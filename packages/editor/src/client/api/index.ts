@@ -56,6 +56,10 @@ export type ArticleConnection = {
 
 export type ArticleFilter = {
   title?: Maybe<Scalars['String']>;
+  preTitle?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
+  publicationDateFrom?: Maybe<DateFilter>;
+  publicationDateTo?: Maybe<DateFilter>;
   draft?: Maybe<Scalars['Boolean']>;
   published?: Maybe<Scalars['Boolean']>;
   pending?: Maybe<Scalars['Boolean']>;
@@ -113,7 +117,7 @@ export type ArticleRevision = {
   canonicalUrl?: Maybe<Scalars['String']>;
   url: Scalars['String'];
   image?: Maybe<Image>;
-  authors: Array<Maybe<Author>>;
+  authors: Array<Author>;
   breaking: Scalars['Boolean'];
   socialMediaTitle?: Maybe<Scalars['String']>;
   socialMediaDescription?: Maybe<Scalars['String']>;
@@ -271,6 +275,7 @@ export type Comment = {
   authorType: CommentAuthorType;
   itemID: Scalars['ID'];
   itemType: CommentItemType;
+  peerId?: Maybe<Scalars['ID']>;
   parentComment?: Maybe<Comment>;
   revisions: Array<CommentRevision>;
   source?: Maybe<Scalars['String']>;
@@ -278,12 +283,14 @@ export type Comment = {
   rejectionReason?: Maybe<CommentRejectionReason>;
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
+  overriddenRatings?: Maybe<Array<OverriddenRating>>;
 };
 
 export enum CommentAuthorType {
   Author = 'Author',
   Team = 'Team',
-  VerifiedUser = 'VerifiedUser'
+  VerifiedUser = 'VerifiedUser',
+  GuestUser = 'GuestUser'
 }
 
 export type CommentBlock = {
@@ -327,6 +334,11 @@ export enum CommentItemType {
   PeerArticle = 'PeerArticle',
   Page = 'Page'
 }
+
+export type CommentRatingOverrideUpdateInput = {
+  answerId: Scalars['ID'];
+  value?: Maybe<Scalars['Int']>;
+};
 
 export type CommentRatingSystemAnswer = {
   __typename?: 'CommentRatingSystemAnswer';
@@ -1180,6 +1192,7 @@ export type MutationUpdateCommentArgs = {
   guestUserImageID?: Maybe<Scalars['ID']>;
   source?: Maybe<Scalars['String']>;
   tagIds?: Maybe<Array<Scalars['ID']>>;
+  ratingOverrides?: Maybe<Array<CommentRatingOverrideUpdateInput>>;
 };
 
 
@@ -1346,6 +1359,12 @@ export type OAuth2Account = {
   scope: Scalars['String'];
 };
 
+export type OverriddenRating = {
+  __typename?: 'overriddenRating';
+  answerId: Scalars['ID'];
+  value?: Maybe<Scalars['Int']>;
+};
+
 export type Page = {
   __typename?: 'Page';
   id: Scalars['ID'];
@@ -1363,6 +1382,17 @@ export type PageConnection = {
   nodes: Array<Page>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type PageFilter = {
+  title?: Maybe<Scalars['String']>;
+  draft?: Maybe<Scalars['Boolean']>;
+  description?: Maybe<Scalars['String']>;
+  publicationDateFrom?: Maybe<DateFilter>;
+  publicationDateTo?: Maybe<DateFilter>;
+  published?: Maybe<Scalars['Boolean']>;
+  pending?: Maybe<Scalars['Boolean']>;
+  tags?: Maybe<Array<Scalars['String']>>;
 };
 
 export type PageInfo = {
@@ -1909,7 +1939,7 @@ export type QueryPagesArgs = {
   cursor?: Maybe<Scalars['ID']>;
   take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<ArticleFilter>;
+  filter?: Maybe<PageFilter>;
   sort?: Maybe<PageSort>;
   order?: Maybe<SortOrder>;
 };
@@ -2369,6 +2399,7 @@ export type User = {
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   preferredName?: Maybe<Scalars['String']>;
   address?: Maybe<UserAddress>;
+  userImage?: Maybe<Image>;
   active: Scalars['Boolean'];
   lastLogin?: Maybe<Scalars['DateTime']>;
   properties: Array<Properties>;
@@ -2416,6 +2447,7 @@ export type UserInput = {
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   preferredName?: Maybe<Scalars['String']>;
   address?: Maybe<UserAddressInput>;
+  userImageID?: Maybe<Scalars['ID']>;
   active: Scalars['Boolean'];
   properties: Array<PropertiesInput>;
   roleIDs?: Maybe<Array<Scalars['String']>>;
@@ -2529,10 +2561,10 @@ export type ArticleRefFragment = (
   )>, latest: (
     { __typename?: 'ArticleRevision' }
     & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead' | 'canonicalUrl'>
-    & { authors: Array<Maybe<(
+    & { authors: Array<(
       { __typename?: 'Author' }
       & Pick<Author, 'name'>
-    )>>, image?: Maybe<(
+    )>, image?: Maybe<(
       { __typename?: 'Image' }
       & ImageRefFragment
     )> }
@@ -2716,10 +2748,10 @@ export type ArticleQuery = (
       )>, properties: Array<(
         { __typename?: 'Properties' }
         & Pick<Properties, 'key' | 'value' | 'public'>
-      )>, authors: Array<Maybe<(
+      )>, authors: Array<(
         { __typename?: 'Author' }
         & AuthorRefFragment
-      )>>, socialMediaAuthors: Array<(
+      )>, socialMediaAuthors: Array<(
         { __typename?: 'Author' }
         & AuthorRefFragment
       )>, socialMediaImage?: Maybe<(
@@ -3304,6 +3336,9 @@ export type FullCommentFragment = (
   )>, tags?: Maybe<Array<(
     { __typename?: 'Tag' }
     & Pick<Tag, 'id' | 'tag'>
+  )>>, overriddenRatings?: Maybe<Array<(
+    { __typename?: 'overriddenRating' }
+    & Pick<OverriddenRating, 'answerId' | 'value'>
   )>> }
 );
 
@@ -3394,6 +3429,7 @@ export type UpdateCommentMutationVariables = Exact<{
   guestUserImageID?: Maybe<Scalars['ID']>;
   source?: Maybe<Scalars['String']>;
   tagIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
+  ratingOverrides?: Maybe<Array<CommentRatingOverrideUpdateInput> | CommentRatingOverrideUpdateInput>;
 }>;
 
 
@@ -3939,7 +3975,7 @@ export type PageRefFragment = (
 );
 
 export type PageListQueryVariables = Exact<{
-  filter?: Maybe<Scalars['String']>;
+  filter?: Maybe<PageFilter>;
   cursor?: Maybe<Scalars['ID']>;
   take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
@@ -4684,6 +4720,9 @@ export type FullUserFragment = (
   & { address?: Maybe<(
     { __typename?: 'UserAddress' }
     & Pick<UserAddress, 'company' | 'streetAddress' | 'streetAddress2' | 'zipCode' | 'city' | 'country'>
+  )>, userImage?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
   )>, properties: Array<(
     { __typename?: 'Properties' }
     & Pick<Properties, 'key' | 'value' | 'public'>
@@ -5116,6 +5155,9 @@ export const FullUserFragmentDoc = gql`
     city
     country
   }
+  userImage {
+    ...ImageRef
+  }
   active
   lastLogin
   properties {
@@ -5132,7 +5174,8 @@ export const FullUserFragmentDoc = gql`
     ...UserSubscription
   }
 }
-    ${FullUserRoleFragmentDoc}
+    ${ImageRefFragmentDoc}
+${FullUserRoleFragmentDoc}
 ${UserSubscriptionFragmentDoc}`;
 export const CommentRevisionFragmentDoc = gql`
     fragment CommentRevision on CommentRevision {
@@ -5185,6 +5228,10 @@ export const FullCommentFragmentDoc = gql`
   tags {
     id
     tag
+  }
+  overriddenRatings {
+    answerId
+    value
   }
 }
     ${ImageRefFragmentDoc}
@@ -6766,8 +6813,8 @@ export type RequestChangesOnCommentMutationHookResult = ReturnType<typeof useReq
 export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<RequestChangesOnCommentMutation>;
 export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
 export const UpdateCommentDocument = gql`
-    mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $guestUserImageID: ID, $source: String, $tagIds: [ID!]) {
-  updateComment(id: $id, revision: $revision, userID: $userID, guestUsername: $guestUsername, guestUserImageID: $guestUserImageID, source: $source, tagIds: $tagIds) {
+    mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $guestUserImageID: ID, $source: String, $tagIds: [ID!], $ratingOverrides: [CommentRatingOverrideUpdateInput!]) {
+  updateComment(id: $id, revision: $revision, userID: $userID, guestUsername: $guestUsername, guestUserImageID: $guestUserImageID, source: $source, tagIds: $tagIds, ratingOverrides: $ratingOverrides) {
     ...FullComment
   }
 }
@@ -6794,6 +6841,7 @@ export type UpdateCommentMutationFn = Apollo.MutationFunction<UpdateCommentMutat
  *      guestUserImageID: // value for 'guestUserImageID'
  *      source: // value for 'source'
  *      tagIds: // value for 'tagIds'
+ *      ratingOverrides: // value for 'ratingOverrides'
  *   },
  * });
  */
@@ -7774,8 +7822,8 @@ export type DeleteNewsroomMutationHookResult = ReturnType<typeof useDeleteNewsro
 export type DeleteNewsroomMutationResult = Apollo.MutationResult<DeleteNewsroomMutation>;
 export type DeleteNewsroomMutationOptions = Apollo.BaseMutationOptions<DeleteNewsroomMutation, DeleteNewsroomMutationVariables>;
 export const PageListDocument = gql`
-    query PageList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
-  pages(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    query PageList($filter: PageFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
+  pages(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...PageRef
     }

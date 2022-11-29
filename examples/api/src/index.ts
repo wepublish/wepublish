@@ -57,7 +57,7 @@ class ExampleURLAdapter implements URLAdapter {
     return `${this.websiteURL}/author/${author.slug || author.id}`
   }
 
-  getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment, peer?: Peer) {
+  getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment, peer?: Newsroom) {
     if (comment.itemType === CommentItemType.article) {
       return `${this.websiteURL}/a/${item.id}/${item.slug}#${comment.id}`
     }

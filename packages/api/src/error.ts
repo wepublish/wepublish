@@ -232,6 +232,18 @@ export class PollClosedError extends ApolloError {
   }
 }
 
+export class SubscriptionNotFound extends ApolloError {
+  constructor() {
+    super('SubscriptionId given not found!', ErrorCode.UserInputError)
+  }
+}
+
+export class AlreadyUnpaidInvoices extends ApolloError {
+  constructor() {
+    super('You cant create new invoice while you have unpaid invoices!', ErrorCode.UserInputError)
+  }
+}
+
 export class PeerIdMissingCommentError extends ApolloError {
   constructor() {
     super(`Comment with itemType PeerArticle requires a peerId`)

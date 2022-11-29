@@ -61,7 +61,7 @@ fragment PageRef on Page {
 }
 
 query PageList(
-  $filter: String
+  $filter: PageFilter
   $cursor: ID
   $take: Int
   $skip: Int
@@ -69,7 +69,7 @@ query PageList(
   $sort: PageSort
 ) {
   pages(
-    filter: {title: $filter}
+    filter: $filter
     cursor: $cursor
     take: $take
     skip: $skip

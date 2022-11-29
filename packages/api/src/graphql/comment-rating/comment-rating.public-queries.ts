@@ -11,21 +11,18 @@ export const getRatingSystem = (commentRatingSystem: PrismaClient['commentRating
 
 export const userCommentRating = async (
   commentId: string,
-  answerId: string,
   authenticateUser: Context['authenticateUser'],
   commentRating: PrismaClient['commentRating']
 ) => {
   const {user} = authenticateUser()
 
-  const rating = await commentRating.findUnique({
+  return await commentRating.findMany({
     where: {
-      answerId_commentId_userId: {
-        commentId,
-        answerId,
-        userId: user.id
-      }
+      commentId,
+      userId: user.id
+    },
+    include: {
+      answer: true
     }
   })
-
-  return rating?.value
 }

@@ -31,7 +31,7 @@ model MetadataProperty {
 }
 
 model ArticleRevision {
-  id                     String             @id @default(cuid())
+  id                     String                             @id @default(cuid())
   preTitle               String?
   title                  String?
   lead                   String?
@@ -40,16 +40,16 @@ model ArticleRevision {
   tags                   String[]
   canonicalUrl           String?
   properties             MetadataProperty[]
-  image                  Image?             @relation("articleRevisionImage", fields: [imageID], references: [id])
+  image                  Image?                             @relation("articleRevisionImage", fields: [imageID], references: [id])
   imageID                String?
-  authorIDs              String[]
+  authors                ArticleRevisionAuthor[]
   breaking               Boolean
   blocks                 Json[]
   hideAuthor             Boolean
   socialMediaTitle       String?
   socialMediaDescription String?
-  socialMediaAuthorIDs   String[]
-  socialMediaImage       Image?             @relation("articleRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
+  socialMediaAuthors     ArticleRevisionSocialMediaAuthor[]
+  socialMediaImage       Image?                             @relation("articleRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   socialMediaImageID     String?
 
   revision    Int       @default(0)
@@ -68,6 +68,28 @@ model ArticleRevision {
   @@index([updatedAt])
   @@index([tags])
   @@map("articles.revisions")
+}
+
+model ArticleRevisionAuthor {
+  revision   ArticleRevision @relation(fields: [revisionId], references: [id])
+  revisionId String
+
+  author   Author @relation(fields: [authorId], references: [id])
+  authorId String
+
+  @@id([revisionId, authorId])
+  @@map("articles.revisions.author")
+}
+
+model ArticleRevisionSocialMediaAuthor {
+  revision   ArticleRevision @relation(fields: [revisionId], references: [id])
+  revisionId String
+
+  author   Author @relation(fields: [authorId], references: [id])
+  authorId String
+
+  @@id([revisionId, authorId])
+  @@map("articles.revisions.social-media-author")
 }
 
 model Article {
@@ -94,7 +116,6 @@ model Article {
   navigations NavigationLink[]
 
   newsroomId String ? @db.Uuid
-
   oldId  String?
 
   @@index([createdAt])
@@ -126,8 +147,10 @@ model Author {
   links      AuthorsLinks[]
   bio        Json[]
 
-  imageID String?
-  image   Image?  @relation(fields: [imageID], references: [id])
+  imageID                     String?
+  image                       Image?                             @relation(fields: [imageID], references: [id])
+  articlesAsAuthor            ArticleRevisionAuthor[]
+  articlesAsSocialMediaAuthor ArticleRevisionSocialMediaAuthor[]
 
   newsroomId String ? @db.Uuid
 
@@ -179,6 +202,7 @@ model Image {
   pageRevisionSocialMediaImages PageRevision[] @relation("pageRevisionSocialMediaImage")
   pageRevisionImages            PageRevision[] @relation("pageRevisionImage")
 
+  User User[]
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([title])
@@ -187,14 +211,14 @@ model Image {
 }
 
 enum CommentItemType {
-  peerArticle @map("peerArticle")
-  article     @map("article")
-  page        @map("page")
+  peerArticle  @map("peerArticle")
+  article      @map("article")
+  page         @map("page")
 }
 
 enum CommentRejectionReason {
-  misconduct @map("misconduct")
-  spam       @map("spam")
+  misconduct  @map("misconduct")
+  spam        @map("spam")
 }
 
 model CommentsRevisions {
@@ -212,17 +236,17 @@ model CommentsRevisions {
 }
 
 enum CommentState {
-  approved           @map("approved")
-  pendingApproval    @map("pendingApproval")
-  pendingUserChanges @map("pendingUserChanges")
-  rejected           @map("rejected")
+  approved            @map("approved")
+  pendingApproval     @map("pendingApproval")
+  pendingUserChanges  @map("pendingUserChanges")
+  rejected            @map("rejected")
 }
 
 enum CommentAuthorType {
-  team         @map("team")
-  author       @map("author")
-  verifiedUser @map("verifiedUser")
-  guestUser    @map("guestUser")
+  team          @map("team")
+  author        @map("author")
+  verifiedUser  @map("verifiedUser")
+  guestUser     @map("guestUser")
 }
 
 model Comment {
@@ -233,8 +257,8 @@ model Comment {
   itemID           String
   itemType         CommentItemType
   /// only populated when itemType is peerArticle
-  peerId           String?
-  peer             Peer?                   @relation(fields: [peerId], references: [id])
+  newsroomId       String? @db.Uuid
+  newsroom         Newsroom?                   @relation(fields: [newsroomId], references: [id])
   parentID         String?
   revisions        CommentsRevisions[]
   rejectionReason  CommentRejectionReason?
@@ -249,7 +273,8 @@ model Comment {
 
   tags TaggedComments[]
 
-  ratings CommentRating[]
+  ratings           CommentRating[]
+  overriddenRatings CommentRatingOverride[]
 
   @@index([createdAt])
   @@map("comments")
@@ -280,7 +305,7 @@ model CommentRatingSystem {
 }
 
 enum RatingSystemType {
-  star @map("star")
+  star  @map("star")
 }
 
 model CommentRatingSystemAnswer {
@@ -294,7 +319,8 @@ model CommentRatingSystemAnswer {
   ratingSystem   CommentRatingSystem @relation(fields: [ratingSystemId], references: [id], onDelete: Cascade)
   ratingSystemId String
 
-  ratings CommentRating[]
+  ratings           CommentRating[]
+  overriddenRatings CommentRatingOverride[]
 
   @@unique([ratingSystemId, answer])
   @@map("comments.rating-system-answers")
@@ -320,6 +346,22 @@ model CommentRating {
 
   @@unique([answerId, commentId, userId])
   @@map("comments.ratings")
+}
+
+model CommentRatingOverride {
+  answerId String
+  answer   CommentRatingSystemAnswer @relation(fields: [answerId], references: [id], onDelete: Cascade)
+
+  commentId String
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  value Int?
+
+  @@unique([answerId, commentId])
+  @@map("comments.rating-override")
 }
 
 model InvoiceItem {
@@ -365,12 +407,12 @@ model Invoice {
 }
 
 enum MailLogState {
-  submitted @map("submitted")
-  accepted  @map("accepted")
-  delivered @map("delivered")
-  deferred  @map("deferred")
-  bounced   @map("bounced")
-  rejected  @map("rejected")
+  submitted  @map("submitted")
+  accepted   @map("accepted")
+  delivered  @map("delivered")
+  deferred   @map("deferred")
+  bounced    @map("bounced")
+  rejected   @map("rejected")
 }
 
 model MailLog {
@@ -389,10 +431,10 @@ model MailLog {
 }
 
 enum PaymentPeriodicity {
-  monthly   @map("monthly")
-  quarterly @map("quarterly")
-  biannual  @map("biannual")
-  yearly    @map("yearly")
+  monthly    @map("monthly")
+  quarterly  @map("quarterly")
+  biannual   @map("biannual")
+  yearly     @map("yearly")
 }
 
 model AvailablePaymentMethod {
@@ -537,13 +579,13 @@ model PaymentMethod {
 }
 
 enum PaymentState {
-  created            @map("created")
-  submitted          @map("submitted")
-  requiresUserAction @map("requiresUserAction")
-  processing         @map("processing")
-  paid               @map("paid")
-  canceled           @map("canceled")
-  declined           @map("declined")
+  created             @map("created")
+  submitted           @map("submitted")
+  requiresUserAction  @map("requiresUserAction")
+  processing          @map("processing")
+  paid                @map("paid")
+  canceled            @map("canceled")
+  declined            @map("declined")
 }
 
 model Payment {
@@ -564,29 +606,32 @@ model Payment {
   @@map("payments")
 }
 
+
 model Newsroom {
-   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-   createdAt  DateTime @default(now())
-   modifiedAt DateTime @updatedAt @default(now())
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @default(now()) @updatedAt
 
-    name       String
-    slug       String?
-    hostURL    String?
-    token      String?
-    isDisabled Boolean @default(false)
+  name       String
+  slug       String?
+  hostURL    String?
+  token      String?
+  isDisabled Boolean @default(false)
 
-      themeColor           String? @default("#000000")
-      themeFontColor       String? @default("#FFFFFF")
-      callToActionURL      String?
-      callToActionText     Json[]
-      callToActionImageURL String?
-      callToActionImageID  String?
+  themeColor           String? @default("#000000")
+  themeFontColor       String? @default("#FFFFFF")
+  callToActionURL      String?
+  callToActionText     Json[]
+  callToActionImageURL String?
+  callToActionImageID  String?
 
-      logoID String?
-      logo   Image?  @relation(fields: [logoID], references: [id])
+  logoID String?
+  logo   Image?  @relation(fields: [logoID], references: [id])
 
-      isSelf    Boolean @default(false)
-      @@map("newsrooms")
+  comments Comment[]
+
+  isSelf Boolean @default(false)
+  @@map("newsrooms")
 }
 
 model Token {
@@ -636,9 +681,9 @@ model SubscriptionPeriod {
 }
 
 enum SubscriptionDeactivationReason {
-  none                @map("none")
-  userSelfDeactivated @map("userSelfDeactivated")
-  invoiceNotPaid      @map("invoiceNotPaid")
+  none                 @map("none")
+  userSelfDeactivated  @map("userSelfDeactivated")
+  invoiceNotPaid       @map("invoiceNotPaid")
 }
 
 model SubscriptionDeactivation {
@@ -750,6 +795,8 @@ model User {
   active          Boolean
   lastLogin       DateTime?
   roleIDs         String[]
+  userImageID     String?
+  userImage       Image?    @relation(fields: [userImageID], references: [id])
 
   address                  UserAddress?
   properties               MetadataProperty[]
@@ -791,7 +838,7 @@ model Setting {
 }
 
 enum TagType {
-  Comment @map("comment")
+  Comment  @map("comment")
 }
 
 model Tag {

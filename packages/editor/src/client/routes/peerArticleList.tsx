@@ -1,18 +1,15 @@
-import SearchIcon from '@rsuite/icons/legacy/Search'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
   Avatar,
   FlexboxGrid,
-  Input,
-  InputGroup,
   Message,
   Pagination,
   Popover,
-  SelectPicker,
   Table,
   toaster,
-  Whisper
+  Whisper,
+  SelectPicker
 } from 'rsuite'
 
 import {
@@ -22,7 +19,9 @@ import {
   useNewsroomListQuery,
   usePeerArticleListQuery
 } from '../api'
+
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+import {ListViewFilters} from '../atoms/searchAndFilter/listViewFilters'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
@@ -46,7 +45,7 @@ function PeerArticleList() {
     skip: (page - 1) * limit,
     sort: mapColumFieldToGraphQLField(sortField),
     order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
-    peerFilter: peerFilter
+    peerFilter
   }
 
   function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
@@ -114,20 +113,6 @@ function PeerArticleList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('peerArticles.peerArticles')}</h2>
         </FlexboxGrid.Item>
-
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
-          <InputGroup>
-            <Input
-              value={filter.title || ''}
-              onChange={value => {
-                setFilter({title: value})
-              }}
-            />
-            <InputGroup.Addon>
-              <SearchIcon />
-            </InputGroup.Addon>
-          </InputGroup>
-        </FlexboxGrid.Item>
       </FlexboxGrid>
 
       <SelectPicker
@@ -141,6 +126,14 @@ function PeerArticleList() {
         searchable
         onSelect={value => setPeerFilter(value)}
         onClean={() => setPeerFilter('')}
+      />
+
+      <ListViewFilters
+        fields={['title', 'preTitle', 'lead', 'peer', 'publicationDate']}
+        filter={filter}
+        isLoading={isLoading}
+        onSetFilter={filter => setFilter(filter)}
+        setPeerFilter={setPeerFilter}
       />
 
       <div

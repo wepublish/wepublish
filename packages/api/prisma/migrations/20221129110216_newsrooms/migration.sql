@@ -26,8 +26,14 @@ ALTER TABLE "newsrooms" ADD CONSTRAINT "newsrooms_logoID_fkey" FOREIGN KEY ("log
 -- Add records from peers to newsrooms
 INSERT INTO "newsrooms"(name, "slug", "hostURL", token, "isDisabled") SELECT name, slug, "hostURL", token, "isDisabled" FROM "peers";
 
+-- Update comments peerId to newsroomId
+ALTER TABLE "comments" DROP CONSTRAINT "comments_peerId_fkey";
+ALTER TABLE "comments" ALTER COLUMN "peerId" TYPE uuid USING "peerId"::uuid;
+ALTER TABLE "comments" RENAME COLUMN "peerId" TO "newsroomId";
+ALTER TABLE "comments" ADD CONSTRAINT "comments_newsroomId_fkey" FOREIGN KEY ("newsroomId") REFERENCES "newsrooms"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
 -- AlterTable
-ALTER TABLE "peerProfiles" ADD COLUMN     "isSelf" BOOLEAN DEFAULT TRUE;
+ALTER TABLE "peerProfiles" ADD COLUMN    "isSelf" BOOLEAN DEFAULT TRUE;
 
 -- Add records from peerProfiles to newsrooms
 INSERT INTO "newsrooms"(name, "themeColor", "themeFontColor", "callToActionURL", "callToActionText", "callToActionImageURL", "callToActionImageID", "logoID", "isSelf")

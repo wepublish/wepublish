@@ -61,7 +61,7 @@ function NewsroomEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
         hostURL: urlString,
         token
       })
-      setProfile(remote?.remotePeerProfile?.profile ? remote.remotePeerProfile : null)
+      setProfile(remote?.remotePeerProfile?.id ? remote.remotePeerProfile : null)
     } catch (error) {
       toaster.push(
         <Message type="error" showIcon closable duration={0}>

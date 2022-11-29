@@ -60,7 +60,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
               class=\\"rs-ripple-pond\\"
             >
               <span
-@@ -130,18 +149,19 @@
+@@ -180,18 +199,19 @@
                           id=\\"active-control-label\\"
                         >
                           userCreateOrEditView.active
@@ -82,7 +82,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                           />
                           <span
                             class=\\"rs-toggle-presentation\\"
-@@ -174,10 +194,11 @@
+@@ -230,10 +250,11 @@
                         >
                           <input
                             aria-describedby=\\"firstName-help-text\\"
@@ -94,7 +94,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -205,14 +226,15 @@
+@@ -261,14 +282,15 @@
                         >
                           <input
                             aria-describedby=\\"name-help-text\\"
@@ -111,7 +111,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                       </div>
                     </div>
                     <div
-@@ -236,10 +258,11 @@
+@@ -292,10 +314,11 @@
                         >
                           <input
                             aria-describedby=\\"preferredName-help-text\\"
@@ -123,7 +123,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -267,14 +290,15 @@
+@@ -323,14 +346,15 @@
                         >
                           <input
                             aria-describedby=\\"email-help-text\\"
@@ -140,7 +140,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                       </div>
                     </div>
                     <div
-@@ -298,10 +322,11 @@
+@@ -354,10 +378,11 @@
                         >
                           <input
                             aria-describedby=\\"company-help-text\\"
@@ -152,7 +152,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -329,10 +354,11 @@
+@@ -385,10 +410,11 @@
                         >
                           <input
                             aria-describedby=\\"streetAddress-help-text\\"
@@ -164,7 +164,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -360,10 +386,11 @@
+@@ -416,10 +442,11 @@
                         >
                           <input
                             aria-describedby=\\"streetAddress2-help-text\\"
@@ -176,7 +176,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -391,10 +418,11 @@
+@@ -447,10 +474,11 @@
                         >
                           <input
                             aria-describedby=\\"zipCode-help-text\\"
@@ -188,7 +188,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -422,10 +450,11 @@
+@@ -478,10 +506,11 @@
                         >
                           <input
                             aria-describedby=\\"city-help-text\\"
@@ -200,7 +200,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -453,10 +482,11 @@
+@@ -509,10 +538,11 @@
                         >
                           <input
                             aria-describedby=\\"country-help-text\\"
@@ -212,7 +212,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -586,14 +616,15 @@
+@@ -714,14 +744,15 @@
                         >
                           <input
                             aria-describedby=\\"password-help-text\\"
@@ -231,12 +231,279 @@ exports[`User edit view should allow a new user to be created 1`] = `
                   </div>"
 `;
 
+exports[`User edit view should allow user properties to be added 1`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -259,17 +259,38 @@
+                        <div
+                          class=\\"rs-form-control rs-form-control-wrapper\\"
+                        >
+                          <input
+                            aria-describedby=\\"name-help-text\\"
++                           aria-errormessage=\\"name-error-message\\"
++                           aria-invalid=\\"true\\"
+                            aria-labelledby=\\"name-control-label\\"
+                            class=\\"rs-input\\"
+                            id=\\"name\\"
+                            name=\\"name\\"
+                            type=\\"text\\"
+                            value=\\"\\"
++                         />
++                         <div
++                           aria-relevant=\\"all\\"
++                           class=\\"rs-form-control-message-wrapper rs-form-error-message-wrapper rs-form-error-message-placement-bottom-start\\"
++                           id=\\"name-error-message\\"
++                           role=\\"alert\\"
++                         >
++                           <span
++                             class=\\"rs-form-error-message rs-form-error-message-show\\"
++                           >
++                             <span
++                               class=\\"rs-form-error-message-arrow\\"
+                              />
++                             <span
++                               class=\\"rs-form-error-message-inner\\"
++                             >
++                               errorMessages.noNameErrorMessage
++                             </span>
++                           </span>
++                         </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class=\\"rs-col rs-col-xs-12\\"
+@@ -321,17 +342,38 @@
+                        <div
+                          class=\\"rs-form-control rs-form-control-wrapper\\"
+                        >
+                          <input
+                            aria-describedby=\\"email-help-text\\"
++                           aria-errormessage=\\"email-error-message\\"
++                           aria-invalid=\\"true\\"
+                            aria-labelledby=\\"email-control-label\\"
+                            class=\\"rs-input\\"
+                            id=\\"email\\"
+                            name=\\"email\\"
+                            type=\\"text\\"
+                            value=\\"\\"
++                         />
++                         <div
++                           aria-relevant=\\"all\\"
++                           class=\\"rs-form-control-message-wrapper rs-form-error-message-wrapper rs-form-error-message-placement-bottom-start\\"
++                           id=\\"email-error-message\\"
++                           role=\\"alert\\"
++                         >
++                           <span
++                             class=\\"rs-form-error-message rs-form-error-message-show\\"
++                           >
++                             <span
++                               class=\\"rs-form-error-message-arrow\\"
+                              />
++                             <span
++                               class=\\"rs-form-error-message-inner\\"
++                             >
++                               errorMessages.noEmailErrorMessage
++                             </span>
++                           </span>
++                         </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class=\\"rs-col rs-col-xs-24\\"
+@@ -637,12 +679,142 @@
+                        >
+                          articleEditor.panels.properties
+                        </label>
+                        <div>
+                          <div>
++                           <div
++                             style=\\"display: flex; flex-direction: row; margin-bottom: 10px;\\"
++                           >
++                             <div
++                               style=\\"margin-right: 10px;\\"
++                             >
+                                <button
+                                  class=\\"rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default\\"
++                                 type=\\"button\\"
++                               >
++                                 <svg
++                                   aria-hidden=\\"true\\"
++                                   aria-label=\\"th 2\\"
++                                   class=\\"rs-icon\\"
++                                   data-category=\\"legacy\\"
++                                   fill=\\"currentColor\\"
++                                   focusable=\\"false\\"
++                                   height=\\"1em\\"
++                                   viewBox=\\"0 0 32 32\\"
++                                   width=\\"1em\\"
++                                 >
++                                   <path
++                                     d=\\"M0 0h8v8.005H0V0zM12 0h8v8.005h-8V0zM24 0h8v8.005h-8V0zM0 11.998h8v8.005H0v-8.005zM12 11.998h8v8.005h-8v-8.005zM24 11.998h8v8.005h-8v-8.005zM0 23.995h8V32H0v-8.005zM12 23.995h8V32h-8v-8.005zM24 23.995h8V32h-8v-8.005z\\"
++                                   />
++                                 </svg>
++                                 <span
++                                   class=\\"rs-ripple-pond\\"
++                                 >
++                                   <span
++                                     class=\\"rs-ripple\\"
++                                   />
++                                 </span>
++                               </button>
++                             </div>
++                             <div
++                               class=\\"rs-panel\\"
++                               style=\\"width: 100%;\\"
++                             >
++                               <div
++                                 class=\\"rs-panel-body rs-panel-body-fill\\"
++                                 role=\\"region\\"
++                               >
++                                 <div
++                                   style=\\"min-height: 100%; display: flex;\\"
++                                 >
++                                   <div
++                                     style=\\"display: flex; flex-direction: row;\\"
++                                   >
++                                     <input
++                                       class=\\"rs-input\\"
++                                       data-testid=\\"propertyKey\\"
++                                       id=\\"userProperties\\"
++                                       placeholder=\\"articleEditor.panels.key\\"
++                                       style=\\"width: 40%; margin-right: 10px;\\"
++                                       type=\\"text\\"
++                                       value=\\"some key\\"
++                                     />
++                                     <input
++                                       class=\\"rs-input\\"
++                                       data-testid=\\"propertyValue\\"
++                                       id=\\"userProperties\\"
++                                       placeholder=\\"articleEditor.panels.value\\"
++                                       style=\\"width: 60%;\\"
++                                       type=\\"text\\"
++                                       value=\\"some value\\"
++                                     />
++                                     <div
++                                       class=\\"rs-form-group\\"
++                                       role=\\"group\\"
++                                       style=\\"padding-top: 6px; padding-left: 8px;\\"
++                                     >
++                                       <label
++                                         class=\\"rs-toggle rs-toggle-checked\\"
++                                         style=\\"max-width: 70px; min-width: 70px;\\"
++                                       >
++                                         <input
++                                           aria-checked=\\"true\\"
++                                           aria-label=\\"articleEditor.panels.public\\"
++                                           checked=\\"\\"
++                                           class=\\"rs-toggle-input\\"
++                                           role=\\"switch\\"
++                                           type=\\"checkbox\\"
++                                         />
++                                         <span
++                                           class=\\"rs-toggle-presentation\\"
++                                         >
++                                           <span
++                                             class=\\"rs-toggle-inner\\"
++                                           >
++                                             articleEditor.panels.public
++                                           </span>
++                                         </span>
++                                       </label>
++                                     </div>
++                                   </div>
++                                 </div>
++                               </div>
++                             </div>
++                             <div
++                               style=\\"margin-left: 10px;\\"
++                             >
++                               <button
++                                 class=\\"rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default\\"
++                                 type=\\"button\\"
++                               >
++                                 <svg
++                                   aria-hidden=\\"true\\"
++                                   aria-label=\\"trash\\"
++                                   class=\\"rs-icon\\"
++                                   data-category=\\"legacy\\"
++                                   fill=\\"currentColor\\"
++                                   focusable=\\"false\\"
++                                   height=\\"1em\\"
++                                   viewBox=\\"0 0 25 32\\"
++                                   width=\\"1em\\"
++                                 >
++                                   <path
++                                     d=\\"M9.143 24.571V12a.564.564 0 00-.571-.571H7.429a.564.564 0 00-.571.571v12.571c0 .321.25.571.571.571h1.143c.321 0 .571-.25.571-.571zm4.571 0V12a.564.564 0 00-.571-.571H12a.564.564 0 00-.571.571v12.571c0 .321.25.571.571.571h1.143c.321 0 .571-.25.571-.571zm4.572 0V12a.564.564 0 00-.571-.571h-1.143a.564.564 0 00-.571.571v12.571c0 .321.25.571.571.571h1.143c.321 0 .571-.25.571-.571zM8.571 6.857h8l-.857-2.089a.684.684 0 00-.304-.196H9.749a.608.608 0 00-.304.196zm16.572.572v1.143c0 .321-.25.571-.571.571h-1.714v16.929c0 1.964-1.286 3.643-2.857 3.643H5.144c-1.571 0-2.857-1.607-2.857-3.571v-17H.573a.564.564 0 01-.571-.571V7.43c0-.321.25-.571.571-.571h5.518l1.25-2.982c.357-.875 1.429-1.589 2.375-1.589h5.714c.946 0 2.018.714 2.375 1.589l1.25 2.982h5.518c.321 0 .571.25.571.571z\\"
++                                   />
++                                 </svg>
++                                 <span
++                                   class=\\"rs-ripple-pond\\"
++                                 >
++                                   <span
++                                     class=\\"rs-ripple\\"
++                                   />
++                                 </span>
++                               </button>
++                             </div>
++                           </div>
++                           <button
++                             class=\\"rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default\\"
+                              data-testid=\\"addProperty\\"
+                              type=\\"button\\"
+                            >
+                              <svg
+                                aria-hidden=\\"true\\"
+@@ -712,17 +884,38 @@
+                        <div
+                          class=\\"rs-form-control rs-form-control-wrapper\\"
+                        >
+                          <input
+                            aria-describedby=\\"password-help-text\\"
++                           aria-errormessage=\\"password-error-message\\"
++                           aria-invalid=\\"true\\"
+                            aria-labelledby=\\"password-control-label\\"
+                            class=\\"rs-input\\"
+                            id=\\"password\\"
+                            name=\\"password\\"
+                            type=\\"password\\"
+                            value=\\"\\"
+                          />
++                         <div
++                           aria-relevant=\\"all\\"
++                           class=\\"rs-form-control-message-wrapper rs-form-error-message-wrapper rs-form-error-message-placement-bottom-start\\"
++                           id=\\"password-error-message\\"
++                           role=\\"alert\\"
++                         >
++                           <span
++                             class=\\"rs-form-error-message rs-form-error-message-show\\"
++                           >
++                             <span
++                               class=\\"rs-form-error-message-arrow\\"
++                             />
++                             <span
++                               class=\\"rs-form-error-message-inner\\"
++                             >
++                               errorMessages.noPasswordErrorMessage
++                             </span>
++                           </span>
++                         </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>"
+`;
+
 exports[`User edit view should allow user role to be added 1`] = `
 "Snapshot Diff:
 - First value
 + Second value
 
-@@ -500,11 +500,11 @@
+@@ -556,11 +556,11 @@
                           id=\\"userRoles-control-label\\"
                         >
                           userCreateOrEditView.userRoles
@@ -249,7 +516,7 @@ exports[`User edit view should allow user role to be added 1`] = `
                             aria-expanded=\\"false\\"
                             aria-haspopup=\\"listbox\\"
                             class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -514,17 +514,54 @@
+@@ -570,17 +570,54 @@
                             <input
                               aria-hidden=\\"true\\"
                               class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -315,7 +582,7 @@ exports[`User edit view should allow user role to be removed 1`] = `
 - First value
 + Second value
 
-@@ -500,11 +500,11 @@
+@@ -556,11 +556,11 @@
                           id=\\"userRoles-control-label\\"
                         >
                           userCreateOrEditView.userRoles
@@ -328,7 +595,7 @@ exports[`User edit view should allow user role to be removed 1`] = `
                             aria-expanded=\\"false\\"
                             aria-haspopup=\\"listbox\\"
                             class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -514,17 +514,54 @@
+@@ -570,17 +570,54 @@
                             <input
                               aria-hidden=\\"true\\"
                               class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -473,7 +740,7 @@ exports[`User edit view should render 1`] = `
     <div
       class="rs-grid-container"
       role="grid"
-      style="width: 100%; padding-left: 0px;"
+      style="width: 100%; padding-left: 0px; height: calc(100vh - 160px); overflow-y: scroll;"
     >
       <div
         class="rs-row"
@@ -505,12 +772,62 @@ exports[`User edit view should render 1`] = `
                 <div
                   class="rs-row"
                   role="row"
-                  style="margin-left: -5px; margin-right: -5px;"
                 >
                   <div
-                    class="rs-col rs-col-xs-24"
+                    class="rs-col rs-col-xs-12"
                     role="gridcell"
-                    style="text-align: end; padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-panel"
+                    >
+                      <div
+                        class="rs-panel-header"
+                        tabindex="-1"
+                      >
+                        userCreateOrEditView.selectUserImage
+                      </div>
+                      <div
+                        class="rs-panel-body rs-panel-body-fill"
+                        role="region"
+                      >
+                        <div
+                          style="display: flex; width: 100%; height: 100%; max-height: 200px; flex-direction: column; align-items: center; justify-content: center; background-color: rgb(247, 249, 250);"
+                        >
+                          <button
+                            class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"
+                            type="button"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              aria-label="plus circle"
+                              class="rs-icon"
+                              data-category="legacy"
+                              fill="currentColor"
+                              focusable="false"
+                              height="1em"
+                              viewBox="0 0 27 32"
+                              width="1em"
+                            >
+                              <path
+                                d="M21.714 17.143v-2.286c0-.625-.518-1.143-1.143-1.143H16V9.143C16 8.518 15.482 8 14.857 8h-2.286c-.625 0-1.143.518-1.143 1.143v4.571H6.857c-.625 0-1.143.518-1.143 1.143v2.286c0 .625.518 1.143 1.143 1.143h4.571v4.571c0 .625.518 1.143 1.143 1.143h2.286c.625 0 1.143-.518 1.143-1.143v-4.571h4.571c.625 0 1.143-.518 1.143-1.143zM27.429 16c0 7.571-6.143 13.714-13.714 13.714S.001 23.571.001 16 6.144 2.286 13.715 2.286 27.429 8.429 27.429 16z"
+                              />
+                            </svg>
+                            <span
+                              class="rs-ripple-pond"
+                            >
+                              <span
+                                class="rs-ripple"
+                              />
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-12"
+                    role="gridcell"
+                    style="text-align: end;"
                   >
                     <div
                       class="rs-form-group"
@@ -545,6 +862,12 @@ exports[`User edit view should render 1`] = `
                       </label>
                     </div>
                   </div>
+                </div>
+                <div
+                  class="rs-row"
+                  role="row"
+                  style="margin-left: -5px; margin-right: -5px;"
+                >
                   <div
                     class="rs-col rs-col-xs-12"
                     role="gridcell"
@@ -931,6 +1254,78 @@ exports[`User edit view should render 1`] = `
                               d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
                             />
                           </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="rs-panel rs-panel-bordered"
+              style="margin-top: 20px;"
+            >
+              <div
+                class="rs-panel-header"
+                tabindex="-1"
+              >
+                userCreateOrEditView.properties
+              </div>
+              <div
+                class="rs-panel-body"
+                role="region"
+              >
+                <div
+                  class="rs-row"
+                  role="row"
+                  style="margin-left: -5px; margin-right: -5px;"
+                >
+                  <div
+                    class="rs-col rs-col-xs-24"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                        for="userProperties"
+                        id="userProperties-control-label"
+                      >
+                        articleEditor.panels.properties
+                      </label>
+                      <div>
+                        <div>
+                          <button
+                            class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default"
+                            data-testid="addProperty"
+                            type="button"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              aria-label="plus circle"
+                              class="rs-icon"
+                              data-category="legacy"
+                              fill="currentColor"
+                              focusable="false"
+                              height="1em"
+                              viewBox="0 0 27 32"
+                              width="1em"
+                            >
+                              <path
+                                d="M21.714 17.143v-2.286c0-.625-.518-1.143-1.143-1.143H16V9.143C16 8.518 15.482 8 14.857 8h-2.286c-.625 0-1.143.518-1.143 1.143v4.571H6.857c-.625 0-1.143.518-1.143 1.143v2.286c0 .625.518 1.143 1.143 1.143h4.571v4.571c0 .625.518 1.143 1.143 1.143h2.286c.625 0 1.143-.518 1.143-1.143v-4.571h4.571c.625 0 1.143-.518 1.143-1.143zM27.429 16c0 7.571-6.143 13.714-13.714 13.714S.001 23.571.001 16 6.144 2.286 13.715 2.286 27.429 8.429 27.429 16z"
+                              />
+                            </svg>
+                            <span
+                              class="rs-ripple-pond"
+                            >
+                              <span
+                                class="rs-ripple"
+                              />
+                            </span>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -1152,7 +1547,7 @@ exports[`User edit view should render with ID 1`] = `
     <div
       class="rs-grid-container"
       role="grid"
-      style="width: 100%; padding-left: 0px;"
+      style="width: 100%; padding-left: 0px; height: calc(100vh - 160px); overflow-y: scroll;"
     >
       <div
         class="rs-row"
@@ -1184,12 +1579,62 @@ exports[`User edit view should render with ID 1`] = `
                 <div
                   class="rs-row"
                   role="row"
-                  style="margin-left: -5px; margin-right: -5px;"
                 >
                   <div
-                    class="rs-col rs-col-xs-24"
+                    class="rs-col rs-col-xs-12"
                     role="gridcell"
-                    style="text-align: end; padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-panel"
+                    >
+                      <div
+                        class="rs-panel-header"
+                        tabindex="-1"
+                      >
+                        userCreateOrEditView.selectUserImage
+                      </div>
+                      <div
+                        class="rs-panel-body rs-panel-body-fill"
+                        role="region"
+                      >
+                        <div
+                          style="display: flex; width: 100%; height: 100%; max-height: 200px; flex-direction: column; align-items: center; justify-content: center; background-color: rgb(247, 249, 250);"
+                        >
+                          <button
+                            class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"
+                            type="button"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              aria-label="plus circle"
+                              class="rs-icon"
+                              data-category="legacy"
+                              fill="currentColor"
+                              focusable="false"
+                              height="1em"
+                              viewBox="0 0 27 32"
+                              width="1em"
+                            >
+                              <path
+                                d="M21.714 17.143v-2.286c0-.625-.518-1.143-1.143-1.143H16V9.143C16 8.518 15.482 8 14.857 8h-2.286c-.625 0-1.143.518-1.143 1.143v4.571H6.857c-.625 0-1.143.518-1.143 1.143v2.286c0 .625.518 1.143 1.143 1.143h4.571v4.571c0 .625.518 1.143 1.143 1.143h2.286c.625 0 1.143-.518 1.143-1.143v-4.571h4.571c.625 0 1.143-.518 1.143-1.143zM27.429 16c0 7.571-6.143 13.714-13.714 13.714S.001 23.571.001 16 6.144 2.286 13.715 2.286 27.429 8.429 27.429 16z"
+                              />
+                            </svg>
+                            <span
+                              class="rs-ripple-pond"
+                            >
+                              <span
+                                class="rs-ripple"
+                              />
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-12"
+                    role="gridcell"
+                    style="text-align: end;"
                   >
                     <div
                       class="rs-form-group"
@@ -1224,6 +1669,12 @@ exports[`User edit view should render with ID 1`] = `
                       </label>
                     </div>
                   </div>
+                </div>
+                <div
+                  class="rs-row"
+                  role="row"
+                  style="margin-left: -5px; margin-right: -5px;"
+                >
                   <div
                     class="rs-col rs-col-xs-12"
                     role="gridcell"
@@ -1610,6 +2061,78 @@ exports[`User edit view should render with ID 1`] = `
                               d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
                             />
                           </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="rs-panel rs-panel-bordered"
+              style="margin-top: 20px;"
+            >
+              <div
+                class="rs-panel-header"
+                tabindex="-1"
+              >
+                userCreateOrEditView.properties
+              </div>
+              <div
+                class="rs-panel-body"
+                role="region"
+              >
+                <div
+                  class="rs-row"
+                  role="row"
+                  style="margin-left: -5px; margin-right: -5px;"
+                >
+                  <div
+                    class="rs-col rs-col-xs-24"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                        for="userProperties"
+                        id="userProperties-control-label"
+                      >
+                        articleEditor.panels.properties
+                      </label>
+                      <div>
+                        <div>
+                          <button
+                            class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default"
+                            data-testid="addProperty"
+                            type="button"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              aria-label="plus circle"
+                              class="rs-icon"
+                              data-category="legacy"
+                              fill="currentColor"
+                              focusable="false"
+                              height="1em"
+                              viewBox="0 0 27 32"
+                              width="1em"
+                            >
+                              <path
+                                d="M21.714 17.143v-2.286c0-.625-.518-1.143-1.143-1.143H16V9.143C16 8.518 15.482 8 14.857 8h-2.286c-.625 0-1.143.518-1.143 1.143v4.571H6.857c-.625 0-1.143.518-1.143 1.143v2.286c0 .625.518 1.143 1.143 1.143h4.571v4.571c0 .625.518 1.143 1.143 1.143h2.286c.625 0 1.143-.518 1.143-1.143v-4.571h4.571c.625 0 1.143-.518 1.143-1.143zM27.429 16c0 7.571-6.143 13.714-13.714 13.714S.001 23.571.001 16 6.144 2.286 13.715 2.286 27.429 8.429 27.429 16z"
+                              />
+                            </svg>
+                            <span
+                              class="rs-ripple-pond"
+                            >
+                              <span
+                                class="rs-ripple"
+                              />
+                            </span>
+                          </button>
                         </div>
                       </div>
                     </div>

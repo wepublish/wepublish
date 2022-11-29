@@ -31,7 +31,8 @@ import {
   GraphQLComment,
   GraphQLCommentRejectionReason,
   GraphQLCommentItemType,
-  GraphQLCommentRevisionUpdateInput
+  GraphQLCommentRevisionUpdateInput,
+  GraphQLCommentRatingOverrideUpdateInput
 } from './comment/comment'
 import {
   GraphQLCommentRatingSystemAnswer,
@@ -883,12 +884,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         guestUsername: {type: GraphQLString},
         guestUserImageID: {type: GraphQLID},
         source: {type: GraphQLString},
-        tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
+        tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
+        ratingOverrides: {
+          type: GraphQLList(GraphQLNonNull(GraphQLCommentRatingOverrideUpdateInput))
+        }
       },
       resolve: (
         root,
-        {id, revision, userID, guestUsername, guestUserImageID, source, tagIds},
-        {authenticate, prisma: {comment}}
+        {id, revision, ratingOverrides, userID, guestUsername, guestUserImageID, source, tagIds},
+        {authenticate, prisma: {comment, commentRatingSystemAnswer}}
       ) =>
         updateComment(
           id,
@@ -898,7 +902,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           guestUserImageID,
           source,
           tagIds,
+          ratingOverrides,
           authenticate,
+          commentRatingSystemAnswer,
           comment
         )
     },

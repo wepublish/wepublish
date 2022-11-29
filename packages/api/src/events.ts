@@ -35,14 +35,13 @@ export const onFindArticle = (prisma: PrismaClient): Prisma.Middleware => async 
   })
 
   await Promise.all(
-    articles.map(({id, publishedId, pending}) =>
-      prisma.article.update({
+    articles.map(async ({id, publishedId, pending}) => {
+      await prisma.article.update({
         where: {
           id
         },
         data: {
           published: {
-            delete: Boolean(publishedId),
             connect: {
               id: pending!.id
             }
@@ -52,7 +51,12 @@ export const onFindArticle = (prisma: PrismaClient): Prisma.Middleware => async 
           }
         }
       })
-    )
+      await prisma.articleRevision.delete({
+        where: {
+          id: publishedId || undefined
+        }
+      })
+    })
   )
 
   return next(params)
@@ -88,14 +92,13 @@ export const onFindPage = (prisma: PrismaClient): Prisma.Middleware => async (pa
   })
 
   await Promise.all(
-    pages.map(({id, publishedId, pending}) =>
-      prisma.page.update({
+    pages.map(async ({id, publishedId, pending}) => {
+      await prisma.page.update({
         where: {
           id
         },
         data: {
           published: {
-            delete: Boolean(publishedId),
             connect: {
               id: pending!.id
             }
@@ -105,7 +108,12 @@ export const onFindPage = (prisma: PrismaClient): Prisma.Middleware => async (pa
           }
         }
       })
-    )
+      await prisma.pageRevision.delete({
+        where: {
+          id: publishedId || undefined
+        }
+      })
+    })
   )
 
   return next(params)
