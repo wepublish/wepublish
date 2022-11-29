@@ -1,9 +1,11 @@
+import './routes.less'
+
 import React, {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
-  MdArrowLeft,
   MdCloudUpload,
   MdIntegrationInstructions,
+  MdKeyboardBackspace,
   MdRemoveRedEye,
   MdSave
 } from 'react-icons/md'
@@ -473,9 +475,9 @@ function ArticleEditor() {
               leftChildren={
                 <Link to="/articles">
                   <IconButton
-                    style={{marginTop: '4px'}}
-                    size={'lg'}
-                    icon={<MdArrowLeft />}
+                    size="lg"
+                    className="actionButton"
+                    icon={<MdKeyboardBackspace />}
                     onClick={e => {
                       if (!unsavedChangesDialog()) e.preventDefault()
                     }}>
@@ -487,8 +489,9 @@ function ArticleEditor() {
                 <div style={{marginTop: '4px', marginBottom: '20px'}}>
                   <IconButton
                     icon={<MdIntegrationInstructions />}
-                    size={'lg'}
+                    size="lg"
                     disabled={isDisabled}
+                    className="actionButton"
                     onClick={() => {
                       syncFirstTitleBlockWithMetadata()
                       setMetaDrawerOpen(true)
@@ -499,10 +502,11 @@ function ArticleEditor() {
                   {isNew && createData == null ? (
                     <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
                       <IconButton
+                        className="actionButton"
                         style={{
                           marginLeft: '10px'
                         }}
-                        size={'lg'}
+                        size="lg"
                         icon={<MdSave />}
                         disabled={isDisabled}
                         onClick={() => handleSave()}>
@@ -516,7 +520,8 @@ function ArticleEditor() {
                           style={{
                             marginLeft: '10px'
                           }}
-                          size={'lg'}
+                          className="actionButton"
+                          size="lg"
                           icon={<MdSave />}
                           disabled={isDisabled}
                           onClick={() => handleSave()}>
@@ -534,7 +539,8 @@ function ArticleEditor() {
                             style={{
                               marginLeft: '10px'
                             }}
-                            size={'lg'}
+                            className="actionButton"
+                            size="lg"
                             icon={<MdCloudUpload />}
                             disabled={isDisabled}
                             onClick={() => {
@@ -552,6 +558,7 @@ function ArticleEditor() {
                 <PermissionControl qualifyingPermissions={['CAN_GET_ARTICLE_PREVIEW_LINK']}>
                   <Link
                     to="#"
+                    className="actionButton"
                     onClick={e => {
                       previewLinkFetch({
                         variables: {
@@ -563,7 +570,7 @@ function ArticleEditor() {
                     <IconButton
                       disabled={hasChanged || !id || !canPreview}
                       style={{marginTop: '4px'}}
-                      size={'lg'}
+                      size="lg"
                       icon={<MdRemoveRedEye />}>
                       {t('articleEditor.overview.preview')}
                     </IconButton>

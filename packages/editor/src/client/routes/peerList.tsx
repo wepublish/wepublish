@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
-import {MdDelete, MdSettings} from 'react-icons/md'
+import {MdAdd, MdDelete, MdSettings} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Avatar,
@@ -224,9 +224,9 @@ function PeerList() {
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
           <Link to="/peering/create">
             <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
-              <Button appearance="primary" disabled={isPeerListLoading}>
+              <IconButton appearance="primary" disabled={isPeerListLoading} icon={<MdAdd />}>
                 {t('peerList.overview.newPeer')}
-              </Button>
+              </IconButton>
             </PermissionControl>
           </Link>
         </FlexboxGrid.Item>

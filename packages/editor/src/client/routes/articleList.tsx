@@ -1,6 +1,13 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdComment, MdContentCopy, MdDelete, MdUnpublished, MdVisibility} from 'react-icons/md'
+import {
+  MdAdd,
+  MdComment,
+  MdContentCopy,
+  MdDelete,
+  MdUnpublished,
+  MdVisibility
+} from 'react-icons/md'
 import {Link, useNavigate} from 'react-router-dom'
 import {Button, FlexboxGrid, IconButton, Message, Modal, Pagination, Table} from 'rsuite'
 
@@ -113,9 +120,9 @@ function ArticleList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <Link to="/articles/create">
-              <Button appearance="primary" disabled={isLoading}>
+              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('articles.overview.newArticle')}
-              </Button>
+              </IconButton>
             </Link>
           </FlexboxGrid.Item>
         </PermissionControl>

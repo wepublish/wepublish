@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdDelete} from 'react-icons/md'
+import {MdDelete, MdGeneratingTokens} from 'react-icons/md'
 import {Link, useLocation, useNavigate} from 'react-router-dom'
 import {
   Button,
@@ -74,9 +74,12 @@ function TokenList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_TOKEN']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <Link to="/tokens/generate">
-              <Button appearance="primary" disabled={isTokenListLoading}>
+              <IconButton
+                appearance="primary"
+                disabled={isTokenListLoading}
+                icon={<MdGeneratingTokens />}>
                 {t('tokenList.overview.generateToken')}
-              </Button>
+              </IconButton>
             </Link>
           </FlexboxGrid.Item>
         </PermissionControl>

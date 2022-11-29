@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdDelete, MdLock, MdSearch} from 'react-icons/md'
+import {MdAdd, MdDelete, MdLock, MdSearch} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Button, FlexboxGrid, IconButton, Input, InputGroup, Modal, Pagination, Table} from 'rsuite'
 
@@ -106,9 +106,9 @@ function UserList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_USER']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <Link to="/users/create">
-              <Button style={{marginLeft: 5}} appearance="primary" disabled={isLoading}>
+              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('userList.overview.newUser')}
-              </Button>
+              </IconButton>
             </Link>
           </FlexboxGrid.Item>
         </PermissionControl>

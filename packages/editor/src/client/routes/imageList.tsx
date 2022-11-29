@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdDelete, MdEdit, MdSearch} from 'react-icons/md'
+import {MdDelete, MdEdit, MdOutlineAddPhotoAlternate, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Button,
@@ -99,9 +99,12 @@ function ImageList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <Link to="/images/upload" state={{modalLocation: location}}>
-              <Button appearance="primary" disabled={isLoading}>
+              <IconButton
+                appearance="primary"
+                disabled={isLoading}
+                icon={<MdOutlineAddPhotoAlternate />}>
                 {t('images.overview.uploadImage')}
-              </Button>
+              </IconButton>
             </Link>
           </FlexboxGrid.Item>
         </PermissionControl>

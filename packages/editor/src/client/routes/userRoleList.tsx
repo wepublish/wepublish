@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdDelete, MdSearch} from 'react-icons/md'
+import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table} from 'rsuite'
 
@@ -70,9 +70,9 @@ function UserRoleList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_USER_ROLE']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <Link to="/userroles/create">
-              <Button appearance="primary" disabled={isLoading}>
+              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('userRoles.overview.newUserRole')}
-              </Button>
+              </IconButton>
             </Link>
           </FlexboxGrid.Item>
         </PermissionControl>

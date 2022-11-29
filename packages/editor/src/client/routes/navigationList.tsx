@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdDelete, MdSearch} from 'react-icons/md'
+import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table} from 'rsuite'
 
@@ -65,9 +65,9 @@ function NavigationList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_NAVIGATION']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <Link to="/navigations/create">
-              <Button appearance="primary" disabled={isLoading}>
+              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('navigation.overview.newNavigation')}
-              </Button>
+              </IconButton>
             </Link>
           </FlexboxGrid.Item>
         </PermissionControl>

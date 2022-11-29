@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdDelete} from 'react-icons/md'
+import {MdAdd, MdDelete} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, FlexboxGrid, IconButton, Modal, Table} from 'rsuite'
 
@@ -68,9 +68,9 @@ function PaymentMethodList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_PAYMENT_METHOD']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <Link to="/paymentmethods/create">
-              <Button appearance="primary" disabled={isLoading}>
+              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('paymentMethodList.createNew')}
-              </Button>
+              </IconButton>
             </Link>
           </FlexboxGrid.Item>
         </PermissionControl>

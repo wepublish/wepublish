@@ -1,7 +1,7 @@
 import {ApolloError} from '@apollo/client'
 import React, {memo, useCallback, useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdDelete, MdSave} from 'react-icons/md'
+import {MdAdd, MdDelete, MdSave} from 'react-icons/md'
 import {
   Button,
   FlexboxGrid,
@@ -217,13 +217,14 @@ const TagList = memo<TagListProps>(({type}) => {
 
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
           <PermissionControl qualifyingPermissions={['CAN_CREATE_TAG']}>
-            <Button
+            <IconButton
               type="button"
               appearance="primary"
               data-testid="create"
+              icon={<MdAdd />}
               onClick={() => createTag()}>
               {t('tags.overview.createTag')}
-            </Button>
+            </IconButton>
           </PermissionControl>
         </FlexboxGrid.Item>
       </FlexboxGrid>

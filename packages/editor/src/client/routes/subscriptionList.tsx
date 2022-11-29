@@ -50,14 +50,13 @@ export const newSubscriptionButton = ({
   const canCreate = authorise('CAN_CREATE_SUBSCRIPTION')
   return (
     <Link to="/subscriptions/create">
-      <Button
-        style={{marginLeft: 5}}
+      <IconButton
         appearance="primary"
-        color="green"
-        disabled={isLoading || !canCreate}>
-        <MdAdd style={{marginRight: '5px'}} />
+        disabled={isLoading || !canCreate}
+        style={{marginLeft: '20px'}}>
+        <MdAdd />
         {t('subscriptionList.overview.newSubscription')}
-      </Button>
+      </IconButton>
     </Link>
   )
 }
@@ -156,10 +155,10 @@ function SubscriptionList() {
   return (
     <>
       <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
+        <FlexboxGrid.Item colspan={12}>
           <h2>{t('subscriptionList.overview.subscription')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+        <FlexboxGrid.Item colspan={12} style={{textAlign: 'right'}}>
           <ExportSubscriptionsAsCsv filter={filter} />
           <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
             {newSubscriptionButton({isLoading, t})}

@@ -1,7 +1,9 @@
+import './routes.less'
+
 import React, {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
-  MdArrowLeft,
+  MdKeyboardBackspace,
   MdCloudUpload,
   MdIntegrationInstructions,
   MdRemoveRedEye,
@@ -315,9 +317,10 @@ function PageEditor() {
               leftChildren={
                 <Link to="/pages">
                   <IconButton
+                    className="actionButton"
                     style={{marginTop: '4px', marginBottom: '20px'}}
                     size={'lg'}
-                    icon={<MdArrowLeft />}
+                    icon={<MdKeyboardBackspace />}
                     onClick={e => {
                       if (!unsavedChangesDialog()) e.preventDefault()
                     }}>
@@ -329,6 +332,7 @@ function PageEditor() {
                 <div style={{marginTop: '4px'}}>
                   <IconButton
                     icon={<MdIntegrationInstructions />}
+                    className="actionButton"
                     size={'lg'}
                     disabled={isDisabled}
                     onClick={() => setMetaDrawerOpen(true)}>
@@ -338,6 +342,7 @@ function PageEditor() {
                   {isNew && createData == null ? (
                     <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
                       <IconButton
+                        className="actionButton"
                         style={{
                           marginLeft: '10px'
                         }}
@@ -352,6 +357,7 @@ function PageEditor() {
                     <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
                         <IconButton
+                          className="actionButton"
                           style={{
                             marginLeft: '10px'
                           }}
@@ -373,6 +379,7 @@ function PageEditor() {
                             style={{
                               marginLeft: '10px'
                             }}
+                            className="actionButton"
                             size={'lg'}
                             icon={<MdCloudUpload />}
                             disabled={isDisabled}
@@ -391,6 +398,7 @@ function PageEditor() {
                 <PermissionControl qualifyingPermissions={['CAN_GET_PAGE_PREVIEW_LINK']}>
                   <Link to="#">
                     <IconButton
+                      className="actionButton"
                       disabled={hasChanged || !id || !canPreview}
                       style={{marginTop: '4px'}}
                       size={'lg'}

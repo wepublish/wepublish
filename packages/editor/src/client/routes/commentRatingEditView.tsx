@@ -1,7 +1,7 @@
 import {ApolloError} from '@apollo/client'
 import React, {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete, MdReplay} from 'react-icons/md'
+import {MdAdd, MdDelete, MdOutlineSave, MdReplay} from 'react-icons/md'
 import {
   Button,
   FlexboxGrid,
@@ -111,11 +111,12 @@ function CommentRatingEditView() {
 
         {ratingSystem && (
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-            <Button
+            <IconButton
               type="button"
               appearance="primary"
               data-testid="save"
               disabled={isLoading}
+              icon={<MdOutlineSave />}
               onClick={() =>
                 updateAnswer({
                   variables: {
@@ -126,12 +127,12 @@ function CommentRatingEditView() {
               }>
               {isLoading ? (
                 <p style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                  <MdReplay spin /> {t('comments.ratingEdit.loading')}
+                  <MdReplay /> {t('comments.ratingEdit.loading')}
                 </p>
               ) : (
                 t('save')
               )}
-            </Button>
+            </IconButton>
           </FlexboxGrid.Item>
         )}
       </FlexboxGrid>
@@ -239,10 +240,10 @@ export function RatingAnswers({
         </FlexboxGrid>
       ))}
 
-      <Button appearance="ghost" style={{marginTop: '12px'}} onClick={() => onAddAnswer()}>
-        <MdAdd style={{marginRight: '5px'}} />
+      <IconButton appearance="ghost" style={{marginTop: '12px'}} onClick={() => onAddAnswer()}>
+        <MdAdd />
         {t('comments.ratingEdit.newAnswer')}
-      </Button>
+      </IconButton>
     </>
   )
 }
