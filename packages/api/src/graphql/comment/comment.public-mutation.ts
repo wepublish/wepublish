@@ -65,7 +65,7 @@ export const addPublicComment = async (
       throw new CommentAuthenticationError(challengeValidationResult.message)
   }
 
-  if (input.itemType === CommentItemType.peerArticle && !input.peerId) {
+  if (input.itemType === CommentItemType.peerArticle && !input.newsroomId) {
     throw new PeerIdMissingCommentError()
   }
 
