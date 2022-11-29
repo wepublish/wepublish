@@ -208,7 +208,6 @@ model Image {
   @@index([title])
   @@index([tags])
   @@map("images")
-  User User[]
 }
 
 enum CommentItemType {

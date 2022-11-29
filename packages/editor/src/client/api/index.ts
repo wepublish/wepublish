@@ -1597,18 +1597,6 @@ export type PeerArticleTeaserInput = {
   articleID: Scalars['ID'];
 };
 
-export type PeerProfile = {
-  __typename?: 'PeerProfile';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  slug?: Maybe<Scalars['String']>;
-  isDisabled?: Maybe<Scalars['Boolean']>;
-  hostURL?: Maybe<Scalars['String']>;
-  profile?: Maybe<Newsroom>;
-};
-
 export type Permission = {
   __typename?: 'Permission';
   id: Scalars['String'];
@@ -1718,7 +1706,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
-  remotePeerProfile?: Maybe<PeerProfile>;
+  remotePeerProfile?: Maybe<Newsroom>;
   createJWTForUser?: Maybe<JwtToken>;
   peerProfile: Newsroom;
   newsrooms?: Maybe<Array<Newsroom>>;
@@ -3834,8 +3822,8 @@ export type RemotePeerProfileQueryVariables = Exact<{
 export type RemotePeerProfileQuery = (
   { __typename?: 'Query' }
   & { remotePeerProfile?: Maybe<(
-    { __typename?: 'PeerProfile' }
-    & Pick<PeerProfile, 'id'>
+    { __typename?: 'Newsroom' }
+    & Pick<Newsroom, 'id'>
   )> }
 );
 
