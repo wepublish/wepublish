@@ -1,7 +1,8 @@
-import React, {ComponentType, PropsWithChildren, useContext, useEffect, useState} from 'react'
+import React, {ComponentType, PropsWithChildren, useContext, useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
-import {AuthContext} from '../authContext'
 import {Message} from 'rsuite'
+
+import {AuthContext} from '../authContext'
 
 interface RejectionMessageProps {
   requiredPermissions: string[]
@@ -28,28 +29,27 @@ export function PermissionControl({
   qualifyingPermissions,
   showRejectionMessage
 }: PropsWithChildren<PermissionControlProps>) {
-  const [isAuthorized, setIsAuthorized] = useState(false)
   const roles = useContext(AuthContext)?.session?.sessionRoles
 
-  useEffect(() => {
-    setIsAuthorized(
-      qualifyingPermissions?.some(qualifyingPermission =>
-        roles?.some(role =>
-          role.permissions.some(userPermission => userPermission.id === qualifyingPermission)
-        )
+  const isAuthorized = useMemo(() => {
+    if (!roles) {
+      return true
+    }
+
+    return qualifyingPermissions.some(qualifyingPermission =>
+      roles.some(role =>
+        role.permissions.some(userPermission => userPermission.id === qualifyingPermission)
       )
     )
   }, [qualifyingPermissions, roles])
 
-  return (
-    <>
-      {isAuthorized ? (
-        children
-      ) : showRejectionMessage ? (
-        <RejectionMessage requiredPermissions={qualifyingPermissions} />
-      ) : null}
-    </>
-  )
+  if (isAuthorized) {
+    return <>{children}</>
+  }
+
+  return showRejectionMessage ? (
+    <RejectionMessage requiredPermissions={qualifyingPermissions} />
+  ) : null
 }
 
 export const createCheckedPermissionComponent = (

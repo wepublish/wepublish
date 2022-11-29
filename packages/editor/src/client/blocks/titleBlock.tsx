@@ -1,10 +1,8 @@
-import React, {useRef, useEffect} from 'react'
-
-import {TypographicTextArea} from '../atoms/typographicTextArea'
-import {BlockProps} from '../atoms/blockList'
-
+import React, {useEffect, useRef} from 'react'
 import {useTranslation} from 'react-i18next'
 
+import {BlockProps} from '../atoms/blockList'
+import {TypographicTextArea} from '../atoms/typographicTextArea'
 import {TitleBlockValue} from './types'
 
 export type TitleBlockProps = BlockProps<TitleBlockValue>

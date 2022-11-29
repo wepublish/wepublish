@@ -5,9 +5,9 @@ import {BrowserRouter} from 'react-router-dom'
 import snapshotDiff from 'snapshot-diff'
 
 import {CreateUserDocument, UserDocument, UserRoleListDocument} from '../../src/client/api'
+import {AuthContext} from '../../src/client/authContext'
 import {UserEditView} from '../../src/client/routes/userEditView'
 import {actWait, sessionWithPermissions} from '../utils'
-import {AuthContext} from '../../src/client/authContext'
 
 const MockedProvider = MockedProviderBase as any
 
@@ -165,6 +165,82 @@ describe('User edit view', () => {
     fireEvent.click(await screen.findByRole('combobox'))
     const checkboxLabels = await screen.findAllByRole('checkbox', {checked: false})
     fireEvent.click(checkboxLabels[checkboxLabels.length - 1])
+
+    expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
+  })
+
+  test('should allow user properties to be added', async () => {
+    const user = {
+      name: 'Testing Müller',
+      email: 'testing@mueller.com',
+      active: true,
+      properties: [],
+      roleIDs: [],
+      password: 'superSecret'
+    }
+
+    const mocks = [
+      {
+        request: {
+          query: CreateUserDocument,
+          variables: {
+            input: {
+              name: user.name,
+              firstName: undefined,
+              preferredName: undefined,
+              email: user.email,
+              active: user.active,
+              properties: user.properties,
+              roleIDs: user.roleIDs
+            },
+            password: user.password
+          }
+        },
+        result: () => ({
+          data: {
+            user: {
+              __typename: 'User',
+              id: 'fakeId4',
+              name: user.name,
+              email: user.email,
+              roles: user.roleIDs,
+              active: user.active,
+              properties: user.properties
+            }
+          }
+        })
+      },
+      userRoleListDocumentQuery
+    ]
+
+    const {asFragment, getByTestId} = render(
+      <AuthContext.Provider value={sessionWithPermissions}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <BrowserRouter>
+            <UserEditView />
+          </BrowserRouter>
+        </MockedProvider>
+      </AuthContext.Provider>
+    )
+    await actWait()
+    const initialRender = asFragment()
+
+    const addPropertyButton = getByTestId('addProperty')
+    const saveButton = getByTestId('saveButton')
+
+    fireEvent.click(addPropertyButton)
+
+    const keyInput = getByTestId('propertyKey')
+    const valueInput = getByTestId('propertyValue')
+
+    fireEvent.change(keyInput, {
+      target: {value: 'some key'}
+    })
+    fireEvent.change(valueInput, {
+      target: {value: 'some value'}
+    })
+
+    fireEvent.click(saveButton)
 
     expect(snapshotDiff(initialRender, asFragment())).toMatchSnapshot()
   })

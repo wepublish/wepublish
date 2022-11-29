@@ -49,10 +49,14 @@ export const GraphQLCommentRatingSystemAnswer = new GraphQLObjectType<
 export const GraphQLCommentRating = new GraphQLObjectType<CommentRating, Context>({
   name: 'CommentRating',
   fields: {
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    id: {type: GraphQLNonNull(GraphQLID)},
+    userId: {type: GraphQLID},
+    commentId: {type: GraphQLNonNull(GraphQLID)},
     value: {type: GraphQLInt},
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     fingerprint: {type: GraphQLString},
-    disabled: {type: GraphQLBoolean}
+    disabled: {type: GraphQLBoolean},
+    answer: {type: GraphQLCommentRatingSystemAnswer}
   }
 })
 

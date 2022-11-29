@@ -43,6 +43,8 @@ export function ArticleFooterContainer({
         relatedArticles={[]}
         tags={tags}
         authors={authors}
+        isPeerArticle={isPeerArticle}
+        peer={peer}
         itemID={id}
         comments={comments}
       />
@@ -63,6 +65,7 @@ export function ArticleFooterContainer({
       tags={tags}
       authors={authors}
       isPeerArticle={isPeerArticle}
+      peer={peer}
       comments={comments}
       itemID={id}
     />

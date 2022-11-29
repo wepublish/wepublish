@@ -1,4 +1,11 @@
-import {Comment, CommentAuthorType, CommentState, Prisma, PrismaClient} from '@prisma/client'
+import {
+  Comment,
+  CommentAuthorType,
+  CommentItemType,
+  CommentState,
+  Prisma,
+  PrismaClient
+} from '@prisma/client'
 import {Context} from '../../context'
 import {SettingName} from '../../db/setting'
 import {
@@ -8,15 +15,17 @@ import {
   CommentAuthenticationError,
   CommentLengthError,
   NotAuthorisedError,
+  PeerIdMissingCommentError,
   UserInputError
 } from '../../error'
 import {countRichtextChars, MAX_COMMENT_LENGTH} from '../../utility'
 
 export const addPublicComment = async (
-  input: {text: string; challenge: {challengeID: string; challengeSolution: number}} & Omit<
-    Prisma.CommentUncheckedCreateInput,
-    'revisions' | 'authorType' | 'userID' | 'state'
-  >,
+  input: {
+    title?: string
+    text: string
+    challenge: {challengeID: string; challengeSolution: number}
+  } & Omit<Prisma.CommentUncheckedCreateInput, 'revisions' | 'authorType' | 'userID' | 'state'>,
   optionalAuthenticateUser: Context['optionalAuthenticateUser'],
   challenge: Context['challenge'],
   settingsClient: PrismaClient['setting'],
@@ -56,15 +65,20 @@ export const addPublicComment = async (
       throw new CommentAuthenticationError(challengeValidationResult.message)
   }
 
+  if (input.itemType === CommentItemType.peerArticle && !input.peerId) {
+    throw new PeerIdMissingCommentError()
+  }
+
   // Cleanup
-  const {challenge: _, text, ...commentInput} = input
+  const {challenge: _, title, text, ...commentInput} = input
 
   const comment = await commentClient.create({
     data: {
       ...commentInput,
       revisions: {
         create: {
-          text
+          text,
+          title
         }
       },
       userID: user?.user.id,
@@ -72,8 +86,7 @@ export const addPublicComment = async (
       state: CommentState.pendingApproval
     }
   })
-
-  return {...comment, text}
+  return {...comment, title, text}
 }
 
 export const updatePublicComment = async (

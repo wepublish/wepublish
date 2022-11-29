@@ -84,9 +84,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged --pattern \"{examples,packages,services}/**/*.{js,ts,tsx,json}\"",
-      "post-checkout": "prisma generate &",
-      "post-merge": "prisma generate &"
+      "pre-commit": "pretty-quick --staged --pattern \"{examples,packages,services}/**/*.{js,ts,tsx,json}\""
     }
   },
   "eslintConfig": {

@@ -18,6 +18,7 @@ import {GraphQLImage} from './image'
 import {PublicPage, PageRevision, Page, PageSort} from '../db/page'
 import {GraphQLSlug} from './slug'
 import {
+  GraphQLDateFilter,
   GraphQLMetadataProperty,
   GraphQLMetadataPropertyInput,
   GraphQLMetadataPropertyPublic,
@@ -32,6 +33,9 @@ export const GraphQLPageFilter = new GraphQLInputObjectType({
   fields: {
     title: {type: GraphQLString},
     draft: {type: GraphQLBoolean},
+    description: {type: GraphQLString},
+    publicationDateFrom: {type: GraphQLDateFilter},
+    publicationDateTo: {type: GraphQLDateFilter},
     published: {type: GraphQLBoolean},
     pending: {type: GraphQLBoolean},
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}

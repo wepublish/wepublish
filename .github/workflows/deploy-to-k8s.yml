@@ -28,7 +28,7 @@ jobs:
           ls -al ./kubernetesConfigs
 
       - name: Prepare and authenticate kubectl
-        uses: google-github-actions/get-gke-credentials@main
+        uses: google-github-actions/get-gke-credentials@v0
         with:
           cluster_name: funiciello-dev-cluster
           location: europe-west6

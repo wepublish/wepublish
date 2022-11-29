@@ -2,22 +2,11 @@ import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
 import CommentIcon from '@rsuite/icons/legacy/Comment'
 import CopyIcon from '@rsuite/icons/legacy/Copy'
 import EyeIcon from '@rsuite/icons/legacy/Eye'
-import SearchIcon from '@rsuite/icons/legacy/Search'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Link, useNavigate} from 'react-router-dom'
-import {
-  Button,
-  FlexboxGrid,
-  IconButton,
-  Input,
-  InputGroup,
-  Message,
-  Modal,
-  Pagination,
-  Table
-} from 'rsuite'
+import {Button, FlexboxGrid, IconButton, Message, Modal, Pagination, Table} from 'rsuite'
 
 import {
   ArticleFilter,
@@ -35,6 +24,8 @@ import {
 } from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {ListViewFilters} from '../atoms/searchAndFilter/listViewFilters'
 import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
 import {
   DEFAULT_MAX_TABLE_PAGES,
@@ -42,7 +33,6 @@ import {
   mapTableSortTypeToGraphQLSortOrder,
   StateColor
 } from '../utility'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -66,7 +56,7 @@ function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
 }
 
 function ArticleList() {
-  const [filter, setFilter] = useState<ArticleFilter>({title: ''})
+  const [filter, setFilter] = useState({} as ArticleFilter)
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [isArticlePreviewLinkOpen, setArticlePreviewLinkOpen] = useState(false)
@@ -133,14 +123,22 @@ function ArticleList() {
             </Link>
           </FlexboxGrid.Item>
         </PermissionControl>
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
-          <InputGroup>
-            <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
-            <InputGroup.Addon>
-              <SearchIcon />
-            </InputGroup.Addon>
-          </InputGroup>
-        </FlexboxGrid.Item>
+
+        <ListViewFilters
+          fields={[
+            'title',
+            'preTitle',
+            'lead',
+            'draft',
+            'authors',
+            'pending',
+            'published',
+            'publicationDate'
+          ]}
+          filter={filter}
+          isLoading={isLoading}
+          onSetFilter={filter => setFilter(filter)}
+        />
       </FlexboxGrid>
 
       <div
