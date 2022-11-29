@@ -1432,8 +1432,8 @@ exports[`User edit view should render 1`] = `
                   >
                     <button
                       aria-disabled="false"
-                      class="rs-btn rs-btn-primary rs-btn-green"
-                      style="margin-left: 5px;"
+                      class="rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-with-text rs-btn rs-btn-primary"
+                      style="margin-left: 20px;"
                       type="button"
                     >
                       <svg
@@ -1441,7 +1441,6 @@ exports[`User edit view should render 1`] = `
                         height="1em"
                         stroke="currentColor"
                         stroke-width="0"
-                        style="margin-right: 5px;"
                         viewBox="0 0 24 24"
                         width="1em"
                         xmlns="http://www.w3.org/2000/svg"
@@ -2244,8 +2243,8 @@ exports[`User edit view should render with ID 1`] = `
                   >
                     <button
                       aria-disabled="false"
-                      class="rs-btn rs-btn-primary rs-btn-green"
-                      style="margin-left: 5px;"
+                      class="rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-with-text rs-btn rs-btn-primary"
+                      style="margin-left: 20px;"
                       type="button"
                     >
                       <svg
@@ -2253,7 +2252,6 @@ exports[`User edit view should render with ID 1`] = `
                         height="1em"
                         stroke="currentColor"
                         stroke-width="0"
-                        style="margin-right: 5px;"
                         viewBox="0 0 24 24"
                         width="1em"
                         xmlns="http://www.w3.org/2000/svg"
