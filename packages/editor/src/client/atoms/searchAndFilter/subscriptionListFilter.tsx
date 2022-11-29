@@ -1,6 +1,8 @@
+import CloseIcon from '@rsuite/icons/legacy/Close'
 import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
 import {Button, DateRangePicker, Form, SelectPicker} from 'rsuite'
-import {ALL_PAYMENT_PERIODICITIES} from '../../utility'
+
 import {
   DateFilterComparison,
   FullMemberPlanFragment,
@@ -11,8 +13,7 @@ import {
   useMemberPlanListQuery,
   usePaymentMethodListQuery
 } from '../../api'
-import {useTranslation} from 'react-i18next'
-import CloseIcon from '@rsuite/icons/legacy/Close'
+import {ALL_PAYMENT_PERIODICITIES} from '../../utility'
 import {UserSearch} from './userSearch'
 
 export interface SubscriptionListFilterProps {

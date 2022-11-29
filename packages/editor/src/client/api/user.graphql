@@ -16,6 +16,9 @@ fragment FullUser on User {
     city
     country
   }
+  userImage {
+    ...ImageRef
+  }
   active
   lastLogin
   properties {

@@ -240,7 +240,6 @@
         "overview": {
           "editEmbed": "Edit Embed"
         },
-
         "panels": {
           "alternativeStyling": "Set <code>style</code> alternatively as attribute to overwrite the defaults and disable auto ratio size scaling .e.g.",
           "close": "Close",
@@ -449,7 +448,9 @@
       "tags": "Tags",
       "source": "Source",
       "userPanelHeader": "Author of the comment",
-      "actions": "Actions"
+      "actions": "Actions",
+      "ratingOverrides": "Override comment rating",
+      "noOverride": "Don't override"
     },
     "commentUser": {
       "selectExistingUser": "Select from registered users",
@@ -643,7 +644,11 @@
       "deleteModalTitle": "Delete?",
       "deleteModalBody": "Do you want to delete the answer \"{{answer}}\" permanently? You'll lose the poll results.",
       "deleteBtn": "Delete",
-      "answerMissing": "Please, input your answer."
+      "answerMissing": "Please, input your answer.",
+      "copyVoteUrl": "Copy voting link",
+      "urlCopied": "Voting link copied to the clipboard.",
+      "urlCopyingFailed": "Voting link could not be copied.",
+      "votes": "votes"
     },
     "pollExternalVotes": {
       "newSourcePlaceholder": "Input new external vote source (e.g. Facebook)",
@@ -967,6 +972,19 @@
         "confirm": "Confirm"
       }
     },
+    "articleList": {
+      "filter": {
+        "reset": "Reset Filter",
+        "title": "Filter by title",
+        "description": "Filter by description",
+        "preTitle": "Filter by pre-title",
+        "lead": "Filter by lead",
+        "isDraft": "Draft",
+        "isPending": "Pending",
+        "isPublished": "Published",
+        "publicationDate": "Publication Date"
+      }
+    },
     "userList": {
       "overview": {
         "action": "Action",
@@ -1067,12 +1085,14 @@
       "subTitle": "Subscription",
       "Unknown": "Unknown",
       "userRoles": "User Roles",
+      "properties": "Properties",
       "company": "Company",
       "streetAddress": "Street",
       "streetAddress2": "Street 2",
       "zipCode": "ZIP",
       "city": "City",
-      "country": "Country"
+      "country": "Country",
+      "selectUserImage": "Choose profile picture"
     },
     "userSubscriptionList": {
       "deactivationReason": {

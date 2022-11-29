@@ -1,12 +1,13 @@
 import {GraphQLResolveInfo, Kind} from 'graphql'
 import {ExtractField, WrapQuery} from 'graphql-tools'
 import {Context} from '../../context'
-import {ArticleSort, PeerArticle} from '../../db/article'
+import {ArticleFilter, ArticleSort, PeerArticle} from '../../db/article'
 import {ConnectionResult, SortOrder} from '../../db/common'
 import {delegateToPeerSchema, base64Encode} from '../../utility'
 import {authorise, CanGetPeerArticles} from '../permissions'
 
 export const getAdminPeerArticles = async (
+  filter: Partial<ArticleFilter>,
   sort: ArticleSort,
   order: SortOrder,
   peerNameFilter: string,
@@ -169,52 +170,79 @@ export const getAdminPeerArticles = async (
     return result?.nodes.map((article: any) => ({peerID: peer.id, article})) ?? []
   })
 
+  let filtered = peerArticles
+  // filters
+  if (filter.title) {
+    filtered = filtered.filter(({article}) =>
+      article.latest.title.toLowerCase().includes(filter.title?.toLowerCase())
+    )
+  }
+  if (filter.preTitle) {
+    filtered = filtered.filter(({article}) =>
+      article.latest.preTitle.toLowerCase().includes(filter.preTitle?.toLowerCase())
+    )
+  }
+  if (filter.lead) {
+    filtered = filtered.filter(({article}) =>
+      article.latest.lead.toLowerCase().includes(filter.lead?.toLowerCase())
+    )
+  }
+  if (filter.publicationDateFrom && filter.publicationDateTo) {
+    const from = filter.publicationDateFrom.date as Date
+    const to = filter.publicationDateTo.date as Date
+    filtered = filtered.filter(
+      ({article}) =>
+        new Date(article.published.publishedAt).getTime() >= new Date(from).getTime() &&
+        new Date(article.published.publishedAt).getTime() < new Date(to).getTime()
+    )
+  }
+
   switch (sort) {
     case ArticleSort.CreatedAt:
-      peerArticles.sort(
-        (a, b) => new Date(b.article.createdAt).getTime() - new Date(a.article.createdAt).getTime()
+      filtered.sort(
+        (a, b) => new Date(a.article.createdAt).getTime() - new Date(b.article.createdAt).getTime()
       )
       break
 
     case ArticleSort.ModifiedAt:
-      peerArticles.sort(
+      filtered.sort(
         (a, b) =>
-          new Date(b.article.modifiedAt).getTime() - new Date(a.article.modifiedAt).getTime()
+          new Date(a.article.modifiedAt).getTime() - new Date(b.article.modifiedAt).getTime()
       )
       break
 
     case ArticleSort.PublishAt:
-      peerArticles.sort(
+      filtered.sort(
         (a, b) =>
-          new Date(b.article.latest.publishAt).getTime() -
-          new Date(a.article.latest.publishAt).getTime()
+          new Date(a.article.latest.publishAt).getTime() -
+          new Date(b.article.latest.publishAt).getTime()
       )
       break
 
     case ArticleSort.PublishedAt:
-      peerArticles.sort(
+      filtered.sort(
         (a, b) =>
-          new Date(b.article.latest.publishedAt).getTime() -
-          new Date(a.article.latest.publishedAt).getTime()
+          new Date(a.article.latest.publishedAt).getTime() -
+          new Date(b.article.latest.publishedAt).getTime()
       )
       break
 
     case ArticleSort.UpdatedAt:
-      peerArticles.sort(
+      filtered.sort(
         (a, b) =>
-          new Date(b.article.latest.updatedAt).getTime() -
-          new Date(a.article.latest.updatedAt).getTime()
+          new Date(a.article.latest.updatedAt).getTime() -
+          new Date(b.article.latest.updatedAt).getTime()
       )
       break
   }
 
   if (order === SortOrder.Descending) {
-    peerArticles.reverse()
+    filtered.reverse()
   }
 
   return {
-    nodes: peerArticles,
-    totalCount: totalCount,
+    nodes: filtered,
+    totalCount,
     pageInfo: {
       endCursor: JSON.stringify(endCursors),
       startCursor: JSON.stringify(startCursors),

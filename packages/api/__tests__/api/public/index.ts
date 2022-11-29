@@ -22,6 +22,8 @@ export type Scalars = {
   VoteValue: any
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: File
 }
 
 export type Article = {
@@ -156,6 +158,7 @@ export type Block =
   | TikTokVideoBlock
   | BildwurfAdBlock
   | EmbedBlock
+  | HtmlBlock
   | PollBlock
   | CommentBlock
   | LinkPageBreakBlock
@@ -163,6 +166,14 @@ export type Block =
   | QuoteBlock
   | TeaserGridBlock
   | TeaserGridFlexBlock
+
+export type CalculatedRating = {
+  __typename?: 'CalculatedRating'
+  count: Scalars['Int']
+  total: Scalars['Int']
+  mean: Scalars['Float']
+  answer?: Maybe<CommentRatingSystemAnswer>
+}
 
 export type Challenge = {
   __typename?: 'Challenge'
@@ -181,23 +192,31 @@ export type Comment = {
   id: Scalars['ID']
   parentID?: Maybe<Scalars['ID']>
   guestUsername?: Maybe<Scalars['String']>
+  guestUserImage?: Maybe<Image>
   user?: Maybe<User>
   tags?: Maybe<Array<Tag>>
   authorType: CommentAuthorType
   itemID: Scalars['ID']
   itemType: CommentItemType
+  peerId?: Maybe<Scalars['ID']>
   children?: Maybe<Array<Maybe<Comment>>>
-  text: Scalars['RichText']
+  title?: Maybe<Scalars['String']>
+  lead?: Maybe<Scalars['String']>
+  text?: Maybe<Scalars['RichText']>
   state: CommentState
+  source?: Maybe<Scalars['String']>
   rejectionReason?: Maybe<Scalars['String']>
+  createdAt: Scalars['DateTime']
   modifiedAt: Scalars['DateTime']
-  ratings: Array<Rating>
+  calculatedRatings?: Maybe<Array<Maybe<CalculatedRating>>>
+  overriddenRatings: Array<OverriddenRating>
 }
 
 export enum CommentAuthorType {
   Author = 'Author',
   Team = 'Team',
-  VerifiedUser = 'VerifiedUser'
+  VerifiedUser = 'VerifiedUser',
+  GuestUser = 'GuestUser'
 }
 
 export type CommentBlock = {
@@ -211,20 +230,27 @@ export type CommentInput = {
   challenge?: Maybe<ChallengeInput>
   itemID: Scalars['ID']
   itemType: CommentItemType
+  title?: Maybe<Scalars['String']>
+  peerId?: Maybe<Scalars['ID']>
   text: Scalars['RichText']
 }
 
 export enum CommentItemType {
   Article = 'Article',
+  PeerArticle = 'PeerArticle',
   Page = 'Page'
 }
 
 export type CommentRating = {
   __typename?: 'CommentRating'
-  createdAt: Scalars['DateTime']
+  id: Scalars['ID']
+  userId?: Maybe<Scalars['ID']>
+  commentId: Scalars['ID']
   value?: Maybe<Scalars['Int']>
+  createdAt: Scalars['DateTime']
   fingerprint?: Maybe<Scalars['String']>
   disabled?: Maybe<Scalars['Boolean']>
+  answer?: Maybe<CommentRatingSystemAnswer>
 }
 
 export type CommentRatingSystemAnswer = {
@@ -233,6 +259,10 @@ export type CommentRatingSystemAnswer = {
   ratingSystemId: Scalars['ID']
   answer?: Maybe<Scalars['String']>
   type: RatingSystemType
+}
+
+export enum CommentSort {
+  Rating = 'RATING'
 }
 
 export enum CommentState {
@@ -245,6 +275,17 @@ export enum CommentState {
 export type CommentUpdateInput = {
   id: Scalars['ID']
   text: Scalars['RichText']
+}
+
+export type CustomTeaser = {
+  __typename?: 'CustomTeaser'
+  style: TeaserStyle
+  image?: Maybe<Image>
+  preTitle?: Maybe<Scalars['String']>
+  title?: Maybe<Scalars['String']>
+  lead?: Maybe<Scalars['String']>
+  contentUrl?: Maybe<Scalars['String']>
+  properties: Array<PublicProperties>
 }
 
 export type EmbedBlock = {
@@ -306,6 +347,11 @@ export type GalleryImageEdge = {
   image?: Maybe<Image>
 }
 
+export type HtmlBlock = {
+  __typename?: 'HTMLBlock'
+  html?: Maybe<Scalars['String']>
+}
+
 export type Image = {
   __typename?: 'Image'
   id: Scalars['ID']
@@ -364,6 +410,11 @@ export type ImageTransformation = {
   rotation?: Maybe<ImageRotation>
   quality?: Maybe<Scalars['Float']>
   output?: Maybe<ImageOutput>
+}
+
+export type InputPoint = {
+  x: Scalars['Float']
+  y: Scalars['Float']
 }
 
 export type InstagramPostBlock = {
@@ -474,10 +525,14 @@ export type Mutation = {
   registerMemberAndReceivePayment: RegistrationAndPayment
   /** Allows authenticated users to create additional subscriptions */
   createSubscription: Payment
+  /** This mutation extends an subscription early */
+  extendSubscription: Payment
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String']
   /** This mutation allows to update the user's data by taking an input of type UserInput. */
   updateUser?: Maybe<User>
+  /** This mutation allows to upload and update the user's profile image. */
+  uploadUserProfileImage?: Maybe<User>
   /**
    * This mutation allows to update the user's password by entering the new
    * password. The repeated new password gives an error if the passwords don't
@@ -572,12 +627,22 @@ export type MutationCreateSubscriptionArgs = {
   failureURL?: Maybe<Scalars['String']>
 }
 
+export type MutationExtendSubscriptionArgs = {
+  subscriptionId: Scalars['String']
+  successURL?: Maybe<Scalars['String']>
+  failureURL?: Maybe<Scalars['String']>
+}
+
 export type MutationSendWebsiteLoginArgs = {
   email: Scalars['String']
 }
 
 export type MutationUpdateUserArgs = {
   input: UserInput
+}
+
+export type MutationUploadUserProfileImageArgs = {
+  uploadImageInput?: Maybe<UploadImageInput>
 }
 
 export type MutationUpdatePasswordArgs = {
@@ -621,6 +686,12 @@ export type OAuth2Account = {
   type: Scalars['String']
   provider: Scalars['String']
   scope: Scalars['String']
+}
+
+export type OverriddenRating = {
+  __typename?: 'overriddenRating'
+  answerId: Scalars['ID']
+  value?: Maybe<Scalars['Int']>
 }
 
 export type Page = {
@@ -853,7 +924,7 @@ export type Query = {
   /** This query returns the comments of an item. */
   comments: Array<Comment>
   /** This query returns the value of a comments answer rating if the user has already rated it. */
-  userCommentRating?: Maybe<Scalars['Int']>
+  userCommentRatings: Array<Maybe<CommentRating>>
   /** This query returns the redirect Uri. */
   authProviders: Array<AuthProvider>
   /** This query returns the user. */
@@ -939,11 +1010,12 @@ export type QueryPagesArgs = {
 
 export type QueryCommentsArgs = {
   itemId: Scalars['ID']
+  sort?: Maybe<CommentSort>
+  order?: Maybe<SortOrder>
 }
 
-export type QueryUserCommentRatingArgs = {
+export type QueryUserCommentRatingsArgs = {
   commentId: Scalars['ID']
-  answerId: Scalars['ID']
 }
 
 export type QueryAuthProvidersArgs = {
@@ -980,14 +1052,6 @@ export type QuoteBlock = {
   __typename?: 'QuoteBlock'
   quote?: Maybe<Scalars['String']>
   author?: Maybe<Scalars['String']>
-}
-
-export type Rating = {
-  __typename?: 'Rating'
-  answerId: Scalars['ID']
-  count: Scalars['Int']
-  total: Scalars['Int']
-  mean: Scalars['Float']
 }
 
 export enum RatingSystemType {
@@ -1076,7 +1140,7 @@ export enum TagType {
   Comment = 'Comment'
 }
 
-export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
+export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser
 
 export type TeaserGridBlock = {
   __typename?: 'TeaserGridBlock'
@@ -1113,6 +1177,18 @@ export type TwitterTweetBlock = {
   tweetID: Scalars['String']
 }
 
+export type UploadImageInput = {
+  file: Scalars['Upload']
+  filename?: Maybe<Scalars['String']>
+  title?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
+  tags?: Maybe<Array<Scalars['String']>>
+  link?: Maybe<Scalars['String']>
+  source?: Maybe<Scalars['String']>
+  license?: Maybe<Scalars['String']>
+  focalPoint?: Maybe<InputPoint>
+}
+
 export type User = {
   __typename?: 'User'
   id: Scalars['String']
@@ -1123,6 +1199,7 @@ export type User = {
   address?: Maybe<UserAddress>
   paymentProviderCustomers: Array<PaymentProviderCustomer>
   oauth2Accounts: Array<OAuth2Account>
+  image?: Maybe<Image>
 }
 
 export type UserAddress = {
@@ -1150,6 +1227,7 @@ export type UserInput = {
   email: Scalars['String']
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddressInput>
+  uploadImageInput?: Maybe<UploadImageInput>
 }
 
 export type UserSession = {
@@ -1229,6 +1307,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
+          | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
           | ({__typename?: 'PollBlock'} & FullBlock_PollBlock_Fragment)
           | ({__typename?: 'CommentBlock'} & FullBlock_CommentBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
@@ -1282,6 +1361,7 @@ export type PeerArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
+          | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
           | ({__typename?: 'PollBlock'} & FullBlock_PollBlock_Fragment)
           | ({__typename?: 'CommentBlock'} & FullBlock_CommentBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
@@ -1352,10 +1432,13 @@ type FullTeaser_PageTeaser_Fragment = {__typename?: 'PageTeaser'} & Pick<
     page?: Maybe<{__typename?: 'Page'} & PageRefFragment>
   }
 
+type FullTeaser_CustomTeaser_Fragment = {__typename?: 'CustomTeaser'}
+
 export type FullTeaserFragment =
   | FullTeaser_ArticleTeaser_Fragment
   | FullTeaser_PeerArticleTeaser_Fragment
   | FullTeaser_PageTeaser_Fragment
+  | FullTeaser_CustomTeaser_Fragment
 
 type FullBlock_RichTextBlock_Fragment = {__typename: 'RichTextBlock'} & Pick<
   RichTextBlock,
@@ -1423,6 +1506,8 @@ type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
   'url' | 'title' | 'width' | 'height' | 'styleCustom' | 'sandbox'
 >
 
+type FullBlock_HtmlBlock_Fragment = {__typename: 'HTMLBlock'}
+
 type FullBlock_PollBlock_Fragment = {__typename: 'PollBlock'}
 
 type FullBlock_CommentBlock_Fragment = {__typename: 'CommentBlock'}
@@ -1448,6 +1533,7 @@ type FullBlock_TeaserGridBlock_Fragment = {__typename: 'TeaserGridBlock'} & Pick
         | ({__typename?: 'ArticleTeaser'} & FullTeaser_ArticleTeaser_Fragment)
         | ({__typename?: 'PeerArticleTeaser'} & FullTeaser_PeerArticleTeaser_Fragment)
         | ({__typename?: 'PageTeaser'} & FullTeaser_PageTeaser_Fragment)
+        | ({__typename?: 'CustomTeaser'} & FullTeaser_CustomTeaser_Fragment)
       >
     >
   }
@@ -1469,6 +1555,7 @@ export type FullBlockFragment =
   | FullBlock_TikTokVideoBlock_Fragment
   | FullBlock_BildwurfAdBlock_Fragment
   | FullBlock_EmbedBlock_Fragment
+  | FullBlock_HtmlBlock_Fragment
   | FullBlock_PollBlock_Fragment
   | FullBlock_CommentBlock_Fragment
   | FullBlock_LinkPageBreakBlock_Fragment
@@ -1573,6 +1660,7 @@ export type PageQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'TikTokVideoBlock'} & FullBlock_TikTokVideoBlock_Fragment)
           | ({__typename?: 'BildwurfAdBlock'} & FullBlock_BildwurfAdBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
+          | ({__typename?: 'HTMLBlock'} & FullBlock_HtmlBlock_Fragment)
           | ({__typename?: 'PollBlock'} & FullBlock_PollBlock_Fragment)
           | ({__typename?: 'CommentBlock'} & FullBlock_CommentBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)

@@ -248,7 +248,7 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
             deleteMany: {
               invoiceId: invoiceData.id
             },
-            create: items
+            create: items.map(({invoiceId, ...item}) => item)
           },
           paidAt: new Date(),
           canceledAt: null

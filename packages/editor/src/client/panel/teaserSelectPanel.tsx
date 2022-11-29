@@ -24,6 +24,7 @@ import {
 import {
   ArticleFilter,
   ArticleSort,
+  PageFilter,
   SortOrder,
   TeaserStyle,
   useArticleListQuery,
@@ -63,7 +64,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
-  const [filter, setFilter] = useState<ArticleFilter>({title: ''})
+  const [filter, setFilter] = useState<ArticleFilter>({title: '', published: true})
   const [metaDataProperties, setMetadataProperties] = useState<ListValue<TeaserMetadataProperty>[]>(
     initialTeaser.type === TeaserType.Custom && initialTeaser.properties
       ? initialTeaser.properties.map(metaDataProperty => ({
@@ -80,7 +81,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     sort: ArticleSort.PublishedAt
   }
   const listVariables = {filter: filter || undefined, take: 20}
-  const pageListVariables = {filter: filter.title || undefined, take: 20}
+  const pageListVariables = {filter: filter as PageFilter, take: 20}
 
   const {
     data: articleListData,
@@ -177,18 +178,11 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     })
   }
 
-  function currentFilter() {
-    switch (type) {
-      case TeaserType.Article:
-        return <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
-      case TeaserType.PeerArticle:
-        return <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
-      case TeaserType.Page:
-        return <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
-      case TeaserType.Custom:
-        return <Input value={filter.title || ''} onChange={value => setFilter({title: value})} />
-    }
-  }
+  const updateFilter = (value: string) =>
+    setFilter(oldFilter => ({
+      ...oldFilter,
+      title: value
+    }))
 
   function currentContent() {
     switch (type) {
@@ -288,9 +282,9 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
             {pages.map(page => {
               const states = []
 
-              if (page.draft) states.push('articleEditor.panels.draft')
-              if (page.pending) states.push('articleEditor.panels.pending')
-              if (page.published) states.push('articleEditor.panels.published')
+              if (page.draft) states.push(t('articleEditor.panels.draft'))
+              if (page.pending) states.push(t('articleEditor.panels.pending'))
+              if (page.published) states.push(t('articleEditor.panels.published'))
 
               return (
                 <List.Item key={page.id}>
@@ -503,7 +497,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
         {type !== TeaserType.Custom && (
           <InputGroup style={{marginBottom: 20}}>
-            {currentFilter()}
+            <Input value={filter.title || ''} onChange={updateFilter} />
             <InputGroup.Addon>
               <SearchIcon />
             </InputGroup.Addon>

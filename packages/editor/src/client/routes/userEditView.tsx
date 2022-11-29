@@ -6,9 +6,11 @@ import {
   Button,
   CheckPicker,
   Col,
+  Drawer,
   FlexboxGrid,
   Form,
   Grid,
+  Input,
   Loader,
   Message,
   Panel,
@@ -21,16 +23,27 @@ import {
 import {
   FullUserFragment,
   FullUserRoleFragment,
+  ImageRefFragment,
   useCreateUserMutation,
   UserAddress,
   useUpdateUserMutation,
   useUserQuery,
   useUserRoleListQuery
 } from '../api'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {ListInput, ListValue} from '../atoms/listInput'
 import {authorise, createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {EditUserPassword} from '../atoms/user/editUserPassword'
 import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
+import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
+import {generateID} from '../utility'
+
+export interface UserProperty {
+  readonly key: string
+  readonly value: string
+  readonly public: boolean
+}
 
 function UserEditView() {
   const {t} = useTranslation()
@@ -41,8 +54,10 @@ function UserEditView() {
 
   // const isCreateRoute = location.pathname.includes('create')
   const isEditRoute = location.pathname.includes('edit')
-
   const [closeAfterSave, setCloseAfterSave] = useState<boolean>(false)
+
+  // image selection drawer
+  const [imageSelectionOpen, setImageSelectionOpen] = useState<boolean>(false)
 
   // user props
   const [name, setName] = useState('')
@@ -55,7 +70,9 @@ function UserEditView() {
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
   const [address, setAddress] = useState<UserAddress | null>(null)
+  const [userImage, setUserImage] = useState<ImageRefFragment | undefined>()
   const [user, setUser] = useState<FullUserFragment | undefined | null>(null)
+  const [metaDataProperties, setMetadataProperties] = useState<ListValue<UserProperty>[]>([])
 
   // getting user id from url param
   const [id] = useState<string | undefined>(isEditRoute ? userId : undefined)
@@ -85,9 +102,18 @@ function UserEditView() {
     setName(tmpUser.name)
     setPreferredName(tmpUser.preferredName ?? undefined)
     setEmail(tmpUser.email)
+    setMetadataProperties(
+      tmpUser?.properties
+        ? tmpUser?.properties.map(userProperty => ({
+            id: generateID(),
+            value: userProperty
+          }))
+        : []
+    )
     setEmailVerifiedAt(tmpUser.emailVerifiedAt ? new Date(tmpUser.emailVerifiedAt) : null)
     setActive(tmpUser.active)
     setAddress(tmpUser.address ? tmpUser.address : null)
+    setUserImage(tmpUser.userImage ? tmpUser.userImage : undefined)
     if (tmpUser.roles) {
       setRoles(tmpUser.roles as FullUserRoleFragment[])
     }
@@ -170,12 +196,15 @@ function UserEditView() {
               email,
               emailVerifiedAt: emailVerifiedAt ? emailVerifiedAt.toISOString() : null,
               active,
-              properties: user.properties.map(({value, key, public: publicValue}) => ({
-                value,
-                key,
-                public: publicValue
-              })),
+              userImageID: userImage?.id || null,
               roleIDs: roles.map(role => role.id),
+              properties: metaDataProperties.map(
+                ({value: {key, public: isPublic, value: newValue}}) => ({
+                  key,
+                  public: isPublic,
+                  value: newValue
+                })
+              ),
               address: {
                 company: address?.company ? address.company : '',
                 streetAddress: address?.streetAddress ? address.streetAddress : '',
@@ -214,9 +243,16 @@ function UserEditView() {
               email,
               emailVerifiedAt: null,
               active,
-              properties: [],
+              properties: metaDataProperties.map(
+                ({value: {key, public: isPublic, value: newValue}}) => ({
+                  key,
+                  public: isPublic,
+                  value: newValue
+                })
+              ),
               roleIDs: roles.map(role => role.id),
-              address
+              address,
+              userImageID: userImage?.id || null
             },
             password
           }
@@ -323,15 +359,32 @@ function UserEditView() {
           </FlexboxGrid.Item>
         </FlexboxGrid>
         {/* user form */}
-        <Grid style={{width: '100%', paddingLeft: '0px'}}>
+        <Grid
+          style={{
+            width: '100%',
+            paddingLeft: '0px',
+            height: 'calc(100vh - 160px)',
+            overflowY: 'scroll'
+          }}>
           <Row gutter={10}>
             <Col xs={12}>
               <Grid fluid>
                 {/* general user data */}
                 <Panel bordered header={t('userCreateOrEditView.userDataTitle')}>
-                  <Row gutter={10}>
+                  <Row>
+                    {/* profile image */}
+                    <Col xs={12}>
+                      <ChooseEditImage
+                        image={userImage}
+                        disabled={false}
+                        openChooseModalOpen={() => setImageSelectionOpen(true)}
+                        removeImage={() => setUserImage(undefined)}
+                        header={t('userCreateOrEditView.selectUserImage')}
+                        maxHeight={200}
+                      />
+                    </Col>
                     {/* active / inactive */}
-                    <Col xs={24} style={{textAlign: 'end'}}>
+                    <Col xs={12} style={{textAlign: 'end'}}>
                       <Form.Group controlId="active">
                         <Form.ControlLabel>{t('userCreateOrEditView.active')}</Form.ControlLabel>
                         <Toggle
@@ -341,6 +394,9 @@ function UserEditView() {
                         />
                       </Form.Group>
                     </Col>
+                  </Row>
+
+                  <Row gutter={10}>
                     {/* first name */}
                     <Col xs={12}>
                       <Form.Group controlId="firstName">
@@ -519,6 +575,64 @@ function UserEditView() {
                     </Col>
                   </Row>
                 </Panel>
+                {/* properties */}
+                <Panel
+                  bordered
+                  header={t('userCreateOrEditView.properties')}
+                  style={{marginTop: '20px'}}>
+                  <Row gutter={10}>
+                    <Col xs={24}>
+                      <Form.Group controlId="userProperties">
+                        <Form.ControlLabel>
+                          {t('articleEditor.panels.properties')}
+                        </Form.ControlLabel>
+                        <ListInput
+                          value={metaDataProperties}
+                          onChange={propertiesItemInput =>
+                            setMetadataProperties(propertiesItemInput)
+                          }
+                          defaultValue={{key: '', value: '', public: true}}>
+                          {({value, onChange}) => (
+                            <div style={{display: 'flex', flexDirection: 'row'}}>
+                              <Input
+                                placeholder={t('articleEditor.panels.key')}
+                                style={{
+                                  width: '40%',
+                                  marginRight: '10px'
+                                }}
+                                value={value.key}
+                                onChange={propertyKey => onChange({...value, key: propertyKey})}
+                                data-testid="propertyKey"
+                              />
+                              <Input
+                                placeholder={t('articleEditor.panels.value')}
+                                style={{
+                                  width: '60%'
+                                }}
+                                value={value.value}
+                                onChange={propertyValue =>
+                                  onChange({...value, value: propertyValue})
+                                }
+                                data-testid="propertyValue"
+                              />
+                              <Form.Group
+                                style={{paddingTop: '6px', paddingLeft: '8px'}}
+                                controlId="articleProperty">
+                                <Toggle
+                                  style={{maxWidth: '70px', minWidth: '70px'}}
+                                  checkedChildren={t('articleEditor.panels.public')}
+                                  unCheckedChildren={t('articleEditor.panels.private')}
+                                  checked={value.public}
+                                  onChange={isPublic => onChange({...value, public: isPublic})}
+                                />
+                              </Form.Group>
+                            </div>
+                          )}
+                        </ListInput>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </Panel>
                 {/* password */}
                 <Panel
                   bordered
@@ -548,6 +662,21 @@ function UserEditView() {
           </Row>
         </Grid>
       </Form>
+
+      {/* image selection panel */}
+      <Drawer
+        open={imageSelectionOpen}
+        onClose={() => {
+          setImageSelectionOpen(false)
+        }}>
+        <ImageSelectPanel
+          onClose={() => setImageSelectionOpen(false)}
+          onSelect={(image: ImageRefFragment) => {
+            setUserImage(image)
+            setImageSelectionOpen(false)
+          }}
+        />
+      </Drawer>
     </>
   )
 }

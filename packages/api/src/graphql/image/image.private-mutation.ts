@@ -16,6 +16,9 @@ export const deleteImageById = async (
     image.delete({
       where: {
         id
+      },
+      include: {
+        focalPoint: true
       }
     }),
     mediaAdapter.deleteImage(id)
@@ -24,7 +27,7 @@ export const deleteImageById = async (
   return deletedImage
 }
 
-type CreateImageInput = {
+export type CreateImageInput = {
   file: Promise<FileUpload>
   focalPoint: Prisma.FocalPointUncheckedCreateWithoutImageInput
 } & Omit<Prisma.ImageUncheckedCreateInput, 'modifiedAt' | 'focalPoint'>
@@ -58,13 +61,20 @@ export const createImage = async (
       focalPoint: {
         create: focalPoint
       }
+    },
+    include: {
+      focalPoint: true
     }
   })
 }
 
+export type UpdateImageInput = {
+  focalPoint: Prisma.FocalPointUncheckedCreateWithoutImageInput
+} & Omit<Prisma.ImageUncheckedUpdateInput, 'focalPoint' | 'modifiedAt' | 'createdAt'>
+
 export const updateImage = (
   id: string,
-  input: Omit<Prisma.ImageUncheckedUpdateInput, 'modifiedAt' | 'createdAt'>,
+  {focalPoint, ...input}: UpdateImageInput,
   authenticate: Context['authenticate'],
   image: PrismaClient['image']
 ) => {
@@ -73,6 +83,17 @@ export const updateImage = (
 
   return image.update({
     where: {id},
-    data: input
+    data: {
+      ...input,
+      focalPoint: {
+        upsert: {
+          create: focalPoint,
+          update: focalPoint
+        }
+      }
+    },
+    include: {
+      focalPoint: true
+    }
   })
 }

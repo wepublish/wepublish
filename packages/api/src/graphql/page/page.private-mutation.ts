@@ -220,7 +220,7 @@ export const unpublishPage = async (
     throw new NotFound('page', id)
   }
 
-  const {id: revisionId, properties, ...revision} = (page.pending ?? page.published)!
+  const {id: revisionId, properties, ...revision} = (page.draft ?? page.pending ?? page.published)!
 
   return pageClient.update({
     where: {id},
@@ -380,7 +380,7 @@ export const publishPage = async (
           upsert: {
             create: {
               ...revision,
-              publishAt: publishAt,
+              publishAt,
               publishedAt: publishedAt ?? page?.published?.publishedAt ?? publishAt,
               updatedAt: updatedAt ?? publishAt,
               properties: {
@@ -391,7 +391,7 @@ export const publishPage = async (
             },
             update: {
               ...revision,
-              publishAt: publishAt,
+              publishAt,
               publishedAt: publishedAt ?? page?.published?.publishedAt ?? publishAt,
               updatedAt: updatedAt ?? publishAt,
               properties: {

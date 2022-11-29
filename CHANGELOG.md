@@ -1,5 +1,82 @@
 # Change Log
 
+## 8.1.0 (2022-11-24)
+
+#### :heart: New Feature
+* `api`, `editor`
+  * [#732](https://github.com/wepublish/wepublish/pull/732) feat(api/editor): allow admins to override comment ratings ([@Itrulia](https://github.com/Itrulia))
+  * [#735](https://github.com/wepublish/wepublish/pull/735) feat(api,editor): extend Article, Peer Article and Page filters ([@antkiewiczk](https://github.com/antkiewiczk))
+  * [#698](https://github.com/wepublish/wepublish/pull/698) fix(api/example-website): allow peer article to have comments ([@Itrulia](https://github.com/Itrulia))
+* `api`
+  * [#742](https://github.com/wepublish/wepublish/pull/742) fix(api): authors being in a correct relational database structure ([@Itrulia](https://github.com/Itrulia))
+  * [#733](https://github.com/wepublish/wepublish/pull/733) feat(api): allow sorting of comments by rating ([@Itrulia](https://github.com/Itrulia))
+  * [#737](https://github.com/wepublish/wepublish/pull/737) feat(api): add relations to revision images ([@Itrulia](https://github.com/Itrulia))
+
+#### :bug: Bug Fix
+* `api`
+  * [#742](https://github.com/wepublish/wepublish/pull/742) fix(api): authors being in a correct relational database structure ([@Itrulia](https://github.com/Itrulia))
+* `editor`
+  * [#747](https://github.com/wepublish/wepublish/pull/747) fix(editor): dont show error while roles are being fetched ([@Itrulia](https://github.com/Itrulia))
+
+#### :memo: Documentation
+* [#736](https://github.com/wepublish/wepublish/pull/736) docs: document prisma migrate reset ([@Itrulia](https://github.com/Itrulia))
+
+#### :house: Internal
+* Other
+  * [#723](https://github.com/wepublish/wepublish/pull/723) chore(deps-dev): bump apollo-server from 2.25.3 to 2.25.4 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#739](https://github.com/wepublish/wepublish/pull/739) ci: upgrade code analyze ([@Itrulia](https://github.com/Itrulia))
+* `editor`
+  * [#738](https://github.com/wepublish/wepublish/pull/738) test(editor): got rid of ptest and ran eslint fix ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 3
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+
+
+## 8.0.1 (2022-11-22)
+
+#### :bug: Bug Fix
+* `editor`
+  * [#762](https://github.com/wepublish/wepublish/pull/762) fix(editor): gif or other unsupported images by exfir upload broken ([@Itrulia](https://github.com/Itrulia))
+  * [#763](https://github.com/wepublish/wepublish/pull/763) fix(editor): image url wrong ([@Itrulia](https://github.com/Itrulia))
+  * [#759](https://github.com/wepublish/wepublish/pull/759) fix(editor): sending typename to api ([@Itrulia](https://github.com/Itrulia))
+* `api`
+  * [#760](https://github.com/wepublish/wepublish/pull/760) fix(api): focalpoint missing in queries and mutations ([@Itrulia](https://github.com/Itrulia))
+  * [#761](https://github.com/wepublish/wepublish/pull/761) fix(api): peer articles sorting is the opposite way ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 2
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
+## 8.0.0 (2022-11-07)
+
+#### :boom: Breaking Change
+* `api`, `editor`
+  * [#687](https://github.com/wepublish/wepublish/pull/687) Docker builds, entrypoints improvements ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### :bug: Bug Fix
+* `api`
+  * [#719](https://github.com/wepublish/wepublish/pull/719) WPC-812-update-userprefered-name-empty-string ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### :house: Internal
+* Other
+  * [#707](https://github.com/wepublish/wepublish/pull/707) chore: add git hooks to rebuild prisma when switching or merging branches ([@Itrulia](https://github.com/Itrulia))
+  * [#721](https://github.com/wepublish/wepublish/pull/721) Add website helm chart ([@tomaszdurka](https://github.com/tomaszdurka))
+* `api`
+  * [#722](https://github.com/wepublish/wepublish/pull/722) Improve api seeding ([@tomaszdurka](https://github.com/tomaszdurka))
+* `api`, `editor`
+  * [#687](https://github.com/wepublish/wepublish/pull/687) Docker builds, entrypoints improvements ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### Committers: 5
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- We.Publish Weblate Pusher ([@wepublishweblate](https://github.com/wepublishweblate))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
 ## 7.1.0 (2022-10-13)
 
 #### :heart: New Feature
