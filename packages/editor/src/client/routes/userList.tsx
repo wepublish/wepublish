@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete, MdLock, MdSearch} from 'react-icons/md'
+import {MdAdd, MdDelete, MdPassword, MdSearch} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Button, FlexboxGrid, IconButton, Input, InputGroup, Modal, Pagination, Table} from 'rsuite'
 
@@ -193,7 +193,7 @@ function UserList() {
                   <PermissionControl qualifyingPermissions={['CAN_RESET_USER_PASSWORD']}>
                     <IconButtonTooltip caption={t('userList.overview.resetPassword')}>
                       <IconButton
-                        icon={<MdLock />}
+                        icon={<MdPassword />}
                         circle
                         size="sm"
                         style={{marginLeft: '5px'}}
@@ -210,6 +210,8 @@ function UserList() {
                         icon={<MdDelete />}
                         circle
                         size="sm"
+                        appearance="ghost"
+                        color="red"
                         style={{marginLeft: '5px'}}
                         onClick={() => {
                           setConfirmationDialogOpen(true)

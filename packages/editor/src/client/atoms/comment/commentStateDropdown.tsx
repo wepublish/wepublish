@@ -88,6 +88,7 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
             }}>
             <IconButton
               size={size || 'md'}
+              style={{padding: '2px'}}
               appearance="primary"
               color={mapCommentStateToColor(comment.state)}
               icon={<MdArrowDropDown />}

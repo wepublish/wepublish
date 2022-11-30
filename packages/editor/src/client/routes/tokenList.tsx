@@ -101,6 +101,8 @@ function TokenList() {
                         icon={<MdDelete />}
                         circle
                         size="sm"
+                        appearance="ghost"
+                        color="red"
                         onClick={() => {
                           setConfirmationDialogOpen(true)
                           setCurrentToken(token)
@@ -121,7 +123,7 @@ function TokenList() {
           setTokenGeneratePanelOpen(false)
           navigate('/tokens')
         }}
-        size={'sm'}>
+        size="sm">
         <TokenGeneratePanel
           onClose={() => {
             setTokenGeneratePanelOpen(false)

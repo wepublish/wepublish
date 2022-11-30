@@ -273,7 +273,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         </Drawer.Body>
       </Form>
 
-      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={(value: ImageRefFragment) => {
@@ -283,7 +283,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         />
       </Drawer>
 
-      <Drawer open={isEditModalOpen} size={'sm'}>
+      <Drawer open={isEditModalOpen} size="sm">
         <ImageEditPanel
           id={image?.id}
           onClose={() => setEditModalOpen(false)}

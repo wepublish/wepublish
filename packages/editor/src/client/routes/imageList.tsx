@@ -202,6 +202,8 @@ function ImageList() {
                         icon={<MdDelete />}
                         circle
                         size="sm"
+                        appearance="ghost"
+                        color="red"
                         style={{marginLeft: '5px'}}
                         onClick={event => {
                           event.preventDefault()
@@ -237,7 +239,7 @@ function ImageList() {
 
       <Drawer
         open={isUploadModalOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => {
           setUploadModalOpen(false)
           navigate('/images')
@@ -255,7 +257,7 @@ function ImageList() {
       </Drawer>
       <Drawer
         open={isEditModalOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => {
           setEditModalOpen(false)
           navigate('/images')

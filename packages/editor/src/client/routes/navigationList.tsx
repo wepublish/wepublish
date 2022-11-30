@@ -104,6 +104,8 @@ function NavigationList() {
                       icon={<MdDelete />}
                       circle
                       size="sm"
+                      appearance="ghost"
+                      color="red"
                       style={{marginLeft: '5px'}}
                       onClick={() => {
                         setCurrentNavigation(rowData)
@@ -120,7 +122,7 @@ function NavigationList() {
 
       <Drawer
         open={isEditModalOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => {
           setEditModalOpen(false)
           navigate('/navigations')

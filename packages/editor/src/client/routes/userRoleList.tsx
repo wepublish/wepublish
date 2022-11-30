@@ -111,6 +111,8 @@ function UserRoleList() {
                     icon={<MdDelete />}
                     disabled={rowData.systemRole}
                     circle
+                    appearance="ghost"
+                    color="red"
                     size="sm"
                     style={{marginLeft: '5px'}}
                     onClick={() => {
@@ -131,7 +133,7 @@ function UserRoleList() {
           setEditModalOpen(false)
           navigate('/userroles')
         }}
-        size={'sm'}>
+        size="sm">
         <UserRoleEditPanel
           id={editID!}
           onClose={() => {

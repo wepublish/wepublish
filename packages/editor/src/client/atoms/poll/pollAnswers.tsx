@@ -231,7 +231,7 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
               <IconButton
                 icon={<MdDelete />}
                 circle
-                size={'sm'}
+                size="sm"
                 appearance="ghost"
                 color="red"
                 style={{marginRight: '10px'}}

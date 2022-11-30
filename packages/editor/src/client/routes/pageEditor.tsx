@@ -319,7 +319,7 @@ function PageEditor() {
                   <IconButton
                     className="actionButton"
                     style={{marginTop: '4px', marginBottom: '20px'}}
-                    size={'lg'}
+                    size="lg"
                     icon={<MdKeyboardBackspace />}
                     onClick={e => {
                       if (!unsavedChangesDialog()) e.preventDefault()
@@ -333,7 +333,7 @@ function PageEditor() {
                   <IconButton
                     icon={<MdIntegrationInstructions />}
                     className="actionButton"
-                    size={'lg'}
+                    size="lg"
                     disabled={isDisabled}
                     onClick={() => setMetaDrawerOpen(true)}>
                     {t('pageEditor.overview.metadata')}
@@ -346,7 +346,7 @@ function PageEditor() {
                         style={{
                           marginLeft: '10px'
                         }}
-                        size={'lg'}
+                        size="lg"
                         icon={<MdSave />}
                         disabled={isDisabled}
                         onClick={handleSave}>
@@ -361,7 +361,7 @@ function PageEditor() {
                           style={{
                             marginLeft: '10px'
                           }}
-                          size={'lg'}
+                          size="lg"
                           icon={<MdSave />}
                           disabled={isDisabled}
                           onClick={handleSave}>
@@ -380,7 +380,7 @@ function PageEditor() {
                               marginLeft: '10px'
                             }}
                             className="actionButton"
-                            size={'lg'}
+                            size="lg"
                             icon={<MdCloudUpload />}
                             disabled={isDisabled}
                             onClick={() => {
@@ -401,7 +401,7 @@ function PageEditor() {
                       className="actionButton"
                       disabled={hasChanged || !id || !canPreview}
                       style={{marginTop: '4px'}}
-                      size={'lg'}
+                      size="lg"
                       icon={<MdRemoveRedEye />}
                       onClick={() => {
                         previewLinkFetch({
@@ -423,7 +423,7 @@ function PageEditor() {
           </BlockList>
         </EditorTemplate>
       </fieldset>
-      <Drawer open={isMetaDrawerOpen} size={'sm'} onClose={() => setMetaDrawerOpen(false)}>
+      <Drawer open={isMetaDrawerOpen} size="sm" onClose={() => setMetaDrawerOpen(false)}>
         <PageMetadataPanel
           value={metadata}
           onClose={() => {
@@ -437,7 +437,7 @@ function PageEditor() {
         />
       </Drawer>
 
-      <Modal open={isPublishDialogOpen} size={'sm'} onClose={() => setPublishDialogOpen(false)}>
+      <Modal open={isPublishDialogOpen} size="sm" onClose={() => setPublishDialogOpen(false)}>
         <PublishPagePanel
           publishedAtDate={publishedAt}
           updatedAtDate={updatedAt}

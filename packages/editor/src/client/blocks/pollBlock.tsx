@@ -47,7 +47,7 @@ export const PollBlock = ({value: {poll}, onChange, autofocus}: BlockProps<PollB
                   height: '100%',
                   right: 0
                 }}>
-                <IconButton size={'lg'} icon={<MdEdit />} onClick={() => setIsDialogOpen(true)}>
+                <IconButton size="lg" icon={<MdEdit />} onClick={() => setIsDialogOpen(true)}>
                   {t('blocks.poll.edit')}
                 </IconButton>
               </div>

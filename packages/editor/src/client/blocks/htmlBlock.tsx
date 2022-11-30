@@ -45,7 +45,7 @@ export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValu
                   height: '100%',
                   right: 0
                 }}>
-                <IconButton size={'lg'} icon={<MdEdit />} onClick={() => setHtmlDialogOpen(true)}>
+                <IconButton size="lg" icon={<MdEdit />} onClick={() => setHtmlDialogOpen(true)}>
                   {t('blocks.html.edit')}
                 </IconButton>
               </div>
@@ -57,7 +57,7 @@ export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValu
         </PlaceholderInput>
       </Panel>
 
-      <Drawer size={'sm'} open={isHtmlDialogOpen} onClose={() => setHtmlDialogOpen(false)}>
+      <Drawer size="sm" open={isHtmlDialogOpen} onClose={() => setHtmlDialogOpen(false)}>
         <HtmlEditPanel
           value={value}
           onClose={() => setHtmlDialogOpen(false)}

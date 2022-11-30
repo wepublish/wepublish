@@ -548,7 +548,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
 
         <Drawer
           open={isChooseModalOpen}
-          size={'sm'}
+          size="sm"
           onClose={() => {
             setChooseModalOpen(false)
           }}>
@@ -563,7 +563,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
         {(value.image || value.socialMediaImage) && (
           <Drawer
             open={isEditModalOpen}
-            size={'sm'}
+            size="sm"
             onClose={() => {
               setEditModalOpen(false)
             }}>

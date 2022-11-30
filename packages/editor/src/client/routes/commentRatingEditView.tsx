@@ -233,7 +233,9 @@ export function RatingAnswers({
             <IconButton
               icon={<MdDelete />}
               circle
-              size={'sm'}
+              size="sm"
+              appearance="ghost"
+              color="red"
               onClick={() => onDeleteAnswer(answer.id)}
             />
           </IconButtonTooltip>

@@ -588,7 +588,7 @@ function ArticleEditor() {
           </BlockList>
         </EditorTemplate>
       </fieldset>
-      <Drawer open={isMetaDrawerOpen} size={'sm'} onClose={() => setMetaDrawerOpen(false)}>
+      <Drawer open={isMetaDrawerOpen} size="sm" onClose={() => setMetaDrawerOpen(false)}>
         <ArticleMetadataPanel
           value={metadata}
           infoData={infoData}
@@ -602,7 +602,7 @@ function ArticleEditor() {
           }}
         />
       </Drawer>
-      <Modal open={isPublishDialogOpen} size={'sm'} onClose={() => setPublishDialogOpen(false)}>
+      <Modal open={isPublishDialogOpen} size="sm" onClose={() => setPublishDialogOpen(false)}>
         <PublishArticlePanel
           publishedAtDate={publishedAt}
           updatedAtDate={updatedAt}

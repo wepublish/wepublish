@@ -177,7 +177,7 @@ export function ImageGalleryBlock({
           handleCaptionChange(e.target.value)
         }}
       />
-      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={(value: ImageRefFragment | null) => {
@@ -187,13 +187,13 @@ export function ImageGalleryBlock({
         />
       </Drawer>
       {image && (
-        <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
+        <Drawer open={isEditModalOpen} size="sm" onClose={() => setEditModalOpen(false)}>
           <ImageEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
         </Drawer>
       )}
       <Drawer
         open={isGalleryListEditModalOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => setGalleryListEditModalOpen(false)}>
         <GalleryListEditPanel
           initialImages={value.images}

@@ -111,6 +111,8 @@ function MemberPlanList() {
                     icon={<MdDelete />}
                     circle
                     size="sm"
+                    appearance="ghost"
+                    color="red"
                     style={{marginLeft: '5px'}}
                     onClick={() => {
                       setConfirmationDialogOpen(true)
@@ -126,7 +128,7 @@ function MemberPlanList() {
 
       <Drawer
         open={isEditModalOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => {
           setEditModalOpen(false)
           navigate('/memberplans')
@@ -144,7 +146,7 @@ function MemberPlanList() {
         />
       </Drawer>
 
-      <Modal open={isConfirmationDialogOpen} size={'sm'}>
+      <Modal open={isConfirmationDialogOpen} size="sm">
         <Modal.Header>
           <Modal.Title>{t('memberPlanList.deleteModalTitle')}</Modal.Title>
         </Modal.Header>

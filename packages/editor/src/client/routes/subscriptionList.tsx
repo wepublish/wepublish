@@ -250,6 +250,8 @@ function SubscriptionList() {
                       icon={<MdDelete />}
                       circle
                       size="sm"
+                      appearance="ghost"
+                      color="red"
                       style={{marginLeft: '5px'}}
                       onClick={() => {
                         setCurrentSubscription(rowData)
@@ -283,7 +285,7 @@ function SubscriptionList() {
 
       <Drawer
         open={isEditModalOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => {
           setEditModalOpen(false)
           navigate('/subscriptions')

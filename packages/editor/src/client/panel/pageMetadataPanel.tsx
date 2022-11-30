@@ -302,7 +302,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
         </Panel>
       </Drawer.Body>
 
-      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={(value: ImageRefFragment) => {
@@ -314,7 +314,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
       {(value.image || value.socialMediaImage) && (
         <Drawer
           open={isEditModalOpen}
-          size={'sm'}
+          size="sm"
           onClose={() => {
             setEditModalOpen(false)
           }}>

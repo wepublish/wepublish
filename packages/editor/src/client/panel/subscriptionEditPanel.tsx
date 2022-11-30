@@ -567,7 +567,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
           </Button>
         </Drawer.Footer>
 
-        <Drawer open={isInvoiceListOpen} size={'sm'} onClose={() => setIsInvoiceListOpen(false)}>
+        <Drawer open={isInvoiceListOpen} size="sm" onClose={() => setIsInvoiceListOpen(false)}>
           <InvoiceListPanel
             subscriptionId={id}
             invoices={invoices}
@@ -580,7 +580,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
         {id && user && (
           <Modal
             open={isDeactivationPanelOpen}
-            size={'sm'}
+            size="sm"
             backdrop={'static'}
             keyboard={false}
             onClose={() => setDeactivationPanelOpen(false)}>

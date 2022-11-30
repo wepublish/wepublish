@@ -55,7 +55,7 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
                   height: '100%',
                   right: 0
                 }}>
-                <IconButton size={'lg'} icon={<MdEdit />} onClick={() => setEmbedDialogOpen(true)}>
+                <IconButton size="lg" icon={<MdEdit />} onClick={() => setEmbedDialogOpen(true)}>
                   {t('blocks.embeds.overview.editEmbed')}
                 </IconButton>
               </div>
@@ -64,7 +64,7 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
           )}
         </PlaceholderInput>
       </Panel>
-      <Drawer size={'sm'} open={isEmbedDialogOpen} onClose={() => setEmbedDialogOpen(false)}>
+      <Drawer size="sm" open={isEmbedDialogOpen} onClose={() => setEmbedDialogOpen(false)}>
         <EmbedEditPanel
           value={value}
           onClose={() => setEmbedDialogOpen(false)}

@@ -217,7 +217,7 @@ function AuthorList() {
 
       <Drawer
         open={isEditModalOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => {
           setEditModalOpen(false)
           navigate('/authors')

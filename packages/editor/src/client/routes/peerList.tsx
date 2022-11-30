@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete, MdSettings} from 'react-icons/md'
+import {MdAdd, MdDelete, MdSettings, MdVisibility, MdVisibilityOff} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Avatar,
@@ -119,9 +119,10 @@ function PeerList() {
             </FlexboxGrid.Item>
             <FlexboxGrid.Item colspan={3}>
               <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
-                <Button
+                <IconButton
                   appearance="primary"
                   disabled={isUpdating}
+                  icon={isDisabled ? <MdVisibility /> : <MdVisibilityOff />}
                   onClick={async e => {
                     e.preventDefault()
                     await updatePeer({
@@ -146,7 +147,7 @@ function PeerList() {
                     })
                   }}>
                   {isDisabled ? t('peerList.overview.enable') : t('peerList.overview.disable')}
-                </Button>
+                </IconButton>
               </PermissionControl>
             </FlexboxGrid.Item>
             <FlexboxGrid.Item colspan={1} style={{textAlign: 'center'}}>
@@ -157,6 +158,8 @@ function PeerList() {
                     icon={<MdDelete />}
                     circle
                     size="sm"
+                    appearance="ghost"
+                    color="red"
                     onClick={e => {
                       e.preventDefault()
                       setConfirmationDialogOpen(true)
@@ -241,7 +244,7 @@ function PeerList() {
 
       <Drawer
         open={isPeerProfileEditModalOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => {
           setPeerProfileEditModalOpen(false)
           navigate('/peering')
@@ -256,7 +259,7 @@ function PeerList() {
 
       <Drawer
         open={isEditModalOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => {
           setEditModalOpen(false)
           navigate('/peering')

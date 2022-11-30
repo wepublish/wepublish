@@ -47,7 +47,7 @@ export function LinkPageBreakBlock({
     <>
       <div style={{position: 'relative', width: '100%'}}>
         <div style={{position: 'absolute', zIndex: 1, height: '100%', right: 0}}>
-          <IconButton size={'lg'} icon={<MdEdit />} onClick={() => setEditPanelOpen(true)} />
+          <IconButton size="lg" icon={<MdEdit />} onClick={() => setEditPanelOpen(true)} />
         </div>
       </div>
       <div style={{display: 'flex', flexFlow: 'row wrap', marginTop: 50}}>
@@ -74,7 +74,7 @@ export function LinkPageBreakBlock({
           <RichTextBlock value={richText || createDefaultValue()} onChange={handleRichTextChange} />
         </div>
       </div>
-      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={image => {
@@ -84,7 +84,7 @@ export function LinkPageBreakBlock({
         />
       </Drawer>
       {image && (
-        <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
+        <Drawer open={isEditModalOpen} size="sm" onClose={() => setEditModalOpen(false)}>
           <ImageEditPanel
             id={image!.id}
             onClose={() => setEditModalOpen(false)}
@@ -92,7 +92,7 @@ export function LinkPageBreakBlock({
           />
         </Drawer>
       )}
-      <Drawer open={isEditPanelOpen} size={'sm'} onClose={() => setEditPanelOpen(false)}>
+      <Drawer open={isEditPanelOpen} size="sm" onClose={() => setEditPanelOpen(false)}>
         <LinkPageBreakEditPanel
           value={value}
           onClose={() => setEditPanelOpen(false)}

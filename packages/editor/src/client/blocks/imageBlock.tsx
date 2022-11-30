@@ -77,7 +77,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
           onChange({...value, caption: e.target.value})
         }}
       />
-      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
@@ -87,7 +87,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
         />
       </Drawer>
       {image && (
-        <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
+        <Drawer open={isEditModalOpen} size="sm" onClose={() => setEditModalOpen(false)}>
           <ImageEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
         </Drawer>
       )}

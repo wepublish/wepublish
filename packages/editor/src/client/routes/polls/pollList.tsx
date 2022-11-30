@@ -131,6 +131,8 @@ function PollList() {
                   <IconButton
                     icon={<MdDelete />}
                     circle
+                    appearance="ghost"
+                    color="red"
                     size="sm"
                     onClick={() => setPollDelete(poll)}
                   />

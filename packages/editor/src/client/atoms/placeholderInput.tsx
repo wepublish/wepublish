@@ -43,7 +43,7 @@ export function PlaceholderInput({
       }}>
       <IconButton
         disabled={disabled}
-        size={'sm'}
+        size="sm"
         icon={<MdAddCircle />}
         onClick={() => onAddClick && onAddClick()}
       />

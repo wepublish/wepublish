@@ -94,6 +94,8 @@ function PaymentMethodList() {
                   <IconButton
                     icon={<MdDelete />}
                     circle
+                    appearance="ghost"
+                    color="red"
                     size="sm"
                     style={{marginLeft: '5px'}}
                     onClick={() => {
@@ -110,7 +112,7 @@ function PaymentMethodList() {
 
       <Drawer
         open={isEditModalOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => {
           setEditModalOpen(false)
           navigate('/paymentmethods')
@@ -130,7 +132,7 @@ function PaymentMethodList() {
         />
       </Drawer>
 
-      <Modal open={isConfirmationDialogOpen} size={'sm'}>
+      <Modal open={isConfirmationDialogOpen} size="sm">
         <Modal.Header>
           <Modal.Title>{t('paymentMethodList.deleteModalTitle')}</Modal.Title>
         </Modal.Header>

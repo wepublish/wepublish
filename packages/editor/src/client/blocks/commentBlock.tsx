@@ -54,7 +54,7 @@ export const CommentBlock = ({
                   height: '100%',
                   right: 0
                 }}>
-                <IconButton size={'lg'} icon={<MdEdit />} onClick={() => setIsDialogOpen(true)}>
+                <IconButton size="lg" icon={<MdEdit />} onClick={() => setIsDialogOpen(true)}>
                   {t('blocks.comment.edit')}
                 </IconButton>
               </div>
