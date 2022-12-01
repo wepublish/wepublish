@@ -93,6 +93,21 @@ describe('Events', () => {
         }
       })
     })
+
+    test('can not be created with endsAt before startsAt', async () => {
+      const {mutate} = testClientPrivate
+
+      const res = await mutate({
+        mutation: CreateEvent,
+        variables: {
+          name: 'Test Event',
+          startsAt: '2020-11-25T20:00:00.000Z',
+          endsAt: '2020-11-24T20:00:00.000Z'
+        }
+      })
+
+      expect(res).toMatchSnapshot()
+    })
   })
 
   describe('update', () => {
@@ -202,6 +217,38 @@ describe('Events', () => {
       })
 
       expect(res.data.updateEvent.tags).toHaveLength(3)
+    })
+
+    test.only('can not be updated with endsAt before startsAt', async () => {
+      const {mutate} = testClientPrivate
+
+      const createRes = await mutate({
+        mutation: CreateEvent,
+        variables: {
+          name: 'Test Event',
+          startsAt: '2020-11-25T20:00:00.000Z'
+        }
+      })
+
+      const res = await mutate({
+        mutation: UpdateEvent,
+        variables: {
+          id: createRes.data.createEvent.id,
+          endsAt: '2020-11-24T20:00:00.000Z'
+        }
+      })
+
+      const res2 = await mutate({
+        mutation: UpdateEvent,
+        variables: {
+          id: createRes.data.createEvent.id,
+          startsAt: '2020-11-27T20:00:00.000Z',
+          endsAt: '2020-11-26T20:00:00.000Z'
+        }
+      })
+
+      expect(res).toMatchSnapshot()
+      expect(res2).toMatchSnapshot()
     })
   })
 

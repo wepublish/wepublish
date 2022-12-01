@@ -80,7 +80,8 @@ export const EventEditView = () => {
   const validationModel = Schema.Model({
     name: StringType().isRequired(),
     status: StringType().isRequired(),
-    startsAt: DateType().isRequired()
+    startsAt: DateType().isRequired(),
+    endsAt: DateType().min(new Date(event.startsAt ?? new Date()))
   })
 
   return (

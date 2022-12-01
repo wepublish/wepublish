@@ -1,4 +1,4 @@
-import {CommentState, RatingSystemType} from '@prisma/client'
+import {CommentState, Prisma, RatingSystemType} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLID,
@@ -1174,7 +1174,12 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
       },
       resolve: (root, {tagIds, ...input}, {authenticate, prisma: {event}}) =>
-        createEvent(input as UpdateOrCreateEventInput, tagIds, authenticate, event)
+        createEvent(
+          input as UpdateOrCreateEventInput<Prisma.EventUncheckedCreateInput>,
+          tagIds,
+          authenticate,
+          event
+        )
     },
 
     updateEvent: {
@@ -1191,7 +1196,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
       },
       resolve: (root, {id, tagIds, ...input}, {authenticate, prisma: {event}}) =>
-        updateEvent(id, input as UpdateOrCreateEventInput, tagIds, authenticate, event)
+        updateEvent(
+          id,
+          input as UpdateOrCreateEventInput<Prisma.EventUncheckedUpdateInput>,
+          tagIds,
+          authenticate,
+          event
+        )
     },
 
     deleteEvent: {

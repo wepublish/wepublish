@@ -1,6 +1,7 @@
 import {Prisma, PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 import {authorise, CanCreateEvent, CanDeleteEvent, CanUpdateEvent} from '../permissions'
+import {ApolloError} from 'apollo-server-express'
 
 export const deleteEvent = (
   eventId: string,
@@ -15,19 +16,26 @@ export const deleteEvent = (
   })
 }
 
-export type UpdateOrCreateEventInput = Omit<
-  Prisma.EventUncheckedCreateInput,
-  'createdAt' | 'modifiedAt' | 'tags'
->
+export type UpdateOrCreateEventInput<
+  T = Prisma.EventUncheckedCreateInput | Prisma.EventUncheckedUpdateInput
+> = Omit<T, 'createdAt' | 'modifiedAt' | 'tags'>
+
+const validateEvent = ({startsAt, endsAt}: UpdateOrCreateEventInput) => {
+  if (endsAt && new Date(startsAt as string) > new Date(endsAt as string)) {
+    throw new ApolloError('endsAt can not be earlier than startsAt')
+  }
+}
 
 export const createEvent = (
-  input: UpdateOrCreateEventInput,
+  input: UpdateOrCreateEventInput<Prisma.EventUncheckedCreateInput>,
   tagIds: string[] | undefined,
   authenticate: Context['authenticate'],
   event: PrismaClient['event']
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateEvent, roles)
+
+  validateEvent(input)
 
   return event.create({
     data: {
@@ -41,15 +49,23 @@ export const createEvent = (
   })
 }
 
-export const updateEvent = (
+export const updateEvent = async (
   eventId: string,
-  input: UpdateOrCreateEventInput,
+  input: UpdateOrCreateEventInput<Prisma.EventUncheckedUpdateInput>,
   tagIds: string[] | undefined,
   authenticate: Context['authenticate'],
   event: PrismaClient['event']
 ) => {
   const {roles} = authenticate()
   authorise(CanUpdateEvent, roles)
+
+  const oldEvent = await event.findUnique({
+    where: {
+      id: eventId
+    }
+  })
+
+  validateEvent({startsAt: oldEvent?.startsAt, endsAt: oldEvent?.endsAt, ...input})
 
   return event.update({
     where: {id: eventId},

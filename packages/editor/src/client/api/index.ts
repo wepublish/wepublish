@@ -493,7 +493,7 @@ export type EventConnection = {
 };
 
 export type EventFilter = {
-  openOnly?: Maybe<Scalars['Boolean']>;
+  upcomingOnly?: Maybe<Scalars['Boolean']>;
   tags?: Maybe<Array<Scalars['ID']>>;
 };
 

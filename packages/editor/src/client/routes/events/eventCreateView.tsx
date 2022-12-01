@@ -47,7 +47,8 @@ export const EventCreateView = () => {
   const {StringType, DateType} = Schema.Types
   const validationModel = Schema.Model({
     name: StringType().isRequired(),
-    startsAt: DateType().isRequired()
+    startsAt: DateType().isRequired(),
+    endsAt: DateType().min(new Date(event.startsAt))
   })
 
   return (

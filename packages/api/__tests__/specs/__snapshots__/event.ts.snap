@@ -69,3 +69,54 @@ Object {
   },
 }
 `;
+
+exports[`Events create can not be created with endsAt before startsAt 1`] = `
+Object {
+  "data": Object {
+    "createEvent": null,
+  },
+  "errors": Array [
+    [GraphQLError: endsAt can not be earlier than startsAt],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Events update can not be updated with endsAt before startsAt 1`] = `
+Object {
+  "data": Object {
+    "updateEvent": null,
+  },
+  "errors": Array [
+    [GraphQLError: endsAt can not be earlier than startsAt],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Events update can not be updated with endsAt before startsAt 2`] = `
+Object {
+  "data": Object {
+    "updateEvent": null,
+  },
+  "errors": Array [
+    [GraphQLError: endsAt can not be earlier than startsAt],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
