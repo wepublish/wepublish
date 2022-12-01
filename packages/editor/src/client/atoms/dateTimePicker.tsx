@@ -1,12 +1,10 @@
-import React, {useState} from 'react'
-
 import './dateTimePicker.less'
 
+import React, {useState} from 'react'
 import DatePicker from 'react-datepicker'
-import {Button, ButtonGroup, ButtonToolbar, IconButton, Popover, Whisper, Form} from 'rsuite'
-
 import {useTranslation} from 'react-i18next'
-import InfoIcon from '@rsuite/icons/legacy/Info'
+import {MdInfo} from 'react-icons/md'
+import {Button, ButtonGroup, ButtonToolbar, Form, IconButton, Popover, Whisper} from 'rsuite'
 
 export interface DateTimePreset {
   label: string
@@ -92,7 +90,7 @@ export function DateTimePicker({
                 <p>{helpInfo}</p>
               </Popover>
             }>
-            <IconButton icon={<InfoIcon />} circle size="xs" />
+            <IconButton icon={<MdInfo />} circle size="xs" />
           </Whisper>
         ) : (
           ''

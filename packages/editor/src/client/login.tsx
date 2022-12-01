@@ -1,9 +1,6 @@
-import FacebookIcon from '@rsuite/icons/legacy/Facebook'
-import GoogleIcon from '@rsuite/icons/legacy/Google'
-import SpaceShuttleIcon from '@rsuite/icons/legacy/SpaceShuttle'
-import TwitterIcon from '@rsuite/icons/legacy/Twitter'
 import React, {FormEvent, useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {IoIosRocket, IoLogoFacebook, IoLogoGoogle, IoLogoTwitter} from 'react-icons/io'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Divider, Form, IconButton, Message, toaster} from 'rsuite'
 
@@ -163,13 +160,13 @@ export function Login() {
   function getAuthLogo(name: string): React.ReactElement {
     switch (name) {
       case 'google':
-        return <GoogleIcon />
+        return <IoLogoGoogle />
       case 'facebook':
-        return <FacebookIcon />
+        return <IoLogoFacebook />
       case 'twitter':
-        return <TwitterIcon />
+        return <IoLogoTwitter />
       default:
-        return <SpaceShuttleIcon />
+        return <IoIosRocket />
     }
   }
 

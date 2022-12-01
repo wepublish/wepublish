@@ -1,8 +1,8 @@
 import './emojiPicker.less'
 
-import CloseIcon from '@rsuite/icons/legacy/Close'
 import {BaseEmoji, Picker} from 'emoji-mart'
 import React, {useContext} from 'react'
+import {MdClose} from 'react-icons/md'
 import {Col, IconButton, Row} from 'rsuite'
 
 import {SubMenuContext} from './toolbar'
@@ -18,7 +18,7 @@ export function EmojiPicker({setEmoji}: EmojiPickerProps) {
     <>
       <Row>
         <Col xs={24} style={{textAlign: 'right', marginTop: '0px', marginBottom: '10px'}}>
-          <IconButton icon={<CloseIcon />} onClick={() => closeMenu()} />
+          <IconButton icon={<MdClose />} onClick={() => closeMenu()} />
         </Col>
       </Row>
       <Picker

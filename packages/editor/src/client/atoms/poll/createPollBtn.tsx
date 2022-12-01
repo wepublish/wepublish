@@ -1,9 +1,9 @@
 import {ApolloError} from '@apollo/client'
-import PlusIcon from '@rsuite/icons/legacy/Plus'
 import React, {useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdAdd} from 'react-icons/md'
 import {useNavigate} from 'react-router-dom'
-import {Button, Message, toaster} from 'rsuite'
+import {IconButton, Message, toaster} from 'rsuite'
 
 import {useCreatePollMutation} from '../../api'
 
@@ -36,9 +36,9 @@ export function CreatePollBtn() {
   }
 
   return (
-    <Button appearance="primary" color="green" size="lg" onClick={createPoll} loading={loading}>
-      <PlusIcon style={{marginRight: '5px'}} />
+    <IconButton appearance="primary" onClick={createPoll} loading={loading}>
+      <MdAdd />
       {t('pollList.createNew')}
-    </Button>
+    </IconButton>
   )
 }

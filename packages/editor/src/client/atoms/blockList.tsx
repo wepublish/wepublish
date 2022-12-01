@@ -1,8 +1,6 @@
-import ArrowDownIcon from '@rsuite/icons/legacy/ArrowDown'
-import ArrowUpIcon from '@rsuite/icons/legacy/ArrowUp'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import nanoid from 'nanoid'
 import React, {Fragment, memo, ReactNode, useCallback, useMemo, useState} from 'react'
+import {MdArrowDownward, MdArrowUpward, MdDelete} from 'react-icons/md'
 import {IconButton, Panel} from 'rsuite'
 
 import {
@@ -269,14 +267,14 @@ function ListItemWrapper({
           marginRight: 10
         }}>
         <IconButton
-          icon={<TrashIcon />}
+          icon={<MdDelete />}
           onClick={onDelete}
           disabled={onDelete == null || disabled}
         />
         <div style={{flexGrow: 1}} />
         <div style={{marginTop: 10, marginBottom: 5}}>
           <IconButton
-            icon={<ArrowUpIcon />}
+            icon={<MdArrowUpward />}
             onClick={onMoveUp}
             disabled={onMoveUp == null || disabled}
           />
@@ -284,7 +282,7 @@ function ListItemWrapper({
         <div style={{marginBottom: 10}}>
           <IconButton
             title=""
-            icon={<ArrowDownIcon />}
+            icon={<MdArrowDownward />}
             onClick={onMoveDown}
             disabled={onMoveDown == null || disabled}
           />

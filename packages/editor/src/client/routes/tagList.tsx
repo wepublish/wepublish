@@ -1,8 +1,7 @@
 import {ApolloError} from '@apollo/client'
-import SaveIcon from '@rsuite/icons/legacy/Save'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {memo, useCallback, useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdAdd, MdDelete, MdSave} from 'react-icons/md'
 import {
   Button,
   FlexboxGrid,
@@ -218,13 +217,14 @@ const TagList = memo<TagListProps>(({type}) => {
 
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
           <PermissionControl qualifyingPermissions={['CAN_CREATE_TAG']}>
-            <Button
+            <IconButton
               type="button"
               appearance="primary"
               data-testid="create"
+              icon={<MdAdd />}
               onClick={() => createTag()}>
               {t('tags.overview.createTag')}
-            </Button>
+            </IconButton>
           </PermissionControl>
         </FlexboxGrid.Item>
       </FlexboxGrid>
@@ -260,7 +260,7 @@ const TagList = memo<TagListProps>(({type}) => {
                 <IconButtonTooltip caption={t('save')}>
                   <IconButton
                     type="submit"
-                    icon={<SaveIcon />}
+                    icon={<MdSave />}
                     circle
                     size="sm"
                     style={{marginLeft: '12px'}}
@@ -280,7 +280,7 @@ const TagList = memo<TagListProps>(({type}) => {
               <PermissionControl qualifyingPermissions={['CAN_DELETE_TAG']}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
-                    icon={<TrashIcon />}
+                    icon={<MdDelete />}
                     color="red"
                     appearance="primary"
                     circle

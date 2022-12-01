@@ -1,7 +1,6 @@
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import UploadIcon from '@rsuite/icons/legacy/Upload'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdFileUpload, MdSearch} from 'react-icons/md'
 import {
   Button,
   Drawer,
@@ -45,7 +44,7 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
   const {data, fetchMore, loading: isLoading} = useImageListQuery({
     fetchPolicy: 'network-only',
     variables: {
-      filter: filter,
+      filter,
       take: ImagesPerPage
     }
   })
@@ -119,7 +118,7 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
       <Drawer.Body>
         <Panel bodyFill style={{height: '150px'}}>
           <FileDropInput
-            icon={<UploadIcon />}
+            icon={<MdFileUpload />}
             text={t('articleEditor.panels.dropImage')}
             onDrop={handleDrop}
           />
@@ -133,7 +132,7 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
-              <SearchIcon />
+              <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
         </Panel>

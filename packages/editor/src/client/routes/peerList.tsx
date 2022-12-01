@@ -1,7 +1,6 @@
-import CogIcon from '@rsuite/icons/legacy/Cog'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
+import {MdAdd, MdDelete, MdSettings, MdVisibility, MdVisibilityOff} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Avatar,
@@ -120,9 +119,10 @@ function PeerList() {
             </FlexboxGrid.Item>
             <FlexboxGrid.Item colspan={3}>
               <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
-                <Button
+                <IconButton
                   appearance="primary"
                   disabled={isUpdating}
+                  icon={isDisabled ? <MdVisibility /> : <MdVisibilityOff />}
                   onClick={async e => {
                     e.preventDefault()
                     await updatePeer({
@@ -147,7 +147,7 @@ function PeerList() {
                     })
                   }}>
                   {isDisabled ? t('peerList.overview.enable') : t('peerList.overview.disable')}
-                </Button>
+                </IconButton>
               </PermissionControl>
             </FlexboxGrid.Item>
             <FlexboxGrid.Item colspan={1} style={{textAlign: 'center'}}>
@@ -155,9 +155,11 @@ function PeerList() {
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     disabled={isPeerInfoLoading}
-                    icon={<TrashIcon />}
+                    icon={<MdDelete />}
                     circle
                     size="sm"
+                    appearance="ghost"
+                    color="red"
                     onClick={e => {
                       e.preventDefault()
                       setConfirmationDialogOpen(true)
@@ -206,7 +208,7 @@ function PeerList() {
               <PermissionControl qualifyingPermissions={['CAN_UPDATE_PEER_PROFILE']}>
                 <IconButtonTooltip caption={t('peerList.overview.editProfile')}>
                   <Link to="/peering/profile/edit">
-                    <IconButton size="lg" appearance="link" icon={<CogIcon />} circle />
+                    <IconButton size="lg" appearance="link" icon={<MdSettings />} circle />
                   </Link>
                 </IconButtonTooltip>
               </PermissionControl>
@@ -225,9 +227,9 @@ function PeerList() {
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
           <Link to="/peering/create">
             <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
-              <Button appearance="primary" disabled={isPeerListLoading}>
+              <IconButton appearance="primary" disabled={isPeerListLoading} icon={<MdAdd />}>
                 {t('peerList.overview.newPeer')}
-              </Button>
+              </IconButton>
             </PermissionControl>
           </Link>
         </FlexboxGrid.Item>
@@ -242,7 +244,7 @@ function PeerList() {
 
       <Drawer
         open={isPeerProfileEditModalOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => {
           setPeerProfileEditModalOpen(false)
           navigate('/peering')
@@ -257,7 +259,7 @@ function PeerList() {
 
       <Drawer
         open={isEditModalOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => {
           setEditModalOpen(false)
           navigate('/peering')
