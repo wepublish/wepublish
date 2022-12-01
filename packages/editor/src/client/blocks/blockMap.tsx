@@ -1,3 +1,4 @@
+import EventDetailIcon from '@rsuite/icons/EventDetail'
 import CloneIcon from '@rsuite/icons/legacy/Clone'
 import CodeIcon from '@rsuite/icons/legacy/Code'
 import CoffeeIcon from '@rsuite/icons/legacy/Coffee'
@@ -17,6 +18,7 @@ import React from 'react'
 import {BlockMapForValue} from '../atoms/blockList'
 import {CommentBlock} from './commentBlock'
 import {EmbedBlock} from './embedBlock'
+import {EventBlock} from './eventBlock'
 import {HTMLBlock} from './htmlBlock'
 import {ImageBlock} from './imageBlock'
 import {ImageGalleryBlock} from './imageGalleryBlock'
@@ -178,5 +180,12 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {filter: {}, comments: []},
     label: 'blocks.comment.label',
     icon: <CommentIcon />
+  },
+
+  [BlockType.EventBlock]: {
+    field: props => <EventBlock {...props} />,
+    defaultValue: {filter: {}, events: []},
+    label: 'blocks.event.label',
+    icon: <EventDetailIcon />
   }
 }

@@ -80,7 +80,8 @@ export const GraphQLEventConnection = new GraphQLObjectType<ConnectionResult<Eve
 export const GraphQLEventFilter = new GraphQLInputObjectType({
   name: 'EventFilter',
   fields: {
-    upcomingOnly: {type: GraphQLBoolean}
+    upcomingOnly: {type: GraphQLBoolean},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
   }
 })
 

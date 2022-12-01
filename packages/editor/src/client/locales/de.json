@@ -235,6 +235,16 @@
         "select": "Auswählen",
         "label": "Umfrage"
       },
+      "event": {
+        "title": "Eventblock Bearbeiten",
+        "edit": "Bearbeiten",
+        "filterByTag": "Events filtern nach Etikett",
+        "eventsFilterByTagInformation": "Alle untenstehenden Events werden angezeigt",
+        "cherryPick": "Spezifische Events auswählen",
+        "events": "{{count}} Event",
+        "events_plural": "{{count}} Events",
+        "label": "Events"
+      },
       "embeds": {
         "label": "Embed",
         "overview": {

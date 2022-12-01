@@ -10,6 +10,7 @@ export const getEvent = (id: string, event: PrismaClient['event']) => {
 
 export type EventFilter = {
   upcomingOnly: boolean
+  tags: string[]
 }
 
 export enum EventSort {
@@ -47,6 +48,22 @@ export const createEventOrder = (
   }
 }
 
+const createTagFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput => {
+  if (filter?.tags?.length) {
+    return {
+      tags: {
+        some: {
+          tagId: {
+            in: filter?.tags
+          }
+        }
+      }
+    }
+  }
+
+  return {}
+}
+
 const createUpcomingOnlyFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput => {
   if (filter?.upcomingOnly) {
     return {
@@ -70,7 +87,7 @@ const createUpcomingOnlyFilter = (filter?: Partial<EventFilter>): Prisma.EventWh
 }
 
 export const createEventFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput => ({
-  AND: [createUpcomingOnlyFilter(filter)]
+  AND: [createUpcomingOnlyFilter(filter), createTagFilter(filter)]
 })
 
 export const getEvents = async (
