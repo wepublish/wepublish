@@ -471,7 +471,7 @@ export type EventConnection = {
 };
 
 export type EventFilter = {
-  openOnly?: Maybe<Scalars['Boolean']>;
+  upcomingOnly?: Maybe<Scalars['Boolean']>;
 };
 
 export enum EventSort {
