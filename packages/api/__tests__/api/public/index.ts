@@ -681,6 +681,25 @@ export type Navigation = {
 
 export type NavigationLink = PageNavigationLink | ArticleNavigationLink | ExternalNavigationLink
 
+export type Newsroom = {
+  __typename?: 'Newsroom'
+  id: Scalars['ID']
+  name: Scalars['String']
+  logo?: Maybe<Image>
+  themeColor?: Maybe<Scalars['Color']>
+  themeFontColor?: Maybe<Scalars['Color']>
+  hostURL?: Maybe<Scalars['String']>
+  websiteURL?: Maybe<Scalars['String']>
+  callToActionText?: Maybe<Scalars['RichText']>
+  callToActionURL?: Maybe<Scalars['String']>
+  callToActionImageURL?: Maybe<Scalars['String']>
+  callToActionImage?: Maybe<Image>
+  slug?: Maybe<Scalars['String']>
+  token?: Maybe<Scalars['String']>
+  isDisabled: Scalars['Boolean']
+  isSelf: Scalars['Boolean']
+}
+
 export type OAuth2Account = {
   __typename?: 'OAuth2Account'
   type: Scalars['String']
@@ -796,18 +815,6 @@ export enum PaymentState {
   Declined = 'Declined'
 }
 
-export type Peer = {
-  __typename?: 'Peer'
-  id: Scalars['ID']
-  createdAt: Scalars['DateTime']
-  modifiedAt: Scalars['DateTime']
-  name: Scalars['String']
-  slug: Scalars['String']
-  isDisabled?: Maybe<Scalars['Boolean']>
-  hostURL: Scalars['String']
-  profile?: Maybe<PeerProfile>
-}
-
 export type PeerArticleTeaser = {
   __typename?: 'PeerArticleTeaser'
   style: TeaserStyle
@@ -815,23 +822,21 @@ export type PeerArticleTeaser = {
   preTitle?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
   lead?: Maybe<Scalars['String']>
-  peer?: Maybe<Peer>
+  newsroom?: Maybe<Newsroom>
   articleID: Scalars['ID']
   article?: Maybe<Article>
 }
 
 export type PeerProfile = {
   __typename?: 'PeerProfile'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
   name: Scalars['String']
-  logo?: Maybe<Image>
-  themeColor: Scalars['Color']
-  themeFontColor: Scalars['Color']
-  hostURL: Scalars['String']
-  websiteURL: Scalars['String']
-  callToActionText: Scalars['RichText']
-  callToActionURL: Scalars['String']
-  callToActionImageURL?: Maybe<Scalars['String']>
-  callToActionImage?: Maybe<Image>
+  slug?: Maybe<Scalars['String']>
+  isDisabled?: Maybe<Scalars['Boolean']>
+  hostURL?: Maybe<Scalars['String']>
+  profile?: Maybe<Newsroom>
 }
 
 export type Point = {
@@ -901,10 +906,10 @@ export enum PublishedPageSort {
 
 export type Query = {
   __typename?: 'Query'
-  /** This query returns the peer profile. */
+  /** This query returns the newsroom peer profile. */
   peerProfile: PeerProfile
-  /** This query takes either the ID or the slug and returns the peer profile. */
-  peer?: Maybe<Peer>
+  /** This query takes either the ID or the slug and returns the newsroom peer profile. */
+  newsroom?: Maybe<Newsroom>
   /** This query takes either the ID or the key and returns the navigation. */
   navigation?: Maybe<Navigation>
   /** This query takes either the ID or the slug and returns the author. */
@@ -915,7 +920,7 @@ export type Query = {
   article?: Maybe<Article>
   /** This query returns the articles. */
   articles: ArticleConnection
-  /** This query takes either the peer ID or the peer slug and returns the article. */
+  /** This query takes either the newsroom ID or the newsroom slug and returns the article. */
   peerArticle?: Maybe<Article>
   /** This query takes either the ID, slug or token and returns the page. */
   page?: Maybe<Page>
@@ -948,7 +953,7 @@ export type Query = {
   userPollVote?: Maybe<Scalars['ID']>
 }
 
-export type QueryPeerArgs = {
+export type QueryNewsroomArgs = {
   id?: Maybe<Scalars['ID']>
   slug?: Maybe<Scalars['Slug']>
 }
@@ -988,8 +993,8 @@ export type QueryArticlesArgs = {
 }
 
 export type QueryPeerArticleArgs = {
-  peerID?: Maybe<Scalars['ID']>
-  peerSlug?: Maybe<Scalars['Slug']>
+  newsroomID?: Maybe<Scalars['ID']>
+  newsroomSlug?: Maybe<Scalars['Slug']>
   id: Scalars['ID']
 }
 
@@ -1322,8 +1327,8 @@ export type ArticleQuery = {__typename?: 'Query'} & {
 
 export type PeerArticleQueryVariables = Exact<{
   id: Scalars['ID']
-  peerSlug?: Maybe<Scalars['Slug']>
-  peerID?: Maybe<Scalars['ID']>
+  newsroomSlug?: Maybe<Scalars['Slug']>
+  newsroomID?: Maybe<Scalars['ID']>
 }>
 
 export type PeerArticleQuery = {__typename?: 'Query'} & {
@@ -1420,7 +1425,7 @@ type FullTeaser_PeerArticleTeaser_Fragment = {__typename?: 'PeerArticleTeaser'} 
   'style' | 'preTitle' | 'title' | 'lead' | 'articleID'
 > & {
     image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
-    peer?: Maybe<{__typename?: 'Peer'} & PeerWithProfileFragment>
+    newsroom?: Maybe<{__typename?: 'Newsroom'} & FullNewsroomFragment>
     article?: Maybe<{__typename?: 'Article'} & ArticleRefFragment>
   }
 
@@ -1673,29 +1678,40 @@ export type PageQuery = {__typename?: 'Query'} & {
   >
 }
 
-export type FullPeerProfileFragment = {__typename?: 'PeerProfile'} & Pick<
-  PeerProfile,
-  'name' | 'hostURL' | 'themeColor' | 'themeFontColor'
-> & {logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
-
-export type PeerRefFragment = {__typename?: 'Peer'} & Pick<Peer, 'id' | 'name' | 'slug' | 'hostURL'>
-
-export type PeerWithProfileFragment = {__typename?: 'Peer'} & {
-  profile?: Maybe<{__typename?: 'PeerProfile'} & FullPeerProfileFragment>
-} & PeerRefFragment
+export type FullNewsroomFragment = {__typename?: 'Newsroom'} & Pick<
+  Newsroom,
+  | 'id'
+  | 'name'
+  | 'hostURL'
+  | 'themeColor'
+  | 'themeFontColor'
+  | 'callToActionText'
+  | 'callToActionURL'
+  | 'callToActionImageURL'
+  | 'slug'
+  | 'token'
+  | 'isDisabled'
+  | 'isSelf'
+> & {
+    logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+    callToActionImage?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+  }
 
 export type PeerProfileQueryVariables = Exact<{[key: string]: never}>
 
 export type PeerProfileQuery = {__typename?: 'Query'} & {
-  peerProfile: {__typename?: 'PeerProfile'} & FullPeerProfileFragment
+  peerProfile: {__typename?: 'PeerProfile'} & Pick<
+    PeerProfile,
+    'id' | 'name' | 'slug' | 'isDisabled' | 'hostURL'
+  >
 }
 
-export type PeerQueryVariables = Exact<{
+export type NewsroomQueryVariables = Exact<{
   id: Scalars['ID']
 }>
 
-export type PeerQuery = {__typename?: 'Query'} & {
-  peer?: Maybe<{__typename?: 'Peer'} & PeerRefFragment>
+export type NewsroomQuery = {__typename?: 'Query'} & {
+  newsroom?: Maybe<{__typename?: 'Newsroom'} & FullNewsroomFragment>
 }
 
 export type FullUserFragment = {__typename?: 'User'} & Pick<User, 'name' | 'email'>
@@ -1783,16 +1799,9 @@ export const ArticleRef = gql`
   }
   ${ImageRef}
 `
-export const PeerRef = gql`
-  fragment PeerRef on Peer {
+export const FullNewsroom = gql`
+  fragment FullNewsroom on Newsroom {
     id
-    name
-    slug
-    hostURL
-  }
-`
-export const FullPeerProfile = gql`
-  fragment FullPeerProfile on PeerProfile {
     name
     hostURL
     themeColor
@@ -1800,18 +1809,18 @@ export const FullPeerProfile = gql`
     logo {
       ...ImageRef
     }
+    callToActionText
+    callToActionURL
+    callToActionImage {
+      ...ImageRef
+    }
+    callToActionImageURL
+    slug
+    token
+    isDisabled
+    isSelf
   }
   ${ImageRef}
-`
-export const PeerWithProfile = gql`
-  fragment PeerWithProfile on Peer {
-    ...PeerRef
-    profile {
-      ...FullPeerProfile
-    }
-  }
-  ${PeerRef}
-  ${FullPeerProfile}
 `
 export const PageRef = gql`
   fragment PageRef on Page {
@@ -1848,8 +1857,8 @@ export const FullTeaser = gql`
       preTitle
       title
       lead
-      peer {
-        ...PeerWithProfile
+      newsroom {
+        ...FullNewsroom
       }
       articleID
       article {
@@ -1871,7 +1880,7 @@ export const FullTeaser = gql`
   }
   ${ImageRef}
   ${ArticleRef}
-  ${PeerWithProfile}
+  ${FullNewsroom}
   ${PageRef}
 `
 export const FullBlock = gql`
@@ -2044,8 +2053,8 @@ export const Article = gql`
   ${FullBlock}
 `
 export const PeerArticle = gql`
-  query PeerArticle($id: ID!, $peerSlug: Slug, $peerID: ID) {
-    peerArticle(id: $id, peerSlug: $peerSlug, peerID: $peerID) {
+  query PeerArticle($id: ID!, $newsroomSlug: Slug, $newsroomID: ID) {
+    peerArticle(id: $id, newsroomSlug: $newsroomSlug, newsroomID: $newsroomID) {
       id
       updatedAt
       publishedAt
@@ -2153,18 +2162,21 @@ export const Page = gql`
 export const PeerProfile = gql`
   query PeerProfile {
     peerProfile {
-      ...FullPeerProfile
+      id
+      name
+      slug
+      isDisabled
+      hostURL
     }
   }
-  ${FullPeerProfile}
 `
-export const Peer = gql`
-  query Peer($id: ID!) {
-    peer(id: $id) {
-      ...PeerRef
+export const Newsroom = gql`
+  query Newsroom($id: ID!) {
+    newsroom(id: $id) {
+      ...FullNewsroom
     }
   }
-  ${PeerRef}
+  ${FullNewsroom}
 `
 export const CreateSession = gql`
   mutation CreateSession($email: String!, $password: String!) {

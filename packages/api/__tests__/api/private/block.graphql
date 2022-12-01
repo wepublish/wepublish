@@ -26,9 +26,9 @@ fragment FullTeaser on Teaser {
     title
     lead
 
-    peer {
-      ...PeerWithProfile
-    }
+   peer {
+        ...FullNewsroom
+      }
 
     articleID
     article {

@@ -3,12 +3,21 @@
 exports[`Peers can be created/edited/deleted: can be created 1`] = `
 Object {
   "data": Object {
-    "createPeer": Object {
+    "createNewsroom": Object {
+      "callToActionImage": null,
+      "callToActionImageURL": null,
+      "callToActionText": Array [],
+      "callToActionURL": null,
       "hostURL": "https://host-url.ch/",
       "id": Any<String>,
       "isDisabled": false,
+      "isSelf": false,
+      "logo": null,
       "name": "Create Peer Test",
       "slug": Any<String>,
+      "themeColor": "#000000",
+      "themeFontColor": "#FFFFFF",
+      "token": "testTokenABC123",
     },
   },
   "errors": undefined,
@@ -24,7 +33,7 @@ Object {
 exports[`Peers can be created/edited/deleted: can be deleted 1`] = `
 Object {
   "data": Object {
-    "deletePeer": Any<Object>,
+    "deleteNewsroom": Any<Object>,
   },
   "errors": undefined,
   "extensions": undefined,
@@ -39,12 +48,21 @@ Object {
 exports[`Peers can be created/edited/deleted: can be read by id 1`] = `
 Object {
   "data": Object {
-    "peer": Object {
+    "newsroom": Object {
+      "callToActionImage": null,
+      "callToActionImageURL": null,
+      "callToActionText": Array [],
+      "callToActionURL": null,
       "hostURL": "https://host-url.ch/",
       "id": Any<String>,
       "isDisabled": false,
+      "isSelf": false,
+      "logo": null,
       "name": "Create Peer Test",
       "slug": Any<String>,
+      "themeColor": "#000000",
+      "themeFontColor": "#FFFFFF",
+      "token": "testTokenABC123",
     },
   },
   "errors": undefined,
@@ -60,12 +78,21 @@ Object {
 exports[`Peers can be created/edited/deleted: can be updated 1`] = `
 Object {
   "data": Object {
-    "updatePeer": Object {
+    "updateNewsroom": Object {
+      "callToActionImage": null,
+      "callToActionImageURL": null,
+      "callToActionText": Array [],
+      "callToActionURL": null,
       "hostURL": "https://new-host-url.ch/",
       "id": Any<String>,
       "isDisabled": false,
+      "isSelf": false,
+      "logo": null,
       "name": "Updated Peer",
       "slug": Any<String>,
+      "themeColor": "#000000",
+      "themeFontColor": "#FFFFFF",
+      "token": "newTestTokenABC123",
     },
   },
   "errors": undefined,
@@ -83,14 +110,15 @@ Object {
   "data": Object {
     "peerProfile": Object {
       "callToActionImage": null,
-      "callToActionImageURL": "",
+      "callToActionImageURL": null,
       "callToActionText": Array [],
-      "callToActionURL": "",
-      "hostURL": "https://fakeURL",
+      "callToActionURL": null,
+      "id": Any<String>,
+      "isSelf": true,
       "logo": null,
-      "name": "",
+      "name": "Add your newsroom name here",
       "themeColor": "#000000",
-      "themeFontColor": "#ffffff",
+      "themeFontColor": "#FFFFFF",
     },
   },
   "errors": undefined,
@@ -108,10 +136,10 @@ Object {
   "data": null,
   "errors": Array [
     [GraphQLError: 
-Invalid \`prisma.peerProfile.create()\` invocation:
+Invalid \`prisma.newsroom.update()\` invocation:
 
 
-  Foreign key constraint failed on the field: \`peerProfiles_logoID_fkey (index)\`],
+  Foreign key constraint failed on the field: \`newsrooms_logoID_fkey (index)\`],
   ],
   "extensions": undefined,
   "http": Object {

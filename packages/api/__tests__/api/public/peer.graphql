@@ -1,4 +1,5 @@
-fragment FullPeerProfile on PeerProfile {
+fragment FullNewsroom on Newsroom {
+  id
   name
   hostURL
   themeColor
@@ -6,30 +7,30 @@ fragment FullPeerProfile on PeerProfile {
   logo {
     ...ImageRef
   }
-}
-
-fragment PeerRef on Peer {
-  id
-  name
-  slug
-  hostURL
-}
-
-fragment PeerWithProfile on Peer {
-  ...PeerRef
-  profile {
-    ...FullPeerProfile
+  callToActionText
+  callToActionURL
+  callToActionImage {
+    ...ImageRef
   }
+  callToActionImageURL
+  slug
+  token
+  isDisabled
+  isSelf
 }
 
 query PeerProfile {
   peerProfile {
-    ...FullPeerProfile
+    id
+    name
+   slug
+   isDisabled
+    hostURL
   }
 }
 
-query Peer($id: ID!) {
-  peer(id: $id) {
-    ...PeerRef
+query Newsroom($id: ID!) {
+  newsroom(id: $id) {
+    ...FullNewsroom
   }
 }

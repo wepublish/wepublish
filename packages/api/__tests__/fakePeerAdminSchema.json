@@ -31,7 +31,7 @@
               "deprecationReason": null
             },
             {
-              "name": "peers",
+              "name": "newsrooms",
               "description": null,
               "args": [],
               "type": {
@@ -42,7 +42,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "Peer",
+                    "name": "Newsroom",
                     "ofType": null
                   }
                 }
@@ -51,7 +51,7 @@
               "deprecationReason": null
             },
             {
-              "name": "peer",
+              "name": "newsroom",
               "description": null,
               "args": [
                 {
@@ -71,7 +71,7 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "Peer",
+                "name": "Newsroom",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -818,7 +818,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "peerID",
+                  "name": "newsroomID",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -1716,7 +1716,7 @@
         },
         {
           "kind": "OBJECT",
-          "name": "Peer",
+          "name": "Newsroom",
           "description": null,
           "fields": [
             {
@@ -5002,12 +5002,12 @@
               "deprecationReason": null
             },
             {
-              "name": "peer",
+              "name": "newsroom",
               "description": null,
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "Peer",
+                "name": "Newsroom",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -5736,7 +5736,7 @@
           "description": null,
           "fields": [
             {
-              "name": "peer",
+              "name": "newsroom",
               "description": null,
               "args": [],
               "type": {
@@ -5744,7 +5744,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "Peer",
+                  "name": "Newsroom",
                   "ofType": null
                 }
               },
@@ -6006,7 +6006,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "PeerProfileInput",
+                      "name": "UpdateOwnNewsroomInput",
                       "ofType": null
                     }
                   },
@@ -6026,7 +6026,7 @@
               "deprecationReason": null
             },
             {
-              "name": "createPeer",
+              "name": "createNewsroom",
               "description": null,
               "args": [
                 {
@@ -6037,7 +6037,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "CreatePeerInput",
+                      "name": "CreateNewsroomInput",
                       "ofType": null
                     }
                   },
@@ -6057,7 +6057,7 @@
               "deprecationReason": null
             },
             {
-              "name": "updatePeer",
+              "name": "updateNewsroom",
               "description": null,
               "args": [
                 {
@@ -6082,7 +6082,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "UpdatePeerInput",
+                      "name": "UpdateNewsroomInput",
                       "ofType": null
                     }
                   },
@@ -6094,7 +6094,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "Peer",
+                  "name": "Newsroom",
                   "ofType": null
                 }
               },
@@ -6102,7 +6102,7 @@
               "deprecationReason": null
             },
             {
-              "name": "deletePeer",
+              "name": "deleteNewsroom",
               "description": null,
               "args": [
                 {
@@ -7265,7 +7265,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "PeerProfileInput",
+          "name": "UpdateOwnNewsroomInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -7356,7 +7356,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "CreatePeerInput",
+          "name": "CreateNewsroomInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -7423,7 +7423,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "UpdatePeerInput",
+          "name": "UpdateNewsroomInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -9755,7 +9755,7 @@
               "defaultValue": null
             },
             {
-              "name": "peerID",
+              "name": "newsroomID",
               "description": null,
               "type": {
                 "kind": "NON_NULL",

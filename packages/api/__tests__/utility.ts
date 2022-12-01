@@ -1,4 +1,4 @@
-import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
+import {CommentItemType, Newsroom, PrismaClient} from '@prisma/client'
 import {ApolloServer} from 'apollo-server'
 import {createTestClient} from 'apollo-server-testing'
 import {ApolloServerTestClient} from 'apollo-server-testing/dist/createTestClient'
@@ -34,7 +34,7 @@ class ExampleURLAdapter implements URLAdapter {
     return `https://demo.wepublish.ch/page/${page.id}/${page.slug}`
   }
 
-  getPeeredArticleURL(peer: Peer, article: Article): string {
+  getPeeredArticleURL(peer: Newsroom, article: Article): string {
     return `https://demo.wepublish.ch/peerArticle/${peer.id}/${article.id}`
   }
 
@@ -50,7 +50,7 @@ class ExampleURLAdapter implements URLAdapter {
     return `https://demo.wepulish.ch/page/preview/${token}`
   }
 
-  getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment, peer?: Peer): string {
+  getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment, peer?: Newsroom): string {
     if (comment.itemType === CommentItemType.article) {
       return `https://demo.wepublish.media/comments/a/${item.id}/${item.slug}/${comment.id}`
     }

@@ -1,4 +1,5 @@
-fragment FullPeerProfile on PeerProfile {
+fragment FullNewsroom on Newsroom {
+  id
   name
   hostURL
   themeColor
@@ -12,61 +13,69 @@ fragment FullPeerProfile on PeerProfile {
     ...ImageRef
   }
   callToActionImageURL
-}
-
-fragment PeerRef on Peer {
-  id
-  name
-  isDisabled
   slug
-  hostURL
+  token
+  isDisabled
+  isSelf
 }
 
-fragment PeerWithProfile on Peer {
-  ...PeerRef
-  profile {
-    ...FullPeerProfile
+query RemotePeerProfile($hostURL: String!, $token: String!) {
+  remotePeerProfile(hostURL: $hostURL, token: $token) {
+    id
   }
 }
 
 query PeerProfile {
   peerProfile {
-    ...FullPeerProfile
+    id
+    name
+    themeColor
+    themeFontColor
+    logo {
+      ...ImageRef
+    }
+    callToActionText
+    callToActionURL
+    callToActionImage {
+      ...ImageRef
+    }
+    callToActionImageURL
+    isSelf
   }
 }
 
-mutation UpdatePeerProfile($input: PeerProfileInput!) {
-  updatePeerProfile(input: $input) {
-    ...FullPeerProfile
+query NewsroomList {
+  newsrooms {
+    ...FullNewsroom
   }
 }
 
-query PeerList {
-  peers {
-    ...PeerRef
+query Newsroom($id: ID!) {
+  newsroom(id: $id) {
+    ...FullNewsroom
   }
 }
 
-query Peer($id: ID!) {
-  peer(id: $id) {
-    ...PeerRef
+mutation CreateNewsroom($input: CreateNewsroomInput!) {
+  createNewsroom(input: $input) {
+    ...FullNewsroom
   }
 }
 
-mutation CreatePeer($input: CreatePeerInput!) {
-  createPeer(input: $input) {
-    ...PeerRef
+mutation UpdateNewsroom($id: ID!, $input: UpdateNewsroomInput!) {
+  updateNewsroom(id: $id, input: $input) {
+    ...FullNewsroom
   }
 }
 
-mutation UpdatePeer($id: ID!, $input: UpdatePeerInput!) {
-  updatePeer(id: $id, input: $input) {
-    ...PeerRef
+mutation UpdateOwnNewsroom($input: UpdateOwnNewsroomInput!) {
+  updateOwnNewsroom(input: $input) {
+    ...FullNewsroom
   }
 }
 
-mutation DeletePeer($id: ID!) {
-  deletePeer(id: $id) {
-    ...PeerRef
+mutation DeleteNewsroom($id: ID!) {
+  deleteNewsroom(id: $id) {
+    ...FullNewsroom
   }
 }

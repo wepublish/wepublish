@@ -90,9 +90,9 @@ query ArticleList($filter: String, $cursor: ID, $take: Int) {
 query PeerArticleList($filter: String, $cursors: String, $take: Int) {
   peerArticles(take: $take, cursors: $cursors, filter: {title: $filter}) {
     nodes {
-      peer {
-        ...PeerWithProfile
-      }
+     peer {
+          ...FullNewsroom
+        }
 
       article {
         ...ArticleRef

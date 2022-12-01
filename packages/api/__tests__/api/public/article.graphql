@@ -56,8 +56,8 @@ query Article($id: ID!) {
   }
 }
 
-query PeerArticle($id: ID!, $peerSlug: Slug, $peerID: ID) {
-  peerArticle(id: $id, peerSlug: $peerSlug, peerID: $peerID) {
+query PeerArticle($id: ID!, $newsroomSlug: Slug, $newsroomID: ID) {
+  peerArticle(id: $id, newsroomSlug: $newsroomSlug, newsroomID: $newsroomID) {
     id
     updatedAt
     publishedAt

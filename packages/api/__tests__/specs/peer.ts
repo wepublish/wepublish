@@ -2,15 +2,15 @@ import {ApolloServerTestClient} from 'apollo-server-testing'
 import {FetchMock} from 'jest-fetch-mock'
 import fetch from 'node-fetch'
 import {
-  CreatePeer,
-  CreatePeerInput,
-  DeletePeer,
-  Peer,
-  PeerList,
+  CreateNewsroom,
+  CreateNewsroomInput,
+  DeleteNewsroom,
+  Newsroom,
+  NewsroomList,
   PeerProfile,
-  PeerProfileInput,
-  UpdatePeer,
-  UpdatePeerProfile
+  UpdateNewsroom,
+  UpdateOwnNewsroom,
+  UpdateOwnNewsroomInput
 } from '../api/private'
 import fakePeerAdminSchema from '../fakePeerAdminSchema.json'
 
@@ -35,14 +35,14 @@ describe('Peers', () => {
     const ids: string[] = []
     beforeAll(async () => {
       const {mutate} = testClientPrivate
-      const input: CreatePeerInput = {
+      const input: CreateNewsroomInput = {
         name: `Peer Test ${ids.length}`,
         slug: generateRandomString(),
         hostURL: 'https://host-url.ch/',
         token: `token${ids.length}`
       }
       const res = await mutate({
-        mutation: CreatePeer,
+        mutation: CreateNewsroom,
         variables: {
           input: input
         }
@@ -52,49 +52,49 @@ describe('Peers', () => {
 
     test('can be created', async () => {
       const {mutate} = testClientPrivate
-      const input: CreatePeerInput = {
+      const input: CreateNewsroomInput = {
         name: 'Create Peer Test',
         slug: generateRandomString(),
         hostURL: 'https://host-url.ch/',
         token: 'testTokenABC123'
       }
       const res = await mutate({
-        mutation: CreatePeer,
+        mutation: CreateNewsroom,
         variables: {
           input: input
         }
       })
       expect(res).toMatchSnapshot({
         data: {
-          createPeer: {
+          createNewsroom: {
             id: expect.any(String),
             slug: expect.any(String)
           }
         }
       })
-      ids.unshift(res.data.createPeer?.id)
+      ids.unshift(res.data.createNewsroom?.id)
     })
 
     test('can be read in list', async () => {
       const {query} = testClientPrivate
       const res = await query({
-        query: PeerList
+        query: NewsroomList
       })
 
-      expect(res.data.peers).not.toHaveLength(0)
+      expect(res.data.newsrooms).not.toHaveLength(0)
     })
 
     test('can be read by id', async () => {
       const {query} = testClientPrivate
       const res = await query({
-        query: Peer,
+        query: Newsroom,
         variables: {
           id: ids[0]
         }
       })
       expect(res).toMatchSnapshot({
         data: {
-          peer: {
+          newsroom: {
             id: expect.any(String),
             slug: expect.any(String)
           }
@@ -105,7 +105,7 @@ describe('Peers', () => {
     test('can be updated', async () => {
       const {mutate} = testClientPrivate
       const res = await mutate({
-        mutation: UpdatePeer,
+        mutation: UpdateNewsroom,
         variables: {
           input: {
             name: 'Updated Peer',
@@ -119,7 +119,7 @@ describe('Peers', () => {
 
       expect(res).toMatchSnapshot({
         data: {
-          updatePeer: {
+          updateNewsroom: {
             id: expect.any(String),
             slug: expect.any(String)
           }
@@ -130,7 +130,7 @@ describe('Peers', () => {
     test('can be deleted', async () => {
       const {mutate} = testClientPrivate
       const res = await mutate({
-        mutation: DeletePeer,
+        mutation: DeleteNewsroom,
         variables: {
           id: ids[0]
         }
@@ -138,10 +138,10 @@ describe('Peers', () => {
 
       expect(res).toMatchSnapshot({
         data: {
-          deletePeer: expect.any(Object)
+          deleteNewsroom: expect.any(Object)
         }
       })
-      expect(res.data.deletePeer.id).toBe(ids[0])
+      expect(res.data.deleteNewsroom.id).toBe(ids[0])
 
       ids.shift()
     })
@@ -151,12 +151,18 @@ describe('Peers', () => {
       const res = await query({
         query: PeerProfile
       })
-      expect(res).toMatchSnapshot()
+      expect(res).toMatchSnapshot({
+        data: {
+          peerProfile: {
+            id: expect.any(String)
+          }
+        }
+      })
     })
 
     test('can update peer profile', async () => {
       const {mutate} = testClientPrivate
-      const input: PeerProfileInput = {
+      const input: UpdateOwnNewsroomInput = {
         name: 'test peer profile',
         logoID: 'logoID123',
         themeColor: '#4287f5',
@@ -166,7 +172,7 @@ describe('Peers', () => {
       }
 
       const res = await mutate({
-        mutation: UpdatePeerProfile,
+        mutation: UpdateOwnNewsroom,
         variables: {
           input: input
         }
