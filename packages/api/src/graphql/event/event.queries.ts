@@ -51,7 +51,7 @@ const createUpcomingOnlyFilter = (filter?: Partial<EventFilter>): Prisma.EventWh
   if (filter?.upcomingOnly) {
     return {
       startsAt: {
-        lte: new Date()
+        gte: new Date()
       },
       OR: [
         {
