@@ -139,8 +139,8 @@ function PageEditor() {
       if (publishAt) setPublishAt(new Date(publishAt))
 
       setMetadata({
-        slug,
-        title,
+        slug: slug ?? '',
+        title: title ?? '',
         description: description ?? '',
         tags,
         url,
@@ -195,8 +195,8 @@ function PageEditor() {
 
   function createInput(): PageInput {
     return {
-      slug: metadata.slug,
-      title: metadata.title,
+      slug: metadata.slug ?? '',
+      title: metadata.title ?? '',
       description: metadata.description,
       imageID: metadata.image?.id,
       tags: metadata.tags,
