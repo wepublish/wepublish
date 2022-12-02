@@ -235,6 +235,16 @@
         "select": "Select",
         "label": "Poll"
       },
+      "event": {
+        "title": "Edit Event Block",
+        "edit": "Edit event block",
+        "filterByTag": "Filter comments by tag",
+        "eventsFilterByTagInformation": "All events below will be displayed",
+        "cherryPick": "Select specific events",
+        "events": "{{count}} Event",
+        "events_plural": "{{count}} Events",
+        "label": "Events"
+      },
       "embeds": {
         "label": "Embed",
         "overview": {
