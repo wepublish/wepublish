@@ -224,14 +224,14 @@ export const GraphQLPeerArticle = new GraphQLObjectType<PeerArticle, Context>({
   fields: {
     peer: {
       type: GraphQLNonNull(GraphQLNewsroom),
-      resolve: createProxyingResolver(({newsroomID}, {}, {loaders}) =>
-        loaders.newsroom.load(newsroomID)
+      resolve: createProxyingResolver(({newsroomId}, {}, {loaders}) =>
+        loaders.newsroom.load(newsroomId)
       )
     },
     peeredArticleURL: {
       type: GraphQLNonNull(GraphQLString),
-      resolve: createProxyingResolver(async ({newsroomID, article}, {}, {loaders, urlAdapter}) => {
-        const peer = await loaders.newsroom.load(newsroomID)
+      resolve: createProxyingResolver(async ({newsroomId, article}, {}, {loaders, urlAdapter}) => {
+        const peer = await loaders.newsroom.load(newsroomId)
         if (!peer || !article) return ''
         return urlAdapter.getPeeredArticleURL(peer, article)
       })

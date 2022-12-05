@@ -15,7 +15,7 @@ export interface Author {
   imageID?: string | null
   links: AuthorLink[]
   bio: RichTextNode[]
-  newsroomID?: string | null
+  newsroomId?: string | null
 }
 
 export interface AuthorInput {

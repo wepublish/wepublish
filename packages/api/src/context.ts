@@ -659,6 +659,7 @@ export async function contextFromRequest(
               console.error(peer)
               return null
             }
+            if (!peer.hostURL || !peer.token) return null
             const peerTimeout =
               ((
                 await prisma.setting.findUnique({
@@ -667,7 +668,7 @@ export async function contextFromRequest(
               )?.value as number) ||
               parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
               3000
-            const fetcher = createFetcher(peer?.hostURL ?? '', peer?.token ?? '', peerTimeout)
+            const fetcher = createFetcher(peer.hostURL, peer.token, peerTimeout)
 
             return makeRemoteExecutableSchema({
               schema: await introspectSchema(fetcher),
@@ -693,6 +694,7 @@ export async function contextFromRequest(
               console.error(peer)
               return null
             }
+            if (!peer.hostURL || !peer.token) return null
             const peerTimeout =
               ((
                 await prisma.setting.findUnique({
@@ -702,8 +704,8 @@ export async function contextFromRequest(
               parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
               3000
             const fetcher = createFetcher(
-              url.resolve(peer?.hostURL ?? '', 'admin'),
-              peer?.token ?? '',
+              url.resolve(peer.hostURL, 'admin'),
+              peer.token,
               peerTimeout
             )
 

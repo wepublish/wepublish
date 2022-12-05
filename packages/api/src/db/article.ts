@@ -50,7 +50,7 @@ export interface Article extends ArticleData {
 }
 
 export interface PeerArticle {
-  newsroomID: string
+  newsroomId: string
   article: Article
 }
 
