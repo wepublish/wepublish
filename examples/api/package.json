@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "@wepublish/api": "*",
-    "@wepublish/api-media-karma": "*",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cross-fetch": "^3.0.6",
