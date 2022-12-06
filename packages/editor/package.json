@@ -37,7 +37,7 @@
     "watch:server:start": "nodemon -r dotenv/config --inspect=0.0.0.0:9230 ./bin/run-server.js",
     "watch:server:build": "tsc -b ./src/shared ./src/server --watch",
     "watch:client:build-ts": "tsc -b ./src/client --watch",
-    "watch:client:build-wp": "webpack-dev-server --mode development --hot --inline",
+    "watch:client:build-wp": "webpack serve --mode development --hot --inline",
     "watch:generate": "yarn generate:api --watch \"./src/**/*.graphql\"",
     "crlf": "crlf --set=LF dist/**/*",
     "clean": "shx rm -rf ./dist ./assets",
@@ -92,11 +92,12 @@
     "@babel/preset-react": "^7.10.4",
     "@babel/preset-typescript": "^7.7.4",
     "@graphql-codegen/add": "^2.0.1",
-    "@graphql-codegen/cli": "^1.17.10",
-    "@graphql-codegen/introspection": "^1.18.0",
-    "@graphql-codegen/typescript": "^1.17.10",
-    "@graphql-codegen/typescript-operations": "^1.17.8",
-    "@graphql-codegen/typescript-react-apollo": "^2.0.7",
+    "@graphql-codegen/cli": "^2.15.0",
+    "@graphql-codegen/typescript": "^2.8.3",
+    "@graphql-codegen/typescript-document-nodes": "^2.3.8",
+    "@graphql-codegen/typescript-operations": "^2.5.8",
+    "@graphql-codegen/introspection": "^2.2.1",
+    "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@testing-library/react": "^12.0.0",
     "@types/apollo-upload-client": "^14.1.0",
     "@types/emoji-mart": "3.0.0",
@@ -121,9 +122,9 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "fork-ts-checker-webpack-plugin": "^4.1.4",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^26.4.2",
-    "jsdom": "^19.0.0",
-    "jsdom-global": "^3.0.2",
+    "jest": "28.1.1",
+    "jest-environment-jsdom": "28.1.1",
+    "ts-jest": "28.0.5",
     "less": "^3.12.2",
     "less-loader": "^7.0.2",
     "nodemon": "^2.0.1",
@@ -131,94 +132,9 @@
     "shx": "^0.3.2",
     "snapshot-diff": "^0.9.0",
     "style-loader": "^1.0.0",
-    "ts-jest": "^26.4.1",
     "typescript": "^4.6.4",
     "webpack": "^4.35.3",
-    "webpack-cli": "^3.3.5",
+    "webpack-cli": "^4.3.5",
     "webpack-dev-server": "^3.9.0"
-  },
-  "eslintConfig": {
-    "plugins": [
-      "i18next",
-      "simple-import-sort"
-    ],
-    "rules": {
-      "react/display-name": [
-        0
-      ],
-      "react/jsx-boolean-value": [
-        1
-      ],
-      "react/prop-types": [
-        0
-      ],
-      "i18next/no-literal-string": [
-        2,
-        {
-          "markupOnly": true,
-          "ignoreAttribute": [
-            "as",
-            "dateFormat",
-            "componentClass",
-            "autoComplete",
-            "controlId",
-            "value",
-            "name",
-            "placement",
-            "trigger",
-            "dataKey",
-            "eventKey",
-            "appearance",
-            "icon",
-            "iconActive",
-            "size",
-            "display",
-            "fixed",
-            "flexDirection",
-            "alignItems",
-            "element",
-            "variant",
-            "color",
-            "align",
-            "position",
-            "justifyContent",
-            "justify",
-            "overflow",
-            "target",
-            "spacing",
-            "sdkLanguage",
-            "axis",
-            "flexWrap",
-            "minHeight",
-            "href",
-            "fixed",
-            "format",
-            "stack",
-            "backdrop",
-            "data-testid",
-            "to",
-            "path"
-          ],
-          "ignoreComponent": [
-            "code"
-          ],
-          "ignore": [
-            "—",
-            "&"
-          ]
-        }
-      ],
-      "simple-import-sort/imports": 1,
-      "simple-import-sort/exports": 1,
-      "import/first": 1,
-      "import/newline-after-import": 1,
-      "import/no-duplicates": 1
-    },
-    "extends": [
-      "../../package.json"
-    ],
-    "ignorePatterns": [
-      "src/client/api/index.ts"
-    ]
   }
 }

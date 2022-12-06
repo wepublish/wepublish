@@ -105,7 +105,11 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     fetchPolicy: 'network-only'
   })
 
-  const {data: pageListData, fetchMore: fetchMorePages, error: pageListError} = usePageListQuery({
+  const {
+    data: pageListData,
+    fetchMore: fetchMorePages,
+    error: pageListError
+  } = usePageListQuery({
     variables: pageListVariables,
     fetchPolicy: 'no-cache'
   })
@@ -129,7 +133,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
         {placement: 'topEnd'}
       )
     }
-  }, [articleListError ?? pageListError ?? peerArticleListError])
+  }, [articleListError, pageListError, peerArticleListError])
 
   function loadMoreArticles() {
     fetchMoreArticles({
@@ -140,7 +144,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
         return {
           articles: {
             ...fetchMoreResult.articles,
-            nodes: [...prev.articles.nodes, ...fetchMoreResult?.articles.nodes]
+            nodes: [...prev.articles.nodes, ...fetchMoreResult.articles.nodes]
           }
         }
       }
@@ -159,7 +163,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
         return {
           peerArticles: {
             ...fetchMoreResult.peerArticles,
-            nodes: [...prev.peerArticles.nodes, ...fetchMoreResult?.peerArticles.nodes]
+            nodes: [...prev.peerArticles.nodes, ...fetchMoreResult.peerArticles.nodes]
           }
         }
       }
@@ -175,7 +179,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
         return {
           pages: {
             ...fetchMoreResult.pages,
-            nodes: [...prev.pages.nodes, ...fetchMoreResult?.pages.nodes]
+            nodes: [...prev.pages.nodes, ...fetchMoreResult.pages.nodes]
           }
         }
       }

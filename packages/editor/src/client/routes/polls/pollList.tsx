@@ -105,11 +105,9 @@ function PollList() {
               <Table.HeaderCell>{t('pollList.question')}</Table.HeaderCell>
               <Table.Cell>
                 {(rowData: Poll) => (
-                  <>
-                    <Link to={`/polls/edit/${rowData.id}`}>
-                      {rowData.question || t('pollList.noQuestion')}
-                    </Link>
-                  </>
+                  <Link to={`/polls/edit/${rowData.id}`}>
+                    {rowData.question || t('pollList.noQuestion')}
+                  </Link>
                 )}
               </Table.Cell>
             </Table.Column>

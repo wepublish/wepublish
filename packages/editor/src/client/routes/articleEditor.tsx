@@ -27,9 +27,9 @@ import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
 import {NavigationBar} from '../atoms/navigationBar'
 import {
-  authorise,
   createCheckedPermissionComponent,
-  PermissionControl
+  PermissionControl,
+  useAuthorisation
 } from '../atoms/permissionControl'
 import {BlockMap} from '../blocks/blockMap'
 import {
@@ -74,21 +74,17 @@ function ArticleEditor() {
     document.getElementById(ElementID.Settings)!.textContent!
   )
 
-  const [
-    createArticle,
-    {loading: isCreating, data: createData, error: createError}
-  ] = useCreateArticleMutation()
+  const [createArticle, {loading: isCreating, data: createData, error: createError}] =
+    useCreateArticleMutation()
 
   const [updateArticle, {loading: isUpdating, error: updateError}] = useUpdateArticleMutation({
     fetchPolicy: 'no-cache'
   })
 
-  const [
-    publishArticle,
-    {data: publishData, loading: isPublishing, error: publishError}
-  ] = usePublishArticleMutation({
-    fetchPolicy: 'no-cache'
-  })
+  const [publishArticle, {data: publishData, loading: isPublishing, error: publishError}] =
+    usePublishArticleMutation({
+      fetchPolicy: 'no-cache'
+    })
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
@@ -125,7 +121,11 @@ function ArticleEditor() {
 
   const articleID = id || createData?.createArticle.id
 
-  const {data: articleData, refetch, loading: isLoading} = useArticleQuery({
+  const {
+    data: articleData,
+    refetch,
+    loading: isLoading
+  } = useArticleQuery({
     errorPolicy: 'all',
     fetchPolicy: 'no-cache',
     variables: {id: articleID!}
@@ -144,7 +144,7 @@ function ArticleEditor() {
 
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
 
-  const isAuthorized = authorise('CAN_CREATE_ARTICLE')
+  const isAuthorized = useAuthorisation('CAN_CREATE_ARTICLE')
 
   const handleChange = useCallback((blocks: React.SetStateAction<BlockValue[]>) => {
     setBlocks(blocks)

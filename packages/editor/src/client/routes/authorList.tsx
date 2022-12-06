@@ -73,7 +73,11 @@ function AuthorList() {
     order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
   }
 
-  const {data, loading: isLoading, refetch: authorListRefetch} = useAuthorListQuery({
+  const {
+    data,
+    loading: isLoading,
+    refetch: authorListRefetch
+  } = useAuthorListQuery({
     variables: authorListQueryVariables,
     fetchPolicy: 'network-only'
   })
@@ -176,22 +180,20 @@ function AuthorList() {
             <HeaderCell>{t('authors.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: FullAuthorFragment) => (
-                <>
-                  <PermissionControl qualifyingPermissions={['CAN_DELETE_AUTHOR']}>
-                    <IconButtonTooltip caption={t('delete')}>
-                      <IconButton
-                        icon={<MdDelete />}
-                        circle
-                        size="sm"
-                        style={{marginLeft: '5px'}}
-                        onClick={() => {
-                          setConfirmationDialogOpen(true)
-                          setCurrentAuthor(rowData)
-                        }}
-                      />
-                    </IconButtonTooltip>
-                  </PermissionControl>
-                </>
+                <PermissionControl qualifyingPermissions={['CAN_DELETE_AUTHOR']}>
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButton
+                      icon={<MdDelete />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setConfirmationDialogOpen(true)
+                        setCurrentAuthor(rowData)
+                      }}
+                    />
+                  </IconButtonTooltip>
+                </PermissionControl>
               )}
             </Cell>
           </Column>

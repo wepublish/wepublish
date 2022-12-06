@@ -158,7 +158,7 @@ export function TeaserBlock({
               width: '100%',
               height: '100%'
             }}>
-            {contentForTeaser(teaser, numColumns)}
+            {ContentForTeaser(teaser, numColumns)}
 
             <div
               style={{
@@ -198,7 +198,7 @@ export function TeaserBlock({
   )
 }
 
-export function contentForTeaser(teaser: Teaser, numColumns?: number) {
+export function ContentForTeaser(teaser: Teaser, numColumns?: number) {
   const {t} = useTranslation()
   switch (teaser.type) {
     case TeaserType.Article: {

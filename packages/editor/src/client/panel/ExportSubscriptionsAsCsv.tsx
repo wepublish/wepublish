@@ -41,14 +41,12 @@ export function ExportSubscriptionsAsCsv({filter}: ExportSubscriptionAsCsvProps)
   }
 
   return (
-    <>
-      <IconButton
-        appearance="primary"
-        icon={<MdFileDownload />}
-        loading={loading}
-        onClick={initDownload}>
-        {t('subscriptionList.overview.downloadCsv')}
-      </IconButton>
-    </>
+    <IconButton
+      appearance="primary"
+      icon={<MdFileDownload />}
+      loading={loading}
+      onClick={initDownload}>
+      {t('subscriptionList.overview.downloadCsv')}
+    </IconButton>
   )
 }

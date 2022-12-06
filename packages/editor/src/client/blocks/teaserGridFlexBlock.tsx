@@ -14,7 +14,7 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
-import {contentForTeaser} from './teaserGridBlock'
+import {ContentForTeaser} from './teaserGridBlock'
 import {FlexAlignment, FlexTeaser, Teaser, TeaserGridFlexBlockValue} from './types'
 
 export function FlexTeaserBlock({
@@ -41,7 +41,7 @@ export function FlexTeaserBlock({
               width: '100%',
               height: '100%'
             }}>
-            {contentForTeaser(teaser)}
+            {ContentForTeaser(teaser)}
 
             <div
               style={{

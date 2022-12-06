@@ -32,7 +32,7 @@ import {
 } from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
-import {authorise, createCheckedPermissionComponent} from '../atoms/permissionControl'
+import {createCheckedPermissionComponent, useAuthorisation} from '../atoms/permissionControl'
 import {EditUserPassword} from '../atoms/user/editUserPassword'
 import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
@@ -86,7 +86,11 @@ function UserEditView() {
   /**
    * fetch user from api
    */
-  const {data, loading: isLoading, error: loadError} = useUserQuery({
+  const {
+    data,
+    loading: isLoading,
+    error: loadError
+  } = useUserQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
     skip: id === undefined
@@ -133,7 +137,7 @@ function UserEditView() {
 
   const isDisabled =
     isLoading || isUserRoleLoading || isCreating || isUpdating || loadError !== undefined
-  const canResetPassword = authorise('CAN_RESET_USER_PASSWORD')
+  const canResetPassword = useAuthorisation('CAN_RESET_USER_PASSWORD')
 
   /**
    * Function to update address object

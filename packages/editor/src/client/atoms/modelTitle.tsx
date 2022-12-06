@@ -65,35 +65,33 @@ export function ModelTitle({
   }
 
   return (
-    <>
-      <FlexboxGrid align="middle" style={{paddingRight: '5px', paddingBottom: '20px'}}>
-        {/* title */}
-        <FlexboxGrid.Item colspan={12}>
-          <Row>
-            <Col xs={2} style={{paddingTop: '3px'}}>
-              <Link to={closePath}>
-                <h1>
-                  <MdChevronLeft />
-                </h1>
-              </Link>
-            </Col>
-            <Col xs={16}>
-              <h2>{titleView()}</h2>
-            </Col>
-          </Row>
-        </FlexboxGrid.Item>
+    <FlexboxGrid align="middle" style={{paddingRight: '5px', paddingBottom: '20px'}}>
+      {/* title */}
+      <FlexboxGrid.Item colspan={12}>
+        <Row>
+          <Col xs={2} style={{paddingTop: '3px'}}>
+            <Link to={closePath}>
+              <h1>
+                <MdChevronLeft />
+              </h1>
+            </Link>
+          </Col>
+          <Col xs={16}>
+            <h2>{titleView()}</h2>
+          </Col>
+        </Row>
+      </FlexboxGrid.Item>
 
-        {/* actions */}
-        <FlexboxGrid.Item colspan={12}>
-          <FlexboxGrid justify="end" align="middle">
-            {/* additional menu content */}
-            <FlexboxGrid.Item>{additionalMenu}</FlexboxGrid.Item>
+      {/* actions */}
+      <FlexboxGrid.Item colspan={12}>
+        <FlexboxGrid justify="end" align="middle">
+          {/* additional menu content */}
+          <FlexboxGrid.Item>{additionalMenu}</FlexboxGrid.Item>
 
-            {/* save btns */}
-            <FlexboxGrid.Item style={{marginLeft: '40px'}}>{actionsView()}</FlexboxGrid.Item>
-          </FlexboxGrid>
-        </FlexboxGrid.Item>
-      </FlexboxGrid>
-    </>
+          {/* save btns */}
+          <FlexboxGrid.Item style={{marginLeft: '40px'}}>{actionsView()}</FlexboxGrid.Item>
+        </FlexboxGrid>
+      </FlexboxGrid.Item>
+    </FlexboxGrid>
   )
 }

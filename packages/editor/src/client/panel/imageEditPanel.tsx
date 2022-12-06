@@ -16,9 +16,9 @@ import {Point} from '../atoms/draggable'
 import {FocalPointInput} from '../atoms/focalPointInput'
 import {ImageMetaData} from '../atoms/imageMetaData'
 import {
-  authorise,
   createCheckedPermissionComponent,
-  PermissionControl
+  PermissionControl,
+  useAuthorisation
 } from '../atoms/permissionControl'
 import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
 
@@ -68,7 +68,7 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
   })
 
   const [isLoading, setLoading] = useState(true)
-  const isAuthorized = authorise('CAN_CREATE_IMAGE')
+  const isAuthorized = useAuthorisation('CAN_CREATE_IMAGE')
   const isDisabled = isLoading || isUpdating || isUploading || !isAuthorized
   const isUpload = file !== undefined
   console.log('isLoading', isLoading)
@@ -248,153 +248,151 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
   })
 
   return (
-    <>
-      <Form
-        fluid
-        model={validationModel}
-        onSubmit={validationPassed => validationPassed && handleSave()}
-        style={{height: '100%'}}>
-        <Drawer.Header>
-          <Drawer.Title>
-            {isUpload ? t('images.panels.uploadImage') : t('images.panels.editImage')}
-          </Drawer.Title>
+    <Form
+      fluid
+      model={validationModel}
+      onSubmit={validationPassed => validationPassed && handleSave()}
+      style={{height: '100%'}}>
+      <Drawer.Header>
+        <Drawer.Title>
+          {isUpload ? t('images.panels.uploadImage') : t('images.panels.editImage')}
+        </Drawer.Title>
 
-          <Drawer.Actions>
-            <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
-              <Button appearance={'primary'} disabled={isDisabled} type="submit">
-                {isUpload ? t('images.panels.upload') : t('save')}
-              </Button>
-            </PermissionControl>
-            <Button appearance={'subtle'} onClick={() => onClose?.()}>
-              {isUpload ? t('images.panels.cancel') : t('images.panels.close')}
+        <Drawer.Actions>
+          <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
+            <Button appearance={'primary'} disabled={isDisabled} type="submit">
+              {isUpload ? t('images.panels.upload') : t('save')}
             </Button>
-          </Drawer.Actions>
-        </Drawer.Header>
+          </PermissionControl>
+          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            {isUpload ? t('images.panels.cancel') : t('images.panels.close')}
+          </Button>
+        </Drawer.Actions>
+      </Drawer.Header>
 
-        <Drawer.Body>
-          {!isLoading && (
-            <>
-              <Panel style={{backgroundColor: 'dark'}}>
-                {imageURL && imageWidth && imageHeight && (
-                  <FocalPointInput
-                    imageURL={imageURL}
-                    imageWidth={imageWidth}
-                    imageHeight={imageHeight}
-                    maxHeight={300}
-                    focalPoint={focalPoint}
-                    onChange={point => setFocalPoint(point)}
-                  />
+      <Drawer.Body>
+        {!isLoading && (
+          <>
+            <Panel style={{backgroundColor: 'dark'}}>
+              {imageURL && imageWidth && imageHeight && (
+                <FocalPointInput
+                  imageURL={imageURL}
+                  imageWidth={imageWidth}
+                  imageHeight={imageHeight}
+                  maxHeight={300}
+                  focalPoint={focalPoint}
+                  onChange={point => setFocalPoint(point)}
+                />
+              )}
+            </Panel>
+            <Panel header={t('images.panels.description')}>
+              <DescriptionList>
+                <DescriptionListItem label={t('images.panels.filename')}>
+                  {filename || t('images.panels.untitled')}
+                  {extension}
+                </DescriptionListItem>
+                <DescriptionListItem label={t('images.panels.dimension')}>
+                  {t('images.panels.imageDimension', {imageWidth, imageHeight})}
+                </DescriptionListItem>
+                {createdAt && (
+                  <DescriptionListItem label={t('images.panels.created')}>
+                    {t('images.panels.createdAt', {createdAt: new Date(createdAt)})}
+                  </DescriptionListItem>
                 )}
-              </Panel>
-              <Panel header={t('images.panels.description')}>
-                <DescriptionList>
-                  <DescriptionListItem label={t('images.panels.filename')}>
-                    {filename || t('images.panels.untitled')}
-                    {extension}
+                {updatedAt && (
+                  <DescriptionListItem label={t('images.panels.updated')}>
+                    {t('images.panels.updatedAt', {updatedAt: new Date(updatedAt)})}
                   </DescriptionListItem>
-                  <DescriptionListItem label={t('images.panels.dimension')}>
-                    {t('images.panels.imageDimension', {imageWidth, imageHeight})}
-                  </DescriptionListItem>
-                  {createdAt && (
-                    <DescriptionListItem label={t('images.panels.created')}>
-                      {t('images.panels.createdAt', {createdAt: new Date(createdAt)})}
-                    </DescriptionListItem>
-                  )}
-                  {updatedAt && (
-                    <DescriptionListItem label={t('images.panels.updated')}>
-                      {t('images.panels.updatedAt', {updatedAt: new Date(updatedAt)})}
-                    </DescriptionListItem>
-                  )}
-                  <DescriptionListItem label={t('images.panels.fileSize')}>
-                    {prettyBytes(fileSize)}
-                  </DescriptionListItem>
+                )}
+                <DescriptionListItem label={t('images.panels.fileSize')}>
+                  {prettyBytes(fileSize)}
+                </DescriptionListItem>
 
-                  {originalImageURL && (
-                    <DescriptionListItem label={t('images.panels.link')}>
-                      <a href={originalImageURL} target="_blank" rel="noreferrer">
-                        {originalImageURL}
-                      </a>
-                    </DescriptionListItem>
-                  )}
-                </DescriptionList>
-              </Panel>
-              <Panel header={t('images.panels.information')}>
-                <Form.Group controlId="imageFilename">
-                  <Form.ControlLabel>{t('images.panels.filename')}</Form.ControlLabel>
-                  <Form.Control
-                    name="filename"
-                    value={filename}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setFilename(value)}
-                  />
-                </Form.Group>
-                <Form.Group controlId="imageTitle">
-                  <Form.ControlLabel>{t('images.panels.title')}</Form.ControlLabel>
-                  <Form.Control
-                    name="title"
-                    value={title}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setTitle(value)}
-                  />
-                </Form.Group>
-                <Form.Group controlId="imageDescription">
-                  <Form.ControlLabel>{t('images.panels.description')}</Form.ControlLabel>
-                  <Form.Control
-                    name="description"
-                    value={description}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setDescription(value)}
-                  />
-                </Form.Group>
-                <Form.Group controlId="imageTags">
-                  <Form.ControlLabel>{t('images.panels.tags')}</Form.ControlLabel>
-                  <TagPicker
-                    virtualized
-                    block
-                    creatable
-                    disabled={isDisabled}
-                    value={tags}
-                    data={tags.map(tag => ({value: tag, label: tag}))}
-                    onChange={value => setTags(value ?? [])}
-                  />
-                </Form.Group>
-              </Panel>
-              <Panel header={t('images.panels.attribution')}>
-                <Form.Group controlId="imageSource">
-                  <Form.ControlLabel>{t('images.panels.source')}</Form.ControlLabel>
-                  <Form.Control
-                    name="source"
-                    value={source}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setSource(value)}
-                  />
-                </Form.Group>
-                <Form.Group controlId="imageLink">
-                  <Form.ControlLabel>{t('images.panels.link')}</Form.ControlLabel>
-                  <Form.Control
-                    name="link"
-                    value={link}
-                    placeholder={t('images.panels.urlPlaceholder')}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setLink(value)}
-                  />
-                  <p>{t('images.panels.sourceLink')}</p>
-                </Form.Group>
-                <Form.Group controlId="imageLicense">
-                  <Form.ControlLabel>{t('images.panels.license')}</Form.ControlLabel>
-                  <Form.Control
-                    name="license"
-                    value={license}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setLicense(value)}
-                  />
-                </Form.Group>
-              </Panel>
-            </>
-          )}
-        </Drawer.Body>
-      </Form>
-    </>
+                {originalImageURL && (
+                  <DescriptionListItem label={t('images.panels.link')}>
+                    <a href={originalImageURL} target="_blank" rel="noreferrer">
+                      {originalImageURL}
+                    </a>
+                  </DescriptionListItem>
+                )}
+              </DescriptionList>
+            </Panel>
+            <Panel header={t('images.panels.information')}>
+              <Form.Group controlId="imageFilename">
+                <Form.ControlLabel>{t('images.panels.filename')}</Form.ControlLabel>
+                <Form.Control
+                  name="filename"
+                  value={filename}
+                  disabled={isDisabled}
+                  onChange={(value: string) => setFilename(value)}
+                />
+              </Form.Group>
+              <Form.Group controlId="imageTitle">
+                <Form.ControlLabel>{t('images.panels.title')}</Form.ControlLabel>
+                <Form.Control
+                  name="title"
+                  value={title}
+                  disabled={isDisabled}
+                  onChange={(value: string) => setTitle(value)}
+                />
+              </Form.Group>
+              <Form.Group controlId="imageDescription">
+                <Form.ControlLabel>{t('images.panels.description')}</Form.ControlLabel>
+                <Form.Control
+                  name="description"
+                  value={description}
+                  disabled={isDisabled}
+                  onChange={(value: string) => setDescription(value)}
+                />
+              </Form.Group>
+              <Form.Group controlId="imageTags">
+                <Form.ControlLabel>{t('images.panels.tags')}</Form.ControlLabel>
+                <TagPicker
+                  virtualized
+                  block
+                  creatable
+                  disabled={isDisabled}
+                  value={tags}
+                  data={tags.map(tag => ({value: tag, label: tag}))}
+                  onChange={value => setTags(value ?? [])}
+                />
+              </Form.Group>
+            </Panel>
+            <Panel header={t('images.panels.attribution')}>
+              <Form.Group controlId="imageSource">
+                <Form.ControlLabel>{t('images.panels.source')}</Form.ControlLabel>
+                <Form.Control
+                  name="source"
+                  value={source}
+                  disabled={isDisabled}
+                  onChange={(value: string) => setSource(value)}
+                />
+              </Form.Group>
+              <Form.Group controlId="imageLink">
+                <Form.ControlLabel>{t('images.panels.link')}</Form.ControlLabel>
+                <Form.Control
+                  name="link"
+                  value={link}
+                  placeholder={t('images.panels.urlPlaceholder')}
+                  disabled={isDisabled}
+                  onChange={(value: string) => setLink(value)}
+                />
+                <p>{t('images.panels.sourceLink')}</p>
+              </Form.Group>
+              <Form.Group controlId="imageLicense">
+                <Form.ControlLabel>{t('images.panels.license')}</Form.ControlLabel>
+                <Form.Control
+                  name="license"
+                  value={license}
+                  disabled={isDisabled}
+                  onChange={(value: string) => setLicense(value)}
+                />
+              </Form.Group>
+            </Panel>
+          </>
+        )}
+      </Drawer.Body>
+    </Form>
   )
 }
 

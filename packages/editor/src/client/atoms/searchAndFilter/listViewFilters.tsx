@@ -95,14 +95,12 @@ export function ListViewFilters({
       return <></>
     }
     return (
-      <>
-        <Form.Group style={{width: '100%'}}>
-          <Button onClick={() => resetFilter()} color="red" appearance="ghost">
-            <MdClose style={{marginRight: '5px'}} />
-            {t('articleList.filter.reset')}
-          </Button>
-        </Form.Group>
-      </>
+      <Form.Group style={{width: '100%'}}>
+        <Button onClick={() => resetFilter()} color="red" appearance="ghost">
+          <MdClose style={{marginRight: '5px'}} />
+          {t('articleList.filter.reset')}
+        </Button>
+      </Form.Group>
     )
   }
 

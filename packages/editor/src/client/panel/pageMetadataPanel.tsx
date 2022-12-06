@@ -7,9 +7,9 @@ import {ImageRefFragment} from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
 import {
-  authorise,
   createCheckedPermissionComponent,
-  PermissionControl
+  PermissionControl,
+  useAuthorisation
 } from '../atoms/permissionControl'
 import {Textarea} from '../atoms/textarea'
 import {MetaDataType} from '../blocks/types'
@@ -62,7 +62,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
 
   const [activeKey, setActiveKey] = useState(MetaDataType.General)
 
-  const isAuthorized = authorise('CAN_CREATE_PAGE')
+  const isAuthorized = useAuthorisation('CAN_CREATE_PAGE')
 
   const [metaDataProperties, setMetadataProperties] = useState<ListValue<PageMetadataProperty>[]>(
     properties

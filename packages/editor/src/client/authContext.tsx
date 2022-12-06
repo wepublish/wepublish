@@ -2,8 +2,8 @@ import {gql, useQuery} from '@apollo/client'
 import React, {createContext, Dispatch, ReactNode, useEffect, useReducer} from 'react'
 import {usePageVisibility} from 'react-page-visibility'
 
-import {LocalStorageKey} from './utility'
 import {UserRole} from './api'
+import {LocalStorageKey} from './utility'
 
 export interface AuthContextState {
   readonly session?: {

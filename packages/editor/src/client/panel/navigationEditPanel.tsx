@@ -16,9 +16,9 @@ import {
 } from '../api'
 import {ListInput, ListValue} from '../atoms/listInput'
 import {
-  authorise,
   createCheckedPermissionComponent,
-  PermissionControl
+  PermissionControl,
+  useAuthorisation
 } from '../atoms/permissionControl'
 import {generateID, getOperationNameFromDocument} from '../utility'
 
@@ -38,7 +38,7 @@ export interface NavigationLink {
 }
 
 function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
-  const isAuthorized = authorise('CAN_CREATE_NAVIGATION')
+  const isAuthorized = useAuthorisation('CAN_CREATE_NAVIGATION')
   const [name, setName] = useState('')
   const [key, setKey] = useState('')
   const [navigationLinks, setNavigationLinks] = useState<ListValue<NavigationLink>[]>([])
@@ -51,13 +51,21 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
     {label: 'External Link', value: 'ExternalNavigationLink'}
   ]
 
-  const {data, loading: isLoading, error: loadError} = useNavigationQuery({
+  const {
+    data,
+    loading: isLoading,
+    error: loadError
+  } = useNavigationQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
     skip: id === undefined
   })
 
-  const {data: pageData, loading: isLoadingPageData, error: pageLoadError} = usePageListQuery({
+  const {
+    data: pageData,
+    loading: isLoadingPageData,
+    error: pageLoadError
+  } = usePageListQuery({
     variables: {take: 50},
     fetchPolicy: 'no-cache'
   })
@@ -77,10 +85,8 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
     }
   )
 
-  const [
-    updateNavigation,
-    {loading: isUpdating, error: updateError}
-  ] = useUpdateNavigationMutation()
+  const [updateNavigation, {loading: isUpdating, error: updateError}] =
+    useUpdateNavigationMutation()
 
   const isDisabled =
     isLoading ||

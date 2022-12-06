@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {toaster, Button, Form, Message, Modal, Slider} from 'rsuite'
-import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+import {Button, Form, Message, Modal, Slider, toaster} from 'rsuite'
 
 import {usePagePreviewLinkQuery} from '../api'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface PagePreviewProps {
   id: string
@@ -20,7 +20,12 @@ function PagePreviewLinkPanel({props, onClose}: PagePreviewLinkPanelProps) {
 
   const {t} = useTranslation()
 
-  const {data, loading: isLoading, error: loadError, refetch} = usePagePreviewLinkQuery({
+  const {
+    data,
+    loading: isLoading,
+    error: loadError,
+    refetch
+  } = usePagePreviewLinkQuery({
     variables: {
       id: props.id,
       hours

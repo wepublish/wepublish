@@ -3,8 +3,8 @@ import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Input, Message, Panel, toaster} from 'rsuite'
 
 import {TokenListDocument, useCreateTokenMutation} from '../api'
-import {getOperationNameFromDocument} from '../utility'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+import {getOperationNameFromDocument} from '../utility'
 
 export interface TokenGeneratePanelProps {
   onClose?(): void
