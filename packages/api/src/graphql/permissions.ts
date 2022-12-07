@@ -569,25 +569,25 @@ export const CanDeletePoll: Permission = {
 
 export const CanGetEvent: Permission = {
   id: 'CAN_GET_EVENT',
-  description: 'Allows to get a event',
+  description: 'Allows to get an event',
   deprecated: false
 }
 
 export const CanCreateEvent: Permission = {
   id: 'CAN_CREATE_EVENT',
-  description: 'Allows to create a event',
+  description: 'Allows to create an event',
   deprecated: false
 }
 
 export const CanUpdateEvent: Permission = {
   id: 'CAN_UPDATE_EVENT',
-  description: 'Allows to update a event',
+  description: 'Allows to update an event',
   deprecated: false
 }
 
 export const CanDeleteEvent: Permission = {
   id: 'CAN_DELETE_EVENT',
-  description: 'Allows to delete a event',
+  description: 'Allows to delete an event',
   deprecated: false
 }
 

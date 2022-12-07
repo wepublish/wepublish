@@ -450,7 +450,7 @@ Object {
         },
         Object {
           "deprecated": false,
-          "description": "Allows to update a event",
+          "description": "Allows to update an event",
           "id": "CAN_UPDATE_EVENT",
         },
         Object {
@@ -460,7 +460,7 @@ Object {
         },
         Object {
           "deprecated": false,
-          "description": "Allows to create a event",
+          "description": "Allows to create an event",
           "id": "CAN_CREATE_EVENT",
         },
       ],
@@ -942,17 +942,17 @@ Object {
         },
         Object {
           "deprecated": false,
-          "description": "Allows to update a event",
+          "description": "Allows to update an event",
           "id": "CAN_UPDATE_EVENT",
         },
         Object {
           "deprecated": false,
-          "description": "Allows to delete a event",
+          "description": "Allows to delete an event",
           "id": "CAN_DELETE_EVENT",
         },
         Object {
           "deprecated": false,
-          "description": "Allows to create a event",
+          "description": "Allows to create an event",
           "id": "CAN_CREATE_EVENT",
         },
       ],
@@ -1442,22 +1442,22 @@ Object {
       },
       Object {
         "deprecated": false,
-        "description": "Allows to get a event",
+        "description": "Allows to get an event",
         "id": "CAN_GET_EVENT",
       },
       Object {
         "deprecated": false,
-        "description": "Allows to update a event",
+        "description": "Allows to update an event",
         "id": "CAN_UPDATE_EVENT",
       },
       Object {
         "deprecated": false,
-        "description": "Allows to delete a event",
+        "description": "Allows to delete an event",
         "id": "CAN_DELETE_EVENT",
       },
       Object {
         "deprecated": false,
-        "description": "Allows to create a event",
+        "description": "Allows to create an event",
         "id": "CAN_CREATE_EVENT",
       },
     ],
