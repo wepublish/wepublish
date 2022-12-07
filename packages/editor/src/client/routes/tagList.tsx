@@ -121,8 +121,6 @@ const TagList = memo<TagListProps>(({type}) => {
     }
   })
 
-  console.log('hey', data)
-
   const [createTag] = useCreateTagMutation({
     variables: {
       type

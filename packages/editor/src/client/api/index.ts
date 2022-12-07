@@ -236,7 +236,7 @@ export type BildwurfAdBlockInput = {
   zoneID: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HtmlBlock | PollBlock | EventBlock | CommentBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HtmlBlock | PollBlock | CommentBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>;
@@ -258,7 +258,6 @@ export type BlockInput = {
   embed?: Maybe<EmbedBlockInput>;
   html?: Maybe<HtmlBlockInput>;
   poll?: Maybe<PollBlockInput>;
-  event?: Maybe<EventBlockInput>;
   comment?: Maybe<CommentBlockInput>;
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
   teaserGrid?: Maybe<TeaserGridBlockInput>;
@@ -464,27 +463,6 @@ export type Event = {
   image?: Maybe<Image>;
 };
 
-export type EventBlock = {
-  __typename?: 'EventBlock';
-  filter: EventBlockFilter;
-  events: Array<Event>;
-};
-
-export type EventBlockFilter = {
-  __typename?: 'EventBlockFilter';
-  tags?: Maybe<Array<Scalars['ID']>>;
-  events?: Maybe<Array<Scalars['ID']>>;
-};
-
-export type EventBlockInput = {
-  filter: EventBlockInputFilter;
-};
-
-export type EventBlockInputFilter = {
-  tags?: Maybe<Array<Scalars['ID']>>;
-  events?: Maybe<Array<Scalars['ID']>>;
-};
-
 export type EventConnection = {
   __typename?: 'EventConnection';
   nodes: Array<Event>;
@@ -494,7 +472,6 @@ export type EventConnection = {
 
 export type EventFilter = {
   upcomingOnly?: Maybe<Scalars['Boolean']>;
-  tags?: Maybe<Array<Scalars['ID']>>;
 };
 
 export enum EventSort {
@@ -2915,9 +2892,6 @@ export type ArticleQuery = (
         { __typename?: 'PollBlock' }
         & FullBlock_PollBlock_Fragment
       ) | (
-        { __typename?: 'EventBlock' }
-        & FullBlock_EventBlock_Fragment
-      ) | (
         { __typename?: 'CommentBlock' }
         & FullBlock_CommentBlock_Fragment
       ) | (
@@ -3275,8 +3249,6 @@ type FullBlock_PollBlock_Fragment = (
   )> }
 );
 
-type FullBlock_EventBlock_Fragment = { __typename: 'EventBlock' };
-
 type FullBlock_CommentBlock_Fragment = (
   { __typename: 'CommentBlock' }
   & { filter: (
@@ -3348,7 +3320,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = (
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_EventBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
 
 export type RatingSystemQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4267,9 +4239,6 @@ export type PageQuery = (
       ) | (
         { __typename?: 'PollBlock' }
         & FullBlock_PollBlock_Fragment
-      ) | (
-        { __typename?: 'EventBlock' }
-        & FullBlock_EventBlock_Fragment
       ) | (
         { __typename?: 'CommentBlock' }
         & FullBlock_CommentBlock_Fragment
