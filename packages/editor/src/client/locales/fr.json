@@ -953,10 +953,10 @@
       "createNew": "Créer Sondage",
       "question": "Question",
       "opensAt": "Débute le",
-      "openedAt": "Débuté le {{openedAt}}",
-      "pollWillOpenAt": "Débute le {{opensAt}}",
+      "openedAt": "Débuté le {{openedAt, ccc PP p}}",
+      "pollWillOpenAt": "Débute le {{opensAt, ccc PP p}}",
       "noQuestion": "Aucune question saisie",
-      "hasBeenClosedAt": "Fermé le {{closedAt}}",
+      "hasBeenClosedAt": "Fermé le {{closedAt, ccc PP p}}",
       "closedAt": "Fermé le",
       "closedAtNone": "Non fermé",
       "answersCount": "Réponses saisies",
@@ -1009,7 +1009,7 @@
     "pollStateIndication": {
       "closed": "Sondage fermé",
       "open": "Sondage en cours",
-      "waiting": "Sondage en attente d'ouverture le {{date}}"
+      "waiting": "Sondage en attente d'ouverture le {{date, ccc PP p}}"
     },
     "navbar": {
       "events": "Events",
@@ -1258,8 +1258,8 @@
         "name": "Name",
         "delete": "Delete",
         "create": "Create new event",
-        "startsAt": "Starts at {{startsAt}}",
-        "endsAt": "Ends at {{endsAt}}",
+        "startsAt": "Starts at {{startsAt, ccc PP p}}",
+        "endsAt": "Ends at {{endsAt, ccc PP p}}",
         "endsAtNone": "Open ended"
       },
       "create": {

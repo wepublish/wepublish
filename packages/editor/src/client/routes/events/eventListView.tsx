@@ -7,15 +7,14 @@ import {Button, FlexboxGrid, IconButton, Message, Pagination, Table, toaster} fr
 
 import {Event, useEventListQuery} from '../../api'
 import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
-import {dateTimeLocalString, DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
+import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
 import {DeleteEventModal} from './deleteEventModal'
 
 export function EventStartsAtView({event}: {event: Event}) {
   const startsAt = new Date(event.startsAt)
-  const startsAtLocalString = dateTimeLocalString(startsAt)
   const {t} = useTranslation()
 
-  return <>{t('event.list.startsAt', {startsAt: startsAtLocalString})}</>
+  return <>{t('event.list.startsAt', {startsAt})}</>
 }
 
 export function EventEndsAtView({event}: {event: Event}) {
@@ -23,8 +22,7 @@ export function EventEndsAtView({event}: {event: Event}) {
   const {t} = useTranslation()
 
   if (endsAt) {
-    const endsAtLocal = dateTimeLocalString(endsAt)
-    return <>{t('event.list.endsAt', {endsAt: endsAtLocal})}</>
+    return <>{t('event.list.endsAt', {endsAt})}</>
   }
 
   return <>{t('event.list.endsAtNone')}</>

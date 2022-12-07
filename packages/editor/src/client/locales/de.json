@@ -605,10 +605,10 @@
       "createNew": "Umfrage erstellen",
       "question": "Frage",
       "opensAt": "Beginnt am",
-      "openedAt": "Begonnen am {{openedAt}}",
-      "pollWillOpenAt": "Beginnt am {{opensAt}}",
+      "openedAt": "Begonnen am {{openedAt, ccc PP p}}",
+      "pollWillOpenAt": "Beginnt am {{opensAt, ccc PP p}}",
       "noQuestion": "Keine Frage erfasst",
-      "hasBeenClosedAt": "Geschlossen am {{closedAt}}",
+      "hasBeenClosedAt": "Geschlossen am {{closedAt, ccc PP p}}",
       "closedAt": "Geschlossen am",
       "closedAtNone": "Nicht geschlossen",
       "answersCount": "Erfasste Antworten",
@@ -661,7 +661,7 @@
     "pollStateIndication": {
       "closed": "Umfrage geschlossen",
       "open": "Umfrage läuft",
-      "waiting": "Umfrage wartet auf Öffnung am {{date}}"
+      "waiting": "Umfrage wartet auf Öffnung am {{date, ccc PP p}}"
     },
     "navbar": {
       "events": "Events",
@@ -1262,8 +1262,8 @@
         "name": "Name",
         "delete": "Löschen",
         "create": "Neues Event erstellen",
-        "startsAt": "Startet um {{startsAt}}",
-        "endsAt": "Ended um {{endsAt}}",
+        "startsAt": "Startet um {{startsAt, ccc PP p}}",
+        "endsAt": "Ended um {{endsAt, ccc PP p}}",
         "endsAtNone": "Offenes Ende"
       },
       "create": {

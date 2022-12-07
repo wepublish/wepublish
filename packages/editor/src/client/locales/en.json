@@ -605,10 +605,10 @@
       "createNew": "Create Poll",
       "question": "Question",
       "opensAt": "Opens at",
-      "openedAt": "Opened at {{openedAt}}",
-      "pollWillOpenAt": "Opens at {{opensAt}}",
+      "openedAt": "Opened at {{openedAt, ccc PP p}}",
+      "pollWillOpenAt": "Opens at {{opensAt, ccc PP p}}",
       "noQuestion": "No question captured",
-      "hasBeenClosedAt": "Closed at {{closedAt}}",
+      "hasBeenClosedAt": "Closed at {{closedAt, ccc PP p}}",
       "closedAt": "Closed at",
       "closedAtNone": "Not closed",
       "answersCount": "Possible answers",
@@ -661,7 +661,7 @@
     "pollStateIndication": {
       "closed": "Poll closed",
       "open": "Poll open",
-      "waiting": "Poll is waiting for the opening on {{date}}"
+      "waiting": "Poll is waiting for the opening on {{date, ccc PP p}}"
     },
     "navbar": {
       "events": "Events",
@@ -1261,8 +1261,8 @@
         "name": "Name",
         "delete": "Delete",
         "create": "Create new event",
-        "startsAt": "Starts at {{startsAt}}",
-        "endsAt": "Ends at {{endsAt}}",
+        "startsAt": "Starts at {{startsAt, ccc PP p}}",
+        "endsAt": "Ends at {{endsAt, ccc PP p}}",
         "endsAtNone": "Open ended"
       },
       "create": {
