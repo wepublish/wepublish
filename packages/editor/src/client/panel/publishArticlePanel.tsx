@@ -1,16 +1,13 @@
 import React, {useEffect, useState} from 'react'
-
-import {ArticleMetadata} from './articleMetadataPanel'
-
+import {useTranslation} from 'react-i18next'
 import {Button, Checkbox, Message, Modal} from 'rsuite'
 
+import {DateTimePicker} from '../atoms/dateTimePicker'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
-
-import {DateTimePicker} from '../atoms/dateTimePicker'
 import {InfoColor} from '../atoms/infoMessage'
-import {useTranslation} from 'react-i18next'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+import {ArticleMetadata} from './articleMetadataPanel'
 
 export interface PublishArticlePanelProps {
   publishedAtDate?: Date
@@ -45,7 +42,6 @@ function PublishArticlePanel({
   const [isPublishDateActive, setIsPublishDateActive] = useState<boolean>(
     !(publishedAt?.getTime() === publishAt?.getTime() || !publishAt) ?? false
   )
-
   const {t} = useTranslation()
 
   useEffect(() => {
@@ -88,7 +84,9 @@ function PublishArticlePanel({
 
         <Checkbox
           checked={isPublishDateActive}
-          onChange={isPublishDateActive => setIsPublishDateActive(!isPublishDateActive)}>
+          onChange={(_, checked) => {
+            setIsPublishDateActive(checked)
+          }}>
           {t('articleEditor.panels.publishAtDateCheckbox')}
         </Checkbox>
 

@@ -117,7 +117,7 @@ export type ArticleRevision = {
   canonicalUrl?: Maybe<Scalars['String']>;
   url: Scalars['String'];
   image?: Maybe<Image>;
-  authors: Array<Maybe<Author>>;
+  authors: Array<Author>;
   breaking: Scalars['Boolean'];
   socialMediaTitle?: Maybe<Scalars['String']>;
   socialMediaDescription?: Maybe<Scalars['String']>;
@@ -275,6 +275,7 @@ export type Comment = {
   authorType: CommentAuthorType;
   itemID: Scalars['ID'];
   itemType: CommentItemType;
+  peerId?: Maybe<Scalars['ID']>;
   parentComment?: Maybe<Comment>;
   revisions: Array<CommentRevision>;
   source?: Maybe<Scalars['String']>;
@@ -2555,10 +2556,10 @@ export type ArticleRefFragment = (
   )>, latest: (
     { __typename?: 'ArticleRevision' }
     & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead' | 'canonicalUrl'>
-    & { authors: Array<Maybe<(
+    & { authors: Array<(
       { __typename?: 'Author' }
       & Pick<Author, 'name'>
-    )>>, image?: Maybe<(
+    )>, image?: Maybe<(
       { __typename?: 'Image' }
       & ImageRefFragment
     )> }
@@ -2742,10 +2743,10 @@ export type ArticleQuery = (
       )>, properties: Array<(
         { __typename?: 'Properties' }
         & Pick<Properties, 'key' | 'value' | 'public'>
-      )>, authors: Array<Maybe<(
+      )>, authors: Array<(
         { __typename?: 'Author' }
         & AuthorRefFragment
-      )>>, socialMediaAuthors: Array<(
+      )>, socialMediaAuthors: Array<(
         { __typename?: 'Author' }
         & AuthorRefFragment
       )>, socialMediaImage?: Maybe<(

@@ -37,6 +37,10 @@ class WepublishURLAdapter implements URLAdapter {
   }
 
   getPublicArticleURL(article: PublicArticle): string {
+    if (article.canonicalUrl) {
+      return article.canonicalUrl
+    }
+
     return `${this.websiteURL}/a/${article.id}/${article.slug}`
   }
 
@@ -327,7 +331,7 @@ export async function runServer() {
     challenge
   })
 
-  // eslint-disable-nex t-line no-unused-expressions
+  // eslint-disable-next-line no-unused-expressions
   yargs(hideBin(process.argv))
     .command(
       ['listen', '$0'],
