@@ -1,7 +1,6 @@
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table} from 'rsuite'
 
@@ -77,9 +76,9 @@ function MemberPlanList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_MEMBER_PLAN']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <Link to="/memberplans/create">
-              <Button appearance="primary" disabled={isLoading}>
+              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('memberPlanList.createNew')}
-              </Button>
+              </IconButton>
             </Link>
           </FlexboxGrid.Item>
         </PermissionControl>
@@ -87,7 +86,7 @@ function MemberPlanList() {
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
-              <SearchIcon />
+              <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
         </FlexboxGrid.Item>
@@ -109,9 +108,11 @@ function MemberPlanList() {
               <PermissionControl qualifyingPermissions={['CAN_DELETE_MEMBER_PLAN']}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
-                    icon={<TrashIcon />}
+                    icon={<MdDelete />}
                     circle
                     size="sm"
+                    appearance="ghost"
+                    color="red"
                     style={{marginLeft: '5px'}}
                     onClick={() => {
                       setConfirmationDialogOpen(true)
@@ -127,7 +128,7 @@ function MemberPlanList() {
 
       <Drawer
         open={isEditModalOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => {
           setEditModalOpen(false)
           navigate('/memberplans')
@@ -145,7 +146,7 @@ function MemberPlanList() {
         />
       </Drawer>
 
-      <Modal open={isConfirmationDialogOpen} size={'sm'}>
+      <Modal open={isConfirmationDialogOpen} size="sm">
         <Modal.Header>
           <Modal.Title>{t('memberPlanList.deleteModalTitle')}</Modal.Title>
         </Modal.Header>

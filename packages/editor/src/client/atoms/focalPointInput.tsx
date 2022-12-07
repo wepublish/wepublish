@@ -1,9 +1,8 @@
-import React, {useRef, useState, useLayoutEffect} from 'react'
-
-import {DraggableContainer, Draggable, Point} from './draggable'
-
+import React, {useLayoutEffect, useRef, useState} from 'react'
+import {MdCropSquare} from 'react-icons/md'
 import {Panel} from 'rsuite'
-import SquareOIcon from '@rsuite/icons/legacy/SquareO'
+
+import {Draggable, DraggableContainer, Point} from './draggable'
 
 export interface FocalPointInputProps {
   imageURL: string
@@ -129,7 +128,7 @@ export function FocalPoint() {
         backgroundColor: 'rgba(0, 0, 0, 0.4)'
       } */
       }}>
-      <SquareOIcon />
+      <MdCropSquare />
     </div>
   )
 }

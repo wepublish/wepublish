@@ -183,7 +183,7 @@ export function TeaserEditPanel({
         />
       </Drawer.Body>
 
-      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
@@ -193,7 +193,7 @@ export function TeaserEditPanel({
         />
       </Drawer>
       {image && (
-        <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
+        <Drawer open={isEditModalOpen} size="sm" onClose={() => setEditModalOpen(false)}>
           <ImageEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
         </Drawer>
       )}

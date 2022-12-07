@@ -1,10 +1,14 @@
-import ArrowLeftIcon from '@rsuite/icons/legacy/ArrowLeft'
-import CloudUploadIcon from '@rsuite/icons/legacy/CloudUpload'
-import EyeIcon from '@rsuite/icons/legacy/Eye'
-import NewspaperOIcon from '@rsuite/icons/legacy/NewspaperO'
-import SaveIcon from '@rsuite/icons/legacy/Save'
+import './routes.less'
+
 import React, {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {
+  MdKeyboardBackspace,
+  MdCloudUpload,
+  MdIntegrationInstructions,
+  MdRemoveRedEye,
+  MdSave
+} from 'react-icons/md'
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import {Badge, Drawer, IconButton, Message, Modal, Notification, Tag, toaster} from 'rsuite'
 
@@ -313,9 +317,10 @@ function PageEditor() {
               leftChildren={
                 <Link to="/pages">
                   <IconButton
+                    className="actionButton"
                     style={{marginTop: '4px', marginBottom: '20px'}}
-                    size={'lg'}
-                    icon={<ArrowLeftIcon />}
+                    size="lg"
+                    icon={<MdKeyboardBackspace />}
                     onClick={e => {
                       if (!unsavedChangesDialog()) e.preventDefault()
                     }}>
@@ -326,8 +331,9 @@ function PageEditor() {
               centerChildren={
                 <div style={{marginTop: '4px'}}>
                   <IconButton
-                    icon={<NewspaperOIcon />}
-                    size={'lg'}
+                    icon={<MdIntegrationInstructions />}
+                    className="actionButton"
+                    size="lg"
                     disabled={isDisabled}
                     onClick={() => setMetaDrawerOpen(true)}>
                     {t('pageEditor.overview.metadata')}
@@ -336,11 +342,12 @@ function PageEditor() {
                   {isNew && createData == null ? (
                     <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
                       <IconButton
+                        className="actionButton"
                         style={{
                           marginLeft: '10px'
                         }}
-                        size={'lg'}
-                        icon={<SaveIcon />}
+                        size="lg"
+                        icon={<MdSave />}
                         disabled={isDisabled}
                         onClick={handleSave}>
                         {t('create')}
@@ -350,11 +357,12 @@ function PageEditor() {
                     <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
                         <IconButton
+                          className="actionButton"
                           style={{
                             marginLeft: '10px'
                           }}
-                          size={'lg'}
-                          icon={<SaveIcon />}
+                          size="lg"
+                          icon={<MdSave />}
                           disabled={isDisabled}
                           onClick={handleSave}>
                           {t('save')}
@@ -371,8 +379,9 @@ function PageEditor() {
                             style={{
                               marginLeft: '10px'
                             }}
-                            size={'lg'}
-                            icon={<CloudUploadIcon />}
+                            className="actionButton"
+                            size="lg"
+                            icon={<MdCloudUpload />}
                             disabled={isDisabled}
                             onClick={() => {
                               setPublishDialogOpen(true)
@@ -389,10 +398,11 @@ function PageEditor() {
                 <PermissionControl qualifyingPermissions={['CAN_GET_PAGE_PREVIEW_LINK']}>
                   <Link to="#">
                     <IconButton
+                      className="actionButton"
                       disabled={hasChanged || !id || !canPreview}
                       style={{marginTop: '4px'}}
-                      size={'lg'}
-                      icon={<EyeIcon />}
+                      size="lg"
+                      icon={<MdRemoveRedEye />}
                       onClick={() => {
                         previewLinkFetch({
                           variables: {
@@ -413,7 +423,7 @@ function PageEditor() {
           </BlockList>
         </EditorTemplate>
       </fieldset>
-      <Drawer open={isMetaDrawerOpen} size={'sm'} onClose={() => setMetaDrawerOpen(false)}>
+      <Drawer open={isMetaDrawerOpen} size="sm" onClose={() => setMetaDrawerOpen(false)}>
         <PageMetadataPanel
           value={metadata}
           onClose={() => {
@@ -427,7 +437,7 @@ function PageEditor() {
         />
       </Drawer>
 
-      <Modal open={isPublishDialogOpen} size={'sm'} onClose={() => setPublishDialogOpen(false)}>
+      <Modal open={isPublishDialogOpen} size="sm" onClose={() => setPublishDialogOpen(false)}>
         <PublishPagePanel
           publishedAtDate={publishedAt}
           updatedAtDate={updatedAt}

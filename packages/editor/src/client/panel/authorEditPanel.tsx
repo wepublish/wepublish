@@ -1,6 +1,6 @@
-import LinkIcon from '@rsuite/icons/legacy/Link'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdLink} from 'react-icons/md'
 import {
   Button,
   Drawer,
@@ -244,7 +244,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                     <Form.Group>
                       <InputGroup inside style={{width: '230px', marginLeft: '5px'}}>
                         <InputGroup.Addon>
-                          <LinkIcon />
+                          <MdLink />
                         </InputGroup.Addon>
 
                         <Form.Control
@@ -273,7 +273,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         </Drawer.Body>
       </Form>
 
-      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={(value: ImageRefFragment) => {
@@ -283,7 +283,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         />
       </Drawer>
 
-      <Drawer open={isEditModalOpen} size={'sm'}>
+      <Drawer open={isEditModalOpen} size="sm">
         <ImageEditPanel
           id={image?.id}
           onClose={() => setEditModalOpen(false)}

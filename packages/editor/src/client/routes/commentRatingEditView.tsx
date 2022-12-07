@@ -1,9 +1,7 @@
 import {ApolloError} from '@apollo/client'
-import PlusIcon from '@rsuite/icons/legacy/Plus'
-import SpinnerIcon from '@rsuite/icons/legacy/Spinner'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdAdd, MdDelete, MdOutlineSave, MdReplay} from 'react-icons/md'
 import {
   Button,
   FlexboxGrid,
@@ -113,11 +111,12 @@ function CommentRatingEditView() {
 
         {ratingSystem && (
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
-            <Button
+            <IconButton
               type="button"
               appearance="primary"
               data-testid="save"
               disabled={isLoading}
+              icon={<MdOutlineSave />}
               onClick={() =>
                 updateAnswer({
                   variables: {
@@ -128,12 +127,12 @@ function CommentRatingEditView() {
               }>
               {isLoading ? (
                 <p style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                  <SpinnerIcon spin /> {t('comments.ratingEdit.loading')}
+                  <MdReplay /> {t('comments.ratingEdit.loading')}
                 </p>
               ) : (
                 t('save')
               )}
-            </Button>
+            </IconButton>
           </FlexboxGrid.Item>
         )}
       </FlexboxGrid>
@@ -232,19 +231,21 @@ export function RatingAnswers({
 
           <IconButtonTooltip caption={t('delete')}>
             <IconButton
-              icon={<TrashIcon />}
+              icon={<MdDelete />}
               circle
-              size={'sm'}
+              size="sm"
+              appearance="ghost"
+              color="red"
               onClick={() => onDeleteAnswer(answer.id)}
             />
           </IconButtonTooltip>
         </FlexboxGrid>
       ))}
 
-      <Button appearance="ghost" style={{marginTop: '12px'}} onClick={() => onAddAnswer()}>
-        <PlusIcon style={{marginRight: '5px'}} />
+      <IconButton appearance="ghost" style={{marginTop: '12px'}} onClick={() => onAddAnswer()}>
+        <MdAdd />
         {t('comments.ratingEdit.newAnswer')}
-      </Button>
+      </IconButton>
     </>
   )
 }

@@ -1,12 +1,10 @@
 import React from 'react'
-
-import {Button, Drawer, Notification, toaster, Form} from 'rsuite'
+import {useTranslation} from 'react-i18next'
+import {MdUploadFile} from 'react-icons/md'
+import {Button, Drawer, Form, Notification, toaster} from 'rsuite'
 
 import {FileDropInput} from '../atoms/fileDropInput'
-
-import {useTranslation} from 'react-i18next'
 import {getImgMinSizeToCompress} from '../utility'
-import UploadIcon from '@rsuite/icons/legacy/Upload'
 
 export interface ImageUploadPanelProps {
   onClose(): void
@@ -49,7 +47,7 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
       <Drawer.Body>
         <div style={{height: '100px'}}>
           <FileDropInput
-            icon={<UploadIcon />}
+            icon={<MdUploadFile />}
             text={t('articleEditor.panels.dropImage')}
             onDrop={handleDrop}
           />

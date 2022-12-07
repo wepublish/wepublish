@@ -1,16 +1,18 @@
-import BoldIcon from '@rsuite/icons/legacy/Bold'
-import ItalicIcon from '@rsuite/icons/legacy/Italic'
-import LinkIcon from '@rsuite/icons/legacy/Link'
-import ListOlIcon from '@rsuite/icons/legacy/ListOl'
-import ListUlIcon from '@rsuite/icons/legacy/ListUl'
-import SmileOIcon from '@rsuite/icons/legacy/SmileO'
-import StrikethroughIcon from '@rsuite/icons/legacy/Strikethrough'
-import SubscriptIcon from '@rsuite/icons/legacy/Subscript'
-import SuperscriptIcon from '@rsuite/icons/legacy/Superscript'
-import TableIcon from '@rsuite/icons/legacy/Table'
-import UnderlineIcon from '@rsuite/icons/legacy/Underline'
 import React, {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {
+  MdFormatBold,
+  MdFormatItalic,
+  MdFormatListBulleted,
+  MdFormatListNumbered,
+  MdFormatStrikethrough,
+  MdFormatUnderlined,
+  MdLink,
+  MdMood,
+  MdSubscript,
+  MdSuperscript,
+  MdTableChart
+} from 'react-icons/md'
 import {createEditor, Location, Node as SlateNode, Transforms} from 'slate'
 import {withHistory} from 'slate-history'
 import {Editable, ReactEditor, Slate, withReact} from 'slate-react'
@@ -125,33 +127,33 @@ export const RichTextBlock = memo(function RichTextBlock({
 
             <ToolbarDivider />
 
-            <FormatIconButton icon={<ListUlIcon />} format={BlockFormat.UnorderedList} />
-            <FormatIconButton icon={<ListOlIcon />} format={BlockFormat.OrderedList} />
+            <FormatIconButton icon={<MdFormatListBulleted />} format={BlockFormat.UnorderedList} />
+            <FormatIconButton icon={<MdFormatListNumbered />} format={BlockFormat.OrderedList} />
 
             <ToolbarDivider />
 
-            <EditorSubMenuButton icon={<TableIcon />} editorHasFocus={hasFocus}>
+            <EditorSubMenuButton icon={<MdTableChart />} editorHasFocus={hasFocus}>
               <TableMenu />
             </EditorSubMenuButton>
 
             <ToolbarDivider />
 
-            <FormatIconButton icon={<BoldIcon />} format={TextFormat.Bold} />
-            <FormatIconButton icon={<ItalicIcon />} format={TextFormat.Italic} />
-            <FormatIconButton icon={<UnderlineIcon />} format={TextFormat.Underline} />
-            <FormatIconButton icon={<StrikethroughIcon />} format={TextFormat.Strikethrough} />
-            <FormatIconButton icon={<SuperscriptIcon />} format={TextFormat.Superscript} />
-            <FormatIconButton icon={<SubscriptIcon />} format={TextFormat.Subscript} />
+            <FormatIconButton icon={<MdFormatBold />} format={TextFormat.Bold} />
+            <FormatIconButton icon={<MdFormatItalic />} format={TextFormat.Italic} />
+            <FormatIconButton icon={<MdFormatUnderlined />} format={TextFormat.Underline} />
+            <FormatIconButton icon={<MdFormatStrikethrough />} format={TextFormat.Strikethrough} />
+            <FormatIconButton icon={<MdSuperscript />} format={TextFormat.Superscript} />
+            <FormatIconButton icon={<MdSubscript />} format={TextFormat.Subscript} />
 
             <ToolbarDivider />
 
-            <SubMenuButton icon={<LinkIcon />} format={InlineFormat.Link}>
+            <SubMenuButton icon={<MdLink />} format={InlineFormat.Link}>
               <LinkMenu />
             </SubMenuButton>
 
             <ToolbarDivider />
 
-            <SubMenuButton icon={<SmileOIcon />}>
+            <SubMenuButton icon={<MdMood />}>
               <EmojiPicker
                 setEmoji={emoji => {
                   editor.insertText(emoji)

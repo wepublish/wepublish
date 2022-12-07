@@ -1,7 +1,7 @@
 import {ApolloError} from '@apollo/client'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdDelete} from 'react-icons/md'
 import {Button, IconButton, Message, Modal, toaster} from 'rsuite'
 
 import {FullCommentFragment, useDeleteCommentMutation} from '../../api'
@@ -46,7 +46,7 @@ export function CommentDeleteBtn({comment, onCommentDeleted}: CommentDeleteBtnPr
         <IconButton
           color="red"
           appearance="ghost"
-          icon={<TrashIcon />}
+          icon={<MdDelete />}
           onClick={() => setModalOpen(true)}
           loading={loading}>
           {t('delete')}

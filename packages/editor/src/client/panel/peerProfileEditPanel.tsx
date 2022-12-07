@@ -300,7 +300,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           </Panel>
         </Drawer.Body>
 
-        <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
+        <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
           <ImageSelectPanel
             onClose={() => setChooseModalOpen(false)}
             onSelect={(value: any) => {
@@ -313,7 +313,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           />
         </Drawer>
 
-        <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
+        <Drawer open={isEditModalOpen} size="sm" onClose={() => setEditModalOpen(false)}>
           {(logoImage || callToActionImage) && (
             <ImageEditPanel
               id={isLogoChange ? logoImage?.id : callToActionImage?.id}

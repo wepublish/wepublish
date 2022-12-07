@@ -1,9 +1,13 @@
-import CogIcon from '@rsuite/icons/legacy/Cog'
-import ExternalLinkIcon from '@rsuite/icons/legacy/ExternalLink'
-import FileTextIcon from '@rsuite/icons/legacy/FileText'
-import SearchIcon from '@rsuite/icons/legacy/Search'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {
+  MdDashboard,
+  MdDescription,
+  MdFileCopy,
+  MdPreview,
+  MdSearch,
+  MdSettings
+} from 'react-icons/md'
 import {
   Button,
   Drawer,
@@ -263,7 +267,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
                     </div>
                     <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
                       <a href={peeredArticleURL} target="_blank" rel="noreferrer">
-                        {t('articleEditor.panels.peeredArticlePreview')} <ExternalLinkIcon />
+                        {t('articleEditor.panels.peeredArticlePreview')} <MdPreview />
                       </a>
                     </div>
                   </div>
@@ -443,7 +447,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
               removeImage={() => setImage(undefined)}
             />
 
-            <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
+            <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
               <ImageSelectPanel
                 onClose={() => setChooseModalOpen(false)}
                 onSelect={value => {
@@ -454,7 +458,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
             </Drawer>
 
             {image && (
-              <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
+              <Drawer open={isEditModalOpen} size="sm" onClose={() => setEditModalOpen(false)}>
                 <ImageEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
               </Drawer>
             )}
@@ -481,16 +485,16 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
           activeKey={type}
           onSelect={type => setType(type)}
           style={{marginBottom: 20}}>
-          <Nav.Item eventKey={TeaserType.Article} icon={<FileTextIcon />}>
+          <Nav.Item eventKey={TeaserType.Article} icon={<MdDescription />}>
             {t('articleEditor.panels.article')}
           </Nav.Item>
-          <Nav.Item eventKey={TeaserType.PeerArticle} icon={<FileTextIcon />}>
+          <Nav.Item eventKey={TeaserType.PeerArticle} icon={<MdFileCopy />}>
             {t('articleEditor.panels.peerArticle')}
           </Nav.Item>
-          <Nav.Item eventKey={TeaserType.Page} icon={<FileTextIcon />}>
+          <Nav.Item eventKey={TeaserType.Page} icon={<MdDashboard />}>
             {t('articleEditor.panels.page')}
           </Nav.Item>
-          <Nav.Item eventKey={TeaserType.Custom} icon={<CogIcon />}>
+          <Nav.Item eventKey={TeaserType.Custom} icon={<MdSettings />}>
             {t('articleEditor.panels.custom')}
           </Nav.Item>
         </Nav>
@@ -499,7 +503,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
           <InputGroup style={{marginBottom: 20}}>
             <Input value={filter.title || ''} onChange={updateFilter} />
             <InputGroup.Addon>
-              <SearchIcon />
+              <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
         )}

@@ -1,18 +1,21 @@
-import CloneIcon from '@rsuite/icons/legacy/Clone'
-import CodeIcon from '@rsuite/icons/legacy/Code'
-import CoffeeIcon from '@rsuite/icons/legacy/Coffee'
-import ColumnsIcon from '@rsuite/icons/legacy/Columns'
-import CommentIcon from '@rsuite/icons/legacy/Comment'
-import EllipsisHIcon from '@rsuite/icons/legacy/EllipsisH'
-import EllipsisVIcon from '@rsuite/icons/legacy/EllipsisV'
-import FileTextIcon from '@rsuite/icons/legacy/FileText'
-import HeaderIcon from '@rsuite/icons/legacy/Header'
-import ImageIcon from '@rsuite/icons/legacy/Image'
-import QuoteLeftIcon from '@rsuite/icons/legacy/QuoteLeft'
-import ThListIcon from '@rsuite/icons/legacy/ThList'
-import PieChartIcon from '@rsuite/icons/PieChart'
 import nanoid from 'nanoid'
 import React from 'react'
+import {
+  MdChat,
+  MdCode,
+  MdCoffee,
+  MdFilter1,
+  MdFilter6,
+  MdFormatColorText,
+  MdFormatQuote,
+  MdIntegrationInstructions,
+  MdPhoto,
+  MdPhotoLibrary,
+  MdQueryStats,
+  MdTitle,
+  MdViewList,
+  MdViewQuilt
+} from 'react-icons/md'
 
 import {BlockMapForValue} from '../atoms/blockList'
 import {CommentBlock} from './commentBlock'
@@ -35,28 +38,28 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     field: props => <TitleBlock {...props} />,
     defaultValue: {title: '', lead: ''},
     label: 'blocks.title.label',
-    icon: <HeaderIcon />
+    icon: <MdTitle />
   },
 
   [BlockType.RichText]: {
     field: props => <RichTextBlock {...props} />,
     defaultValue: createDefaultValue,
     label: 'blocks.richText.label',
-    icon: <FileTextIcon />
+    icon: <MdFormatColorText />
   },
 
   [BlockType.Image]: {
     field: props => <ImageBlock {...props} />,
     defaultValue: {image: null, caption: ''},
     label: 'blocks.image.label',
-    icon: <ImageIcon />
+    icon: <MdPhoto />
   },
 
   [BlockType.ImageGallery]: {
     field: props => <ImageGalleryBlock {...props} />,
     defaultValue: {images: [{caption: '', image: null}]},
     label: 'blocks.imageGallery.label',
-    icon: <CloneIcon />
+    icon: <MdPhotoLibrary />
   },
 
   [BlockType.Listicle]: {
@@ -74,14 +77,14 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       ]
     },
     label: 'blocks.listicle.label',
-    icon: <ThListIcon />
+    icon: <MdViewList />
   },
 
   [BlockType.Quote]: {
     field: props => <QuoteBlock {...props} />,
     defaultValue: {quote: '', author: ''},
     label: 'blocks.quote.label',
-    icon: <QuoteLeftIcon />
+    icon: <MdFormatQuote />
   },
 
   [BlockType.LinkPageBreak]: {
@@ -99,21 +102,21 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       hideButton: false
     },
     label: 'blocks.linkPageBreak.label',
-    icon: <CoffeeIcon />
+    icon: <MdCoffee />
   },
 
   [BlockType.Embed]: {
     field: props => <EmbedBlock {...props} />,
     defaultValue: {type: EmbedType.Other},
     label: 'blocks.embeds.label',
-    icon: <CodeIcon />
+    icon: <MdIntegrationInstructions />
   },
 
   [BlockType.TeaserGrid1]: {
     field: props => <TeaserGridBlock {...props} />,
     defaultValue: {numColumns: 1, teasers: [[nanoid(), null]]},
     label: 'blocks.teaserGrid1.label',
-    icon: <EllipsisVIcon />
+    icon: <MdFilter1 />
   },
 
   [BlockType.TeaserGrid6]: {
@@ -130,7 +133,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       ]
     },
     label: 'blocks.teaserGrid6.label',
-    icon: <EllipsisHIcon />
+    icon: <MdFilter6 />
   },
 
   [BlockType.TeaserGridFlex]: {
@@ -156,27 +159,27 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       ]
     },
     label: 'blocks.teaserFlexGrid.label',
-    icon: <ColumnsIcon />
+    icon: <MdViewQuilt />
   },
 
   [BlockType.HTMLBlock]: {
     field: props => <HTMLBlock {...props} />,
     defaultValue: {html: ''},
     label: 'blocks.html.label',
-    icon: <CodeIcon />
+    icon: <MdCode />
   },
 
   [BlockType.PollBlock]: {
     field: props => <PollBlock {...props} />,
     defaultValue: {poll: null},
     label: 'blocks.poll.label',
-    icon: <PieChartIcon />
+    icon: <MdQueryStats />
   },
 
   [BlockType.CommentBlock]: {
     field: props => <CommentBlock {...props} />,
     defaultValue: {filter: {}, comments: []},
     label: 'blocks.comment.label',
-    icon: <CommentIcon />
+    icon: <MdChat />
   }
 }

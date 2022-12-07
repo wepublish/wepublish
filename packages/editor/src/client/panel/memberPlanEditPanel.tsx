@@ -365,7 +365,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
           </Panel>
         </Drawer.Body>
 
-        <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
+        <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
           <ImageSelectPanel
             onClose={() => setChooseModalOpen(false)}
             onSelect={(value: ImageRefFragment) => {
@@ -375,7 +375,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
           />
         </Drawer>
         {image && (
-          <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
+          <Drawer open={isEditModalOpen} size="sm" onClose={() => setEditModalOpen(false)}>
             <ImageEditPanel
               id={image!.id}
               onClose={() => setEditModalOpen(false)}

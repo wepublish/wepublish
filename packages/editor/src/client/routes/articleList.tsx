@@ -1,10 +1,6 @@
-import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
-import CommentIcon from '@rsuite/icons/legacy/Comment'
-import CopyIcon from '@rsuite/icons/legacy/Copy'
-import EyeIcon from '@rsuite/icons/legacy/Eye'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdAdd, MdComment, MdContentCopy, MdDelete, MdPreview, MdUnpublished} from 'react-icons/md'
 import {Link, useNavigate} from 'react-router-dom'
 import {Button, FlexboxGrid, IconButton, Message, Modal, Pagination, Table} from 'rsuite'
 
@@ -117,9 +113,9 @@ function ArticleList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <Link to="/articles/create">
-              <Button appearance="primary" disabled={isLoading}>
+              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('articles.overview.newArticle')}
-              </Button>
+              </IconButton>
             </Link>
           </FlexboxGrid.Item>
         </PermissionControl>
@@ -243,7 +239,7 @@ function ArticleList() {
                   <PermissionControl qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}>
                     <IconButtonTooltip caption={t('articleEditor.overview.unpublish')}>
                       <IconButton
-                        icon={<BtnOffIcon />}
+                        icon={<MdUnpublished />}
                         circle
                         disabled={!(rowData.published || rowData.pending)}
                         size="sm"
@@ -256,26 +252,10 @@ function ArticleList() {
                     </IconButtonTooltip>
                   </PermissionControl>
 
-                  <PermissionControl qualifyingPermissions={['CAN_DELETE_ARTICLE']}>
-                    <IconButtonTooltip caption={t('delete')}>
-                      <IconButton
-                        icon={<TrashIcon />}
-                        circle
-                        size="sm"
-                        style={{marginLeft: '5px'}}
-                        onClick={() => {
-                          setCurrentArticle(rowData)
-                          setConfirmAction(ConfirmAction.Delete)
-                          setConfirmationDialogOpen(true)
-                        }}
-                      />
-                    </IconButtonTooltip>
-                  </PermissionControl>
-
                   <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
                     <IconButtonTooltip caption={t('articleEditor.overview.duplicate')}>
                       <IconButton
-                        icon={<CopyIcon />}
+                        icon={<MdContentCopy />}
                         circle
                         size="sm"
                         style={{marginLeft: '5px'}}
@@ -291,7 +271,7 @@ function ArticleList() {
                   <PermissionControl qualifyingPermissions={['CAN_GET_ARTICLE_PREVIEW_LINK']}>
                     <IconButtonTooltip caption={t('articleEditor.overview.preview')}>
                       <IconButton
-                        icon={<EyeIcon />}
+                        icon={<MdPreview />}
                         circle
                         disabled={!rowData.draft}
                         size="sm"
@@ -307,7 +287,7 @@ function ArticleList() {
                   <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
                     <IconButtonTooltip caption={t('articleEditor.overview.createComment')}>
                       <IconButton
-                        icon={<CommentIcon />}
+                        icon={<MdComment />}
                         circle
                         size="sm"
                         style={{marginLeft: '5px'}}
@@ -321,6 +301,24 @@ function ArticleList() {
                               navigate(`/comments/edit/${data?.createComment.id}`)
                             }
                           })
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
+
+                  <PermissionControl qualifyingPermissions={['CAN_DELETE_ARTICLE']}>
+                    <IconButtonTooltip caption={t('delete')}>
+                      <IconButton
+                        icon={<MdDelete />}
+                        circle
+                        size="sm"
+                        appearance="ghost"
+                        color="red"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setCurrentArticle(rowData)
+                          setConfirmAction(ConfirmAction.Delete)
+                          setConfirmationDialogOpen(true)
                         }}
                       />
                     </IconButtonTooltip>
@@ -351,7 +349,7 @@ function ArticleList() {
 
       <Modal
         open={isArticlePreviewLinkOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => setArticlePreviewLinkOpen(false)}>
         {currentArticle && (
           <ArticlePreviewLinkPanel
@@ -363,7 +361,7 @@ function ArticleList() {
 
       <Modal
         open={isConfirmationDialogOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>

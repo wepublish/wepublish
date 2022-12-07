@@ -119,22 +119,6 @@ export async function runServer() {
     })
   }
 
-  if (
-    process.env.OAUTH_WEPUBLISH_DISCOVERY_URL &&
-    process.env.OAUTH_WEPUBLISH_CLIENT_ID &&
-    process.env.OAUTH_WEPUBLISH_CLIENT_KEY &&
-    process.env.OAUTH_WEPUBLISH_REDIRECT_URL
-  ) {
-    oauth2Providers.push({
-      name: 'wepublish',
-      discoverUrl: process.env.OAUTH_WEPUBLISH_DISCOVERY_URL ?? '',
-      clientId: process.env.OAUTH_WEPUBLISH_CLIENT_ID ?? '',
-      clientKey: process.env.OAUTH_WEPUBLISH_CLIENT_KEY ?? '',
-      redirectUri: [process.env.OAUTH_WEPUBLISH_REDIRECT_URL ?? ''],
-      scopes: ['openid profile email']
-    })
-  }
-
   let mailProvider
   if (
     process.env.MAILGUN_API_KEY &&

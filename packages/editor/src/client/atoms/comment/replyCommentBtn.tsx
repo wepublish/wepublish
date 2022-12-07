@@ -1,7 +1,7 @@
 import {ApolloError} from '@apollo/client'
-import {MoveDown} from '@rsuite/icons'
 import React from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdOutlineMoveToInbox, MdReply} from 'react-icons/md'
 import {useNavigate} from 'react-router-dom'
 import {IconButton, Message, toaster} from 'rsuite'
 import {TypeAttributes} from 'rsuite/cjs/@types/common'
@@ -61,7 +61,7 @@ export function ReplyCommentBtn({
     if (hideText) {
       return (
         <IconButton
-          icon={<MoveDown />}
+          icon={<MdOutlineMoveToInbox />}
           size={size}
           circle={circle}
           color={color}
@@ -74,7 +74,7 @@ export function ReplyCommentBtn({
     }
     return (
       <IconButton
-        icon={<MoveDown />}
+        icon={<MdReply />}
         size={size}
         circle={circle}
         color={color}

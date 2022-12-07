@@ -1,8 +1,16 @@
-import {ArrowRightLine, Calendar, Creative, Exit, Off, PieChart, Reload} from '@rsuite/icons'
-import CreditCardIcon from '@rsuite/icons/legacy/CreditCard'
-import EditIcon from '@rsuite/icons/legacy/Edit'
 import React from 'react'
 import {useTranslation} from 'react-i18next'
+import {
+  MdCreditCard,
+  MdDisabledByDefault,
+  MdEdit,
+  MdEvent,
+  MdEventAvailable,
+  MdMoneyOff,
+  MdOutlineKeyboardArrowRight,
+  MdRefresh,
+  MdTimelapse
+} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Button, Divider, FlexboxGrid, Panel} from 'rsuite'
 
@@ -28,7 +36,7 @@ function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
     if (subscription.autoRenew && !subscription.deactivation) {
       return (
         <>
-          <Reload style={{marginRight: '5px'}} />{' '}
+          <MdRefresh style={{marginRight: '5px'}} />{' '}
           {t('userSubscriptionList.subscriptionIsAutoRenewed')}.&nbsp;
           {getDeactivationString(subscription)}
         </>
@@ -37,7 +45,8 @@ function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
     // subscription is not auto renewed
     return (
       <>
-        <Off style={{marginRight: '5px'}} /> {t('userSubscriptionList.noAutoRenew')}.&nbsp;
+        <MdDisabledByDefault style={{marginRight: '5px'}} /> {t('userSubscriptionList.noAutoRenew')}
+        .&nbsp;
         {getDeactivationString(subscription)}
       </>
     )
@@ -128,7 +137,7 @@ function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
             <FlexboxGrid.Item colspan={6} style={{textAlign: 'right'}}>
               <Link to={`/subscriptions/edit/${subscription.id}`}>
                 <Button appearance="ghost">
-                  <EditIcon /> {t('userSubscriptionList.editSubscription')}
+                  <MdEdit /> {t('userSubscriptionList.editSubscription')}
                 </Button>
               </Link>
             </FlexboxGrid.Item>
@@ -142,7 +151,7 @@ function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
                 <Panel bordered style={{marginTop: '5px'}}>
                   {/* created at */}
                   <FlexboxGrid.Item colspan={24}>
-                    <Calendar style={{marginRight: '5px'}} />
+                    <MdEvent style={{marginRight: '5px'}} />
                     {t('userSubscriptionList.subscriptionCreatedAt', {
                       date: new Intl.DateTimeFormat('de-CH').format(
                         new Date(subscription.createdAt)
@@ -151,28 +160,28 @@ function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
                   </FlexboxGrid.Item>
                   {/* starts at */}
                   <FlexboxGrid.Item colspan={24}>
-                    <Creative style={{marginRight: '5px'}} />
+                    <MdEventAvailable style={{marginRight: '5px'}} />
                     {t('userSubscriptionList.subscriptionStartsAt', {
                       date: new Intl.DateTimeFormat('de-CH').format(new Date(subscription.startsAt))
                     })}
                   </FlexboxGrid.Item>
                   {/* payment periodicity */}
                   <FlexboxGrid.Item colspan={24}>
-                    <PieChart style={{marginRight: '5px'}} />
+                    <MdTimelapse style={{marginRight: '5px'}} />
                     {t('userSubscriptionList.paymentPeriodicity', {
                       paymentPeriodicity: paymentPeriodicity(subscription)
                     })}
                   </FlexboxGrid.Item>
                   {/* monthly amount */}
                   <FlexboxGrid.Item colspan={24}>
-                    <CreditCardIcon style={{marginRight: '5px'}} />
+                    <MdCreditCard style={{marginRight: '5px'}} />
                     {t('userSubscriptionList.monthlyAmount', {
                       monthlyAmount: (subscription.monthlyAmount / 100).toFixed(2)
                     })}
                   </FlexboxGrid.Item>
                   {/* paid until */}
                   <FlexboxGrid.Item colspan={24}>
-                    <Exit style={{marginRight: '5px'}} /> {paidUntilView(subscription)}
+                    <MdMoneyOff style={{marginRight: '5px'}} /> {paidUntilView(subscription)}
                   </FlexboxGrid.Item>
                   {/* auto renewal */}
                   <FlexboxGrid.Item colspan={24}>{autoRenewalView(subscription)}</FlexboxGrid.Item>
@@ -209,7 +218,7 @@ function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
                                 new Date(period.startsAt)
                               )
                             })}
-                            <ArrowRightLine style={{margin: '0px 5px'}} />
+                            <MdOutlineKeyboardArrowRight style={{margin: '0px 5px'}} />
                             {t('userSubscriptionList.periodEndsAt', {
                               date: new Intl.DateTimeFormat('de-CH').format(new Date(period.endsAt))
                             })}

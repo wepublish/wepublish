@@ -1,9 +1,7 @@
 import {ApolloError} from '@apollo/client'
-import CopyIcon from '@rsuite/icons/legacy/Copy'
-import PlusIcon from '@rsuite/icons/legacy/Plus'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdAdd, MdContentCopy, MdDelete} from 'react-icons/md'
 import {
   Badge,
   Button,
@@ -231,9 +229,9 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
             {/* copy link btn */}
             <Col xs={8}>
               <IconButton
-                icon={<TrashIcon />}
+                icon={<MdDelete />}
                 circle
-                size={'sm'}
+                size="sm"
                 appearance="ghost"
                 color="red"
                 style={{marginRight: '10px'}}
@@ -244,7 +242,7 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
               />
               <Whisper speaker={<Tooltip>{t('pollAnswer.copyVoteUrl')}</Tooltip>}>
                 <IconButton
-                  icon={<CopyIcon />}
+                  icon={<MdContentCopy />}
                   circle
                   size="sm"
                   appearance="ghost"
@@ -269,7 +267,7 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
         </Col>
         <Col xs={8}>
           <IconButton
-            icon={<PlusIcon />}
+            icon={<MdAdd />}
             loading={loading}
             appearance="primary"
             onClick={createAnswer}>

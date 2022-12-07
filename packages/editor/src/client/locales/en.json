@@ -1017,9 +1017,9 @@
         "action": "Action",
         "description": "Description",
         "name": "Name",
-        "newUserRole": "New UserRole",
+        "newUserRole": "New User Role",
         "noDescription": "No Description",
-        "noUserRolesFound": "No UserRoles found",
+        "noUserRolesFound": "No User Roles found",
         "search": "Search",
         "Unknown": "Unknown",
         "userRoles": "User Roles"

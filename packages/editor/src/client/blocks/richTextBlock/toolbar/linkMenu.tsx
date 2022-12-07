@@ -1,7 +1,6 @@
-import CloseIcon from '@rsuite/icons/legacy/Close'
-import UnlinkIcon from '@rsuite/icons/legacy/Unlink'
 import React, {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdClose, MdLinkOff} from 'react-icons/md'
 import {Button, ButtonToolbar, Col, Form, IconButton, InputGroup, Row} from 'rsuite'
 import {Editor, Range, Transforms} from 'slate'
 import {useSlate} from 'slate-react'
@@ -87,7 +86,7 @@ export function LinkMenu() {
     <>
       <Row>
         <Col xs={24} style={{textAlign: 'right', marginTop: '0px'}}>
-          <IconButton icon={<CloseIcon />} onClick={() => closeMenu()} />
+          <IconButton icon={<MdClose />} onClick={() => closeMenu()} />
         </Col>
       </Row>
       <Form fluid>
@@ -179,7 +178,7 @@ export function RemoveLinkFormatButton() {
 
   return (
     <IconButton
-      icon={<UnlinkIcon />}
+      icon={<MdLinkOff />}
       active={WepublishEditor.isFormatActive(editor, InlineFormat.Link)}
       disabled={!WepublishEditor.isFormatActive(editor, InlineFormat.Link)}
       onMouseDown={() => {

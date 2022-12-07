@@ -1,7 +1,7 @@
 import {ApolloError} from '@apollo/client'
-import EditIcon from '@rsuite/icons/legacy/Edit'
 import React, {useEffect, useMemo, useReducer, useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
+import {MdEdit} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {
   Button,
@@ -209,7 +209,7 @@ export function SelectCommentPanel({
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
                   <IconButtonTooltip caption={t('comments.overview.edit')}>
                     <Link target="_blank" to={`/comments/edit/${rowData.id}`}>
-                      <IconButton icon={<EditIcon />} circle size="sm" />
+                      <IconButton icon={<MdEdit />} circle size="sm" />
                     </Link>
                   </IconButtonTooltip>
                 </PermissionControl>
