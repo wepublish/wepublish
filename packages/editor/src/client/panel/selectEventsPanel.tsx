@@ -157,16 +157,16 @@ export function SelectEventPanel({selectedFilter, onClose, onSelect}: SelectEven
           )}
 
           <Table.Column width={250} resizable>
-            <Table.HeaderCell>{t('blocks.event.name')}</Table.HeaderCell>
+            <Table.HeaderCell>{t('event.list.name')}</Table.HeaderCell>
             <Table.Cell>{(rowData: EventRefFragment) => rowData.name}</Table.Cell>
           </Table.Column>
 
           <Table.Column width={150} align="center" fixed="right">
-            <Table.HeaderCell>{t('events.overview.edit')}</Table.HeaderCell>
+            <Table.HeaderCell>{t('event.list.edit')}</Table.HeaderCell>
             <Table.Cell style={{padding: '6px 0'}}>
               {(rowData: EventRefFragment) => (
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_EVENT']}>
-                  <IconButtonTooltip caption={t('events.overview.edit')}>
+                  <IconButtonTooltip caption={t('event.list.edit')}>
                     <Link target="_blank" to={`/events/edit/${rowData.id}`}>
                       <IconButton icon={<EditIcon />} circle size="sm" />
                     </Link>

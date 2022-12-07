@@ -1270,6 +1270,7 @@
       "list": {
         "title": "Events",
         "name": "Name",
+        "edit": "Bearbeiten",
         "delete": "Löschen",
         "create": "Neues Event erstellen",
         "startsAt": "Startet um {{startsAt, ccc PP p}}",

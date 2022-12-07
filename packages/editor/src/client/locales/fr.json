@@ -1266,6 +1266,7 @@
       "list": {
         "title": "Events",
         "name": "Name",
+        "edit": "Edit",
         "delete": "Delete",
         "create": "Create new event",
         "startsAt": "Starts at {{startsAt, ccc PP p}}",
