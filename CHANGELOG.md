@@ -1,5 +1,26 @@
 # Change Log
 
+## v8.1.1 (2022-12-07)
+
+#### :bug: Bug Fix
+* `api`
+  * [#767](https://github.com/wepublish/wepublish/pull/767) Backport patch: Fix subscription csv download ([@michael-scheurer](https://github.com/michael-scheurer))
+  * [#784](https://github.com/wepublish/wepublish/pull/784) fix(api): use canonical url in runserver if exists for public articles ([@Itrulia](https://github.com/Itrulia))
+
+* `editor`
+  * [#764](https://github.com/wepublish/wepublish/pull/764) feat(editor): only allow published page/article as a teaser ([@antkiewiczk](https://github.com/antkiewiczk))
+  * [#757](https://github.com/wepublish/wepublish/pull/757) Properly handle checkbox ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### :house: Internal
+* `api`
+  * [#749](https://github.com/wepublish/wepublish/pull/749) fix: regenerated api test definitions ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 3
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
 ## 8.1.0 (2022-11-24)
 
 #### :heart: New Feature
