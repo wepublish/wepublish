@@ -937,7 +937,7 @@ Object {
         },
         Object {
           "deprecated": false,
-          "description": "Allows to get a event",
+          "description": "Allows to get an event",
           "id": "CAN_GET_EVENT",
         },
         Object {
