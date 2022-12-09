@@ -5,8 +5,8 @@
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"],
-        "accessToken": "YmQxYTg2ZDgtNDBlNS00MmM1LWI4MjAtZmJkMWUxM2Y1ZTJkfHJlYWQtd3JpdGU="
+        "cacheableOperations": ["build", "lint", "test", "e2e", "browser", "server"],
+        "accessToken": "NDYyZDM4OTYtYTQ3OS00NWRhLTgxNjYtNWQyMWUxYWU1ODY0fHJlYWQtd3JpdGU="
       }
     }
   },
@@ -15,42 +15,43 @@
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
     },
-    "test": {
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
+    "e2e": {
+      "inputs": ["default", "^production"]
     },
     "lint": {
       "inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
     },
-    "e2e": {
-      "inputs": ["default", "^production"]
+    "test": {
+      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
     }
   },
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [
       "default",
+      "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
-      "!{projectRoot}/jest.config.[jt]s",
-      "!{projectRoot}/.eslintrc.json"
+      "!{projectRoot}/jest.config.[jt]s"
     ],
     "sharedGlobals": ["{workspaceRoot}/babel.config.json"]
   },
-  "defaultProject": "api",
   "generators": {
     "@nrwl/react": {
       "application": {
-        "style": "emotion",
+        "style": "@emotion/styled",
         "linter": "eslint",
+        "bundler": "webpack",
         "babel": true
       },
       "component": {
-        "style": "emotion"
+        "style": "@emotion/styled"
       },
       "library": {
-        "style": "emotion",
+        "style": "@emotion/styled",
         "linter": "eslint"
       }
     }
-  }
+  },
+  "defaultProject": "api"
 }
