@@ -197,7 +197,8 @@
             "backdrop",
             "data-testid",
             "to",
-            "path"
+            "path",
+            "closePath"
           ],
           "ignoreComponent": [
             "code"

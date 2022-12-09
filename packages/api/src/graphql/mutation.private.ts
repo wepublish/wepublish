@@ -148,6 +148,13 @@ import {
   updateAdminUser
 } from './user/user.private-mutation'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
+import {GraphQLEvent, GraphQLEventStatus} from './event/event'
+import {
+  createEvent,
+  deleteEvent,
+  updateEvent,
+  UpdateOrCreateEventInput
+} from './event/event.private-mutation'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -1150,6 +1157,49 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {tag}}) => deleteTag(id, authenticate, tag)
+    },
+
+    // Event
+    // ==========
+
+    createEvent: {
+      type: GraphQLEvent,
+      args: {
+        name: {type: GraphQLNonNull(GraphQLString)},
+        description: {type: GraphQLRichText},
+        location: {type: GraphQLString},
+        startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
+        endsAt: {type: GraphQLDateTime},
+        imageId: {type: GraphQLID},
+        tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
+      },
+      resolve: (root, {tagIds, ...input}, {authenticate, prisma: {event}}) =>
+        createEvent(input as UpdateOrCreateEventInput, tagIds, authenticate, event)
+    },
+
+    updateEvent: {
+      type: GraphQLEvent,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        name: {type: GraphQLString},
+        description: {type: GraphQLRichText},
+        status: {type: GraphQLEventStatus},
+        location: {type: GraphQLString},
+        startsAt: {type: GraphQLDateTime},
+        endsAt: {type: GraphQLDateTime},
+        imageId: {type: GraphQLID},
+        tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
+      },
+      resolve: (root, {id, tagIds, ...input}, {authenticate, prisma: {event}}) =>
+        updateEvent(id, input as UpdateOrCreateEventInput, tagIds, authenticate, event)
+    },
+
+    deleteEvent: {
+      type: GraphQLEvent,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {id}, {authenticate, prisma: {event}}) => deleteEvent(id, authenticate, event)
     }
   }
 })

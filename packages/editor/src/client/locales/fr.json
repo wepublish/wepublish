@@ -953,10 +953,10 @@
       "createNew": "Créer Sondage",
       "question": "Question",
       "opensAt": "Débute le",
-      "openedAt": "Débuté le {{openedAt}}",
-      "pollWillOpenAt": "Débute le {{opensAt}}",
+      "openedAt": "Débuté le {{openedAt, ccc PP p}}",
+      "pollWillOpenAt": "Débute le {{opensAt, ccc PP p}}",
       "noQuestion": "Aucune question saisie",
-      "hasBeenClosedAt": "Fermé le {{closedAt}}",
+      "hasBeenClosedAt": "Fermé le {{closedAt, ccc PP p}}",
       "closedAt": "Fermé le",
       "closedAtNone": "Non fermé",
       "answersCount": "Réponses saisies",
@@ -967,8 +967,7 @@
     "deletePollModal": {
       "title": "Supprimer sondage?",
       "body": "Veux-tu vraiment supprimer le sondage \"{{pollQuestion}}\"?",
-      "deleteBtn": "Oui, supprimer",
-      "cancelBtn": "Annuler"
+      "deleteBtn": "Oui, supprimer"
     },
     "pollEditView": {
       "loadingTitle": "Chargement du sondage...",
@@ -1010,9 +1009,11 @@
     "pollStateIndication": {
       "closed": "Sondage fermé",
       "open": "Sondage en cours",
-      "waiting": "Sondage en attente d'ouverture le {{date}}"
+      "waiting": "Sondage en attente d'ouverture le {{date, ccc PP p}}"
     },
     "navbar": {
+      "events": "Events",
+      "eventTags": "Tags",
       "languageSwitch": {
         "currentLanguage": "Anglais",
         "selectNewLanguage": "Sélectionner une nouvelle langue",
@@ -1250,6 +1251,42 @@
     "permissions": {
       "noAccess": "Vous n'avez pas l'autorisation suffisante pour accéder à ce contenu.",
       "contactAdmin": "Veuillez contacter votre administrateur pour ajouter l'une des autorisations suivantes: {{permissions}}"
+    },
+    "event": {
+      "list": {
+        "title": "Events",
+        "name": "Name",
+        "delete": "Delete",
+        "create": "Create new event",
+        "startsAt": "Starts at {{startsAt, ccc PP p}}",
+        "endsAt": "Ends at {{endsAt, ccc PP p}}",
+        "endsAtNone": "Open ended"
+      },
+      "create": {
+        "title": "Create Event"
+      },
+      "edit": {
+        "title": "Edit Event"
+      },
+      "form": {
+        "name": "Name",
+        "location": "Location",
+        "status": "Status",
+        "startsAt": "Starts at",
+        "endsAt": "Ends at",
+        "description": "Description",
+        "tags": "Tags",
+        "image": "Image",
+        "scheduled": "Scheduled",
+        "cancelled": "Cancelled",
+        "postponed": "Postponed",
+        "rescheduled": "Rescheduled"
+      },
+      "delete": {
+        "title": "Delete Event?",
+        "body": "Do you really want to delete the event \"{{name}}\"?",
+        "delete": "Yes, delete the event"
+      }
     }
   }
 }

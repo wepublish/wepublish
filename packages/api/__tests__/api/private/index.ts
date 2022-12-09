@@ -468,6 +468,44 @@ export type EmbedBlockInput = {
   sandbox?: Maybe<Scalars['String']>
 }
 
+export type Event = {
+  __typename?: 'Event'
+  id: Scalars['ID']
+  name: Scalars['String']
+  status: EventStatus
+  description?: Maybe<Scalars['RichText']>
+  location?: Maybe<Scalars['String']>
+  startsAt: Scalars['DateTime']
+  endsAt?: Maybe<Scalars['DateTime']>
+  tags?: Maybe<Array<Tag>>
+  image?: Maybe<Image>
+}
+
+export type EventConnection = {
+  __typename?: 'EventConnection'
+  nodes: Array<Event>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type EventFilter = {
+  openOnly?: Maybe<Scalars['Boolean']>
+}
+
+export enum EventSort {
+  StartsAt = 'STARTS_AT',
+  EndsAt = 'ENDS_AT',
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
+export enum EventStatus {
+  Cancelled = 'CANCELLED',
+  Rescheduled = 'RESCHEDULED',
+  Postponed = 'POSTPONED',
+  Scheduled = 'SCHEDULED'
+}
+
 export type ExternalNavigationLink = BaseNavigationLink & {
   __typename?: 'ExternalNavigationLink'
   label: Scalars['String']
@@ -908,6 +946,9 @@ export type Mutation = {
   createTag?: Maybe<Tag>
   updateTag?: Maybe<Tag>
   deleteTag?: Maybe<Tag>
+  createEvent?: Maybe<Event>
+  updateEvent?: Maybe<Event>
+  deleteEvent?: Maybe<Event>
 }
 
 export type MutationUpdatePeerProfileArgs = {
@@ -1252,6 +1293,32 @@ export type MutationUpdateTagArgs = {
 }
 
 export type MutationDeleteTagArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationCreateEventArgs = {
+  name: Scalars['String']
+  description?: Maybe<Scalars['RichText']>
+  location?: Maybe<Scalars['String']>
+  startsAt: Scalars['DateTime']
+  endsAt?: Maybe<Scalars['DateTime']>
+  imageId?: Maybe<Scalars['ID']>
+  tagIds?: Maybe<Array<Scalars['ID']>>
+}
+
+export type MutationUpdateEventArgs = {
+  id: Scalars['ID']
+  name?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['RichText']>
+  status?: Maybe<EventStatus>
+  location?: Maybe<Scalars['String']>
+  startsAt?: Maybe<Scalars['DateTime']>
+  endsAt?: Maybe<Scalars['DateTime']>
+  imageId?: Maybe<Scalars['ID']>
+  tagIds?: Maybe<Array<Scalars['ID']>>
+}
+
+export type MutationDeleteEventArgs = {
   id: Scalars['ID']
 }
 
@@ -1716,6 +1783,8 @@ export type Query = {
   tags?: Maybe<TagConnection>
   polls?: Maybe<PollConnection>
   poll?: Maybe<FullPoll>
+  events?: Maybe<EventConnection>
+  event?: Maybe<Event>
 }
 
 export type QueryRemotePeerProfileArgs = {
@@ -1944,6 +2013,19 @@ export type QueryPollArgs = {
   id?: Maybe<Scalars['ID']>
 }
 
+export type QueryEventsArgs = {
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
+  filter?: Maybe<EventFilter>
+  sort?: Maybe<EventSort>
+  order?: Maybe<SortOrder>
+}
+
+export type QueryEventArgs = {
+  id?: Maybe<Scalars['ID']>
+}
+
 export type QuoteBlock = {
   __typename?: 'QuoteBlock'
   quote?: Maybe<Scalars['String']>
@@ -2140,7 +2222,8 @@ export enum TagSort {
 }
 
 export enum TagType {
-  Comment = 'Comment'
+  Comment = 'Comment',
+  Event = 'Event'
 }
 
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser
@@ -2847,6 +2930,81 @@ export type FullBlockFragment =
   | FullBlock_TeaserGridBlock_Fragment
   | FullBlock_TeaserGridFlexBlock_Fragment
 
+export type EventRefFragment = {__typename?: 'Event'} & Pick<
+  Event,
+  'id' | 'name' | 'description' | 'status' | 'startsAt' | 'endsAt'
+> & {
+    image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+    tags?: Maybe<Array<{__typename?: 'Tag'} & Pick<Tag, 'id' | 'tag'>>>
+  }
+
+export type EventListQueryVariables = Exact<{
+  filter?: Maybe<EventFilter>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
+  order?: Maybe<SortOrder>
+  sort?: Maybe<EventSort>
+}>
+
+export type EventListQuery = {__typename?: 'Query'} & {
+  events?: Maybe<
+    {__typename?: 'EventConnection'} & Pick<EventConnection, 'totalCount'> & {
+        nodes: Array<{__typename?: 'Event'} & EventRefFragment>
+        pageInfo: {__typename?: 'PageInfo'} & Pick<
+          PageInfo,
+          'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'
+        >
+      }
+  >
+}
+
+export type EventQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type EventQuery = {__typename?: 'Query'} & {
+  event?: Maybe<{__typename?: 'Event'} & EventRefFragment>
+}
+
+export type CreateEventMutationVariables = Exact<{
+  name: Scalars['String']
+  description?: Maybe<Scalars['RichText']>
+  location?: Maybe<Scalars['String']>
+  startsAt: Scalars['DateTime']
+  endsAt?: Maybe<Scalars['DateTime']>
+  imageId?: Maybe<Scalars['ID']>
+  tagIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>
+}>
+
+export type CreateEventMutation = {__typename?: 'Mutation'} & {
+  createEvent?: Maybe<{__typename?: 'Event'} & EventRefFragment>
+}
+
+export type UpdateEventMutationVariables = Exact<{
+  id: Scalars['ID']
+  name?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['RichText']>
+  status?: Maybe<EventStatus>
+  location?: Maybe<Scalars['String']>
+  startsAt?: Maybe<Scalars['DateTime']>
+  endsAt?: Maybe<Scalars['DateTime']>
+  imageId?: Maybe<Scalars['ID']>
+  tagIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>
+}>
+
+export type UpdateEventMutation = {__typename?: 'Mutation'} & {
+  updateEvent?: Maybe<{__typename?: 'Event'} & EventRefFragment>
+}
+
+export type DeleteEventMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type DeleteEventMutation = {__typename?: 'Mutation'} & {
+  deleteEvent?: Maybe<{__typename?: 'Event'} & EventRefFragment>
+}
+
 export type ImageUrLsFragment = {__typename?: 'Image'} & Pick<Image, 'url'> & {
     largeURL: Image['transformURL']
     mediumURL: Image['transformURL']
@@ -3230,6 +3388,53 @@ export type DeletePeerMutation = {__typename?: 'Mutation'} & {
   deletePeer?: Maybe<{__typename?: 'Peer'} & PeerRefFragment>
 }
 
+export type TagListQueryVariables = Exact<{
+  filter?: Maybe<TagFilter>
+  cursor?: Maybe<Scalars['ID']>
+  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
+  order?: Maybe<SortOrder>
+  sort?: Maybe<TagSort>
+}>
+
+export type TagListQuery = {__typename?: 'Query'} & {
+  tags?: Maybe<
+    {__typename?: 'TagConnection'} & Pick<TagConnection, 'totalCount'> & {
+        nodes: Array<{__typename?: 'Tag'} & Pick<Tag, 'id' | 'tag'>>
+        pageInfo: {__typename?: 'PageInfo'} & Pick<
+          PageInfo,
+          'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'
+        >
+      }
+  >
+}
+
+export type CreateTagMutationVariables = Exact<{
+  tag?: Maybe<Scalars['String']>
+  type: TagType
+}>
+
+export type CreateTagMutation = {__typename?: 'Mutation'} & {
+  createTag?: Maybe<{__typename?: 'Tag'} & Pick<Tag, 'id' | 'tag'>>
+}
+
+export type UpdateTagMutationVariables = Exact<{
+  id: Scalars['ID']
+  tag?: Maybe<Scalars['String']>
+}>
+
+export type UpdateTagMutation = {__typename?: 'Mutation'} & {
+  updateTag?: Maybe<{__typename?: 'Tag'} & Pick<Tag, 'id' | 'tag'>>
+}
+
+export type DeleteTagMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type DeleteTagMutation = {__typename?: 'Mutation'} & {
+  deleteTag?: Maybe<{__typename?: 'Tag'} & Pick<Tag, 'id' | 'tag'>>
+}
+
 export type FullUserFragment = {__typename?: 'User'} & Pick<
   User,
   'id' | 'name' | 'email' | 'emailVerifiedAt'
@@ -3470,6 +3675,24 @@ export const FullAuthor = gql`
     ...AuthorRef
   }
   ${AuthorRef}
+`
+export const EventRef = gql`
+  fragment EventRef on Event {
+    id
+    name
+    description
+    status
+    image {
+      ...ImageRef
+    }
+    tags {
+      id
+      tag
+    }
+    startsAt
+    endsAt
+  }
+  ${ImageRef}
 `
 export const FullImage = gql`
   fragment FullImage on Image {
@@ -4010,6 +4233,98 @@ export const DeleteAuthor = gql`
   }
   ${FullAuthor}
 `
+export const EventList = gql`
+  query EventList(
+    $filter: EventFilter
+    $cursor: ID
+    $take: Int
+    $skip: Int
+    $order: SortOrder
+    $sort: EventSort
+  ) {
+    events(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+      nodes {
+        ...EventRef
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+  }
+  ${EventRef}
+`
+export const Event = gql`
+  query Event($id: ID!) {
+    event(id: $id) {
+      ...EventRef
+    }
+  }
+  ${EventRef}
+`
+export const CreateEvent = gql`
+  mutation CreateEvent(
+    $name: String!
+    $description: RichText
+    $location: String
+    $startsAt: DateTime!
+    $endsAt: DateTime
+    $imageId: ID
+    $tagIds: [ID!]
+  ) {
+    createEvent(
+      name: $name
+      description: $description
+      location: $location
+      startsAt: $startsAt
+      endsAt: $endsAt
+      imageId: $imageId
+      tagIds: $tagIds
+    ) {
+      ...EventRef
+    }
+  }
+  ${EventRef}
+`
+export const UpdateEvent = gql`
+  mutation UpdateEvent(
+    $id: ID!
+    $name: String
+    $description: RichText
+    $status: EventStatus
+    $location: String
+    $startsAt: DateTime
+    $endsAt: DateTime
+    $imageId: ID
+    $tagIds: [ID!]
+  ) {
+    updateEvent(
+      id: $id
+      name: $name
+      description: $description
+      status: $status
+      location: $location
+      startsAt: $startsAt
+      endsAt: $endsAt
+      imageId: $imageId
+      tagIds: $tagIds
+    ) {
+      ...EventRef
+    }
+  }
+  ${EventRef}
+`
+export const DeleteEvent = gql`
+  mutation DeleteEvent($id: ID!) {
+    deleteEvent(id: $id) {
+      ...EventRef
+    }
+  }
+  ${EventRef}
+`
 export const ImageList = gql`
   query ImageList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
     images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {
@@ -4250,6 +4565,54 @@ export const DeletePeer = gql`
     }
   }
   ${PeerRef}
+`
+export const TagList = gql`
+  query TagList(
+    $filter: TagFilter
+    $cursor: ID
+    $take: Int
+    $skip: Int
+    $order: SortOrder
+    $sort: TagSort
+  ) {
+    tags(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+      nodes {
+        id
+        tag
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+  }
+`
+export const CreateTag = gql`
+  mutation CreateTag($tag: String, $type: TagType!) {
+    createTag(tag: $tag, type: $type) {
+      id
+      tag
+    }
+  }
+`
+export const UpdateTag = gql`
+  mutation UpdateTag($id: ID!, $tag: String) {
+    updateTag(id: $id, tag: $tag) {
+      id
+      tag
+    }
+  }
+`
+export const DeleteTag = gql`
+  mutation DeleteTag($id: ID!) {
+    deleteTag(id: $id) {
+      id
+      tag
+    }
+  }
 `
 export const UserList = gql`
   query UserList($filter: String, $cursor: ID, $take: Int, $skip: Int) {

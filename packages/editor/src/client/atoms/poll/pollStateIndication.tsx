@@ -4,9 +4,6 @@ import WaitIcon from '@rsuite/icons/Wait'
 import React from 'react'
 import {useTranslation} from 'react-i18next'
 import {Tooltip, Whisper} from 'rsuite'
-
-import {dateTimeLocalString} from '../../utility'
-
 interface PollStateIndicationPorps {
   closedAt: string | null | undefined
   opensAt: string
@@ -43,9 +40,7 @@ export function PollStateIndication({
   return (
     <Whisper
       speaker={
-        <Tooltip>
-          {t('pollStateIndication.waiting', {date: dateTimeLocalString(new Date(pollOpensAt))})}
-        </Tooltip>
+        <Tooltip>{t('pollStateIndication.waiting', {date: new Date(pollOpensAt)})}</Tooltip>
       }>
       <WaitIcon />
     </Whisper>
