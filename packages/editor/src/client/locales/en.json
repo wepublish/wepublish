@@ -605,10 +605,10 @@
       "createNew": "Create Poll",
       "question": "Question",
       "opensAt": "Opens at",
-      "openedAt": "Opened at {{openedAt}}",
-      "pollWillOpenAt": "Opens at {{opensAt}}",
+      "openedAt": "Opened at {{openedAt, ccc PP p}}",
+      "pollWillOpenAt": "Opens at {{opensAt, ccc PP p}}",
       "noQuestion": "No question captured",
-      "hasBeenClosedAt": "Closed at {{closedAt}}",
+      "hasBeenClosedAt": "Closed at {{closedAt, ccc PP p}}",
       "closedAt": "Closed at",
       "closedAtNone": "Not closed",
       "answersCount": "Possible answers",
@@ -619,8 +619,7 @@
     "deletePollModal": {
       "title": "Delete Poll?",
       "body": "Do you really want to delete the poll \"{{pollQuestion}}\"?",
-      "deleteBtn": "Yes, delete",
-      "cancelBtn": "Cancel"
+      "deleteBtn": "Yes, delete"
     },
     "pollEditView": {
       "loadingTitle": "Loading poll...",
@@ -662,9 +661,11 @@
     "pollStateIndication": {
       "closed": "Poll closed",
       "open": "Poll open",
-      "waiting": "Poll is waiting for the opening on {{date}}"
+      "waiting": "Poll is waiting for the opening on {{date, ccc PP p}}"
     },
     "navbar": {
+      "events": "Events",
+      "eventTags": "Tags",
       "articles": "Articles",
       "blocks": {
         "topMenu": "Content Blocks",
@@ -1253,6 +1254,42 @@
     "permissions": {
       "noAccess": "You have insufficient permission to access this content.",
       "contactAdmin": "Please contact your administrator to add any of the following permissions: {{permissions}}"
+    },
+    "event": {
+      "list": {
+        "title": "Events",
+        "name": "Name",
+        "delete": "Delete",
+        "create": "Create new event",
+        "startsAt": "Starts at {{startsAt, ccc PP p}}",
+        "endsAt": "Ends at {{endsAt, ccc PP p}}",
+        "endsAtNone": "Open ended"
+      },
+      "create": {
+        "title": "Create Event"
+      },
+      "edit": {
+        "title": "Edit Event"
+      },
+      "form": {
+        "name": "Name",
+        "location": "Location",
+        "status": "Status",
+        "startsAt": "Starts at",
+        "endsAt": "Ends at",
+        "description": "Description",
+        "tags": "Tags",
+        "image": "Image",
+        "scheduled": "Scheduled",
+        "cancelled": "Cancelled",
+        "postponed": "Postponed",
+        "rescheduled": "Rescheduled"
+      },
+      "delete": {
+        "title": "Delete Event?",
+        "body": "Do you really want to delete the event \"{{name}}\"?",
+        "delete": "Yes, delete the event"
+      }
     }
   }
 }

@@ -3,17 +3,14 @@ import React from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
 import {Button, Message, Modal, toaster} from 'rsuite'
 
-import {Poll, PollsQuery, useDeletePollMutation} from '../../api'
+import {Event, EventListQuery, useDeleteEventMutation} from '../../api'
 
-interface DeletePollProps {
-  poll?: Poll
+type DeleteEventProps = {
+  event: Event | undefined
   onClose(): void
-  onDelete(): Promise<ApolloQueryResult<PollsQuery>>
+  onDelete(): Promise<ApolloQueryResult<EventListQuery>>
 }
 
-/**
- * Error handling
- */
 const onErrorToast = (error: ApolloError) => {
   toaster.push(
     <Message type="error" showIcon closable duration={3000}>
@@ -25,27 +22,23 @@ const onErrorToast = (error: ApolloError) => {
 const onCompletedToast = (t: TFunction) => () => {
   toaster.push(
     <Message type="success" showIcon closable duration={3000}>
-      {t('pollList.pollDeleted')}
+      {t('event.delete.deleted')}
     </Message>
   )
 }
 
-export function DeletePollModal({poll, onClose, onDelete}: DeletePollProps) {
+export function DeleteEventModal({event, onClose, onDelete}: DeleteEventProps) {
   const {t} = useTranslation()
-  const [deletePollMutation] = useDeletePollMutation()
+  const [deleteEventMutation] = useDeleteEventMutation()
 
-  /**
-   * FUNCTIONS
-   */
-  async function deletePoll() {
-    if (!poll) {
+  async function deleteEvent() {
+    if (!event) {
       return
     }
 
-    // call api
-    await deletePollMutation({
+    await deleteEventMutation({
       variables: {
-        deletePollId: poll.id
+        id: event.id
       },
       onError: onErrorToast,
       onCompleted: onCompletedToast(t)
@@ -57,18 +50,20 @@ export function DeletePollModal({poll, onClose, onDelete}: DeletePollProps) {
 
   return (
     <>
-      <Modal open={!!poll} onClose={onClose}>
+      <Modal open={!!event} onClose={onClose}>
         <Modal.Header>
-          <Modal.Title>{t('deletePollModal.title')}</Modal.Title>
+          <Modal.Title>{t('event.delete.title')}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          {t('deletePollModal.body', {pollQuestion: poll?.question || t('pollList.noQuestion')})}
+          {t('event.delete.body', {
+            name: event?.name
+          })}
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={deletePoll} appearance="primary" color="red">
-            {t('deletePollModal.deleteBtn')}
+          <Button onClick={deleteEvent} appearance="primary" color="red">
+            {t('event.delete.delete')}
           </Button>
 
           <Button onClick={onClose} appearance="subtle">
