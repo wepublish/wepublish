@@ -8,7 +8,6 @@ services:
   website:
     build:
       context: .
-      target: dev
     ports:
       - 4200:8000
     command: ['npx', '@wepublish/website-example']
@@ -25,7 +24,6 @@ services:
   api:
     build:
       context: .
-      target: dev
     ports:
       - 4000:8000
     command: ['npx', '@wepublish/api-example']
@@ -49,7 +47,6 @@ services:
   editor:
     build:
       context: .
-      target: dev
     ports:
       - 3006:8000
     command: ['npx', '@wepublish/editor']
@@ -103,7 +100,7 @@ services:
     image: mongo:4.2.3-bionic
     ports:
       - 27017:27017
-  
+
   mongo-express:
     image: mongo-express
     restart: always
