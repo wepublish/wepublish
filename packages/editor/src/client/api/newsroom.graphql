@@ -21,26 +21,25 @@ fragment FullNewsroom on Newsroom {
 
 query RemotePeerProfile($hostURL: String!, $token: String!) {
   remotePeerProfile(hostURL: $hostURL, token: $token) {
-    id
+      name
+      hostURL
+      themeColor
+      themeFontColor
+      logo {
+        ...ImageRef
+      }
+      callToActionText
+      callToActionURL
+      callToActionImage {
+        ...ImageRef
+      }
+      callToActionImageURL
   }
 }
 
 query PeerProfile {
   peerProfile {
-    id
-    name
-    themeColor
-    themeFontColor
-    logo {
-      ...ImageRef
-    }
-    callToActionText
-    callToActionURL
-    callToActionImage {
-      ...ImageRef
-    }
-    callToActionImageURL
-    isSelf
+     ...FullNewsroom
   }
 }
 

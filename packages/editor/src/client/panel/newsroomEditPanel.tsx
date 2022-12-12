@@ -56,13 +56,16 @@ function NewsroomEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
   const {t} = useTranslation()
 
   async function handleFetch() {
+    console.log('pressed token', token)
     try {
       const {data: remote} = await fetchRemote({
         hostURL: urlString,
         token
       })
-      setProfile(remote?.remotePeerProfile?.id ? remote.remotePeerProfile : null)
+      console.log('remote newsroom', remote)
+      setProfile(remote?.remotePeerProfile ? remote.remotePeerProfile : null)
     } catch (error) {
+      return
       toaster.push(
         <Message type="error" showIcon closable duration={0}>
           {(error as Error).message}
@@ -72,10 +75,11 @@ function NewsroomEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
   }
 
   useEffect(() => {
-    if (data?.newsroom) {
+    console.log('newsroom panel data', data?.newsroom)
+    if (data?.newsroom && data.newsroom.slug && data.newsroom.hostURL) {
       setName(data.newsroom.name)
-      setSlug(data.newsroom.slug ?? '')
-      setURLString(data.newsroom.hostURL ?? '')
+      setSlug(data.newsroom.slug)
+      setURLString(data.newsroom.hostURL)
       setTimeout(() => {
         // setProfile in timeout because the useEffect that listens on
         // urlString and token will set it otherwise to null
@@ -280,7 +284,7 @@ function NewsroomEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
                     {profile?.callToActionURL}
                   </DescriptionListItem>
                   <DescriptionListItem label={t('peerList.panels.callToActionImage')}>
-                    {/* <img src={profile?.callToActionImage?.thumbURL || undefined} /> */}
+                    <img src={profile?.callToActionImage?.thumbURL || undefined} />
                   </DescriptionListItem>
                   <DescriptionListItem label={t('peerList.panels.callToActionImageURL')}>
                     {profile?.callToActionImageURL}

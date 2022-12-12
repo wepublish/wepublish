@@ -22,6 +22,7 @@ import {
   NewsroomListQuery,
   useDeleteNewsroomMutation,
   useNewsroomListQuery,
+  usePeerProfileQuery,
   useUpdateNewsroomMutation
 } from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -51,6 +52,8 @@ function NewsroomList() {
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentNewsroom, setCurrentNewsroom] = useState<Newsroom>()
 
+  const {data: peerInfoData} = usePeerProfileQuery({fetchPolicy: 'network-only'})
+
   const {
     data: newsroomListData,
     loading: isNewsroomListLoading,
@@ -61,7 +64,9 @@ function NewsroomList() {
   })
 
   const peerProfile = useMemo(() => {
-    return newsroomListData?.newsrooms?.find(newsroom => newsroom.isSelf)
+    const nl = newsroomListData?.newsrooms?.find(newsroom => newsroom.isSelf)
+    console.log('newsroom list', newsroomListData?.newsrooms)
+    return nl
   }, [newsroomListData])
 
   const [deleteNewsroom, {loading: isDeleting}] = useDeleteNewsroomMutation()
@@ -232,7 +237,7 @@ function NewsroomList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
       <div style={{marginTop: '20px'}}>
-        {newsroomListData?.newsrooms?.length ? (
+        {newsroomListData?.newsrooms?.filter(newsroom => !newsroom.isSelf).length ? (
           <List>{newsrooms}</List>
         ) : !isNewsroomListLoading ? (
           <p>{t('peerList.overview.noPeersFound')}</p>
@@ -261,10 +266,11 @@ function NewsroomList() {
           setEditModalOpen(false)
           navigate('/peering')
         }}>
+        {console.log('peer info data', peerInfoData)}
         {peerProfile?.hostURL && (
           <NewsroomEditPanel
             id={editID}
-            hostURL={peerProfile?.hostURL ?? ''}
+            hostURL={peerProfile.hostURL}
             onClose={() => {
               setEditModalOpen(false)
               navigate('/peering')

@@ -79,7 +79,7 @@ function PeerArticleList() {
 
   useEffect(() => {
     if (newsroomListData?.newsrooms) {
-      setAllPeers(newsroomListData.newsrooms)
+      setAllPeers(newsroomListData.newsrooms.filter(newsroom => !newsroom.isSelf))
     }
   }, [newsroomListData?.newsrooms])
 

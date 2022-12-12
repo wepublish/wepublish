@@ -3823,7 +3823,14 @@ export type RemotePeerProfileQuery = (
   { __typename?: 'Query' }
   & { remotePeerProfile?: Maybe<(
     { __typename?: 'Newsroom' }
-    & Pick<Newsroom, 'id'>
+    & Pick<Newsroom, 'name' | 'hostURL' | 'themeColor' | 'themeFontColor' | 'callToActionText' | 'callToActionURL' | 'callToActionImageURL'>
+    & { logo?: Maybe<(
+      { __typename?: 'Image' }
+      & ImageRefFragment
+    )>, callToActionImage?: Maybe<(
+      { __typename?: 'Image' }
+      & ImageRefFragment
+    )> }
   )> }
 );
 
@@ -3834,14 +3841,7 @@ export type PeerProfileQuery = (
   { __typename?: 'Query' }
   & { peerProfile: (
     { __typename?: 'Newsroom' }
-    & Pick<Newsroom, 'id' | 'name' | 'themeColor' | 'themeFontColor' | 'callToActionText' | 'callToActionURL' | 'callToActionImageURL' | 'isSelf'>
-    & { logo?: Maybe<(
-      { __typename?: 'Image' }
-      & ImageRefFragment
-    )>, callToActionImage?: Maybe<(
-      { __typename?: 'Image' }
-      & ImageRefFragment
-    )> }
+    & FullNewsroomFragment
   ) }
 );
 
@@ -7527,10 +7527,22 @@ export type DeleteNavigationMutationOptions = Apollo.BaseMutationOptions<DeleteN
 export const RemotePeerProfileDocument = gql`
     query RemotePeerProfile($hostURL: String!, $token: String!) {
   remotePeerProfile(hostURL: $hostURL, token: $token) {
-    id
+    name
+    hostURL
+    themeColor
+    themeFontColor
+    logo {
+      ...ImageRef
+    }
+    callToActionText
+    callToActionURL
+    callToActionImage {
+      ...ImageRef
+    }
+    callToActionImageURL
   }
 }
-    `;
+    ${ImageRefFragmentDoc}`;
 
 /**
  * __useRemotePeerProfileQuery__
@@ -7563,23 +7575,10 @@ export type RemotePeerProfileQueryResult = Apollo.QueryResult<RemotePeerProfileQ
 export const PeerProfileDocument = gql`
     query PeerProfile {
   peerProfile {
-    id
-    name
-    themeColor
-    themeFontColor
-    logo {
-      ...ImageRef
-    }
-    callToActionText
-    callToActionURL
-    callToActionImage {
-      ...ImageRef
-    }
-    callToActionImageURL
-    isSelf
+    ...FullNewsroom
   }
 }
-    ${ImageRefFragmentDoc}`;
+    ${FullNewsroomFragmentDoc}`;
 
 /**
  * __usePeerProfileQuery__
