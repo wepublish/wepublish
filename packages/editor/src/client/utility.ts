@@ -1,5 +1,4 @@
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
-import Maybe from 'graphql/tsutils/Maybe'
 import nanoid from 'nanoid'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 
@@ -12,7 +11,7 @@ export enum LocalStorageKey {
 }
 
 export const addOrUpdateOneInArray = (
-  array: Maybe<Record<string | 'id', any>[]>,
+  array: Record<string | 'id', any>[] | null | undefined,
   entry: Record<string | 'id', any>
 ) => {
   let isNew = true

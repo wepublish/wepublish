@@ -5,6 +5,7 @@
   "main": "./dist/server/index.js",
   "license": "UNLICENSED",
   "engines": {
+    "node": "^16.0.0",
     "yarn": "^1.16.0"
   },
   "bin": "./bin/run-server.js",
