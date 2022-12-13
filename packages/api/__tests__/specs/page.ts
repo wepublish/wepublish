@@ -1,4 +1,4 @@
-import {ApolloServerTestClient} from 'apollo-server-testing'
+import {ApolloServer} from 'apollo-server-express'
 import {
   CreatePage,
   DeletePage,
@@ -12,7 +12,7 @@ import {
 
 import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
 
-let testClientPrivate: ApolloServerTestClient
+let testServerPrivate: ApolloServer
 
 const richTextNodes = [
   {
@@ -126,7 +126,7 @@ const blocks = [
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithPrisma()
-    testClientPrivate = setupClient.testClientPrivate
+    testServerPrivate = setupClient.testServerPrivate
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')
@@ -137,7 +137,6 @@ describe('Pages', () => {
   describe('can be created/edited/published/unpublished/deleted:', () => {
     const ids: string[] = []
     beforeAll(async () => {
-      const {mutate} = testClientPrivate
       const input: PageInput = {
         title: 'Testing Page',
         slug: generateRandomString(),
@@ -149,18 +148,17 @@ describe('Pages', () => {
         blocks: []
       }
 
-      const res = await mutate({
-        mutation: CreatePage,
+      const res = await testServerPrivate.executeOperation({
+        query: CreatePage,
         variables: {
           input: input
         }
       })
 
-      ids.unshift(res.data.createPage.id)
+      ids.unshift(res.data?.createPage.id)
     })
 
     test('can be created', async () => {
-      const {mutate} = testClientPrivate
       const input: PageInput = {
         title: 'Testing Page',
         slug: generateRandomString(),
@@ -172,8 +170,8 @@ describe('Pages', () => {
         blocks: blocks
       }
 
-      const res = await mutate({
-        mutation: CreatePage,
+      const res = await testServerPrivate.executeOperation({
+        query: CreatePage,
         variables: {
           input: input
         }
@@ -190,24 +188,22 @@ describe('Pages', () => {
         }
       })
 
-      ids.unshift(res.data.createPage.id)
+      ids.unshift(res.data?.createPage.id)
     })
 
     test('can be read in list', async () => {
-      const {query} = testClientPrivate
-      const res = await query({
+      const res = await testServerPrivate.executeOperation({
         query: PageList,
         variables: {
           take: 100
         }
       })
 
-      expect(res.data.pages.nodes).not.toHaveLength(0)
+      expect(res.data?.pages.nodes).not.toHaveLength(0)
     })
 
     test('can be read by id', async () => {
-      const {query} = testClientPrivate
-      const res = await query({
+      const res = await testServerPrivate.executeOperation({
         query: Page,
         variables: {
           id: ids[0]
@@ -227,9 +223,8 @@ describe('Pages', () => {
     })
 
     test('can be updated', async () => {
-      const {mutate} = testClientPrivate
-      const res = await mutate({
-        mutation: UpdatePage,
+      const res = await testServerPrivate.executeOperation({
+        query: UpdatePage,
         variables: {
           input: {
             title: 'Update Title',
@@ -264,9 +259,8 @@ describe('Pages', () => {
     })
 
     test('can be published', async () => {
-      const {mutate} = testClientPrivate
-      const res = await mutate({
-        mutation: PublishPage,
+      const res = await testServerPrivate.executeOperation({
+        query: PublishPage,
         variables: {
           id: ids[0],
           publishAt: '2020-11-25T23:55:35.000Z',
@@ -288,8 +282,6 @@ describe('Pages', () => {
     })
 
     test('can not be published with the same slug', async () => {
-      const {mutate} = testClientPrivate
-
       const input: PageInput = {
         title: 'Testing Page with the same slug',
         slug: 'testing-page',
@@ -298,34 +290,34 @@ describe('Pages', () => {
         blocks: []
       }
 
-      const newPage = await mutate({
-        mutation: CreatePage,
+      const newPage = await testServerPrivate.executeOperation({
+        query: CreatePage,
         variables: {
           input: input
         }
       })
 
-      await mutate({
-        mutation: PublishPage,
+      await testServerPrivate.executeOperation({
+        query: PublishPage,
         variables: {
-          id: newPage.data.createPage.id,
+          id: newPage.data?.createPage.id,
           publishAt: '2020-11-25T23:55:35.000Z',
           publishedAt: '2020-11-25T23:55:35.000Z',
           updatedAt: '2020-11-25T23:55:35.000Z'
         }
       })
 
-      const newPage2 = await mutate({
-        mutation: CreatePage,
+      const newPage2 = await testServerPrivate.executeOperation({
+        query: CreatePage,
         variables: {
           input: input
         }
       })
 
-      const res = await mutate({
-        mutation: PublishPage,
+      const res = await testServerPrivate.executeOperation({
+        query: PublishPage,
         variables: {
-          id: newPage2.data.createPage.id,
+          id: newPage2.data?.createPage.id,
           publishAt: '2020-11-25T23:55:35.000Z',
           publishedAt: '2020-11-25T23:55:35.000Z',
           updatedAt: '2020-11-25T23:55:35.000Z'
@@ -338,9 +330,8 @@ describe('Pages', () => {
     })
 
     test('can be unpublished', async () => {
-      const {mutate} = testClientPrivate
-      const res = await mutate({
-        mutation: UnpublishPage,
+      const res = await testServerPrivate.executeOperation({
+        query: UnpublishPage,
         variables: {
           id: ids[0]
         }
@@ -359,9 +350,8 @@ describe('Pages', () => {
     })
 
     test('can be deleted', async () => {
-      const {mutate} = testClientPrivate
-      const res = await mutate({
-        mutation: DeletePage,
+      const res = await testServerPrivate.executeOperation({
+        query: DeletePage,
         variables: {
           id: ids[0]
         }
@@ -371,7 +361,7 @@ describe('Pages', () => {
           deletePage: expect.any(Object)
         }
       })
-      expect(res.data.deletePage.id).toBe(ids[0])
+      expect(res.data?.deletePage.id).toBe(ids[0])
       ids.shift()
     })
   })

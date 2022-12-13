@@ -1,4 +1,4 @@
-import {ApolloServerTestClient} from 'apollo-server-testing'
+import {ApolloServer} from 'apollo-server-express'
 import {
   Author,
   AuthorInput,
@@ -10,12 +10,12 @@ import {
 
 import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
 
-let testClientPrivate: ApolloServerTestClient
+let testServerPrivate: ApolloServer
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithPrisma()
-    testClientPrivate = setupClient.testClientPrivate
+    testServerPrivate = setupClient.testServerPrivate
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')
@@ -26,7 +26,6 @@ describe('Authors', () => {
   describe('can be created/edited/deleted:', () => {
     const authorIds: string[] = []
     beforeAll(async () => {
-      const {mutate} = testClientPrivate
       const authorInput: AuthorInput = {
         name: 'JRR Tolkien',
         slug: generateRandomString(),
@@ -53,17 +52,16 @@ describe('Authors', () => {
           }
         ]
       }
-      const res = await mutate({
-        mutation: CreateAuthor,
+      const res = await testServerPrivate.executeOperation({
+        query: CreateAuthor,
         variables: {
           input: authorInput
         }
       })
-      authorIds.unshift(res.data.createAuthor.id)
+      authorIds.unshift(res.data?.createAuthor.id)
     })
 
     test('can be created', async () => {
-      const {mutate} = testClientPrivate
       const authorInput: AuthorInput = {
         name: 'John Grisham',
         slug: generateRandomString(),
@@ -90,8 +88,8 @@ describe('Authors', () => {
           }
         ]
       }
-      const res = await mutate({
-        mutation: CreateAuthor,
+      const res = await testServerPrivate.executeOperation({
+        query: CreateAuthor,
         variables: {
           input: authorInput
         }
@@ -104,24 +102,22 @@ describe('Authors', () => {
           }
         }
       })
-      authorIds.unshift(res.data.createAuthor.id)
+      authorIds.unshift(res.data?.createAuthor.id)
     })
 
     test('can be read in list', async () => {
-      const {query} = testClientPrivate
-      const res = await query({
+      const res = await testServerPrivate.executeOperation({
         query: AuthorList,
         variables: {
           take: 100
         }
       })
 
-      expect(res.data.authors.nodes).not.toHaveLength(0)
+      expect(res.data?.authors.nodes).not.toHaveLength(0)
     })
 
     test('can be read by id', async () => {
-      const {query} = testClientPrivate
-      const res = await query({
+      const res = await testServerPrivate.executeOperation({
         query: Author,
         variables: {
           id: authorIds[0]
@@ -138,9 +134,8 @@ describe('Authors', () => {
     })
 
     test('can be updated', async () => {
-      const {mutate} = testClientPrivate
-      const res = await mutate({
-        mutation: UpdateAuthor,
+      const res = await testServerPrivate.executeOperation({
+        query: UpdateAuthor,
         variables: {
           input: {
             name: 'Jane Austen',
@@ -161,9 +156,8 @@ describe('Authors', () => {
     })
 
     test('can be deleted', async () => {
-      const {mutate} = testClientPrivate
-      const res = await mutate({
-        mutation: DeleteAuthor,
+      const res = await testServerPrivate.executeOperation({
+        query: DeleteAuthor,
         variables: {
           id: authorIds[0]
         }
@@ -173,7 +167,7 @@ describe('Authors', () => {
           deleteAuthor: expect.any(Object)
         }
       })
-      expect(res.data.deleteAuthor.id).toBe(authorIds[0])
+      expect(res.data?.deleteAuthor.id).toBe(authorIds[0])
       authorIds.shift()
     })
   })

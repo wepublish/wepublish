@@ -67,9 +67,9 @@ Object {
       },
       "pending": null,
       "published": Object {
-        "publishedAt": "2020-11-25T23:55:35.000Z",
+        "publishedAt": 2020-11-25T23:55:35.000Z,
         "revision": 0,
-        "updatedAt": "2020-11-25T23:55:35.000Z",
+        "updatedAt": 2020-11-25T23:55:35.000Z,
       },
       "shared": false,
     },

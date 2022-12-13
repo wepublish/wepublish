@@ -15,329 +15,20 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Color: string;
+  Date: any;
   DateTime: string;
   RichText: Node[];
   Slug: string;
-  VoteValue: any;
-  Color: string;
-  Date: any;
-  Value: any;
   Upload: File;
+  Value: any;
+  VoteValue: any;
 };
 
-export type Query = {
-  __typename?: 'Query';
-  article?: Maybe<Article>;
-  articlePreviewLink?: Maybe<Scalars['String']>;
-  articles: ArticleConnection;
-  author?: Maybe<Author>;
-  authors: AuthorConnection;
-  authProviders: Array<AuthProvider>;
-  comment?: Maybe<Comment>;
-  comments: CommentConnection;
-  createJWTForUser?: Maybe<JwtToken>;
-  image?: Maybe<Image>;
-  images: ImageConnection;
-  invoice?: Maybe<Invoice>;
-  invoices: InvoiceConnection;
-  me?: Maybe<User>;
-  memberPlan?: Maybe<MemberPlan>;
-  memberPlans: MemberPlanConnection;
-  navigation?: Maybe<Navigation>;
-  navigations: Array<Navigation>;
-  page?: Maybe<Page>;
-  pagePreviewLink?: Maybe<Scalars['String']>;
-  pages: PageConnection;
-  payment?: Maybe<Payment>;
-  paymentMethod?: Maybe<PaymentMethod>;
-  paymentMethods: Array<PaymentMethod>;
-  paymentProviders: Array<PaymentProvider>;
-  payments: PaymentConnection;
-  peer?: Maybe<Peer>;
-  peerArticle?: Maybe<Article>;
-  peerArticles: PeerArticleConnection;
-  peerProfile: PeerProfile;
-  peers?: Maybe<Array<Peer>>;
-  permissions?: Maybe<Array<Permission>>;
-  poll?: Maybe<FullPoll>;
-  polls?: Maybe<PollConnection>;
-  ratingSystem: FullCommentRatingSystem;
-  remotePeerProfile?: Maybe<PeerProfile>;
-  sessions: Array<Session>;
-  setting?: Maybe<Setting>;
-  settings: Array<Setting>;
-  subscription?: Maybe<Subscription>;
-  subscriptions: SubscriptionConnection;
-  subscriptionsAsCsv?: Maybe<Scalars['String']>;
-  tags?: Maybe<TagConnection>;
-  tokens: Array<Token>;
-  user?: Maybe<User>;
-  userRole?: Maybe<UserRole>;
-  userRoles: UserRoleConnection;
-  users: UserConnection;
-};
-
-
-export type QueryArticleArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryArticlePreviewLinkArgs = {
-  hours: Scalars['Int'];
-  id: Scalars['ID'];
-};
-
-
-export type QueryArticlesArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<ArticleFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<ArticleSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryAuthorArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  slug?: InputMaybe<Scalars['Slug']>;
-};
-
-
-export type QueryAuthorsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<AuthorFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<AuthorSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryAuthProvidersArgs = {
-  redirectUri?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryCommentArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryCommentsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<CommentFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<CommentSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryCreateJwtForUserArgs = {
-  expiresInMinutes: Scalars['Int'];
-  userId: Scalars['String'];
-};
-
-
-export type QueryImageArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-};
-
-
-export type QueryImagesArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<ImageFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<ImageSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryInvoiceArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-};
-
-
-export type QueryInvoicesArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<InvoiceFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<InvoiceSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryMemberPlanArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  slug?: InputMaybe<Scalars['Slug']>;
-};
-
-
-export type QueryMemberPlansArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<MemberPlanFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<MemberPlanSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryNavigationArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  key?: InputMaybe<Scalars['ID']>;
-};
-
-
-export type QueryPageArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-};
-
-
-export type QueryPagePreviewLinkArgs = {
-  hours: Scalars['Int'];
-  id: Scalars['ID'];
-};
-
-
-export type QueryPagesArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<PageFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<PageSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryPaymentArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-};
-
-
-export type QueryPaymentMethodArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-};
-
-
-export type QueryPaymentsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<PaymentFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<PaymentSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryPeerArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryPeerArticleArgs = {
-  id: Scalars['ID'];
-  peerID: Scalars['ID'];
-};
-
-
-export type QueryPeerArticlesArgs = {
-  cursors?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<ArticleFilter>;
-  order?: InputMaybe<SortOrder>;
-  peerFilter?: InputMaybe<Scalars['String']>;
-  sort?: InputMaybe<ArticleSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryPollArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-};
-
-
-export type QueryPollsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<PollFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<PollSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryRemotePeerProfileArgs = {
-  hostURL: Scalars['String'];
-  token: Scalars['String'];
-};
-
-
-export type QuerySettingArgs = {
-  name?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QuerySubscriptionArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QuerySubscriptionsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<SubscriptionFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<SubscriptionSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QuerySubscriptionsAsCsvArgs = {
-  filter?: InputMaybe<SubscriptionFilter>;
-};
-
-
-export type QueryTagsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<TagFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<TagSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryUserArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-};
-
-
-export type QueryUserRoleArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-};
-
-
-export type QueryUserRolesArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<UserRoleFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<UserRoleSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryUsersArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<UserFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<UserSort>;
-  take?: InputMaybe<Scalars['Int']>;
+export type AllowedSettingVals = {
+  __typename?: 'AllowedSettingVals';
+  boolChoice?: Maybe<Scalars['Boolean']>;
+  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type Article = {
@@ -350,6 +41,58 @@ export type Article = {
   pending?: Maybe<ArticleRevision>;
   published?: Maybe<ArticleRevision>;
   shared: Scalars['Boolean'];
+};
+
+export type ArticleConnection = {
+  __typename?: 'ArticleConnection';
+  nodes: Array<Article>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type ArticleFilter = {
+  authors?: InputMaybe<Array<Scalars['ID']>>;
+  draft?: InputMaybe<Scalars['Boolean']>;
+  lead?: InputMaybe<Scalars['String']>;
+  pending?: InputMaybe<Scalars['Boolean']>;
+  preTitle?: InputMaybe<Scalars['String']>;
+  publicationDateFrom?: InputMaybe<DateFilter>;
+  publicationDateTo?: InputMaybe<DateFilter>;
+  published?: InputMaybe<Scalars['Boolean']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type ArticleInput = {
+  authorIDs: Array<Scalars['ID']>;
+  blocks: Array<BlockInput>;
+  breaking: Scalars['Boolean'];
+  canonicalUrl?: InputMaybe<Scalars['String']>;
+  hideAuthor: Scalars['Boolean'];
+  imageID?: InputMaybe<Scalars['ID']>;
+  lead?: InputMaybe<Scalars['String']>;
+  preTitle?: InputMaybe<Scalars['String']>;
+  properties: Array<PropertiesInput>;
+  seoTitle?: InputMaybe<Scalars['String']>;
+  shared: Scalars['Boolean'];
+  slug?: InputMaybe<Scalars['Slug']>;
+  socialMediaAuthorIDs: Array<Scalars['ID']>;
+  socialMediaDescription?: InputMaybe<Scalars['String']>;
+  socialMediaImageID?: InputMaybe<Scalars['ID']>;
+  socialMediaTitle?: InputMaybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  title: Scalars['String'];
+};
+
+export type ArticleNavigationLink = BaseNavigationLink & {
+  __typename?: 'ArticleNavigationLink';
+  article?: Maybe<Article>;
+  label: Scalars['String'];
+};
+
+export type ArticleNavigationLinkInput = {
+  articleID: Scalars['ID'];
+  label: Scalars['String'];
 };
 
 export type ArticleRevision = {
@@ -379,6 +122,39 @@ export type ArticleRevision = {
   url: Scalars['String'];
 };
 
+export enum ArticleSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  PublishedAt = 'PUBLISHED_AT',
+  PublishAt = 'PUBLISH_AT',
+  UpdatedAt = 'UPDATED_AT'
+}
+
+export type ArticleTeaser = {
+  __typename?: 'ArticleTeaser';
+  article?: Maybe<Article>;
+  image?: Maybe<Image>;
+  lead?: Maybe<Scalars['String']>;
+  preTitle?: Maybe<Scalars['String']>;
+  style: TeaserStyle;
+  title?: Maybe<Scalars['String']>;
+};
+
+export type ArticleTeaserInput = {
+  articleID: Scalars['ID'];
+  imageID?: InputMaybe<Scalars['ID']>;
+  lead?: InputMaybe<Scalars['String']>;
+  preTitle?: InputMaybe<Scalars['String']>;
+  style: TeaserStyle;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type AuthProvider = {
+  __typename?: 'AuthProvider';
+  name: Scalars['String'];
+  url: Scalars['String'];
+};
+
 export type Author = {
   __typename?: 'Author';
   bio?: Maybe<Scalars['RichText']>;
@@ -393,61 +169,25 @@ export type Author = {
   url: Scalars['String'];
 };
 
-export type Image = {
-  __typename?: 'Image';
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  extension: Scalars['String'];
-  filename?: Maybe<Scalars['String']>;
-  fileSize: Scalars['Int'];
-  focalPoint?: Maybe<Point>;
-  format: Scalars['String'];
-  height: Scalars['Int'];
-  id: Scalars['ID'];
-  license?: Maybe<Scalars['String']>;
-  link?: Maybe<Scalars['String']>;
-  mimeType: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  source?: Maybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  transformURL?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
-  width: Scalars['Int'];
+export type AuthorConnection = {
+  __typename?: 'AuthorConnection';
+  nodes: Array<Author>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
 };
 
-
-export type ImageTransformUrlArgs = {
-  input?: InputMaybe<ImageTransformation>;
+export type AuthorFilter = {
+  name?: InputMaybe<Scalars['String']>;
 };
 
-export type Point = {
-  __typename?: 'Point';
-  x: Scalars['Float'];
-  y: Scalars['Float'];
+export type AuthorInput = {
+  bio?: InputMaybe<Scalars['RichText']>;
+  imageID?: InputMaybe<Scalars['ID']>;
+  jobTitle?: InputMaybe<Scalars['String']>;
+  links?: InputMaybe<Array<AuthorLinkInput>>;
+  name: Scalars['String'];
+  slug: Scalars['Slug'];
 };
-
-export type ImageTransformation = {
-  height?: InputMaybe<Scalars['Int']>;
-  output?: InputMaybe<ImageOutput>;
-  quality?: InputMaybe<Scalars['Float']>;
-  rotation?: InputMaybe<ImageRotation>;
-  width?: InputMaybe<Scalars['Int']>;
-};
-
-export enum ImageOutput {
-  Jpeg = 'JPEG',
-  Png = 'PNG',
-  Webp = 'WEBP'
-}
-
-export enum ImageRotation {
-  Auto = 'AUTO',
-  Rotate_0 = 'ROTATE_0',
-  Rotate_180 = 'ROTATE_180',
-  Rotate_270 = 'ROTATE_270',
-  Rotate_90 = 'ROTATE_90'
-}
 
 export type AuthorLink = {
   __typename?: 'AuthorLink';
@@ -455,17 +195,69 @@ export type AuthorLink = {
   url: Scalars['String'];
 };
 
-export type Block = BildwurfAdBlock | CommentBlock | EmbedBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | LinkPageBreakBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | TeaserGridBlock | TeaserGridFlexBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type AuthorLinkInput = {
+  title: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export enum AuthorSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  Name = 'NAME'
+}
+
+export type AvailablePaymentMethod = {
+  __typename?: 'AvailablePaymentMethod';
+  forceAutoRenewal: Scalars['Boolean'];
+  paymentMethods: Array<PaymentMethod>;
+  paymentPeriodicities: Array<PaymentPeriodicity>;
+};
+
+export type AvailablePaymentMethodInput = {
+  forceAutoRenewal: Scalars['Boolean'];
+  paymentMethodIDs: Array<Scalars['String']>;
+  paymentPeriodicities: Array<PaymentPeriodicity>;
+};
+
+export type BaseNavigationLink = {
+  label: Scalars['String'];
+};
 
 export type BildwurfAdBlock = {
   __typename?: 'BildwurfAdBlock';
   zoneID: Scalars['String'];
 };
 
-export type CommentBlock = {
-  __typename?: 'CommentBlock';
-  comments: Array<Comment>;
-  filter: CommentBlockFilter;
+export type BildwurfAdBlockInput = {
+  zoneID: Scalars['String'];
+};
+
+export type Block = BildwurfAdBlock | CommentBlock | EmbedBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | LinkPageBreakBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | TeaserGridBlock | TeaserGridFlexBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock;
+
+export type BlockInput = {
+  bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
+  comment?: InputMaybe<CommentBlockInput>;
+  embed?: InputMaybe<EmbedBlockInput>;
+  facebookPost?: InputMaybe<FacebookPostBlockInput>;
+  facebookVideo?: InputMaybe<FacebookVideoBlockInput>;
+  html?: InputMaybe<HtmlBlockInput>;
+  image?: InputMaybe<ImageBlockInput>;
+  imageGallery?: InputMaybe<ImageGalleryBlockInput>;
+  instagramPost?: InputMaybe<InstagramPostBlockInput>;
+  linkPageBreak?: InputMaybe<LinkPageBreakBlockInput>;
+  listicle?: InputMaybe<ListicleBlockInput>;
+  polisConversation?: InputMaybe<PolisConversationBlockInput>;
+  poll?: InputMaybe<PollBlockInput>;
+  quote?: InputMaybe<QuoteBlockInput>;
+  richText?: InputMaybe<RichTextBlockInput>;
+  soundCloudTrack?: InputMaybe<SoundCloudTrackBlockInput>;
+  teaserGrid?: InputMaybe<TeaserGridBlockInput>;
+  teaserGridFlex?: InputMaybe<TeaserGridFlexBlockInput>;
+  tikTokVideo?: InputMaybe<TikTokVideoBlockInput>;
+  title?: InputMaybe<TitleBlockInput>;
+  twitterTweet?: InputMaybe<TwitterTweetBlockInput>;
+  vimeoVideo?: InputMaybe<VimeoVideoBlockInput>;
+  youTubeVideo?: InputMaybe<YouTubeVideoBlockInput>;
 };
 
 export type Comment = {
@@ -496,16 +288,59 @@ export enum CommentAuthorType {
   VerifiedUser = 'VerifiedUser'
 }
 
+export type CommentBlock = {
+  __typename?: 'CommentBlock';
+  comments: Array<Comment>;
+  filter: CommentBlockFilter;
+};
+
+export type CommentBlockFilter = {
+  __typename?: 'CommentBlockFilter';
+  comments?: Maybe<Array<Scalars['ID']>>;
+  item?: Maybe<Scalars['ID']>;
+  tags?: Maybe<Array<Scalars['ID']>>;
+};
+
+export type CommentBlockInput = {
+  filter: CommentBlockInputFilter;
+};
+
+export type CommentBlockInputFilter = {
+  comments?: InputMaybe<Array<Scalars['ID']>>;
+  item?: InputMaybe<Scalars['ID']>;
+  tags?: InputMaybe<Array<Scalars['ID']>>;
+};
+
+export type CommentConnection = {
+  __typename?: 'CommentConnection';
+  nodes: Array<Comment>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type CommentFilter = {
+  item?: InputMaybe<Scalars['ID']>;
+  states?: InputMaybe<Array<CommentState>>;
+  tags?: InputMaybe<Array<Scalars['ID']>>;
+};
+
 export enum CommentItemType {
   Article = 'Article',
   Page = 'Page',
   PeerArticle = 'PeerArticle'
 }
 
-export type OverriddenRating = {
-  __typename?: 'overriddenRating';
+export type CommentRatingOverrideUpdateInput = {
   answerId: Scalars['ID'];
-  value?: Maybe<Scalars['Int']>;
+  value?: InputMaybe<Scalars['Int']>;
+};
+
+export type CommentRatingSystemAnswer = {
+  __typename?: 'CommentRatingSystemAnswer';
+  answer?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  ratingSystemId: Scalars['ID'];
+  type: RatingSystemType;
 };
 
 export enum CommentRejectionReason {
@@ -521,6 +356,17 @@ export type CommentRevision = {
   title?: Maybe<Scalars['String']>;
 };
 
+export type CommentRevisionUpdateInput = {
+  lead?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['RichText']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export enum CommentSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt'
+}
+
 export enum CommentState {
   Approved = 'Approved',
   PendingApproval = 'PendingApproval',
@@ -528,112 +374,275 @@ export enum CommentState {
   Rejected = 'Rejected'
 }
 
-export type Tag = {
-  __typename?: 'Tag';
-  id: Scalars['ID'];
-  tag?: Maybe<Scalars['String']>;
-  type?: Maybe<TagType>;
+export type CreatePeerInput = {
+  hostURL: Scalars['String'];
+  name: Scalars['String'];
+  slug: Scalars['String'];
+  token: Scalars['String'];
 };
 
-export enum TagType {
-  Comment = 'Comment'
-}
-
-export type User = {
-  __typename?: 'User';
-  active: Scalars['Boolean'];
-  address?: Maybe<UserAddress>;
+export type CreatedToken = {
+  __typename?: 'CreatedToken';
   createdAt: Scalars['DateTime'];
-  email: Scalars['String'];
-  emailVerifiedAt?: Maybe<Scalars['DateTime']>;
-  firstName?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  lastLogin?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
-  oauth2Accounts: Array<OAuth2Account>;
-  paymentProviderCustomers: Array<PaymentProviderCustomer>;
-  preferredName?: Maybe<Scalars['String']>;
-  properties: Array<Properties>;
-  roles: Array<UserRole>;
-  subscriptions: Array<UserSubscription>;
-  userImage?: Maybe<Image>;
+  token: Scalars['String'];
 };
 
-export type UserAddress = {
-  __typename?: 'UserAddress';
-  city?: Maybe<Scalars['String']>;
-  company?: Maybe<Scalars['String']>;
-  country?: Maybe<Scalars['String']>;
-  streetAddress?: Maybe<Scalars['String']>;
-  streetAddress2?: Maybe<Scalars['String']>;
-  zipCode?: Maybe<Scalars['String']>;
+export type CustomTeaser = {
+  __typename?: 'CustomTeaser';
+  contentUrl?: Maybe<Scalars['String']>;
+  image?: Maybe<Image>;
+  lead?: Maybe<Scalars['String']>;
+  preTitle?: Maybe<Scalars['String']>;
+  properties?: Maybe<Array<Properties>>;
+  style: TeaserStyle;
+  title?: Maybe<Scalars['String']>;
 };
 
-export type OAuth2Account = {
-  __typename?: 'OAuth2Account';
-  provider: Scalars['String'];
-  scope: Scalars['String'];
-  type: Scalars['String'];
+export type CustomTeaserInput = {
+  contentUrl?: InputMaybe<Scalars['String']>;
+  imageID?: InputMaybe<Scalars['ID']>;
+  lead?: InputMaybe<Scalars['String']>;
+  preTitle?: InputMaybe<Scalars['String']>;
+  properties: Array<PropertiesInput>;
+  style: TeaserStyle;
+  title?: InputMaybe<Scalars['String']>;
 };
 
-export type PaymentProviderCustomer = {
-  __typename?: 'PaymentProviderCustomer';
-  customerID: Scalars['String'];
-  paymentProviderID: Scalars['String'];
+export type DateFilter = {
+  comparison: DateFilterComparison;
+  date?: InputMaybe<Scalars['DateTime']>;
 };
 
-export type Properties = {
-  __typename?: 'Properties';
-  key: Scalars['String'];
-  public: Scalars['Boolean'];
-  value: Scalars['String'];
+export enum DateFilterComparison {
+  Equal = 'EQUAL',
+  Greater = 'GREATER',
+  GreaterOrEqual = 'GREATER_OR_EQUAL',
+  Lower = 'LOWER',
+  LowerOrEqual = 'LOWER_OR_EQUAL'
+}
+
+export type EmbedBlock = {
+  __typename?: 'EmbedBlock';
+  height?: Maybe<Scalars['Int']>;
+  sandbox?: Maybe<Scalars['String']>;
+  styleCustom?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+  width?: Maybe<Scalars['Int']>;
 };
 
-export type UserRole = {
-  __typename?: 'UserRole';
+export type EmbedBlockInput = {
+  height?: InputMaybe<Scalars['Int']>;
+  sandbox?: InputMaybe<Scalars['String']>;
+  styleCustom?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+  url?: InputMaybe<Scalars['String']>;
+  width?: InputMaybe<Scalars['Int']>;
+};
+
+export type ExternalNavigationLink = BaseNavigationLink & {
+  __typename?: 'ExternalNavigationLink';
+  label: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type ExternalNavigationLinkInput = {
+  label: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type FacebookPostBlock = {
+  __typename?: 'FacebookPostBlock';
+  postID: Scalars['String'];
+  userID: Scalars['String'];
+};
+
+export type FacebookPostBlockInput = {
+  postID: Scalars['String'];
+  userID: Scalars['String'];
+};
+
+export type FacebookVideoBlock = {
+  __typename?: 'FacebookVideoBlock';
+  userID: Scalars['String'];
+  videoID: Scalars['String'];
+};
+
+export type FacebookVideoBlockInput = {
+  userID: Scalars['String'];
+  videoID: Scalars['String'];
+};
+
+export type FlexAlignment = {
+  __typename?: 'FlexAlignment';
+  h: Scalars['Int'];
+  i: Scalars['String'];
+  static: Scalars['Boolean'];
+  w: Scalars['Int'];
+  x: Scalars['Int'];
+  y: Scalars['Int'];
+};
+
+export type FlexAlignmentInput = {
+  h: Scalars['Int'];
+  i: Scalars['String'];
+  static: Scalars['Boolean'];
+  w: Scalars['Int'];
+  x: Scalars['Int'];
+  y: Scalars['Int'];
+};
+
+export type FlexTeaser = {
+  __typename?: 'FlexTeaser';
+  alignment: FlexAlignment;
+  teaser?: Maybe<Teaser>;
+};
+
+export type FlexTeaserInput = {
+  alignment: FlexAlignmentInput;
+  teaser?: InputMaybe<TeaserInput>;
+};
+
+export type FullCommentRatingSystem = {
+  __typename?: 'FullCommentRatingSystem';
+  answers: Array<CommentRatingSystemAnswer>;
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+};
+
+export type FullPoll = {
+  __typename?: 'FullPoll';
+  answers?: Maybe<Array<PollAnswerWithVoteCount>>;
+  closedAt?: Maybe<Scalars['DateTime']>;
+  externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
+  id: Scalars['ID'];
+  opensAt: Scalars['DateTime'];
+  question?: Maybe<Scalars['String']>;
+};
+
+export type GalleryImageEdge = {
+  __typename?: 'GalleryImageEdge';
+  caption?: Maybe<Scalars['String']>;
+  image?: Maybe<Image>;
+};
+
+export type GalleryImageEdgeInput = {
+  caption?: InputMaybe<Scalars['String']>;
+  imageID?: InputMaybe<Scalars['ID']>;
+};
+
+export type HtmlBlock = {
+  __typename?: 'HTMLBlock';
+  html?: Maybe<Scalars['String']>;
+};
+
+export type HtmlBlockInput = {
+  html?: InputMaybe<Scalars['String']>;
+};
+
+export type Image = {
+  __typename?: 'Image';
+  createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  name: Scalars['String'];
-  permissions: Array<Permission>;
-  systemRole: Scalars['Boolean'];
-};
-
-export type Permission = {
-  __typename?: 'Permission';
-  deprecated: Scalars['Boolean'];
-  description: Scalars['String'];
-  id: Scalars['String'];
-};
-
-export type UserSubscription = {
-  __typename?: 'UserSubscription';
-  autoRenew: Scalars['Boolean'];
-  createdAt: Scalars['DateTime'];
-  deactivation?: Maybe<SubscriptionDeactivation>;
+  extension: Scalars['String'];
+  fileSize: Scalars['Int'];
+  filename?: Maybe<Scalars['String']>;
+  focalPoint?: Maybe<Point>;
+  format: Scalars['String'];
+  height: Scalars['Int'];
   id: Scalars['ID'];
-  invoices: Array<Invoice>;
-  memberPlan: MemberPlan;
+  license?: Maybe<Scalars['String']>;
+  link?: Maybe<Scalars['String']>;
+  mimeType: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
-  monthlyAmount: Scalars['Int'];
-  paidUntil?: Maybe<Scalars['DateTime']>;
-  paymentPeriodicity: PaymentPeriodicity;
-  periods: Array<SubscriptionPeriod>;
-  properties: Array<Properties>;
-  startsAt: Scalars['DateTime'];
+  source?: Maybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  transformURL?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+  width: Scalars['Int'];
 };
 
-export type SubscriptionDeactivation = {
-  __typename?: 'SubscriptionDeactivation';
-  date: Scalars['DateTime'];
-  reason: SubscriptionDeactivationReason;
+
+export type ImageTransformUrlArgs = {
+  input?: InputMaybe<ImageTransformation>;
 };
 
-export enum SubscriptionDeactivationReason {
-  InvoiceNotPaid = 'INVOICE_NOT_PAID',
-  None = 'NONE',
-  UserSelfDeactivated = 'USER_SELF_DEACTIVATED'
+export type ImageBlock = {
+  __typename?: 'ImageBlock';
+  caption?: Maybe<Scalars['String']>;
+  image?: Maybe<Image>;
+};
+
+export type ImageBlockInput = {
+  caption?: InputMaybe<Scalars['String']>;
+  imageID?: InputMaybe<Scalars['ID']>;
+};
+
+export type ImageConnection = {
+  __typename?: 'ImageConnection';
+  nodes: Array<Image>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type ImageFilter = {
+  tags?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type ImageGalleryBlock = {
+  __typename?: 'ImageGalleryBlock';
+  images: Array<GalleryImageEdge>;
+};
+
+export type ImageGalleryBlockInput = {
+  images?: InputMaybe<Array<InputMaybe<GalleryImageEdgeInput>>>;
+};
+
+export enum ImageOutput {
+  Jpeg = 'JPEG',
+  Png = 'PNG',
+  Webp = 'WEBP'
 }
+
+export enum ImageRotation {
+  Auto = 'AUTO',
+  Rotate_0 = 'ROTATE_0',
+  Rotate_90 = 'ROTATE_90',
+  Rotate_180 = 'ROTATE_180',
+  Rotate_270 = 'ROTATE_270'
+}
+
+export enum ImageSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
+export type ImageTransformation = {
+  height?: InputMaybe<Scalars['Int']>;
+  output?: InputMaybe<ImageOutput>;
+  quality?: InputMaybe<Scalars['Float']>;
+  rotation?: InputMaybe<ImageRotation>;
+  width?: InputMaybe<Scalars['Int']>;
+};
+
+export type InputPoint = {
+  x: Scalars['Float'];
+  y: Scalars['Float'];
+};
+
+export type InstagramPostBlock = {
+  __typename?: 'InstagramPostBlock';
+  postID: Scalars['String'];
+};
+
+export type InstagramPostBlockInput = {
+  postID: Scalars['String'];
+};
 
 export type Invoice = {
   __typename?: 'Invoice';
@@ -649,6 +658,30 @@ export type Invoice = {
   total: Scalars['Int'];
 };
 
+export type InvoiceConnection = {
+  __typename?: 'InvoiceConnection';
+  nodes: Array<Invoice>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type InvoiceFilter = {
+  canceledAt?: InputMaybe<Scalars['Date']>;
+  mail?: InputMaybe<Scalars['String']>;
+  paidAt?: InputMaybe<Scalars['Date']>;
+  subscriptionID?: InputMaybe<Scalars['ID']>;
+  userID?: InputMaybe<Scalars['ID']>;
+};
+
+export type InvoiceInput = {
+  description?: InputMaybe<Scalars['String']>;
+  items: Array<InvoiceItemInput>;
+  mail: Scalars['String'];
+  manuallySetAsPaidByUserId?: InputMaybe<Scalars['ID']>;
+  paidAt?: InputMaybe<Scalars['DateTime']>;
+  subscriptionID?: InputMaybe<Scalars['ID']>;
+};
+
 export type InvoiceItem = {
   __typename?: 'InvoiceItem';
   amount: Scalars['Int'];
@@ -658,6 +691,76 @@ export type InvoiceItem = {
   name: Scalars['String'];
   quantity: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type InvoiceItemInput = {
+  amount: Scalars['Int'];
+  createdAt: Scalars['DateTime'];
+  description?: InputMaybe<Scalars['String']>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  quantity: Scalars['Int'];
+};
+
+export enum InvoiceSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  PaidAt = 'PAID_AT'
+}
+
+export type JwtToken = {
+  __typename?: 'JWTToken';
+  expiresAt: Scalars['String'];
+  token: Scalars['String'];
+};
+
+export type LinkPageBreakBlock = {
+  __typename?: 'LinkPageBreakBlock';
+  hideButton: Scalars['Boolean'];
+  image?: Maybe<Image>;
+  layoutOption?: Maybe<Scalars['String']>;
+  linkTarget?: Maybe<Scalars['String']>;
+  linkText?: Maybe<Scalars['String']>;
+  linkURL?: Maybe<Scalars['String']>;
+  richText: Scalars['RichText'];
+  styleOption?: Maybe<Scalars['String']>;
+  templateOption?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['String']>;
+};
+
+export type LinkPageBreakBlockInput = {
+  hideButton: Scalars['Boolean'];
+  imageID?: InputMaybe<Scalars['ID']>;
+  layoutOption?: InputMaybe<Scalars['String']>;
+  linkTarget?: InputMaybe<Scalars['String']>;
+  linkText?: InputMaybe<Scalars['String']>;
+  linkURL?: InputMaybe<Scalars['String']>;
+  richText: Scalars['RichText'];
+  styleOption?: InputMaybe<Scalars['String']>;
+  templateOption?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['String']>;
+};
+
+export type ListicleBlock = {
+  __typename?: 'ListicleBlock';
+  items: Array<ListicleItem>;
+};
+
+export type ListicleBlockInput = {
+  items?: InputMaybe<Array<InputMaybe<ListicleItemInput>>>;
+};
+
+export type ListicleItem = {
+  __typename?: 'ListicleItem';
+  image?: Maybe<Image>;
+  richText: Scalars['RichText'];
+  title: Scalars['String'];
+};
+
+export type ListicleItemInput = {
+  imageID?: InputMaybe<Scalars['ID']>;
+  richText: Scalars['RichText'];
+  title: Scalars['String'];
 };
 
 export type MemberPlan = {
@@ -675,488 +778,9 @@ export type MemberPlan = {
   tags?: Maybe<Array<Scalars['String']>>;
 };
 
-export type AvailablePaymentMethod = {
-  __typename?: 'AvailablePaymentMethod';
-  forceAutoRenewal: Scalars['Boolean'];
-  paymentMethods: Array<PaymentMethod>;
-  paymentPeriodicities: Array<PaymentPeriodicity>;
-};
-
-export type PaymentMethod = {
-  __typename?: 'PaymentMethod';
-  active: Scalars['Boolean'];
-  createdAt: Scalars['DateTime'];
-  description: Scalars['String'];
-  id: Scalars['ID'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  paymentProvider: PaymentProvider;
-  slug: Scalars['Slug'];
-};
-
-export type PaymentProvider = {
-  __typename?: 'PaymentProvider';
-  id: Scalars['ID'];
-  name: Scalars['String'];
-};
-
-export enum PaymentPeriodicity {
-  Biannual = 'BIANNUAL',
-  Monthly = 'MONTHLY',
-  Quarterly = 'QUARTERLY',
-  Yearly = 'YEARLY'
-}
-
-export type SubscriptionPeriod = {
-  __typename?: 'SubscriptionPeriod';
-  amount: Scalars['Int'];
-  createdAt: Scalars['DateTime'];
-  endsAt: Scalars['DateTime'];
-  id: Scalars['ID'];
-  invoiceID: Scalars['ID'];
-  paymentPeriodicity: PaymentPeriodicity;
-  startsAt: Scalars['DateTime'];
-};
-
-export type CommentBlockFilter = {
-  __typename?: 'CommentBlockFilter';
-  comments?: Maybe<Array<Scalars['ID']>>;
-  item?: Maybe<Scalars['ID']>;
-  tags?: Maybe<Array<Scalars['ID']>>;
-};
-
-export type EmbedBlock = {
-  __typename?: 'EmbedBlock';
-  height?: Maybe<Scalars['Int']>;
-  sandbox?: Maybe<Scalars['String']>;
-  styleCustom?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
-  width?: Maybe<Scalars['Int']>;
-};
-
-export type FacebookPostBlock = {
-  __typename?: 'FacebookPostBlock';
-  postID: Scalars['String'];
-  userID: Scalars['String'];
-};
-
-export type FacebookVideoBlock = {
-  __typename?: 'FacebookVideoBlock';
-  userID: Scalars['String'];
-  videoID: Scalars['String'];
-};
-
-export type HtmlBlock = {
-  __typename?: 'HTMLBlock';
-  html?: Maybe<Scalars['String']>;
-};
-
-export type ImageBlock = {
-  __typename?: 'ImageBlock';
-  caption?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
-};
-
-export type ImageGalleryBlock = {
-  __typename?: 'ImageGalleryBlock';
-  images: Array<GalleryImageEdge>;
-};
-
-export type GalleryImageEdge = {
-  __typename?: 'GalleryImageEdge';
-  caption?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
-};
-
-export type InstagramPostBlock = {
-  __typename?: 'InstagramPostBlock';
-  postID: Scalars['String'];
-};
-
-export type LinkPageBreakBlock = {
-  __typename?: 'LinkPageBreakBlock';
-  hideButton: Scalars['Boolean'];
-  image?: Maybe<Image>;
-  layoutOption?: Maybe<Scalars['String']>;
-  linkTarget?: Maybe<Scalars['String']>;
-  linkText?: Maybe<Scalars['String']>;
-  linkURL?: Maybe<Scalars['String']>;
-  richText: Scalars['RichText'];
-  styleOption?: Maybe<Scalars['String']>;
-  templateOption?: Maybe<Scalars['String']>;
-  text?: Maybe<Scalars['String']>;
-};
-
-export type ListicleBlock = {
-  __typename?: 'ListicleBlock';
-  items: Array<ListicleItem>;
-};
-
-export type ListicleItem = {
-  __typename?: 'ListicleItem';
-  image?: Maybe<Image>;
-  richText: Scalars['RichText'];
-  title: Scalars['String'];
-};
-
-export type PolisConversationBlock = {
-  __typename?: 'PolisConversationBlock';
-  conversationID: Scalars['String'];
-};
-
-export type PollBlock = {
-  __typename?: 'PollBlock';
-  poll?: Maybe<FullPoll>;
-};
-
-export type FullPoll = {
-  __typename?: 'FullPoll';
-  answers?: Maybe<Array<PollAnswerWithVoteCount>>;
-  closedAt?: Maybe<Scalars['DateTime']>;
-  externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
-  id: Scalars['ID'];
-  opensAt: Scalars['DateTime'];
-  question?: Maybe<Scalars['String']>;
-};
-
-export type PollAnswerWithVoteCount = {
-  __typename?: 'PollAnswerWithVoteCount';
-  answer?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  pollId: Scalars['ID'];
-  votes: Scalars['Int'];
-};
-
-export type PollExternalVoteSource = {
-  __typename?: 'PollExternalVoteSource';
-  id: Scalars['ID'];
-  source?: Maybe<Scalars['String']>;
-  voteAmounts?: Maybe<Array<PollExternalVote>>;
-};
-
-export type PollExternalVote = {
-  __typename?: 'PollExternalVote';
-  amount?: Maybe<Scalars['VoteValue']>;
-  answerId: Scalars['ID'];
-  id: Scalars['ID'];
-};
-
-export type QuoteBlock = {
-  __typename?: 'QuoteBlock';
-  author?: Maybe<Scalars['String']>;
-  quote?: Maybe<Scalars['String']>;
-};
-
-export type RichTextBlock = {
-  __typename?: 'RichTextBlock';
-  richText: Scalars['RichText'];
-};
-
-export type SoundCloudTrackBlock = {
-  __typename?: 'SoundCloudTrackBlock';
-  trackID: Scalars['String'];
-};
-
-export type TeaserGridBlock = {
-  __typename?: 'TeaserGridBlock';
-  numColumns: Scalars['Int'];
-  teasers: Array<Maybe<Teaser>>;
-};
-
-export type Teaser = ArticleTeaser | CustomTeaser | PageTeaser | PeerArticleTeaser;
-
-export type ArticleTeaser = {
-  __typename?: 'ArticleTeaser';
-  article?: Maybe<Article>;
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  preTitle?: Maybe<Scalars['String']>;
-  style: TeaserStyle;
-  title?: Maybe<Scalars['String']>;
-};
-
-export enum TeaserStyle {
-  Default = 'DEFAULT',
-  Light = 'LIGHT',
-  Text = 'TEXT'
-}
-
-export type CustomTeaser = {
-  __typename?: 'CustomTeaser';
-  contentUrl?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  preTitle?: Maybe<Scalars['String']>;
-  properties?: Maybe<Array<Properties>>;
-  style: TeaserStyle;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type PageTeaser = {
-  __typename?: 'PageTeaser';
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  page?: Maybe<Page>;
-  preTitle?: Maybe<Scalars['String']>;
-  style: TeaserStyle;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type Page = {
-  __typename?: 'Page';
-  createdAt: Scalars['DateTime'];
-  draft?: Maybe<PageRevision>;
-  id: Scalars['ID'];
-  latest: PageRevision;
-  modifiedAt: Scalars['DateTime'];
-  pending?: Maybe<PageRevision>;
-  published?: Maybe<PageRevision>;
-  shared: Scalars['Boolean'];
-};
-
-export type PageRevision = {
-  __typename?: 'PageRevision';
-  blocks: Array<Block>;
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
-  properties: Array<Properties>;
-  publishAt?: Maybe<Scalars['DateTime']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  revision: Scalars['Int'];
-  slug: Scalars['Slug'];
-  socialMediaDescription?: Maybe<Scalars['String']>;
-  socialMediaImage?: Maybe<Image>;
-  socialMediaTitle?: Maybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  title: Scalars['String'];
-  updatedAt?: Maybe<Scalars['DateTime']>;
-  url: Scalars['String'];
-};
-
-export type PeerArticleTeaser = {
-  __typename?: 'PeerArticleTeaser';
-  article?: Maybe<Article>;
-  articleID: Scalars['ID'];
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  peer?: Maybe<Peer>;
-  preTitle?: Maybe<Scalars['String']>;
-  style: TeaserStyle;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type Peer = {
-  __typename?: 'Peer';
-  createdAt: Scalars['DateTime'];
-  hostURL: Scalars['String'];
-  id: Scalars['ID'];
-  isDisabled?: Maybe<Scalars['Boolean']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  profile?: Maybe<PeerProfile>;
-  slug: Scalars['String'];
-};
-
-export type PeerProfile = {
-  __typename?: 'PeerProfile';
-  callToActionImage?: Maybe<Image>;
-  callToActionImageURL?: Maybe<Scalars['String']>;
-  callToActionText: Scalars['RichText'];
-  callToActionURL: Scalars['String'];
-  hostURL: Scalars['String'];
-  logo?: Maybe<Image>;
-  name: Scalars['String'];
-  themeColor: Scalars['Color'];
-  themeFontColor: Scalars['Color'];
-  websiteURL: Scalars['String'];
-};
-
-export type TeaserGridFlexBlock = {
-  __typename?: 'TeaserGridFlexBlock';
-  flexTeasers: Array<Maybe<FlexTeaser>>;
-};
-
-export type FlexTeaser = {
-  __typename?: 'FlexTeaser';
-  alignment: FlexAlignment;
-  teaser?: Maybe<Teaser>;
-};
-
-export type FlexAlignment = {
-  __typename?: 'FlexAlignment';
-  h: Scalars['Int'];
-  i: Scalars['String'];
-  static: Scalars['Boolean'];
-  w: Scalars['Int'];
-  x: Scalars['Int'];
-  y: Scalars['Int'];
-};
-
-export type TikTokVideoBlock = {
-  __typename?: 'TikTokVideoBlock';
-  userID: Scalars['String'];
-  videoID: Scalars['String'];
-};
-
-export type TitleBlock = {
-  __typename?: 'TitleBlock';
-  lead?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type TwitterTweetBlock = {
-  __typename?: 'TwitterTweetBlock';
-  tweetID: Scalars['String'];
-  userID: Scalars['String'];
-};
-
-export type VimeoVideoBlock = {
-  __typename?: 'VimeoVideoBlock';
-  videoID: Scalars['String'];
-};
-
-export type YouTubeVideoBlock = {
-  __typename?: 'YouTubeVideoBlock';
-  videoID: Scalars['String'];
-};
-
-export type ArticleFilter = {
-  authors?: InputMaybe<Array<Scalars['ID']>>;
-  draft?: InputMaybe<Scalars['Boolean']>;
-  lead?: InputMaybe<Scalars['String']>;
-  pending?: InputMaybe<Scalars['Boolean']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  publicationDateFrom?: InputMaybe<DateFilter>;
-  publicationDateTo?: InputMaybe<DateFilter>;
-  published?: InputMaybe<Scalars['Boolean']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export type DateFilter = {
-  comparison: DateFilterComparison;
-  date?: InputMaybe<Scalars['DateTime']>;
-};
-
-export enum DateFilterComparison {
-  Equal = 'EQUAL',
-  Greater = 'GREATER',
-  GreaterOrEqual = 'GREATER_OR_EQUAL',
-  Lower = 'LOWER',
-  LowerOrEqual = 'LOWER_OR_EQUAL'
-}
-
-export enum SortOrder {
-  Ascending = 'ASCENDING',
-  Descending = 'DESCENDING'
-}
-
-export enum ArticleSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  PublishAt = 'PUBLISH_AT',
-  PublishedAt = 'PUBLISHED_AT',
-  UpdatedAt = 'UPDATED_AT'
-}
-
-export type ArticleConnection = {
-  __typename?: 'ArticleConnection';
-  nodes: Array<Article>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type PageInfo = {
-  __typename?: 'PageInfo';
-  endCursor?: Maybe<Scalars['String']>;
-  hasNextPage: Scalars['Boolean'];
-  hasPreviousPage: Scalars['Boolean'];
-  startCursor?: Maybe<Scalars['String']>;
-};
-
-export type AuthorFilter = {
-  name?: InputMaybe<Scalars['String']>;
-};
-
-export enum AuthorSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  Name = 'NAME'
-}
-
-export type AuthorConnection = {
-  __typename?: 'AuthorConnection';
-  nodes: Array<Author>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type AuthProvider = {
-  __typename?: 'AuthProvider';
-  name: Scalars['String'];
-  url: Scalars['String'];
-};
-
-export type CommentFilter = {
-  item?: InputMaybe<Scalars['ID']>;
-  states?: InputMaybe<Array<CommentState>>;
-  tags?: InputMaybe<Array<Scalars['ID']>>;
-};
-
-export enum CommentSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt'
-}
-
-export type CommentConnection = {
-  __typename?: 'CommentConnection';
-  nodes: Array<Comment>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type JwtToken = {
-  __typename?: 'JWTToken';
-  expiresAt: Scalars['String'];
-  token: Scalars['String'];
-};
-
-export type ImageFilter = {
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export enum ImageSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
-}
-
-export type ImageConnection = {
-  __typename?: 'ImageConnection';
-  nodes: Array<Image>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type InvoiceFilter = {
-  canceledAt?: InputMaybe<Scalars['Date']>;
-  mail?: InputMaybe<Scalars['String']>;
-  paidAt?: InputMaybe<Scalars['Date']>;
-  subscriptionID?: InputMaybe<Scalars['ID']>;
-  userID?: InputMaybe<Scalars['ID']>;
-};
-
-export enum InvoiceSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  PaidAt = 'PAID_AT'
-}
-
-export type InvoiceConnection = {
-  __typename?: 'InvoiceConnection';
-  nodes: Array<Invoice>;
+export type MemberPlanConnection = {
+  __typename?: 'MemberPlanConnection';
+  nodes: Array<MemberPlan>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -1167,328 +791,21 @@ export type MemberPlanFilter = {
   tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
+export type MemberPlanInput = {
+  active: Scalars['Boolean'];
+  amountPerMonthMin: Scalars['Int'];
+  availablePaymentMethods: Array<AvailablePaymentMethodInput>;
+  description?: InputMaybe<Scalars['RichText']>;
+  imageID?: InputMaybe<Scalars['ID']>;
+  name: Scalars['String'];
+  slug: Scalars['String'];
+  tags?: InputMaybe<Array<Scalars['String']>>;
+};
+
 export enum MemberPlanSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT'
 }
-
-export type MemberPlanConnection = {
-  __typename?: 'MemberPlanConnection';
-  nodes: Array<MemberPlan>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type Navigation = {
-  __typename?: 'Navigation';
-  id: Scalars['ID'];
-  key: Scalars['String'];
-  links: Array<NavigationLink>;
-  name: Scalars['String'];
-};
-
-export type NavigationLink = ArticleNavigationLink | ExternalNavigationLink | PageNavigationLink;
-
-export type ArticleNavigationLink = BaseNavigationLink & {
-  __typename?: 'ArticleNavigationLink';
-  article?: Maybe<Article>;
-  label: Scalars['String'];
-};
-
-export type BaseNavigationLink = {
-  label: Scalars['String'];
-};
-
-export type ExternalNavigationLink = BaseNavigationLink & {
-  __typename?: 'ExternalNavigationLink';
-  label: Scalars['String'];
-  url: Scalars['String'];
-};
-
-export type PageNavigationLink = BaseNavigationLink & {
-  __typename?: 'PageNavigationLink';
-  label: Scalars['String'];
-  page?: Maybe<Page>;
-};
-
-export type PageFilter = {
-  description?: InputMaybe<Scalars['String']>;
-  draft?: InputMaybe<Scalars['Boolean']>;
-  pending?: InputMaybe<Scalars['Boolean']>;
-  publicationDateFrom?: InputMaybe<DateFilter>;
-  publicationDateTo?: InputMaybe<DateFilter>;
-  published?: InputMaybe<Scalars['Boolean']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export enum PageSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  PublishAt = 'PUBLISH_AT',
-  PublishedAt = 'PUBLISHED_AT',
-  UpdatedAt = 'UPDATED_AT'
-}
-
-export type PageConnection = {
-  __typename?: 'PageConnection';
-  nodes: Array<Page>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type Payment = {
-  __typename?: 'Payment';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['ID'];
-  intentData?: Maybe<Scalars['String']>;
-  intentID?: Maybe<Scalars['String']>;
-  intentSecret?: Maybe<Scalars['String']>;
-  invoice: Invoice;
-  modifiedAt: Scalars['DateTime'];
-  paymentData?: Maybe<Scalars['String']>;
-  paymentMethod: PaymentMethod;
-  state: PaymentState;
-};
-
-export enum PaymentState {
-  Canceled = 'Canceled',
-  Created = 'Created',
-  Declined = 'Declined',
-  Paid = 'Paid',
-  Processing = 'Processing',
-  RequiresUserAction = 'RequiresUserAction',
-  Submitted = 'Submitted'
-}
-
-export type PaymentFilter = {
-  intentID?: InputMaybe<Scalars['String']>;
-};
-
-export enum PaymentSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
-}
-
-export type PaymentConnection = {
-  __typename?: 'PaymentConnection';
-  nodes: Array<Payment>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type PeerArticleConnection = {
-  __typename?: 'PeerArticleConnection';
-  nodes: Array<PeerArticle>;
-  pageInfo: UnidirectionalPageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type PeerArticle = {
-  __typename?: 'PeerArticle';
-  article: Article;
-  peer: Peer;
-  peeredArticleURL: Scalars['String'];
-};
-
-export type UnidirectionalPageInfo = {
-  __typename?: 'UnidirectionalPageInfo';
-  endCursor?: Maybe<Scalars['String']>;
-  hasNextPage: Scalars['Boolean'];
-};
-
-export type PollFilter = {
-  openOnly?: InputMaybe<Scalars['Boolean']>;
-};
-
-export enum PollSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  OpensAt = 'OPENS_AT'
-}
-
-export type PollConnection = {
-  __typename?: 'PollConnection';
-  nodes: Array<Poll>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type Poll = {
-  __typename?: 'Poll';
-  closedAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['ID'];
-  opensAt: Scalars['DateTime'];
-  question?: Maybe<Scalars['String']>;
-};
-
-export type FullCommentRatingSystem = {
-  __typename?: 'FullCommentRatingSystem';
-  answers: Array<CommentRatingSystemAnswer>;
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-};
-
-export type CommentRatingSystemAnswer = {
-  __typename?: 'CommentRatingSystemAnswer';
-  answer?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  ratingSystemId: Scalars['ID'];
-  type: RatingSystemType;
-};
-
-export enum RatingSystemType {
-  Star = 'STAR'
-}
-
-export type Session = {
-  __typename?: 'Session';
-  createdAt: Scalars['DateTime'];
-  expiresAt: Scalars['DateTime'];
-  id: Scalars['ID'];
-  user: User;
-};
-
-export type Setting = {
-  __typename?: 'Setting';
-  id: Scalars['ID'];
-  name: SettingName;
-  settingRestriction?: Maybe<SettingRestriction>;
-  value: Scalars['Value'];
-};
-
-export enum SettingName {
-  AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
-  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
-  AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
-  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
-  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES',
-  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
-  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
-  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN'
-}
-
-export type SettingRestriction = {
-  __typename?: 'SettingRestriction';
-  allowedValues?: Maybe<AllowedSettingVals>;
-  inputLength?: Maybe<Scalars['Int']>;
-  maxValue?: Maybe<Scalars['Int']>;
-  minValue?: Maybe<Scalars['Int']>;
-};
-
-export type AllowedSettingVals = {
-  __typename?: 'AllowedSettingVals';
-  boolChoice?: Maybe<Scalars['Boolean']>;
-  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>;
-};
-
-export type Subscription = {
-  __typename?: 'Subscription';
-  autoRenew: Scalars['Boolean'];
-  createdAt: Scalars['DateTime'];
-  deactivation?: Maybe<SubscriptionDeactivation>;
-  id: Scalars['ID'];
-  memberPlan: MemberPlan;
-  modifiedAt: Scalars['DateTime'];
-  monthlyAmount: Scalars['Int'];
-  paidUntil?: Maybe<Scalars['DateTime']>;
-  paymentMethod: PaymentMethod;
-  paymentPeriodicity: PaymentPeriodicity;
-  properties: Array<Properties>;
-  startsAt: Scalars['DateTime'];
-  user?: Maybe<User>;
-};
-
-export type SubscriptionFilter = {
-  autoRenew?: InputMaybe<Scalars['Boolean']>;
-  deactivationDateFrom?: InputMaybe<DateFilter>;
-  deactivationDateTo?: InputMaybe<DateFilter>;
-  deactivationReason?: InputMaybe<SubscriptionDeactivationReason>;
-  memberPlanID?: InputMaybe<Scalars['String']>;
-  paidUntil?: InputMaybe<DateFilter>;
-  paidUntilFrom?: InputMaybe<DateFilter>;
-  paidUntilTo?: InputMaybe<DateFilter>;
-  paymentMethodID?: InputMaybe<Scalars['String']>;
-  paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
-  startsAt?: InputMaybe<DateFilter>;
-  startsAtFrom?: InputMaybe<DateFilter>;
-  startsAtTo?: InputMaybe<DateFilter>;
-  userHasAddress?: InputMaybe<Scalars['Boolean']>;
-  userID?: InputMaybe<Scalars['ID']>;
-};
-
-export enum SubscriptionSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
-}
-
-export type SubscriptionConnection = {
-  __typename?: 'SubscriptionConnection';
-  nodes: Array<Subscription>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type TagFilter = {
-  tag?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<TagType>;
-};
-
-export enum TagSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  Tag = 'TAG'
-}
-
-export type TagConnection = {
-  __typename?: 'TagConnection';
-  nodes: Array<Tag>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type Token = {
-  __typename?: 'Token';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['ID'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-};
-
-export type UserRoleFilter = {
-  name?: InputMaybe<Scalars['String']>;
-};
-
-export enum UserRoleSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
-}
-
-export type UserRoleConnection = {
-  __typename?: 'UserRoleConnection';
-  nodes: Array<UserRole>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type UserFilter = {
-  name?: InputMaybe<Scalars['String']>;
-  text?: InputMaybe<Scalars['String']>;
-};
-
-export enum UserSort {
-  CreatedAt = 'CREATED_AT',
-  FirstName = 'FIRST_NAME',
-  ModifiedAt = 'MODIFIED_AT',
-  Name = 'NAME'
-}
-
-export type UserConnection = {
-  __typename?: 'UserConnection';
-  nodes: Array<User>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -1987,296 +1304,12 @@ export type MutationUploadImageArgs = {
   input: UploadImageInput;
 };
 
-export type ArticleInput = {
-  authorIDs: Array<Scalars['ID']>;
-  blocks: Array<BlockInput>;
-  breaking: Scalars['Boolean'];
-  canonicalUrl?: InputMaybe<Scalars['String']>;
-  hideAuthor: Scalars['Boolean'];
-  imageID?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  properties: Array<PropertiesInput>;
-  seoTitle?: InputMaybe<Scalars['String']>;
-  shared: Scalars['Boolean'];
-  slug?: InputMaybe<Scalars['Slug']>;
-  socialMediaAuthorIDs: Array<Scalars['ID']>;
-  socialMediaDescription?: InputMaybe<Scalars['String']>;
-  socialMediaImageID?: InputMaybe<Scalars['ID']>;
-  socialMediaTitle?: InputMaybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  title: Scalars['String'];
-};
-
-export type BlockInput = {
-  bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
-  comment?: InputMaybe<CommentBlockInput>;
-  embed?: InputMaybe<EmbedBlockInput>;
-  facebookPost?: InputMaybe<FacebookPostBlockInput>;
-  facebookVideo?: InputMaybe<FacebookVideoBlockInput>;
-  html?: InputMaybe<HtmlBlockInput>;
-  image?: InputMaybe<ImageBlockInput>;
-  imageGallery?: InputMaybe<ImageGalleryBlockInput>;
-  instagramPost?: InputMaybe<InstagramPostBlockInput>;
-  linkPageBreak?: InputMaybe<LinkPageBreakBlockInput>;
-  listicle?: InputMaybe<ListicleBlockInput>;
-  polisConversation?: InputMaybe<PolisConversationBlockInput>;
-  poll?: InputMaybe<PollBlockInput>;
-  quote?: InputMaybe<QuoteBlockInput>;
-  richText?: InputMaybe<RichTextBlockInput>;
-  soundCloudTrack?: InputMaybe<SoundCloudTrackBlockInput>;
-  teaserGrid?: InputMaybe<TeaserGridBlockInput>;
-  teaserGridFlex?: InputMaybe<TeaserGridFlexBlockInput>;
-  tikTokVideo?: InputMaybe<TikTokVideoBlockInput>;
-  title?: InputMaybe<TitleBlockInput>;
-  twitterTweet?: InputMaybe<TwitterTweetBlockInput>;
-  vimeoVideo?: InputMaybe<VimeoVideoBlockInput>;
-  youTubeVideo?: InputMaybe<YouTubeVideoBlockInput>;
-};
-
-export type BildwurfAdBlockInput = {
-  zoneID: Scalars['String'];
-};
-
-export type CommentBlockInput = {
-  filter: CommentBlockInputFilter;
-};
-
-export type CommentBlockInputFilter = {
-  comments?: InputMaybe<Array<Scalars['ID']>>;
-  item?: InputMaybe<Scalars['ID']>;
-  tags?: InputMaybe<Array<Scalars['ID']>>;
-};
-
-export type EmbedBlockInput = {
-  height?: InputMaybe<Scalars['Int']>;
-  sandbox?: InputMaybe<Scalars['String']>;
-  styleCustom?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
-  url?: InputMaybe<Scalars['String']>;
-  width?: InputMaybe<Scalars['Int']>;
-};
-
-export type FacebookPostBlockInput = {
-  postID: Scalars['String'];
-  userID: Scalars['String'];
-};
-
-export type FacebookVideoBlockInput = {
-  userID: Scalars['String'];
-  videoID: Scalars['String'];
-};
-
-export type HtmlBlockInput = {
-  html?: InputMaybe<Scalars['String']>;
-};
-
-export type ImageBlockInput = {
-  caption?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['ID']>;
-};
-
-export type ImageGalleryBlockInput = {
-  images?: InputMaybe<Array<InputMaybe<GalleryImageEdgeInput>>>;
-};
-
-export type GalleryImageEdgeInput = {
-  caption?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['ID']>;
-};
-
-export type InstagramPostBlockInput = {
-  postID: Scalars['String'];
-};
-
-export type LinkPageBreakBlockInput = {
-  hideButton: Scalars['Boolean'];
-  imageID?: InputMaybe<Scalars['ID']>;
-  layoutOption?: InputMaybe<Scalars['String']>;
-  linkTarget?: InputMaybe<Scalars['String']>;
-  linkText?: InputMaybe<Scalars['String']>;
-  linkURL?: InputMaybe<Scalars['String']>;
-  richText: Scalars['RichText'];
-  styleOption?: InputMaybe<Scalars['String']>;
-  templateOption?: InputMaybe<Scalars['String']>;
-  text?: InputMaybe<Scalars['String']>;
-};
-
-export type ListicleBlockInput = {
-  items?: InputMaybe<Array<InputMaybe<ListicleItemInput>>>;
-};
-
-export type ListicleItemInput = {
-  imageID?: InputMaybe<Scalars['ID']>;
-  richText: Scalars['RichText'];
-  title: Scalars['String'];
-};
-
-export type PolisConversationBlockInput = {
-  conversationID: Scalars['String'];
-};
-
-export type PollBlockInput = {
-  pollId?: InputMaybe<Scalars['ID']>;
-};
-
-export type QuoteBlockInput = {
-  author?: InputMaybe<Scalars['String']>;
-  quote?: InputMaybe<Scalars['String']>;
-};
-
-export type RichTextBlockInput = {
-  richText: Scalars['RichText'];
-};
-
-export type SoundCloudTrackBlockInput = {
-  trackID: Scalars['String'];
-};
-
-export type TeaserGridBlockInput = {
-  numColumns: Scalars['Int'];
-  teasers: Array<InputMaybe<TeaserInput>>;
-};
-
-export type TeaserInput = {
-  article?: InputMaybe<ArticleTeaserInput>;
-  custom?: InputMaybe<CustomTeaserInput>;
-  page?: InputMaybe<PageTeaserInput>;
-  peerArticle?: InputMaybe<PeerArticleTeaserInput>;
-};
-
-export type ArticleTeaserInput = {
-  articleID: Scalars['ID'];
-  imageID?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  style: TeaserStyle;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export type CustomTeaserInput = {
-  contentUrl?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  properties: Array<PropertiesInput>;
-  style: TeaserStyle;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export type PropertiesInput = {
+export type Navigation = {
+  __typename?: 'Navigation';
+  id: Scalars['ID'];
   key: Scalars['String'];
-  public: Scalars['Boolean'];
-  value: Scalars['String'];
-};
-
-export type PageTeaserInput = {
-  imageID?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  pageID: Scalars['ID'];
-  preTitle?: InputMaybe<Scalars['String']>;
-  style: TeaserStyle;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export type PeerArticleTeaserInput = {
-  articleID: Scalars['ID'];
-  imageID?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  peerID: Scalars['ID'];
-  preTitle?: InputMaybe<Scalars['String']>;
-  style: TeaserStyle;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export type TeaserGridFlexBlockInput = {
-  flexTeasers: Array<FlexTeaserInput>;
-};
-
-export type FlexTeaserInput = {
-  alignment: FlexAlignmentInput;
-  teaser?: InputMaybe<TeaserInput>;
-};
-
-export type FlexAlignmentInput = {
-  h: Scalars['Int'];
-  i: Scalars['String'];
-  static: Scalars['Boolean'];
-  w: Scalars['Int'];
-  x: Scalars['Int'];
-  y: Scalars['Int'];
-};
-
-export type TikTokVideoBlockInput = {
-  userID: Scalars['String'];
-  videoID: Scalars['String'];
-};
-
-export type TitleBlockInput = {
-  lead?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export type TwitterTweetBlockInput = {
-  tweetID: Scalars['String'];
-  userID: Scalars['String'];
-};
-
-export type VimeoVideoBlockInput = {
-  videoID: Scalars['String'];
-};
-
-export type YouTubeVideoBlockInput = {
-  videoID: Scalars['String'];
-};
-
-export type AuthorInput = {
-  bio?: InputMaybe<Scalars['RichText']>;
-  imageID?: InputMaybe<Scalars['ID']>;
-  jobTitle?: InputMaybe<Scalars['String']>;
-  links?: InputMaybe<Array<AuthorLinkInput>>;
+  links: Array<NavigationLink>;
   name: Scalars['String'];
-  slug: Scalars['Slug'];
-};
-
-export type AuthorLinkInput = {
-  title: Scalars['String'];
-  url: Scalars['String'];
-};
-
-export type InvoiceInput = {
-  description?: InputMaybe<Scalars['String']>;
-  items: Array<InvoiceItemInput>;
-  mail: Scalars['String'];
-  manuallySetAsPaidByUserId?: InputMaybe<Scalars['ID']>;
-  paidAt?: InputMaybe<Scalars['DateTime']>;
-  subscriptionID?: InputMaybe<Scalars['ID']>;
-};
-
-export type InvoiceItemInput = {
-  amount: Scalars['Int'];
-  createdAt: Scalars['DateTime'];
-  description?: InputMaybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  quantity: Scalars['Int'];
-};
-
-export type MemberPlanInput = {
-  active: Scalars['Boolean'];
-  amountPerMonthMin: Scalars['Int'];
-  availablePaymentMethods: Array<AvailablePaymentMethodInput>;
-  description?: InputMaybe<Scalars['RichText']>;
-  imageID?: InputMaybe<Scalars['ID']>;
-  name: Scalars['String'];
-  slug: Scalars['String'];
-  tags?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export type AvailablePaymentMethodInput = {
-  forceAutoRenewal: Scalars['Boolean'];
-  paymentMethodIDs: Array<Scalars['String']>;
-  paymentPeriodicities: Array<PaymentPeriodicity>;
 };
 
 export type NavigationInput = {
@@ -2285,25 +1318,57 @@ export type NavigationInput = {
   name: Scalars['String'];
 };
 
+export type NavigationLink = ArticleNavigationLink | ExternalNavigationLink | PageNavigationLink;
+
 export type NavigationLinkInput = {
   article?: InputMaybe<ArticleNavigationLinkInput>;
   external?: InputMaybe<ExternalNavigationLinkInput>;
   page?: InputMaybe<PageNavigationLinkInput>;
 };
 
-export type ArticleNavigationLinkInput = {
-  articleID: Scalars['ID'];
-  label: Scalars['String'];
+export type OAuth2Account = {
+  __typename?: 'OAuth2Account';
+  provider: Scalars['String'];
+  scope: Scalars['String'];
+  type: Scalars['String'];
 };
 
-export type ExternalNavigationLinkInput = {
-  label: Scalars['String'];
-  url: Scalars['String'];
+export type Page = {
+  __typename?: 'Page';
+  createdAt: Scalars['DateTime'];
+  draft?: Maybe<PageRevision>;
+  id: Scalars['ID'];
+  latest: PageRevision;
+  modifiedAt: Scalars['DateTime'];
+  pending?: Maybe<PageRevision>;
+  published?: Maybe<PageRevision>;
+  shared: Scalars['Boolean'];
 };
 
-export type PageNavigationLinkInput = {
-  label: Scalars['String'];
-  pageID: Scalars['ID'];
+export type PageConnection = {
+  __typename?: 'PageConnection';
+  nodes: Array<Page>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PageFilter = {
+  description?: InputMaybe<Scalars['String']>;
+  draft?: InputMaybe<Scalars['Boolean']>;
+  pending?: InputMaybe<Scalars['Boolean']>;
+  publicationDateFrom?: InputMaybe<DateFilter>;
+  publicationDateTo?: InputMaybe<DateFilter>;
+  published?: InputMaybe<Scalars['Boolean']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  endCursor?: Maybe<Scalars['String']>;
+  hasNextPage: Scalars['Boolean'];
+  hasPreviousPage: Scalars['Boolean'];
+  startCursor?: Maybe<Scalars['String']>;
 };
 
 export type PageInput = {
@@ -2319,12 +1384,107 @@ export type PageInput = {
   title: Scalars['String'];
 };
 
+export type PageNavigationLink = BaseNavigationLink & {
+  __typename?: 'PageNavigationLink';
+  label: Scalars['String'];
+  page?: Maybe<Page>;
+};
+
+export type PageNavigationLinkInput = {
+  label: Scalars['String'];
+  pageID: Scalars['ID'];
+};
+
+export type PageRevision = {
+  __typename?: 'PageRevision';
+  blocks: Array<Block>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  image?: Maybe<Image>;
+  properties: Array<Properties>;
+  publishAt?: Maybe<Scalars['DateTime']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  revision: Scalars['Int'];
+  slug: Scalars['Slug'];
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaImage?: Maybe<Image>;
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  title: Scalars['String'];
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  url: Scalars['String'];
+};
+
+export enum PageSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  PublishedAt = 'PUBLISHED_AT',
+  PublishAt = 'PUBLISH_AT',
+  UpdatedAt = 'UPDATED_AT'
+}
+
+export type PageTeaser = {
+  __typename?: 'PageTeaser';
+  image?: Maybe<Image>;
+  lead?: Maybe<Scalars['String']>;
+  page?: Maybe<Page>;
+  preTitle?: Maybe<Scalars['String']>;
+  style: TeaserStyle;
+  title?: Maybe<Scalars['String']>;
+};
+
+export type PageTeaserInput = {
+  imageID?: InputMaybe<Scalars['ID']>;
+  lead?: InputMaybe<Scalars['String']>;
+  pageID: Scalars['ID'];
+  preTitle?: InputMaybe<Scalars['String']>;
+  style: TeaserStyle;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type Payment = {
+  __typename?: 'Payment';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  intentData?: Maybe<Scalars['String']>;
+  intentID?: Maybe<Scalars['String']>;
+  intentSecret?: Maybe<Scalars['String']>;
+  invoice: Invoice;
+  modifiedAt: Scalars['DateTime'];
+  paymentData?: Maybe<Scalars['String']>;
+  paymentMethod: PaymentMethod;
+  state: PaymentState;
+};
+
+export type PaymentConnection = {
+  __typename?: 'PaymentConnection';
+  nodes: Array<Payment>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaymentFilter = {
+  intentID?: InputMaybe<Scalars['String']>;
+};
+
 export type PaymentFromInvoiceInput = {
   failureURL?: InputMaybe<Scalars['String']>;
   invoiceID: Scalars['String'];
   paymentMethodID?: InputMaybe<Scalars['ID']>;
   paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
   successURL?: InputMaybe<Scalars['String']>;
+};
+
+export type PaymentMethod = {
+  __typename?: 'PaymentMethod';
+  active: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+  description: Scalars['String'];
+  id: Scalars['ID'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  paymentProvider: PaymentProvider;
+  slug: Scalars['Slug'];
 };
 
 export type PaymentMethodInput = {
@@ -2335,16 +1495,137 @@ export type PaymentMethodInput = {
   slug: Scalars['Slug'];
 };
 
-export type CreatePeerInput = {
-  hostURL: Scalars['String'];
+export enum PaymentPeriodicity {
+  Biannual = 'BIANNUAL',
+  Monthly = 'MONTHLY',
+  Quarterly = 'QUARTERLY',
+  Yearly = 'YEARLY'
+}
+
+export type PaymentProvider = {
+  __typename?: 'PaymentProvider';
+  id: Scalars['ID'];
   name: Scalars['String'];
-  slug: Scalars['String'];
-  token: Scalars['String'];
 };
 
-export type PollWithAnswers = {
-  __typename?: 'PollWithAnswers';
-  answers?: Maybe<Array<PollAnswer>>;
+export type PaymentProviderCustomer = {
+  __typename?: 'PaymentProviderCustomer';
+  customerID: Scalars['String'];
+  paymentProviderID: Scalars['String'];
+};
+
+export enum PaymentSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
+export enum PaymentState {
+  Canceled = 'Canceled',
+  Created = 'Created',
+  Declined = 'Declined',
+  Paid = 'Paid',
+  Processing = 'Processing',
+  RequiresUserAction = 'RequiresUserAction',
+  Submitted = 'Submitted'
+}
+
+export type Peer = {
+  __typename?: 'Peer';
+  createdAt: Scalars['DateTime'];
+  hostURL: Scalars['String'];
+  id: Scalars['ID'];
+  isDisabled?: Maybe<Scalars['Boolean']>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  profile?: Maybe<PeerProfile>;
+  slug: Scalars['String'];
+};
+
+export type PeerArticle = {
+  __typename?: 'PeerArticle';
+  article: Article;
+  peer: Peer;
+  peeredArticleURL: Scalars['String'];
+};
+
+export type PeerArticleConnection = {
+  __typename?: 'PeerArticleConnection';
+  nodes: Array<PeerArticle>;
+  pageInfo: UnidirectionalPageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PeerArticleTeaser = {
+  __typename?: 'PeerArticleTeaser';
+  article?: Maybe<Article>;
+  articleID: Scalars['ID'];
+  image?: Maybe<Image>;
+  lead?: Maybe<Scalars['String']>;
+  peer?: Maybe<Peer>;
+  preTitle?: Maybe<Scalars['String']>;
+  style: TeaserStyle;
+  title?: Maybe<Scalars['String']>;
+};
+
+export type PeerArticleTeaserInput = {
+  articleID: Scalars['ID'];
+  imageID?: InputMaybe<Scalars['ID']>;
+  lead?: InputMaybe<Scalars['String']>;
+  peerID: Scalars['ID'];
+  preTitle?: InputMaybe<Scalars['String']>;
+  style: TeaserStyle;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type PeerProfile = {
+  __typename?: 'PeerProfile';
+  callToActionImage?: Maybe<Image>;
+  callToActionImageURL?: Maybe<Scalars['String']>;
+  callToActionText: Scalars['RichText'];
+  callToActionURL: Scalars['String'];
+  hostURL: Scalars['String'];
+  logo?: Maybe<Image>;
+  name: Scalars['String'];
+  themeColor: Scalars['Color'];
+  themeFontColor: Scalars['Color'];
+  websiteURL: Scalars['String'];
+};
+
+export type PeerProfileInput = {
+  callToActionImageID?: InputMaybe<Scalars['ID']>;
+  callToActionImageURL?: InputMaybe<Scalars['String']>;
+  callToActionText: Scalars['RichText'];
+  callToActionURL: Scalars['String'];
+  logoID?: InputMaybe<Scalars['ID']>;
+  name: Scalars['String'];
+  themeColor: Scalars['Color'];
+  themeFontColor: Scalars['Color'];
+};
+
+export type Permission = {
+  __typename?: 'Permission';
+  deprecated: Scalars['Boolean'];
+  description: Scalars['String'];
+  id: Scalars['String'];
+};
+
+export type Point = {
+  __typename?: 'Point';
+  x: Scalars['Float'];
+  y: Scalars['Float'];
+};
+
+export type PolisConversationBlock = {
+  __typename?: 'PolisConversationBlock';
+  conversationID: Scalars['String'];
+};
+
+export type PolisConversationBlockInput = {
+  conversationID: Scalars['String'];
+};
+
+export type Poll = {
+  __typename?: 'Poll';
   closedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['ID'];
   opensAt: Scalars['DateTime'];
@@ -2358,6 +1639,423 @@ export type PollAnswer = {
   pollId: Scalars['ID'];
 };
 
+export type PollAnswerWithVoteCount = {
+  __typename?: 'PollAnswerWithVoteCount';
+  answer?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  pollId: Scalars['ID'];
+  votes: Scalars['Int'];
+};
+
+export type PollBlock = {
+  __typename?: 'PollBlock';
+  poll?: Maybe<FullPoll>;
+};
+
+export type PollBlockInput = {
+  pollId?: InputMaybe<Scalars['ID']>;
+};
+
+export type PollConnection = {
+  __typename?: 'PollConnection';
+  nodes: Array<Poll>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PollExternalVote = {
+  __typename?: 'PollExternalVote';
+  amount?: Maybe<Scalars['VoteValue']>;
+  answerId: Scalars['ID'];
+  id: Scalars['ID'];
+};
+
+export type PollExternalVoteSource = {
+  __typename?: 'PollExternalVoteSource';
+  id: Scalars['ID'];
+  source?: Maybe<Scalars['String']>;
+  voteAmounts?: Maybe<Array<PollExternalVote>>;
+};
+
+export type PollFilter = {
+  openOnly?: InputMaybe<Scalars['Boolean']>;
+};
+
+export enum PollSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  OpensAt = 'OPENS_AT'
+}
+
+export type PollWithAnswers = {
+  __typename?: 'PollWithAnswers';
+  answers?: Maybe<Array<PollAnswer>>;
+  closedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  opensAt: Scalars['DateTime'];
+  question?: Maybe<Scalars['String']>;
+};
+
+export type Properties = {
+  __typename?: 'Properties';
+  key: Scalars['String'];
+  public: Scalars['Boolean'];
+  value: Scalars['String'];
+};
+
+export type PropertiesInput = {
+  key: Scalars['String'];
+  public: Scalars['Boolean'];
+  value: Scalars['String'];
+};
+
+export type Query = {
+  __typename?: 'Query';
+  article?: Maybe<Article>;
+  articlePreviewLink?: Maybe<Scalars['String']>;
+  articles: ArticleConnection;
+  authProviders: Array<AuthProvider>;
+  author?: Maybe<Author>;
+  authors: AuthorConnection;
+  comment?: Maybe<Comment>;
+  comments: CommentConnection;
+  createJWTForUser?: Maybe<JwtToken>;
+  image?: Maybe<Image>;
+  images: ImageConnection;
+  invoice?: Maybe<Invoice>;
+  invoices: InvoiceConnection;
+  me?: Maybe<User>;
+  memberPlan?: Maybe<MemberPlan>;
+  memberPlans: MemberPlanConnection;
+  navigation?: Maybe<Navigation>;
+  navigations: Array<Navigation>;
+  page?: Maybe<Page>;
+  pagePreviewLink?: Maybe<Scalars['String']>;
+  pages: PageConnection;
+  payment?: Maybe<Payment>;
+  paymentMethod?: Maybe<PaymentMethod>;
+  paymentMethods: Array<PaymentMethod>;
+  paymentProviders: Array<PaymentProvider>;
+  payments: PaymentConnection;
+  peer?: Maybe<Peer>;
+  peerArticle?: Maybe<Article>;
+  peerArticles: PeerArticleConnection;
+  peerProfile: PeerProfile;
+  peers?: Maybe<Array<Peer>>;
+  permissions?: Maybe<Array<Permission>>;
+  poll?: Maybe<FullPoll>;
+  polls?: Maybe<PollConnection>;
+  ratingSystem: FullCommentRatingSystem;
+  remotePeerProfile?: Maybe<PeerProfile>;
+  sessions: Array<Session>;
+  setting?: Maybe<Setting>;
+  settings: Array<Setting>;
+  subscription?: Maybe<Subscription>;
+  subscriptions: SubscriptionConnection;
+  subscriptionsAsCsv?: Maybe<Scalars['String']>;
+  tags?: Maybe<TagConnection>;
+  tokens: Array<Token>;
+  user?: Maybe<User>;
+  userRole?: Maybe<UserRole>;
+  userRoles: UserRoleConnection;
+  users: UserConnection;
+};
+
+
+export type QueryArticleArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryArticlePreviewLinkArgs = {
+  hours: Scalars['Int'];
+  id: Scalars['ID'];
+};
+
+
+export type QueryArticlesArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<ArticleFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<ArticleSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryAuthProvidersArgs = {
+  redirectUri?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryAuthorArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  slug?: InputMaybe<Scalars['Slug']>;
+};
+
+
+export type QueryAuthorsArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<AuthorFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<AuthorSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryCommentArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryCommentsArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<CommentFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<CommentSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryCreateJwtForUserArgs = {
+  expiresInMinutes: Scalars['Int'];
+  userId: Scalars['String'];
+};
+
+
+export type QueryImageArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryImagesArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<ImageFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<ImageSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryInvoiceArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryInvoicesArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<InvoiceFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<InvoiceSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryMemberPlanArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  slug?: InputMaybe<Scalars['Slug']>;
+};
+
+
+export type QueryMemberPlansArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<MemberPlanFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<MemberPlanSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryNavigationArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  key?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryPageArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryPagePreviewLinkArgs = {
+  hours: Scalars['Int'];
+  id: Scalars['ID'];
+};
+
+
+export type QueryPagesArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<PageFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<PageSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPaymentArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryPaymentMethodArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryPaymentsArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<PaymentFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<PaymentSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPeerArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryPeerArticleArgs = {
+  id: Scalars['ID'];
+  peerID: Scalars['ID'];
+};
+
+
+export type QueryPeerArticlesArgs = {
+  cursors?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<ArticleFilter>;
+  order?: InputMaybe<SortOrder>;
+  peerFilter?: InputMaybe<Scalars['String']>;
+  sort?: InputMaybe<ArticleSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPollArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryPollsArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<PollFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<PollSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryRemotePeerProfileArgs = {
+  hostURL: Scalars['String'];
+  token: Scalars['String'];
+};
+
+
+export type QuerySettingArgs = {
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QuerySubscriptionArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QuerySubscriptionsArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<SubscriptionFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<SubscriptionSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QuerySubscriptionsAsCsvArgs = {
+  filter?: InputMaybe<SubscriptionFilter>;
+};
+
+
+export type QueryTagsArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<TagFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<TagSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryUserArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryUserRoleArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryUserRolesArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<UserRoleFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<UserRoleSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryUsersArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<UserFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<UserSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+export type QuoteBlock = {
+  __typename?: 'QuoteBlock';
+  author?: Maybe<Scalars['String']>;
+  quote?: Maybe<Scalars['String']>;
+};
+
+export type QuoteBlockInput = {
+  author?: InputMaybe<Scalars['String']>;
+  quote?: InputMaybe<Scalars['String']>;
+};
+
+export enum RatingSystemType {
+  Star = 'STAR'
+}
+
+export type RichTextBlock = {
+  __typename?: 'RichTextBlock';
+  richText: Scalars['RichText'];
+};
+
+export type RichTextBlockInput = {
+  richText: Scalars['RichText'];
+};
+
+export type Session = {
+  __typename?: 'Session';
+  createdAt: Scalars['DateTime'];
+  expiresAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  user: User;
+};
+
 export type SessionWithToken = {
   __typename?: 'SessionWithToken';
   createdAt: Scalars['DateTime'];
@@ -2365,6 +2063,106 @@ export type SessionWithToken = {
   id: Scalars['ID'];
   token: Scalars['String'];
   user: User;
+};
+
+export type Setting = {
+  __typename?: 'Setting';
+  id: Scalars['ID'];
+  name: SettingName;
+  settingRestriction?: Maybe<SettingRestriction>;
+  value: Scalars['Value'];
+};
+
+export enum SettingName {
+  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
+  AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
+  AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
+  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
+  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES',
+  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
+  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN'
+}
+
+export type SettingRestriction = {
+  __typename?: 'SettingRestriction';
+  allowedValues?: Maybe<AllowedSettingVals>;
+  inputLength?: Maybe<Scalars['Int']>;
+  maxValue?: Maybe<Scalars['Int']>;
+  minValue?: Maybe<Scalars['Int']>;
+};
+
+export enum SortOrder {
+  Ascending = 'ASCENDING',
+  Descending = 'DESCENDING'
+}
+
+export type SoundCloudTrackBlock = {
+  __typename?: 'SoundCloudTrackBlock';
+  trackID: Scalars['String'];
+};
+
+export type SoundCloudTrackBlockInput = {
+  trackID: Scalars['String'];
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  autoRenew: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+  deactivation?: Maybe<SubscriptionDeactivation>;
+  id: Scalars['ID'];
+  memberPlan: MemberPlan;
+  modifiedAt: Scalars['DateTime'];
+  monthlyAmount: Scalars['Int'];
+  paidUntil?: Maybe<Scalars['DateTime']>;
+  paymentMethod: PaymentMethod;
+  paymentPeriodicity: PaymentPeriodicity;
+  properties: Array<Properties>;
+  startsAt: Scalars['DateTime'];
+  user?: Maybe<User>;
+};
+
+export type SubscriptionConnection = {
+  __typename?: 'SubscriptionConnection';
+  nodes: Array<Subscription>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type SubscriptionDeactivation = {
+  __typename?: 'SubscriptionDeactivation';
+  date: Scalars['DateTime'];
+  reason: SubscriptionDeactivationReason;
+};
+
+export type SubscriptionDeactivationInput = {
+  date: Scalars['DateTime'];
+  reason: SubscriptionDeactivationReason;
+};
+
+export enum SubscriptionDeactivationReason {
+  InvoiceNotPaid = 'INVOICE_NOT_PAID',
+  None = 'NONE',
+  UserSelfDeactivated = 'USER_SELF_DEACTIVATED'
+}
+
+export type SubscriptionFilter = {
+  autoRenew?: InputMaybe<Scalars['Boolean']>;
+  deactivationDateFrom?: InputMaybe<DateFilter>;
+  deactivationDateTo?: InputMaybe<DateFilter>;
+  deactivationReason?: InputMaybe<SubscriptionDeactivationReason>;
+  memberPlanID?: InputMaybe<Scalars['String']>;
+  paidUntil?: InputMaybe<DateFilter>;
+  paidUntilFrom?: InputMaybe<DateFilter>;
+  paidUntilTo?: InputMaybe<DateFilter>;
+  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
+  startsAt?: InputMaybe<DateFilter>;
+  startsAtFrom?: InputMaybe<DateFilter>;
+  startsAtTo?: InputMaybe<DateFilter>;
+  userHasAddress?: InputMaybe<Scalars['Boolean']>;
+  userID?: InputMaybe<Scalars['ID']>;
 };
 
 export type SubscriptionInput = {
@@ -2380,61 +2178,141 @@ export type SubscriptionInput = {
   userID: Scalars['ID'];
 };
 
-export type SubscriptionDeactivationInput = {
-  date: Scalars['DateTime'];
-  reason: SubscriptionDeactivationReason;
+export type SubscriptionPeriod = {
+  __typename?: 'SubscriptionPeriod';
+  amount: Scalars['Int'];
+  createdAt: Scalars['DateTime'];
+  endsAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  invoiceID: Scalars['ID'];
+  paymentPeriodicity: PaymentPeriodicity;
+  startsAt: Scalars['DateTime'];
+};
+
+export enum SubscriptionSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
+export type Tag = {
+  __typename?: 'Tag';
+  id: Scalars['ID'];
+  tag?: Maybe<Scalars['String']>;
+  type?: Maybe<TagType>;
+};
+
+export type TagConnection = {
+  __typename?: 'TagConnection';
+  nodes: Array<Tag>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type TagFilter = {
+  tag?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TagType>;
+};
+
+export enum TagSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  Tag = 'TAG'
+}
+
+export enum TagType {
+  Comment = 'Comment'
+}
+
+export type Teaser = ArticleTeaser | CustomTeaser | PageTeaser | PeerArticleTeaser;
+
+export type TeaserGridBlock = {
+  __typename?: 'TeaserGridBlock';
+  numColumns: Scalars['Int'];
+  teasers: Array<Maybe<Teaser>>;
+};
+
+export type TeaserGridBlockInput = {
+  numColumns: Scalars['Int'];
+  teasers: Array<InputMaybe<TeaserInput>>;
+};
+
+export type TeaserGridFlexBlock = {
+  __typename?: 'TeaserGridFlexBlock';
+  flexTeasers: Array<Maybe<FlexTeaser>>;
+};
+
+export type TeaserGridFlexBlockInput = {
+  flexTeasers: Array<FlexTeaserInput>;
+};
+
+export type TeaserInput = {
+  article?: InputMaybe<ArticleTeaserInput>;
+  custom?: InputMaybe<CustomTeaserInput>;
+  page?: InputMaybe<PageTeaserInput>;
+  peerArticle?: InputMaybe<PeerArticleTeaserInput>;
+};
+
+export enum TeaserStyle {
+  Default = 'DEFAULT',
+  Light = 'LIGHT',
+  Text = 'TEXT'
+}
+
+export type TikTokVideoBlock = {
+  __typename?: 'TikTokVideoBlock';
+  userID: Scalars['String'];
+  videoID: Scalars['String'];
+};
+
+export type TikTokVideoBlockInput = {
+  userID: Scalars['String'];
+  videoID: Scalars['String'];
+};
+
+export type TitleBlock = {
+  __typename?: 'TitleBlock';
+  lead?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+};
+
+export type TitleBlockInput = {
+  lead?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type Token = {
+  __typename?: 'Token';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
 };
 
 export type TokenInput = {
   name: Scalars['String'];
 };
 
-export type CreatedToken = {
-  __typename?: 'CreatedToken';
-  createdAt: Scalars['DateTime'];
+export type TwitterTweetBlock = {
+  __typename?: 'TwitterTweetBlock';
+  tweetID: Scalars['String'];
+  userID: Scalars['String'];
+};
+
+export type TwitterTweetBlockInput = {
+  tweetID: Scalars['String'];
+  userID: Scalars['String'];
+};
+
+export type UnidirectionalPageInfo = {
+  __typename?: 'UnidirectionalPageInfo';
+  endCursor?: Maybe<Scalars['String']>;
+  hasNextPage: Scalars['Boolean'];
+};
+
+export type UpdateCommentRatingSystemAnswer = {
+  answer?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  token: Scalars['String'];
-};
-
-export type UserInput = {
-  active: Scalars['Boolean'];
-  address?: InputMaybe<UserAddressInput>;
-  email: Scalars['String'];
-  emailVerifiedAt?: InputMaybe<Scalars['DateTime']>;
-  firstName?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  preferredName?: InputMaybe<Scalars['String']>;
-  properties: Array<PropertiesInput>;
-  roleIDs?: InputMaybe<Array<Scalars['String']>>;
-  userImageID?: InputMaybe<Scalars['ID']>;
-};
-
-export type UserAddressInput = {
-  city?: InputMaybe<Scalars['String']>;
-  company?: InputMaybe<Scalars['String']>;
-  country?: InputMaybe<Scalars['String']>;
-  streetAddress?: InputMaybe<Scalars['String']>;
-  streetAddress2?: InputMaybe<Scalars['String']>;
-  zipCode?: InputMaybe<Scalars['String']>;
-};
-
-export type UserRoleInput = {
-  description: Scalars['String'];
-  name: Scalars['String'];
-  permissionIDs?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export type CommentRatingOverrideUpdateInput = {
-  answerId: Scalars['ID'];
-  value?: InputMaybe<Scalars['Int']>;
-};
-
-export type CommentRevisionUpdateInput = {
-  lead?: InputMaybe<Scalars['String']>;
-  text?: InputMaybe<Scalars['RichText']>;
-  title?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<RatingSystemType>;
 };
 
 export type UpdateImageInput = {
@@ -2448,11 +2326,6 @@ export type UpdateImageInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
-export type InputPoint = {
-  x: Scalars['Float'];
-  y: Scalars['Float'];
-};
-
 export type UpdatePeerInput = {
   hostURL?: InputMaybe<Scalars['String']>;
   isDisabled?: InputMaybe<Scalars['Boolean']>;
@@ -2461,26 +2334,9 @@ export type UpdatePeerInput = {
   token?: InputMaybe<Scalars['String']>;
 };
 
-export type PeerProfileInput = {
-  callToActionImageID?: InputMaybe<Scalars['ID']>;
-  callToActionImageURL?: InputMaybe<Scalars['String']>;
-  callToActionText: Scalars['RichText'];
-  callToActionURL: Scalars['String'];
-  logoID?: InputMaybe<Scalars['ID']>;
-  name: Scalars['String'];
-  themeColor: Scalars['Color'];
-  themeFontColor: Scalars['Color'];
-};
-
 export type UpdatePollAnswer = {
   answer?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
-};
-
-export type UpdatePollExternalVoteSources = {
-  id: Scalars['ID'];
-  source?: InputMaybe<Scalars['String']>;
-  voteAmounts?: InputMaybe<Array<UpdatePollExternalVote>>;
 };
 
 export type UpdatePollExternalVote = {
@@ -2488,10 +2344,10 @@ export type UpdatePollExternalVote = {
   id: Scalars['ID'];
 };
 
-export type UpdateCommentRatingSystemAnswer = {
-  answer?: InputMaybe<Scalars['String']>;
+export type UpdatePollExternalVoteSources = {
   id: Scalars['ID'];
-  type?: InputMaybe<RatingSystemType>;
+  source?: InputMaybe<Scalars['String']>;
+  voteAmounts?: InputMaybe<Array<UpdatePollExternalVote>>;
 };
 
 export type UpdateSettingArgs = {
@@ -2509,6 +2365,150 @@ export type UploadImageInput = {
   source?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
+};
+
+export type User = {
+  __typename?: 'User';
+  active: Scalars['Boolean'];
+  address?: Maybe<UserAddress>;
+  createdAt: Scalars['DateTime'];
+  email: Scalars['String'];
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>;
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  lastLogin?: Maybe<Scalars['DateTime']>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  oauth2Accounts: Array<OAuth2Account>;
+  paymentProviderCustomers: Array<PaymentProviderCustomer>;
+  preferredName?: Maybe<Scalars['String']>;
+  properties: Array<Properties>;
+  roles: Array<UserRole>;
+  subscriptions: Array<UserSubscription>;
+  userImage?: Maybe<Image>;
+};
+
+export type UserAddress = {
+  __typename?: 'UserAddress';
+  city?: Maybe<Scalars['String']>;
+  company?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  streetAddress?: Maybe<Scalars['String']>;
+  streetAddress2?: Maybe<Scalars['String']>;
+  zipCode?: Maybe<Scalars['String']>;
+};
+
+export type UserAddressInput = {
+  city?: InputMaybe<Scalars['String']>;
+  company?: InputMaybe<Scalars['String']>;
+  country?: InputMaybe<Scalars['String']>;
+  streetAddress?: InputMaybe<Scalars['String']>;
+  streetAddress2?: InputMaybe<Scalars['String']>;
+  zipCode?: InputMaybe<Scalars['String']>;
+};
+
+export type UserConnection = {
+  __typename?: 'UserConnection';
+  nodes: Array<User>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type UserFilter = {
+  name?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['String']>;
+};
+
+export type UserInput = {
+  active: Scalars['Boolean'];
+  address?: InputMaybe<UserAddressInput>;
+  email: Scalars['String'];
+  emailVerifiedAt?: InputMaybe<Scalars['DateTime']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  preferredName?: InputMaybe<Scalars['String']>;
+  properties: Array<PropertiesInput>;
+  roleIDs?: InputMaybe<Array<Scalars['String']>>;
+  userImageID?: InputMaybe<Scalars['ID']>;
+};
+
+export type UserRole = {
+  __typename?: 'UserRole';
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+  permissions: Array<Permission>;
+  systemRole: Scalars['Boolean'];
+};
+
+export type UserRoleConnection = {
+  __typename?: 'UserRoleConnection';
+  nodes: Array<UserRole>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type UserRoleFilter = {
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export type UserRoleInput = {
+  description: Scalars['String'];
+  name: Scalars['String'];
+  permissionIDs?: InputMaybe<Array<Scalars['String']>>;
+};
+
+export enum UserRoleSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
+export enum UserSort {
+  CreatedAt = 'CREATED_AT',
+  FirstName = 'FIRST_NAME',
+  ModifiedAt = 'MODIFIED_AT',
+  Name = 'NAME'
+}
+
+export type UserSubscription = {
+  __typename?: 'UserSubscription';
+  autoRenew: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+  deactivation?: Maybe<SubscriptionDeactivation>;
+  id: Scalars['ID'];
+  invoices: Array<Invoice>;
+  memberPlan: MemberPlan;
+  modifiedAt: Scalars['DateTime'];
+  monthlyAmount: Scalars['Int'];
+  paidUntil?: Maybe<Scalars['DateTime']>;
+  paymentPeriodicity: PaymentPeriodicity;
+  periods: Array<SubscriptionPeriod>;
+  properties: Array<Properties>;
+  startsAt: Scalars['DateTime'];
+};
+
+export type VimeoVideoBlock = {
+  __typename?: 'VimeoVideoBlock';
+  videoID: Scalars['String'];
+};
+
+export type VimeoVideoBlockInput = {
+  videoID: Scalars['String'];
+};
+
+export type YouTubeVideoBlock = {
+  __typename?: 'YouTubeVideoBlock';
+  videoID: Scalars['String'];
+};
+
+export type YouTubeVideoBlockInput = {
+  videoID: Scalars['String'];
+};
+
+export type OverriddenRating = {
+  __typename?: 'overriddenRating';
+  answerId: Scalars['ID'];
+  value?: Maybe<Scalars['Int']>;
 };
 
 export type MutationArticleFragment = { __typename?: 'Article', id: string, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } };
@@ -4242,7 +4242,14 @@ export const TokenRefFragmentDoc = gql`
     `;
 export const ArticleListDocument = gql`
     query ArticleList($filter: ArticleFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
-  articles(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  articles(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...ArticleRef
     }
@@ -4291,7 +4298,13 @@ export type ArticleListLazyQueryHookResult = ReturnType<typeof useArticleListLaz
 export type ArticleListQueryResult = Apollo.QueryResult<ArticleListQuery, ArticleListQueryVariables>;
 export const PeerArticleListDocument = gql`
     query PeerArticleList($filter: ArticleFilter, $cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort) {
-  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort, filter: $filter) {
+  peerArticles(
+    cursors: $cursors
+    peerFilter: $peerFilter
+    order: $order
+    sort: $sort
+    filter: $filter
+  ) {
     nodes {
       peer {
         ...PeerWithProfile
@@ -4411,7 +4424,12 @@ export type UpdateArticleMutationResult = Apollo.MutationResult<UpdateArticleMut
 export type UpdateArticleMutationOptions = Apollo.BaseMutationOptions<UpdateArticleMutation, UpdateArticleMutationVariables>;
 export const PublishArticleDocument = gql`
     mutation PublishArticle($id: ID!, $publishAt: DateTime!, $publishedAt: DateTime!, $updatedAt: DateTime!) {
-  publishArticle(id: $id, publishAt: $publishAt, publishedAt: $publishedAt, updatedAt: $updatedAt) {
+  publishArticle(
+    id: $id
+    publishAt: $publishAt
+    publishedAt: $publishedAt
+    updatedAt: $updatedAt
+  ) {
     ...MutationArticle
   }
 }
@@ -4823,7 +4841,14 @@ export type CreateSessionWithJwtMutationResult = Apollo.MutationResult<CreateSes
 export type CreateSessionWithJwtMutationOptions = Apollo.BaseMutationOptions<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>;
 export const AuthorListDocument = gql`
     query AuthorList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: AuthorSort) {
-  authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  authors(
+    filter: {name: $filter}
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullAuthor
     }
@@ -5048,7 +5073,11 @@ export type RatingSystemLazyQueryHookResult = ReturnType<typeof useRatingSystemL
 export type RatingSystemQueryResult = Apollo.QueryResult<RatingSystemQuery, RatingSystemQueryVariables>;
 export const UpdateRatingSystemDocument = gql`
     mutation UpdateRatingSystem($ratingSystemId: ID!, $name: String, $answers: [UpdateCommentRatingSystemAnswer!]) {
-  updateRatingSystem(ratingSystemId: $ratingSystemId, name: $name, answers: $answers) {
+  updateRatingSystem(
+    ratingSystemId: $ratingSystemId
+    name: $name
+    answers: $answers
+  ) {
     id
     name
     answers {
@@ -5090,7 +5119,11 @@ export type UpdateRatingSystemMutationResult = Apollo.MutationResult<UpdateRatin
 export type UpdateRatingSystemMutationOptions = Apollo.BaseMutationOptions<UpdateRatingSystemMutation, UpdateRatingSystemMutationVariables>;
 export const CreateRatingSystemAnswerDocument = gql`
     mutation CreateRatingSystemAnswer($ratingSystemId: ID!, $type: RatingSystemType!, $answer: String) {
-  createRatingSystemAnswer(ratingSystemId: $ratingSystemId, type: $type, answer: $answer) {
+  createRatingSystemAnswer(
+    ratingSystemId: $ratingSystemId
+    type: $type
+    answer: $answer
+  ) {
     answer
     id
     type
@@ -5161,7 +5194,14 @@ export type DeleteRatingSystemAnswerMutationResult = Apollo.MutationResult<Delet
 export type DeleteRatingSystemAnswerMutationOptions = Apollo.BaseMutationOptions<DeleteRatingSystemAnswerMutation, DeleteRatingSystemAnswerMutationVariables>;
 export const CommentListDocument = gql`
     query CommentList($filter: CommentFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
-  comments(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  comments(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullComment
     }
@@ -5348,7 +5388,16 @@ export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<Reques
 export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
 export const UpdateCommentDocument = gql`
     mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $guestUserImageID: ID, $source: String, $tagIds: [ID!], $ratingOverrides: [CommentRatingOverrideUpdateInput!]) {
-  updateComment(id: $id, revision: $revision, userID: $userID, guestUsername: $guestUsername, guestUserImageID: $guestUserImageID, source: $source, tagIds: $tagIds, ratingOverrides: $ratingOverrides) {
+  updateComment(
+    id: $id
+    revision: $revision
+    userID: $userID
+    guestUsername: $guestUsername
+    guestUserImageID: $guestUserImageID
+    source: $source
+    tagIds: $tagIds
+    ratingOverrides: $ratingOverrides
+  ) {
     ...FullComment
   }
 }
@@ -5388,7 +5437,13 @@ export type UpdateCommentMutationResult = Apollo.MutationResult<UpdateCommentMut
 export type UpdateCommentMutationOptions = Apollo.BaseMutationOptions<UpdateCommentMutation, UpdateCommentMutationVariables>;
 export const CreateCommentDocument = gql`
     mutation createComment($itemID: ID!, $itemType: CommentItemType!, $parentID: ID, $text: RichText, $tagIds: [ID!]) {
-  createComment(itemID: $itemID, itemType: $itemType, parentID: $parentID, text: $text, tagIds: $tagIds) {
+  createComment(
+    itemID: $itemID
+    itemType: $itemType
+    parentID: $parentID
+    text: $text
+    tagIds: $tagIds
+  ) {
     id
   }
 }
@@ -5640,7 +5695,14 @@ export type DeleteImageMutationResult = Apollo.MutationResult<DeleteImageMutatio
 export type DeleteImageMutationOptions = Apollo.BaseMutationOptions<DeleteImageMutation, DeleteImageMutationVariables>;
 export const InvoicesDocument = gql`
     query Invoices($cursor: ID, $take: Int, $skip: Int, $filter: InvoiceFilter, $sort: InvoiceSort, $order: SortOrder) {
-  invoices(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
+  invoices(
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    filter: $filter
+    sort: $sort
+    order: $order
+  ) {
     nodes {
       ...Invoice
     }
@@ -6072,7 +6134,14 @@ export type DeleteNavigationMutationResult = Apollo.MutationResult<DeleteNavigat
 export type DeleteNavigationMutationOptions = Apollo.BaseMutationOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
 export const PageListDocument = gql`
     query PageList($filter: PageFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
-  pages(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  pages(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...PageRef
     }
@@ -6188,7 +6257,12 @@ export type UpdatePageMutationResult = Apollo.MutationResult<UpdatePageMutation>
 export type UpdatePageMutationOptions = Apollo.BaseMutationOptions<UpdatePageMutation, UpdatePageMutationVariables>;
 export const PublishPageDocument = gql`
     mutation PublishPage($id: ID!, $publishAt: DateTime, $publishedAt: DateTime, $updatedAt: DateTime) {
-  publishPage(id: $id, publishAt: $publishAt, publishedAt: $publishedAt, updatedAt: $updatedAt) {
+  publishPage(
+    id: $id
+    publishAt: $publishAt
+    publishedAt: $publishedAt
+    updatedAt: $updatedAt
+  ) {
     ...MutationPage
   }
 }
@@ -6948,7 +7022,14 @@ export type CreatePollMutationResult = Apollo.MutationResult<CreatePollMutation>
 export type CreatePollMutationOptions = Apollo.BaseMutationOptions<CreatePollMutation, CreatePollMutationVariables>;
 export const UpdatePollDocument = gql`
     mutation UpdatePoll($pollId: ID!, $opensAt: DateTime, $closedAt: DateTime, $question: String, $answers: [UpdatePollAnswer!], $externalVoteSources: [UpdatePollExternalVoteSources!]) {
-  updatePoll(pollId: $pollId, opensAt: $opensAt, closedAt: $closedAt, question: $question, answers: $answers, externalVoteSources: $externalVoteSources) {
+  updatePoll(
+    pollId: $pollId
+    opensAt: $opensAt
+    closedAt: $closedAt
+    question: $question
+    answers: $answers
+    externalVoteSources: $externalVoteSources
+  ) {
     id
     question
     opensAt
@@ -7167,7 +7248,14 @@ export type DeletePollExternalVoteSourceMutationResult = Apollo.MutationResult<D
 export type DeletePollExternalVoteSourceMutationOptions = Apollo.BaseMutationOptions<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>;
 export const PollsDocument = gql`
     query Polls($cursor: ID, $take: Int, $skip: Int, $filter: PollFilter, $sort: PollSort, $order: SortOrder) {
-  polls(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
+  polls(
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    filter: $filter
+    sort: $sort
+    order: $order
+  ) {
     nodes {
       id
       question
@@ -7344,7 +7432,14 @@ export type UpdateSettingListMutationResult = Apollo.MutationResult<UpdateSettin
 export type UpdateSettingListMutationOptions = Apollo.BaseMutationOptions<UpdateSettingListMutation, UpdateSettingListMutationVariables>;
 export const SubscriptionListDocument = gql`
     query SubscriptionList($filter: SubscriptionFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
-  subscriptions(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  subscriptions(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullSubscription
     }
@@ -7561,7 +7656,14 @@ export type DeleteSubscriptionMutationResult = Apollo.MutationResult<DeleteSubsc
 export type DeleteSubscriptionMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>;
 export const TagListDocument = gql`
     query TagList($filter: TagFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
-  tags(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  tags(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       id
       tag
@@ -7819,7 +7921,14 @@ export type DeleteTokenMutationResult = Apollo.MutationResult<DeleteTokenMutatio
 export type DeleteTokenMutationOptions = Apollo.BaseMutationOptions<DeleteTokenMutation, DeleteTokenMutationVariables>;
 export const UserListDocument = gql`
     query UserList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
-  users(filter: {text: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  users(
+    filter: {text: $filter}
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullUser
     }

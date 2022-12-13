@@ -1,5 +1,5 @@
 import {Image} from '@prisma/client'
-import {FileUpload} from 'graphql-upload'
+import type {FileUpload} from 'graphql-upload'
 import {ImageTransformation, UploadImage} from '../db/image'
 
 export interface ArrayBufferUpload {

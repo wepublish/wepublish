@@ -1,4 +1,4 @@
-import {ApolloServerTestClient} from 'apollo-server-testing'
+import {ApolloServer} from 'apollo-server-express'
 import {Permission} from '../../src'
 import {
   CreateUserRole,
@@ -12,12 +12,12 @@ import {
 
 import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
 
-let testClientPrivate: ApolloServerTestClient
+let testServerPrivate: ApolloServer
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithPrisma()
-    testClientPrivate = setupClient.testClientPrivate
+    testServerPrivate = setupClient.testServerPrivate
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')
@@ -31,44 +31,41 @@ describe('User Roles', () => {
     let permissionIDs: string[]
 
     beforeAll(async () => {
-      const {mutate} = testClientPrivate
       const input: UserRoleInput = {
         name: generateRandomString(),
         description: 'User Role',
         permissionIDs: []
       }
-      const res = await mutate({
-        mutation: CreateUserRole,
+      const res = await testServerPrivate.executeOperation({
+        query: CreateUserRole,
         variables: {
-          input: input
+          input
         }
       })
-      ids.unshift(res.data.createUserRole.id)
+      ids.unshift(res.data?.createUserRole.id)
     })
 
     test('can read permission list', async () => {
-      const {query} = testClientPrivate
-      const res = await query({
+      const res = await testServerPrivate.executeOperation({
         query: PermissionList
       })
       expect(res).toMatchSnapshot()
 
-      permissionsList = res.data.permissions
+      permissionsList = res.data?.permissions
       permissionIDs = permissionsList.map((permission: Permission) => permission.id)
     })
 
     test('can be created', async () => {
-      const {mutate} = testClientPrivate
       const input: UserRoleInput = {
         name: generateRandomString(),
         description: 'New Role',
-        permissionIDs: permissionIDs
+        permissionIDs
       }
 
-      const res = await mutate({
-        mutation: CreateUserRole,
+      const res = await testServerPrivate.executeOperation({
+        query: CreateUserRole,
         variables: {
-          input: input
+          input
         }
       })
       expect(res).toMatchSnapshot({
@@ -79,24 +76,22 @@ describe('User Roles', () => {
           }
         }
       })
-      ids.unshift(res.data.createUserRole.id)
+      ids.unshift(res.data?.createUserRole.id)
     })
 
     test('can be read in list', async () => {
-      const {query} = testClientPrivate
-      const res = await query({
+      const res = await testServerPrivate.executeOperation({
         query: UserRoleList,
         variables: {
           take: 100
         }
       })
 
-      expect(res.data.userRoles.nodes).not.toHaveLength(0)
+      expect(res.data?.userRoles.nodes).not.toHaveLength(0)
     })
 
     test('can be read by id', async () => {
-      const {query} = testClientPrivate
-      const res = await query({
+      const res = await testServerPrivate.executeOperation({
         query: UserRole,
         variables: {
           id: ids[0]
@@ -113,9 +108,8 @@ describe('User Roles', () => {
     })
 
     test('can be updated', async () => {
-      const {mutate} = testClientPrivate
-      const res = await mutate({
-        mutation: UpdateUserRole,
+      const res = await testServerPrivate.executeOperation({
+        query: UpdateUserRole,
         variables: {
           input: {
             name: generateRandomString(),
@@ -137,9 +131,8 @@ describe('User Roles', () => {
     })
 
     test('can be deleted', async () => {
-      const {mutate} = testClientPrivate
-      const res = await mutate({
-        mutation: DeleteUserRole,
+      const res = await testServerPrivate.executeOperation({
+        query: DeleteUserRole,
         variables: {
           id: ids[0]
         }
@@ -150,7 +143,7 @@ describe('User Roles', () => {
           deleteUserRole: expect.any(Object)
         }
       })
-      expect(res.data.deleteUserRole.id).toBe(ids[0])
+      expect(res.data?.deleteUserRole.id).toBe(ids[0])
       ids.shift()
     })
   })

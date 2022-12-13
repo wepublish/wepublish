@@ -1,4 +1,4 @@
-import {ApolloServerTestClient} from 'apollo-server-testing'
+import {ApolloServer} from 'apollo-server-express'
 import {
   ArticleInput,
   CreateArticle,
@@ -13,20 +13,18 @@ import {
 } from '../api/private'
 import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
 
-let testClientPrivate: ApolloServerTestClient
+let testServerPrivate: ApolloServer
 let pageID: string
 let articleID: string
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithPrisma()
-    testClientPrivate = setupClient.testClientPrivate
+    testServerPrivate = setupClient.testServerPrivate
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')
   }
-
-  const {mutate} = testClientPrivate
 
   const pageInput: PageInput = {
     title: 'Testing Page',
@@ -36,8 +34,8 @@ beforeAll(async () => {
     blocks: []
   }
 
-  const pageRes = await mutate({
-    mutation: CreatePage,
+  const pageRes = await testServerPrivate.executeOperation({
+    query: CreatePage,
     variables: {
       input: pageInput
     }
@@ -59,8 +57,8 @@ beforeAll(async () => {
     blocks: []
   }
 
-  const articleRes = await mutate({
-    mutation: CreateArticle,
+  const articleRes = await testServerPrivate.executeOperation({
+    query: CreateArticle,
     variables: {
       input: articleInput
     }
@@ -74,7 +72,6 @@ describe('Navigations', () => {
     const ids: string[] = []
 
     beforeAll(async () => {
-      const {mutate} = testClientPrivate
       const input: NavigationInput = {
         name: `Test ${ids.length}`,
         key: generateRandomString(),
@@ -85,19 +82,18 @@ describe('Navigations', () => {
         ]
       }
 
-      const res = await mutate({
-        mutation: CreateNavigation,
+      const res = await testServerPrivate.executeOperation({
+        query: CreateNavigation,
         variables: {
           input: input
         }
       })
 
-      ids.unshift(res.data.createNavigation?.id)
+      ids.unshift(res.data?.createNavigation?.id)
     })
 
     test('can be created', async () => {
       const key = generateRandomString()
-      const {mutate} = testClientPrivate
       const input: NavigationInput = {
         name: 'Create Navigation Name',
         key: key,
@@ -108,8 +104,8 @@ describe('Navigations', () => {
         ]
       }
 
-      const res = await mutate({
-        mutation: CreateNavigation,
+      const res = await testServerPrivate.executeOperation({
+        query: CreateNavigation,
         variables: {
           input: input
         }
@@ -125,7 +121,7 @@ describe('Navigations', () => {
         }
       })
 
-      const links = res.data.createNavigation?.links
+      const links = res.data?.createNavigation?.links
       expect(links).toHaveLength(3)
       //external link
       expect(links[0].label).toBe('External Label')
@@ -137,21 +133,19 @@ describe('Navigations', () => {
       expect(links[2].label).toBe('Page Label')
       expect(links[2].page.id).toBe(pageID)
 
-      ids.unshift(res.data.createNavigation?.id)
+      ids.unshift(res.data?.createNavigation?.id)
     })
 
     test('can be read in list', async () => {
-      const {query} = testClientPrivate
-      const res = await query({
+      const res = await testServerPrivate.executeOperation({
         query: NavigationList
       })
 
-      expect(res.data.navigations).not.toHaveLength(0)
+      expect(res.data?.navigations).not.toHaveLength(0)
     })
 
     test('can be read by id', async () => {
-      const {query} = testClientPrivate
-      const res = await query({
+      const res = await testServerPrivate.executeOperation({
         query: Navigation,
         variables: {
           id: ids[0]
@@ -168,12 +162,10 @@ describe('Navigations', () => {
         }
       })
 
-      expect(res.data.navigation.id).toBe(ids[0])
+      expect(res.data?.navigation.id).toBe(ids[0])
     })
 
     test('can be updated', async () => {
-      const {mutate} = testClientPrivate
-
       const articleInput: ArticleInput = {
         title: '',
         slug: generateRandomString(),
@@ -191,8 +183,8 @@ describe('Navigations', () => {
         socialMediaImageID: null,
         blocks: []
       }
-      const articleRes = await mutate({
-        mutation: CreateArticle,
+      const articleRes = await testServerPrivate.executeOperation({
+        query: CreateArticle,
         variables: {
           input: articleInput
         }
@@ -205,23 +197,23 @@ describe('Navigations', () => {
         properties: [],
         blocks: []
       }
-      const pageRes = await mutate({
-        mutation: CreatePage,
+      const pageRes = await testServerPrivate.executeOperation({
+        query: CreatePage,
         variables: {
           input: pageInput
         }
       })
 
-      const res = await mutate({
-        mutation: UpdateNavigation,
+      const res = await testServerPrivate.executeOperation({
+        query: UpdateNavigation,
         variables: {
           input: {
             name: 'Updated Navigation Name',
             key: generateRandomString(),
             links: [
               {external: {label: 'New External Label', url: 'newlinkurl.ch/'}},
-              {article: {label: 'New Article Label', articleID: articleRes.data.createArticle.id}},
-              {page: {label: 'New Page Label', pageID: pageRes.data.createPage.id}}
+              {article: {label: 'New Article Label', articleID: articleRes.data?.createArticle.id}},
+              {page: {label: 'New Page Label', pageID: pageRes.data?.createPage.id}}
             ]
           },
           id: ids[0]
@@ -251,15 +243,14 @@ describe('Navigations', () => {
         }
       })
 
-      const updatedNav = res.data.updateNavigation
+      const updatedNav = res.data?.updateNavigation
       expect(updatedNav.id).toBe(ids[0])
       expect(updatedNav.name).toBe('Updated Navigation Name')
     })
 
     test('can be deleted', async () => {
-      const {mutate} = testClientPrivate
-      const res = await mutate({
-        mutation: DeleteNavigation,
+      const res = await testServerPrivate.executeOperation({
+        query: DeleteNavigation,
         variables: {
           id: ids[0]
         }
@@ -271,7 +262,7 @@ describe('Navigations', () => {
         }
       })
 
-      expect(res.data.deleteNavigation.id).toBe(ids[0])
+      expect(res.data?.deleteNavigation.id).toBe(ids[0])
       ids.shift()
     })
   })

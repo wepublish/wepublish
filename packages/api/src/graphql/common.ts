@@ -8,7 +8,7 @@ import {
 } from 'graphql'
 
 import {DateFilterComparison, SortOrder} from '../db/common'
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDateTime} from 'graphql-scalars'
 
 export const GraphQLSortOrder = new GraphQLEnumType({
   name: 'SortOrder',

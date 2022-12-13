@@ -10,8 +10,8 @@ import {
   GraphQLID
 } from 'graphql'
 
-import {GraphQLDateTime} from 'graphql-iso-date'
-import {GraphQLUpload} from 'apollo-server-express'
+import {GraphQLDateTime} from 'graphql-scalars'
+import {GraphQLUpload} from 'graphql-upload'
 
 import {Context} from '../context'
 import {ImageRotation, ImageOutput, ImageSort, ImageWithTransformURL} from '../db/image'
@@ -68,7 +68,8 @@ export const GraphQLImageTransformation = new GraphQLInputObjectType({
 export const GraphQLUploadImageInput = new GraphQLInputObjectType({
   name: 'UploadImageInput',
   fields: {
-    file: {type: GraphQLNonNull(GraphQLUpload!)},
+    // @ts-expect-error graphql-upload has outdated typings
+    file: {type: GraphQLNonNull(GraphQLUpload)},
     filename: {type: GraphQLString},
 
     title: {type: GraphQLString},

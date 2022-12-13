@@ -7,7 +7,7 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../context'
 import {Block, BlockMap, BlockType} from '../db/block'
 import {SettingName} from '../db/setting'

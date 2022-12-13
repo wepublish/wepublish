@@ -9,6 +9,11 @@ import {JobType, runJob} from './jobs'
 import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
 import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments/paymentProvider'
 import {MAX_PAYLOAD_SIZE} from './utility'
+import {
+  ApolloServerPluginLandingPageGraphQLPlayground,
+  ApolloServerPluginLandingPageDisabled
+} from 'apollo-server-core'
+import {graphqlUploadExpress} from 'graphql-upload'
 
 let serverLogger: pino.Logger
 
@@ -19,35 +24,44 @@ export function logger(moduleName: string): pino.Logger {
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
   readonly introspection?: boolean
-  readonly tracing?: boolean
   readonly logger?: pino.Logger
 }
 
 export class WepublishServer {
-  private readonly app: Application
+  private app: Application | undefined
 
-  constructor(private readonly opts: WepublishServerOpts) {
+  constructor(private readonly opts: WepublishServerOpts) {}
+
+  async listen(port?: number, hostname?: string): Promise<void> {
     const app = express()
 
     this.setupPrismaMiddlewares()
 
-    serverLogger = opts.logger ? opts.logger : pino({name: 'we.publish'})
+    serverLogger = this.opts.logger ? this.opts.logger : pino({name: 'we.publish'})
 
     const adminServer = new ApolloServer({
       schema: GraphQLWepublishSchema,
-      playground: opts.playground ? {version: '1.7.27'} : false,
-      introspection: opts.introspection ?? false,
-      tracing: opts.tracing ?? false,
+      plugins: [
+        this.opts.playground
+          ? ApolloServerPluginLandingPageGraphQLPlayground()
+          : ApolloServerPluginLandingPageDisabled()
+      ],
+      introspection: this.opts.introspection ?? false,
       context: ({req}) => contextFromRequest(req, this.opts)
     })
+    await adminServer.start()
 
     const publicServer = new ApolloServer({
       schema: GraphQLWepublishPublicSchema,
-      playground: opts.playground ? {version: '1.7.27'} : false,
-      introspection: opts.introspection ?? false,
-      tracing: opts.tracing ?? false,
+      plugins: [
+        this.opts.playground
+          ? ApolloServerPluginLandingPageGraphQLPlayground()
+          : ApolloServerPluginLandingPageDisabled()
+      ],
+      introspection: this.opts.introspection ?? false,
       context: ({req}) => contextFromRequest(req, this.opts)
     })
+    await publicServer.start()
 
     const corsOptions = {
       origin: true,
@@ -73,6 +87,8 @@ export class WepublishServer {
     app.use(`/${MAIL_WEBHOOK_PATH_PREFIX}`, setupMailProvider(this.opts))
     app.use(`/${PAYMENT_WEBHOOK_PATH_PREFIX}`, setupPaymentProvider(this.opts))
 
+    app.use(graphqlUploadExpress())
+
     adminServer.applyMiddleware({
       app,
       path: '/admin',
@@ -97,9 +113,7 @@ export class WepublishServer {
     })
 
     this.app = app
-  }
 
-  async listen(port?: number, hostname?: string): Promise<void> {
     this.app.listen(port ?? 4000, hostname ?? 'localhost')
   }
 
