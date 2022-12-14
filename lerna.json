@@ -15,13 +15,10 @@
   },
   "npmClient": "yarn",
   "command": {
-    "version": {
-      "allowBranch": "master"
-    },
     "publish": {
       "ignoreChanges": ["*.md", "*.txt"],
       "message": "chore(release): publish %s"
     }
   },
-  "packages": ["packages/api", "dist/apps/editor"]
+  "packages": ["packages/api", "apps/editor"]
 }
