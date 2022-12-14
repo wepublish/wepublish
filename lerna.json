@@ -1,5 +1,5 @@
 {
-  "version": "8.1.1",
+  "version": "9.0.0-debug",
   "changelog": {
     "repo": "wepublish/wepublish",
     "cacheDir": ".changelog",
@@ -16,9 +16,15 @@
   "npmClient": "yarn",
   "command": {
     "publish": {
-      "ignoreChanges": ["*.md", "*.txt"],
+      "ignoreChanges": [
+        "*.md",
+        "*.txt"
+      ],
       "message": "chore(release): publish %s"
     }
   },
-  "packages": ["packages/api", "apps/editor"]
+  "packages": [
+    "packages/api",
+    "apps/editor"
+  ]
 }
