@@ -1,5 +1,6 @@
 {
   "name": "@wepublish/editor",
+  "version": "8.1.1",
   "description": "We.publish CMS Editor",
   "keywords": [
     "editor",
