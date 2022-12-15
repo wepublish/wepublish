@@ -1,10 +1,14 @@
-import ArrowLeftIcon from '@rsuite/icons/legacy/ArrowLeft'
-import CloudUploadIcon from '@rsuite/icons/legacy/CloudUpload'
-import EyeIcon from '@rsuite/icons/legacy/Eye'
-import NewspaperOIcon from '@rsuite/icons/legacy/NewspaperO'
-import SaveIcon from '@rsuite/icons/legacy/Save'
+import './routes.less'
+
 import React, {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {
+  MdCloudUpload,
+  MdIntegrationInstructions,
+  MdKeyboardBackspace,
+  MdRemoveRedEye,
+  MdSave
+} from 'react-icons/md'
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import {Badge, Drawer, IconButton, Message, Modal, Notification, Tag, toaster} from 'rsuite'
 
@@ -471,9 +475,9 @@ function ArticleEditor() {
               leftChildren={
                 <Link to="/articles">
                   <IconButton
-                    style={{marginTop: '4px'}}
-                    size={'lg'}
-                    icon={<ArrowLeftIcon />}
+                    size="lg"
+                    className="actionButton"
+                    icon={<MdKeyboardBackspace />}
                     onClick={e => {
                       if (!unsavedChangesDialog()) e.preventDefault()
                     }}>
@@ -484,9 +488,10 @@ function ArticleEditor() {
               centerChildren={
                 <div style={{marginTop: '4px', marginBottom: '20px'}}>
                   <IconButton
-                    icon={<NewspaperOIcon />}
-                    size={'lg'}
+                    icon={<MdIntegrationInstructions />}
+                    size="lg"
                     disabled={isDisabled}
+                    className="actionButton"
                     onClick={() => {
                       syncFirstTitleBlockWithMetadata()
                       setMetaDrawerOpen(true)
@@ -497,11 +502,12 @@ function ArticleEditor() {
                   {isNew && createData == null ? (
                     <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
                       <IconButton
+                        className="actionButton"
                         style={{
                           marginLeft: '10px'
                         }}
-                        size={'lg'}
-                        icon={<SaveIcon />}
+                        size="lg"
+                        icon={<MdSave />}
                         disabled={isDisabled}
                         onClick={() => handleSave()}>
                         {t('create')}
@@ -514,8 +520,9 @@ function ArticleEditor() {
                           style={{
                             marginLeft: '10px'
                           }}
-                          size={'lg'}
-                          icon={<SaveIcon />}
+                          className="actionButton"
+                          size="lg"
+                          icon={<MdSave />}
                           disabled={isDisabled}
                           onClick={() => handleSave()}>
                           {t('save')}
@@ -532,8 +539,9 @@ function ArticleEditor() {
                             style={{
                               marginLeft: '10px'
                             }}
-                            size={'lg'}
-                            icon={<CloudUploadIcon />}
+                            className="actionButton"
+                            size="lg"
+                            icon={<MdCloudUpload />}
                             disabled={isDisabled}
                             onClick={() => {
                               setPublishDialogOpen(true)
@@ -550,6 +558,7 @@ function ArticleEditor() {
                 <PermissionControl qualifyingPermissions={['CAN_GET_ARTICLE_PREVIEW_LINK']}>
                   <Link
                     to="#"
+                    className="actionButton"
                     onClick={e => {
                       previewLinkFetch({
                         variables: {
@@ -561,8 +570,8 @@ function ArticleEditor() {
                     <IconButton
                       disabled={hasChanged || !id || !canPreview}
                       style={{marginTop: '4px'}}
-                      size={'lg'}
-                      icon={<EyeIcon />}>
+                      size="lg"
+                      icon={<MdRemoveRedEye />}>
                       {t('articleEditor.overview.preview')}
                     </IconButton>
                   </Link>
@@ -594,7 +603,7 @@ function ArticleEditor() {
           }}
         />
       </Drawer>
-      <Modal open={isPublishDialogOpen} size={'sm'} onClose={() => setPublishDialogOpen(false)}>
+      <Modal open={isPublishDialogOpen} size="sm" onClose={() => setPublishDialogOpen(false)}>
         <PublishArticlePanel
           publishedAtDate={publishedAt}
           updatedAtDate={updatedAt}

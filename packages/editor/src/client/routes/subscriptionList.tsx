@@ -1,7 +1,6 @@
-import PlusIcon from '@rsuite/icons/legacy/Plus'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
+import {MdAdd, MdDelete} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, FlexboxGrid, IconButton, Modal, Pagination, Table} from 'rsuite'
 
@@ -51,14 +50,13 @@ export const newSubscriptionButton = ({
   const canCreate = authorise('CAN_CREATE_SUBSCRIPTION')
   return (
     <Link to="/subscriptions/create">
-      <Button
-        style={{marginLeft: 5}}
+      <IconButton
         appearance="primary"
-        color="green"
-        disabled={isLoading || !canCreate}>
-        <PlusIcon style={{marginRight: '5px'}} />
+        disabled={isLoading || !canCreate}
+        style={{marginLeft: '20px'}}>
+        <MdAdd />
         {t('subscriptionList.overview.newSubscription')}
-      </Button>
+      </IconButton>
     </Link>
   )
 }
@@ -157,10 +155,10 @@ function SubscriptionList() {
   return (
     <>
       <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
+        <FlexboxGrid.Item colspan={12}>
           <h2>{t('subscriptionList.overview.subscription')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+        <FlexboxGrid.Item colspan={12} style={{textAlign: 'right'}}>
           <ExportSubscriptionsAsCsv filter={filter} />
           <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
             {newSubscriptionButton({isLoading, t})}
@@ -249,9 +247,11 @@ function SubscriptionList() {
                 <>
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
-                      icon={<TrashIcon />}
+                      icon={<MdDelete />}
                       circle
                       size="sm"
+                      appearance="ghost"
+                      color="red"
                       style={{marginLeft: '5px'}}
                       onClick={() => {
                         setCurrentSubscription(rowData)
@@ -285,7 +285,7 @@ function SubscriptionList() {
 
       <Drawer
         open={isEditModalOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => {
           setEditModalOpen(false)
           navigate('/subscriptions')

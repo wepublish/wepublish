@@ -1,8 +1,7 @@
 import {ApolloError} from '@apollo/client'
-import PlusIcon from '@rsuite/icons/legacy/Plus'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdAdd, MdDelete} from 'react-icons/md'
 import {Button, Col, IconButton, InputNumber, Message, Modal, Row, Table, toaster} from 'rsuite'
 import FormControl from 'rsuite/FormControl'
 
@@ -99,7 +98,7 @@ export function ExternalVoteTable({
           <Table.HeaderCell>{t('delete')}</Table.HeaderCell>
           <Table.Cell>
             {(voteSource: PollExternalVoteSource) => (
-              <IconButton icon={<TrashIcon />} onClick={() => onClickDeleteBtn(voteSource)} />
+              <IconButton icon={<MdDelete />} onClick={() => onClickDeleteBtn(voteSource)} />
             )}
           </Table.Cell>
         </Table.Column>
@@ -178,7 +177,7 @@ export function AddSource({poll, setLoading, onPollChange}: addSourceProps) {
           />
         </Col>
         <Col xs={12}>
-          <IconButton icon={<PlusIcon />} appearance="primary" onClick={createPoll}>
+          <IconButton icon={<MdAdd />} appearance="primary" onClick={createPoll}>
             {t('pollExternalVotes.addSourceBtn')}
           </IconButton>
         </Col>

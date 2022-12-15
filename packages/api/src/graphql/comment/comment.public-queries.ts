@@ -71,7 +71,8 @@ export const getPublicCommentsForItemById = async (
       },
       include: {
         revisions: true,
-        ratings: true
+        ratings: true,
+        overriddenRatings: true
       },
       orderBy: {
         createdAt: 'asc'

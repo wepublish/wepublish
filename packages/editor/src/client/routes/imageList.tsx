@@ -1,8 +1,6 @@
-import EditIcon from '@rsuite/icons/legacy/Edit'
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdDelete, MdEdit, MdOutlineAddPhotoAlternate, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Button,
@@ -101,9 +99,12 @@ function ImageList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <Link to="/images/upload" state={{modalLocation: location}}>
-              <Button appearance="primary" disabled={isLoading}>
+              <IconButton
+                appearance="primary"
+                disabled={isLoading}
+                icon={<MdOutlineAddPhotoAlternate />}>
                 {t('images.overview.uploadImage')}
-              </Button>
+              </IconButton>
             </Link>
           </FlexboxGrid.Item>
         </PermissionControl>
@@ -111,7 +112,7 @@ function ImageList() {
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
-              <SearchIcon />
+              <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
         </FlexboxGrid.Item>
@@ -186,7 +187,7 @@ function ImageList() {
                       <>
                         <Link to={`/images/edit/${rowData.id}`}>
                           <IconButton
-                            icon={<EditIcon />}
+                            icon={<MdEdit />}
                             circle
                             size="sm"
                             style={{marginLeft: '5px'}}
@@ -198,9 +199,11 @@ function ImageList() {
                   <PermissionControl qualifyingPermissions={['CAN_DELETE_IMAGE']}>
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
-                        icon={<TrashIcon />}
+                        icon={<MdDelete />}
                         circle
                         size="sm"
+                        appearance="ghost"
+                        color="red"
                         style={{marginLeft: '5px'}}
                         onClick={event => {
                           event.preventDefault()
@@ -236,7 +239,7 @@ function ImageList() {
 
       <Drawer
         open={isUploadModalOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => {
           setUploadModalOpen(false)
           navigate('/images')
@@ -254,7 +257,7 @@ function ImageList() {
       </Drawer>
       <Drawer
         open={isEditModalOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => {
           setEditModalOpen(false)
           navigate('/images')

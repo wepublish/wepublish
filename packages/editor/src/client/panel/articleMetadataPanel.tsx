@@ -1,10 +1,7 @@
-import CogIcon from '@rsuite/icons/legacy/Cog'
-import CommentIcon from '@rsuite/icons/legacy/Comment'
-import ListIcon from '@rsuite/icons/legacy/List'
-import MagicIcon from '@rsuite/icons/legacy/Magic'
-import ShareAltIcon from '@rsuite/icons/legacy/ShareAlt'
 import React, {useEffect, useState} from 'react'
+import CommentIcon from '@rsuite/icons/legacy/Comment'
 import {Trans, useTranslation} from 'react-i18next'
+import {MdAutoFixHigh, MdListAlt, MdSettings, MdShare} from 'react-icons/md'
 import {
   Button,
   Drawer,
@@ -365,7 +362,7 @@ function ArticleMetadataPanel({
                   trigger="hover"
                   speaker={<Tooltip>{t('articleEditor.panels.slugifySeoTitle')}</Tooltip>}>
                   <IconButton
-                    icon={<MagicIcon />}
+                    icon={<MdAutoFixHigh />}
                     onClick={() => {
                       onChange?.({...value, title, slug: slugify(seoTitle)})
                     }}
@@ -553,13 +550,13 @@ function ArticleMetadataPanel({
             activeKey={activeKey}
             onSelect={activeKey => setActiveKey(activeKey)}
             style={{marginBottom: 20}}>
-            <Nav.Item eventKey={MetaDataType.General} icon={<CogIcon />}>
+            <Nav.Item eventKey={MetaDataType.General} icon={<MdSettings />}>
               {t('articleEditor.panels.general')}
             </Nav.Item>
-            <Nav.Item eventKey={MetaDataType.SocialMedia} icon={<ShareAltIcon />}>
+            <Nav.Item eventKey={MetaDataType.SocialMedia} icon={<MdShare />}>
               {t('articleEditor.panels.socialMedia')}
             </Nav.Item>
-            <Nav.Item eventKey={MetaDataType.Properties} icon={<ListIcon />}>
+            <Nav.Item eventKey={MetaDataType.Properties} icon={<MdListAlt />}>
               {t('articleEditor.panels.properties')}
             </Nav.Item>
             {articleID && (
@@ -573,7 +570,7 @@ function ArticleMetadataPanel({
 
         <Drawer
           open={isChooseModalOpen}
-          size={'sm'}
+          size="sm"
           onClose={() => {
             setChooseModalOpen(false)
           }}>
@@ -588,7 +585,7 @@ function ArticleMetadataPanel({
         {(value.image || value.socialMediaImage) && (
           <Drawer
             open={isEditModalOpen}
-            size={'sm'}
+            size="sm"
             onClose={() => {
               setEditModalOpen(false)
             }}>

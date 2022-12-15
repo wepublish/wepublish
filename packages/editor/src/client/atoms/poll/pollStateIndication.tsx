@@ -1,8 +1,6 @@
-import {PlayOutline} from '@rsuite/icons'
-import OffIcon from '@rsuite/icons/Off'
-import WaitIcon from '@rsuite/icons/Wait'
 import React from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdHourglassEmpty, MdPlayCircleOutline, MdPowerOff} from 'react-icons/md'
 import {Tooltip, Whisper} from 'rsuite'
 
 import {dateTimeLocalString} from '../../utility'
@@ -24,7 +22,7 @@ export function PollStateIndication({
   if (closedAt && now.getTime() >= closedAt.getTime()) {
     return (
       <Whisper speaker={<Tooltip>{t('pollStateIndication.closed')}</Tooltip>}>
-        <OffIcon style={{color: 'red'}} />
+        <MdPowerOff style={{color: 'red'}} />
       </Whisper>
     )
   }
@@ -34,7 +32,7 @@ export function PollStateIndication({
   if (now.getTime() > opensAt.getTime()) {
     return (
       <Whisper speaker={<Tooltip>{t('pollStateIndication.open')}</Tooltip>}>
-        <PlayOutline style={{color: 'green'}} />
+        <MdPlayCircleOutline style={{color: 'green'}} />
       </Whisper>
     )
   }
@@ -47,7 +45,7 @@ export function PollStateIndication({
           {t('pollStateIndication.waiting', {date: dateTimeLocalString(new Date(pollOpensAt))})}
         </Tooltip>
       }>
-      <WaitIcon />
+      <MdHourglassEmpty />
     </Whisper>
   )
 }

@@ -1,8 +1,8 @@
 import {ApolloError} from '@apollo/client'
-import {MoveDown} from '@rsuite/icons'
-import {IconProps} from '@rsuite/icons/lib/Icon'
+import {IconProps} from '@wepublish/website-example/dist/shared/atoms/icon'
 import React from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdOutlineMoveToInbox, MdReply} from 'react-icons/md'
 import {useNavigate} from 'react-router-dom'
 import {IconButton, Message, toaster} from 'rsuite'
 import {TypeAttributes} from 'rsuite/cjs/@types/common'
@@ -66,7 +66,7 @@ export function CreateCommentBtn({
       return (
         <IconButton
           style={{marginLeft: '10px'}}
-          icon={icon || <MoveDown />}
+          icon={icon || <MdOutlineMoveToInbox />}
           size={size}
           circle={circle}
           color={color}
@@ -80,7 +80,7 @@ export function CreateCommentBtn({
     return (
       <IconButton
         style={{marginLeft: '10px'}}
-        icon={icon || <MoveDown />}
+        icon={icon || <MdReply />}
         size={size}
         circle={circle}
         color={color}

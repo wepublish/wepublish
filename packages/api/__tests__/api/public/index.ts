@@ -209,6 +209,7 @@ export type Comment = {
   createdAt: Scalars['DateTime']
   modifiedAt: Scalars['DateTime']
   calculatedRatings?: Maybe<Array<Maybe<CalculatedRating>>>
+  overriddenRatings: Array<OverriddenRating>
 }
 
 export enum CommentAuthorType {
@@ -685,6 +686,12 @@ export type OAuth2Account = {
   type: Scalars['String']
   provider: Scalars['String']
   scope: Scalars['String']
+}
+
+export type OverriddenRating = {
+  __typename?: 'overriddenRating'
+  answerId: Scalars['ID']
+  value?: Maybe<Scalars['Int']>
 }
 
 export type Page = {

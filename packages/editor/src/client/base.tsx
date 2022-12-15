@@ -1,28 +1,32 @@
-import GridIcon from '@rsuite/icons/Grid'
-import AngleLeftIcon from '@rsuite/icons/legacy/AngleLeft'
-import AngleRightIcon from '@rsuite/icons/legacy/AngleRight'
-import BarsIcon from '@rsuite/icons/legacy/Bars'
-import CharacterAuthorizeIcon from '@rsuite/icons/legacy/CharacterAuthorize'
-import CogIcon from '@rsuite/icons/legacy/Cog'
-import CommentIcon from '@rsuite/icons/legacy/Comment'
-import CreditCardIcon from '@rsuite/icons/legacy/CreditCard'
-import FileTextIcon from '@rsuite/icons/legacy/FileText'
-import FileTextOIcon from '@rsuite/icons/legacy/FileTextO'
-import FrameIcon from '@rsuite/icons/legacy/Frame'
-import GlobeIcon from '@rsuite/icons/legacy/Globe'
-import IdCardIcon from '@rsuite/icons/legacy/IdCard'
-import ImageIcon from '@rsuite/icons/legacy/Image'
-import KeyIcon from '@rsuite/icons/legacy/Key'
-import MehOIcon from '@rsuite/icons/legacy/MehO'
-import PeopleGroupIcon from '@rsuite/icons/legacy/PeopleGroup'
-import PeoplesIcon from '@rsuite/icons/legacy/Peoples'
-import ShareIcon from '@rsuite/icons/legacy/Share'
-import UserCircleIcon from '@rsuite/icons/legacy/UserCircle'
-import RateIcon from '@rsuite/icons/Rate'
-import SpeakerIcon from '@rsuite/icons/Speaker'
-import TagIcon from '@rsuite/icons/Tag'
 import React, {ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {
+  MdAccountCircle,
+  MdAutorenew,
+  MdBadge,
+  MdBookOnline,
+  MdChat,
+  MdChevronLeft,
+  MdChevronRight,
+  MdCreditCard,
+  MdDashboard,
+  MdDescription,
+  MdFileCopy,
+  MdGroup,
+  MdGroups,
+  MdLocationPin,
+  MdLogout,
+  MdOutlineGridView,
+  MdPersonAddAlt1,
+  MdPhoto,
+  MdQueryStats,
+  MdSell,
+  MdSettings,
+  MdSettingsInputAntenna,
+  MdStar,
+  MdTranslate,
+  MdVpnKey
+} from 'react-icons/md'
 import {Link, useLocation} from 'react-router-dom'
 import {Container, IconButton, Nav, Navbar, Sidebar, Sidenav} from 'rsuite'
 
@@ -95,8 +99,8 @@ export function Base({children}: BaseProps) {
                 style={{
                   position: 'absolute',
                   top: '5vh',
-                  left: isExpanded ? 260 : 56,
-                  transform: 'translate(-50%)',
+                  transform: `translateX(${isExpanded ? '243px' : '38px'})`,
+                  transition: 'transform 0.2s ease-in',
                   zIndex: 100
                 }}
                 className="collapse-nav-btn"
@@ -106,14 +110,14 @@ export function Base({children}: BaseProps) {
                 onClick={() => setIsExpanded(!isExpanded)}
                 icon={
                   isExpanded ? (
-                    <AngleLeftIcon style={{fontSize: '1.3333em'}} />
+                    <MdChevronLeft style={{fontSize: '1.3333em'}} />
                   ) : (
-                    <AngleRightIcon style={{fontSize: '1.3333em'}} />
+                    <MdChevronRight style={{fontSize: '1.3333em'}} />
                   )
                 }
               />
 
-              <Nav>
+              <Nav style={{marginTop: '1rem'}}>
                 <PermissionControl
                   qualifyingPermissions={[
                     'CAN_GET_ARTICLES',
@@ -126,7 +130,7 @@ export function Base({children}: BaseProps) {
                   <Nav.Item
                     as={NavLink}
                     href="/articles"
-                    icon={<FileTextIcon />}
+                    icon={<MdDescription />}
                     active={path === 'articles'}>
                     {t('navbar.articles')}
                   </Nav.Item>
@@ -137,7 +141,7 @@ export function Base({children}: BaseProps) {
                   <Nav.Item
                     as={NavLink}
                     href="/peerarticles"
-                    icon={<FileTextOIcon />}
+                    icon={<MdFileCopy />}
                     active={path === 'peerarticles'}>
                     {t('navbar.peerArticles')}
                   </Nav.Item>
@@ -155,13 +159,13 @@ export function Base({children}: BaseProps) {
                   <Nav.Item
                     as={NavLink}
                     href="/pages"
-                    icon={<FrameIcon />}
+                    icon={<MdDashboard />}
                     active={path === 'pages'}>
                     {t('navbar.pages')}
                   </Nav.Item>
                 </PermissionControl>
 
-                <Nav.Menu eventKey={'comments'} title={t('navbar.comments')} icon={<CommentIcon />}>
+                <Nav.Menu eventKey={'comments'} title={t('navbar.comments')} icon={<MdChat />}>
                   <PermissionControl
                     qualifyingPermissions={[
                       'CAN_GET_COMMENTS',
@@ -171,7 +175,7 @@ export function Base({children}: BaseProps) {
                     <Nav.Item
                       as={NavLink}
                       href="/comments"
-                      icon={<CommentIcon />}
+                      icon={<MdChat />}
                       active={path === 'comments'}>
                       {t('navbar.comments')}
                     </Nav.Item>
@@ -187,7 +191,7 @@ export function Base({children}: BaseProps) {
                     <Nav.Item
                       as={NavLink}
                       href="/comments/tags"
-                      icon={<TagIcon />}
+                      icon={<MdSell />}
                       active={path === 'comments/tags'}>
                       {t('navbar.commentTags')}
                     </Nav.Item>
@@ -203,7 +207,7 @@ export function Base({children}: BaseProps) {
                     <Nav.Item
                       as={NavLink}
                       href="/comments/rating"
-                      icon={<RateIcon />}
+                      icon={<MdStar />}
                       active={path === 'comments/rating'}>
                       {t('navbar.commentRating')}
                     </Nav.Item>
@@ -215,12 +219,12 @@ export function Base({children}: BaseProps) {
                   <Nav.Menu
                     eventKey={'poll'}
                     title={t('navbar.blocks.topMenu')}
-                    icon={<GridIcon />}>
+                    icon={<MdOutlineGridView />}>
                     <Nav.Item
                       as={NavLink}
                       href="/polls"
                       active={path === 'polls'}
-                      icon={<SpeakerIcon />}>
+                      icon={<MdQueryStats />}>
                       {t('navbar.blocks.polls')}
                     </Nav.Item>
                   </Nav.Menu>
@@ -236,7 +240,7 @@ export function Base({children}: BaseProps) {
                   <Nav.Item
                     as={NavLink}
                     href="/images"
-                    icon={<ImageIcon />}
+                    icon={<MdPhoto />}
                     active={path === 'images'}>
                     {t('navbar.imageLibrary')}
                   </Nav.Item>
@@ -252,7 +256,7 @@ export function Base({children}: BaseProps) {
                   <Nav.Item
                     as={NavLink}
                     href="/navigations"
-                    icon={<BarsIcon />}
+                    icon={<MdLocationPin />}
                     active={path === 'navigations'}>
                     {t('navbar.navigations')}
                   </Nav.Item>
@@ -268,7 +272,7 @@ export function Base({children}: BaseProps) {
                   <Nav.Item
                     as={NavLink}
                     href="/authors"
-                    icon={<PeopleGroupIcon />}
+                    icon={<MdGroup />}
                     active={path === 'authors'}>
                     {t('navbar.authors')}
                   </Nav.Item>
@@ -299,12 +303,12 @@ export function Base({children}: BaseProps) {
                   <Nav.Menu
                     eventKey={'usersAndMembers'}
                     title={t('navbar.usersAndMembers')}
-                    icon={<PeoplesIcon />}>
+                    icon={<MdGroups />}>
                     <Nav.Item
                       as={NavLink}
                       href="/users"
                       active={path === 'users'}
-                      icon={<UserCircleIcon />}>
+                      icon={<MdAccountCircle />}>
                       {t('navbar.users')}
                     </Nav.Item>
 
@@ -319,7 +323,7 @@ export function Base({children}: BaseProps) {
                         as={NavLink}
                         href="/userroles"
                         active={path === 'userroles'}
-                        icon={<CharacterAuthorizeIcon />}>
+                        icon={<MdBadge />}>
                         {t('navbar.userRoles')}
                       </Nav.Item>
                     </PermissionControl>
@@ -335,7 +339,7 @@ export function Base({children}: BaseProps) {
                         as={NavLink}
                         href="/subscriptions"
                         active={path === 'subscriptions'}
-                        icon={<MehOIcon />}>
+                        icon={<MdAutorenew />}>
                         {t('navbar.subscriptions')}
                       </Nav.Item>
                     </PermissionControl>
@@ -351,7 +355,7 @@ export function Base({children}: BaseProps) {
                         as={NavLink}
                         href="/memberplans"
                         active={path === 'memberplans'}
-                        icon={<IdCardIcon />}>
+                        icon={<MdBookOnline />}>
                         {t('navbar.memberPlans')}
                       </Nav.Item>
                     </PermissionControl>
@@ -367,7 +371,7 @@ export function Base({children}: BaseProps) {
                         as={NavLink}
                         href="/paymentmethods"
                         active={path === 'paymentmethods'}
-                        icon={<CreditCardIcon />}>
+                        icon={<MdCreditCard />}>
                         {t('navbar.paymentMethods')}
                       </Nav.Item>
                     </PermissionControl>
@@ -381,12 +385,12 @@ export function Base({children}: BaseProps) {
                     'CAN_CREATE_PEER',
                     'CAN_DELETE_PEER'
                   ]}>
-                  <Nav.Menu title={t('navbar.peering')} icon={<ShareIcon />}>
+                  <Nav.Menu title={t('navbar.peering')} icon={<MdSettingsInputAntenna />}>
                     <Nav.Item
                       as={NavLink}
                       href="/peering"
                       active={path === 'peering'}
-                      icon={<ShareIcon />}>
+                      icon={<MdPersonAddAlt1 />}>
                       {t('navbar.peers')}
                     </Nav.Item>
                     <PermissionControl
@@ -399,7 +403,7 @@ export function Base({children}: BaseProps) {
                         as={NavLink}
                         href="/tokens"
                         active={path === 'tokens'}
-                        icon={<KeyIcon />}>
+                        icon={<MdVpnKey />}>
                         {t('navbar.tokens')}
                       </Nav.Item>
                     </PermissionControl>
@@ -411,7 +415,7 @@ export function Base({children}: BaseProps) {
                     as={NavLink}
                     href="/settings"
                     active={path === 'settings'}
-                    icon={<CogIcon />}>
+                    icon={<MdSettings />}>
                     {t('navbar.settings')}
                   </Nav.Item>
                 </PermissionControl>
@@ -430,7 +434,7 @@ export function Base({children}: BaseProps) {
                     ref={ref}
                     style={iconStyles}
                     className="icon-selector"
-                    icon={<BarsIcon />}
+                    icon={<MdLogout />}
                   />
                 )}>
                 <Nav.Item as={NavLink} href="/logout">
@@ -449,7 +453,7 @@ export function Base({children}: BaseProps) {
                     ref={ref}
                     style={iconStyles}
                     className="icon-selector"
-                    icon={<GlobeIcon />}
+                    icon={<MdTranslate />}
                   />
                 )}>
                 {AVAILABLE_LANG.map(lang => (

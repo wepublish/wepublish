@@ -1,8 +1,6 @@
-import CogIcon from '@rsuite/icons/legacy/Cog'
-import ListIcon from '@rsuite/icons/legacy/List'
-import ShareAltIcon from '@rsuite/icons/legacy/ShareAlt'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdListAlt, MdSettings, MdShare} from 'react-icons/md'
 import {Button, Drawer, Form, Input, Message, Nav, Panel, TagPicker, Toggle} from 'rsuite'
 
 import {ImageRefFragment} from '../api'
@@ -286,13 +284,13 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
           activeKey={activeKey}
           onSelect={activeKey => setActiveKey(activeKey)}
           style={{marginBottom: 20}}>
-          <Nav.Item eventKey={MetaDataType.General} icon={<CogIcon />}>
+          <Nav.Item eventKey={MetaDataType.General} icon={<MdSettings />}>
             {t('articleEditor.panels.general')}
           </Nav.Item>
-          <Nav.Item eventKey={MetaDataType.SocialMedia} icon={<ShareAltIcon />}>
+          <Nav.Item eventKey={MetaDataType.SocialMedia} icon={<MdShare />}>
             {t('articleEditor.panels.socialMedia')}
           </Nav.Item>
-          <Nav.Item eventKey={MetaDataType.Properties} icon={<ListIcon />}>
+          <Nav.Item eventKey={MetaDataType.Properties} icon={<MdListAlt />}>
             {t('pageEditor.panels.properties')}
           </Nav.Item>
         </Nav>
@@ -304,7 +302,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
         </Panel>
       </Drawer.Body>
 
-      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={(value: ImageRefFragment) => {
@@ -316,7 +314,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
       {(value.image || value.socialMediaImage) && (
         <Drawer
           open={isEditModalOpen}
-          size={'sm'}
+          size="sm"
           onClose={() => {
             setEditModalOpen(false)
           }}>

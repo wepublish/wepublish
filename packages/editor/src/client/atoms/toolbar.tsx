@@ -1,6 +1,5 @@
 import './toolbar.less'
 
-import CloseIcon from '@rsuite/icons/legacy/Close'
 import React, {
   createContext,
   forwardRef,
@@ -10,6 +9,7 @@ import React, {
   useRef,
   useState
 } from 'react'
+import {MdClose} from 'react-icons/md'
 import {Divider, Popover, Whisper} from 'rsuite'
 import {OverlayTriggerInstance} from 'rsuite/esm/Picker'
 import {useSlate} from 'slate-react'
@@ -155,7 +155,7 @@ export const SubMenuButton = forwardRef<OverlayTriggerInstance, SubMenuButtonPro
               isMenuOpen ? closeMenu() : openMenu()
             }}>
             {isMenuOpen ? (
-              <CloseIcon
+              <MdClose
                 style={{
                   minWidth: '15px' // width of close icon (14px) so that element does not change size as long as the provided icon is < 15px.
                 }}

@@ -450,6 +450,8 @@
       "source": "Quelle",
       "userPanelHeader": "Verfasser:in des Kommentars",
       "actions": "Aktionen",
+      "ratingOverrides": "Kommentarbewertung überschreiben",
+      "noOverride": "Nicht überschreiben",
       "commentContextHeader": "Kommentar-Historie",
       "goToArticle": "Zum Artikel"
     },
@@ -1081,6 +1083,7 @@
       "subTitle": "Abonnement",
       "Unknown": "Unbekannt",
       "userRoles": "Userrollen",
+      "properties": "Eigenschaften",
       "subDisableDescription": "Das Abonnement kann erst hinzugefügt werden, wenn der User erstellt ist.",
       "company": "Firma",
       "streetAddress": "Strasse",

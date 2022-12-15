@@ -1,6 +1,6 @@
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdDelete, MdGeneratingTokens} from 'react-icons/md'
 import {Link, useLocation, useNavigate} from 'react-router-dom'
 import {
   Button,
@@ -74,9 +74,12 @@ function TokenList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_TOKEN']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <Link to="/tokens/generate">
-              <Button appearance="primary" disabled={isTokenListLoading}>
+              <IconButton
+                appearance="primary"
+                disabled={isTokenListLoading}
+                icon={<MdGeneratingTokens />}>
                 {t('tokenList.overview.generateToken')}
-              </Button>
+              </IconButton>
             </Link>
           </FlexboxGrid.Item>
         </PermissionControl>
@@ -95,9 +98,11 @@ function TokenList() {
                   <PermissionControl qualifyingPermissions={['CAN_DELETE_TOKEN']}>
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
-                        icon={<TrashIcon />}
+                        icon={<MdDelete />}
                         circle
                         size="sm"
+                        appearance="ghost"
+                        color="red"
                         onClick={() => {
                           setConfirmationDialogOpen(true)
                           setCurrentToken(token)
@@ -118,7 +123,7 @@ function TokenList() {
           setTokenGeneratePanelOpen(false)
           navigate('/tokens')
         }}
-        size={'sm'}>
+        size="sm">
         <TokenGeneratePanel
           onClose={() => {
             setTokenGeneratePanelOpen(false)

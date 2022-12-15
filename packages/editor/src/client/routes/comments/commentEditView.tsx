@@ -13,6 +13,7 @@ import {
   Panel,
   Row,
   Schema,
+  SelectPicker,
   toaster
 } from 'rsuite'
 
@@ -21,8 +22,10 @@ import {
   FullCommentFragment,
   TagType,
   useCommentQuery,
+  useRatingSystemQuery,
   useUpdateCommentMutation
 } from '../../api'
+import {stripTypename} from '../../api/strip-typename'
 import {CommentDeleteBtn} from '../../atoms/comment/commentDeleteBtn'
 import {CommentHistory} from '../../atoms/comment/commentHistory'
 import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
@@ -40,6 +43,42 @@ const showErrors = (error: ApolloError): void => {
       {error.message}
     </Message>
   )
+}
+
+/**
+ * Helper function to parse comment revision input object out of full revision fragment.
+ * @param comment
+ */
+function getLastRevision(comment: FullCommentFragment): CommentRevisionUpdateInput | undefined {
+  const revisions = comment.revisions
+  if (!revisions.length) {
+    return
+  }
+
+  const lastRevision = revisions[revisions.length - 1]
+  const parsedRevision = {
+    title: lastRevision?.title,
+    lead: lastRevision?.lead,
+    text: lastRevision?.text
+  } as CommentRevisionUpdateInput
+
+  return parsedRevision
+}
+
+/**
+ * Check, if revision object differs from original. Used to decide, whether to create a new revision.
+ */
+function hasRevisionChanged(
+  comment: FullCommentFragment | undefined,
+  revision: CommentRevisionUpdateInput | undefined
+): boolean {
+  if (!comment) {
+    return true
+  }
+
+  const originalVersion = getLastRevision(comment)
+
+  return JSON.stringify(originalVersion) !== JSON.stringify(revision)
 }
 
 const CommentEditView = memo(() => {
@@ -67,6 +106,10 @@ const CommentEditView = memo(() => {
     onError: showErrors
   })
 
+  const {data: ratingSystem, loading: loadingRatingSystem} = useRatingSystemQuery({
+    onError: showErrors
+  })
+
   const [updateCommentMutation, {loading: updatingComment}] = useUpdateCommentMutation({
     onCompleted: () =>
       toaster.push(
@@ -78,7 +121,7 @@ const CommentEditView = memo(() => {
   })
 
   // compute loading state
-  const loading = updatingComment || loadingComment
+  const loading = updatingComment || loadingComment || loadingRatingSystem
 
   /**
    * Initial set of variables "comment" and "revision"
@@ -99,237 +142,267 @@ const CommentEditView = memo(() => {
     selectedTags
   ])
 
-  /**
-   * Helper function to parse comment revision input object out of full revision fragment.
-   * @param comment
-   */
-  function getLastRevision(comment: FullCommentFragment): CommentRevisionUpdateInput | undefined {
-    const revisions = comment.revisions
-    if (!revisions.length) {
-      return
-    }
-    const lastRevision = revisions[revisions.length - 1]
-    const parsedRevision = {
-      title: lastRevision?.title,
-      lead: lastRevision?.lead,
-      text: lastRevision?.text
-    } as CommentRevisionUpdateInput
-    return parsedRevision
-  }
+  const ratingOverrides = useMemo(
+    () =>
+      ratingSystem?.ratingSystem.answers.map(answer => ({
+        answerId: answer.id,
+        name: answer.answer,
+        value:
+          comment?.overriddenRatings?.find(override => override.answerId === answer.id)?.value ??
+          null
+      })) ?? [],
+    [comment, ratingSystem]
+  )
 
-  /**
-   * Check, if revision object differs from original. Used to decide, whether to create a new revision.
-   */
-  function revisionChanged(): boolean {
-    if (!comment) {
-      return true
-    }
-    const originalVersion = getLastRevision(comment)
-    if (JSON.stringify(originalVersion) !== JSON.stringify(revision)) {
-      return true
-    }
-    return false
-  }
+  const ratingOverridePossibleValues = [
+    {label: t('commentEditView.noOverride'), value: null},
+    {label: '1', value: 1},
+    {label: '2', value: 2},
+    {label: '3', value: 3},
+    {label: '4', value: 4},
+    {label: '5', value: 5}
+  ]
 
   async function updateComment() {
     if (!comment) {
       return
     }
+
     await updateCommentMutation({
       variables: {
         id: comment.id,
-        revision: revisionChanged() ? revision : undefined,
+        revision: hasRevisionChanged(comment, revision) ? revision : undefined,
         userID: comment.user?.id || null,
         guestUsername: comment.guestUsername,
         guestUserImageID: comment.guestUserImage?.id || null,
         source: comment.source,
-        tagIds: commentTags
+        tagIds: commentTags,
+        ratingOverrides: comment.overriddenRatings?.map(stripTypename)
       }
     })
+
     if (close) {
       navigate(closePath)
     }
   }
 
   return (
-    <>
-      <Form onSubmit={() => updateComment()} model={validationModel} fluid disabled={loading}>
-        {/* heading */}
-        <ModelTitle
-          loading={loading}
-          title={t('comments.edit.title')}
-          loadingTitle={t('comments.edit.title')}
-          saveBtnTitle={t('save')}
-          saveAndCloseBtnTitle={t('saveAndClose')}
-          closePath={closePath}
-          setCloseFn={setClose}
-        />
+    <Form onSubmit={() => updateComment()} model={validationModel} fluid disabled={loading}>
+      <ModelTitle
+        loading={loading}
+        title={t('comments.edit.title')}
+        loadingTitle={t('comments.edit.title')}
+        saveBtnTitle={t('save')}
+        saveAndCloseBtnTitle={t('saveAndClose')}
+        closePath={closePath}
+        setCloseFn={setClose}
+      />
 
-        {/* form elements */}
-        <Grid fluid>
-          <Row gutter={30}>
-            {/* comment content */}
-            <Col xs={14}>
-              <Row>
-                <Col xs={24} style={{marginTop: '0px'}}>
-                  <Panel bordered style={{width: '100%'}}>
-                    <Row>
-                      {/* comment title */}
-                      <Col xs={18}>
-                        <Form.ControlLabel>{t('commentEditView.title')}</Form.ControlLabel>
-                        <Form.Control
-                          name="commentTitle"
-                          value={revision?.title || ''}
-                          placeholder={t('commentEditView.title')}
-                          onChange={(title: string) => {
-                            setRevision({...revision, title})
-                          }}
+      {/* form elements */}
+      <Grid fluid>
+        <Row gutter={30}>
+          {/* comment content */}
+          <Col xs={14}>
+            <Row>
+              <Col xs={24} style={{marginTop: '0px'}}>
+                <Panel bordered style={{width: '100%'}}>
+                  <Row>
+                    {/* comment title */}
+                    <Col xs={18}>
+                      <Form.ControlLabel>{t('commentEditView.title')}</Form.ControlLabel>
+                      <Form.Control
+                        name="commentTitle"
+                        value={revision?.title || ''}
+                        placeholder={t('commentEditView.title')}
+                        onChange={(title: string) =>
+                          setRevision(oldRevision => ({...oldRevision, title}))
+                        }
+                      />
+                    </Col>
+                    {/* comment lead */}
+                    <Col xs={18}>
+                      <Form.ControlLabel>{t('commentEditView.lead')}</Form.ControlLabel>
+                      <Form.Control
+                        name="commentLead"
+                        value={revision?.lead || ''}
+                        placeholder={t('commentEditView.lead')}
+                        onChange={(lead: string) =>
+                          setRevision(oldRevision => ({...oldRevision, lead}))
+                        }
+                      />
+                    </Col>
+                    {/* comment text */}
+                    <Col xs={24} style={{marginTop: '20px'}}>
+                      <Form.ControlLabel>{t('commentEditView.comment')}</Form.ControlLabel>
+                      <Panel bordered>
+                        <RichTextBlock
+                          value={revision?.text || []}
+                          onChange={text =>
+                            setRevision(oldRevision => ({
+                              ...oldRevision,
+                              text: text as RichTextBlockValue
+                            }))
+                          }
                         />
-                      </Col>
-                      {/* comment lead */}
-                      <Col xs={18}>
-                        <Form.ControlLabel>{t('commentEditView.lead')}</Form.ControlLabel>
-                        <Form.Control
-                          name="commentLead"
-                          value={revision?.lead || ''}
-                          placeholder={t('commentEditView.lead')}
-                          onChange={(lead: string) => {
-                            setRevision({...revision, lead})
-                          }}
+                      </Panel>
+                    </Col>
+                  </Row>
+                </Panel>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col xs={24}>
+                <Panel bordered header={t('commentEditView.commentContextHeader')}>
+                  <Row>
+                    <Col xs={24}>
+                      {comment && (
+                        <CommentHistory
+                          commentItemID={comment.itemID}
+                          commentId={comment.id}
+                          commentItemType={comment.itemType}
                         />
-                      </Col>
-                      {/* comment text */}
-                      <Col xs={24} style={{marginTop: '20px'}}>
-                        <Form.ControlLabel>{t('commentEditView.comment')}</Form.ControlLabel>
-                        <Panel bordered>
-                          <RichTextBlock
-                            value={revision?.text || []}
-                            onChange={text => {
-                              setRevision({...revision, text: text as RichTextBlockValue})
-                            }}
-                          />
-                        </Panel>
-                      </Col>
-                    </Row>
-                  </Panel>
-                </Col>
-              </Row>
+                      )}
+                    </Col>
+                  </Row>
+                </Panel>
+              </Col>
+            </Row>
+          </Col>
 
-              <Row>
-                <Col xs={24}>
-                  <Panel bordered header={t('commentEditView.commentContextHeader')}>
-                    <Row>
-                      <Col xs={24}>
-                        {comment && (
-                          <CommentHistory
-                            commentItemID={comment.itemID}
-                            commentId={comment.id}
-                            commentItemType={comment.itemType}
-                          />
-                        )}
-                      </Col>
-                    </Row>
-                  </Panel>
-                </Col>
-              </Row>
-            </Col>
-
-            <Col xs={10}>
-              <Row>
-                {/* some actions on the comment */}
-                <Col xs={24} style={{marginTop: '0px'}}>
-                  <Panel bordered header={t('commentEditView.actions')}>
-                    <FlexboxGrid align="bottom" justify="end">
-                      <FlexboxGrid.Item style={{textAlign: 'end'}} colspan={24}>
-                        <IconButton
+          <Col xs={10}>
+            <Row>
+              {/* some actions on the comment */}
+              <Col xs={24} style={{marginTop: '0px'}}>
+                <Panel bordered header={t('commentEditView.actions')}>
+                  <FlexboxGrid>
+                    <FlexboxGrid.Item colspan={24}>
+                      <IconButton
+                        appearance="ghost"
+                        color="violet"
+                        icon={<Visible />}
+                        onClick={() => {
+                          navigate(`/articles/edit/${comment?.itemID}`)
+                        }}>
+                        {t('commentEditView.goToArticle')}
+                      </IconButton>
+                    </FlexboxGrid.Item>
+                    <FlexboxGrid.Item style={{marginTop: '10px', textAlign: 'end'}} colspan={24}>
+                      {comment && (
+                        <CreateCommentBtn
+                          itemID={comment.itemID}
+                          itemType={comment.itemType}
+                          parentID={comment.id}
+                          text={t('replyCommentBtn.reply')}
                           appearance="ghost"
-                          color="violet"
-                          icon={<Visible />}
-                          onClick={() => {
-                            navigate(`/articles/edit/${comment?.itemID}`)
-                          }}>
-                          {t('commentEditView.goToArticle')}
-                        </IconButton>
-                      </FlexboxGrid.Item>
-                      <FlexboxGrid.Item style={{marginTop: '10px', textAlign: 'end'}} colspan={24}>
-                        {comment && (
-                          <CreateCommentBtn
-                            itemID={comment.itemID}
-                            itemType={comment.itemType}
-                            parentID={comment.id}
-                            text={t('replyCommentBtn.reply')}
-                            appearance="ghost"
-                          />
-                        )}
-                      </FlexboxGrid.Item>
-                      <FlexboxGrid.Item colspan={24} style={{marginTop: '10px', textAlign: 'end'}}>
-                        {comment && (
-                          <CommentStateDropdown
-                            comment={comment}
-                            onStateChanged={async (state, rejectionReason) => {
-                              setComment({
-                                ...comment,
-                                state,
-                                rejectionReason
-                              })
-                            }}
-                          />
-                        )}
-                      </FlexboxGrid.Item>
-                      <FlexboxGrid.Item style={{marginTop: '10px', textAlign: 'end'}} colspan={24}>
-                        <CommentDeleteBtn
+                        />
+                      )}
+                    </FlexboxGrid.Item>
+
+                    <FlexboxGrid.Item colspan={24} style={{marginTop: '10px'}}>
+                      {comment && (
+                        <CommentStateDropdown
                           comment={comment}
-                          onCommentDeleted={() => {
-                            navigate(closePath)
+                          onStateChanged={async (state, rejectionReason) => {
+                            setComment({
+                              ...comment,
+                              state,
+                              rejectionReason
+                            })
                           }}
+                        />
+                      )}
+                    </FlexboxGrid.Item>
+
+                    <FlexboxGrid.Item style={{marginTop: '10px'}} colspan={24}>
+                      <CommentDeleteBtn
+                        comment={comment}
+                        onCommentDeleted={() => {
+                          navigate(closePath)
+                        }}
+                      />
+                    </FlexboxGrid.Item>
+                  </FlexboxGrid>
+                </Panel>
+              </Col>
+
+              {/* tags & source */}
+              <Col xs={24}>
+                <Panel bordered header={t('commentEditView.variousPanelHeader')}>
+                  <Row>
+                    {/* tags */}
+                    <Col xs={24}>
+                      <Form.ControlLabel>{t('commentEditView.tags')}</Form.ControlLabel>
+                      <SelectTags
+                        selectedTags={commentTags}
+                        setSelectedTags={setSelectedTags}
+                        tagType={TagType.Comment}
+                      />
+                    </Col>
+
+                    {/* external source */}
+                    <Col xs={24}>
+                      <Form.ControlLabel>{t('commentEditView.source')}</Form.ControlLabel>
+                      <Form.Control
+                        name="externalSource"
+                        placeholder={t('commentEditView.source')}
+                        value={comment?.source || ''}
+                        onChange={(source: string) => {
+                          setComment(oldComment => ({...oldComment, source} as FullCommentFragment))
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                </Panel>
+              </Col>
+
+              {/* user or guest user */}
+              <Col xs={24}>
+                <Panel bordered header={t('commentEditView.userPanelHeader')}>
+                  <CommentUser comment={comment} setComment={setComment} />
+                </Panel>
+              </Col>
+
+              {/* rating overrides */}
+              <Col xs={24} style={{marginTop: '0px'}}>
+                <Panel bordered header={t('commentEditView.ratingOverrides')}>
+                  <FlexboxGrid>
+                    {ratingOverrides.map(override => (
+                      <FlexboxGrid.Item
+                        key={override.answerId}
+                        colspan={24}
+                        style={{marginTop: '10px'}}>
+                        <Form.ControlLabel>{override.name}</Form.ControlLabel>
+                        <SelectPicker
+                          block
+                          cleanable={false}
+                          data={ratingOverridePossibleValues}
+                          value={override.value}
+                          onChange={value =>
+                            setComment(oldComment =>
+                              oldComment
+                                ? {
+                                    ...oldComment,
+                                    overriddenRatings: ratingOverrides.map(oldOverride =>
+                                      oldOverride.answerId === override.answerId
+                                        ? {answerId: override.answerId, value}
+                                        : {answerId: oldOverride.answerId, value: oldOverride.value}
+                                    )
+                                  }
+                                : undefined
+                            )
+                          }
                         />
                       </FlexboxGrid.Item>
-                    </FlexboxGrid>
-                  </Panel>
-                </Col>
-
-                {/* tags & source */}
-                <Col xs={24}>
-                  <Panel bordered header={t('commentEditView.variousPanelHeader')}>
-                    <Row>
-                      {/* tags */}
-                      <Col xs={24}>
-                        <Form.ControlLabel>{t('commentEditView.tags')}</Form.ControlLabel>
-                        <SelectTags
-                          selectedTags={commentTags}
-                          setSelectedTags={setSelectedTags}
-                          tagType={TagType.Comment}
-                        />
-                      </Col>
-
-                      {/* external source */}
-                      <Col xs={24}>
-                        <Form.ControlLabel>{t('commentEditView.source')}</Form.ControlLabel>
-                        <Form.Control
-                          name="externalSource"
-                          placeholder={t('commentEditView.source')}
-                          value={comment?.source || ''}
-                          onChange={(source: string) => {
-                            setComment({...comment, source} as FullCommentFragment)
-                          }}
-                        />
-                      </Col>
-                    </Row>
-                  </Panel>
-                </Col>
-
-                {/* user or guest user */}
-                <Col xs={24}>
-                  <Panel bordered header={t('commentEditView.userPanelHeader')}>
-                    <CommentUser comment={comment} setComment={setComment} />
-                  </Panel>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </Grid>
-      </Form>
-    </>
+                    ))}
+                  </FlexboxGrid>
+                </Panel>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Grid>
+    </Form>
   )
 })
 

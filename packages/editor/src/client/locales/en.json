@@ -450,6 +450,8 @@
       "source": "Source",
       "userPanelHeader": "Author of the comment",
       "actions": "Actions",
+      "ratingOverrides": "Override comment rating",
+      "noOverride": "Don't override",
       "commentContextHeader": "Comment history",
       "goToArticle": "To the article"
     },
@@ -1030,9 +1032,9 @@
         "action": "Action",
         "description": "Description",
         "name": "Name",
-        "newUserRole": "New UserRole",
+        "newUserRole": "New User Role",
         "noDescription": "No Description",
-        "noUserRolesFound": "No UserRoles found",
+        "noUserRolesFound": "No User Roles found",
         "search": "Search",
         "Unknown": "Unknown",
         "userRoles": "User Roles"
@@ -1098,6 +1100,7 @@
       "subTitle": "Subscription",
       "Unknown": "Unknown",
       "userRoles": "User Roles",
+      "properties": "Properties",
       "company": "Company",
       "streetAddress": "Street",
       "streetAddress2": "Street 2",

@@ -303,6 +303,7 @@ export type Comment = {
   rejectionReason?: Maybe<CommentRejectionReason>
   createdAt: Scalars['DateTime']
   modifiedAt: Scalars['DateTime']
+  overriddenRatings?: Maybe<Array<OverriddenRating>>
 }
 
 export enum CommentAuthorType {
@@ -354,6 +355,11 @@ export enum CommentItemType {
   Article = 'Article',
   PeerArticle = 'PeerArticle',
   Page = 'Page'
+}
+
+export type CommentRatingOverrideUpdateInput = {
+  answerId: Scalars['ID']
+  value?: Maybe<Scalars['Int']>
 }
 
 export type CommentRatingSystemAnswer = {
@@ -1151,6 +1157,7 @@ export type MutationUpdateCommentArgs = {
   guestUserImageID?: Maybe<Scalars['ID']>
   source?: Maybe<Scalars['String']>
   tagIds?: Maybe<Array<Scalars['ID']>>
+  ratingOverrides?: Maybe<Array<CommentRatingOverrideUpdateInput>>
 }
 
 export type MutationCreateCommentArgs = {
@@ -1277,6 +1284,12 @@ export type OAuth2Account = {
   type: Scalars['String']
   provider: Scalars['String']
   scope: Scalars['String']
+}
+
+export type OverriddenRating = {
+  __typename?: 'overriddenRating'
+  answerId: Scalars['ID']
+  value?: Maybe<Scalars['Int']>
 }
 
 export type Page = {

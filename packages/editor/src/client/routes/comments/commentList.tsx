@@ -1,6 +1,6 @@
-import EditIcon from '@rsuite/icons/legacy/Edit'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdEdit} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {FlexboxGrid, IconButton, Pagination, Table, Toggle} from 'rsuite'
 
@@ -268,7 +268,7 @@ function CommentList() {
                   <span style={{marginRight: '5px'}}>
                     <IconButtonTooltip caption={t('comments.overview.edit')}>
                       <Link to={`edit/${rowData.id}`}>
-                        <IconButton icon={<EditIcon />} circle size="sm" />
+                        <IconButton icon={<MdEdit />} circle size="sm" />
                       </Link>
                     </IconButtonTooltip>
                   </span>

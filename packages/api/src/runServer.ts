@@ -37,6 +37,10 @@ class WepublishURLAdapter implements URLAdapter {
   }
 
   getPublicArticleURL(article: PublicArticle): string {
+    if (article.canonicalUrl) {
+      return article.canonicalUrl
+    }
+
     return `${this.websiteURL}/a/${article.id}/${article.slug}`
   }
 
@@ -115,22 +119,6 @@ export async function runServer() {
       clientId: process.env.OAUTH_GOOGLE_CLIENT_ID,
       clientKey: process.env.OAUTH_GOOGLE_CLIENT_KEY,
       redirectUri: [process.env.OAUTH_GOOGLE_REDIRECT_URL],
-      scopes: ['openid profile email']
-    })
-  }
-
-  if (
-    process.env.OAUTH_WEPUBLISH_DISCOVERY_URL &&
-    process.env.OAUTH_WEPUBLISH_CLIENT_ID &&
-    process.env.OAUTH_WEPUBLISH_CLIENT_KEY &&
-    process.env.OAUTH_WEPUBLISH_REDIRECT_URL
-  ) {
-    oauth2Providers.push({
-      name: 'wepublish',
-      discoverUrl: process.env.OAUTH_WEPUBLISH_DISCOVERY_URL ?? '',
-      clientId: process.env.OAUTH_WEPUBLISH_CLIENT_ID ?? '',
-      clientKey: process.env.OAUTH_WEPUBLISH_CLIENT_KEY ?? '',
-      redirectUri: [process.env.OAUTH_WEPUBLISH_REDIRECT_URL ?? ''],
       scopes: ['openid profile email']
     })
   }
@@ -327,7 +315,7 @@ export async function runServer() {
     challenge
   })
 
-  // eslint-disable-nex t-line no-unused-expressions
+  // eslint-disable-next-line no-unused-expressions
   yargs(hideBin(process.argv))
     .command(
       ['listen', '$0'],

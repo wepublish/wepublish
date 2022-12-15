@@ -268,6 +268,8 @@
       "source": "Source",
       "userPanelHeader": "Auteur dans le commentaire",
       "actions": "Actions",
+      "ratingOverrides": "Override comment rating",
+      "noOverride": "Don't override",
       "commentContextHeader": "Histoire des commentaires",
       "goToArticle": "Aller à l'article"
     },

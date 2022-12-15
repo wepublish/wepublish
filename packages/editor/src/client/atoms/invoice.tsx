@@ -1,10 +1,9 @@
 import React, {useState} from 'react'
-import {Button, FlexboxGrid, Message, Modal, Panel, toaster} from 'rsuite'
-import {InvoiceFragment, InvoiceItem, useUpdateInvoiceMutation, FullUserFragment} from '../api'
 import {useTranslation} from 'react-i18next'
-import CheckIcon from '@rsuite/icons/legacy/Check'
-import CloseIcon from '@rsuite/icons/legacy/Close'
-import {Email} from '@rsuite/icons'
+import {MdClose, MdDone, MdMail} from 'react-icons/md'
+import {Button, FlexboxGrid, Message, Modal, Panel, toaster} from 'rsuite'
+
+import {FullUserFragment, InvoiceFragment, InvoiceItem, useUpdateInvoiceMutation} from '../api'
 
 export interface InvoiceProps {
   subscriptionId: string
@@ -117,11 +116,11 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
 
   function invoiceIconView() {
     if (invoice.paidAt) {
-      return <CheckIcon style={{color: 'green', fontSize: '2em'}} />
+      return <MdDone style={{color: 'green', fontSize: '2em'}} />
     } else if (invoice.canceledAt) {
-      return <CloseIcon style={{color: 'red', fontSize: '2em'}} />
+      return <MdClose style={{color: 'red', fontSize: '2em'}} />
     } else {
-      return <Email style={{color: 'red', fontSize: '2em'}} />
+      return <MdMail style={{color: 'red', fontSize: '2em'}} />
     }
   }
 

@@ -1,8 +1,6 @@
-import CloseIcon from '@rsuite/icons/legacy/Close'
-import ImageIcon from '@rsuite/icons/legacy/Image'
-import PencilIcon from '@rsuite/icons/legacy/Pencil'
 import React from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdClose, MdEdit, MdPhoto} from 'react-icons/md'
 import {Dropdown, IconButton, Panel, Placeholder} from 'rsuite'
 
 import {PlaceholderInput} from './placeholderInput'
@@ -63,7 +61,7 @@ export function ChooseEditImage({
                     <IconButton
                       {...props}
                       ref={ref}
-                      icon={<PencilIcon />}
+                      icon={<MdEdit />}
                       circle
                       size="sm"
                       appearance="primary"
@@ -71,17 +69,17 @@ export function ChooseEditImage({
                   )}>
                   {openChooseModalOpen && (
                     <Dropdown.Item disabled={disabled} onClick={() => openChooseModalOpen()}>
-                      <ImageIcon /> {t('chooseEditImage.chooseImage')}
+                      <MdPhoto /> {t('chooseEditImage.chooseImage')}
                     </Dropdown.Item>
                   )}
                   {openEditModalOpen && (
                     <Dropdown.Item disabled={disabled} onClick={() => openEditModalOpen()}>
-                      <PencilIcon /> {t('chooseEditImage.editImage')}
+                      <MdEdit /> {t('chooseEditImage.editImage')}
                     </Dropdown.Item>
                   )}
                   {removeImage && (
                     <Dropdown.Item disabled={disabled} onClick={() => removeImage()}>
-                      <CloseIcon /> {t('chooseEditImage.removeImage')}
+                      <MdClose /> {t('chooseEditImage.removeImage')}
                     </Dropdown.Item>
                   )}
                 </Dropdown>

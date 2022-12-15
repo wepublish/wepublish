@@ -1,9 +1,7 @@
-import PlusCircleIcon from '@rsuite/icons/legacy/PlusCircle'
-import Th2Icon from '@rsuite/icons/legacy/Th2'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import arrayMove from 'array-move'
 import nanoid from 'nanoid'
 import React from 'react'
+import {MdAddCircle, MdDelete, MdDragIndicator} from 'react-icons/md'
 import {SortableContainer, SortableElement, SortableHandle} from 'react-sortable-hoc'
 import {IconButton, Panel} from 'rsuite'
 
@@ -36,7 +34,7 @@ export interface ListItemProps<T = any> {
 }
 
 const DragHandle = SortableHandle(({disabled}: {disabled?: boolean}) => (
-  <IconButton icon={<Th2Icon />} disabled={disabled} />
+  <IconButton icon={<MdDragIndicator />} disabled={disabled} />
 ))
 
 const ListItem = SortableElement(
@@ -68,7 +66,7 @@ const ListItem = SortableElement(
           </div>
         </Panel>
         <div style={{marginLeft: '10px'}}>
-          <IconButton icon={<TrashIcon />} onClick={handleRemove} disabled={itemDisabled} />
+          <IconButton icon={<MdDelete />} onClick={handleRemove} disabled={itemDisabled} />
         </div>
       </div>
     )
@@ -107,7 +105,12 @@ const SortableList = SortableContainer(
             {children}
           </ListItem>
         ))}
-        <IconButton icon={<PlusCircleIcon />} onClick={handleAdd} disabled={disabled} />
+        <IconButton
+          icon={<MdAddCircle />}
+          onClick={handleAdd}
+          disabled={disabled}
+          data-testid="addProperty"
+        />
       </div>
     )
   }

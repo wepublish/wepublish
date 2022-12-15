@@ -1,10 +1,6 @@
-import BtnOffIcon from '@rsuite/icons/legacy/BtnOff'
-import CommentIcon from '@rsuite/icons/legacy/Comment'
-import CopyIcon from '@rsuite/icons/legacy/Copy'
-import EyeIcon from '@rsuite/icons/legacy/Eye'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdAdd, MdComment, MdContentCopy, MdDelete, MdPreview, MdUnpublished} from 'react-icons/md'
 import {Link, useNavigate} from 'react-router-dom'
 import {Button, FlexboxGrid, IconButton, Message, Modal, Pagination, Table} from 'rsuite'
 
@@ -115,9 +111,9 @@ function PageList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <Link to="/pages/create">
-              <Button appearance="primary" disabled={isLoading}>
+              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('pages.overview.newPage')}
-              </Button>
+              </IconButton>
             </Link>
           </FlexboxGrid.Item>
         </PermissionControl>
@@ -222,7 +218,7 @@ function PageList() {
                   <PermissionControl qualifyingPermissions={['CAN_PUBLISH_PAGE']}>
                     <IconButtonTooltip caption={t('pageEditor.overview.unpublish')}>
                       <IconButton
-                        icon={<BtnOffIcon />}
+                        icon={<MdUnpublished />}
                         circle
                         disabled={!(rowData.published || rowData.pending)}
                         size="sm"
@@ -235,26 +231,10 @@ function PageList() {
                     </IconButtonTooltip>
                   </PermissionControl>
 
-                  <PermissionControl qualifyingPermissions={['CAN_DELETE_PAGE']}>
-                    <IconButtonTooltip caption={t('delete')}>
-                      <IconButton
-                        icon={<TrashIcon />}
-                        circle
-                        size="sm"
-                        style={{marginLeft: '5px'}}
-                        onClick={() => {
-                          setCurrentPage(rowData)
-                          setConfirmAction(ConfirmAction.Delete)
-                          setConfirmationDialogOpen(true)
-                        }}
-                      />
-                    </IconButtonTooltip>
-                  </PermissionControl>
-
                   <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
                     <IconButtonTooltip caption={t('pageEditor.overview.duplicate')}>
                       <IconButton
-                        icon={<CopyIcon />}
+                        icon={<MdContentCopy />}
                         circle
                         size="sm"
                         style={{marginLeft: '5px'}}
@@ -270,7 +250,7 @@ function PageList() {
                   <PermissionControl qualifyingPermissions={['CAN_GET_PAGE_PREVIEW_LINK']}>
                     <IconButtonTooltip caption={t('pageEditor.overview.preview')}>
                       <IconButton
-                        icon={<EyeIcon />}
+                        icon={<MdPreview />}
                         disabled={!rowData.draft}
                         circle
                         size="sm"
@@ -286,7 +266,7 @@ function PageList() {
                   <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
                     <IconButtonTooltip caption={t('pageEditor.overview.createComment')}>
                       <IconButton
-                        icon={<CommentIcon />}
+                        icon={<MdComment />}
                         circle
                         size="sm"
                         style={{marginLeft: '5px'}}
@@ -300,6 +280,24 @@ function PageList() {
                               navigate(`/comments/edit/${data?.createComment.id}`)
                             }
                           })
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
+
+                  <PermissionControl qualifyingPermissions={['CAN_DELETE_PAGE']}>
+                    <IconButtonTooltip caption={t('delete')}>
+                      <IconButton
+                        icon={<MdDelete />}
+                        circle
+                        size="sm"
+                        appearance="ghost"
+                        color="red"
+                        style={{marginLeft: '5px'}}
+                        onClick={() => {
+                          setCurrentPage(rowData)
+                          setConfirmAction(ConfirmAction.Delete)
+                          setConfirmationDialogOpen(true)
                         }}
                       />
                     </IconButtonTooltip>
@@ -328,7 +326,7 @@ function PageList() {
         />
       </div>
 
-      <Modal open={isPagePreviewLinkOpen} size={'sm'} onClose={() => setPagePreviewLinkOpen(false)}>
+      <Modal open={isPagePreviewLinkOpen} size="sm" onClose={() => setPagePreviewLinkOpen(false)}>
         {currentPage && (
           <PagePreviewLinkPanel
             props={{id: currentPage.id}}
@@ -339,7 +337,7 @@ function PageList() {
 
       <Modal
         open={isConfirmationDialogOpen}
-        size={'sm'}
+        size="sm"
         onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>

@@ -57,39 +57,8 @@ Prerequisite: In the API (packages/api) exists a corresponding GraphQL endpoint.
 
 
 ### Analytics
-In order to use analytics and send data to WePublish, we prepared an analytics.js plugin that's available here:
-
-https://github.com/wepublish/analytics
-
-it integrates with https://github.com/DavidWells/analytics
-
-Usage:
-
-Import and initialise the tracker anywhere in the project
-
-    import  Analytics  from  'analytics'
-    import { wepublish } from '@wepublish/analytics'
-    
-    const  analytics = Analytics({
-	    app: 'Your app name',
-	    plugins: [wepublish()]
-    })
-
-then call the method on page load e.g.
-
-    const { current } = useRoute()
-    
-    useEffect(() => {
-    	analytics.page()
-    }, [current])
-
-The tracker will automatically look in the html structure for an element with an id "peer-element" and take data from this element. Example element to send peer tracking data should look like the following:
-
-    <div id="peer-element" data-peer-name="Some peer name" data-peer-article-id="123" data-publisher-name="Your name" />
-
-If you want to track page views and send peer name and peer article id, please make sure that this element is present on the peered article page. Otherwise the tracker won't be called.
-
-The above can be seen in examples/website/src/shared/route/router.tsx
+Please refer to the documentation
+https://github.com/wepublish/analytics#readme
 
 ### Form validation
 Validation is based on rsuite validation: https://rsuitejs.com/components/form-validation/
@@ -177,6 +146,32 @@ After requests from publishers and weighing benefits and potential issues, we de
 To give further control over the content of HTML block, whitelisting certain tags and urls will be made possible in the editor's settings. In addition, we always store the original data in the database, and we allow the publisher to see the sanitised data in the settings to see how (and if) the HTML was changed thanks to the xss prevention filter - which can further help to understand the risks and dangers.
 
 We have, however, to be aware that it's almost impossible to be 100% sure that none of the code displayed as custom HTML is dangerous.
+
+### Icon Library
+
+The icon library used throughout the editor is react-icons. https://react-icons.github.io/react-icons
+
+It's a great library created reasonably long time ago, with a good support, that includes few of the most widely used icon packages, all for free.
+For consistency, we decided to only use one of the icon sets in our project, and we chose material-icons from Google.
+- it contains lots of icons
+- it utilizes ES6 imports that allows us to include only the icons that we are using in our project
+- it's free (Apache License 2.0)
+- it's widely used
+- it's supported by Google
+
+The usage is very simple. In your component import the icon as a React component like this:
+
+```import { IconName } from "react-icons/md";```
+
+then just use the icon by rendering it as JSX like this:
+
+```<IconName />```
+
+Here is the complete list of icons by material-design that are supported by react-icons https://react-icons.github.io/react-icons/icons?name=md
+For reasearch purposes, if you want to add a new icons but struggle to find it by name (e.g. trash), you can search under this link 
+https://fonts.google.com/icons as the search is a bit more intelligent than just looking on the string representing the icon's name. Here's an
+example: https://fonts.google.com/icons?icon.query=trash
+
 
 ## packages/api
 ### Environment Variables

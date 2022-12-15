@@ -1,7 +1,6 @@
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table} from 'rsuite'
 
@@ -71,9 +70,9 @@ function UserRoleList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_USER_ROLE']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <Link to="/userroles/create">
-              <Button appearance="primary" disabled={isLoading}>
+              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('userRoles.overview.newUserRole')}
-              </Button>
+              </IconButton>
             </Link>
           </FlexboxGrid.Item>
         </PermissionControl>
@@ -81,7 +80,7 @@ function UserRoleList() {
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
-              <SearchIcon />
+              <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
         </FlexboxGrid.Item>
@@ -109,9 +108,11 @@ function UserRoleList() {
               <PermissionControl qualifyingPermissions={['CAN_DELETE_USER_ROLE']}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
-                    icon={<TrashIcon />}
+                    icon={<MdDelete />}
                     disabled={rowData.systemRole}
                     circle
+                    appearance="ghost"
+                    color="red"
                     size="sm"
                     style={{marginLeft: '5px'}}
                     onClick={() => {
@@ -132,7 +133,7 @@ function UserRoleList() {
           setEditModalOpen(false)
           navigate('/userroles')
         }}
-        size={'sm'}>
+        size="sm">
         <UserRoleEditPanel
           id={editID!}
           onClose={() => {

@@ -1,8 +1,6 @@
-import ImageIcon from '@rsuite/icons/legacy/Image'
-import PencilIcon from '@rsuite/icons/legacy/Pencil'
-import WrenchIcon from '@rsuite/icons/legacy/Wrench'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdBuild, MdEdit, MdPhoto} from 'react-icons/md'
 import {Drawer, Dropdown, IconButton, Panel} from 'rsuite'
 
 import {ImageRefFragment} from '../api'
@@ -56,19 +54,13 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
               }}>
               <Dropdown
                 renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
-                  <IconButton
-                    {...props}
-                    ref={ref}
-                    icon={<WrenchIcon />}
-                    circle
-                    appearance="subtle"
-                  />
+                  <IconButton {...props} ref={ref} icon={<MdBuild />} circle appearance="subtle" />
                 )}>
                 <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
-                  <ImageIcon /> {t('blocks.image.overview.chooseImage')}
+                  <MdPhoto /> {t('blocks.image.overview.chooseImage')}
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => setEditModalOpen(true)}>
-                  <PencilIcon /> {t('blocks.image.overview.editImage')}
+                  <MdEdit /> {t('blocks.image.overview.editImage')}
                 </Dropdown.Item>
                 {/* TODO: Meta sync for metadata image */}
               </Dropdown>
@@ -85,7 +77,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
           onChange({...value, caption: e.target.value})
         }}
       />
-      <Drawer open={isChooseModalOpen} size={'sm'} onClose={() => setChooseModalOpen(false)}>
+      <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
@@ -95,7 +87,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
         />
       </Drawer>
       {image && (
-        <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
+        <Drawer open={isEditModalOpen} size="sm" onClose={() => setEditModalOpen(false)}>
           <ImageEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
         </Drawer>
       )}

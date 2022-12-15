@@ -1,8 +1,6 @@
-import LockIcon from '@rsuite/icons/legacy/Lock'
-import SearchIcon from '@rsuite/icons/legacy/Search'
-import TrashIcon from '@rsuite/icons/legacy/Trash'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdAdd, MdDelete, MdPassword, MdSearch} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Button, FlexboxGrid, IconButton, Input, InputGroup, Modal, Pagination, Table} from 'rsuite'
 
@@ -108,9 +106,9 @@ function UserList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_USER']}>
           <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
             <Link to="/users/create">
-              <Button style={{marginLeft: 5}} appearance="primary" disabled={isLoading}>
+              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('userList.overview.newUser')}
-              </Button>
+              </IconButton>
             </Link>
           </FlexboxGrid.Item>
         </PermissionControl>
@@ -118,7 +116,7 @@ function UserList() {
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
-              <SearchIcon />
+              <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
         </FlexboxGrid.Item>
@@ -195,7 +193,7 @@ function UserList() {
                   <PermissionControl qualifyingPermissions={['CAN_RESET_USER_PASSWORD']}>
                     <IconButtonTooltip caption={t('userList.overview.resetPassword')}>
                       <IconButton
-                        icon={<LockIcon />}
+                        icon={<MdPassword />}
                         circle
                         size="sm"
                         style={{marginLeft: '5px'}}
@@ -209,9 +207,11 @@ function UserList() {
                   <PermissionControl qualifyingPermissions={['CAN_DELETE_USER']}>
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
-                        icon={<TrashIcon />}
+                        icon={<MdDelete />}
                         circle
                         size="sm"
+                        appearance="ghost"
+                        color="red"
                         style={{marginLeft: '5px'}}
                         onClick={() => {
                           setConfirmationDialogOpen(true)

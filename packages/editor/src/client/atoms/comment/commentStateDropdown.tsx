@@ -1,6 +1,6 @@
-import ArrowDownIcon from '@rsuite/icons/legacy/ArrowDown'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdArrowDropDown} from 'react-icons/md'
 import {Badge, Button, ButtonGroup, Dropdown, IconButton, Popover, Whisper} from 'rsuite'
 import {TypeAttributes} from 'rsuite/cjs/@types/common'
 
@@ -88,9 +88,10 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
             }}>
             <IconButton
               size={size || 'md'}
+              style={{padding: '2px'}}
               appearance="primary"
               color={mapCommentStateToColor(comment.state)}
-              icon={<ArrowDownIcon />}
+              icon={<MdArrowDropDown />}
             />
           </Whisper>
         </ButtonGroup>

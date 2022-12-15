@@ -283,6 +283,7 @@ export type Comment = {
   rejectionReason?: Maybe<CommentRejectionReason>;
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
+  overriddenRatings?: Maybe<Array<OverriddenRating>>;
 };
 
 export enum CommentAuthorType {
@@ -335,6 +336,11 @@ export enum CommentItemType {
   PeerArticle = 'PeerArticle',
   Page = 'Page'
 }
+
+export type CommentRatingOverrideUpdateInput = {
+  answerId: Scalars['ID'];
+  value?: Maybe<Scalars['Int']>;
+};
 
 export type CommentRatingSystemAnswer = {
   __typename?: 'CommentRatingSystemAnswer';
@@ -1188,6 +1194,7 @@ export type MutationUpdateCommentArgs = {
   guestUserImageID?: Maybe<Scalars['ID']>;
   source?: Maybe<Scalars['String']>;
   tagIds?: Maybe<Array<Scalars['ID']>>;
+  ratingOverrides?: Maybe<Array<CommentRatingOverrideUpdateInput>>;
 };
 
 
@@ -1333,6 +1340,12 @@ export type OAuth2Account = {
   type: Scalars['String'];
   provider: Scalars['String'];
   scope: Scalars['String'];
+};
+
+export type OverriddenRating = {
+  __typename?: 'overriddenRating';
+  answerId: Scalars['ID'];
+  value?: Maybe<Scalars['Int']>;
 };
 
 export type Page = {
@@ -3320,6 +3333,9 @@ export type FullCommentFragment = (
   )>, tags?: Maybe<Array<(
     { __typename?: 'Tag' }
     & Pick<Tag, 'id' | 'tag'>
+  )>>, overriddenRatings?: Maybe<Array<(
+    { __typename?: 'overriddenRating' }
+    & Pick<OverriddenRating, 'answerId' | 'value'>
   )>> }
 );
 
@@ -3410,6 +3426,7 @@ export type UpdateCommentMutationVariables = Exact<{
   guestUserImageID?: Maybe<Scalars['ID']>;
   source?: Maybe<Scalars['String']>;
   tagIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
+  ratingOverrides?: Maybe<Array<CommentRatingOverrideUpdateInput> | CommentRatingOverrideUpdateInput>;
 }>;
 
 
@@ -5220,6 +5237,10 @@ export const FullCommentFragmentDoc = gql`
     id
     tag
   }
+  overriddenRatings {
+    answerId
+    value
+  }
 }
     ${ImageRefFragmentDoc}
 ${FullUserFragmentDoc}
@@ -6817,8 +6838,8 @@ export type RequestChangesOnCommentMutationHookResult = ReturnType<typeof useReq
 export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<RequestChangesOnCommentMutation>;
 export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
 export const UpdateCommentDocument = gql`
-    mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $guestUserImageID: ID, $source: String, $tagIds: [ID!]) {
-  updateComment(id: $id, revision: $revision, userID: $userID, guestUsername: $guestUsername, guestUserImageID: $guestUserImageID, source: $source, tagIds: $tagIds) {
+    mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $guestUserImageID: ID, $source: String, $tagIds: [ID!], $ratingOverrides: [CommentRatingOverrideUpdateInput!]) {
+  updateComment(id: $id, revision: $revision, userID: $userID, guestUsername: $guestUsername, guestUserImageID: $guestUserImageID, source: $source, tagIds: $tagIds, ratingOverrides: $ratingOverrides) {
     ...FullComment
   }
 }
@@ -6845,6 +6866,7 @@ export type UpdateCommentMutationFn = Apollo.MutationFunction<UpdateCommentMutat
  *      guestUserImageID: // value for 'guestUserImageID'
  *      source: // value for 'source'
  *      tagIds: // value for 'tagIds'
+ *      ratingOverrides: // value for 'ratingOverrides'
  *   },
  * });
  */

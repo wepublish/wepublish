@@ -1,6 +1,6 @@
-import PencilIcon from '@rsuite/icons/legacy/Pencil'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdEdit} from 'react-icons/md'
 import {Drawer, IconButton, Panel} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
@@ -54,7 +54,7 @@ export const CommentBlock = ({
                   height: '100%',
                   right: 0
                 }}>
-                <IconButton size={'lg'} icon={<PencilIcon />} onClick={() => setIsDialogOpen(true)}>
+                <IconButton size="lg" icon={<MdEdit />} onClick={() => setIsDialogOpen(true)}>
                   {t('blocks.comment.edit')}
                 </IconButton>
               </div>
