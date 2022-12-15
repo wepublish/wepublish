@@ -177,7 +177,7 @@ export function CommentPreview({
         <Grid style={{maxWidth: '100%'}}>
           <Row>
             {/* comment title */}
-            <Col xs={18}>
+            <Col xs={24}>
               <Form.ControlLabel>{t('commentEditView.title')}</Form.ControlLabel>
               <Form.Control
                 name="commentTitle"
@@ -191,7 +191,7 @@ export function CommentPreview({
               />
             </Col>
             {/* comment lead */}
-            <Col xs={18}>
+            <Col xs={24}>
               <Form.ControlLabel>{t('commentEditView.lead')}</Form.ControlLabel>
               <Form.Control
                 name="commentLead"
@@ -207,7 +207,7 @@ export function CommentPreview({
             {/* comment text */}
             <Col xs={24} style={{marginTop: '20px'}}>
               <Form.ControlLabel>{t('commentEditView.comment')}</Form.ControlLabel>
-              <Panel bordered>
+              <Panel bordered style={{backgroundColor: 'white'}}>
                 <RichTextBlock
                   value={revision?.text || []}
                   onChange={text => {
