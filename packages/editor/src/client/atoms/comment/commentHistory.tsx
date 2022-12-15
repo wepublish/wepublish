@@ -8,7 +8,7 @@ import {
   CommentSort,
   CommentState,
   FullCommentFragment,
-  useCommentListQuery
+  useCommentListLazyQuery
 } from '../../api'
 import {CommentPreview} from './commentPreview'
 import {CreateCommentBtn} from './createCommentBtn'
@@ -50,7 +50,7 @@ interface CommentHistoryProps {
 export function CommentHistory({commentId, commentItemType, commentItemID}: CommentHistoryProps) {
   const {t} = useTranslation()
   const [comments, setComments] = useState<FullCommentFragment[] | undefined>()
-  const {data, refetch} = useCommentListQuery({
+  const [fetchCommentList, {data}] = useCommentListLazyQuery({
     variables: {
       filter: {
         itemType: commentItemType,
@@ -71,7 +71,7 @@ export function CommentHistory({commentId, commentItemType, commentItemID}: Comm
   }, [data])
 
   useEffect(() => {
-    refetch()
+    fetchCommentList()
   }, [commentId])
 
   return (
