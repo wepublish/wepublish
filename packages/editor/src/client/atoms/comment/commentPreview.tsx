@@ -11,7 +11,7 @@ import FlexboxGridItem from 'rsuite/esm/FlexboxGrid/FlexboxGridItem'
 import {CommentRevision, CommentRevisionUpdateInput, FullCommentFragment} from '../../api'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../../blocks/types'
-import {humanReadableCommentState, mapCommentStateToColor} from './commentStateDropdown'
+import {humanReadableCommentState} from './commentStateDropdown'
 import {CreateCommentBtn} from './createCommentBtn'
 
 export function CommentRevisionView({revision}: {revision: CommentRevision | undefined}) {
@@ -79,7 +79,7 @@ function CommentSource({comment}: {comment: FullCommentFragment | undefined}) {
 
 export interface RevisionProps {
   revision?: CommentRevisionUpdateInput
-  setRevision: Dispatch<SetStateAction<CommentRevisionUpdateInput | undefined>>
+  setRevision?: Dispatch<SetStateAction<CommentRevisionUpdateInput | undefined>>
 }
 
 interface CommentPreviewProps extends RevisionProps {
@@ -180,7 +180,11 @@ export function CommentPreview({
                 name="commentTitle"
                 value={revision?.title || ''}
                 placeholder={t('commentEditView.title')}
-                onChange={(title: string) => setRevision(oldRevision => ({...oldRevision, title}))}
+                onChange={(title: string) => {
+                  if (setRevision) {
+                    setRevision(oldRevision => ({...oldRevision, title}))
+                  }
+                }}
               />
             </Col>
             {/* comment lead */}
@@ -190,7 +194,11 @@ export function CommentPreview({
                 name="commentLead"
                 value={revision?.lead || ''}
                 placeholder={t('commentEditView.lead')}
-                onChange={(lead: string) => setRevision(oldRevision => ({...oldRevision, lead}))}
+                onChange={(lead: string) => {
+                  if (setRevision) {
+                    setRevision(oldRevision => ({...oldRevision, lead}))
+                  }
+                }}
               />
             </Col>
             {/* comment text */}
@@ -199,12 +207,14 @@ export function CommentPreview({
               <Panel bordered>
                 <RichTextBlock
                   value={revision?.text || []}
-                  onChange={text =>
-                    setRevision(oldRevision => ({
-                      ...oldRevision,
-                      text: text as RichTextBlockValue
-                    }))
-                  }
+                  onChange={text => {
+                    if (setRevision) {
+                      setRevision(oldRevision => ({
+                        ...oldRevision,
+                        text: text as RichTextBlockValue
+                      }))
+                    }
+                  }}
                 />
               </Panel>
             </Col>

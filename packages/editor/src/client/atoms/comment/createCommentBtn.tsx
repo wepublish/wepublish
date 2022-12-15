@@ -1,7 +1,7 @@
 import {ApolloError} from '@apollo/client'
-import {IconProps} from '@wepublish/website-example/dist/shared/atoms/icon'
 import React from 'react'
 import {useTranslation} from 'react-i18next'
+import {IconType} from 'react-icons'
 import {MdReply} from 'react-icons/md'
 import {useNavigate} from 'react-router-dom'
 import {IconButton, Message, toaster} from 'rsuite'
@@ -19,7 +19,7 @@ interface ReplyCommentBtnProps {
   itemID: string
   itemType: CommentItemType
   parentID?: string | null
-  icon?: React.ReactElement<IconProps>
+  icon?: React.ReactElement<IconType>
   onCommentCreated?: () => void
 }
 
