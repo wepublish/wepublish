@@ -102,6 +102,7 @@ const CommentEditView = memo(() => {
     variables: {
       id: commentId
     },
+    fetchPolicy: 'no-cache',
     onError: showErrors
   })
 
