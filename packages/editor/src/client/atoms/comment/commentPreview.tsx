@@ -1,6 +1,5 @@
 import {Attachment} from '@rsuite/icons'
 import TagIcon from '@rsuite/icons/Tag'
-import {Color} from '@wepublish/website-example/dist/shared/style/colors'
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit, MdExpandLess, MdExpandMore} from 'react-icons/md'
@@ -150,7 +149,7 @@ export function CommentPreview({
       }
       defaultExpanded={!!expanded}
       onSelect={() => setPanelExpanded(!panelExpanded)}
-      style={expanded ? {border: `3px solid ${Color.Secondary}`} : {}}>
+      style={expanded ? {border: `1px solid black`, backgroundColor: '#f7f9fa'} : {}}>
       {!expanded && (
         <Grid style={{maxWidth: '100%'}}>
           <Row style={{maxWidth: '100%'}}>
