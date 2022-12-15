@@ -104,11 +104,15 @@ export function CommentPreview({
   const [panelExpanded, setPanelExpanded] = useState<boolean>(!!expanded)
 
   useEffect(() => {
-    const element = document.getElementById('current-comment')
-    if (element) {
-      element.scrollIntoView({behavior: 'smooth'})
+    if (!expanded) {
+      return
     }
-  }, [])
+    const element = document.getElementById(`comment-${comment.id}`)
+    if (!element) {
+      return
+    }
+    element.scrollIntoView({behavior: 'smooth'})
+  }, [originComment])
 
   function getPanelHeader() {
     const createdAtReadable = new Date(displayComment.createdAt).toLocaleString('de-CH', {

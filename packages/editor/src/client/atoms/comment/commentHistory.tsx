@@ -35,7 +35,7 @@ function ChildComments({
       {childComments.map(childComment => (
         <div
           key={childComment.id}
-          id={childComment.id === originComment?.id ? 'current-comment' : ''}>
+          id={childComment.id === originComment?.id ? `comment-${originComment.id}` : ''}>
           <CommentPreview
             comment={childComment}
             originComment={childComment.id === originComment?.id ? originComment : undefined}
