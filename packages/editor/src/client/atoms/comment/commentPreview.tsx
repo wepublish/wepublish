@@ -1,13 +1,16 @@
 import {Attachment} from '@rsuite/icons'
 import EyeIcon from '@rsuite/icons/legacy/Eye'
 import TagIcon from '@rsuite/icons/Tag'
-import React from 'react'
+import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdExpandLess, MdExpandMore, MdReply} from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {Col, Grid, IconButton, Panel, Row} from 'rsuite'
+import {Col, FlexboxGrid, Grid, IconButton, Panel, Row} from 'rsuite'
+import FlexboxGridItem from 'rsuite/esm/FlexboxGrid/FlexboxGridItem'
 
 import {CommentRevision, FullCommentFragment} from '../../api'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
+import {FontSize} from '../helpers'
 import {humanReadableCommentState} from './commentStateDropdown'
 import {CreateCommentBtn} from './createCommentBtn'
 
@@ -83,6 +86,7 @@ export function CommentPreview({comment, expanded}: CommentPreviewProps) {
   const {t} = useTranslation()
   const revisions = comment.revisions
   const lastRevision = revisions?.length ? revisions[revisions.length - 1] : undefined
+  const [panelExpanded, setPanelExpanded] = useState<boolean>(!!expanded)
 
   function getPanelHeader() {
     const createdAtReadable = new Date(comment.createdAt).toLocaleString('de-CH', {
@@ -105,7 +109,21 @@ export function CommentPreview({comment, expanded}: CommentPreviewProps) {
   }
 
   return (
-    <Panel bordered collapsible header={getPanelHeader()} defaultExpanded={!!expanded}>
+    <Panel
+      bordered
+      collapsible
+      header={
+        <FlexboxGrid style={expanded ? {color: 'white'} : {}} justify="space-between">
+          <FlexboxGridItem>{getPanelHeader()}</FlexboxGridItem>
+          <FlexboxGridItem>
+            {panelExpanded && <MdExpandMore />}
+            {!panelExpanded && <MdExpandLess />}
+          </FlexboxGridItem>
+        </FlexboxGrid>
+      }
+      defaultExpanded={!!expanded}
+      onSelect={() => setPanelExpanded(!panelExpanded)}
+      style={expanded ? {backgroundColor: 'black', color: 'white'} : {}}>
       <Grid style={{maxWidth: '100%'}}>
         <Row style={{maxWidth: '100%'}}>
           {/* title, lead, text */}
