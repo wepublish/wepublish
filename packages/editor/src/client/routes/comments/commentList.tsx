@@ -64,7 +64,7 @@ function CommentList() {
 
   const {data, refetch, loading: isLoading} = useCommentListQuery({
     variables: commentListVariables,
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'no-cache'
   })
 
   useEffect(() => {

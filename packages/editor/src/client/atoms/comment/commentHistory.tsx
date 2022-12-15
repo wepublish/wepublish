@@ -63,7 +63,8 @@ export function CommentHistory({commentId, commentItemType, commentItemID}: Comm
       },
       sort: CommentSort.CreatedAt,
       take: 1000
-    }
+    },
+    fetchPolicy: 'no-cache'
   })
 
   useEffect(() => {
@@ -85,6 +86,9 @@ export function CommentHistory({commentId, commentItemType, commentItemID}: Comm
             color="green"
             appearance="ghost"
             icon={<PlusIcon />}
+            onCommentCreated={async () => {
+              await fetchCommentList()
+            }}
           />
         </FlexboxGrid.Item>
       </FlexboxGrid>

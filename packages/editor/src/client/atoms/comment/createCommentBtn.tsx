@@ -20,6 +20,7 @@ interface ReplyCommentBtnProps {
   itemType: CommentItemType
   parentID?: string | null
   icon?: React.ReactElement<IconProps>
+  onCommentCreated?: () => void
 }
 
 export function CreateCommentBtn({
@@ -31,7 +32,8 @@ export function CreateCommentBtn({
   itemID,
   itemType,
   parentID,
-  icon
+  icon,
+  onCommentCreated
 }: ReplyCommentBtnProps) {
   const {t} = useTranslation()
   const navigate = useNavigate()
@@ -57,6 +59,9 @@ export function CreateCommentBtn({
       },
       onCompleted: data => {
         navigate(`/comments/edit/${data?.createComment.id}`)
+        if (onCommentCreated) {
+          onCommentCreated()
+        }
       }
     })
   }
