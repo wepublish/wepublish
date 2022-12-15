@@ -11,13 +11,9 @@ import {LocalStorageKey} from '../utility'
 import {AuthContext, AuthDispatchActionType, AuthDispatchContext} from '../authContext'
 import {gql, useMutation} from '@apollo/client'
 import {Login} from './login'
-import Analytics from 'analytics'
-import {wepublish} from '@wepublish/analytics'
+import {initWepublishAnalytics, trackPage} from '@wepublish/analytics'
 
-const analytics = Analytics({
-  app: 'wp-example',
-  plugins: [wepublish()]
-})
+initWepublishAnalytics({appName: 'wep-example'})
 
 export function Router() {
   const {current} = useRoute()
@@ -30,7 +26,7 @@ export function Router() {
   }, [])
 
   useEffect(() => {
-    analytics.page()
+    trackPage()
   }, [current])
 
   // Handle scrolling.
