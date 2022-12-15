@@ -87,9 +87,8 @@ const onDOMContentLoaded = async () => {
           // TODO: implement this handling console.warn()
         }
       })
-      // if (networkError) console.log(`[Network error]: ${networkError}`)
     }
-    return forward(operation)
+    forward(operation)
   })
 
   const mainLink = createUploadLink({uri: adminAPIURL})

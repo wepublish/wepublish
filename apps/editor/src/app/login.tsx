@@ -1,4 +1,4 @@
-import React, {FormEvent, useContext, useEffect, useState} from 'react'
+import React, {FormEvent, useContext, useEffect, useState, useRef} from 'react'
 import {useTranslation} from 'react-i18next'
 import {IoIosRocket, IoLogoFacebook, IoLogoGoogle, IoLogoTwitter} from 'react-icons/io'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
@@ -24,6 +24,7 @@ function useQuery() {
 export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const emailInputRef = useRef<HTMLInputElement>(null)
 
   const location = useLocation()
   const params = useParams()
@@ -35,15 +36,11 @@ export function Login() {
 
   const [authenticate, {loading, error: errorLogin}] = useCreateSessionMutation()
 
-  const [
-    authenticateWithOAuth2Code,
-    {loading: loadingOAuth2, error: errorOAuth2}
-  ] = useCreateSessionWithOAuth2CodeMutation()
+  const [authenticateWithOAuth2Code, {loading: loadingOAuth2, error: errorOAuth2}] =
+    useCreateSessionWithOAuth2CodeMutation()
 
-  const [
-    authenticateWithJWT,
-    {loading: loadingJWT, error: errorJWT}
-  ] = useCreateSessionWithJwtMutation()
+  const [authenticateWithJWT, {loading: loadingJWT, error: errorJWT}] =
+    useCreateSessionWithJwtMutation()
 
   const {data: providerData} = useGetAuthProvidersQuery({
     variables: {
@@ -142,6 +139,12 @@ export function Login() {
       )
   }, [errorLogin, errorOAuth2, errorJWT])
 
+  useEffect(() => {
+    if (emailInputRef.current) {
+      emailInputRef.current.focus()
+    }
+  }, [])
+
   async function login(e: FormEvent) {
     e.preventDefault()
 
@@ -184,6 +187,7 @@ export function Login() {
             <Form.Group controlId="loginEmail">
               <Form.ControlLabel>{t('login.email')}</Form.ControlLabel>
               <Form.Control
+                inputRef={emailInputRef}
                 name="username"
                 className="username"
                 value={email}
