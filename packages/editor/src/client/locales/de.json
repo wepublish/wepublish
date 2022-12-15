@@ -464,7 +464,7 @@
       "noTags": "Keine Tags",
       "source": "Quelle",
       "noSource": "Keine Quelle",
-      "showComment": "Gehe zum Kommentar",
+      "editComment": "Kommentar bearbeiten",
       "noContent": "Dieser Kommentar hat keinen Inhalt."
     },
     "commentUser": {

@@ -237,7 +237,7 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
                 id: parentID
               },
               include: {
-                revisions: true
+                revisions: {orderBy: {createdAt: 'asc'}}
               }
             })
           : null

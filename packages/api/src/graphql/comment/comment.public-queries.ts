@@ -18,7 +18,7 @@ export const getPublicChildrenCommentsByParentId = async (
       modifiedAt: 'desc'
     },
     include: {
-      revisions: true,
+      revisions: {orderBy: {createdAt: 'asc'}},
       tags: true
     }
   })
@@ -70,7 +70,7 @@ export const getPublicCommentsForItemById = async (
         ]
       },
       include: {
-        revisions: true,
+        revisions: {orderBy: {createdAt: 'asc'}},
         ratings: true,
         overriddenRatings: true
       },

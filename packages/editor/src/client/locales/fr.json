@@ -282,7 +282,7 @@
       "noTags": "Pas de tags",
       "source": "Source",
       "noSource": "Pas de source",
-      "showComment": "Aller au commentaire",
+      "editComment": "Modifier le commentaire",
       "noContent": "Ce commentaire n'a pas de contenu."
     },
     "commentUser": {

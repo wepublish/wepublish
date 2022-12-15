@@ -1,16 +1,17 @@
 import {Attachment} from '@rsuite/icons'
-import EyeIcon from '@rsuite/icons/legacy/Eye'
 import TagIcon from '@rsuite/icons/Tag'
-import React, {useState} from 'react'
+import {Color} from '@wepublish/website-example/dist/shared/style/colors'
+import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdExpandLess, MdExpandMore} from 'react-icons/md'
+import {MdEdit, MdExpandLess, MdExpandMore} from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {Col, FlexboxGrid, Grid, IconButton, Panel, Row} from 'rsuite'
+import {Col, FlexboxGrid, Form, Grid, IconButton, Panel, Row} from 'rsuite'
 import FlexboxGridItem from 'rsuite/esm/FlexboxGrid/FlexboxGridItem'
 
-import {CommentRevision, FullCommentFragment} from '../../api'
+import {CommentRevision, CommentRevisionUpdateInput, FullCommentFragment} from '../../api'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
-import {humanReadableCommentState} from './commentStateDropdown'
+import {RichTextBlockValue} from '../../blocks/types'
+import {humanReadableCommentState, mapCommentStateToColor} from './commentStateDropdown'
 import {CreateCommentBtn} from './createCommentBtn'
 
 export function CommentRevisionView({revision}: {revision: CommentRevision | undefined}) {
@@ -76,27 +77,52 @@ function CommentSource({comment}: {comment: FullCommentFragment | undefined}) {
   )
 }
 
-interface CommentPreviewProps {
-  comment: FullCommentFragment
-  expanded?: boolean
+export interface RevisionProps {
+  revision?: CommentRevisionUpdateInput
+  setRevision: Dispatch<SetStateAction<CommentRevisionUpdateInput | undefined>>
 }
 
-export function CommentPreview({comment, expanded}: CommentPreviewProps) {
+interface CommentPreviewProps extends RevisionProps {
+  comment: FullCommentFragment
+  originComment?: FullCommentFragment
+}
+
+export function CommentPreview({
+  comment,
+  originComment,
+  revision,
+  setRevision
+}: CommentPreviewProps) {
   const {t} = useTranslation()
   const revisions = comment.revisions
   const lastRevision = revisions?.length ? revisions[revisions.length - 1] : undefined
+  const expanded = useMemo(() => comment.id === originComment?.id, [comment.id, originComment?.id])
+  const displayComment = useMemo(() => (expanded ? originComment || comment : comment), [
+    originComment,
+    comment,
+    expanded
+  ])
   const [panelExpanded, setPanelExpanded] = useState<boolean>(!!expanded)
 
+  useEffect(() => {
+    const element = document.getElementById('current-comment')
+    if (element) {
+      element.scrollIntoView({behavior: 'smooth'})
+    }
+  }, [])
+
   function getPanelHeader() {
-    const createdAtReadable = new Date(comment.createdAt).toLocaleString('de-CH', {
+    const createdAtReadable = new Date(displayComment.createdAt).toLocaleString('de-CH', {
       timeZone: 'europe/zurich'
     })
 
-    if (comment.guestUsername) {
-      return `${comment.guestUsername} (${t('commentHistory.guestUser')}) | ${createdAtReadable}`
+    if (displayComment.guestUsername) {
+      return `${displayComment.guestUsername} (${t(
+        'commentHistory.guestUser'
+      )}) | ${createdAtReadable}`
     }
 
-    const user = comment.user
+    const user = displayComment.user
     let userName
     if (!user) {
       userName = t('commentHistory.unknownUser')
@@ -104,7 +130,9 @@ export function CommentPreview({comment, expanded}: CommentPreviewProps) {
       userName = user?.firstName ? `${user.firstName} ${user.name}` : user.name
     }
 
-    return `${userName} | ${createdAtReadable} | ${t(humanReadableCommentState(comment.state))}`
+    return `${userName} | ${createdAtReadable} | ${t(
+      humanReadableCommentState(displayComment.state)
+    )}`
   }
 
   return (
@@ -112,7 +140,7 @@ export function CommentPreview({comment, expanded}: CommentPreviewProps) {
       bordered
       collapsible
       header={
-        <FlexboxGrid style={expanded ? {color: 'white'} : {}} justify="space-between">
+        <FlexboxGrid justify="space-between">
           <FlexboxGridItem>{getPanelHeader()}</FlexboxGridItem>
           <FlexboxGridItem>
             {panelExpanded && <MdExpandMore />}
@@ -122,39 +150,85 @@ export function CommentPreview({comment, expanded}: CommentPreviewProps) {
       }
       defaultExpanded={!!expanded}
       onSelect={() => setPanelExpanded(!panelExpanded)}
-      style={expanded ? {backgroundColor: 'black', color: 'white'} : {}}>
-      <Grid style={{maxWidth: '100%'}}>
-        <Row style={{maxWidth: '100%'}}>
-          {/* title, lead, text */}
-          <Col xs={18}>
-            <CommentRevisionView revision={lastRevision} />
-          </Col>
-          {/* tags & source */}
-          <Col xs={6}>
-            <div>
-              <CommentTags comment={comment} />
-            </div>
-            <div style={{marginTop: '20px'}}>
-              <CommentSource comment={comment} />
-            </div>
-          </Col>
-          {/* actions */}
-          <Col xs={24} style={{textAlign: 'center', marginTop: '20px'}}>
-            <CreateCommentBtn
-              itemID={comment.itemID}
-              itemType={comment.itemType}
-              parentID={comment.id}
-              appearance="ghost"
-              text={t('replyCommentBtn.reply')}
-            />
-            <Link to={`/comments/edit/${comment.id}`}>
-              <IconButton style={{marginLeft: '10px'}} icon={<EyeIcon />} appearance="ghost">
-                {t('commentPreview.showComment')}
-              </IconButton>
-            </Link>
-          </Col>
-        </Row>
-      </Grid>
+      style={expanded ? {border: `3px solid ${Color.Secondary}`} : {}}>
+      {!expanded && (
+        <Grid style={{maxWidth: '100%'}}>
+          <Row style={{maxWidth: '100%'}}>
+            {/* title, lead, text */}
+            <Col xs={18}>
+              <CommentRevisionView revision={lastRevision} />
+            </Col>
+            {/* tags & source */}
+            <Col xs={6}>
+              <div>
+                <CommentTags comment={displayComment} />
+              </div>
+              <div style={{marginTop: '20px'}}>
+                <CommentSource comment={displayComment} />
+              </div>
+            </Col>
+          </Row>
+        </Grid>
+      )}
+      {expanded && (
+        <Grid style={{maxWidth: '100%'}}>
+          <Row>
+            {/* comment title */}
+            <Col xs={18}>
+              <Form.ControlLabel>{t('commentEditView.title')}</Form.ControlLabel>
+              <Form.Control
+                name="commentTitle"
+                value={revision?.title || ''}
+                placeholder={t('commentEditView.title')}
+                onChange={(title: string) => setRevision(oldRevision => ({...oldRevision, title}))}
+              />
+            </Col>
+            {/* comment lead */}
+            <Col xs={18}>
+              <Form.ControlLabel>{t('commentEditView.lead')}</Form.ControlLabel>
+              <Form.Control
+                name="commentLead"
+                value={revision?.lead || ''}
+                placeholder={t('commentEditView.lead')}
+                onChange={(lead: string) => setRevision(oldRevision => ({...oldRevision, lead}))}
+              />
+            </Col>
+            {/* comment text */}
+            <Col xs={24} style={{marginTop: '20px'}}>
+              <Form.ControlLabel>{t('commentEditView.comment')}</Form.ControlLabel>
+              <Panel bordered>
+                <RichTextBlock
+                  value={revision?.text || []}
+                  onChange={text =>
+                    setRevision(oldRevision => ({
+                      ...oldRevision,
+                      text: text as RichTextBlockValue
+                    }))
+                  }
+                />
+              </Panel>
+            </Col>
+          </Row>
+        </Grid>
+      )}
+
+      {/* actions */}
+      <Col xs={24} style={{textAlign: 'center', marginTop: '20px', marginBottom: '20px'}}>
+        <CreateCommentBtn
+          itemID={comment.itemID}
+          itemType={comment.itemType}
+          parentID={comment.id}
+          appearance="ghost"
+          text={t('replyCommentBtn.reply')}
+        />
+        {!expanded && (
+          <Link to={`/comments/edit/${comment.id}`}>
+            <IconButton style={{marginLeft: '10px'}} icon={<MdEdit />} appearance="ghost">
+              {t('commentPreview.editComment')}
+            </IconButton>
+          </Link>
+        )}
+      </Col>
     </Panel>
   )
 }

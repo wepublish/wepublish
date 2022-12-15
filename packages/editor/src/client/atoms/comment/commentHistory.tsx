@@ -10,16 +10,22 @@ import {
   FullCommentFragment,
   useCommentListLazyQuery
 } from '../../api'
-import {CommentPreview} from './commentPreview'
+import {CommentPreview, RevisionProps} from './commentPreview'
 import {CreateCommentBtn} from './createCommentBtn'
 
-interface ChildCommentsProps {
+interface ChildCommentsProps extends RevisionProps {
   comments?: FullCommentFragment[]
   comment: FullCommentFragment
-  originCommentId?: string
+  originComment?: FullCommentFragment
 }
 
-function ChildComments({comments, comment, originCommentId}: ChildCommentsProps) {
+function ChildComments({
+  comments,
+  comment,
+  originComment,
+  revision,
+  setRevision
+}: ChildCommentsProps) {
   if (!comments) {
     return <></>
   }
@@ -27,13 +33,22 @@ function ChildComments({comments, comment, originCommentId}: ChildCommentsProps)
   return (
     <div style={{marginTop: '20px', borderLeft: '1px lightgrey solid', paddingLeft: '20px'}}>
       {childComments.map(childComment => (
-        <div key={childComment.id}>
-          <CommentPreview comment={childComment} expanded={childComment.id === originCommentId} />
+        <div
+          key={childComment.id}
+          id={childComment.id === originComment?.id ? 'current-comment' : ''}>
+          <CommentPreview
+            comment={childComment}
+            originComment={childComment.id === originComment?.id ? originComment : undefined}
+            revision={revision}
+            setRevision={setRevision}
+          />
           {/* some fancy recursion */}
           <ChildComments
             comments={comments}
             comment={childComment}
-            originCommentId={originCommentId}
+            originComment={originComment}
+            revision={revision}
+            setRevision={setRevision}
           />
         </div>
       ))}
@@ -41,13 +56,19 @@ function ChildComments({comments, comment, originCommentId}: ChildCommentsProps)
   )
 }
 
-interface CommentHistoryProps {
+interface CommentHistoryProps extends RevisionProps {
   commentItemType: CommentItemType
   commentItemID: string
-  commentId?: string
+  originComment?: FullCommentFragment
 }
 
-export function CommentHistory({commentId, commentItemType, commentItemID}: CommentHistoryProps) {
+export function CommentHistory({
+  commentItemType,
+  commentItemID,
+  revision,
+  setRevision,
+  originComment
+}: CommentHistoryProps) {
   const {t} = useTranslation()
   const [comments, setComments] = useState<FullCommentFragment[] | undefined>()
   const [fetchCommentList, {data}] = useCommentListLazyQuery({
@@ -71,9 +92,10 @@ export function CommentHistory({commentId, commentItemType, commentItemID}: Comm
     setComments(data?.comments?.nodes)
   }, [data])
 
+  // re-load comments whenever the comment id changes
   useEffect(() => {
     fetchCommentList()
-  }, [commentId])
+  }, [originComment?.id])
 
   return (
     <>
@@ -98,11 +120,18 @@ export function CommentHistory({commentId, commentItemType, commentItemID}: Comm
           <div key={tmpComment.id}>
             {!tmpComment.parentComment && (
               <>
-                <CommentPreview comment={tmpComment} expanded={tmpComment.id === commentId} />
+                <CommentPreview
+                  comment={tmpComment}
+                  originComment={originComment}
+                  revision={revision}
+                  setRevision={setRevision}
+                />
                 <ChildComments
                   comment={tmpComment}
-                  originCommentId={commentId}
+                  originComment={originComment}
                   comments={comments}
+                  revision={revision}
+                  setRevision={setRevision}
                 />
               </>
             )}

@@ -116,7 +116,7 @@ export const getComments = async (
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {
-        revisions: true
+        revisions: {orderBy: {createdAt: 'asc'}}
       }
     })
   ])

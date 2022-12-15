@@ -18,7 +18,7 @@ export const getComment = (
     },
     include: {
       overriddenRatings: true,
-      revisions: true
+      revisions: {orderBy: {createdAt: 'asc'}}
     }
   })
 }

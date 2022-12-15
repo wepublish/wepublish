@@ -33,8 +33,6 @@ import {CommentUser} from '../../atoms/comment/commentUser'
 import {ModelTitle} from '../../atoms/modelTitle'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {SelectTags} from '../../atoms/tag/selectTags'
-import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../../blocks/types'
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
@@ -48,7 +46,9 @@ const showErrors = (error: ApolloError): void => {
  * Helper function to parse comment revision input object out of full revision fragment.
  * @param comment
  */
-function getLastRevision(comment: FullCommentFragment): CommentRevisionUpdateInput | undefined {
+export function getLastRevision(
+  comment: FullCommentFragment
+): CommentRevisionUpdateInput | undefined {
   const revisions = comment.revisions
   if (!revisions.length) {
     return
@@ -130,6 +130,7 @@ const CommentEditView = memo(() => {
     if (!tmpComment) {
       return
     }
+    setSelectedTags(null)
     setComment(tmpComment)
 
     const lastRevision = getLastRevision(tmpComment)
@@ -186,7 +187,12 @@ const CommentEditView = memo(() => {
   }
 
   return (
-    <Form onSubmit={() => updateComment()} model={validationModel} fluid disabled={loading}>
+    <Form
+      onSubmit={() => updateComment()}
+      model={validationModel}
+      fluid
+      disabled={loading}
+      style={{maxHeight: 'calc(100vh - 135px)', maxWidth: 'calc(100vw - 260px - 80px)'}}>
       <ModelTitle
         loading={loading}
         title={t('comments.edit.title')}
@@ -201,75 +207,21 @@ const CommentEditView = memo(() => {
       <Grid fluid>
         <Row gutter={30}>
           {/* comment content */}
-          <Col xs={14}>
-            <Row>
-              <Col xs={24} style={{marginTop: '0px'}}>
-                <Panel bordered style={{width: '100%'}}>
-                  <Row>
-                    {/* comment title */}
-                    <Col xs={18}>
-                      <Form.ControlLabel>{t('commentEditView.title')}</Form.ControlLabel>
-                      <Form.Control
-                        name="commentTitle"
-                        value={revision?.title || ''}
-                        placeholder={t('commentEditView.title')}
-                        onChange={(title: string) =>
-                          setRevision(oldRevision => ({...oldRevision, title}))
-                        }
-                      />
-                    </Col>
-                    {/* comment lead */}
-                    <Col xs={18}>
-                      <Form.ControlLabel>{t('commentEditView.lead')}</Form.ControlLabel>
-                      <Form.Control
-                        name="commentLead"
-                        value={revision?.lead || ''}
-                        placeholder={t('commentEditView.lead')}
-                        onChange={(lead: string) =>
-                          setRevision(oldRevision => ({...oldRevision, lead}))
-                        }
-                      />
-                    </Col>
-                    {/* comment text */}
-                    <Col xs={24} style={{marginTop: '20px'}}>
-                      <Form.ControlLabel>{t('commentEditView.comment')}</Form.ControlLabel>
-                      <Panel bordered>
-                        <RichTextBlock
-                          value={revision?.text || []}
-                          onChange={text =>
-                            setRevision(oldRevision => ({
-                              ...oldRevision,
-                              text: text as RichTextBlockValue
-                            }))
-                          }
-                        />
-                      </Panel>
-                    </Col>
-                  </Row>
-                </Panel>
-              </Col>
-            </Row>
-
-            <Row>
-              <Col xs={24}>
-                <Panel bordered header={t('commentEditView.commentContextHeader')}>
-                  <Row>
-                    <Col xs={24}>
-                      {comment && (
-                        <CommentHistory
-                          commentItemID={comment.itemID}
-                          commentId={comment.id}
-                          commentItemType={comment.itemType}
-                        />
-                      )}
-                    </Col>
-                  </Row>
-                </Panel>
-              </Col>
-            </Row>
+          <Col xs={14} style={{maxHeight: 'calc(100vh - 80px - 60px - 15px)', overflowY: 'scroll'}}>
+            <Panel bordered header={t('commentEditView.commentContextHeader')}>
+              {comment && (
+                <CommentHistory
+                  commentItemID={comment.itemID}
+                  commentItemType={comment.itemType}
+                  originComment={comment}
+                  revision={revision}
+                  setRevision={setRevision}
+                />
+              )}
+            </Panel>
           </Col>
 
-          <Col xs={10}>
+          <Col xs={10} style={{maxHeight: 'calc(100vh - 80px - 60px - 15px)', overflowY: 'scroll'}}>
             <Row>
               {/* some actions on the comment */}
               <Col xs={24} style={{marginTop: '0px'}}>
