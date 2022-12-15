@@ -30,7 +30,6 @@ import {CommentDeleteBtn} from '../../atoms/comment/commentDeleteBtn'
 import {CommentHistory} from '../../atoms/comment/commentHistory'
 import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {CommentUser} from '../../atoms/comment/commentUser'
-import {CreateCommentBtn} from '../../atoms/comment/createCommentBtn'
 import {ModelTitle} from '../../atoms/modelTitle'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {SelectTags} from '../../atoms/tag/selectTags'
@@ -276,7 +275,7 @@ const CommentEditView = memo(() => {
               <Col xs={24} style={{marginTop: '0px'}}>
                 <Panel bordered header={t('commentEditView.actions')}>
                   <FlexboxGrid>
-                    <FlexboxGrid.Item colspan={24}>
+                    <FlexboxGrid.Item colspan={24} style={{textAlign: 'end'}}>
                       <IconButton
                         appearance="ghost"
                         color="violet"
@@ -287,19 +286,8 @@ const CommentEditView = memo(() => {
                         {t('commentEditView.goToArticle')}
                       </IconButton>
                     </FlexboxGrid.Item>
-                    <FlexboxGrid.Item style={{marginTop: '10px', textAlign: 'end'}} colspan={24}>
-                      {comment && (
-                        <CreateCommentBtn
-                          itemID={comment.itemID}
-                          itemType={comment.itemType}
-                          parentID={comment.id}
-                          text={t('replyCommentBtn.reply')}
-                          appearance="ghost"
-                        />
-                      )}
-                    </FlexboxGrid.Item>
 
-                    <FlexboxGrid.Item colspan={24} style={{marginTop: '10px'}}>
+                    <FlexboxGrid.Item colspan={24} style={{marginTop: '10px', textAlign: 'end'}}>
                       {comment && (
                         <CommentStateDropdown
                           comment={comment}
@@ -314,7 +302,7 @@ const CommentEditView = memo(() => {
                       )}
                     </FlexboxGrid.Item>
 
-                    <FlexboxGrid.Item style={{marginTop: '10px'}} colspan={24}>
+                    <FlexboxGrid.Item style={{marginTop: '10px', textAlign: 'end'}} colspan={24}>
                       <CommentDeleteBtn
                         comment={comment}
                         onCommentDeleted={() => {

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdArrowDropDown} from 'react-icons/md'
-import {Badge, Button, ButtonGroup, Dropdown, IconButton, Popover, Whisper} from 'rsuite'
+import {Button, ButtonGroup, Dropdown, IconButton, Popover, Whisper} from 'rsuite'
 import {TypeAttributes} from 'rsuite/cjs/@types/common'
 
 import {CommentRejectionReason, CommentState, FullCommentFragment} from '../../api'
@@ -46,16 +46,8 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
     setNewCommentState(comment.state)
   }, [comment])
 
-  const showBadge =
-    comment.state === CommentState.Rejected || comment.state === CommentState.PendingUserChanges
-
   return (
     <>
-      {showBadge && (
-        <div style={{marginBottom: '5px'}}>
-          <Badge content={comment.rejectionReason} color={mapCommentStateToColor(comment.state)} />
-        </div>
-      )}
       <div>
         <ButtonGroup>
           <Button
@@ -91,7 +83,7 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
               style={{padding: '2px'}}
               appearance="primary"
               color={mapCommentStateToColor(comment.state)}
-              icon={<MdArrowDropDown />}
+              icon={<MdArrowDropDown size={!size ? '32px' : ''} />}
             />
           </Whisper>
         </ButtonGroup>
