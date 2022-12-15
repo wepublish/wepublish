@@ -56,19 +56,19 @@ function CommentTags({comment}: {comment: FullCommentFragment | undefined}) {
 function CommentSource({comment}: {comment: FullCommentFragment | undefined}) {
   const {t} = useTranslation()
   const source = comment?.source
-  const title = <h6 style={{marginBottom: '5px'}}>{t('commentPreview.source')}</h6>
+  const label = <h6 style={{marginBottom: '5px'}}>{t('commentPreview.source')}</h6>
 
   if (source) {
     return (
       <>
-        {title}
+        {label}
         {source}
       </>
     )
   }
   return (
     <>
-      {title}
+      {label}
       {t('commentPreview.noSource')}
     </>
   )
