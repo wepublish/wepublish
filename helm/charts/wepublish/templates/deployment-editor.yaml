@@ -31,10 +31,10 @@ spec:
         - name: {{ include "helm.fullname" . }}
           image: {{ .Values.deployment.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
-          command: ['npx', '@wepublish/editor']
+          command: ['node', 'dist/apps/editor/main.js']
           ports:
             - name: http
-              containerPort: 8000
+              containerPort: 3000
               protocol: TCP
           envFrom:
             - secretRef:

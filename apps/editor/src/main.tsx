@@ -70,7 +70,9 @@ const onDOMContentLoaded = async () => {
       ...context
     })
 
-    return forward(operation)
+    forward(operation)
+
+    return null
   })
 
   const authErrorLink = onError(({graphQLErrors, /* networkError, */ operation, forward}) => {

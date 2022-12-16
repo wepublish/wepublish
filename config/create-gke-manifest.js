@@ -887,7 +887,7 @@ async function applyApiServer() {
 async function applyEditor() {
   const app = 'editor'
   const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
-  const appPort = 8000
+  const appPort = 3000
 
   const deployment = {
     apiVersion: 'apps/v1',

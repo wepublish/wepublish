@@ -48,8 +48,8 @@ services:
     build:
       context: .
     ports:
-      - 3006:8000
-    command: ['npx', '@wepublish/editor']
+      - 3006:3000
+    command: ['node', 'dist/apps/editor/main.js']
     environment:
       NODE_ENV: production
       ADDRESS: 0.0.0.0
