@@ -37,6 +37,10 @@ class WepublishURLAdapter implements URLAdapter {
   }
 
   getPublicArticleURL(article: PublicArticle): string {
+    if (article.canonicalUrl) {
+      return article.canonicalUrl
+    }
+
     return `${this.websiteURL}/a/${article.id}/${article.slug}`
   }
 
