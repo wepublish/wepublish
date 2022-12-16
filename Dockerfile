@@ -14,7 +14,7 @@ COPY --chown=node:node ./tsconfig.base.json ./tsconfig.base.json
 COPY --chown=node:node ./babel.config.json ./babel.config.json
 COPY --chown=node:node ./LICENSE ./LICENSE
 
-COPY --chown=node:node ./packages/ ./packages/
+COPY --chown=node:node ./libs/ ./libs/
 COPY --chown=node:node ./apps/ ./apps/
 COPY --chown=node:node ./examples/ ./examples/
 

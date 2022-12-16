@@ -4,6 +4,7 @@
     "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -14,7 +15,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@wepublish/api": ["libs/api/src/index.ts"],
+      "@wepublish/api/seed": ["libs/api/prisma/seed.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
