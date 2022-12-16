@@ -26,7 +26,7 @@ services:
       context: .
     ports:
       - 4000:8000
-    command: ['npx', '@wepublish/api-example']
+    command: ['node', 'dist/apps/api-example/main.js']
     environment:
       NODE_ENV: production
       HOST_URL: http://localhost:4000

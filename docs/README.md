@@ -167,7 +167,7 @@ For reasearch purposes, if you want to add a new icons but struggle to find it b
 https://fonts.google.com/icons as the search is a bit more intelligent than just looking on the string representing the icon's name. Here's an
 example: https://fonts.google.com/icons?icon.query=trash
 
-## packages/api
+## libs/api
 
 ### Environment Variables
 

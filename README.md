@@ -93,7 +93,7 @@ TBD
 
 ## Packages
 
-- [@wepublish/api](./packages/api)
+- [@wepublish/api](./libs/api)
 - [@wepublish/editor](./apps/editor)
 
 <!-- GETTING STARTED -->

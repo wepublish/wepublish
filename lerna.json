@@ -23,5 +23,5 @@
       "message": "chore(release): publish %s"
     }
   },
-  "packages": ["packages/api", "apps/editor"]
+  "packages": ["libs/api", "apps/editor"]
 }
