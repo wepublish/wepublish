@@ -219,7 +219,7 @@ describe('Events', () => {
       expect(res.data.updateEvent.tags).toHaveLength(3)
     })
 
-    test.only('can not be updated with endsAt before startsAt', async () => {
+    test('can not be updated with endsAt before startsAt', async () => {
       const {mutate} = testClientPrivate
 
       const createRes = await mutate({
