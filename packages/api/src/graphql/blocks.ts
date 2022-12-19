@@ -636,7 +636,7 @@ export const GraphQLCommentBlock = new GraphQLObjectType<CommentBlock, Context>(
             ]
           },
           include: {
-            revisions: true
+            revisions: {orderBy: {createdAt: 'asc'}}
           }
         })
     }
@@ -673,7 +673,7 @@ export const GraphQLPublicCommentBlock = new GraphQLObjectType<CommentBlock, Con
             ]
           },
           include: {
-            revisions: true,
+            revisions: {orderBy: {createdAt: 'asc'}},
             overriddenRatings: true
           }
         })

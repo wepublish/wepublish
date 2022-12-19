@@ -320,6 +320,8 @@ export type CommentConnection = {
 
 export type CommentFilter = {
   item?: InputMaybe<Scalars['ID']>;
+  itemID?: InputMaybe<Scalars['ID']>;
+  itemType?: InputMaybe<CommentItemType>;
   states?: InputMaybe<Array<CommentState>>;
   tags?: InputMaybe<Array<Scalars['ID']>>;
 };

@@ -56,8 +56,10 @@ export function CommentStateChangeModal({
   const [open, setOpen] = useState<boolean>(false)
   const [rejectionReason, setRejectionReason] = useState<CommentRejectionReason>()
   const [approveComment, {loading: isApproving, error: errorApprove}] = useApproveCommentMutation()
-  const [requestChanges, {loading: isRequestingChanges, error: errorRequestingChanges}] =
-    useRequestChangesOnCommentMutation()
+  const [
+    requestChanges,
+    {loading: isRequestingChanges, error: errorRequestingChanges}
+  ] = useRequestChangesOnCommentMutation()
   const [rejectComment, {loading: isRejecting, error: errorRejecting}] = useRejectCommentMutation()
 
   useEffect(() => {
@@ -178,33 +180,33 @@ export function CommentStateChangeModal({
 
           {comment?.parentComment && (
             <DescriptionListItem label={t('comments.panels.parent')}>
-              <Panel
-                bordered
-                style={{marginRight: 40, fontStyle: 'italic', color: 'lightslategrey'}}>
-                <>
-                  <div>
-                    {t('comments.panels.parentDate', {
-                      parentDate: new Date(comment.parentComment.createdAt)
-                    })}
-                  </div>
-                  <p>{printUsername}:</p>
-                  <RichTextBlock
-                    displayOnly
-                    displayOneLine
-                    disabled
-                    // TODO: remove this
-                    onChange={console.log}
-                    value={
-                      comment.parentComment.revisions[comment.parentComment.revisions.length - 1]
-                        ?.text || []
-                    }
-                  />
-                </>
-              </Panel>
-              <div style={{marginTop: 8, marginLeft: 10}}>
-                <MdReplay rotate={180} />
-              </div>
-            </DescriptionListItem>
+                <Panel
+                  bordered
+                  style={{marginRight: 40, fontStyle: 'italic', color: 'lightslategrey'}}>
+                  <>
+                    <div>
+                      {t('comments.panels.parentDate', {
+                        parentDate: new Date(comment.parentComment.createdAt)
+                      })}
+                    </div>
+                    <p>{printUsername}:</p>
+                    <RichTextBlock
+                      displayOnly
+                      displayOneLine
+                      disabled
+                      // TODO: remove this
+                      onChange={console.log}
+                      value={
+                        comment.parentComment.revisions[comment.parentComment.revisions.length - 1]
+                          ?.text || []
+                      }
+                    />
+                  </>
+                </Panel>
+                <div style={{marginTop: 8, marginLeft: 10}}>
+                  <MdReplay rotate={180} />
+                </div>
+              </DescriptionListItem>
           )}
 
           {newCommentState === CommentState.Rejected ||

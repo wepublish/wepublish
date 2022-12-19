@@ -70,9 +70,7 @@ const onDOMContentLoaded = async () => {
       ...context
     })
 
-    forward(operation)
-
-    return null
+    return forward(operation)
   })
 
   const authErrorLink = onError(({graphQLErrors, /* networkError, */ operation, forward}) => {
@@ -90,6 +88,7 @@ const onDOMContentLoaded = async () => {
         }
       })
     }
+
     forward(operation)
   })
 
@@ -126,7 +125,13 @@ const onDOMContentLoaded = async () => {
 initI18N()
 
 if (document.readyState !== 'loading') {
-  onDOMContentLoaded()
+  onDOMContentLoaded().catch(console.error)
 } else {
-  document.addEventListener('DOMContentLoaded', onDOMContentLoaded)
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      await onDOMContentLoaded()
+    } catch (e) {
+      console.log(e)
+    }
+  })
 }

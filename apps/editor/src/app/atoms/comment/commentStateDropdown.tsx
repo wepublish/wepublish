@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdArrowDropDown} from 'react-icons/md'
-import {Badge, Button, ButtonGroup, Dropdown, IconButton, Popover, Whisper} from 'rsuite'
+import {Dropdown, IconButton, Popover, Whisper} from 'rsuite'
 import {TypeAttributes} from 'rsuite/cjs/@types/common'
 
 import {CommentRejectionReason, CommentState, FullCommentFragment} from '../../api'
 import {CommentStateChangeModal, mapCommentActionToBtnTitle} from './commentStateChangeModal'
 
-function mapCommentStateToColor(commentState: CommentState) {
+export function mapCommentStateToColor(commentState: CommentState) {
   switch (commentState) {
     case CommentState.Approved:
       return 'green'
@@ -19,7 +19,7 @@ function mapCommentStateToColor(commentState: CommentState) {
   }
 }
 
-function humanReadableCommentState(commentState: CommentState) {
+export function humanReadableCommentState(commentState: CommentState) {
   switch (commentState) {
     case CommentState.Approved:
       return 'comments.state.approved'
@@ -46,55 +46,46 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
     setNewCommentState(comment.state)
   }, [comment])
 
-  const showBadge =
-    comment.state === CommentState.Rejected || comment.state === CommentState.PendingUserChanges
+  const renderMenu = ({onClose, className}: {className: any; onClose: () => void}, ref: any) => {
+    const handleSelect = (eventKey: string | undefined) => {
+      onClose()
+      if (eventKey) {
+        setNewCommentState(eventKey as CommentState)
+      }
+    }
+
+    return (
+      <Popover ref={ref} className={className} full>
+        <Dropdown.Menu onSelect={handleSelect}>
+          {Object.keys(CommentState)
+            .filter(tmpState => tmpState !== CommentState.PendingApproval)
+            .map((tmpState, index) => (
+              <Dropdown.Item
+                key={index}
+                eventKey={tmpState}
+                /* onClick={() => setNewCommentState(tmpState as CommentState)} */
+              >
+                {t(mapCommentActionToBtnTitle(tmpState as CommentState))}
+              </Dropdown.Item>
+            ))}
+        </Dropdown.Menu>
+      </Popover>
+    )
+  }
 
   return (
     <>
-      {showBadge && (
-        <div style={{marginBottom: '5px'}}>
-          <Badge content={comment.rejectionReason} color={mapCommentStateToColor(comment.state)} />
-        </div>
-      )}
       <div>
-        <ButtonGroup>
-          <Button
+        <Whisper placement="bottomStart" trigger="click" speaker={renderMenu}>
+          <IconButton
             appearance="ghost"
+            icon={<MdArrowDropDown style={size === 'xs' ? {marginTop: '-6px'} : {}} />}
+            placement="left"
             color={mapCommentStateToColor(comment.state)}
-            size={size || 'md'}>
+            size={size}>
             {t(humanReadableCommentState(comment.state))}
-          </Button>
-          <Whisper
-            placement="bottomEnd"
-            trigger="click"
-            speaker={({onClose, left, top, className}, ref) => {
-              const handleSelect = (tmpCommentState: any) => {
-                onClose()
-                setNewCommentState(tmpCommentState as CommentState)
-              }
-              return (
-                <Popover ref={ref} className={className} style={{left, top}} full>
-                  <Dropdown.Menu onSelect={handleSelect}>
-                    {Object.keys(CommentState)
-                      .filter(tmpState => tmpState !== CommentState.PendingApproval)
-                      .map((tmpState, index) => (
-                        <Dropdown.Item key={index} eventKey={tmpState}>
-                          {t(mapCommentActionToBtnTitle(tmpState as CommentState))}
-                        </Dropdown.Item>
-                      ))}
-                  </Dropdown.Menu>
-                </Popover>
-              )
-            }}>
-            <IconButton
-              size={size || 'md'}
-              style={{padding: '2px'}}
-              appearance="primary"
-              color={mapCommentStateToColor(comment.state)}
-              icon={<MdArrowDropDown />}
-            />
-          </Whisper>
-        </ButtonGroup>
+          </IconButton>
+        </Whisper>
       </div>
 
       {/* modal */}
