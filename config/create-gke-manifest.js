@@ -235,7 +235,7 @@ async function applyWebsite() {
             {
               name: appName,
               image,
-              command: ['npx', '@wepublish/website-example'],
+              command: ['node', 'dist/apps/editor/main.js'],
               env: [
                 {
                   name: 'NODE_ENV',

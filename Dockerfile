@@ -16,7 +16,6 @@ COPY --chown=node:node ./LICENSE ./LICENSE
 
 COPY --chown=node:node ./libs/ ./libs/
 COPY --chown=node:node ./apps/ ./apps/
-COPY --chown=node:node ./examples/ ./examples/
 
 RUN yarn install
 RUN yarn build:demo
