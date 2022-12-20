@@ -24,8 +24,8 @@ export interface PageMetadataProperty {
 }
 
 export interface PageMetadata {
-  readonly slug: string
-  readonly title: string
+  readonly slug?: string
+  readonly title?: string
   readonly description: string
   readonly tags: string[]
   readonly url: string
