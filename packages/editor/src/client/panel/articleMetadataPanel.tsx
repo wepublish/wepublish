@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react'
+import CommentIcon from '@rsuite/icons/legacy/Comment'
 import {Trans, useTranslation} from 'react-i18next'
 import {MdAutoFixHigh, MdListAlt, MdSettings, MdShare} from 'react-icons/md'
 import {
@@ -18,8 +19,9 @@ import {
   Whisper
 } from 'rsuite'
 
-import {AuthorRefFragment, ImageRefFragment} from '../api'
+import {AuthorRefFragment, CommentItemType, ImageRefFragment} from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {CommentHistory} from '../atoms/comment/commentHistory'
 import {ListInput, ListValue} from '../atoms/listInput'
 import {
   createCheckedPermissionComponent,
@@ -65,6 +67,7 @@ export interface InfoData {
 }
 
 export interface ArticleMetadataPanelProps {
+  readonly articleID?: string
   readonly value: ArticleMetadata
   readonly infoData: InfoData
 
@@ -72,7 +75,13 @@ export interface ArticleMetadataPanelProps {
   onChange?(value: ArticleMetadata): void
 }
 
-function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetadataPanelProps) {
+function ArticleMetadataPanel({
+  articleID,
+  value,
+  infoData,
+  onClose,
+  onChange
+}: ArticleMetadataPanelProps) {
   const {
     canonicalUrl,
     preTitle,
@@ -503,6 +512,14 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
             </Form.Group>
           </Panel>
         )
+      case MetaDataType.Comments:
+        return (
+          <Panel>
+            {articleID && (
+              <CommentHistory commentItemType={CommentItemType.Article} commentItemID={articleID} />
+            )}
+          </Panel>
+        )
       default:
         return <></>
     }
@@ -541,6 +558,11 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
           <Nav.Item eventKey={MetaDataType.Properties} icon={<MdListAlt />}>
             {t('articleEditor.panels.properties')}
           </Nav.Item>
+          {articleID && (
+            <Nav.Item eventKey={MetaDataType.Comments} icon={<CommentIcon />}>
+              {t('articleEditor.panels.comments')}
+            </Nav.Item>
+          )}
         </Nav>
         {currentContent()}
       </Drawer.Body>

@@ -142,7 +142,8 @@
         "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux",
         "enterTag": "Veuillez ajouter un tag",
         "enterSocialMediaAuthors": "Veuillez ajouter un·e auteur·trice pour les réseaux sociaux",
-        "enterAuthors": "Veuillez ajouter un·e auteur·trice"
+        "enterAuthors": "Veuillez ajouter un·e auteur·trice",
+        "comments": "Commentaires"
       }
     },
     "articles": {
@@ -268,7 +269,21 @@
       "userPanelHeader": "Auteur dans le commentaire",
       "actions": "Actions",
       "ratingOverrides": "Override comment rating",
-      "noOverride": "Don't override"
+      "noOverride": "Don't override",
+      "commentContextHeader": "Histoire des commentaires",
+      "goToArticle": "Aller à l'article"
+    },
+    "commentHistory": {
+      "guestUser": "Visiteur non authentifié",
+      "unknownUser": "Utilisateur sans nom",
+      "addComment": "Créer un nouveau commentaire"
+    },
+    "commentPreview": {
+      "noTags": "Pas de tags",
+      "source": "Source",
+      "noSource": "Pas de source",
+      "editComment": "Modifier le commentaire",
+      "noContent": "Ce commentaire n'a pas de contenu."
     },
     "commentUser": {
       "selectExistingUser": "Sélectionner les utilisateurs enregistrés",
@@ -835,7 +850,6 @@
       "Unknown": "Inconnu",
       "subTitle": "Abonnement",
       "userRoles": "Rôles de l'utilisateur·trice",
-      "properties": "Propriétés",
       "active": "Actif",
       "cancel": "Annuler",
       "close": "Fermer",

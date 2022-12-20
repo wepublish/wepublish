@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {Form, Message, SelectPicker, toaster} from 'rsuite'
 
 import {FullUserFragment, useUserListQuery} from '../../api'
@@ -73,6 +73,10 @@ export function UserSearch({
     return userLabel
   }
 
+  const formData = useMemo(() => {
+    return users.map(usr => ({value: usr?.id, label: getUserLabel(usr)}))
+  }, [users])
+
   // if one wants to reset a filter, it's not working when setting the value property
   function getResetableSelectPicker() {
     if (resetFilterKey) {
@@ -84,7 +88,7 @@ export function UserSearch({
             block
             name={name}
             disabled={loading || !!error}
-            data={users.map(usr => ({value: usr?.id, label: getUserLabel(usr)}))}
+            data={formData}
             cleanable
             accepter={SelectPicker}
             onChange={(userId: any) => setUser(userId)}
