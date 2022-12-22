@@ -1407,12 +1407,12 @@ export type PageRevision = {
   publishAt?: Maybe<Scalars['DateTime']>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   revision: Scalars['Int'];
-  slug: Scalars['Slug'];
+  slug?: Maybe<Scalars['Slug']>;
   socialMediaDescription?: Maybe<Scalars['String']>;
   socialMediaImage?: Maybe<Image>;
   socialMediaTitle?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
-  title: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   url: Scalars['String'];
 };
