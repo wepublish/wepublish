@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, CheckPicker, Drawer, Form, Message, Schema, toaster} from 'rsuite'
@@ -16,6 +17,10 @@ import {
   PermissionControl
 } from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
+
+const StyledForm = styled(Form)`
+  height: 100%;
+`
 
 export interface UserRoleEditPanelProps {
   id?: string
@@ -125,11 +130,10 @@ function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
 
   return (
     <>
-      <Form
+      <StyledForm
         onSubmit={validationPassed => validationPassed && handleSave()}
         fluid
         model={validationModel}
-        style={{height: '100%'}}
         formValue={{name}}>
         <Drawer.Header>
           <Drawer.Title>
@@ -190,7 +194,7 @@ function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
             />
           </Form.Group>
         </Drawer.Body>
-      </Form>
+      </StyledForm>
     </>
   )
 }

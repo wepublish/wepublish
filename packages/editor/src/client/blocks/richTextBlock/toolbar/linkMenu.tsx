@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdLinkOff} from 'react-icons/md'
@@ -8,6 +9,17 @@ import {useSlate} from 'slate-react'
 import {SubMenuContext} from '../../../atoms/toolbar'
 import {InlineFormat} from '../editor/formats'
 import {WepublishEditor} from '../editor/wepublishEditor'
+
+const StyledSelect = styled.select`
+  background-color: white;
+  border: none;
+  box-shadow: none;
+`
+
+const StyledCol = styled(Col)`
+  text-align: right;
+  margin-top: 0px;
+`
 
 export function LinkMenu() {
   const editor = useSlate()
@@ -85,16 +97,15 @@ export function LinkMenu() {
   return (
     <>
       <Row>
-        <Col xs={24} style={{textAlign: 'right', marginTop: '0px'}}>
+        <StyledCol xs={24}>
           <IconButton icon={<MdClose />} onClick={() => closeMenu()} />
-        </Col>
+        </StyledCol>
       </Row>
       <Form fluid>
         <Form.Group controlId="link">
           <Form.ControlLabel>{t('blocks.richText.link')}</Form.ControlLabel>
           <InputGroup>
-            <select
-              style={{backgroundColor: 'white', border: 'none', boxShadow: 'none'}}
+            <StyledSelect
               value={prefix}
               onChange={e => {
                 setPrefix(e.target.value)
@@ -103,7 +114,7 @@ export function LinkMenu() {
               <option value={prefixType.https}>{prefixType.https}</option>
               <option value={prefixType.mailto}>{prefixType.mailto}</option>
               <option value={prefixType.other}>{prefixType.other}</option>
-            </select>
+            </StyledSelect>
 
             <Form.Control name="url" value={url} onChange={(url: string) => setURL(url)} />
           </InputGroup>

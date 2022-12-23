@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -68,6 +69,46 @@ function useStickyState(defaultValue: string, key: string) {
   return [value, setValue]
 }
 
+const Wrapper = styled.div`
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+`
+
+const StyledSidebar = styled(Sidebar)`
+  display: flex;
+  flex-direction: column;
+`
+
+const StyledSidenav = styled(Sidenav)`
+  flex: 1 1 auto;
+`
+
+const FloatingButton = styled(IconButton)`
+  display: block;
+  opacity: 0;
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  top: 5vh;
+  transition: transform 0.2s ease-in, opacity 0.15s ease-in-out;
+  z-index: 100;
+  transform: translateX(${props => (props.isExpanded ? '243px' : '38px')});
+
+  .rs-sidebar:hover & {
+    opacity: 1;
+  }
+`
+
+const StyledNav = styled(Nav)`
+  margin-top: 1rem;
+`
+
+const StyledContainer = styled(Container)`
+  padding: 60px 40px;
+  overflow-y: scroll;
+`
+
 export function Base({children}: BaseProps) {
   const {pathname} = useLocation()
   const path = pathname.substring(1)
@@ -83,41 +124,21 @@ export function Base({children}: BaseProps) {
   }, [uiLanguage])
 
   return (
-    <div style={{display: 'flex', height: '100vh', width: '100vw'}}>
+    <Wrapper>
       <Container>
-        <Sidebar
-          style={{display: 'flex', flexDirection: 'column'}}
-          width={isExpanded ? 260 : 56}
-          collapsible>
-          <Sidenav
-            expanded={isExpanded}
-            defaultOpenKeys={['1']}
-            appearance="default"
-            style={{flex: '1 1 auto'}}>
+        <StyledSidebar isExpanded={isExpanded} collapsible width={isExpanded ? 260 : 56}>
+          <StyledSidenav expanded={isExpanded} defaultOpenKeys={['1']} appearance="default">
             <Sidenav.Body>
-              <IconButton
-                style={{
-                  position: 'absolute',
-                  top: '5vh',
-                  transform: `translateX(${isExpanded ? '243px' : '38px'})`,
-                  transition: 'transform 0.2s ease-in',
-                  zIndex: 100
-                }}
-                className="collapse-nav-btn"
+              <FloatingButton
+                isExpanded={isExpanded}
                 appearance="primary"
                 circle
                 size="xs"
                 onClick={() => setIsExpanded(!isExpanded)}
-                icon={
-                  isExpanded ? (
-                    <MdChevronLeft style={{fontSize: '1.3333em'}} />
-                  ) : (
-                    <MdChevronRight style={{fontSize: '1.3333em'}} />
-                  )
-                }
+                icon={isExpanded ? <MdChevronLeft /> : <MdChevronRight />}
               />
 
-              <Nav style={{marginTop: '1rem'}}>
+              <StyledNav>
                 <PermissionControl
                   qualifyingPermissions={[
                     'CAN_GET_ARTICLES',
@@ -419,9 +440,9 @@ export function Base({children}: BaseProps) {
                     {t('navbar.settings')}
                   </Nav.Item>
                 </PermissionControl>
-              </Nav>
+              </StyledNav>
             </Sidenav.Body>
-          </Sidenav>
+          </StyledSidenav>
           <Navbar appearance="default" className="nav-toggle">
             <Nav>
               <Nav.Menu
@@ -467,18 +488,9 @@ export function Base({children}: BaseProps) {
               </Nav.Menu>
             </Nav>
           </Navbar>
-        </Sidebar>
-        <Container
-          style={{
-            paddingTop: '60px',
-            paddingBottom: '60px',
-            paddingLeft: '40px',
-            paddingRight: '40px',
-            overflowY: 'scroll'
-          }}>
-          {children}
-        </Container>
+        </StyledSidebar>
+        <StyledContainer>{children}</StyledContainer>
       </Container>
-    </div>
+    </Wrapper>
   )
 }

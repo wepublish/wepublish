@@ -1,5 +1,6 @@
 import './toolbar.less'
 
+import styled from '@emotion/styled'
 import React, {
   createContext,
   forwardRef,
@@ -17,6 +18,60 @@ import {useSlate} from 'slate-react'
 import {Format} from '../blocks/richTextBlock/editor/formats'
 import {WepublishEditor} from '../blocks/richTextBlock/editor/wepublishEditor'
 
+const StyledToolbarDivider = styled(Divider)`
+  height: 1.5em;
+`
+
+const StyledControlsChildrenWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+`
+
+const StyledControls = styled.div`
+  width: 100%;
+`
+
+const StyledIcon = styled.div`
+  min-width: 15px;
+`
+
+const CloseIcon = styled(MdClose)`
+  min-width: 15px;
+`
+
+const StyledToolbarButton = styled.button<{active: boolean}>`
+  border: 1px solid;
+  border-color: ${({active}) => (active ? 'blue' : 'black')};
+`
+
+const StyledChildrenWrapper = styled.div<{fadeOut: boolean}>`
+  display: flex;
+  transition-property: opacity;
+  transition-duration: 100ms;
+  opacity: ${({fadeOut}) => (fadeOut ? 0.5 : 1)};
+`
+
+const StyledToolbarInner = styled.div`
+  pointer-events: auto;
+  padding: 5;
+  background-color: white;
+  border-radius: 6;
+  transition-property: opacity;
+  transition-duration: 100ms;
+`
+
+const StyledToolbar = styled.div`
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+  z-index: 1;
+  margin-bottom: 30;
+`
+
 export interface ToolbarProps {
   readonly onMouseDown?: ReactEventHandler
   readonly fadeOut?: boolean
@@ -25,39 +80,11 @@ export interface ToolbarProps {
 
 export function Toolbar({onMouseDown, fadeOut = false, children}: ToolbarProps) {
   return (
-    <div
-      onMouseDown={onMouseDown}
-      style={{
-        pointerEvents: 'none',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-
-        position: 'sticky',
-        zIndex: 1,
-        marginBottom: 30
-      }}>
-      <div
-        style={{
-          pointerEvents: 'auto',
-          padding: 5,
-          backgroundColor: 'white',
-          borderRadius: 6,
-
-          transitionProperty: 'opacity',
-          transitionDuration: '100ms'
-        }}>
-        <div
-          style={{
-            display: 'flex',
-            opacity: fadeOut ? 0.5 : 1,
-            transitionProperty: 'opacity',
-            transitionDuration: '100ms'
-          }}>
-          {children}
-        </div>
-      </div>
-    </div>
+    <StyledToolbar onMouseDown={onMouseDown}>
+      <StyledToolbarInner>
+        <StyledChildrenWrapper fadeOut={fadeOut}>{children}</StyledChildrenWrapper>
+      </StyledToolbarInner>
+    </StyledToolbar>
   )
 }
 
@@ -72,16 +99,14 @@ export interface ToolbarButtonProps extends BaseToolbarButtonProps {
 export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   ({active, children, ...props}, ref) => {
     return (
-      <button
+      <StyledToolbarButton
         type="button"
+        active={!!active}
         className="icon-button"
-        style={{
-          border: `${active ? 'blue' : '#00000000'} 1px solid`
-        }}
         ref={ref}
         {...props}>
         {children}
-      </button>
+      </StyledToolbarButton>
     )
   }
 )
@@ -154,20 +179,7 @@ export const SubMenuButton = forwardRef<OverlayTriggerInstance, SubMenuButtonPro
               e.preventDefault()
               isMenuOpen ? closeMenu() : openMenu()
             }}>
-            {isMenuOpen ? (
-              <MdClose
-                style={{
-                  minWidth: '15px' // width of close icon (14px) so that element does not change size as long as the provided icon is < 15px.
-                }}
-              />
-            ) : (
-              <div
-                style={{
-                  minWidth: '15px' // width of close icon (14px) so that element does not change size as long as the provided icon is < 15px.
-                }}>
-                {icon}
-              </div>
-            )}
+            {isMenuOpen ? <CloseIcon /> : <StyledIcon>{icon}</StyledIcon>}
           </ToolbarButton>
         </Whisper>
       </SubMenuContext.Provider>
@@ -176,7 +188,7 @@ export const SubMenuButton = forwardRef<OverlayTriggerInstance, SubMenuButtonPro
 )
 
 export function ToolbarDivider() {
-  return <Divider style={{height: '1.5em'}} vertical />
+  return <StyledToolbarDivider vertical />
 }
 
 interface ControlsContainerProps {
@@ -188,19 +200,11 @@ interface ControlsContainerProps {
 export function ControlsContainer({children, dividerTop, dividerBottom}: ControlsContainerProps) {
   // TODO find rsuite component
   return (
-    <div style={{width: '100%'}}>
+    <StyledControls>
       {dividerTop && <Divider />}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          width: '100%'
-        }}>
-        {children}
-      </div>
+      <StyledControlsChildrenWrapper>{children}</StyledControlsChildrenWrapper>
       {dividerBottom && <Divider />}
-    </div>
+    </StyledControls>
   )
 }
 

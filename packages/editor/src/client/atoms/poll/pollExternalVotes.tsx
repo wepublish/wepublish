@@ -1,4 +1,5 @@
 import {ApolloError} from '@apollo/client'
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
@@ -13,6 +14,10 @@ import {
   useCreatePollExternalVoteSourceMutation,
   useDeletePollExternalVoteSourceMutation
 } from '../../api'
+
+const StyledRow = styled(Row)`
+  margin-top: 20px;
+`
 
 /**
  *  COMPONENT HELPERS
@@ -167,7 +172,7 @@ export function AddSource({poll, setLoading, onPollChange}: addSourceProps) {
   }
   return (
     <>
-      <Row style={{marginTop: '20px'}}>
+      <StyledRow>
         <Col xs={12}>
           <FormControl
             name="addNewSource"
@@ -181,7 +186,7 @@ export function AddSource({poll, setLoading, onPollChange}: addSourceProps) {
             {t('pollExternalVotes.addSourceBtn')}
           </IconButton>
         </Col>
-      </Row>
+      </StyledRow>
     </>
   )
 }

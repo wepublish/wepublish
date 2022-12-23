@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdChevronLeft} from 'react-icons/md'
@@ -38,6 +39,39 @@ import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {generateID} from '../utility'
+
+const StyledPanel = styled(Panel)`
+  margin-top: 20px;
+`
+
+const StyledColTextAlign = styled(Col)`
+  text-align: end;
+`
+
+const StyledGrid = styled(Grid)`
+  width: 100%;
+  padding-left: 0px;
+  height: calc(100vh - 160px);
+  overflow-y: scroll;
+`
+
+const StyledCol = styled(Col)`
+  padding-top: 3px;
+  margin-right: 1rem;
+`
+
+const StyledFlexboxGrid = styled(FlexboxGrid)`
+  padding-right: 5px;
+  padding-bottom: 20px;
+`
+
+const ButtonMarginRight = styled(Button)`
+  margin-right: 10px;
+`
+
+const StyledLoader = styled(Loader)`
+  margin-right: 5px;
+`
 
 export interface UserProperty {
   readonly key: string
@@ -291,7 +325,7 @@ function UserEditView() {
     if (isDisabled) {
       return (
         <>
-          <Loader style={{marginRight: '5px'}} />
+          <StyledLoader />
           {t('userCreateOrEditView.loadingUser')}
         </>
       )
@@ -308,14 +342,13 @@ function UserEditView() {
     return (
       <>
         {/* save button */}
-        <Button
+        <ButtonMarginRight
           appearance="ghost"
           loading={isDisabled}
           type="submit"
-          data-testid="saveButton"
-          style={{marginRight: '10px'}}>
+          data-testid="saveButton">
           {user ? t('save') : t('create')}
-        </Button>
+        </ButtonMarginRight>
         {/* save and close button */}
         <Button
           appearance="primary"
@@ -337,17 +370,17 @@ function UserEditView() {
         model={validationModel}
         formValue={{name, email, password}}>
         {/* heading */}
-        <FlexboxGrid align="middle" style={{paddingRight: '5px', paddingBottom: '20px'}}>
+        <StyledFlexboxGrid align="middle">
           {/* title */}
           <FlexboxGrid.Item colspan={12}>
             <Row>
-              <Col xs={2} style={{paddingTop: '3px', marginRight: '1rem'}}>
+              <StyledCol xs={2}>
                 <Link to="/users">
                   <h1>
                     <MdChevronLeft />
                   </h1>
                 </Link>
-              </Col>
+              </StyledCol>
               <Col xs={16}>
                 <h2>{titleView()}</h2>
               </Col>
@@ -357,15 +390,9 @@ function UserEditView() {
           <FlexboxGrid.Item colspan={12} style={{textAlign: 'right'}}>
             {actionsView()}
           </FlexboxGrid.Item>
-        </FlexboxGrid>
+        </StyledFlexboxGrid>
         {/* user form */}
-        <Grid
-          style={{
-            width: '100%',
-            paddingLeft: '0px',
-            height: 'calc(100vh - 160px)',
-            overflowY: 'scroll'
-          }}>
+        <StyledGrid>
           <Row gutter={10}>
             <Col xs={12}>
               <Grid fluid>
@@ -384,7 +411,7 @@ function UserEditView() {
                       />
                     </Col>
                     {/* active / inactive */}
-                    <Col xs={12} style={{textAlign: 'end'}}>
+                    <StyledColTextAlign xs={12}>
                       <Form.Group controlId="active">
                         <Form.ControlLabel>{t('userCreateOrEditView.active')}</Form.ControlLabel>
                         <Toggle
@@ -393,7 +420,7 @@ function UserEditView() {
                           onChange={value => setActive(value)}
                         />
                       </Form.Group>
-                    </Col>
+                    </StyledColTextAlign>
                   </Row>
 
                   <Row gutter={10}>
@@ -550,10 +577,7 @@ function UserEditView() {
                   </Row>
                 </Panel>
                 {/* roles */}
-                <Panel
-                  bordered
-                  header={t('userCreateOrEditView.userRoles')}
-                  style={{marginTop: '20px'}}>
+                <StyledPanel bordered header={t('userCreateOrEditView.userRoles')}>
                   <Row gutter={10}>
                     <Col xs={24}>
                       <Form.Group controlId="userRoles">
@@ -574,12 +598,9 @@ function UserEditView() {
                       </Form.Group>
                     </Col>
                   </Row>
-                </Panel>
+                </StyledPanel>
                 {/* properties */}
-                <Panel
-                  bordered
-                  header={t('userCreateOrEditView.properties')}
-                  style={{marginTop: '20px'}}>
+                <StyledPanel bordered header={t('userCreateOrEditView.properties')}>
                   <Row gutter={10}>
                     <Col xs={24}>
                       <Form.Group controlId="userProperties">
@@ -632,12 +653,9 @@ function UserEditView() {
                       </Form.Group>
                     </Col>
                   </Row>
-                </Panel>
+                </StyledPanel>
                 {/* password */}
-                <Panel
-                  bordered
-                  header={t('userCreateOrEditView.passwordHeader')}
-                  style={{marginTop: '20px'}}>
+                <StyledPanel bordered header={t('userCreateOrEditView.passwordHeader')}>
                   <Row gutter={10}>
                     <Col xs={24}>
                       <EditUserPassword
@@ -648,7 +666,7 @@ function UserEditView() {
                       />
                     </Col>
                   </Row>
-                </Panel>
+                </StyledPanel>
               </Grid>
             </Col>
             {/* subscriptions */}
@@ -660,7 +678,7 @@ function UserEditView() {
               </Grid>
             </Col>
           </Row>
-        </Grid>
+        </StyledGrid>
       </Form>
 
       {/* image selection panel */}

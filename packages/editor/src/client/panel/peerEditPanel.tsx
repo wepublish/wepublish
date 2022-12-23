@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, Message, Panel, Schema, toaster} from 'rsuite'
@@ -28,6 +29,24 @@ export interface PeerEditPanelProps {
   onClose?(): void
   onSave?(): void
 }
+
+const StyledForm = styled(Form)`
+  height: 100%;
+`
+
+const ThemeColor = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const ThemeColorBox = styled.div<{themeColor: string}>`
+  width: 30px;
+  height: 20px;
+  padding: 5px;
+  margin-left: 5px;
+  border: 1px solid #575757;
+  background-color: ${({themeColor}) => themeColor};
+`
 
 function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
   const isAuthorized = authorise('CAN_CREATE_PEER')
@@ -139,13 +158,12 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
 
   return (
     <>
-      <Form
+      <StyledForm
         fluid
         disabled={!isAuthorized}
         onSubmit={validationPassed => validationPassed && handleSave()}
         model={validationModel}
-        formValue={{name, url: urlString, token}}
-        style={{height: '100%'}}>
+        formValue={{name, url: urlString, token}}>
         <Drawer.Header>
           <Drawer.Title>
             {id ? t('peerList.panels.editPeer') : t('peerList.panels.createPeer')}
@@ -238,34 +256,16 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
                     {profile?.name}
                   </DescriptionListItem>
                   <DescriptionListItem label={t('peerList.panels.themeColor')}>
-                    <div style={{display: 'flex', flexDirection: 'row'}}>
+                    <ThemeColor>
                       <p>{profile?.themeColor}</p>
-                      <div
-                        style={{
-                          backgroundColor: profile?.themeColor,
-                          width: '30px',
-                          height: '20px',
-                          padding: '5px',
-                          marginLeft: '5px',
-                          border: '1px solid #575757'
-                        }}
-                      />
-                    </div>
+                      <ThemeColorBox themeColor={profile.themeColor} />
+                    </ThemeColor>
                   </DescriptionListItem>
                   <DescriptionListItem label={t('peerList.panels.themeFontColor')}>
-                    <div style={{display: 'flex', flexDirection: 'row'}}>
+                    <ThemeColor>
                       <p>{profile?.themeFontColor}</p>
-                      <div
-                        style={{
-                          backgroundColor: profile?.themeFontColor,
-                          width: '30px',
-                          height: '20px',
-                          padding: '5px',
-                          marginLeft: '5px',
-                          border: '1px solid #575757'
-                        }}
-                      />
-                    </div>
+                      <ThemeColorBox themeColor={profile?.themeFontColor} />
+                    </ThemeColor>
                   </DescriptionListItem>
                   <DescriptionListItem label={t('peerList.panels.callToActionText')}>
                     {!!profile?.callToActionText && (
@@ -292,7 +292,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
             )}
           </PermissionControl>
         </Drawer.Body>
-      </Form>
+      </StyledForm>
     </>
   )
 }

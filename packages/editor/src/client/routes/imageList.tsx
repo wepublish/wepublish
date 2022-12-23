@@ -130,12 +130,6 @@ function ImageList() {
             <HeaderCell>{t('images.overview.image')}</HeaderCell>
             <Cell>
               {(rowData: ImageRefFragment) => (
-                // <Link route={ImageEditRoute.create({id: rowData.id}, current ?? undefined)}>
-                // <img
-                //   src={rowData.thumbURL || ''}
-                //   style={{height: '70', width: 'auto', display: 'block', margin: '0 auto'}}
-                // />
-                // </Link>
                 <Link to={`/images/edit/${rowData.id}`}>
                   <img
                     src={rowData.thumbURL || ''}

@@ -1,10 +1,15 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Input, Message, Panel, toaster} from 'rsuite'
 
 import {TokenListDocument, useCreateTokenMutation} from '../api'
-import {getOperationNameFromDocument} from '../utility'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+import {getOperationNameFromDocument} from '../utility'
+
+const StyledMessage = styled(Message)`
+  margin-top: 5px;
+`
 
 export interface TokenGeneratePanelProps {
   onClose?(): void
@@ -57,9 +62,9 @@ function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
           <>
             <p>{t('tokenList.panels.creationSuccess')}</p>
             <Panel bordered>{token}</Panel>
-            <Message showIcon style={{marginTop: 5}} type="warning">
+            <StyledMessage showIcon type="warning">
               {t('tokenList.panels.tokenWarning')}
-            </Message>
+            </StyledMessage>
           </>
         ) : (
           <Input

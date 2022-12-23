@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdLink} from 'react-icons/md'
@@ -37,6 +38,20 @@ import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {generateID, getOperationNameFromDocument, slugify} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
+
+const StyledInputGroup = styled(InputGroup)`
+  width: 230px;
+  margin-left: 5px;
+`
+
+const StyledControls = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const StyledForm = styled(Form)`
+  height: 100%;
+`
 
 export interface AuthorEditPanelProps {
   id?: string
@@ -156,12 +171,11 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
   return (
     <>
-      <Form
+      <StyledForm
         onSubmit={validationPassed => validationPassed && handleSave()}
         fluid
         model={validationModel}
-        formValue={{name}}
-        style={{height: '100%'}}>
+        formValue={{name}}>
         <Drawer.Header>
           <Drawer.Title>
             {id ? t('authors.panels.editAuthor') : t('authors.panels.createAuthor')}
@@ -234,7 +248,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                 }}
                 defaultValue={{title: '', url: ''}}>
                 {({value, onChange}) => (
-                  <div style={{display: 'flex', flexDirection: 'row'}}>
+                  <StyledControls>
                     <Form.Control
                       name="title"
                       placeholder={t('authors.panels.title')}
@@ -242,7 +256,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                       onChange={(title: string) => onChange({...value, title})}
                     />
                     <Form.Group>
-                      <InputGroup inside style={{width: '230px', marginLeft: '5px'}}>
+                      <StyledInputGroup inside>
                         <InputGroup.Addon>
                           <MdLink />
                         </InputGroup.Addon>
@@ -254,9 +268,9 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                           onChange={(url: any) => onChange({...value, url})}
                           accepter={Input}
                         />
-                      </InputGroup>
+                      </StyledInputGroup>
                     </Form.Group>
-                  </div>
+                  </StyledControls>
                 )}
               </ListInput>
             </Panel>
@@ -271,7 +285,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             </Panel>
           </PanelGroup>
         </Drawer.Body>
-      </Form>
+      </StyledForm>
 
       <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel

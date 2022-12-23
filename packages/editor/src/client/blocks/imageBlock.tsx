@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdBuild, MdEdit, MdPhoto} from 'react-icons/md'
@@ -10,6 +11,24 @@ import {TypographicTextArea} from '../atoms/typographicTextArea'
 import {ImageEditPanel} from '../panel/imageEditPanel'
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImageBlockValue} from './types'
+
+export const StyledPanel = styled(Panel)`
+  height: 300px;
+  margin-bottom: 0;
+  overflow: hidden;
+`
+
+export const StyledImagePanel = styled(Panel)<{image: ImageRefFragment}>`
+  padding: 0;
+  position: relative;
+  height: 100%;
+  background-size: ${({image}) => (image?.height > 300 ? 'contain' : 'auto')};
+  background-position-x: center;
+  background-position-y: center;
+  background-repeat: no-repeat;
+  background-image: ${({image}) =>
+    image?.largeURL ? `url(${image?.largeURL})` : 'https://via.placeholder.com/240x240'};
+`
 
 // TODO: Handle disabled prop
 export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockValue>) {
@@ -31,27 +50,10 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
 
   return (
     <>
-      <Panel
-        bodyFill
-        bordered
-        style={{
-          height: 300,
-          overflow: 'hidden',
-          marginBottom: 10
-        }}>
+      <StyledPanel bodyFill bordered>
         <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
           {image && (
-            <Panel
-              style={{
-                padding: 0,
-                position: 'relative',
-                height: '100%',
-                backgroundSize: `${image?.height > 300 ? 'contain' : 'auto'}`,
-                backgroundPositionX: 'center',
-                backgroundPositionY: 'center',
-                backgroundRepeat: 'no-repeat',
-                backgroundImage: `url(${image?.largeURL ?? 'https://via.placeholder.com/240x240'})`
-              }}>
+            <StyledImagePanel image={image}>
               <Dropdown
                 renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
                   <IconButton {...props} ref={ref} icon={<MdBuild />} circle appearance="subtle" />
@@ -64,10 +66,10 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
                 </Dropdown.Item>
                 {/* TODO: Meta sync for metadata image */}
               </Dropdown>
-            </Panel>
+            </StyledImagePanel>
           )}
         </PlaceholderInput>
-      </Panel>
+      </StyledPanel>
       <TypographicTextArea
         variant="subtitle2"
         align="center"

@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import imageCompression from 'browser-image-compression'
 import prettyBytes from 'pretty-bytes'
 import React, {useEffect, useState} from 'react'
@@ -21,6 +22,14 @@ import {
   PermissionControl
 } from '../atoms/permissionControl'
 import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
+
+const StyledPanel = styled(Panel)`
+  background-color: dark;
+`
+
+const StyledForm = styled(Form)`
+  height: 100%;
+`
 
 export interface ImageEditPanelProps {
   readonly id?: string
@@ -249,11 +258,10 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
 
   return (
     <>
-      <Form
+      <StyledForm
         fluid
         model={validationModel}
-        onSubmit={validationPassed => validationPassed && handleSave()}
-        style={{height: '100%'}}>
+        onSubmit={validationPassed => validationPassed && handleSave()}>
         <Drawer.Header>
           <Drawer.Title>
             {isUpload ? t('images.panels.uploadImage') : t('images.panels.editImage')}
@@ -274,7 +282,7 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
         <Drawer.Body>
           {!isLoading && (
             <>
-              <Panel style={{backgroundColor: 'dark'}}>
+              <StyledPanel>
                 {imageURL && imageWidth && imageHeight && (
                   <FocalPointInput
                     imageURL={imageURL}
@@ -285,7 +293,7 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
                     onChange={point => setFocalPoint(point)}
                   />
                 )}
-              </Panel>
+              </StyledPanel>
               <Panel header={t('images.panels.description')}>
                 <DescriptionList>
                   <DescriptionListItem label={t('images.panels.filename')}>
@@ -393,7 +401,7 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
             </>
           )}
         </Drawer.Body>
-      </Form>
+      </StyledForm>
     </>
   )
 }

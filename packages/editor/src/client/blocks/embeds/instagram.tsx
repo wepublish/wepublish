@@ -1,5 +1,14 @@
-import React, {createContext, useContext, useEffect, ReactNode} from 'react'
+import styled from '@emotion/styled'
+import React, {createContext, ReactNode, useContext, useEffect} from 'react'
+
 import {useScript} from '../../utility'
+
+const StyledWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  min-height: 300;
+  padding: 20;
+`
 
 // Define some globals set by the SDKs.
 declare global {
@@ -50,13 +59,7 @@ export function InstagramPostEmbed({postID}: InstagramPostEmbedProps) {
   }, [isLoaded, isLoading])
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        minHeight: 300,
-        padding: 20
-      }}>
+    <StyledWrapper>
       <blockquote
         className="instagram-media"
         data-width="100%"
@@ -64,6 +67,6 @@ export function InstagramPostEmbed({postID}: InstagramPostEmbedProps) {
         data-instgrm-permalink={`https://www.instagram.com/p/${encodeURIComponent(postID)}/`}
         data-instgrm-version="12"
       />
-    </div>
+    </StyledWrapper>
   )
 }

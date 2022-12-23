@@ -1,10 +1,11 @@
+import styled from '@emotion/styled'
 import React, {
   createContext,
   ReactNode,
-  useRef,
+  RefObject,
   useContext,
   useEffect,
-  RefObject,
+  useRef,
   useState
 } from 'react'
 
@@ -19,21 +20,30 @@ export interface DraggableContainerProps {
   readonly children?: ReactNode
 }
 
+const StyledContainer = styled.div`
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+`
+
+const StyledDraggable = styled.div<{layouted: boolean}>`
+  cursor: move;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+  user-select: none;
+  display: ${({layouted}) => (layouted ? 'block' : 'none')};
+`
+
 export function DraggableContainer({children}: DraggableContainerProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        overflow: 'hidden',
-        width: '100%',
-        height: '100%',
-        userSelect: 'none'
-      }}
-      ref={ref}>
+    <StyledContainer ref={ref}>
       <DraggableContext.Provider value={ref}>{children}</DraggableContext.Provider>
-    </div>
+    </StyledContainer>
   )
 }
 
@@ -139,17 +149,8 @@ export function Draggable({children, point, disabled, onChange}: DraggableProps)
   }, [containerRef, draggableRef, point, disabled])
 
   return (
-    <div
-      ref={draggableRef}
-      style={{
-        display: layouted ? 'block' : 'none',
-        cursor: 'move',
-        position: 'absolute',
-        transform: 'translate(-50%, -50%)',
-        transformOrigin: 'center',
-        userSelect: 'none'
-      }}>
+    <StyledDraggable layouted={layouted} ref={draggableRef}>
       {children}
-    </div>
+    </StyledDraggable>
   )
 }

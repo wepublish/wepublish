@@ -1,30 +1,27 @@
+import styled from '@emotion/styled'
 import React, {forwardRef, ReactNode} from 'react'
 
-import {hexToRgba, BlurStrength} from './helpers'
+import {BlurStrength} from './helpers'
 
 export interface OverlayProps extends React.ComponentPropsWithRef<'div'> {
   children?: ReactNode
 }
 
+const StyledOverlay = styled.div<{position?: string}>`
+  color: white;
+  display: block;
+  position: absolute;
+  backdrop-filter: blur(${BlurStrength.Strong});
+  background-color: rgba(0, 0, 0, 0.8);
+`
+
 export const Overlay = forwardRef<HTMLImageElement, OverlayProps>(function Image(
-  {children, style, ...props},
+  {children, className, ...props},
   ref
 ) {
   return (
-    <div
-      style={{
-        display: 'block',
-        position: style?.position ?? 'absolute',
-        backgroundColor: hexToRgba('black', 0.8),
-        color: 'white',
-
-        backdropFilter: `blur(${BlurStrength.Strong})`,
-
-        ...style
-      }}
-      {...props}
-      ref={ref}>
+    <StyledOverlay className={className} {...props} ref={ref}>
       {children}
-    </div>
+    </StyledOverlay>
   )
 })

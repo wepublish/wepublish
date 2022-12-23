@@ -1,5 +1,6 @@
 import './dateTimePicker.less'
 
+import styled from '@emotion/styled'
 import React, {useState} from 'react'
 import DatePicker from 'react-datepicker'
 import {useTranslation} from 'react-i18next'
@@ -21,6 +22,20 @@ export interface DateTimePickerProps {
   helpInfo?: string
   disabled?: boolean
 }
+
+const Header = styled.div`
+  margin: 5px auto;
+`
+
+const StyledPopover = styled(Popover)`
+  max-width: 300px;
+`
+
+const PresetsButton = styled(Button)`
+  white-space: break-spaces;
+  padding: 3px;
+  margin: 1px;
+`
 
 export function DateTimePicker({
   dateTime,
@@ -76,26 +91,27 @@ export function DateTimePicker({
       changeDate(day)
     }
   }
+
   return (
     <>
-      <div style={{marginTop: '5px', marginBottom: '5px'}}>
-        <Form.ControlLabel style={{marginRight: '5px'}}>{label}</Form.ControlLabel>
+      <Header>
+        <Form.ControlLabel>{label}</Form.ControlLabel>
         {helpInfo ? (
           <Whisper
             placement="right"
             trigger="hover"
             controlId="control-id-hover"
             speaker={
-              <Popover style={{maxWidth: 300}}>
+              <StyledPopover>
                 <p>{helpInfo}</p>
-              </Popover>
+              </StyledPopover>
             }>
             <IconButton icon={<MdInfo />} circle size="xs" />
           </Whisper>
         ) : (
           ''
         )}
-      </div>
+      </Header>
       <DatePicker
         disabled={disabled}
         isClearable
@@ -111,26 +127,24 @@ export function DateTimePicker({
         <ButtonToolbar>
           <ButtonGroup justified>
             {dateButtonPresets.map((datePreset, i) => (
-              <Button
-                style={{whiteSpace: 'break-spaces', padding: '3px', margin: '1px'}}
+              <PresetsButton
                 key={i}
                 size="xs"
                 onClick={() => handleDatePresetButton(datePreset.offset)}>
                 {datePreset.label}
-              </Button>
+              </PresetsButton>
             ))}
           </ButtonGroup>
         </ButtonToolbar>
         <ButtonToolbar>
           <ButtonGroup justified>
             {timeButtonPresets.map((timePreset, i) => (
-              <Button
-                style={{whiteSpace: 'break-spaces', padding: '3px', margin: '1px'}}
+              <PresetsButton
                 key={i}
                 size="xs"
                 onClick={() => handleTimePresetButton(timePreset.offset)}>
                 {timePreset.label}
-              </Button>
+              </PresetsButton>
             ))}
           </ButtonGroup>
         </ButtonToolbar>

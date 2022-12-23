@@ -1,9 +1,14 @@
+import styled from '@emotion/styled'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, DatePicker, Form, Message, Modal, SelectPicker} from 'rsuite'
 
 import {SubscriptionDeactivationReason} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+
+const StyledForm = styled(Form)`
+  margin-top: 20px;
+`
 
 export interface DeactivateSubscription {
   date: Date
@@ -62,7 +67,7 @@ function UserSubscriptionDeactivatePanel({
           )}
         </p>
         {!isDeactivated && (
-          <Form style={{marginTop: '20px'}} fluid>
+          <StyledForm fluid>
             <Form.Group controlId="deactivationDate">
               <Form.ControlLabel>{t('userSubscriptionEdit.deactivation.date')}</Form.ControlLabel>
               <DatePicker
@@ -101,7 +106,7 @@ function UserSubscriptionDeactivatePanel({
             <Message showIcon type="info">
               {t('userSubscriptionEdit.deactivation.help')}
             </Message>
-          </Form>
+          </StyledForm>
         )}
       </Modal.Body>
 

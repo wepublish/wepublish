@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdReplay, MdSend} from 'react-icons/md'
@@ -6,6 +7,18 @@ import {Button, Form, Message, Modal, toaster} from 'rsuite'
 import {FullUserFragment, useSendWebsiteLoginMutation} from '../../api'
 import {toggleRequiredLabel} from '../../toggleRequiredLabel'
 import {ResetUserPasswordForm} from './resetUserPasswordForm'
+
+const StyledReplayIcon = styled(MdReplay)`
+  margin-right: 5px;
+`
+
+const StyledSendIcon = styled(MdSend)`
+  margin-right: 5px;
+`
+
+const StyledButton = styled(Button)`
+  margin-left: 20px;
+`
 
 interface CreateOrUpdateuserPasswordProps {
   user?: FullUserFragment | null
@@ -62,18 +75,17 @@ export function EditUserPassword({
         <>
           <Form.Group>
             <Button appearance="primary" onClick={() => setIsResetUserPasswordOpen(true)}>
-              <MdReplay style={{marginRight: '5px'}} />
+              <StyledReplayIcon />
               {t('userCreateOrEditView.resetPassword')}
             </Button>
-            <Button
+            <StyledButton
               appearance="primary"
               color="red"
-              style={{marginLeft: '20px'}}
               disabled={isDisabled || !user.email || !user.active}
               onClick={() => setSendLoginModalOpen(true)}>
-              <MdSend style={{marginRight: '5px'}} />
+              <StyledSendIcon />
               {t('userCreateOrEditView.sendWebsiteLogin')}
-            </Button>
+            </StyledButton>
           </Form.Group>
         </>
       )

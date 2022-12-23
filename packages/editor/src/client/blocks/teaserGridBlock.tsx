@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import arrayMove from 'array-move'
 import nanoid from 'nanoid'
 import React, {ReactNode, useState} from 'react'
@@ -16,6 +17,77 @@ import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 import {Teaser, TeaserGridBlockValue, TeaserType} from './types'
 
+export const StyledIconButton = styled(IconButton)`
+  margin: 10px;
+`
+
+const StyledSortableContainer = styled.div<{numColumns: number}>`
+  display: grid;
+  grid-template-columns: repeat(${({numColumns}) => `${numColumns}`}, 1fr);
+  grid-gap: 20px;
+  user-select: none;
+`
+
+export const StyledPanel = styled(Panel)<{showGrabCursor: boolean}>`
+  cursor: ${({showGrabCursor}) => showGrabCursor && 'grab'};
+  height: 300px;
+  overflow: hidden;
+  z-index: 1;
+`
+
+export const StyledTeaser = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+`
+const StyledTeaserContent = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+`
+
+const StyledTeaserImage = styled.img`
+  width: 100%;
+  height: 100%;
+`
+
+export const StyledIconWrapper = styled.div`
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  top: 0;
+`
+
+const StyledPeerInfo = styled.div`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const StyledContent = styled.div`
+  margin-bottom: 10px;
+`
+
+const StyledPeerLogo = styled.div`
+  display: flex;
+  margin-bottom: 10px;
+`
+
+const StyledTeaserInfoWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`
+
+const StyledTeaserStyle = styled.div`
+  flex-shrink: 0;
+  margin-right: 10px;
+`
+
+const StyledStatus = styled.div`
+  flex-shrink: 0;
+`
+
 const GridItem = SortableElement((props: TeaserBlockProps) => {
   return <TeaserBlock {...props} />
 })
@@ -26,17 +98,7 @@ interface GridProps {
 }
 
 const Grid = SortableContainer(({children, numColumns}: GridProps) => {
-  return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
-        gridGap: 20,
-        userSelect: 'none'
-      }}>
-      {children}
-    </div>
-  )
+  return <StyledSortableContainer numColumns={numColumns}>{children}</StyledSortableContainer>
 })
 
 export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockValue>) {
@@ -142,59 +204,23 @@ export function TeaserBlock({
   onRemove
 }: TeaserBlockProps) {
   return (
-    <Panel
-      bodyFill
-      style={{
-        cursor: showGrabCursor ? 'grab' : '',
-        height: 300,
-        overflow: 'hidden',
-        zIndex: 1
-      }}>
+    <StyledPanel bodyFill showGrabCursor={showGrabCursor}>
       <PlaceholderInput onAddClick={onChoose}>
         {teaser && (
-          <div
-            style={{
-              position: 'relative',
-              width: '100%',
-              height: '100%'
-            }}>
+          <StyledTeaser>
             {contentForTeaser(teaser, numColumns)}
 
-            <div
-              style={{
-                position: 'absolute',
-                zIndex: 1,
-                right: 0,
-                top: 0
-              }}>
-              <IconButton
-                icon={<MdArticle />}
-                onClick={onChoose}
-                style={{
-                  margin: 10
-                }}
-              />
+            <StyledIconWrapper>
+              <StyledIconButton icon={<MdArticle />} onClick={onChoose} />
               {teaser.type !== TeaserType.PeerArticle || !teaser?.peer?.isDisabled ? (
-                <IconButton
-                  icon={<MdEdit />}
-                  onClick={onEdit}
-                  style={{
-                    margin: 10
-                  }}
-                />
+                <StyledIconButton icon={<MdEdit />} onClick={onEdit} />
               ) : null}
-              <IconButton
-                icon={<MdDelete />}
-                onClick={onRemove}
-                style={{
-                  margin: 10
-                }}
-              />
-            </div>
-          </div>
+              <StyledIconButton icon={<MdDelete />} onClick={onRemove} />
+            </StyledIconWrapper>
+          </StyledTeaser>
         )}
       </PlaceholderInput>
-    </Panel>
+    </StyledPanel>
   )
 }
 
@@ -304,6 +330,13 @@ function labelForTeaserStyle(style: TeaserStyle) {
   }
 }
 
+const StyledOverlay = styled(Overlay)<{isDisabled?: boolean}>`
+  bottom: 0;
+  width: 100%;
+  padding: 10px;
+  height: ${({isDisabled}) => (isDisabled ? '100%' : 'auto')};
+`
+
 export function TeaserContent({
   style,
   preTitle,
@@ -320,51 +353,26 @@ export function TeaserContent({
   const stateJoin = states?.join(' / ')
   return (
     <>
-      <div
-        style={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%'
-        }}>
+      <StyledTeaserContent>
         {image ? (
-          <img
-            style={{
-              width: '100%',
-              height: '100%'
-            }}
+          <StyledTeaserImage
             src={numColumns === 1 ? image.column1URL ?? '' : image.column6URL ?? ''}
           />
         ) : (
           <PlaceholderImage />
         )}
-      </div>
+      </StyledTeaserContent>
 
-      <Overlay
-        style={{
-          bottom: '0px',
-          width: '100%',
-          height: peer && peer.isDisabled === true ? '100%' : 'auto',
-          padding: '10px'
-        }}>
+      <StyledOverlay isDisabled={peer?.isDisabled || false}>
         {peer && peer.isDisabled === true ? (
-          <div
-            style={{
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
+          <StyledPeerInfo>
             <Typography variant="body2" color="white" spacing="small" align="center">
               {t('articleEditor.panels.peerDisabled')}
             </Typography>
-          </div>
+          </StyledPeerInfo>
         ) : (
           <>
-            {' '}
-            <div
-              style={{
-                marginBottom: 10
-              }}>
+            <StyledContent>
               {contentUrl && <div>{contentUrl}</div>}
               {preTitle && (
                 <Typography variant="subtitle1" color="white" spacing="small" ellipsize>
@@ -379,39 +387,27 @@ export function TeaserContent({
                   {lead}
                 </Typography>
               )}
-            </div>
+            </StyledContent>
             {peer && (
-              <div
-                style={{
-                  display: 'flex',
-                  marginBottom: 10
-                }}>
+              <StyledPeerLogo>
                 <Avatar src={peer.profile?.logo?.squareURL ?? undefined} circle />
-              </div>
+              </StyledPeerLogo>
             )}
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap'
-              }}>
-              <div
-                style={{
-                  flexShrink: 0,
-                  marginRight: 10
-                }}>
+            <StyledTeaserInfoWrapper>
+              <StyledTeaserStyle>
                 <Typography variant="subtitle1" color="gray">
                   {t('articleEditor.panels.teaserStyle', {label})}
                 </Typography>
-              </div>
-              <div style={{flexShrink: 0}}>
+              </StyledTeaserStyle>
+              <StyledStatus>
                 <Typography variant="subtitle1" color="gray">
                   {t('articleEditor.panels.status', {stateJoin})}
                 </Typography>
-              </div>
-            </div>
+              </StyledStatus>
+            </StyledTeaserInfoWrapper>
           </>
         )}
-      </Overlay>
+      </StyledOverlay>
     </>
   )
 }

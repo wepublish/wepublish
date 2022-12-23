@@ -2,6 +2,7 @@ import React, {useState, useCallback} from 'react'
 import {Form, Message} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 import {validateURL} from '../utility'
+import styled from '@emotion/styled'
 
 interface UrlValidationProps {
   placeholder: string
@@ -9,6 +10,10 @@ interface UrlValidationProps {
   value?: string
   onChange: (url: string) => void
 }
+
+const StyledMessage = styled(Message)`
+  margin-top: 5px;
+`
 
 export function FormControlUrl({placeholder, name, value, onChange}: UrlValidationProps) {
   const {t} = useTranslation()
@@ -35,9 +40,9 @@ export function FormControlUrl({placeholder, name, value, onChange}: UrlValidati
         }}
       />
       {invalidInput && (
-        <Message showIcon type="error" style={{marginTop: '5px'}}>
+        <StyledMessage showIcon type="error">
           {t('peerList.overview.invalidURLTooltip')}
-        </Message>
+        </StyledMessage>
       )}
     </div>
   )

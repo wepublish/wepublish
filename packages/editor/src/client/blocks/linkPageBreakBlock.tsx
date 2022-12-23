@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
@@ -11,6 +12,39 @@ import {LinkPageBreakEditPanel} from '../panel/linkPageBreakEditPanel'
 import {isFunctionalUpdate} from '../utility'
 import {createDefaultValue, RichTextBlock} from './richTextBlock/richTextBlock'
 import {LinkPageBreakBlockValue, RichTextBlockValue} from './types'
+
+const StyledInput = styled(Input)`
+  font-size: 24px;
+  margin-bottom: 20;
+`
+
+const StyledInputWrapper = styled.div`
+  flex: 1 0 70%;
+`
+
+const StyledChooseImageWrapper = styled.div`
+  flex: 1 0 25%;
+  align-self: center;
+  margin-bottom: 10px;
+`
+
+const StyledContentWrapper = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  margin-top: 50;
+`
+
+const StyledIconWrapper = styled.div`
+  position: absolute;
+  z-index: 1;
+  height: 100%;
+  right: 0;
+`
+
+const StyledLinkPage = styled.div`
+  position: relative;
+  width: 100%;
+`
 
 export type LinkPageBreakBlockProps = BlockProps<LinkPageBreakBlockValue>
 
@@ -45,13 +79,13 @@ export function LinkPageBreakBlock({
 
   return (
     <>
-      <div style={{position: 'relative', width: '100%'}}>
-        <div style={{position: 'absolute', zIndex: 1, height: '100%', right: 0}}>
+      <StyledLinkPage>
+        <StyledIconWrapper>
           <IconButton size="lg" icon={<MdEdit />} onClick={() => setEditPanelOpen(true)} />
-        </div>
-      </div>
-      <div style={{display: 'flex', flexFlow: 'row wrap', marginTop: 50}}>
-        <div style={{flex: '1 0 25%', alignSelf: 'center', marginBottom: '10px'}}>
+        </StyledIconWrapper>
+      </StyledLinkPage>
+      <StyledContentWrapper>
+        <StyledChooseImageWrapper>
           <ChooseEditImage
             header={''}
             image={image}
@@ -60,20 +94,19 @@ export function LinkPageBreakBlock({
             openEditModalOpen={() => setEditModalOpen(true)}
             removeImage={() => onChange(value => ({...value, image: undefined}))}
           />
-        </div>
-        <div style={{flex: '1 0 70%'}}>
-          <Input
+        </StyledChooseImageWrapper>
+        <StyledInputWrapper>
+          <StyledInput
             ref={focusInputRef}
             placeholder={t('blocks.linkPageBreak.title')}
-            style={{fontSize: '24px', marginBottom: 20}}
             value={text}
             disabled={disabled}
             onChange={text => onChange({...value, text})}
           />
 
           <RichTextBlock value={richText || createDefaultValue()} onChange={handleRichTextChange} />
-        </div>
-      </div>
+        </StyledInputWrapper>
+      </StyledContentWrapper>
       <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}

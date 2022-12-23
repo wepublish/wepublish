@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {FormEvent, useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {IoIosRocket, IoLogoFacebook, IoLogoGoogle, IoLogoTwitter} from 'react-icons/io'
@@ -13,13 +14,23 @@ import {
 } from './api'
 import {LoginTemplate} from './atoms/loginTemplate'
 import {AuthDispatchActionType, AuthDispatchContext} from './authContext'
-import {Logo} from './logo'
+import {Background} from './ui/loginBackground'
 import {LocalStorageKey} from './utility'
 
 function useQuery() {
   const {search} = useLocation()
   return React.useMemo(() => new URLSearchParams(search), [search])
 }
+
+const StyledForm = styled(Form)`
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+`
+
+const StyledIconButton = styled(IconButton)`
+  margin-bottom: 10px;
+`
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -174,13 +185,7 @@ export function Login() {
     <LoginTemplate backgroundChildren={<Background />}>
       {!loadingOAuth2 && (
         <>
-          <Form
-            fluid
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              margin: 0
-            }}>
+          <StyledForm fluid>
             <Form.Group controlId="loginEmail">
               <Form.ControlLabel>{t('login.email')}</Form.ControlLabel>
               <Form.Control
@@ -205,19 +210,16 @@ export function Login() {
             <Button appearance="primary" type="submit" disabled={loading} onClick={login}>
               {t('login.login')}
             </Button>
-          </Form>
+          </StyledForm>
           {!!providerData?.authProviders?.length && (
             <>
               <Divider />
               {providerData.authProviders.map(
                 (provider: {url: string; name: string}, index: number) => (
                   <Link to={provider.url} key={index}>
-                    <IconButton
-                      style={{marginBottom: 10}}
-                      appearance="subtle"
-                      icon={getAuthLogo(provider.name)}>
+                    <StyledIconButton appearance="subtle" icon={getAuthLogo(provider.name)}>
                       {provider.name}
-                    </IconButton>
+                    </StyledIconButton>
                   </Link>
                 )
               )}
@@ -236,70 +238,5 @@ export function Login() {
         </div>
       )}
     </LoginTemplate>
-  )
-}
-
-function Background() {
-  return (
-    <div
-      style={{
-        position: 'relative',
-        width: 340,
-        height: 40,
-        transform: 'translateY(-0px)'
-      }}>
-      <div
-        style={{
-          position: 'absolute',
-          left: '50%',
-          width: 260,
-          height: 260,
-          borderRadius: '100%',
-          transform: 'translateX(-50%) translateX(-180px) translateY(-40px)',
-          background: 'linear-gradient(230deg, #F08C1F 0%, #FFA463 100%)'
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          left: '50%',
-          width: 260,
-          height: 260,
-          borderRadius: '100%',
-          transform: 'translateX(-50%) translateX(180px) translateY(-40px)',
-          background: 'linear-gradient(10deg, #29805A 0%, #34D690 100%)'
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          left: '50%',
-          width: 260,
-          height: 260,
-          borderRadius: '100%',
-          transform: 'translateX(-50%) translateY(-140px)',
-          background: 'linear-gradient(-40deg, #03738C 0%, #04C4D9 100%)'
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          width: 340,
-          height: 340,
-          borderRadius: '100%',
-          transform: 'translateY(-80px)',
-          background: 'linear-gradient(-90deg, #D95560 0%, #FF6370 100%)'
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: 230
-        }}>
-        <Logo />
-      </div>
-    </div>
   )
 }

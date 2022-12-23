@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
@@ -18,6 +19,25 @@ import {VimeoVideoEmbed} from './embeds/vimeo'
 import {YouTubeVideoEmbed} from './embeds/youTube'
 import {EmbedBlockValue, EmbedType} from './types'
 
+const StyledPanel = styled(Panel)<{isEmpty: boolean}>`
+  height: ${({isEmpty}) => (isEmpty ? '300px' : undefined)};
+  padding: 0;
+  overflow: hidden;
+  background-color: #f7f9fa;
+`
+
+const StyledWrapper = styled.div`
+  position: relative;
+  width: 100%;
+`
+
+const StyledIconWrapper = styled.div`
+  position: absolute;
+  z-index: 100;
+  height: 100%;
+  right: 0;
+`
+
 // TODO: Handle disabled prop
 export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockValue>) {
   const [isEmbedDialogOpen, setEmbedDialogOpen] = useState(false)
@@ -32,38 +52,20 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
 
   return (
     <>
-      <Panel
-        bodyFill
-        bordered
-        style={{
-          height: isEmpty ? 300 : undefined,
-          padding: 0,
-          overflow: 'hidden',
-          backgroundColor: '#f7f9fa'
-        }}>
+      <StyledPanel bodyFill bordered isEmpty={isEmpty}>
         <PlaceholderInput onAddClick={() => setEmbedDialogOpen(true)}>
           {!isEmpty && (
-            <div
-              style={{
-                position: 'relative',
-                width: '100%'
-              }}>
-              <div
-                style={{
-                  position: 'absolute',
-                  zIndex: 100,
-                  height: '100%',
-                  right: 0
-                }}>
+            <StyledWrapper>
+              <StyledIconWrapper>
                 <IconButton size="lg" icon={<MdEdit />} onClick={() => setEmbedDialogOpen(true)}>
                   {t('blocks.embeds.overview.editEmbed')}
                 </IconButton>
-              </div>
+              </StyledIconWrapper>
               <EmbedPreview value={value} />
-            </div>
+            </StyledWrapper>
           )}
         </PlaceholderInput>
-      </Panel>
+      </StyledPanel>
       <Drawer size="sm" open={isEmbedDialogOpen} onClose={() => setEmbedDialogOpen(false)}>
         <EmbedEditPanel
           value={value}

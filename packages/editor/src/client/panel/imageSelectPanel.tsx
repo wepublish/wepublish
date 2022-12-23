@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdFileUpload, MdSearch} from 'react-icons/md'
@@ -22,6 +23,26 @@ import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {Typography} from '../atoms/typography'
 import {getImgMinSizeToCompress} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
+
+const StyledImgWrapper = styled.div`
+  background-color: #f7f7fa;
+`
+
+const StyledPanel = styled(Panel)`
+  cursor: pointer;
+`
+
+const StyledImg = styled.img`
+  display: block;
+  margin: 0 auto;
+  max-width: 240;
+  max-height: 240;
+  width: 100%;
+`
+
+const StyledFileDropWrapper = styled(Panel)`
+  height: 150px;
+`
 
 export interface ImageSelectPanelProps {
   onClose(): void
@@ -116,13 +137,13 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <Panel bodyFill style={{height: '150px'}}>
+        <StyledFileDropWrapper bodyFill>
           <FileDropInput
             icon={<MdFileUpload />}
             text={t('articleEditor.panels.dropImage')}
             onDrop={handleDrop}
           />
-        </Panel>
+        </StyledFileDropWrapper>
         <Form.ControlLabel>
           <br />
           {t('images.panels.resizedImage', {sizeMB: getImgMinSizeToCompress()})}
@@ -143,24 +164,10 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
                 const {id, mediumURL, title, filename, extension} = image
                 return (
                   <FlexboxGrid.Item key={id} colspan={10} style={{marginBottom: 20}}>
-                    <Panel
-                      style={{cursor: 'pointer'}}
-                      onClick={() => onSelect(image)}
-                      shaded
-                      bordered
-                      bodyFill>
-                      <div style={{backgroundColor: '#f7f7fa'}}>
-                        <img
-                          src={mediumURL || ''}
-                          style={{
-                            display: 'block',
-                            margin: '0 auto',
-                            maxWidth: '240',
-                            maxHeight: '240',
-                            width: '100%'
-                          }}
-                        />
-                      </div>
+                    <StyledPanel onClick={() => onSelect(image)} shaded bordered bodyFill>
+                      <StyledImgWrapper>
+                        <StyledImg src={mediumURL || ''} />
+                      </StyledImgWrapper>
                       <Panel>
                         <Typography variant={'subtitle1'} ellipsize>{`${
                           filename || t('images.panels.untitled')
@@ -169,7 +176,7 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
                           {title || t('images.panels.Untitled')}
                         </Typography>
                       </Panel>
-                    </Panel>
+                    </StyledPanel>
                   </FlexboxGrid.Item>
                 )
               })}

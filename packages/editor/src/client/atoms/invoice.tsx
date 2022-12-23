@@ -1,9 +1,29 @@
+import styled from '@emotion/styled'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdDone, MdMail} from 'react-icons/md'
 import {Button, FlexboxGrid, Message, Modal, Panel, toaster} from 'rsuite'
 
 import {FullUserFragment, InvoiceFragment, InvoiceItem, useUpdateInvoiceMutation} from '../api'
+
+const StyledButton = styled(Button)`
+  margin-top: 20px;
+`
+
+const MailIcon = styled(MdMail)`
+  color: red;
+  font-size: 2em;
+`
+
+const CloseIcon = styled(MdClose)`
+  color: red;
+  font-size: 2em;
+`
+
+const DoneIcon = styled(MdDone)`
+  color: green;
+  font-size: 2em;
+`
 
 export interface InvoiceProps {
   subscriptionId: string
@@ -90,13 +110,12 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
     } else {
       return (
         <>
-          <Button
+          <StyledButton
             onClick={() => setModalOpen(true)}
             appearance="primary"
-            style={{marginTop: '20px'}}
             disabled={!me?.id || disabled}>
             {t('invoice.payManually')}
-          </Button>
+          </StyledButton>
         </>
       )
     }
@@ -116,11 +135,11 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
 
   function invoiceIconView() {
     if (invoice.paidAt) {
-      return <MdDone style={{color: 'green', fontSize: '2em'}} />
+      return <DoneIcon />
     } else if (invoice.canceledAt) {
-      return <MdClose style={{color: 'red', fontSize: '2em'}} />
+      return <CloseIcon />
     } else {
-      return <MdMail style={{color: 'red', fontSize: '2em'}} />
+      return <MailIcon />
     }
   }
 

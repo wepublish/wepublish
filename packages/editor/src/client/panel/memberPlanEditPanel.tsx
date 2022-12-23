@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -45,6 +46,10 @@ import {
 } from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
+
+const StyledForm = styled(Form)`
+  height: 100%;
+`
 
 export interface MemberPlanEditPanelProps {
   id?: string
@@ -209,12 +214,11 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
 
   return (
     <>
-      <Form
+      <StyledForm
         onSubmit={validationPassed => validationPassed && handleSave()}
         fluid
         model={validationModel}
-        formValue={{name: name, currency: amountPerMonthMin}}
-        style={{height: '100%'}}>
+        formValue={{name, currency: amountPerMonthMin}}>
         <Drawer.Header>
           <Drawer.Title>
             {id ? t('memberPlanList.editTitle') : t('memberPlanList.createTitle')}
@@ -383,7 +387,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
             />
           </Drawer>
         )}
-      </Form>
+      </StyledForm>
     </>
   )
 }

@@ -36,13 +36,15 @@ export interface ListViewFiltersProps {
   isLoading: boolean
   onSetFilter(filter: ArticleFilter & PageFilter): void
   setPeerFilter?(value: string): void
+  className?: string
 }
 
 export function ListViewFilters({
   fields,
   filter,
   onSetFilter,
-  setPeerFilter
+  setPeerFilter,
+  className
 }: ListViewFiltersProps) {
   const {t} = useTranslation()
   const [resetFilterKey, setResetFilterkey] = useState<string>(new Date().getTime().toString())
@@ -110,7 +112,7 @@ export function ListViewFilters({
 
   return (
     <>
-      <Form style={{display: 'flex', flexWrap: 'wrap', marginTop: '15px'}}>
+      <Form style={{display: 'flex', flexWrap: 'wrap', marginTop: '15px'}} className={className}>
         {fields.includes('title') && (
           <Form.Group style={formInputStyle}>
             <Input

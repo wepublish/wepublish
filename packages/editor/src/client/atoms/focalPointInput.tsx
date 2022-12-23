@@ -1,8 +1,56 @@
+import styled from '@emotion/styled'
 import React, {useLayoutEffect, useRef, useState} from 'react'
 import {MdCropSquare} from 'react-icons/md'
 import {Panel} from 'rsuite'
 
 import {Draggable, DraggableContainer, Point} from './draggable'
+
+const StyledFocalPoint = styled.div`
+  width: 50;
+  height: 50;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 100%;
+  border: 1px solid #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  fill: #ffffff;
+  font-size: 24px;
+`
+
+const StyledDraggableContainerWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+`
+
+const StyledImage = styled.img`
+  max-height: 300;
+`
+
+const StyledPanel = styled(Panel)`
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+`
+
+const StyledPanelWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+`
+
+const StyledFocalPointInput = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+`
 
 export interface FocalPointInputProps {
   imageURL: string
@@ -61,36 +109,14 @@ export function FocalPointInput({
   }, [])
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-      ref={containerRef}>
+    <StyledFocalPointInput ref={containerRef}>
       <div ref={imageContainer}>
         {layouted && (
-          <div style={{position: 'relative', width: '100%', height: '100%'}}>
-            <Panel
-              style={{
-                overflow: 'hidden',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100%',
-                width: '100%'
-              }}>
-              <img src={imageURL} style={{maxHeight: '300'}} />
-            </Panel>
-            <div
-              style={{
-                position: 'absolute',
-                top: '0',
-                left: '0',
-                width: '100%',
-                height: '100%'
-              }}>
+          <StyledPanelWrapper>
+            <StyledPanel>
+              <StyledImage src={imageURL} />
+            </StyledPanel>
+            <StyledDraggableContainerWrapper>
               <DraggableContainer>
                 {focalPoint && (
                   <Draggable point={focalPoint} onChange={onChange} disabled={disabled}>
@@ -98,37 +124,18 @@ export function FocalPointInput({
                   </Draggable>
                 )}
               </DraggableContainer>
-            </div>
-          </div>
+            </StyledDraggableContainerWrapper>
+          </StyledPanelWrapper>
         )}
       </div>
-    </div>
+    </StyledFocalPointInput>
   )
 }
 
 export function FocalPoint() {
   return (
-    <div
-      style={{
-        width: 50,
-        height: 50,
-        backgroundColor: 'rgba(0, 0, 0, 0.2)',
-
-        borderRadius: '100%',
-        border: `1px solid #FFFFFF`,
-
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-
-        fill: '#FFFFFF',
-        fontSize: '24px'
-
-        /* '&:hover': {
-        backgroundColor: 'rgba(0, 0, 0, 0.4)'
-      } */
-      }}>
+    <StyledFocalPoint>
       <MdCropSquare />
-    </div>
+    </StyledFocalPoint>
   )
 }

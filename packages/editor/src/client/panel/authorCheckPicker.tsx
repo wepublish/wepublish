@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, CheckPicker} from 'rsuite'
@@ -9,6 +10,10 @@ import {
   useCreateAuthorMutation
 } from '../api'
 import {getOperationNameFromDocument, slugify} from '../utility'
+
+const StyledButtonWrapper = styled.div`
+  margin: 10px;
+`
 
 export interface AuthorCheckPickerProps {
   readonly list: AuthorRefFragment[]
@@ -73,11 +78,11 @@ export function AuthorCheckPicker({list, disabled, onChange}: AuthorCheckPickerP
       renderExtraFooter={() =>
         authorsFilter &&
         !data?.authors.nodes.length && (
-          <div style={{margin: '10px'}}>
+          <StyledButtonWrapper>
             <Button onClick={() => handleCreateAuthor()} appearance="primary">
               {t('articles.panels.createAuthorProfile', {name: authorsFilter})}
             </Button>
-          </div>
+          </StyledButtonWrapper>
         )
       }
     />

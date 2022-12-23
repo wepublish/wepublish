@@ -1,4 +1,5 @@
 import {ApolloError} from '@apollo/client'
+import styled from '@emotion/styled'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdContentCopy, MdDelete} from 'react-icons/md'
@@ -23,6 +24,22 @@ import {
   useCreatePollAnswerMutation,
   useDeletePollAnswerMutation
 } from '../../api'
+
+const StyledIconButton = styled(IconButton)`
+  margin-right: 10px;
+`
+
+const StyledBadge = styled(Badge)`
+  width: 100%;
+`
+
+const StyledCol = styled(Col)`
+  padding-right: 30px;
+`
+
+const StyledRow = styled(Row)`
+  align-items: center;
+`
 
 function getTotalUserVotesByAnswerId(poll: FullPoll, answerId: string): number {
   const answers = poll?.answers
@@ -207,12 +224,11 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
 
   return (
     <>
-      <Row style={{alignItems: 'center'}}>
+      <StyledRow>
         {poll?.answers?.map(answer => (
           <div key={`answer-${answer.id}`}>
-            <Col xs={16} style={{paddingRight: '30px'}}>
-              <Badge
-                style={{width: '100%'}}
+            <StyledCol xs={16}>
+              <StyledBadge
                 content={`${getTotalVotesByAnswerId(poll, answer.id)} ${t('pollAnswer.votes')}`}>
                 <Form.Control
                   name={`answer-${answer.id}`}
@@ -224,17 +240,16 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
                     })
                   }}
                 />
-              </Badge>
-            </Col>
+              </StyledBadge>
+            </StyledCol>
             {/* copy link btn */}
             <Col xs={8}>
-              <IconButton
+              <StyledIconButton
                 icon={<MdDelete />}
                 circle
                 size="sm"
                 appearance="ghost"
                 color="red"
-                style={{marginRight: '10px'}}
                 onClick={() => {
                   setAnswerToDelete(answer)
                   setModalOpen(true)
@@ -252,7 +267,7 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
             </Col>
           </div>
         ))}
-      </Row>
+      </StyledRow>
       {/* adding new poll answer */}
       <Row>
         <Col xs={16}>

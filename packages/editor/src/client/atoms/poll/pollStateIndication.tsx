@@ -1,9 +1,18 @@
+import styled from '@emotion/styled'
 import React from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdHourglassEmpty, MdPlayCircleOutline, MdPowerOff} from 'react-icons/md'
 import {Tooltip, Whisper} from 'rsuite'
 
 import {dateTimeLocalString} from '../../utility'
+
+const StyledClosedIcon = styled(MdPowerOff)`
+  color: red;
+`
+
+const StyledOpensIcon = styled(MdPlayCircleOutline)`
+  color: green;
+`
 
 interface PollStateIndicationPorps {
   closedAt: string | null | undefined
@@ -22,7 +31,7 @@ export function PollStateIndication({
   if (closedAt && now.getTime() >= closedAt.getTime()) {
     return (
       <Whisper speaker={<Tooltip>{t('pollStateIndication.closed')}</Tooltip>}>
-        <MdPowerOff style={{color: 'red'}} />
+        <StyledClosedIcon />
       </Whisper>
     )
   }
@@ -32,7 +41,7 @@ export function PollStateIndication({
   if (now.getTime() > opensAt.getTime()) {
     return (
       <Whisper speaker={<Tooltip>{t('pollStateIndication.open')}</Tooltip>}>
-        <MdPlayCircleOutline style={{color: 'green'}} />
+        <StyledOpensIcon />
       </Whisper>
     )
   }

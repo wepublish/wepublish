@@ -50,6 +50,9 @@
   },
   "dependencies": {
     "@apollo/client": "^3.3.21",
+    "@emotion/babel-preset-css-prop": "^11.10.0",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@karma.run/webpack": "^0.0.3",
     "apollo-upload-client": "^16.0.0",
     "array-move": "^2.2.1",

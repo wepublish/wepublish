@@ -1,5 +1,6 @@
 import './emojiPicker.less'
 
+import styled from '@emotion/styled'
 import {BaseEmoji, Picker} from 'emoji-mart'
 import React, {useContext} from 'react'
 import {MdClose} from 'react-icons/md'
@@ -11,15 +12,21 @@ interface EmojiPickerProps {
   setEmoji: (emoji: string) => void
 }
 
+const StyledCol = styled(Col)`
+  text-align: right;
+  margin-top: 0px;
+  margin-bottom: 10px;
+`
+
 export function EmojiPicker({setEmoji}: EmojiPickerProps) {
   const {closeMenu} = useContext(SubMenuContext)
 
   return (
     <>
       <Row>
-        <Col xs={24} style={{textAlign: 'right', marginTop: '0px', marginBottom: '10px'}}>
+        <StyledCol xs={24}>
           <IconButton icon={<MdClose />} onClick={() => closeMenu()} />
-        </Col>
+        </StyledCol>
       </Row>
       <Picker
         onSelect={({native}: BaseEmoji) => {

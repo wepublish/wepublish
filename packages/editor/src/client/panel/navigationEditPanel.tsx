@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, Input, Message, Panel, SelectPicker, toaster} from 'rsuite'
@@ -21,6 +22,14 @@ import {
   PermissionControl
 } from '../atoms/permissionControl'
 import {generateID, getOperationNameFromDocument} from '../utility'
+
+const StyledSelectPicker = styled(SelectPicker)`
+  margin-bottom: 4;
+`
+
+const StyledInput = styled(Input)`
+  margin-bottom: 8;
+`
 
 export interface NavigationEditPanelProps {
   id?: string
@@ -259,19 +268,17 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
             defaultValue={{label: '', url: '', type: 'ExternalNavigationLink'}}>
             {({value, onChange}) => (
               <>
-                <Input
+                <StyledInput
                   placeholder={t('navigation.panels.label')}
                   value={value.label}
-                  style={{marginBottom: 4}}
                   onChange={label => {
                     onChange({...value, label})
                   }}
                 />
-                <SelectPicker
+                <StyledSelectPicker
                   block
                   virtualized
                   value={value.type}
-                  style={{marginBottom: 4}}
                   data={linkTypes}
                   onChange={(type: string) => {
                     if (!type) return
@@ -306,9 +313,8 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
                     }}
                   />
                 ) : (
-                  <Input
+                  <StyledInput
                     placeholder={t('navigation.panels.url')}
-                    style={{marginBottom: 8}}
                     value={value.url}
                     onChange={url =>
                       onChange({

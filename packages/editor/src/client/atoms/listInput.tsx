@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import arrayMove from 'array-move'
 import nanoid from 'nanoid'
 import React from 'react'
@@ -6,6 +7,29 @@ import {SortableContainer, SortableElement, SortableHandle} from 'react-sortable
 import {IconButton, Panel} from 'rsuite'
 
 import {isFunctionalUpdate} from '../utility'
+
+const IconButtonWrapper = styled.div`
+  margin-left: 10px;
+`
+
+const StyledChildrenWrapper = styled.div`
+  min-height: 100%;
+  display: flex;
+`
+
+const StyledPanel = styled(Panel)`
+  width: 100%;
+`
+
+const StyledDragHandleWrapper = styled.div`
+  margin-right: 10px;
+`
+
+const StyledListItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+`
 
 export interface FieldProps<V = any> {
   readonly value: V
@@ -51,24 +75,19 @@ const ListItem = SortableElement(
     }
 
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          marginBottom: '10px'
-        }}>
-        <div style={{marginRight: '10px'}}>
+      <StyledListItem>
+        <StyledDragHandleWrapper>
           <DragHandle disabled={itemDisabled} />
-        </div>
-        <Panel bodyFill style={{width: '100%'}}>
-          <div style={{minHeight: '100%', display: 'flex'}}>
+        </StyledDragHandleWrapper>
+        <StyledPanel bodyFill>
+          <StyledChildrenWrapper>
             {children({value: value.value, onChange: handleValueChange})}
-          </div>
-        </Panel>
-        <div style={{marginLeft: '10px'}}>
+          </StyledChildrenWrapper>
+        </StyledPanel>
+        <IconButtonWrapper>
           <IconButton icon={<MdDelete />} onClick={handleRemove} disabled={itemDisabled} />
-        </div>
-      </div>
+        </IconButtonWrapper>
+      </StyledListItem>
     )
   }
 )

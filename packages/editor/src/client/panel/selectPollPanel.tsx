@@ -1,4 +1,5 @@
 import {ApolloError} from '@apollo/client'
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAddCircle} from 'react-icons/md'
@@ -10,6 +11,10 @@ import {PollStateIndication} from '../atoms/poll/pollStateIndication'
 import {PollBlockValue} from '../blocks/types'
 import {PollClosedAtView, PollOpensAtView} from '../routes/polls/pollList'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
+
+const StyledDrawerBody = styled(Drawer.Body)`
+  padding: 24px;
+`
 
 const onErrorToast = (error: ApolloError) => {
   if (error?.message) {
@@ -57,7 +62,7 @@ export function SelectPollPanel({selectedPoll, onClose, onSelect}: SelectPollPan
         </Drawer.Actions>
       </Drawer.Header>
 
-      <Drawer.Body style={{padding: '24px'}}>
+      <StyledDrawerBody>
         <Table
           minHeight={600}
           autoHeight
@@ -127,7 +132,7 @@ export function SelectPollPanel({selectedPoll, onClose, onSelect}: SelectPollPan
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </Drawer.Body>
+      </StyledDrawerBody>
     </>
   )
 }

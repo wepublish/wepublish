@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd} from 'react-icons/md'
@@ -23,13 +24,14 @@ export interface AddBlockInputProps {
   onMenuItemClick: (item: MenuItem) => void
 }
 
-export function AddBlockInput({menuItems, subtle, disabled, onMenuItemClick}: AddBlockInputProps) {
+const Wrapper = styled.div`
+  position: relative;
+`
+
+export function AddBlockInput({menuItems, disabled, onMenuItemClick}: AddBlockInputProps) {
   const {t} = useTranslation()
   return (
-    <div
-      style={{
-        position: 'relative'
-      }}>
+    <Wrapper>
       <Dropdown
         disabled={disabled}
         renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
@@ -38,13 +40,13 @@ export function AddBlockInput({menuItems, subtle, disabled, onMenuItemClick}: Ad
         {menuItems.map((item, index) => (
           <Dropdown.Item
             key={index}
-            onSelect={event => {
+            onSelect={() => {
               onMenuItemClick(item)
             }}>
             {item.icon} {t(item.label)}
           </Dropdown.Item>
         ))}
       </Dropdown>
-    </div>
+    </Wrapper>
   )
 }

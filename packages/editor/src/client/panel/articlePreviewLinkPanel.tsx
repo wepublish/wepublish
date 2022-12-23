@@ -4,6 +4,11 @@ import {toaster, Button, Form, Message, Modal, Slider} from 'rsuite'
 
 import {useArticlePreviewLinkQuery} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+import styled from '@emotion/styled'
+
+const StyledMessage = styled(Message)`
+  margin-bottom: 20px;
+`
 
 export interface ArticlePreviewProps {
   id: string
@@ -48,9 +53,9 @@ function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPanelProps)
       </Modal.Header>
 
       <Modal.Body>
-        <Message style={{marginBottom: '20px'}} type="warning">
+        <StyledMessage type="warning">
           {t('articleEditor.panels.articlePreviewLinkDesc')}
-        </Message>
+        </StyledMessage>
 
         <Form fluid>
           <Form.Group style={{paddingLeft: '20px', paddingRight: '20px'}} controlId="hours">

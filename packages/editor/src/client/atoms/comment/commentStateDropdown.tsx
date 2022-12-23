@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdArrowDropDown} from 'react-icons/md'
@@ -6,6 +7,18 @@ import {TypeAttributes} from 'rsuite/cjs/@types/common'
 
 import {CommentRejectionReason, CommentState, FullCommentFragment} from '../../api'
 import {CommentStateChangeModal, mapCommentActionToBtnTitle} from './commentStateChangeModal'
+
+const StyledBadgeWrapper = styled.div`
+  margin-bottom: 5px;
+`
+
+const StyledPopover = styled(Popover)<{left: number; top: number}>`
+  left: ${({left}) => left};
+  top: ${({top}) => top};
+`
+const StyledIconButton = styled(IconButton)`
+  padding: 2px;
+`
 
 function mapCommentStateToColor(commentState: CommentState) {
   switch (commentState) {
@@ -52,9 +65,9 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
   return (
     <>
       {showBadge && (
-        <div style={{marginBottom: '5px'}}>
+        <StyledBadgeWrapper>
           <Badge content={comment.rejectionReason} color={mapCommentStateToColor(comment.state)} />
-        </div>
+        </StyledBadgeWrapper>
       )}
       <div>
         <ButtonGroup>
@@ -73,7 +86,7 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
                 setNewCommentState(tmpCommentState as CommentState)
               }
               return (
-                <Popover ref={ref} className={className} style={{left, top}} full>
+                <StyledPopover ref={ref} className={className} left={left} top={top} full>
                   <Dropdown.Menu onSelect={handleSelect}>
                     {Object.keys(CommentState)
                       .filter(tmpState => tmpState !== CommentState.PendingApproval)
@@ -83,12 +96,11 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
                         </Dropdown.Item>
                       ))}
                   </Dropdown.Menu>
-                </Popover>
+                </StyledPopover>
               )
             }}>
-            <IconButton
+            <StyledIconButton
               size={size || 'md'}
-              style={{padding: '2px'}}
               appearance="primary"
               color={mapCommentStateToColor(comment.state)}
               icon={<MdArrowDropDown />}

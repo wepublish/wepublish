@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdReplay} from 'react-icons/md'
@@ -14,6 +15,22 @@ import {
 } from '../../api'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 import {DescriptionList, DescriptionListItem} from '../descriptionList'
+
+const StyledPanel = styled(Panel)`
+  margin-right: 40;
+  font-style: italic;
+  color: lightslategrey;
+`
+
+const IconWrapper = styled.div`
+  margin-top: 8px;
+  margin-left: 10px;
+`
+
+const StyledRevisionPanel = styled(Panel)`
+  max-height: 300px;
+  overflow-y: scroll;
+`
 
 function mapModalTitle(commentState: CommentState): string {
   switch (commentState) {
@@ -181,9 +198,7 @@ export function CommentStateChangeModal({
           {comment?.parentComment && (
             <>
               <DescriptionListItem label={t('comments.panels.parent')}>
-                <Panel
-                  bordered
-                  style={{marginRight: 40, fontStyle: 'italic', color: 'lightslategrey'}}>
+                <StyledPanel bordered>
                   <>
                     <div>
                       {t('comments.panels.parentDate', {
@@ -203,10 +218,10 @@ export function CommentStateChangeModal({
                       }
                     />
                   </>
-                </Panel>
-                <div style={{marginTop: 8, marginLeft: 10}}>
+                </StyledPanel>
+                <IconWrapper>
                   <MdReplay rotate={180} />
-                </div>
+                </IconWrapper>
               </DescriptionListItem>
             </>
           )}
@@ -246,7 +261,7 @@ export function CommentStateChangeModal({
           ) : null}
 
           <DescriptionListItem label={t('comments.panels.revisions')} />
-          <Panel bordered style={{maxHeight: '300px', overflowY: 'scroll'}}>
+          <StyledRevisionPanel bordered>
             <Timeline align="left">
               {sortedRevisions.length
                 ? sortedRevisions.map(({text, createdAt}, index) => (
@@ -270,7 +285,7 @@ export function CommentStateChangeModal({
                   ))
                 : null}
             </Timeline>
-          </Panel>
+          </StyledRevisionPanel>
         </DescriptionList>
       </Modal.Body>
       <Modal.Footer>
