@@ -16,7 +16,7 @@ import {GraphQLPageInfo} from './common'
 import {GraphQLImage} from './image'
 import {GraphQLSlug} from './slug'
 import {GraphQLRichText} from './richText'
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDateTime} from 'graphql-scalars'
 import {createProxyingResolver} from '../utility'
 
 export const GraphQLAuthorLink = new GraphQLObjectType<Author, Context>({

@@ -5,7 +5,7 @@
   "main": "./dist/server/index.js",
   "license": "UNLICENSED",
   "engines": {
-    "node": "^12.0.0",
+    "node": "^16.0.0",
     "yarn": "^1.16.0"
   },
   "bin": "./bin/run-server.js",
@@ -15,7 +15,7 @@
     "build:server": "tsc -b ./src/shared ./src/server",
     "build:storybook": "build-storybook -c ./src/shared/.storybook -o ./.storybookbuild",
     "watch": "npm-run-all --parallel watch:client watch:server",
-    "watch:client": "webpack-dev-server --mode development --hot --inline",
+    "watch:client": "webpack serve --mode development --hot --inline",
     "watch:server": "run-p watch:server:*",
     "watch:server:start": "nodemon --inspect=0.0.0.0:9229 ./bin/run-server.js",
     "watch:server:build": "tsc -b ./src/server ./src/shared --watch",
@@ -35,7 +35,7 @@
     "fela-dom": "^10.6.1",
     "fela-plugin-fallback-value": "^10.6.1",
     "fela-plugin-prefixer": "^10.6.1",
-    "graphql": "^14.5.8",
+    "graphql": "^15.8.0",
     "graphql-tag": "^2.10.1",
     "immutable": "^4.0.0-rc.12",
     "react": "^17.0.2",
@@ -72,7 +72,7 @@
     "ts-node": "^8.3.0",
     "typescript": "^4.6.4",
     "webpack": "^4.35.3",
-    "webpack-cli": "^3.3.5",
+    "webpack-cli": "^4.3.5",
     "webpack-dev-server": "^3.7.2"
   }
 }

@@ -1,5 +1,5 @@
 import {GraphQLID, GraphQLInt, GraphQLNonNull, GraphQLObjectType} from 'graphql'
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDateTime} from 'graphql-scalars'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
 
 export const GraphQLSubscriptionPeriod = new GraphQLObjectType({

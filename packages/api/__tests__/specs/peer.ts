@@ -1,4 +1,4 @@
-import {ApolloServerTestClient} from 'apollo-server-testing'
+import {ApolloServer} from 'apollo-server-express'
 import {FetchMock} from 'jest-fetch-mock'
 import fetch from 'node-fetch'
 import {
@@ -15,14 +15,14 @@ import {
 import fakePeerAdminSchema from '../fakePeerAdminSchema.json'
 
 import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
-;((fetch as unknown) as FetchMock).mockResponse(JSON.stringify(fakePeerAdminSchema))
+;(fetch as unknown as FetchMock).mockResponse(JSON.stringify(fakePeerAdminSchema))
 
-let testClientPrivate: ApolloServerTestClient
+let testServerPrivate: ApolloServer
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithPrisma()
-    testClientPrivate = setupClient.testClientPrivate
+    testServerPrivate = setupClient.testServerPrivate
   } catch (error) {
     console.log('Error', error)
 
@@ -34,32 +34,30 @@ describe('Peers', () => {
   describe('can be created/edited/deleted:', () => {
     const ids: string[] = []
     beforeAll(async () => {
-      const {mutate} = testClientPrivate
       const input: CreatePeerInput = {
         name: `Peer Test ${ids.length}`,
         slug: generateRandomString(),
         hostURL: 'https://host-url.ch/',
         token: `token${ids.length}`
       }
-      const res = await mutate({
-        mutation: CreatePeer,
+      const res = await testServerPrivate.executeOperation({
+        query: CreatePeer,
         variables: {
           input: input
         }
       })
-      ids.unshift(res.data.createPeer?.id)
+      ids.unshift(res.data?.createPeer?.id)
     })
 
     test('can be created', async () => {
-      const {mutate} = testClientPrivate
       const input: CreatePeerInput = {
         name: 'Create Peer Test',
         slug: generateRandomString(),
         hostURL: 'https://host-url.ch/',
         token: 'testTokenABC123'
       }
-      const res = await mutate({
-        mutation: CreatePeer,
+      const res = await testServerPrivate.executeOperation({
+        query: CreatePeer,
         variables: {
           input: input
         }
@@ -72,21 +70,19 @@ describe('Peers', () => {
           }
         }
       })
-      ids.unshift(res.data.createPeer?.id)
+      ids.unshift(res.data?.createPeer?.id)
     })
 
     test('can be read in list', async () => {
-      const {query} = testClientPrivate
-      const res = await query({
+      const res = await testServerPrivate.executeOperation({
         query: PeerList
       })
 
-      expect(res.data.peers).not.toHaveLength(0)
+      expect(res.data?.peers).not.toHaveLength(0)
     })
 
     test('can be read by id', async () => {
-      const {query} = testClientPrivate
-      const res = await query({
+      const res = await testServerPrivate.executeOperation({
         query: Peer,
         variables: {
           id: ids[0]
@@ -103,9 +99,8 @@ describe('Peers', () => {
     })
 
     test('can be updated', async () => {
-      const {mutate} = testClientPrivate
-      const res = await mutate({
-        mutation: UpdatePeer,
+      const res = await testServerPrivate.executeOperation({
+        query: UpdatePeer,
         variables: {
           input: {
             name: 'Updated Peer',
@@ -128,9 +123,8 @@ describe('Peers', () => {
     })
 
     test('can be deleted', async () => {
-      const {mutate} = testClientPrivate
-      const res = await mutate({
-        mutation: DeletePeer,
+      const res = await testServerPrivate.executeOperation({
+        query: DeletePeer,
         variables: {
           id: ids[0]
         }
@@ -141,21 +135,19 @@ describe('Peers', () => {
           deletePeer: expect.any(Object)
         }
       })
-      expect(res.data.deletePeer.id).toBe(ids[0])
+      expect(res.data?.deletePeer.id).toBe(ids[0])
 
       ids.shift()
     })
 
     test('can read peer profile', async () => {
-      const {query} = testClientPrivate
-      const res = await query({
+      const res = await testServerPrivate.executeOperation({
         query: PeerProfile
       })
       expect(res).toMatchSnapshot()
     })
 
     test('can update peer profile', async () => {
-      const {mutate} = testClientPrivate
       const input: PeerProfileInput = {
         name: 'test peer profile',
         logoID: 'logoID123',
@@ -165,8 +157,8 @@ describe('Peers', () => {
         callToActionURL: 'calltoactionurl.ch/'
       }
 
-      const res = await mutate({
-        mutation: UpdatePeerProfile,
+      const res = await testServerPrivate.executeOperation({
+        query: UpdatePeerProfile,
         variables: {
           input: input
         }

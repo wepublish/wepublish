@@ -9,7 +9,7 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
-import {GraphQLDate, GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDate, GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../context'
 import {InvoiceSort, InvoiceWithItems} from '../db/invoice'
 import {createProxyingResolver} from '../utility'

@@ -20,7 +20,7 @@ import {
   GraphQLString,
   Kind
 } from 'graphql'
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../../context'
 import {ConnectionResult} from '../../db/common'
 import {GraphQLPageInfo} from '../common'

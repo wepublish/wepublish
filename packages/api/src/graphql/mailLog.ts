@@ -9,7 +9,7 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../context'
 import {MailLogSort} from '../db/mailLog'
 import {GraphQLPageInfo} from './common'

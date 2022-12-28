@@ -14,9 +14,9 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {
-  authorise,
   createCheckedPermissionComponent,
-  PermissionControl
+  PermissionControl,
+  useAuthorisation
 } from '../atoms/permissionControl'
 import {SubscriptionListFilter} from '../atoms/searchAndFilter/subscriptionListFilter'
 import {ExportSubscriptionsAsCsv} from '../panel/ExportSubscriptionsAsCsv'
@@ -40,14 +40,14 @@ function mapColumFieldToGraphQLField(columnField: string): SubscriptionSort | nu
   }
 }
 
-export const newSubscriptionButton = ({
+export const NewSubscriptionButton = ({
   isLoading,
   t
 }: {
   isLoading?: boolean
   t: TFunction<'translation'>
 }) => {
-  const canCreate = authorise('CAN_CREATE_SUBSCRIPTION')
+  const canCreate = useAuthorisation('CAN_CREATE_SUBSCRIPTION')
   return (
     <Link to="/subscriptions/create">
       <IconButton
@@ -89,7 +89,11 @@ function SubscriptionList() {
       delete filter[el as keyof SubscriptionFilter]
   })
 
-  const {data, refetch, loading: isLoading} = useSubscriptionListQuery({
+  const {
+    data,
+    refetch,
+    loading: isLoading
+  } = useSubscriptionListQuery({
     variables: {
       filter,
       take: limit,
@@ -161,7 +165,7 @@ function SubscriptionList() {
         <FlexboxGrid.Item colspan={12} style={{textAlign: 'right'}}>
           <ExportSubscriptionsAsCsv filter={filter} />
           <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
-            {newSubscriptionButton({isLoading, t})}
+            {NewSubscriptionButton({isLoading, t})}
           </PermissionControl>
         </FlexboxGrid.Item>
       </FlexboxGrid>
@@ -244,22 +248,20 @@ function SubscriptionList() {
             <HeaderCell>{t('action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: FullSubscriptionFragment) => (
-                <>
-                  <IconButtonTooltip caption={t('delete')}>
-                    <IconButton
-                      icon={<MdDelete />}
-                      circle
-                      size="sm"
-                      appearance="ghost"
-                      color="red"
-                      style={{marginLeft: '5px'}}
-                      onClick={() => {
-                        setCurrentSubscription(rowData)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
-                </>
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    icon={<MdDelete />}
+                    circle
+                    size="sm"
+                    appearance="ghost"
+                    color="red"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentSubscription(rowData)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                </IconButtonTooltip>
               )}
             </Cell>
           </Column>

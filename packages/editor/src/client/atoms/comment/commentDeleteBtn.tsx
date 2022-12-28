@@ -21,10 +21,6 @@ interface CommentDeleteBtnProps {
 }
 
 export function CommentDeleteBtn({comment, onCommentDeleted}: CommentDeleteBtnProps) {
-  if (!comment) {
-    return <></>
-  }
-
   const {t} = useTranslation()
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [deleteComment, {loading}] = useDeleteCommentMutation({
@@ -39,6 +35,10 @@ export function CommentDeleteBtn({comment, onCommentDeleted}: CommentDeleteBtnPr
       onErrorToast(error)
     }
   })
+
+  if (!comment) {
+    return <></>
+  }
 
   return (
     <>

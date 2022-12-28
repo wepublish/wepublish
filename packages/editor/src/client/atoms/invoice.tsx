@@ -89,15 +89,13 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
       )
     } else {
       return (
-        <>
-          <Button
-            onClick={() => setModalOpen(true)}
-            appearance="primary"
-            style={{marginTop: '20px'}}
-            disabled={!me?.id || disabled}>
-            {t('invoice.payManually')}
-          </Button>
-        </>
+        <Button
+          onClick={() => setModalOpen(true)}
+          appearance="primary"
+          style={{marginTop: '20px'}}
+          disabled={!me?.id || disabled}>
+          {t('invoice.payManually')}
+        </Button>
       )
     }
   }

@@ -15,7 +15,7 @@ import {
   GraphQLString,
   GraphQLInt
 } from 'graphql'
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../../context'
 import {
   CommentRevision,
@@ -269,83 +269,82 @@ export const GraphQLCalculatedRating = new GraphQLObjectType<CalculatedRating, C
   }
 })
 
-export const GraphQLPublicComment: GraphQLObjectType<
-  PublicComment,
-  Context
-> = new GraphQLObjectType<PublicComment, Context>({
-  name: 'Comment',
-  fields: () => ({
-    id: {type: GraphQLNonNull(GraphQLID)},
-    parentID: {type: GraphQLID},
-    guestUsername: {type: GraphQLString},
-    guestUserImage: {
-      type: GraphQLImage,
-      resolve: createProxyingResolver(({guestUserImageID}, _, {prisma: {image}}) =>
-        guestUserImageID ? image.findUnique({where: {id: guestUserImageID}}) : null
-      )
-    },
-    user: {
-      type: GraphQLPublicUser,
-      resolve: createProxyingResolver(({userID}, _, {prisma: {user}}) =>
-        userID
-          ? user.findUnique({
-              where: {
-                id: userID
-              },
-              select: unselectPassword
-            })
-          : null
-      )
-    },
-    tags: {
-      type: GraphQLList(GraphQLNonNull(GraphQLTag)),
-      resolve: createProxyingResolver(async ({id}, _, {prisma: {taggedComments}}) => {
-        const tags = await taggedComments.findMany({
-          where: {
-            commentId: id
-          },
-          include: {
-            tag: true
-          }
+export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
+  new GraphQLObjectType<PublicComment, Context>({
+    name: 'Comment',
+    fields: () => ({
+      id: {type: GraphQLNonNull(GraphQLID)},
+      parentID: {type: GraphQLID},
+      guestUsername: {type: GraphQLString},
+      guestUserImage: {
+        type: GraphQLImage,
+        resolve: createProxyingResolver(({guestUserImageID}, _, {prisma: {image}}) =>
+          guestUserImageID ? image.findUnique({where: {id: guestUserImageID}}) : null
+        )
+      },
+      user: {
+        type: GraphQLPublicUser,
+        resolve: createProxyingResolver(({userID}, _, {prisma: {user}}) =>
+          userID
+            ? user.findUnique({
+                where: {
+                  id: userID
+                },
+                select: unselectPassword
+              })
+            : null
+        )
+      },
+      tags: {
+        type: GraphQLList(GraphQLNonNull(GraphQLTag)),
+        resolve: createProxyingResolver(async ({id}, _, {prisma: {taggedComments}}) => {
+          const tags = await taggedComments.findMany({
+            where: {
+              commentId: id
+            },
+            include: {
+              tag: true
+            }
+          })
+
+          return tags.map(({tag}) => tag)
         })
+      },
+      authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
 
-        return tags.map(({tag}) => tag)
-      })
-    },
-    authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
+      itemID: {type: GraphQLNonNull(GraphQLID)},
+      itemType: {
+        type: GraphQLNonNull(GraphQLCommentItemType)
+      },
+      peerId: {type: GraphQLID},
 
-    itemID: {type: GraphQLNonNull(GraphQLID)},
-    itemType: {
-      type: GraphQLNonNull(GraphQLCommentItemType)
-    },
-    peerId: {type: GraphQLID},
+      children: {
+        type: GraphQLList(GraphQLPublicComment),
+        resolve: createProxyingResolver(({id, userID}, _, {prisma: {comment}}) =>
+          getPublicChildrenCommentsByParentId(id, userID ?? null, comment)
+        )
+      },
 
-    children: {
-      type: GraphQLList(GraphQLPublicComment),
-      resolve: createProxyingResolver(({id, userID}, _, {prisma: {comment}}) =>
-        getPublicChildrenCommentsByParentId(id, userID ?? null, comment)
-      )
-    },
+      title: {type: GraphQLString},
+      lead: {type: GraphQLString},
+      text: {type: GraphQLRichText},
 
-    title: {type: GraphQLString},
-    lead: {type: GraphQLString},
-    text: {type: GraphQLRichText},
+      state: {type: GraphQLNonNull(GraphQLCommentState)},
+      source: {type: GraphQLString},
 
-    state: {type: GraphQLNonNull(GraphQLCommentState)},
-    source: {type: GraphQLString},
-
-    rejectionReason: {type: GraphQLString},
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    calculatedRatings: {
-      type: GraphQLList(GraphQLCalculatedRating)
-    },
-    overriddenRatings: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLoverriddenRating))),
-      resolve: comment => comment.overriddenRatings?.filter(ratings => ratings.value != null) ?? []
-    }
+      rejectionReason: {type: GraphQLString},
+      createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+      modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+      calculatedRatings: {
+        type: GraphQLList(GraphQLCalculatedRating)
+      },
+      overriddenRatings: {
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLoverriddenRating))),
+        resolve: comment =>
+          comment.overriddenRatings?.filter(ratings => ratings.value != null) ?? []
+      }
+    })
   })
-})
 
 export const GraphQLCommentConnection = new GraphQLObjectType({
   name: 'CommentConnection',

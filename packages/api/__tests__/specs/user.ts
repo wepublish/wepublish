@@ -1,4 +1,4 @@
-import {ApolloServerTestClient} from 'apollo-server-testing'
+import {ApolloServer} from 'apollo-server-express'
 import {
   CreateSession,
   CreateUser,
@@ -12,12 +12,12 @@ import {
 
 import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
 
-let testClientPrivate: ApolloServerTestClient
+let testServerPrivate: ApolloServer
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithPrisma()
-    testClientPrivate = setupClient.testClientPrivate
+    testServerPrivate = setupClient.testServerPrivate
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')
@@ -29,7 +29,6 @@ describe('Users', () => {
     const ids: string[] = []
 
     beforeAll(async () => {
-      const {mutate} = testClientPrivate
       const input: UserInput = {
         name: 'Bruce Wayne',
         email: `${generateRandomString()}@wepublish.ch`,
@@ -38,19 +37,18 @@ describe('Users', () => {
         active: true,
         roleIDs: []
       }
-      const res = await mutate({
-        mutation: CreateUser,
+      const res = await testServerPrivate.executeOperation({
+        query: CreateUser,
         variables: {
           input: input,
           password: 'p@$$w0rd'
         }
       })
 
-      ids.unshift(res.data.createUser.id)
+      ids.unshift(res.data?.createUser.id)
     })
 
     test('can be created', async () => {
-      const {mutate} = testClientPrivate
       const input: UserInput = {
         name: 'Robin Wayne',
         email: `${generateRandomString()}@wepublish.ch`,
@@ -60,8 +58,8 @@ describe('Users', () => {
         roleIDs: []
       }
 
-      const res = await mutate({
-        mutation: CreateUser,
+      const res = await testServerPrivate.executeOperation({
+        query: CreateUser,
         variables: {
           input: input,
           password: 'pwd123'
@@ -73,28 +71,26 @@ describe('Users', () => {
           createUser: {
             id: expect.any(String),
             email: expect.any(String),
-            emailVerifiedAt: expect.any(String)
+            emailVerifiedAt: expect.any(Date)
           }
         }
       })
-      ids.unshift(res.data.createUser.id)
+      ids.unshift(res.data?.createUser.id)
     })
 
     test('can be read in list', async () => {
-      const {query} = testClientPrivate
-      const res = await query({
+      const res = await testServerPrivate.executeOperation({
         query: UserList,
         variables: {
           take: 100
         }
       })
 
-      expect(res.data.users.nodes).not.toHaveLength(0)
+      expect(res.data?.users.nodes).not.toHaveLength(0)
     })
 
     test('can be read by id', async () => {
-      const {query} = testClientPrivate
-      const res = await query({
+      const res = await testServerPrivate.executeOperation({
         query: User,
         variables: {
           id: ids[0]
@@ -106,16 +102,15 @@ describe('Users', () => {
           user: {
             id: expect.any(String),
             email: expect.any(String),
-            emailVerifiedAt: expect.any(String)
+            emailVerifiedAt: expect.any(Date)
           }
         }
       })
     })
 
     test('can be updated', async () => {
-      const {mutate} = testClientPrivate
-      const res = await mutate({
-        mutation: UpdateUser,
+      const res = await testServerPrivate.executeOperation({
+        query: UpdateUser,
         variables: {
           input: {
             name: 'Dark Knight',
@@ -140,8 +135,6 @@ describe('Users', () => {
     })
 
     test('can reset user password', async () => {
-      const {mutate} = testClientPrivate
-
       const input: UserInput = {
         name: 'Robin Wayne',
         email: `${generateRandomString()}@wepublish.ch`,
@@ -151,16 +144,16 @@ describe('Users', () => {
         roleIDs: []
       }
 
-      const createdUser = await mutate({
-        mutation: CreateUser,
+      const createdUser = await testServerPrivate.executeOperation({
+        query: CreateUser,
         variables: {
           input: input,
           password: 'p@$$w0rd'
         }
       })
 
-      const sessionRes = await mutate({
-        mutation: CreateSession,
+      const sessionRes = await testServerPrivate.executeOperation({
+        query: CreateSession,
         variables: {
           email: input.email,
           password: 'p@$$w0rd'
@@ -178,10 +171,10 @@ describe('Users', () => {
         }
       })
 
-      const resetPwdRes = await mutate({
-        mutation: ResetUserPassword,
+      const resetPwdRes = await testServerPrivate.executeOperation({
+        query: ResetUserPassword,
         variables: {
-          id: createdUser.data.createUser.id,
+          id: createdUser.data?.createUser.id,
           password: 'NewUpdatedPassword321'
         }
       })
@@ -191,13 +184,13 @@ describe('Users', () => {
           resetUserPassword: {
             id: expect.any(String),
             email: expect.any(String),
-            emailVerifiedAt: expect.any(String)
+            emailVerifiedAt: expect.any(Date)
           }
         }
       })
 
-      const updatedPwdSession = await mutate({
-        mutation: CreateSession,
+      const updatedPwdSession = await testServerPrivate.executeOperation({
+        query: CreateSession,
         variables: {
           email: input.email,
           password: 'NewUpdatedPassword321'
@@ -217,9 +210,8 @@ describe('Users', () => {
     })
 
     test('can be deleted', async () => {
-      const {mutate} = testClientPrivate
-      const res = await mutate({
-        mutation: DeleteUser,
+      const res = await testServerPrivate.executeOperation({
+        query: DeleteUser,
         variables: {
           id: ids[0]
         }

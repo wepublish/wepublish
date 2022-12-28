@@ -1,5 +1,5 @@
 import {Prisma, PrismaClient} from '@prisma/client'
-import {FileUpload} from 'graphql-upload'
+import type {FileUpload} from 'graphql-upload'
 import {Context} from '../../context'
 import {authorise, CanCreateImage, CanDeleteImage} from '../permissions'
 

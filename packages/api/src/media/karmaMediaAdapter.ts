@@ -2,7 +2,7 @@ import {URL} from 'url'
 import FormData from 'form-data'
 import {ImageTransformation, ImageWithFocalPoint, UploadImage} from '../db/image'
 import fetch from 'node-fetch'
-import {FileUpload} from 'graphql-upload'
+import type {FileUpload} from 'graphql-upload'
 import {ArrayBufferUpload, MediaAdapter} from './mediaAdapter'
 
 export class MediaServerError extends Error {

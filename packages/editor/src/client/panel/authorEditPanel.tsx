@@ -27,9 +27,9 @@ import {
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
 import {
-  authorise,
   createCheckedPermissionComponent,
-  PermissionControl
+  PermissionControl,
+  useAuthorisation
 } from '../atoms/permissionControl'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
@@ -58,9 +58,13 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
-  const isAuthorized = authorise('CAN_CREATE_AUTHOR')
+  const isAuthorized = useAuthorisation('CAN_CREATE_AUTHOR')
 
-  const {data, loading: isLoading, error: loadError} = useAuthorQuery({
+  const {
+    data,
+    loading: isLoading,
+    error: loadError
+  } = useAuthorQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
     skip: id === undefined

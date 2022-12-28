@@ -56,26 +56,24 @@ export function DeletePollModal({poll, setPoll, afterDelete}: deletePollProps) {
   }
 
   return (
-    <>
-      <Modal open={!!poll} onClose={() => setPoll(undefined)}>
-        <Modal.Header>
-          <Modal.Title>{t('deletePollModal.title')}</Modal.Title>
-        </Modal.Header>
+    <Modal open={!!poll} onClose={() => setPoll(undefined)}>
+      <Modal.Header>
+        <Modal.Title>{t('deletePollModal.title')}</Modal.Title>
+      </Modal.Header>
 
-        <Modal.Body>
-          {t('deletePollModal.body', {pollQuestion: poll?.question || t('pollList.noQuestion')})}
-        </Modal.Body>
+      <Modal.Body>
+        {t('deletePollModal.body', {pollQuestion: poll?.question || t('pollList.noQuestion')})}
+      </Modal.Body>
 
-        <Modal.Footer>
-          <Button onClick={deletePoll} appearance="primary">
-            {t('deletePollModal.deleteBtn')}
-          </Button>
+      <Modal.Footer>
+        <Button onClick={deletePoll} appearance="primary">
+          {t('deletePollModal.deleteBtn')}
+        </Button>
 
-          <Button onClick={() => setPoll(undefined)} appearance="subtle">
-            {t('deletePollModal.cancelBtn')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+        <Button onClick={() => setPoll(undefined)} appearance="subtle">
+          {t('deletePollModal.cancelBtn')}
+        </Button>
+      </Modal.Footer>
+    </Modal>
   )
 }

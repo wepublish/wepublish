@@ -7,7 +7,7 @@ import {
   GraphQLInputObjectType
 } from 'graphql'
 import {Context} from '../context'
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDateTime} from 'graphql-scalars'
 import {PaymentProvider} from '../payments/paymentProvider'
 import {createProxyingResolver} from '../utility'
 import {GraphQLSlug} from './slug'

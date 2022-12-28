@@ -1,5 +1,4 @@
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
-import Maybe from 'graphql/tsutils/Maybe'
 import nanoid from 'nanoid'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 
@@ -12,7 +11,7 @@ export enum LocalStorageKey {
 }
 
 export const addOrUpdateOneInArray = (
-  array: Maybe<Record<string | 'id', any>[]>,
+  array: Record<string | 'id', any>[] | null | undefined,
   entry: Record<string | 'id', any>
 ) => {
   let isNew = true
@@ -104,15 +103,6 @@ export function dateTimeLocalString(date: Date) {
 }
 
 export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin = false) {
-  if (typeof window !== 'object')
-    return {
-      isLoaded: false,
-      isLoading: false,
-      load: () => {
-        /* do nothing */
-      }
-    }
-
   const scriptRef = useRef<HTMLScriptElement | null>(null)
 
   const [isLoading, setLoading] = useState(false)
@@ -131,13 +121,13 @@ export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin
       document.head.appendChild(script)
       scriptRef.current = script
     }
-  }, [isLoading])
+  }, [isLoading, crossOrigin, src, isLoaded])
 
   const load = useCallback(() => {
     setLoading(true)
   }, [])
 
-  return useMemo(
+  const result = useMemo(
     () => ({
       isLoading,
       isLoaded,
@@ -145,6 +135,18 @@ export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin
     }),
     [isLoading, isLoaded, load]
   )
+
+  if (typeof window !== 'object') {
+    return {
+      isLoaded: false,
+      isLoading: false,
+      load: () => {
+        /* do nothing */
+      }
+    }
+  }
+
+  return result
 }
 
 export function getOperationNameFromDocument(node: DocumentNode) {
@@ -202,10 +204,10 @@ export function validateURL(url: string) {
   if (url) {
     const pattern = new RegExp(
       '^(https?:\\/\\/)?' + // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
         '(\\#[-a-z\\d_]*)?$',
       'i'
     )

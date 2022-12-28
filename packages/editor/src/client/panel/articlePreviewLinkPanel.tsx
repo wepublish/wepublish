@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {toaster, Button, Form, Message, Modal, Slider} from 'rsuite'
+import {Button, Form, Message, Modal, Slider, toaster} from 'rsuite'
 
 import {useArticlePreviewLinkQuery} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
@@ -20,7 +20,12 @@ function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPanelProps)
 
   const {t} = useTranslation()
 
-  const {data, loading: isLoading, error: loadError, refetch} = useArticlePreviewLinkQuery({
+  const {
+    data,
+    loading: isLoading,
+    error: loadError,
+    refetch
+  } = useArticlePreviewLinkQuery({
     variables: {
       id: props.id,
       hours
