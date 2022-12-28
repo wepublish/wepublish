@@ -9,7 +9,8 @@ module.exports = (config, context) => {
         http: require.resolve('stream-http'),
         https: require.resolve('https-browserify'),
         querystring: require.resolve('querystring-es3'),
-        url: require.resolve('url')
+        url: require.resolve('url'),
+        buffer: require.resolve('buffer')
       }
     }
   })

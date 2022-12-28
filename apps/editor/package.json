@@ -24,5 +24,8 @@
   },
   "bin": "main.js",
   "main": "main.js",
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "directory": "../../dist/apps/editor"
+  }
 }

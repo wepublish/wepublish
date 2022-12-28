@@ -23,7 +23,7 @@ To automate the generating of the prisma schema, we recommend to add the followi
 }
 ```
 
-[Prepare](https://docs.npmjs.com/cli/v8/using-npm/scripts#prepare-and-prepublish) will automatically run on `npm`/`yarn` install.
+[Prepare](https://docs.npmjs.com/cli/v8/using-npm/scripts#prepare-and-prepublish) will automatically run on `npm` install.
 
 Your `seed.ts` should seed atleast 1 user, so that you can login with it and change the password:
 

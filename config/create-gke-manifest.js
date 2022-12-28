@@ -586,7 +586,7 @@ async function applyApiServer() {
               name: appName,
               image,
               command: ['/bin/sh'],
-              args: ['-c', 'yarn migrate && node dist/apps/editor/main.js'],
+              args: ['-c', 'npm run migrate && node dist/apps/editor/main.js'],
               volumeMounts: [
                 {
                   name: 'google-cloud-key',

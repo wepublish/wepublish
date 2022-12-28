@@ -1,5 +1,5 @@
 {
-  "version": "8.1.1",
+  "version": "10.0.0-alpha.1",
   "changelog": {
     "repo": "wepublish/wepublish",
     "cacheDir": ".changelog",
@@ -13,15 +13,20 @@
       "PR: Revert :leftwards_arrow_with_hook:": ":leftwards_arrow_with_hook: Revert"
     }
   },
-  "npmClient": "yarn",
   "command": {
     "version": {
       "allowBranch": "master"
     },
     "publish": {
-      "ignoreChanges": ["*.md", "*.txt"],
+      "ignoreChanges": [
+        "*.md",
+        "*.txt"
+      ],
       "message": "chore(release): publish %s"
     }
   },
-  "packages": ["libs/api", "apps/editor"]
+  "packages": [
+    "libs/api",
+    "apps/editor"
+  ]
 }
