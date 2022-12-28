@@ -36,15 +36,11 @@ export function Login() {
 
   const [authenticate, {loading, error: errorLogin}] = useCreateSessionMutation()
 
-  const [
-    authenticateWithOAuth2Code,
-    {loading: loadingOAuth2, error: errorOAuth2}
-  ] = useCreateSessionWithOAuth2CodeMutation()
+  const [authenticateWithOAuth2Code, {loading: loadingOAuth2, error: errorOAuth2}] =
+    useCreateSessionWithOAuth2CodeMutation()
 
-  const [
-    authenticateWithJWT,
-    {loading: loadingJWT, error: errorJWT}
-  ] = useCreateSessionWithJwtMutation()
+  const [authenticateWithJWT, {loading: loadingJWT, error: errorJWT}] =
+    useCreateSessionWithJwtMutation()
 
   const {data: providerData} = useGetAuthProvidersQuery({
     variables: {

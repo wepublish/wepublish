@@ -60,20 +60,20 @@ export function EditUserPassword({
     if (user) {
       return (
         <Form.Group>
-            <Button appearance="primary" onClick={() => setIsResetUserPasswordOpen(true)}>
-              <MdReplay style={{marginRight: '5px'}} />
-              {t('userCreateOrEditView.resetPassword')}
-            </Button>
-            <Button
-              appearance="primary"
-              color="red"
-              style={{marginLeft: '20px'}}
-              disabled={isDisabled || !user.email || !user.active}
-              onClick={() => setSendLoginModalOpen(true)}>
-              <MdSend style={{marginRight: '5px'}} />
-              {t('userCreateOrEditView.sendWebsiteLogin')}
-            </Button>
-          </Form.Group>
+          <Button appearance="primary" onClick={() => setIsResetUserPasswordOpen(true)}>
+            <MdReplay style={{marginRight: '5px'}} />
+            {t('userCreateOrEditView.resetPassword')}
+          </Button>
+          <Button
+            appearance="primary"
+            color="red"
+            style={{marginLeft: '20px'}}
+            disabled={isDisabled || !user.email || !user.active}
+            onClick={() => setSendLoginModalOpen(true)}>
+            <MdSend style={{marginRight: '5px'}} />
+            {t('userCreateOrEditView.sendWebsiteLogin')}
+          </Button>
+        </Form.Group>
       )
     }
 
@@ -127,25 +127,25 @@ export function EditUserPassword({
   function sendLoginLinkModal() {
     return (
       <Modal open={sendLoginModalOpen} onClose={() => setSendLoginModalOpen(false)}>
-          <Modal.Header>
-            <Modal.Title>{t('createOrEditUserPassword.sendLoginLink')}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {t('createOrEditUserPassword.sendLoginLinkContent', {
-              email: user?.email,
-              firstName: user?.firstName,
-              name: user?.name
-            })}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button appearance="ghost" onClick={() => setSendLoginModalOpen(false)}>
-              {t('cancel')}
-            </Button>
-            <Button appearance="primary" onClick={sendLoginLink}>
-              {t('userCreateOrEditView.sendWebsiteLogin')}
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        <Modal.Header>
+          <Modal.Title>{t('createOrEditUserPassword.sendLoginLink')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {t('createOrEditUserPassword.sendLoginLinkContent', {
+            email: user?.email,
+            firstName: user?.firstName,
+            name: user?.name
+          })}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button appearance="ghost" onClick={() => setSendLoginModalOpen(false)}>
+            {t('cancel')}
+          </Button>
+          <Button appearance="primary" onClick={sendLoginLink}>
+            {t('userCreateOrEditView.sendWebsiteLogin')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     )
   }
 

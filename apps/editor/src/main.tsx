@@ -107,7 +107,7 @@ const onDOMContentLoaded = async () => {
   ReactDOM.render(
     <ApolloProvider client={client}>
       <AuthProvider>
-        <IconContext.Provider value={{className: 'react-icons'}}>
+        <IconContext.Provider value={{className: 'rs-icon'}}>
           <FacebookProvider sdkLanguage={'en_US'}>
             <InstagramProvider>
               <TwitterProvider>

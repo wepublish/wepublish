@@ -229,7 +229,7 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
     case TeaserType.Page:
       type = 'Page'
       imageURL = teaser.page.latest.image?.previewURL ?? undefined
-      title = teaser.page.latest.title
+      title = teaser.page.latest.title ?? undefined
       lead = teaser.page.latest.description ?? undefined
       break
 

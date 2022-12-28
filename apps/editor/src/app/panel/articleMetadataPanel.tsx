@@ -24,9 +24,9 @@ import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {CommentHistory} from '../atoms/comment/commentHistory'
 import {ListInput, ListValue} from '../atoms/listInput'
 import {
-  useAuthorisation,
   createCheckedPermissionComponent,
-  PermissionControl
+  PermissionControl,
+  useAuthorisation
 } from '../atoms/permissionControl'
 import {Textarea} from '../atoms/textarea'
 import {MetaDataType} from '../blocks/types'

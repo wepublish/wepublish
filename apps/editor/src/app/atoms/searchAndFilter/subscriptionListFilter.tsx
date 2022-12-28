@@ -118,11 +118,11 @@ export function SubscriptionListFilter({
     }
     return (
       <Form.Group style={{marginRight: '15px', marginTop: '15px'}}>
-          <Button onClick={() => resetFilter()} color="red" appearance="ghost">
-            <MdClose style={{marginRight: '5px'}} />
-            {t('subscriptionList.filter.reset')}
-          </Button>
-        </Form.Group>
+        <Button onClick={() => resetFilter()} color="red" appearance="ghost">
+          <MdClose style={{marginRight: '5px'}} />
+          {t('subscriptionList.filter.reset')}
+        </Button>
+      </Form.Group>
     )
   }
 

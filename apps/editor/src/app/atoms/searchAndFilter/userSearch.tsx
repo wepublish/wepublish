@@ -20,7 +20,12 @@ export function UserSearch({
 }: UserSearchProps) {
   const [userSearch, setUserSearch] = useState<string>('')
   const [users, setUsers] = useState<(FullUserFragment | undefined | null)[]>([])
-  const {data: userData, loading, error, refetch} = useUserListQuery({
+  const {
+    data: userData,
+    loading,
+    error,
+    refetch
+  } = useUserListQuery({
     variables: {
       take: 100,
       filter: userSearch
@@ -77,43 +82,42 @@ export function UserSearch({
     if (resetFilterKey) {
       return (
         <Form.Group>
-            <Form.Control
-              key={`user-id-${resetFilterKey}`}
-              placeholder={placeholder}
-              block
-              name={name}
-              disabled={loading || !!error}
-              data={formData}
-              cleanable
-              accepter={SelectPicker}
-              onChange={(userId: any) => setUser(userId)}
-              onSearch={(searchString: any) => {
-                setUserSearch(searchString)
-                refetch()
-              }}
-            />
-          </Form.Group>
-      )
-    }
-    return (
-      <Form.Group>
           <Form.Control
             key={`user-id-${resetFilterKey}`}
             placeholder={placeholder}
             block
+            name={name}
             disabled={loading || !!error}
             data={formData}
             cleanable
-            name={name}
+            accepter={SelectPicker}
             onChange={(userId: any) => setUser(userId)}
             onSearch={(searchString: any) => {
               setUserSearch(searchString)
               refetch()
             }}
-            value={user?.id}
-            accepter={SelectPicker}
           />
         </Form.Group>
+      )
+    }
+    return (
+      <Form.Group>
+        <Form.Control
+          key={`user-id-${resetFilterKey}`}
+          placeholder={placeholder}
+          block
+          name={name}
+          disabled={loading || !!error}
+          data={formData}
+          cleanable
+          accepter={SelectPicker}
+          onChange={(userId: any) => setUser(userId)}
+          onSearch={(searchString: any) => {
+            setUserSearch(searchString)
+            refetch()
+          }}
+        />
+      </Form.Group>
     )
   }
 
