@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -29,6 +30,14 @@ import {WepublishEditor} from './editor/wepublishEditor'
 import {EditorSubMenuButton, FormatButton, FormatIconButton} from './toolbar/buttons'
 import {LinkMenu} from './toolbar/linkMenu'
 import {TableMenu} from './toolbar/tableMenu'
+
+const CharCount = styled.p`
+  text-align: right;
+`
+
+const StyledAltPlaceholder = styled.div`
+  color: #cad5e4;
+`
 
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
   displayOnly?: boolean
@@ -162,9 +171,9 @@ export const RichTextBlock = memo(function RichTextBlock({
             </SubMenuButton>
           </Toolbar>
           {WepublishEditor.isEmpty(editor) && ( // Alternative placeholder
-            <div onClick={() => ReactEditor.focus(editor)} style={{color: '#cad5e4'}}>
+            <StyledAltPlaceholder onClick={() => ReactEditor.focus(editor)}>
               {t('blocks.richText.startWriting')}
-            </div>
+            </StyledAltPlaceholder>
           )}
         </>
       )}
@@ -179,7 +188,6 @@ export const RichTextBlock = memo(function RichTextBlock({
             : undefined
         }
         readOnly={disabled || displayOnly}
-        // placeholder={t('blocks.richText.startWriting')}  # causes focusing problems on firefox !
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         onBlur={() => {
@@ -189,9 +197,7 @@ export const RichTextBlock = memo(function RichTextBlock({
           if (e.ctrlKey || e.metaKey) activateHotkey(e)
         }}
       />
-      {showCharCount && (
-        <p style={{textAlign: 'right'}}>{t('blocks.richText.charCount', {charCount})}</p>
-      )}
+      {showCharCount && <CharCount>{t('blocks.richText.charCount', {charCount})}</CharCount>}
     </Slate>
   )
 })

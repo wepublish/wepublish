@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdRequestQuote} from 'react-icons/md'
@@ -46,6 +47,22 @@ import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {ALL_PAYMENT_PERIODICITIES} from '../utility'
 import {InvoiceListPanel} from './invoiceListPanel'
 import {UserSubscriptionDeactivatePanel} from './userSubscriptionDeactivatePanel'
+
+const StyledForm = styled(Form)`
+  height: 100%;
+`
+
+const StyledQuoteIcon = styled(MdRequestQuote)`
+  margin-right: 10px;
+`
+
+const StyledButton = styled(Button)`
+  margin-top: 10px;
+`
+
+const StyledGridItem = styled(FlexboxGrid.Item)`
+  padding-right: 10px;
+`
 
 export interface SubscriptionEditPanelProps {
   id?: string
@@ -348,40 +365,37 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
     }
     return (
       <FlexboxGrid>
-        <FlexboxGrid.Item style={{paddingRight: '10px'}}>
-          <Button
+        <StyledGridItem>
+          <StyledButton
             color="green"
             appearance="primary"
-            onClick={() => setIsInvoiceListOpen(true)}
-            style={{marginTop: '10px'}}>
-            <MdRequestQuote style={{marginRight: '10px'}} />
+            onClick={() => setIsInvoiceListOpen(true)}>
+            <StyledQuoteIcon />
             {t('invoice.panel.invoiceHistory')} ({unpaidInvoices} {t('invoice.unpaid')})
-          </Button>
-        </FlexboxGrid.Item>
+          </StyledButton>
+        </StyledGridItem>
 
         <FlexboxGrid.Item>
-          <Button
+          <StyledButton
             appearance="ghost"
             disabled={isDisabled}
-            style={{marginTop: '10px'}}
             onClick={() => setDeactivationPanelOpen(true)}>
             {t(
               deactivation
                 ? 'userSubscriptionEdit.deactivation.title.deactivated'
                 : 'userSubscriptionEdit.deactivation.title.activated'
             )}
-          </Button>
+          </StyledButton>
         </FlexboxGrid.Item>
       </FlexboxGrid>
     )
   }
   return (
     <>
-      <Form
+      <StyledForm
         onSubmit={validationPassed => validationPassed && handleSave()}
         model={validationModel}
         fluid
-        style={{height: '100%'}}
         formValue={{
           memberPlan: memberPlan?.name,
           user: user?.name,
@@ -601,7 +615,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
             />
           </Modal>
         )}
-      </Form>
+      </StyledForm>
     </>
   )
 }

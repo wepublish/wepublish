@@ -1,7 +1,29 @@
+import styled from '@emotion/styled'
 import React, {ReactChild} from 'react'
 import {MdChevronLeft} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Button, Col, FlexboxGrid, Loader, Row} from 'rsuite'
+
+const StyledCol = styled(Col)`
+  padding-top: 3px;
+`
+
+const StyledFlexboxGrid = styled(FlexboxGrid)`
+  padding-right: 5px;
+  padding-bottom: 20px;
+`
+
+const StyledFlexboxItem = styled(FlexboxGrid.Item)`
+  margin-left: 40px;
+`
+
+const StyledLoader = styled(Loader)`
+  margin-right: 5px;
+`
+
+const StyledSaveButton = styled(Button)`
+  margin-right: 10px;
+`
 
 interface modelTitleProps {
   title?: string
@@ -31,7 +53,7 @@ export function ModelTitle({
     if (loading) {
       return (
         <>
-          <Loader style={{marginRight: '5px'}} />
+          <StyledLoader />
           {loadingTitle}
         </>
       )
@@ -43,14 +65,13 @@ export function ModelTitle({
     return (
       <>
         {/* save button */}
-        <Button
+        <StyledSaveButton
           appearance="ghost"
           loading={loading}
           type="submit"
-          data-testid="saveButton"
-          style={{marginRight: '10px'}}>
+          data-testid="saveButton">
           {saveBtnTitle}
-        </Button>
+        </StyledSaveButton>
         {/* save and close button */}
         <Button
           appearance="primary"
@@ -66,17 +87,17 @@ export function ModelTitle({
 
   return (
     <>
-      <FlexboxGrid align="middle" style={{paddingRight: '5px', paddingBottom: '20px'}}>
+      <StyledFlexboxGrid align="middle">
         {/* title */}
         <FlexboxGrid.Item colspan={12}>
           <Row>
-            <Col xs={2} style={{paddingTop: '3px'}}>
+            <StyledCol xs={2}>
               <Link to={closePath}>
                 <h1>
                   <MdChevronLeft />
                 </h1>
               </Link>
-            </Col>
+            </StyledCol>
             <Col xs={16}>
               <h2>{titleView()}</h2>
             </Col>
@@ -90,10 +111,10 @@ export function ModelTitle({
             <FlexboxGrid.Item>{additionalMenu}</FlexboxGrid.Item>
 
             {/* save btns */}
-            <FlexboxGrid.Item style={{marginLeft: '40px'}}>{actionsView()}</FlexboxGrid.Item>
+            <StyledFlexboxItem>{actionsView()}</StyledFlexboxItem>
           </FlexboxGrid>
         </FlexboxGrid.Item>
-      </FlexboxGrid>
+      </StyledFlexboxGrid>
     </>
   )
 }

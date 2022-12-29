@@ -44,6 +44,10 @@ const StyledFileDropWrapper = styled(Panel)`
   height: 150px;
 `
 
+const StyledFlexItem = styled(FlexboxGrid.Item)`
+  margin-bottom: 20px;
+`
+
 export interface ImageSelectPanelProps {
   onClose(): void
   onSelect(image: ImageRefFragment): void
@@ -163,7 +167,7 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
               {images.map(image => {
                 const {id, mediumURL, title, filename, extension} = image
                 return (
-                  <FlexboxGrid.Item key={id} colspan={10} style={{marginBottom: 20}}>
+                  <StyledFlexItem key={id} colspan={10}>
                     <StyledPanel onClick={() => onSelect(image)} shaded bordered bodyFill>
                       <StyledImgWrapper>
                         <StyledImg src={mediumURL || ''} />
@@ -177,7 +181,7 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
                         </Typography>
                       </Panel>
                     </StyledPanel>
-                  </FlexboxGrid.Item>
+                  </StyledFlexItem>
                 )
               })}
             </FlexboxGrid>

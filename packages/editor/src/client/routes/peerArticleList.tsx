@@ -1,6 +1,16 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Avatar, FlexboxGrid, Message, Pagination, Popover, Table, toaster, Whisper} from 'rsuite'
+import {
+  Avatar as RAvatar,
+  FlexboxGrid,
+  Message,
+  Pagination,
+  Popover,
+  Table as RTable,
+  toaster,
+  Whisper
+} from 'rsuite'
 
 import {ArticleFilter, ArticleSort, PeerArticle, usePeerArticleListQuery} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
@@ -10,6 +20,37 @@ import {
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
+
+const Img = styled.img`
+  height: 25;
+  width: auto;
+`
+
+const PopoverImg = styled.img`
+  height: 175;
+  width: auto;
+`
+
+const {Column, HeaderCell, Cell: RCell} = RTable
+
+const Avatar = styled(RAvatar)`
+  margin-right: 5;
+  min-width: 20;
+`
+
+const FlexCell = styled(RCell)`
+  display: flex;
+`
+
+const Table = styled(RTable)`
+  flex: 1;
+`
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-flow: column;
+  margin-top: 20px;
+`
 
 function PeerArticleList() {
   const [page, setPage] = useState(1)
@@ -65,8 +106,6 @@ function PeerArticleList() {
     refetch(listVariables)
   }, [filter, page, limit, sortOrder, sortField, peerFilter])
 
-  const {Column, HeaderCell, Cell} = Table
-
   useEffect(() => {
     if (peerArticleListError) {
       toaster.push(
@@ -93,12 +132,7 @@ function PeerArticleList() {
         setPeerFilter={setPeerFilter}
       />
 
-      <div
-        style={{
-          display: 'flex',
-          flexFlow: 'column',
-          marginTop: '20px'
-        }}>
+      <Wrapper>
         <Table
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType ?? 'asc')
@@ -106,34 +140,33 @@ function PeerArticleList() {
           }}
           minHeight={600}
           autoHeight
-          style={{flex: 1}}
           loading={isLoading}
           data={peerArticles as any[]}
           sortColumn={sortField}
           sortType={sortOrder}>
           <Column width={200} align="left" resizable>
             <HeaderCell>{t('peerArticles.title')}</HeaderCell>
-            <Cell>
+            <RCell>
               {(rowData: PeerArticle) => (
                 <a href={rowData.peeredArticleURL} target="_blank" rel="noreferrer">
                   {rowData.article.latest.title || t('articles.overview.untitled')}
                 </a>
               )}
-            </Cell>
+            </RCell>
           </Column>
 
           <Column width={200} align="left" resizable>
             <HeaderCell>{t('peerArticles.lead')}</HeaderCell>
-            <Cell>
+            <RCell>
               {(rowData: PeerArticle) =>
                 rowData.article.latest.lead || t('articles.overview.untitled')
               }
-            </Cell>
+            </RCell>
           </Column>
 
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('peerArticles.publishedAt')}</HeaderCell>
-            <Cell dataKey="publishedAt">
+            <RCell dataKey="publishedAt">
               {(rowData: PeerArticle) =>
                 rowData.article.latest.publishedAt
                   ? t('peerArticles.publicationDate', {
@@ -141,12 +174,12 @@ function PeerArticleList() {
                     })
                   : t('peerArticles.notPublished')
               }
-            </Cell>
+            </RCell>
           </Column>
 
           <Column width={150} align="left" resizable>
             <HeaderCell>{t('peerArticles.peer')}</HeaderCell>
-            <Cell dataKey="peer" style={{display: 'flex'}}>
+            <FlexCell dataKey="peer">
               {(rowData: PeerArticle) => (
                 <>
                   <Avatar
@@ -154,30 +187,29 @@ function PeerArticleList() {
                     alt={rowData.peer.profile?.name}
                     circle
                     size="xs"
-                    style={{marginRight: 5, minWidth: 20}}
                     className="peerArticleAvatar"
                   />
                   <div>{rowData.peer.profile?.name}</div>
                 </>
               )}
-            </Cell>
+            </FlexCell>
           </Column>
 
           <Column width={120} align="left" resizable>
             <HeaderCell>{t('peerArticles.authors')}</HeaderCell>
-            <Cell>
+            <RCell>
               {(rowData: PeerArticle) => {
                 return rowData.article.latest.authors.reduce((allAuthors, author, index) => {
                   return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`
                 }, '')
               }}
-            </Cell>
+            </RCell>
           </Column>
 
           <Column width={120} align="left" resizable>
             <HeaderCell>{t('peerArticles.articleImage')}</HeaderCell>
 
-            <Cell>
+            <RCell>
               {(rowData: PeerArticle) =>
                 rowData.article.latest.image?.url ? (
                   <Whisper
@@ -186,24 +218,16 @@ function PeerArticleList() {
                     controlId="control-id-hover"
                     speaker={
                       <Popover>
-                        <img
-                          src={rowData.article.latest.image?.url || ''}
-                          alt=""
-                          style={{height: '175', width: 'auto'}}
-                        />
+                        <PopoverImg src={rowData.article.latest.image?.url || ''} alt="" />
                       </Popover>
                     }>
-                    <img
-                      src={rowData.article.latest.image?.url || ''}
-                      alt=""
-                      style={{height: '25', width: 'auto'}}
-                    />
+                    <Img src={rowData.article.latest.image?.url || ''} alt="" />
                   </Whisper>
                 ) : (
                   ''
                 )
               }
-            </Cell>
+            </RCell>
           </Column>
 
           {/* This section will be uncommented when the hostURL is available. See this issue: https://wepublish.atlassian.net/browse/WPC-663}
@@ -235,7 +259,7 @@ function PeerArticleList() {
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </div>
+      </Wrapper>
     </>
   )
 }

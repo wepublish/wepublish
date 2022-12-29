@@ -1,8 +1,16 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
-import {Button, Drawer, FlexboxGrid, IconButton, Modal, Table} from 'rsuite'
+import {
+  Button,
+  Drawer,
+  FlexboxGrid,
+  IconButton as RIconButton,
+  Modal,
+  Table as RTable
+} from 'rsuite'
 
 import {
   FullPaymentMethodFragment,
@@ -14,7 +22,23 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {PaymentMethodEditPanel} from '../panel/paymentMethodEditPanel'
 
-const {Column, HeaderCell, Cell} = Table
+const {Column, HeaderCell, Cell: RCell} = RTable
+
+const Cell = styled(RCell)`
+  padding: 6px 0;
+`
+
+const Table = styled(RTable)`
+  margin-top: 20px;
+`
+
+const GridItemAlignRight = styled(FlexboxGrid.Item)`
+  text-align: right;
+`
+
+const IconButton = styled(RIconButton)`
+  margin-left: 5px;
+`
 
 function PaymentMethodList() {
   const {t} = useTranslation()
@@ -66,17 +90,17 @@ function PaymentMethodList() {
           <h2>{t('paymentMethodList.title')}</h2>
         </FlexboxGrid.Item>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_PAYMENT_METHOD']}>
-          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <GridItemAlignRight colspan={8}>
             <Link to="/paymentmethods/create">
               <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('paymentMethodList.createNew')}
               </IconButton>
             </Link>
-          </FlexboxGrid.Item>
+          </GridItemAlignRight>
         </PermissionControl>
       </FlexboxGrid>
 
-      <Table autoHeight style={{marginTop: '20px'}} loading={isLoading} data={paymentMethods}>
+      <Table autoHeight loading={isLoading} data={paymentMethods}>
         <Column width={200} align="left" resizable>
           <HeaderCell>{t('paymentMethodList.name')}</HeaderCell>
           <Cell>
@@ -87,7 +111,7 @@ function PaymentMethodList() {
         </Column>
         <Column width={100} align="center" fixed="right">
           <HeaderCell>{t('paymentMethodList.action')}</HeaderCell>
-          <Cell style={{padding: '6px 0'}}>
+          <Cell>
             {(rowData: FullPaymentMethodFragment) => (
               <PermissionControl qualifyingPermissions={['CAN_DELETE_PAYMENT_METHOD']}>
                 <IconButtonTooltip caption={t('delete')}>
@@ -97,7 +121,6 @@ function PaymentMethodList() {
                     appearance="ghost"
                     color="red"
                     size="sm"
-                    style={{marginLeft: '5px'}}
                     onClick={() => {
                       setConfirmationDialogOpen(true)
                       setCurrentPaymentMethod(rowData)

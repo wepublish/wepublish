@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose} from 'react-icons/md'
@@ -11,6 +12,29 @@ import {
   usePeerListLazyQuery
 } from '../../api'
 import {AuthorCheckPicker} from '../../panel/authorCheckPicker'
+
+const StyledForm = styled(Form)`
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 15px;
+`
+
+const StyledCloseIcon = styled(MdClose)`
+  margin-right: 5px;
+`
+
+const StyledSelectPicker = styled(SelectPicker)`
+  width: 150;
+`
+
+const StyledToggle = styled(Toggle)`
+  display: inline-block;
+  margin-top: 6px;
+`
+
+const StyledFormGroup = styled(Form.Group)`
+  width: 100%;
+`
 
 const formInputStyle = {
   marginRight: '15px',
@@ -98,12 +122,12 @@ export function ListViewFilters({
     }
     return (
       <>
-        <Form.Group style={{width: '100%'}}>
+        <StyledFormGroup>
           <Button onClick={() => resetFilter()} color="red" appearance="ghost">
-            <MdClose style={{marginRight: '5px'}} />
+            <StyledCloseIcon />
             {t('articleList.filter.reset')}
           </Button>
-        </Form.Group>
+        </StyledFormGroup>
       </>
     )
   }
@@ -112,7 +136,7 @@ export function ListViewFilters({
 
   return (
     <>
-      <Form style={{display: 'flex', flexWrap: 'wrap', marginTop: '15px'}} className={className}>
+      <StyledForm className={className}>
         {fields.includes('title') && (
           <Form.Group style={formInputStyle}>
             <Input
@@ -167,8 +191,7 @@ export function ListViewFilters({
 
         {fields.includes('draft') && (
           <Form.Group style={formInputStyle}>
-            <Toggle
-              style={{display: 'inline-block', marginTop: '6px'}}
+            <StyledToggle
               defaultChecked={!!filter.draft}
               onChange={value => updateFilter({draft: value || null})}
               checkedChildren={t('articleList.filter.isDraft')}
@@ -179,8 +202,7 @@ export function ListViewFilters({
 
         {fields.includes('pending') && (
           <Form.Group style={formInputStyle}>
-            <Toggle
-              style={{display: 'inline-block', marginTop: '6px'}}
+            <StyledToggle
               defaultChecked={!!filter.pending}
               onChange={value => updateFilter({pending: value || null})}
               checkedChildren={t('articleList.filter.isPending')}
@@ -191,8 +213,7 @@ export function ListViewFilters({
 
         {fields.includes('published') && (
           <Form.Group style={formInputStyle}>
-            <Toggle
-              style={{display: 'inline-block', marginTop: '6px'}}
+            <StyledToggle
               defaultChecked={!!filter.published}
               onChange={value => updateFilter({published: value || null})}
               checkedChildren={t('articleList.filter.isPublished')}
@@ -231,13 +252,12 @@ export function ListViewFilters({
 
         {isPeerFilter && !!allPeers && (
           <Form.Group style={formInputStyle}>
-            <SelectPicker
+            <StyledSelectPicker
               virtualized
               data={allPeers.map(peer => ({
                 value: peer.name,
                 label: peer.profile?.name
               }))}
-              style={{width: 150}}
               placeholder={t('peerArticles.filterByPeer')}
               searchable
               onSelect={value => setPeerFilter(value)}
@@ -245,7 +265,7 @@ export function ListViewFilters({
             />
           </Form.Group>
         )}
-      </Form>
+      </StyledForm>
       {resetFilterView()}
     </>
   )

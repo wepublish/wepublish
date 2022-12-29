@@ -25,6 +25,10 @@ const DoneIcon = styled(MdDone)`
   font-size: 2em;
 `
 
+const StyledFlexboxItem = styled(FlexboxGrid.Item)`
+  text-align: right;
+`
+
 export interface InvoiceProps {
   subscriptionId: string
   invoice: InvoiceFragment
@@ -128,7 +132,7 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
           {`${t('invoice.invoiceNo')} ${invoice.id}`}{' '}
           {!invoice.paidAt && <span>({t('invoice.unpaid')})</span>}
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item style={{textAlign: 'right'}}>{invoiceIconView()}</FlexboxGrid.Item>
+        <StyledFlexboxItem>{invoiceIconView()}</StyledFlexboxItem>
       </FlexboxGrid>
     )
   }

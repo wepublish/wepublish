@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -8,7 +9,7 @@ import {
   InputGroup,
   InputNumber,
   Notification,
-  Panel,
+  Panel as RPanel,
   Row,
   Schema,
   toaster,
@@ -29,6 +30,10 @@ import {
   createCheckedPermissionComponent,
   PermissionControl
 } from '../atoms/permissionControl'
+
+const Panel = styled(RPanel)`
+  margin-bottom: 10;
+`
 
 function SettingList() {
   const {t} = useTranslation()
@@ -244,7 +249,7 @@ function SettingList() {
               <Row>
                 {/* comments */}
                 <Col xs={24}>
-                  <Panel bordered header={t('settingList.comments')} style={{marginBottom: 10}}>
+                  <Panel bordered header={t('settingList.comments')}>
                     <Form.Group controlId="guestCommenting">
                       <Form.ControlLabel>{t('settingList.guestCommenting')}</Form.ControlLabel>
                       <Toggle
@@ -278,7 +283,7 @@ function SettingList() {
                 </Col>
                 {/* polls */}
                 <Col xs={24}>
-                  <Panel bordered header={t('settingList.polls')} style={{marginBottom: 10}}>
+                  <Panel bordered header={t('settingList.polls')}>
                     <Form.Group controlId="guestPollVote">
                       <Form.ControlLabel>{t('settingList.guestPollVote')}</Form.ControlLabel>
                       <Toggle
@@ -301,7 +306,7 @@ function SettingList() {
               <Row>
                 {/* login */}
                 <Col xs={24}>
-                  <Panel bordered header={t('settingList.login')} style={{marginBottom: 10}}>
+                  <Panel bordered header={t('settingList.login')}>
                     <Form.Group controlId="loginMinutes">
                       <Form.ControlLabel>{t('settingList.loginMinutes')}</Form.ControlLabel>
                       <InputGroup>
@@ -337,7 +342,7 @@ function SettingList() {
                 </Col>
                 {/* peering */}
                 <Col xs={24}>
-                  <Panel bordered header={t('settingList.peering')} style={{marginBottom: 10}}>
+                  <Panel bordered header={t('settingList.peering')}>
                     <Form.Group controlId="peerToken">
                       <Form.ControlLabel>{t('settingList.peerToken')}</Form.ControlLabel>
                       <InputGroup>
@@ -359,7 +364,7 @@ function SettingList() {
                 </Col>
                 {/* payment */}
                 <Col xs={24}>
-                  <Panel bordered header={t('settingList.payment')} style={{marginBottom: 10}}>
+                  <Panel bordered header={t('settingList.payment')}>
                     <Form.Group controlId="invoiceReminders">
                       <Form.ControlLabel>{t('settingList.invoiceReminders')}</Form.ControlLabel>
                       <Form.Control

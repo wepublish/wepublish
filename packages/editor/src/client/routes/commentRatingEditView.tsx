@@ -1,4 +1,5 @@
 import {ApolloError} from '@apollo/client'
+import styled from '@emotion/styled'
 import React, {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdOutlineSave, MdReplay} from 'react-icons/md'
@@ -25,6 +26,33 @@ import {
 } from '../api/index'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+
+const StyledIconButton = styled(IconButton)`
+  margin-top: 12px;
+`
+
+const StyledAnswerGrid = styled(FlexboxGrid)`
+  margin-bottom: 12px;
+  gap: 12px;
+`
+
+const StyledLoader = styled(Loader)`
+  margin: 30px;
+`
+
+const StyledP = styled.p`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`
+
+const StyledFlexboxGrid = styled(FlexboxGrid)`
+  margin-bottom: 40px;
+`
+
+const RatingSystem = styled(FlexboxGrid.Item)`
+  text-align: right;
+`
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
@@ -104,13 +132,13 @@ function CommentRatingEditView() {
 
   return (
     <>
-      <FlexboxGrid style={{marginBottom: '40px'}}>
+      <StyledFlexboxGrid>
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('comments.ratingEdit.title')}</h2>
         </FlexboxGrid.Item>
 
         {ratingSystem && (
-          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <RatingSystem colspan={8}>
             <IconButton
               type="button"
               appearance="primary"
@@ -126,16 +154,16 @@ function CommentRatingEditView() {
                 })
               }>
               {isLoading ? (
-                <p style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                <StyledP>
                   <MdReplay /> {t('comments.ratingEdit.loading')}
-                </p>
+                </StyledP>
               ) : (
                 t('save')
               )}
             </IconButton>
-          </FlexboxGrid.Item>
+          </RatingSystem>
         )}
-      </FlexboxGrid>
+      </StyledFlexboxGrid>
 
       <Form>
         {ratingSystem && (
@@ -157,7 +185,7 @@ function CommentRatingEditView() {
 
       {isFetching && (
         <FlexboxGrid justify="center">
-          <Loader size="lg" style={{margin: '30px'}} />
+          <StyledLoader size="lg" />
         </FlexboxGrid>
       )}
 
@@ -214,7 +242,7 @@ export function RatingAnswers({
   return (
     <>
       {answers?.map(answer => (
-        <FlexboxGrid style={{marginBottom: '12px', gap: '12px'}} key={answer.id}>
+        <StyledAnswerGrid key={answer.id}>
           <Form.Control
             name={`answer-${answer.id}`}
             placeholder={t('comments.ratingEdit.placeholder')}
@@ -239,13 +267,13 @@ export function RatingAnswers({
               onClick={() => onDeleteAnswer(answer.id)}
             />
           </IconButtonTooltip>
-        </FlexboxGrid>
+        </StyledAnswerGrid>
       ))}
 
-      <IconButton appearance="ghost" style={{marginTop: '12px'}} onClick={() => onAddAnswer()}>
+      <StyledIconButton appearance="ghost" onClick={() => onAddAnswer()}>
         <MdAdd />
         {t('comments.ratingEdit.newAnswer')}
-      </IconButton>
+      </StyledIconButton>
     </>
   )
 }

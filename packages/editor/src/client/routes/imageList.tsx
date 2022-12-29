@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdDelete, MdEdit, MdOutlineAddPhotoAlternate, MdSearch} from 'react-icons/md'
@@ -6,7 +7,7 @@ import {
   Button,
   Drawer,
   FlexboxGrid,
-  IconButton,
+  IconButton as RIconButton,
   Input,
   InputGroup,
   Modal,
@@ -28,7 +29,30 @@ import {ImageEditPanel} from '../panel/imageEditPanel'
 import {ImageUploadAndEditPanel} from '../panel/imageUploadAndEditPanel'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_IMAGE_PAGE_SIZES} from '../utility'
 
-const {Column, HeaderCell, Cell} = Table
+const {Column, HeaderCell, Cell: RCell} = Table
+
+const Cell = styled(RCell)`
+  padding: 6px 0;
+`
+
+const Img = styled.img`
+  height: 70;
+  width: auto;
+  display: block;
+  margin: 0 auto;
+`
+
+const IconButton = styled(RIconButton)`
+  margin-left: 5px;
+`
+
+const GridItemAlignRight = styled(FlexboxGrid.Item)`
+  text-align: right;
+`
+
+const GridItemMarginTop = styled(FlexboxGrid.Item)`
+  margin-top: 20px;
+`
 
 function ImageList() {
   const location = useLocation()
@@ -97,25 +121,25 @@ function ImageList() {
           <h2>{t('images.overview.imageLibrary')}</h2>
         </FlexboxGrid.Item>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
-          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <GridItemAlignRight colspan={8}>
             <Link to="/images/upload" state={{modalLocation: location}}>
-              <IconButton
+              <RIconButton
                 appearance="primary"
                 disabled={isLoading}
                 icon={<MdOutlineAddPhotoAlternate />}>
                 {t('images.overview.uploadImage')}
-              </IconButton>
+              </RIconButton>
             </Link>
-          </FlexboxGrid.Item>
+          </GridItemAlignRight>
         </PermissionControl>
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
+        <GridItemMarginTop colspan={24}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
-        </FlexboxGrid.Item>
+        </GridItemMarginTop>
       </FlexboxGrid>
       <div>
         <Table
@@ -128,64 +152,56 @@ function ImageList() {
           className={'displayThreeLinesOnly'}>
           <Column width={160} align="left" resizable>
             <HeaderCell>{t('images.overview.image')}</HeaderCell>
-            <Cell>
+            <RCell>
               {(rowData: ImageRefFragment) => (
                 <Link to={`/images/edit/${rowData.id}`}>
-                  <img
-                    src={rowData.thumbURL || ''}
-                    style={{height: '70', width: 'auto', display: 'block', margin: '0 auto'}}
-                  />
+                  <Img src={rowData.thumbURL || ''} />
                 </Link>
               )}
-            </Cell>
+            </RCell>
           </Column>
           <Column width={160} align="left" resizable>
             <HeaderCell>{t('images.overview.title')}</HeaderCell>
-            <Cell className="displayThreeLinesOnly">
+            <RCell className="displayThreeLinesOnly">
               {(rowData: ImageRefFragment) => (
                 <p className={'displayThreeLinesOnly'}>
                   {rowData.title ? rowData.title : t('images.overview.untitled')}
                 </p>
               )}
-            </Cell>
+            </RCell>
           </Column>
           <Column width={340} align="left" resizable>
             <HeaderCell>{t('images.overview.description')}</HeaderCell>
-            <Cell className={'displayThreeLinesOnly'}>
+            <RCell className={'displayThreeLinesOnly'}>
               {(rowData: ImageRefFragment) => (
                 <p className={'displayThreeLinesOnly'}>
                   {rowData.description ? rowData.description : t('images.overview.noDescription')}
                 </p>
               )}
-            </Cell>
+            </RCell>
           </Column>
 
           <Column width={250} align="left" resizable>
             <HeaderCell>{t('images.overview.filename')}</HeaderCell>
-            <Cell>
+            <RCell>
               {(rowData: ImageRefFragment) => (
                 <p className={'displayThreeLinesOnly'}>
                   {rowData.filename ? rowData.filename : ''}
                 </p>
               )}
-            </Cell>
+            </RCell>
           </Column>
 
           <Column width={160} align="center" resizable>
             <HeaderCell>{t('images.overview.actions')}</HeaderCell>
-            <Cell style={{padding: '6px 0'}}>
+            <Cell>
               {(rowData: ImageRefFragment) => (
                 <>
                   <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
                     <IconButtonTooltip caption={t('images.overview.edit')}>
                       <>
                         <Link to={`/images/edit/${rowData.id}`}>
-                          <IconButton
-                            icon={<MdEdit />}
-                            circle
-                            size="sm"
-                            style={{marginLeft: '5px'}}
-                          />
+                          <IconButton icon={<MdEdit />} circle size="sm" />
                         </Link>
                       </>
                     </IconButtonTooltip>
@@ -198,7 +214,6 @@ function ImageList() {
                         size="sm"
                         appearance="ghost"
                         color="red"
-                        style={{marginLeft: '5px'}}
                         onClick={event => {
                           event.preventDefault()
                           setCurrentImage(rowData)

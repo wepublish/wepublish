@@ -1,4 +1,5 @@
 import {ApolloError} from '@apollo/client'
+import styled from '@emotion/styled'
 import React, {memo, useCallback, useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSave} from 'react-icons/md'
@@ -6,8 +7,8 @@ import {
   Button,
   FlexboxGrid,
   Form,
-  IconButton,
-  Loader,
+  IconButton as RIconButton,
+  Loader as RLoader,
   Message,
   Modal,
   Pagination,
@@ -25,6 +26,35 @@ import {
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
+
+const FlexGridSmallerMargin = styled(FlexboxGrid)`
+  margin-bottom: 12px;
+`
+
+const FlexGrid = styled(FlexboxGrid)`
+  margin-bottom: 40px;
+`
+
+const IconButton = styled(RIconButton)`
+  margin-left: 12px;
+`
+
+const Flex = styled.div`
+  flex: 0 0 auto;
+`
+
+const FlexWrapper = styled.div`
+  max-width: 300px;
+  flex: 1 1;
+`
+
+const Loader = styled(RLoader)`
+  margin: 30px;
+`
+
+const FlexItemAlignRight = styled(FlexboxGrid.Item)`
+  text-align: right;
+`
 
 export type TagListProps = {
   type: TagType
@@ -210,35 +240,35 @@ const TagList = memo<TagListProps>(({type}) => {
 
   return (
     <>
-      <FlexboxGrid style={{marginBottom: '40px'}}>
+      <FlexGrid>
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('tags.overview.title')}</h2>
         </FlexboxGrid.Item>
 
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+        <FlexItemAlignRight colspan={8}>
           <PermissionControl qualifyingPermissions={['CAN_CREATE_TAG']}>
-            <IconButton
+            <RIconButton
               type="button"
               appearance="primary"
               data-testid="create"
               icon={<MdAdd />}
               onClick={() => createTag()}>
               {t('tags.overview.createTag')}
-            </IconButton>
+            </RIconButton>
           </PermissionControl>
-        </FlexboxGrid.Item>
-      </FlexboxGrid>
+        </FlexItemAlignRight>
+      </FlexGrid>
 
       {loading && (
         <FlexboxGrid justify="center">
-          <Loader size="lg" style={{margin: '30px'}} />
+          <Loader size="lg" />
         </FlexboxGrid>
       )}
 
       {Object.entries(formValue).map(([tagId, inputValue]) => (
         <Form key={tagId}>
-          <FlexboxGrid style={{marginBottom: '12px'}}>
-            <div style={{maxWidth: '300px', flex: '1 1'}}>
+          <FlexGridSmallerMargin>
+            <FlexWrapper>
               <Form.Control
                 name={tagId}
                 value={inputValue}
@@ -253,17 +283,16 @@ const TagList = memo<TagListProps>(({type}) => {
                   })
                 }}
               />
-            </div>
+            </FlexWrapper>
 
-            <div style={{flex: '0 0 auto'}}>
+            <Flex>
               <PermissionControl qualifyingPermissions={['CAN_UPDATE_TAG']}>
                 <IconButtonTooltip caption={t('save')}>
                   <IconButton
                     type="submit"
-                    icon={<MdSave />}
                     circle
                     size="sm"
-                    style={{marginLeft: '12px'}}
+                    icon={<MdSave />}
                     onClick={() => {
                       updateTag({
                         variables: {
@@ -280,18 +309,17 @@ const TagList = memo<TagListProps>(({type}) => {
               <PermissionControl qualifyingPermissions={['CAN_DELETE_TAG']}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
-                    icon={<MdDelete />}
                     color="red"
                     appearance="primary"
                     circle
                     size="sm"
-                    style={{marginLeft: '12px'}}
+                    icon={<MdDelete />}
                     onClick={() => setTagToDelete(tagId)}
                   />
                 </IconButtonTooltip>
               </PermissionControl>
-            </div>
-          </FlexboxGrid>
+            </Flex>
+          </FlexGridSmallerMargin>
         </Form>
       ))}
 

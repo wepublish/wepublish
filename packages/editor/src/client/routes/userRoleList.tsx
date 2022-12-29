@@ -1,8 +1,18 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
-import {Button, Drawer, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table} from 'rsuite'
+import {
+  Button,
+  Drawer,
+  FlexboxGrid,
+  IconButton as RIconButton,
+  Input,
+  InputGroup,
+  Modal,
+  Table as RTable
+} from 'rsuite'
 
 import {FullUserRoleFragment, useDeleteUserRoleMutation, useUserRoleListQuery} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -10,7 +20,27 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
 
-const {Column, HeaderCell, Cell} = Table
+const {Column, HeaderCell, Cell: RCell} = RTable
+
+const Cell = styled(RCell)`
+  padding: 6px 0;
+`
+
+const IconButton = styled(RIconButton)`
+  margin-left: 5px;
+`
+
+const Table = styled(RTable)`
+  margin-top: 20px;
+`
+
+const FlexItemAlignRight = styled(FlexboxGrid.Item)`
+  text-align: right;
+`
+
+const FlexItemMarginTop = styled(FlexboxGrid.Item)`
+  margin-top: 20px;
+`
 
 function UserRoleList() {
   const {t} = useTranslation()
@@ -68,53 +98,52 @@ function UserRoleList() {
           <h2>{t('userRoles.overview.userRoles')}</h2>
         </FlexboxGrid.Item>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_USER_ROLE']}>
-          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <FlexItemAlignRight colspan={8}>
             <Link to="/userroles/create">
               <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('userRoles.overview.newUserRole')}
               </IconButton>
             </Link>
-          </FlexboxGrid.Item>
+          </FlexItemAlignRight>
         </PermissionControl>
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
+        <FlexItemMarginTop colspan={24}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
-        </FlexboxGrid.Item>
+        </FlexItemMarginTop>
       </FlexboxGrid>
 
-      <Table autoHeight style={{marginTop: '20px'}} loading={isLoading} data={userRoles}>
+      <Table autoHeight loading={isLoading} data={userRoles}>
         <Column width={200} align="left" resizable>
           <HeaderCell>{t('userRoles.overview.name')}</HeaderCell>
-          <Cell>
+          <RCell>
             {(rowData: FullUserRoleFragment) => (
               <Link to={`/userroles/edit/${rowData.id}`}>
                 {rowData.name || t('userRoles.overview.untitled')}
               </Link>
             )}
-          </Cell>
+          </RCell>
         </Column>
         <Column width={400} align="left" resizable>
           <HeaderCell>{t('userRoles.overview.description')}</HeaderCell>
-          <Cell dataKey="description" />
+          <RCell dataKey="description" />
         </Column>
         <Column width={100} align="center" fixed="right">
           <HeaderCell>{t('userRoles.overview.action')}</HeaderCell>
-          <Cell style={{padding: '6px 0'}}>
+          <Cell>
             {(rowData: FullUserRoleFragment) => (
               <PermissionControl qualifyingPermissions={['CAN_DELETE_USER_ROLE']}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
-                    icon={<MdDelete />}
                     disabled={rowData.systemRole}
                     circle
                     appearance="ghost"
                     color="red"
                     size="sm"
-                    style={{marginLeft: '5px'}}
+                    icon={<MdDelete />}
                     onClick={() => {
                       setConfirmationDialogOpen(true)
                       setCurrentUserRole(rowData)

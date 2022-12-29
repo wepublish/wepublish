@@ -1,13 +1,22 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {toaster, Button, Form, Message, Modal, Slider} from 'rsuite'
+import {Button, Form, Message, Modal, Slider, toaster} from 'rsuite'
 
 import {useArticlePreviewLinkQuery} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
-import styled from '@emotion/styled'
 
 const StyledMessage = styled(Message)`
   margin-bottom: 20px;
+`
+
+const StyledFormGroupTop = styled(Form.Group)`
+  padding-top: 20px;
+`
+
+const StyledFormGroupHorizontal = styled(Form.Group)`
+  padding-left: 20px;
+  padding-right: 20px;
 `
 
 export interface ArticlePreviewProps {
@@ -58,7 +67,7 @@ function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPanelProps)
         </StyledMessage>
 
         <Form fluid>
-          <Form.Group style={{paddingLeft: '20px', paddingRight: '20px'}} controlId="hours">
+          <StyledFormGroupHorizontal controlId="hours">
             <Form.ControlLabel>
               {t('articleEditor.panels.articlePreviewLinkHours')}
             </Form.ControlLabel>
@@ -74,8 +83,8 @@ function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPanelProps)
               }}
               onChange={value => setHours(value)}
             />
-          </Form.Group>
-          <Form.Group style={{paddingTop: '20px'}} controlId="field">
+          </StyledFormGroupHorizontal>
+          <StyledFormGroupTop controlId="field">
             <Form.ControlLabel>
               {t('articleEditor.panels.articlePreviewLinkField')}
             </Form.ControlLabel>
@@ -84,7 +93,7 @@ function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPanelProps)
               disabled={isLoading}
               value={data?.articlePreviewLink}
             />
-          </Form.Group>
+          </StyledFormGroupTop>
         </Form>
       </Modal.Body>
 

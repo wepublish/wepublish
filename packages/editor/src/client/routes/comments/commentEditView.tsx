@@ -1,14 +1,15 @@
 import {ApolloError} from '@apollo/client'
+import styled from '@emotion/styled'
 import React, {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {
-  Col,
+  Col as RCol,
   FlexboxGrid,
   Form,
   Grid,
   Message,
-  Panel,
+  Panel as RPanel,
   Row,
   Schema,
   SelectPicker,
@@ -33,6 +34,22 @@ import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {SelectTags} from '../../atoms/tag/selectTags'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../../blocks/types'
+
+const ColNoMargin = styled(RCol)`
+  margin-top: 0px;
+`
+
+const Col = styled(RCol)`
+  margin-top: 20px;
+`
+
+const Panel = styled(RPanel)`
+  width: 100%;
+`
+
+const FlexItem = styled(FlexboxGrid.Item)`
+  margin-top: 10px;
+`
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
@@ -199,11 +216,11 @@ const CommentEditView = memo(() => {
       <Grid fluid>
         <Row gutter={30}>
           {/* comment content */}
-          <Col xs={14}>
-            <Panel bordered style={{width: '100%'}}>
+          <RCol xs={14}>
+            <Panel bordered>
               <Row>
                 {/* comment title */}
-                <Col xs={18}>
+                <RCol xs={18}>
                   <Form.ControlLabel>{t('commentEditView.title')}</Form.ControlLabel>
                   <Form.Control
                     name="commentTitle"
@@ -213,10 +230,10 @@ const CommentEditView = memo(() => {
                       setRevision(oldRevision => ({...oldRevision, title}))
                     }
                   />
-                </Col>
+                </RCol>
 
                 {/* comment lead */}
-                <Col xs={18}>
+                <RCol xs={18}>
                   <Form.ControlLabel>{t('commentEditView.lead')}</Form.ControlLabel>
                   <Form.Control
                     name="commentLead"
@@ -226,10 +243,10 @@ const CommentEditView = memo(() => {
                       setRevision(oldRevision => ({...oldRevision, lead}))
                     }
                   />
-                </Col>
+                </RCol>
 
                 {/* comment text */}
-                <Col xs={24} style={{marginTop: '20px'}}>
+                <Col xs={24}>
                   <Form.ControlLabel>{t('commentEditView.comment')}</Form.ControlLabel>
                   <Panel bordered>
                     <RichTextBlock
@@ -245,19 +262,19 @@ const CommentEditView = memo(() => {
                 </Col>
               </Row>
             </Panel>
-          </Col>
+          </RCol>
 
-          <Col xs={10}>
+          <RCol xs={10}>
             <Row>
               {/* some actions on the comment */}
-              <Col xs={24} style={{marginTop: '0px'}}>
-                <Panel bordered header={t('commentEditView.actions')}>
+              <ColNoMargin xs={24}>
+                <RPanel bordered header={t('commentEditView.actions')}>
                   <FlexboxGrid>
                     <FlexboxGrid.Item colspan={24}>
                       <ReplyCommentBtn comment={comment} appearance="ghost" />
                     </FlexboxGrid.Item>
 
-                    <FlexboxGrid.Item colspan={24} style={{marginTop: '10px'}}>
+                    <FlexItem colspan={24}>
                       {comment && (
                         <CommentStateDropdown
                           comment={comment}
@@ -270,36 +287,36 @@ const CommentEditView = memo(() => {
                           }}
                         />
                       )}
-                    </FlexboxGrid.Item>
+                    </FlexItem>
 
-                    <FlexboxGrid.Item style={{marginTop: '10px'}} colspan={24}>
+                    <FlexItem colspan={24}>
                       <CommentDeleteBtn
                         comment={comment}
                         onCommentDeleted={() => {
                           navigate(closePath)
                         }}
                       />
-                    </FlexboxGrid.Item>
+                    </FlexItem>
                   </FlexboxGrid>
-                </Panel>
-              </Col>
+                </RPanel>
+              </ColNoMargin>
 
               {/* tags & source */}
-              <Col xs={24}>
-                <Panel bordered header={t('commentEditView.variousPanelHeader')}>
+              <RCol xs={24}>
+                <RPanel bordered header={t('commentEditView.variousPanelHeader')}>
                   <Row>
                     {/* tags */}
-                    <Col xs={24}>
+                    <RCol xs={24}>
                       <Form.ControlLabel>{t('commentEditView.tags')}</Form.ControlLabel>
                       <SelectTags
                         selectedTags={commentTags}
                         setSelectedTags={setSelectedTags}
                         tagType={TagType.Comment}
                       />
-                    </Col>
+                    </RCol>
 
                     {/* external source */}
-                    <Col xs={24}>
+                    <RCol xs={24}>
                       <Form.ControlLabel>{t('commentEditView.source')}</Form.ControlLabel>
                       <Form.Control
                         name="externalSource"
@@ -309,27 +326,24 @@ const CommentEditView = memo(() => {
                           setComment(oldComment => ({...oldComment, source} as FullCommentFragment))
                         }}
                       />
-                    </Col>
+                    </RCol>
                   </Row>
-                </Panel>
-              </Col>
+                </RPanel>
+              </RCol>
 
               {/* user or guest user */}
-              <Col xs={24}>
-                <Panel bordered header={t('commentEditView.userPanelHeader')}>
+              <RCol xs={24}>
+                <RPanel bordered header={t('commentEditView.userPanelHeader')}>
                   <CommentUser comment={comment} setComment={setComment} />
-                </Panel>
-              </Col>
+                </RPanel>
+              </RCol>
 
               {/* rating overrides */}
-              <Col xs={24} style={{marginTop: '0px'}}>
-                <Panel bordered header={t('commentEditView.ratingOverrides')}>
+              <ColNoMargin xs={24}>
+                <RPanel bordered header={t('commentEditView.ratingOverrides')}>
                   <FlexboxGrid>
                     {ratingOverrides.map(override => (
-                      <FlexboxGrid.Item
-                        key={override.answerId}
-                        colspan={24}
-                        style={{marginTop: '10px'}}>
+                      <FlexItem key={override.answerId} colspan={24}>
                         <Form.ControlLabel>{override.name}</Form.ControlLabel>
                         <SelectPicker
                           block
@@ -351,13 +365,13 @@ const CommentEditView = memo(() => {
                             )
                           }
                         />
-                      </FlexboxGrid.Item>
+                      </FlexItem>
                     ))}
                   </FlexboxGrid>
-                </Panel>
-              </Col>
+                </RPanel>
+              </ColNoMargin>
             </Row>
-          </Col>
+          </RCol>
         </Row>
       </Grid>
     </Form>

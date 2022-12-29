@@ -1,4 +1,19 @@
+import styled from '@emotion/styled'
 import React from 'react'
+
+const StyledIframe = styled.iframe`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+`
+
+const StyledVimeoEmbed = styled.div`
+  position: relative;
+  padding-top: 56.25%;
+  width: 100%;
+`
 
 export interface VimeoVideoEmbedProps {
   videoID: string
@@ -6,25 +21,13 @@ export interface VimeoVideoEmbedProps {
 
 export function VimeoVideoEmbed({videoID}: VimeoVideoEmbedProps) {
   return (
-    <div
-      style={{
-        position: 'relative',
-        paddingTop: '56.25%',
-        width: '100%'
-      }}>
-      <iframe
+    <StyledVimeoEmbed>
+      <StyledIframe
         src={`https://player.vimeo.com/video/${encodeURIComponent(videoID)}`}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%'
-        }}
         scrolling="no"
         frameBorder="0"
         allowFullScreen
       />
-    </div>
+    </StyledVimeoEmbed>
   )
 }

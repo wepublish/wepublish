@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdListAlt, MdSettings, MdShare} from 'react-icons/md'
@@ -16,6 +17,38 @@ import {MetaDataType} from '../blocks/types'
 import {generateID} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
+
+const StyledNav = styled(Nav)`
+  margin-bottom: 20;
+`
+
+const StyledToggle = styled(Toggle)`
+  max-width: 70px;
+  min-width: 70px;
+`
+
+const StyledInputWidth60 = styled(Input)`
+  width: 60%;
+`
+
+const StyledInputWidth40 = styled(Input)`
+  width: 40%;
+  margin-right: 10px;
+`
+
+const StyledInputList = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const StyledTagPicker = styled(TagPicker)`
+  width: 100%;
+`
+
+const StyledFormGroup = styled(Form.Group)`
+  padding-top: 6px;
+  padding-left: 8px;
+`
 
 export interface PageMetadataProperty {
   readonly key: string
@@ -179,10 +212,9 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
             </Form.Group>
             <Form.Group controlId="pageTags">
               <Form.ControlLabel>{t('pageEditor.panels.tags')}</Form.ControlLabel>
-              <TagPicker
+              <StyledTagPicker
                 disabled={!isAuthorized}
                 virtualized
-                style={{width: '100%'}}
                 creatable
                 value={tags}
                 data={tags.map(tag => ({label: tag, value: tag}))}
@@ -222,38 +254,30 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
                 onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
                 defaultValue={{key: '', value: '', public: true}}>
                 {({value, onChange}) => (
-                  <div style={{display: 'flex', flexDirection: 'row'}}>
-                    <Input
+                  <StyledInputList>
+                    <StyledInputWidth40
                       placeholder={t('pageEditor.panels.key')}
-                      style={{
-                        width: '40%',
-                        marginRight: '10px'
-                      }}
                       value={value.key}
                       onChange={propertyKey => {
                         onChange({...value, key: propertyKey})
                       }}
                     />
-                    <Input
+                    <StyledInputWidth60
                       placeholder={t('pageEditor.panels.value')}
-                      style={{
-                        width: '60%'
-                      }}
                       value={value.value}
                       onChange={propertyValue => {
                         onChange({...value, value: propertyValue})
                       }}
                     />
-                    <Form.Group style={{paddingTop: '6px', paddingLeft: '8px'}}>
-                      <Toggle
-                        style={{maxWidth: '70px', minWidth: '70px'}}
+                    <StyledFormGroup>
+                      <StyledToggle
                         checkedChildren={t('pageEditor.panels.public')}
                         unCheckedChildren={t('pageEditor.panels.private')}
                         checked={value.public}
                         onChange={isPublic => onChange({...value, public: isPublic})}
                       />
-                    </Form.Group>
-                  </div>
+                    </StyledFormGroup>
+                  </StyledInputList>
                 )}
               </ListInput>
             </Form.Group>
@@ -279,11 +303,10 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <Nav
+        <StyledNav
           appearance="tabs"
           activeKey={activeKey}
-          onSelect={activeKey => setActiveKey(activeKey)}
-          style={{marginBottom: 20}}>
+          onSelect={activeKey => setActiveKey(activeKey)}>
           <Nav.Item eventKey={MetaDataType.General} icon={<MdSettings />}>
             {t('articleEditor.panels.general')}
           </Nav.Item>
@@ -293,7 +316,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
           <Nav.Item eventKey={MetaDataType.Properties} icon={<MdListAlt />}>
             {t('pageEditor.panels.properties')}
           </Nav.Item>
-        </Nav>
+        </StyledNav>
 
         <Panel>
           <Form fluid disabled={!isAuthorized}>

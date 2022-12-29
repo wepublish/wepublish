@@ -1,7 +1,13 @@
+import styled from '@emotion/styled'
 import React from 'react'
 import {RenderElementProps, RenderLeafProps} from 'slate-react'
 
 import {BlockFormat, InlineFormat, TextFormat} from './formats'
+
+const StyledTD = styled.td<{borderColor: string}>`
+  border-color: ${({borderColor}) =>
+    borderColor === 'transparent' ? 'rgba(0, 0, 0, 0.1)' : borderColor};
+`
 
 export function renderElement({attributes, children, element}: RenderElementProps) {
   switch (element.type) {
@@ -34,18 +40,10 @@ export function renderElement({attributes, children, element}: RenderElementProp
       return <tr {...attributes}>{children}</tr>
 
     case BlockFormat.TableCell:
-      // TODO custom borderColor using colorPicker
       return (
-        <td
-          {...attributes}
-          style={{
-            borderColor:
-              element.borderColor === 'transparent'
-                ? `rgb(0, 0, 0, 0.1)`
-                : (element.borderColor as string)
-          }}>
+        <StyledTD borderColor={element.borderColor as string} {...attributes}>
           {children}
-        </td>
+        </StyledTD>
       )
 
     case InlineFormat.Link:

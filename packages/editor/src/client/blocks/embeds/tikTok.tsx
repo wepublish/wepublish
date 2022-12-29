@@ -1,4 +1,23 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
+
+const StyledImage = styled.img`
+  max-width: 605px;
+  max-height: 500px;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+`
+
+const BoldParagraph = styled.p`
+  font-weight: bold;
+`
+
+const StyledTikTokEmbed = styled.div`
+  justify-content: center;
+  padding: 20;
+  background-color: rgb(247, 249, 250);
+`
 
 export interface TikTokVideoEmbedProps {
   userID: string
@@ -20,32 +39,18 @@ export function TikTokVideoEmbed({userID, videoID}: TikTokVideoEmbedProps) {
   }, [userID, videoID])
 
   return (
-    <div
-      style={{
-        justifyContent: 'center',
-        padding: 20,
-        backgroundColor: 'rgb(247, 249, 250)'
-      }}>
+    <StyledTikTokEmbed>
       <a href={tikTokData?.author_url} target="_blank" rel="noreferrer">
-        <p style={{fontWeight: 'bold'}}>@{userID}</p>
+        <BoldParagraph>@{userID}</BoldParagraph>
       </a>
-      <p style={{fontWeight: 'bold'}}>{tikTokData?.author_name}</p>
+      <BoldParagraph>{tikTokData?.author_name}</BoldParagraph>
       <a
         href={`https://www.tiktok.com/@${userID}/video/${videoID}`}
         rel="noreferrer"
         target="_blank">
-        <img
-          src={tikTokData?.thumbnail_url}
-          style={{
-            maxWidth: '605px',
-            maxHeight: '500px',
-            display: 'block',
-            marginRight: 'auto',
-            marginLeft: 'auto'
-          }}
-        />
+        <StyledImage src={tikTokData?.thumbnail_url} />
       </a>
       <p>{tikTokData?.title}</p>
-    </div>
+    </StyledTikTokEmbed>
   )
 }

@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, Input, Panel, Radio, RadioGroup, Toggle} from 'rsuite'
@@ -10,6 +11,38 @@ import {Teaser, TeaserType} from '../blocks/types'
 import {generateID} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
+
+const StyledPanel = styled(Panel)<{imageUrl: string}>`
+  height: 200px;
+  background-size: cover;
+  background-image: url();
+  margin-bottom: 12px;
+  background-image: ${({imageUrl}) => `url(${imageUrl || 'https://via.placeholder.com/240x240'})`};
+`
+
+const StyledToggle = styled(Toggle)`
+  max-width: 70px;
+  min-width: 70px;
+`
+
+const InputWidth60 = styled(Input)`
+  width: 60%;
+`
+
+const InputWidth40 = styled(Input)`
+  width: 40%;
+  margin-right: 10px;
+`
+
+const StyledInputsWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const StyledFormGroup = styled(Form.Group)`
+  padding-top: 6px;
+  padding-left: 8px;
+`
 
 export interface TeaserMetadataProperty {
   readonly key: string
@@ -136,36 +169,26 @@ export function TeaserEditPanel({
                     onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
                     defaultValue={{key: '', value: '', public: true}}>
                     {({value, onChange}) => (
-                      <div style={{display: 'flex', flexDirection: 'row'}}>
-                        <Input
+                      <StyledInputsWrapper>
+                        <InputWidth40
                           placeholder={t('articleEditor.panels.key')}
-                          style={{
-                            width: '40%',
-                            marginRight: '10px'
-                          }}
                           value={value.key}
                           onChange={propertyKey => onChange({...value, key: propertyKey})}
                         />
-                        <Input
+                        <InputWidth60
                           placeholder={t('articleEditor.panels.value')}
-                          style={{
-                            width: '60%'
-                          }}
                           value={value.value}
                           onChange={propertyValue => onChange({...value, value: propertyValue})}
                         />
-                        <Form.Group
-                          style={{paddingTop: '6px', paddingLeft: '8px'}}
-                          controlId="articleProperty">
-                          <Toggle
-                            style={{maxWidth: '70px', minWidth: '70px'}}
+                        <StyledFormGroup controlId="articleProperty">
+                          <StyledToggle
                             checkedChildren={t('articleEditor.panels.public')}
                             unCheckedChildren={t('articleEditor.panels.private')}
                             checked={value.public}
                             onChange={isPublic => onChange({...value, public: isPublic})}
                           />
-                        </Form.Group>
-                      </div>
+                        </StyledFormGroup>
+                      </StyledInputsWrapper>
                     )}
                   </ListInput>
                 </Form.Group>
@@ -245,15 +268,7 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
 
   return (
     <Panel>
-      <Panel
-        bordered
-        style={{
-          height: '200px',
-          backgroundSize: 'cover',
-          backgroundImage: `url(${imageURL ?? 'https://via.placeholder.com/240x240'})`,
-          marginBottom: '12px'
-        }}
-      />
+      <StyledPanel bordered />
       <DescriptionList>
         {contentUrl && (
           <DescriptionListItem label={t('articleEditor.panels.contentUrl')}>

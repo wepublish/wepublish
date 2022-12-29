@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
 import {MdAutoFixHigh, MdListAlt, MdSettings, MdShare} from 'react-icons/md'
@@ -32,6 +33,54 @@ import {generateID, slugify} from '../utility'
 import {AuthorCheckPicker} from './authorCheckPicker'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
+
+const StyledInputGroup = styled(InputGroup)`
+  width: 100%;
+`
+
+const StyledNav = styled(Nav)`
+  margin-bottom: 20;
+`
+
+const StyledForm = styled(Form)`
+  height: 100%;
+`
+
+const StyledToggle = styled(Toggle)`
+  max-width: 70px;
+  min-width: 70px;
+`
+
+const ValueInput = styled(Input)`
+  width: 60%;
+`
+
+const KeyInput = styled(Input)`
+  width: 40%;
+  margin-right: 10px;
+`
+
+const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const PaddingBottom = styled.div`
+  padding-bottom: 20px;
+`
+
+const FloatRightLabel = styled.label`
+  float: right;
+`
+
+const GoldLabel = styled.label`
+  color: gold;
+`
+
+const StyledFormGroup = styled(Form.Group)`
+  padding-top: 6px;
+  padding-left: 8px;
+`
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -162,10 +211,9 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
             <Form.Group controlId="socialMediaTitle">
               <Form.ControlLabel>
                 {t('articleEditor.panels.socialMediaTitle')}
-                <label style={{float: 'right'}}>
-                  {' '}
+                <FloatRightLabel>
                   {value.socialMediaTitle ? value.socialMediaTitle.length : 0}/{socialMediaTitleMax}
-                </label>
+                </FloatRightLabel>
               </Form.ControlLabel>
               <Form.Control
                 name="social-media-title"
@@ -175,21 +223,20 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                 }}
               />
               {value.socialMediaTitle && value.socialMediaTitle?.length > socialMediaTitleMax && (
-                <label style={{color: 'gold'}}>
+                <GoldLabel>
                   {t('articleEditor.panels.charCountWarning', {
                     charCountWarning: socialMediaTitleMax
                   })}
-                </label>
+                </GoldLabel>
               )}
             </Form.Group>
             <Form.Group controlId="socialMediaDescription">
               <Form.ControlLabel>
                 {t('articleEditor.panels.socialMediaDescription')}
-                <label style={{float: 'right'}}>
-                  {' '}
+                <FloatRightLabel>
                   {value.socialMediaDescription ? value.socialMediaDescription.length : 0}/
                   {socialMediaDescriptionMax}
-                </label>
+                </FloatRightLabel>
               </Form.ControlLabel>
               <Form.Control
                 name="social-media-description"
@@ -202,11 +249,11 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
               />
               {value.socialMediaDescription &&
                 value.socialMediaDescription?.length > socialMediaDescriptionMax && (
-                  <label style={{color: 'gold'}}>
+                  <GoldLabel>
                     {t('articleEditor.panels.charCountWarning', {
                       charCountWarning: socialMediaDescriptionMax
                     })}
-                  </label>
+                  </GoldLabel>
                 )}
             </Form.Group>
             <Form.Group controlId="socialMediaAuthors">
@@ -232,22 +279,20 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                 removeImage={() => onChange?.({...value, socialMediaImage: undefined})}
               />
             </Form.Group>
-            {/* </Form> */}
           </Panel>
         )
       case MetaDataType.General:
         return (
           <Panel>
-            <div style={{paddingBottom: '20px'}}>
+            <PaddingBottom>
               {t('articleEditor.panels.totalCharCount', {totalCharCount: infoData.charCount})}
-            </div>
+            </PaddingBottom>
             <Form.Group>
               <Form.ControlLabel>
                 {t('articleEditor.panels.preTitle')}
-                <label style={{float: 'right'}}>
-                  {' '}
+                <FloatRightLabel>
                   {value.preTitle.length}/{preTitleMax}{' '}
-                </label>
+                </FloatRightLabel>
               </Form.ControlLabel>
               <Form.Control
                 name="pre-title"
@@ -256,18 +301,17 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                 onChange={(preTitle: string) => onChange?.({...value, preTitle})}
               />
               {value.preTitle.length > preTitleMax && (
-                <label style={{color: 'gold'}}>
+                <GoldLabel>
                   {t('articleEditor.panels.charCountWarning', {charCountWarning: preTitleMax})}
-                </label>
+                </GoldLabel>
               )}
             </Form.Group>
             <Form.Group controlId="articleTitle">
               <Form.ControlLabel>
                 {t('articleEditor.panels.title')}
-                <label style={{float: 'right'}}>
-                  {' '}
+                <FloatRightLabel>
                   {value.title.length}/{titleMax}{' '}
-                </label>
+                </FloatRightLabel>
               </Form.ControlLabel>
               <Form.Control
                 name="title"
@@ -277,18 +321,17 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
               />
               <Form.HelpText>{t('articleEditor.panels.titleHelpBlock')}</Form.HelpText>
               {value.title.length > titleMax && (
-                <label style={{color: 'gold'}}>
+                <GoldLabel>
                   {t('articleEditor.panels.charCountWarning', {charCountWarning: titleMax})}
-                </label>
+                </GoldLabel>
               )}
             </Form.Group>
             <Form.Group controlId="articleLead">
               <Form.ControlLabel>
                 {t('articleEditor.panels.lead')}
-                <label style={{float: 'right'}}>
-                  {' '}
+                <FloatRightLabel>
                   {value.lead.length}/{leadMax}{' '}
-                </label>
+                </FloatRightLabel>
               </Form.ControlLabel>
               <Form.Control
                 name="lead"
@@ -302,18 +345,17 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
               />
               <Form.HelpText>{t('articleEditor.panels.leadHelpBlock')}</Form.HelpText>
               {value.lead.length > leadMax && (
-                <label style={{color: 'gold'}}>
+                <GoldLabel>
                   {t('articleEditor.panels.charCountWarning', {charCountWarning: leadMax})}
-                </label>
+                </GoldLabel>
               )}
             </Form.Group>
             <Form.Group controlId="articleSeoTitle">
               <Form.ControlLabel>
                 {t('articleEditor.panels.seoTitle')}
-                <label style={{float: 'right'}}>
-                  {' '}
+                <FloatRightLabel>
                   {value.seoTitle.length}/{seoTitleMax}{' '}
-                </label>
+                </FloatRightLabel>
               </Form.ControlLabel>
               <Form.Control
                 name="seo-title"
@@ -333,14 +375,14 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                 </Trans>
               </Form.HelpText>
               {value.seoTitle.length > seoTitleMax && (
-                <label style={{color: 'gold'}}>
+                <GoldLabel>
                   {t('articleEditor.panels.charCountWarning', {charCountWarning: seoTitleMax})}
-                </label>
+                </GoldLabel>
               )}
             </Form.Group>
             <Form.Group controlId="articleSlug">
               <Form.ControlLabel>{t('articleEditor.panels.slug')}</Form.ControlLabel>
-              <InputGroup style={{width: '100%'}}>
+              <StyledInputGroup>
                 <Form.Control
                   name="slug"
                   className="slug"
@@ -359,7 +401,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                     }}
                   />
                 </Whisper>
-              </InputGroup>
+              </StyledInputGroup>
               <Form.HelpText>
                 <Trans i18nKey={'articleEditor.panels.dontChangeSlug'}>
                   text{' '}
@@ -468,36 +510,26 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
                 onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
                 defaultValue={{key: '', value: '', public: true}}>
                 {({value, onChange}) => (
-                  <div style={{display: 'flex', flexDirection: 'row'}}>
-                    <Input
+                  <FlexRow>
+                    <KeyInput
                       placeholder={t('articleEditor.panels.key')}
-                      style={{
-                        width: '40%',
-                        marginRight: '10px'
-                      }}
                       value={value.key}
                       onChange={propertyKey => onChange({...value, key: propertyKey})}
                     />
-                    <Input
+                    <ValueInput
                       placeholder={t('articleEditor.panels.value')}
-                      style={{
-                        width: '60%'
-                      }}
                       value={value.value}
                       onChange={propertyValue => onChange({...value, value: propertyValue})}
                     />
-                    <Form.Group
-                      style={{paddingTop: '6px', paddingLeft: '8px'}}
-                      controlId="articleProperty">
-                      <Toggle
-                        style={{maxWidth: '70px', minWidth: '70px'}}
+                    <StyledFormGroup controlId="articleProperty">
+                      <StyledToggle
                         checkedChildren={t('articleEditor.panels.public')}
                         unCheckedChildren={t('articleEditor.panels.private')}
                         checked={value.public}
                         onChange={isPublic => onChange({...value, public: isPublic})}
                       />
-                    </Form.Group>
-                  </div>
+                    </StyledFormGroup>
+                  </FlexRow>
                 )}
               </ListInput>
             </Form.Group>
@@ -510,11 +542,10 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
 
   return (
     <>
-      <Form
+      <StyledForm
         fluid
         model={model}
-        onSubmit={validationPassed => validationPassed && onClose?.()}
-        style={{height: '100%'}}>
+        onSubmit={validationPassed => validationPassed && onClose?.()}>
         <Drawer.Header>
           <Drawer.Title>{t('articleEditor.panels.metadata')}</Drawer.Title>
 
@@ -528,11 +559,10 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
         </Drawer.Header>
 
         <Drawer.Body>
-          <Nav
+          <StyledNav
             appearance="tabs"
             activeKey={activeKey}
-            onSelect={activeKey => setActiveKey(activeKey)}
-            style={{marginBottom: 20}}>
+            onSelect={activeKey => setActiveKey(activeKey)}>
             <Nav.Item eventKey={MetaDataType.General} icon={<MdSettings />}>
               {t('articleEditor.panels.general')}
             </Nav.Item>
@@ -542,7 +572,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
             <Nav.Item eventKey={MetaDataType.Properties} icon={<MdListAlt />}>
               {t('articleEditor.panels.properties')}
             </Nav.Item>
-          </Nav>
+          </StyledNav>
           {currentContent()}
         </Drawer.Body>
 
@@ -573,7 +603,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
             />
           </Drawer>
         )}
-      </Form>
+      </StyledForm>
     </>
   )
 }

@@ -10,7 +10,7 @@ import {
   Drawer,
   FlexboxGrid,
   Form,
-  Grid,
+  Grid as RGrid,
   Input,
   Loader,
   Message,
@@ -18,7 +18,7 @@ import {
   Row,
   Schema,
   toaster,
-  Toggle
+  Toggle as RToggle
 } from 'rsuite'
 
 import {
@@ -39,6 +39,29 @@ import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {generateID} from '../utility'
+
+const Grid = styled(RGrid)`
+  padding-right: 0px;
+`
+
+const Toggle = styled(RToggle)`
+  max-width: 70px;
+  min-width: 70px;
+`
+
+const InputW60 = styled(Input)`
+  width: 60%;
+`
+
+const InputW40 = styled(Input)`
+  width: 40%;
+  margin-right: 10px;
+`
+
+const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`
 
 const StyledPanel = styled(Panel)`
   margin-top: 20px;
@@ -71,6 +94,15 @@ const ButtonMarginRight = styled(Button)`
 
 const StyledLoader = styled(Loader)`
   margin-right: 5px;
+`
+
+const FlexItemAlignRight = styled(FlexboxGrid.Item)`
+  text-align: right;
+`
+
+const FormGroup = styled(Form.Group)`
+  padding-top: 6px;
+  padding-left: 8px;
 `
 
 export interface UserProperty {
@@ -387,15 +419,13 @@ function UserEditView() {
             </Row>
           </FlexboxGrid.Item>
           {/* actions */}
-          <FlexboxGrid.Item colspan={12} style={{textAlign: 'right'}}>
-            {actionsView()}
-          </FlexboxGrid.Item>
+          <FlexItemAlignRight colspan={12}>{actionsView()}</FlexItemAlignRight>
         </StyledFlexboxGrid>
         {/* user form */}
         <StyledGrid>
           <Row gutter={10}>
             <Col xs={12}>
-              <Grid fluid>
+              <RGrid fluid>
                 {/* general user data */}
                 <Panel bordered header={t('userCreateOrEditView.userDataTitle')}>
                   <Row>
@@ -414,7 +444,7 @@ function UserEditView() {
                     <StyledColTextAlign xs={12}>
                       <Form.Group controlId="active">
                         <Form.ControlLabel>{t('userCreateOrEditView.active')}</Form.ControlLabel>
-                        <Toggle
+                        <RToggle
                           checked={active}
                           disabled={isDisabled}
                           onChange={value => setActive(value)}
@@ -614,40 +644,30 @@ function UserEditView() {
                           }
                           defaultValue={{key: '', value: '', public: true}}>
                           {({value, onChange}) => (
-                            <div style={{display: 'flex', flexDirection: 'row'}}>
-                              <Input
+                            <FlexRow>
+                              <InputW40
                                 placeholder={t('articleEditor.panels.key')}
-                                style={{
-                                  width: '40%',
-                                  marginRight: '10px'
-                                }}
                                 value={value.key}
                                 onChange={propertyKey => onChange({...value, key: propertyKey})}
                                 data-testid="propertyKey"
                               />
-                              <Input
+                              <InputW60
                                 placeholder={t('articleEditor.panels.value')}
-                                style={{
-                                  width: '60%'
-                                }}
                                 value={value.value}
                                 onChange={propertyValue =>
                                   onChange({...value, value: propertyValue})
                                 }
                                 data-testid="propertyValue"
                               />
-                              <Form.Group
-                                style={{paddingTop: '6px', paddingLeft: '8px'}}
-                                controlId="articleProperty">
+                              <FormGroup controlId="articleProperty">
                                 <Toggle
-                                  style={{maxWidth: '70px', minWidth: '70px'}}
                                   checkedChildren={t('articleEditor.panels.public')}
                                   unCheckedChildren={t('articleEditor.panels.private')}
                                   checked={value.public}
                                   onChange={isPublic => onChange({...value, public: isPublic})}
                                 />
-                              </Form.Group>
-                            </div>
+                              </FormGroup>
+                            </FlexRow>
                           )}
                         </ListInput>
                       </Form.Group>
@@ -667,11 +687,11 @@ function UserEditView() {
                     </Col>
                   </Row>
                 </StyledPanel>
-              </Grid>
+              </RGrid>
             </Col>
             {/* subscriptions */}
             <Col xs={12}>
-              <Grid fluid style={{paddingRight: '0px'}}>
+              <Grid fluid>
                 <Panel bordered header={t('userCreateOrEditView.subscriptionsHeader')}>
                   <UserSubscriptionsList subscriptions={user?.subscriptions} />
                 </Panel>

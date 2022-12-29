@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
@@ -27,6 +28,36 @@ import {
 } from '../utility'
 
 const {Column, HeaderCell, Cell} = Table
+
+const StyledIconButton = styled(MdDelete)`
+  margin-left: 5px;
+`
+
+const StyledCell = styled(Cell)`
+  padding: 6px 0;
+`
+
+const StyledCellSmallPadding = styled(Cell)`
+  padding: 2;
+`
+
+const StyledTable = styled(Table)`
+  flex: 1;
+`
+
+const StyledFlexColumn = styled.div`
+  display: flex;
+  flex-flow: column;
+  margin-top: 20px;
+`
+
+const FlexItemTextAlign = styled(FlexboxGrid.Item)`
+  text-align: right;
+`
+
+const FlexItemMarginTop = styled(FlexboxGrid.Item)`
+  margin-top: 20px;
+`
 
 function mapColumFieldToGraphQLField(columnField: string): AuthorSort | null {
   switch (columnField) {
@@ -109,33 +140,27 @@ function AuthorList() {
           <h2>{t('authors.overview.authors')}</h2>
         </FlexboxGrid.Item>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_AUTHOR']}>
-          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <FlexItemTextAlign colspan={8}>
             <Link to="/authors/create">
               <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('authors.overview.newAuthor')}
               </IconButton>
             </Link>
-          </FlexboxGrid.Item>
+          </FlexItemTextAlign>
         </PermissionControl>
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
+        <FlexItemMarginTop colspan={24}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
-        </FlexboxGrid.Item>
+        </FlexItemMarginTop>
       </FlexboxGrid>
-      <div
-        style={{
-          display: 'flex',
-          flexFlow: 'column',
-          marginTop: '20px'
-        }}>
-        <Table
+      <StyledFlexColumn>
+        <StyledTable
           minHeight={600}
           autoHeight
-          style={{flex: 1}}
           loading={isLoading}
           data={authors}
           sortColumn={sortField}
@@ -146,11 +171,11 @@ function AuthorList() {
           }}>
           <Column width={100} align="left" resizable>
             <HeaderCell>{}</HeaderCell>
-            <Cell style={{padding: 2}}>
+            <StyledCellSmallPadding>
               {(rowData: FullAuthorFragment) => (
                 <Avatar circle src={rowData.image?.squareURL || undefined} />
               )}
-            </Cell>
+            </StyledCellSmallPadding>
           </Column>
           <Column width={300} align="left" resizable sortable>
             <HeaderCell>{t('authors.overview.name')}</HeaderCell>
@@ -174,16 +199,15 @@ function AuthorList() {
           </Column>
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('authors.overview.action')}</HeaderCell>
-            <Cell style={{padding: '6px 0'}}>
+            <StyledCell>
               {(rowData: FullAuthorFragment) => (
                 <>
                   <PermissionControl qualifyingPermissions={['CAN_DELETE_AUTHOR']}>
                     <IconButtonTooltip caption={t('delete')}>
-                      <IconButton
+                      <StyledIconButton
                         icon={<MdDelete />}
                         circle
                         size="sm"
-                        style={{marginLeft: '5px'}}
                         onClick={() => {
                           setConfirmationDialogOpen(true)
                           setCurrentAuthor(rowData)
@@ -193,9 +217,9 @@ function AuthorList() {
                   </PermissionControl>
                 </>
               )}
-            </Cell>
+            </StyledCell>
           </Column>
-        </Table>
+        </StyledTable>
 
         <Pagination
           limit={limit}
@@ -213,7 +237,7 @@ function AuthorList() {
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </div>
+      </StyledFlexColumn>
 
       <Drawer
         open={isEditModalOpen}

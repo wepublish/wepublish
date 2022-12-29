@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose} from 'react-icons/md'
@@ -15,6 +16,21 @@ import {
 } from '../../api'
 import {ALL_PAYMENT_PERIODICITIES} from '../../utility'
 import {UserSearch} from './userSearch'
+
+const StyledForm = styled(Form)`
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 15px;
+`
+
+const StyledCloseIcon = styled(MdClose)`
+  margin-right: 5px;
+`
+
+const StyledFormGroup = styled(Form.Group)`
+  margin-right: 15px;
+  margin-top: 15px;
+`
 
 export interface SubscriptionListFilterProps {
   filter: SubscriptionFilter
@@ -118,19 +134,19 @@ export function SubscriptionListFilter({
     }
     return (
       <>
-        <Form.Group style={{marginRight: '15px', marginTop: '15px'}}>
+        <StyledFormGroup>
           <Button onClick={() => resetFilter()} color="red" appearance="ghost">
-            <MdClose style={{marginRight: '5px'}} />
+            <StyledCloseIcon />
             {t('subscriptionList.filter.reset')}
           </Button>
-        </Form.Group>
+        </StyledFormGroup>
       </>
     )
   }
 
   return (
     <>
-      <Form style={{display: 'flex', flexWrap: 'wrap', marginTop: '15px'}}>
+      <StyledForm>
         <Form.Group style={formInputStyle}>
           <UserSearch
             name="user"
@@ -297,7 +313,7 @@ export function SubscriptionListFilter({
             onClean={() => updateFilter({paidUntilFrom: undefined, paidUntilTo: undefined})}
           />
         </Form.Group>
-      </Form>
+      </StyledForm>
       {resetFilterView()}
     </>
   )

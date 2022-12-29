@@ -1,5 +1,6 @@
 import './routes.less'
 
+import styled from '@emotion/styled'
 import React, {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -47,6 +48,32 @@ import {ArticleMetadata, ArticleMetadataPanel, InfoData} from '../panel/articleM
 import {PublishArticlePanel} from '../panel/publishArticlePanel'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {StateColor} from '../utility'
+
+const IconButtonMarginTop = styled(IconButton)`
+  margin-top: 4px;
+`
+
+const StyledIconButton = styled(IconButton)`
+  margin-left: 10px;
+`
+
+const StyledCenterChildren = styled.div`
+  margin-top: 4px;
+  margin-bottom: 20px;
+`
+
+const StyledLegend = styled.legend`
+  width: auto;
+  margin: 0px auto;
+`
+
+const StyledFieldSet = styled.fieldset<{stateColor: string}>`
+  border-color: ${({stateColor}) => stateColor};
+`
+
+const StyledTag = styled(Tag)<{stateColor: string}>`
+  background-color: ${({stateColor}) => stateColor};
+`
 
 const InitialArticleBlocks: BlockValue[] = [
   {key: '0', type: BlockType.Title, value: {title: '', lead: ''}},
@@ -465,10 +492,10 @@ function ArticleEditor() {
 
   return (
     <>
-      <fieldset style={{borderColor: stateColor}}>
-        <legend style={{width: 'auto', margin: '0px auto'}}>
-          <Tag style={{backgroundColor: stateColor}}>{tagTitle}</Tag>
-        </legend>
+      <StyledFieldSet stateColor={stateColor}>
+        <StyledLegend>
+          <StyledTag stateColor={stateColor}>{tagTitle}</StyledTag>
+        </StyledLegend>
         <EditorTemplate
           navigationChildren={
             <NavigationBar
@@ -486,7 +513,7 @@ function ArticleEditor() {
                 </Link>
               }
               centerChildren={
-                <div style={{marginTop: '4px', marginBottom: '20px'}}>
+                <StyledCenterChildren>
                   <IconButton
                     icon={<MdIntegrationInstructions />}
                     size="lg"
@@ -501,32 +528,26 @@ function ArticleEditor() {
 
                   {isNew && createData == null ? (
                     <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
-                      <IconButton
+                      <StyledIconButton
                         className="actionButton"
-                        style={{
-                          marginLeft: '10px'
-                        }}
                         size="lg"
                         icon={<MdSave />}
                         disabled={isDisabled}
                         onClick={() => handleSave()}>
                         {t('create')}
-                      </IconButton>
+                      </StyledIconButton>
                     </PermissionControl>
                   ) : (
                     <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
-                        <IconButton
-                          style={{
-                            marginLeft: '10px'
-                          }}
+                        <StyledIconButton
                           className="actionButton"
                           size="lg"
                           icon={<MdSave />}
                           disabled={isDisabled}
                           onClick={() => handleSave()}>
                           {t('save')}
-                        </IconButton>
+                        </StyledIconButton>
                       </Badge>
                       <PermissionControl qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}>
                         <Badge
@@ -535,10 +556,7 @@ function ArticleEditor() {
                               ? 'unsaved'
                               : 'saved'
                           }>
-                          <IconButton
-                            style={{
-                              marginLeft: '10px'
-                            }}
+                          <StyledIconButton
                             className="actionButton"
                             size="lg"
                             icon={<MdCloudUpload />}
@@ -547,12 +565,12 @@ function ArticleEditor() {
                               setPublishDialogOpen(true)
                             }}>
                             {t('articleEditor.overview.publish')}
-                          </IconButton>
+                          </StyledIconButton>
                         </Badge>
                       </PermissionControl>
                     </PermissionControl>
                   )}
-                </div>
+                </StyledCenterChildren>
               }
               rightChildren={
                 <PermissionControl qualifyingPermissions={['CAN_GET_ARTICLE_PREVIEW_LINK']}>
@@ -567,13 +585,12 @@ function ArticleEditor() {
                         }
                       })
                     }}>
-                    <IconButton
+                    <IconButtonMarginTop
                       disabled={hasChanged || !id || !canPreview}
-                      style={{marginTop: '4px'}}
                       size="lg"
                       icon={<MdRemoveRedEye />}>
                       {t('articleEditor.overview.preview')}
-                    </IconButton>
+                    </IconButtonMarginTop>
                   </Link>
                 </PermissionControl>
               }
@@ -587,7 +604,7 @@ function ArticleEditor() {
             {useBlockMap<BlockValue>(() => BlockMap, [])}
           </BlockList>
         </EditorTemplate>
-      </fieldset>
+      </StyledFieldSet>
       <Drawer open={isMetaDrawerOpen} size="sm" onClose={() => setMetaDrawerOpen(false)}>
         <ArticleMetadataPanel
           value={metadata}
