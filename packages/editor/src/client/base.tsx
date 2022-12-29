@@ -25,7 +25,8 @@ import {
   MdSettingsInputAntenna,
   MdStar,
   MdTranslate,
-  MdVpnKey
+  MdVpnKey,
+  MdPieChartOutline
 } from 'react-icons/md'
 import {Link, useLocation} from 'react-router-dom'
 import {Container, IconButton, Nav, Navbar, Sidebar, Sidenav} from 'rsuite'
@@ -118,6 +119,14 @@ export function Base({children}: BaseProps) {
               />
 
               <Nav style={{marginTop: '1rem'}}>
+                <Nav.Item
+                  as={NavLink}
+                  href="/dashboard"
+                  icon={<MdPieChartOutline />}
+                  active={path === 'dashboard' || path === ''}>
+                  {t('navbar.dashboard')}
+                </Nav.Item>
+
                 <PermissionControl
                   qualifyingPermissions={[
                     'CAN_GET_ARTICLES',

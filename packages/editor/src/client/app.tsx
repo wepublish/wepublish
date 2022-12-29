@@ -39,6 +39,7 @@ import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
 import {LocalStorageKey} from './utility'
+import {Dashboard} from './routes/dashboard'
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -88,15 +89,25 @@ export function App() {
       <BrowserRouter>
         <Routes>
           <Route path="login" element={<Login />} />
-          {/* Articles Routes */}
+          {/* Dashboard Routes */}
+          <Route
+            path="dashboard"
+            element={
+              <Base>
+                <Dashboard />
+              </Base>
+            }
+          />
           <Route
             path="/"
             element={
               <Base>
-                <ArticleList />
+                <Dashboard />
               </Base>
             }
           />
+
+          {/* Articles Routes */}
           <Route
             path="articles"
             element={

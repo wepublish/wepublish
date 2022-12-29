@@ -112,6 +112,7 @@ import {GraphQLSetting} from './setting'
 import {getSetting, getSettings} from './setting/setting.private-queries'
 import {GraphQLSlug} from './slug'
 import {
+  GraphQLSubscribersPerMonth,
   GraphQLSubscription,
   GraphQLSubscriptionConnection,
   GraphQLSubscriptionFilter,
@@ -119,6 +120,7 @@ import {
 } from './subscription'
 import {
   getAdminSubscriptions,
+  getNewSubscribersYear,
   getSubscriptionById,
   getSubscriptionsAsCSV
 } from './subscription/subscription.private-queries'
@@ -300,6 +302,15 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       args: {filter: {type: GraphQLSubscriptionFilter}},
       resolve: (root, {filter}, {prisma: {subscription}, authenticate}) =>
         getSubscriptionsAsCSV(filter, authenticate, subscription)
+    },
+
+    // Stats
+
+    newSubscribersPastYear: {
+      type: GraphQLList(GraphQLSubscribersPerMonth),
+      resolve: async (root, {}, {prisma: {subscription}}) => {
+        return await getNewSubscribersYear(subscription)
+      }
     },
 
     // UserRole

@@ -1739,6 +1739,7 @@ export type Query = {
   subscription?: Maybe<Subscription>;
   subscriptions: SubscriptionConnection;
   subscriptionsAsCsv?: Maybe<Scalars['String']>;
+  newSubscribersPastYear?: Maybe<Array<Maybe<SubscribersPerMonth>>>;
   userRole?: Maybe<UserRole>;
   userRoles: UserRoleConnection;
   permissions?: Maybe<Array<Permission>>;
@@ -2121,6 +2122,12 @@ export type SoundCloudTrackBlock = {
 
 export type SoundCloudTrackBlockInput = {
   trackID: Scalars['String'];
+};
+
+export type SubscribersPerMonth = {
+  __typename?: 'SubscribersPerMonth';
+  month: Scalars['String'];
+  subscriberCount?: Maybe<Scalars['Int']>;
 };
 
 export type Subscription = {
@@ -4612,6 +4619,17 @@ export type DeleteSubscriptionMutation = (
     { __typename?: 'Subscription' }
     & FullSubscriptionFragment
   )> }
+);
+
+export type NewSubscribersPastYearQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NewSubscribersPastYearQuery = (
+  { __typename?: 'Query' }
+  & { newSubscribersPastYear?: Maybe<Array<Maybe<(
+    { __typename?: 'SubscribersPerMonth' }
+    & Pick<SubscribersPerMonth, 'month' | 'subscriberCount'>
+  )>>> }
 );
 
 export type TagListQueryVariables = Exact<{
@@ -9050,6 +9068,41 @@ export function useDeleteSubscriptionMutation(baseOptions?: Apollo.MutationHookO
 export type DeleteSubscriptionMutationHookResult = ReturnType<typeof useDeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationResult = Apollo.MutationResult<DeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>;
+export const NewSubscribersPastYearDocument = gql`
+    query NewSubscribersPastYear {
+  newSubscribersPastYear {
+    month
+    subscriberCount
+  }
+}
+    `;
+
+/**
+ * __useNewSubscribersPastYearQuery__
+ *
+ * To run a query within a React component, call `useNewSubscribersPastYearQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNewSubscribersPastYearQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewSubscribersPastYearQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNewSubscribersPastYearQuery(baseOptions?: Apollo.QueryHookOptions<NewSubscribersPastYearQuery, NewSubscribersPastYearQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NewSubscribersPastYearQuery, NewSubscribersPastYearQueryVariables>(NewSubscribersPastYearDocument, options);
+      }
+export function useNewSubscribersPastYearLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NewSubscribersPastYearQuery, NewSubscribersPastYearQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NewSubscribersPastYearQuery, NewSubscribersPastYearQueryVariables>(NewSubscribersPastYearDocument, options);
+        }
+export type NewSubscribersPastYearQueryHookResult = ReturnType<typeof useNewSubscribersPastYearQuery>;
+export type NewSubscribersPastYearLazyQueryHookResult = ReturnType<typeof useNewSubscribersPastYearLazyQuery>;
+export type NewSubscribersPastYearQueryResult = Apollo.QueryResult<NewSubscribersPastYearQuery, NewSubscribersPastYearQueryVariables>;
 export const TagListDocument = gql`
     query TagList($filter: TagFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
   tags(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
