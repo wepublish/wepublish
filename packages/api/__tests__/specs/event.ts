@@ -93,6 +93,21 @@ describe('Events', () => {
         }
       })
     })
+
+    test('can not be created with endsAt before startsAt', async () => {
+      const {mutate} = testClientPrivate
+
+      const res = await mutate({
+        mutation: CreateEvent,
+        variables: {
+          name: 'Test Event',
+          startsAt: '2020-11-25T20:00:00.000Z',
+          endsAt: '2020-11-24T20:00:00.000Z'
+        }
+      })
+
+      expect(res).toMatchSnapshot()
+    })
   })
 
   describe('update', () => {
@@ -203,6 +218,38 @@ describe('Events', () => {
 
       expect(res.data.updateEvent.tags).toHaveLength(3)
     })
+
+    test('can not be updated with endsAt before startsAt', async () => {
+      const {mutate} = testClientPrivate
+
+      const createRes = await mutate({
+        mutation: CreateEvent,
+        variables: {
+          name: 'Test Event',
+          startsAt: '2020-11-25T20:00:00.000Z'
+        }
+      })
+
+      const res = await mutate({
+        mutation: UpdateEvent,
+        variables: {
+          id: createRes.data.createEvent.id,
+          endsAt: '2020-11-24T20:00:00.000Z'
+        }
+      })
+
+      const res2 = await mutate({
+        mutation: UpdateEvent,
+        variables: {
+          id: createRes.data.createEvent.id,
+          startsAt: '2020-11-27T20:00:00.000Z',
+          endsAt: '2020-11-26T20:00:00.000Z'
+        }
+      })
+
+      expect(res).toMatchSnapshot()
+      expect(res2).toMatchSnapshot()
+    })
   })
 
   describe('delete', () => {
@@ -283,6 +330,104 @@ describe('Events', () => {
       })
 
       expect(res.data.events.totalCount).toBeGreaterThanOrEqual(2)
+    })
+
+    test('can query a list of events with a specific tag', async () => {
+      const {mutate, query} = testClientPrivate
+
+      const tagRes = await mutate({
+        mutation: CreateTag,
+        variables: {
+          tag: generateRandomString(),
+          type: TagType.Event
+        }
+      })
+
+      await Promise.all([
+        mutate({
+          mutation: CreateEvent,
+          variables: {
+            name: 'Test Event',
+            startsAt: '2020-11-25T20:00:00.000Z'
+          }
+        }),
+        mutate({
+          mutation: CreateEvent,
+          variables: {
+            name: 'Test Event',
+            startsAt: '2020-11-25T20:00:00.000Z',
+            tagIds: [tagRes.data.createTag.id]
+          }
+        })
+      ])
+
+      const res = await query({
+        query: EventList,
+        variables: {
+          filter: {
+            tags: [tagRes.data.createTag.id]
+          }
+        }
+      })
+
+      expect(res.data.events.totalCount).toBe(1)
+    })
+
+    test('can query a list of events that are open', async () => {
+      const {mutate, query} = testClientPrivate
+
+      const tagRes = await mutate({
+        mutation: CreateTag,
+        variables: {
+          tag: generateRandomString(),
+          type: TagType.Event
+        }
+      })
+
+      const today = new Date()
+      const future = new Date(today)
+      future.setDate(future.getDate() + 5000)
+      const past = new Date(today)
+      past.setDate(past.getDate() - 5000)
+
+      await Promise.all([
+        mutate({
+          mutation: CreateEvent,
+          variables: {
+            name: 'Test Event',
+            startsAt: future.toISOString(),
+            tagIds: [tagRes.data.createTag.id]
+          }
+        }),
+        mutate({
+          mutation: CreateEvent,
+          variables: {
+            name: 'Test Event',
+            startsAt: future.toISOString(),
+            tagIds: [tagRes.data.createTag.id]
+          }
+        }),
+        mutate({
+          mutation: CreateEvent,
+          variables: {
+            name: 'Test Event',
+            startsAt: past.toISOString(),
+            tagIds: [tagRes.data.createTag.id]
+          }
+        })
+      ])
+
+      const res = await query({
+        query: EventList,
+        variables: {
+          filter: {
+            upcomingOnly: true,
+            tags: [tagRes.data.createTag.id]
+          }
+        }
+      })
+
+      expect(res.data.events.totalCount).toBe(2)
     })
   })
 })

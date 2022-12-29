@@ -39,6 +39,7 @@ import {
   PeerArticleTeaser,
   PolisConversationBlock,
   PollBlock,
+  EventBlock,
   QuoteBlock,
   RichTextBlock,
   SoundCloudTrackBlock,
@@ -65,6 +66,7 @@ import {
   GraphQLMetadataPropertyInput,
   GraphQLMetadataPropertyPublic
 } from './common'
+import {GraphQLEvent} from './event/event'
 
 export const GraphQLTeaserStyle = new GraphQLEnumType({
   name: 'TeaserStyle',
@@ -599,6 +601,48 @@ export const GraphQLPollBlock = new GraphQLObjectType<PollBlock, Context>({
   })
 })
 
+export const GraphQLEventBlockFilter = new GraphQLObjectType({
+  name: 'EventBlockFilter',
+  fields: {
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
+    events: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
+  }
+})
+
+export const GraphQLEventBlock = new GraphQLObjectType<EventBlock, Context>({
+  name: 'EventBlock',
+  fields: {
+    filter: {type: GraphQLNonNull(GraphQLEventBlockFilter)},
+    events: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLEvent))),
+      resolve: async ({filter}, _, {prisma}) =>
+        prisma.event.findMany({
+          where: {
+            OR: [
+              {
+                tags: {
+                  some: {
+                    tagId: {
+                      in: filter.tags ?? []
+                    }
+                  }
+                }
+              },
+              {
+                id: {
+                  in: filter.events ?? []
+                }
+              }
+            ]
+          }
+        })
+    }
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.Event
+  })
+})
+
 export const GraphQLCommentBlockFilter = new GraphQLObjectType({
   name: 'CommentBlockFilter',
   fields: {
@@ -955,6 +999,21 @@ export const GraphQLPollBlockInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLEventBlockInputFilter = new GraphQLInputObjectType({
+  name: 'EventBlockInputFilter',
+  fields: {
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
+    events: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
+  }
+})
+
+export const GraphQLEventBlockInput = new GraphQLInputObjectType({
+  name: 'EventBlockInput',
+  fields: {
+    filter: {type: GraphQLNonNull(GraphQLEventBlockInputFilter)}
+  }
+})
+
 export const GraphQLCommentBlockInputFilter = new GraphQLInputObjectType({
   name: 'CommentBlockInputFilter',
   fields: {
@@ -1076,6 +1135,7 @@ export const GraphQLBlockInput = new GraphQLInputObjectType({
     [BlockType.Embed]: {type: GraphQLEmbedBlockInput},
     [BlockType.HTML]: {type: GraphQLHTMLBlockInput},
     [BlockType.Poll]: {type: GraphQLPollBlockInput},
+    [BlockType.Event]: {type: GraphQLEventBlockInput},
     [BlockType.Comment]: {type: GraphQLCommentBlockInput},
     [BlockType.LinkPageBreak]: {type: GraphQLLinkPageBreakBlockInput},
     [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput},
@@ -1103,6 +1163,7 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLEmbedBlock,
     GraphQLHTMLBlock,
     GraphQLPollBlock,
+    GraphQLEventBlock,
     GraphQLCommentBlock,
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
@@ -1131,6 +1192,7 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLEmbedBlock,
     GraphQLHTMLBlock,
     GraphQLPollBlock,
+    GraphQLEventBlock,
     GraphQLPublicCommentBlock,
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,

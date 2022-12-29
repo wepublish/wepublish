@@ -235,6 +235,16 @@
         "select": "Select",
         "label": "Poll"
       },
+      "event": {
+        "title": "Edit Event Block",
+        "edit": "Edit event block",
+        "filterByTag": "Filter comments by tag",
+        "eventsFilterByTagInformation": "All events below will be displayed",
+        "cherryPick": "Select specific events",
+        "events": "{{count}} Event",
+        "events_plural": "{{count}} Events",
+        "label": "Events"
+      },
       "embeds": {
         "label": "Embed",
         "overview": {
@@ -1259,6 +1269,7 @@
       "list": {
         "title": "Events",
         "name": "Name",
+        "edit": "Edit",
         "delete": "Delete",
         "create": "Create new event",
         "startsAt": "Starts at {{startsAt, ccc PP p}}",

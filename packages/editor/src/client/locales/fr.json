@@ -643,6 +643,16 @@
         "comments_plural": "{{count}} Comments",
         "label": "Commentaires"
       },
+      "event": {
+        "title": "Edit Event Block",
+        "edit": "Edit event block",
+        "filterByTag": "Filter comments by tag",
+        "eventsFilterByTagInformation": "All events below will be displayed",
+        "cherryPick": "Select specific events",
+        "events": "{{count}} Event",
+        "events_plural": "{{count}} Events",
+        "label": "Events"
+      },
       "poll": {
         "title": "Edit Poll Block",
         "edit": "Edit poll block",
@@ -1256,6 +1266,7 @@
       "list": {
         "title": "Events",
         "name": "Name",
+        "edit": "Edit",
         "delete": "Delete",
         "create": "Create new event",
         "startsAt": "Starts at {{startsAt, ccc PP p}}",

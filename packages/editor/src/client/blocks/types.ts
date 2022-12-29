@@ -4,6 +4,7 @@ import {Node} from 'slate'
 import {
   ArticleRefFragment,
   BlockInput,
+  EventRefFragment,
   FullBlockFragment,
   FullCommentFragment,
   FullPoll,
@@ -30,7 +31,8 @@ export enum BlockType {
   TeaserGridFlex = 'teaserGridFlex',
   HTMLBlock = 'html',
   PollBlock = 'poll',
-  CommentBlock = 'comment'
+  CommentBlock = 'comment',
+  EventBlock = 'event'
 }
 
 export type RichTextBlockValue = Node[]
@@ -70,6 +72,14 @@ export interface HTMLBlockValue {
 
 export interface PollBlockValue {
   poll: Pick<FullPoll, 'id' | 'question'> | null | undefined
+}
+
+export interface EventBlockValue {
+  filter: Partial<{
+    tags: string[] | null
+    events: string[] | null
+  }>
+  events: EventRefFragment[]
 }
 
 export interface CommentBlockValue {
@@ -300,6 +310,8 @@ export type PollBlockListValue = BlockListValue<BlockType.PollBlock, PollBlockVa
 
 export type CommentBlockListValue = BlockListValue<BlockType.CommentBlock, CommentBlockValue>
 
+export type EventBlockListValue = BlockListValue<BlockType.EventBlock, EventBlockValue>
+
 export type BlockValue =
   | TitleBlockListValue
   | RichTextBlockListValue
@@ -315,6 +327,7 @@ export type BlockValue =
   | HTMLBlockListValue
   | PollBlockListValue
   | CommentBlockListValue
+  | EventBlockListValue
 
 export function unionMapForBlock(block: BlockValue): BlockInput {
   switch (block.type) {
@@ -333,6 +346,13 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
       return {
         poll: {
           pollId: block.value?.poll?.id
+        }
+      }
+
+    case BlockType.EventBlock:
+      return {
+        event: {
+          filter: block.value?.filter ?? {}
         }
       }
 
@@ -1085,6 +1105,16 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         type: BlockType.PollBlock,
         value: {
           poll: block.poll
+        }
+      }
+
+    case 'EventBlock':
+      return {
+        key,
+        type: BlockType.EventBlock,
+        value: {
+          filter: block.filter,
+          events: block.events
         }
       }
 
