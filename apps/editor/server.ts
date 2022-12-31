@@ -9,8 +9,6 @@ if (!process.env.API_URL) throw new Error('No API_URL specified in environment.'
 const port = process.env['port'] || 3000
 const app = express()
 
-console.log(JSON.stringify(process.env))
-
 const browserDist = path.join(process.cwd(), 'dist/apps/editor/browser')
 const indexPath = path.join(browserDist, 'index.html')
 
