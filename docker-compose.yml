@@ -48,7 +48,7 @@ services:
     build:
       context: .
     ports:
-      - 3006:3000
+      - 3006:8000
     command: ['node', 'dist/apps/editor/main.js']
     environment:
       NODE_ENV: production

@@ -3,6 +3,7 @@ import {TFunction, useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, FlexboxGrid, IconButton, Modal, Pagination, Table} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
 import {
   FullSubscriptionFragment,
@@ -142,12 +143,13 @@ function SubscriptionList() {
   /**
    * UI helper
    */
-  function userNameView(fullUser: FullSubscriptionFragment): React.ReactFragment {
+  function userNameView(fullUser: FullSubscriptionFragment): React.ReactElement {
     const user = fullUser.user
     // user deleted
     if (!user) {
       return t('subscriptionList.overview.deleted')
     }
+
     return (
       <>
         <span>{user.firstName} </span>
@@ -203,7 +205,7 @@ function SubscriptionList() {
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('subscriptionList.overview.createdAt')}</HeaderCell>
             <Cell dataKey="createdAt">
-              {({createdAt}: FullSubscriptionFragment) =>
+              {({createdAt}: RowDataType<FullSubscriptionFragment>) =>
                 t('subscriptionList.overview.createdAtDate', {createdAtDate: new Date(createdAt)})
               }
             </Cell>
@@ -211,7 +213,7 @@ function SubscriptionList() {
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: FullSubscriptionFragment) =>
+              {({modifiedAt}: RowDataType<FullSubscriptionFragment>) =>
                 t('subscriptionList.overview.modifiedAtDate', {
                   modifiedAtDate: new Date(modifiedAt)
                 })
@@ -222,7 +224,7 @@ function SubscriptionList() {
           <Column width={200}>
             <HeaderCell>{t('subscriptionList.overview.memberPlan')}</HeaderCell>
             <Cell dataKey={'subscription'}>
-              {(rowData: FullSubscriptionFragment) => (
+              {(rowData: RowDataType<FullSubscriptionFragment>) => (
                 <Link to={`/subscription/edit/${rowData.id}`}>{rowData.memberPlan.name}</Link>
               )}
             </Cell>
@@ -231,14 +233,16 @@ function SubscriptionList() {
           <Column width={300} align="left" resizable sortable>
             <HeaderCell>{t('subscriptionList.overview.name')}</HeaderCell>
             <Cell dataKey={'name'}>
-              {(rowData: FullSubscriptionFragment) => userNameView(rowData)}
+              {(rowData: RowDataType<FullSubscriptionFragment>) =>
+                userNameView(rowData as FullSubscriptionFragment)
+              }
             </Cell>
           </Column>
           {/* email */}
           <Column width={250}>
             <HeaderCell>{t('subscriptionList.overview.email')}</HeaderCell>
             <Cell dataKey={'email'}>
-              {(rowData: FullSubscriptionFragment) => (
+              {(rowData: RowDataType<FullSubscriptionFragment>) => (
                 <div>{rowData.user?.email || t('subscriptionList.overview.deleted')}</div>
               )}
             </Cell>
@@ -247,7 +251,7 @@ function SubscriptionList() {
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
-              {(rowData: FullSubscriptionFragment) => (
+              {(rowData: RowDataType<FullSubscriptionFragment>) => (
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     icon={<MdDelete />}
@@ -257,7 +261,7 @@ function SubscriptionList() {
                     color="red"
                     style={{marginLeft: '5px'}}
                     onClick={() => {
-                      setCurrentSubscription(rowData)
+                      setCurrentSubscription(rowData as FullSubscriptionFragment)
                       setConfirmationDialogOpen(true)
                     }}
                   />

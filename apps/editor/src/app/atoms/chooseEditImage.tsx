@@ -15,6 +15,7 @@ export interface ChooseEditImageProps {
   openEditModalOpen?: () => void
   removeImage?: () => void
   maxHeight?: number
+  minHeight?: number
 }
 
 export function ChooseEditImage({
@@ -26,14 +27,18 @@ export function ChooseEditImage({
   openChooseModalOpen,
   openEditModalOpen,
   removeImage,
-  maxHeight = 240
+  maxHeight = 240,
+  minHeight
 }: ChooseEditImageProps): JSX.Element {
   const {t} = useTranslation()
   header = header ?? t('chooseEditImage.header')
   return (
-    <Panel header={header} bodyFill>
+    <Panel header={header} bodyFill style={{display: 'grid', height: '100%'}}>
       {!image && disabled === true && <Placeholder.Graph />}
-      <PlaceholderInput onAddClick={() => openChooseModalOpen?.()} maxHeight={maxHeight}>
+      <PlaceholderInput
+        onAddClick={() => openChooseModalOpen?.()}
+        maxHeight={maxHeight}
+        minHeight={minHeight}>
         {image && (
           <div
             style={{

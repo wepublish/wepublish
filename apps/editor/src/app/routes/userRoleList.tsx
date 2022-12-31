@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
 import {FullUserRoleFragment, useDeleteUserRoleMutation, useUserRoleListQuery} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -33,7 +34,11 @@ function UserRoleList() {
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
   const [currentUserRole, setCurrentUserRole] = useState<FullUserRoleFragment>()
 
-  const {data, refetch, loading: isLoading} = useUserRoleListQuery({
+  const {
+    data,
+    refetch,
+    loading: isLoading
+  } = useUserRoleListQuery({
     variables: {
       filter: filter || undefined,
       take: 200
@@ -90,7 +95,7 @@ function UserRoleList() {
         <Column width={200} align="left" resizable>
           <HeaderCell>{t('userRoles.overview.name')}</HeaderCell>
           <Cell>
-            {(rowData: FullUserRoleFragment) => (
+            {(rowData: RowDataType<FullUserRoleFragment>) => (
               <Link to={`/userroles/edit/${rowData.id}`}>
                 {rowData.name || t('userRoles.overview.untitled')}
               </Link>
@@ -104,7 +109,7 @@ function UserRoleList() {
         <Column width={100} align="center" fixed="right">
           <HeaderCell>{t('userRoles.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
-            {(rowData: FullUserRoleFragment) => (
+            {(rowData: RowDataType<FullUserRoleFragment>) => (
               <PermissionControl qualifyingPermissions={['CAN_DELETE_USER_ROLE']}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
@@ -117,7 +122,7 @@ function UserRoleList() {
                     style={{marginLeft: '5px'}}
                     onClick={() => {
                       setConfirmationDialogOpen(true)
-                      setCurrentUserRole(rowData)
+                      setCurrentUserRole(rowData as FullUserRoleFragment)
                     }}
                   />
                 </IconButtonTooltip>

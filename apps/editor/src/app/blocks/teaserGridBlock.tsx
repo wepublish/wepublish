@@ -148,7 +148,8 @@ export function TeaserBlock({
         cursor: showGrabCursor ? 'grab' : '',
         height: 300,
         overflow: 'hidden',
-        zIndex: 1
+        zIndex: 1,
+        display: 'grid'
       }}>
       <PlaceholderInput onAddClick={onChoose}>
         {teaser && (

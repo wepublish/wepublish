@@ -10,7 +10,7 @@ import {FacebookProvider} from './app/blocks/embeds/facebook'
 import {InstagramProvider} from './app/blocks/embeds/instagram'
 import {TwitterProvider} from './app/blocks/embeds/twitter'
 import {initI18N} from './app/i18n'
-import {LocalStorageKey} from './app/utility'
+import {LocalStorageKey, getSettings} from './app/utility'
 import {ElementID} from './shared/elementID'
 import {ClientSettings} from './shared/types'
 
@@ -51,9 +51,7 @@ export async function fetchIntrospectionQueryResultData(url: string) {
 }
 
 const onDOMContentLoaded = async () => {
-  const {apiURL}: ClientSettings = JSON.parse(
-    document.getElementById(ElementID.Settings)!.textContent!
-  )
+  const {apiURL} = getSettings()
 
   const adminAPIURL = `${apiURL}/admin`
 

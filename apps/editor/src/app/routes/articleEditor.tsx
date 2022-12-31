@@ -46,7 +46,7 @@ import {
 import {ArticleMetadata, ArticleMetadataPanel, InfoData} from '../panel/articleMetadataPanel'
 import {PublishArticlePanel} from '../panel/publishArticlePanel'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
-import {StateColor} from '../utility'
+import {getSettings, StateColor} from '../utility'
 
 const InitialArticleBlocks: BlockValue[] = [
   {key: '0', type: BlockType.Title, value: {title: '', lead: ''}},
@@ -70,9 +70,7 @@ function ArticleEditor() {
 
   const {t} = useTranslation()
 
-  const {peerByDefault}: ClientSettings = JSON.parse(
-    document.getElementById(ElementID.Settings)!.textContent!
-  )
+  const {peerByDefault}: ClientSettings = getSettings()
 
   const [createArticle, {loading: isCreating, data: createData, error: createError}] =
     useCreateArticleMutation()

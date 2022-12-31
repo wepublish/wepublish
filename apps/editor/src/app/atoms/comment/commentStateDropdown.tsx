@@ -79,7 +79,7 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
         <Whisper placement="bottomStart" trigger="click" speaker={renderMenu}>
           <IconButton
             appearance="ghost"
-            icon={<MdArrowDropDown style={size === 'xs' ? {marginTop: '-6px'} : {}} />}
+            icon={<MdArrowDropDown />}
             placement="left"
             color={mapCommentStateToColor(comment.state)}
             size={size}>

@@ -17,11 +17,11 @@
         ]
       }
     },
-    "serve": {
+    "serve-ssr": {
       "executor": "@nrwl/webpack:ssr-dev-server",
       "defaultConfiguration": "development",
       "options": {
-        "browserTarget": "editor:browser:development",
+        "browserTarget": "editor:build:development",
         "serverTarget": "editor:serve-server:development",
         "port": 3000,
         "browserTargetOptions": {
@@ -122,19 +122,20 @@
         }
       }
     },
-    "serve-browser": {
+    "serve": {
       "executor": "@nrwl/webpack:dev-server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "editor:build",
+        "buildTarget": "editor:browser",
+        "port": 3000,
         "hmr": true
       },
       "configurations": {
         "development": {
-          "buildTarget": "editor:build:development"
+          "buildTarget": "editor:browser:development"
         },
         "production": {
-          "buildTarget": "editor:build:production",
+          "buildTarget": "editor:browser:production",
           "hmr": false
         }
       }

@@ -3,9 +3,9 @@ import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {FlexboxGrid, IconButton, Pagination, Table, Toggle} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
 import {
-  Comment,
   CommentFilter,
   CommentSort,
   CommentState,
@@ -62,7 +62,11 @@ function CommentList() {
     filter
   }
 
-  const {data, refetch, loading: isLoading} = useCommentListQuery({
+  const {
+    data,
+    refetch,
+    loading: isLoading
+  } = useCommentListQuery({
     variables: commentListVariables,
     fetchPolicy: 'no-cache'
   })
@@ -204,7 +208,7 @@ function CommentList() {
           <Column width={350} align="left" verticalAlign="middle" resizable>
             <HeaderCell>{t('comments.overview.text')}</HeaderCell>
             <Cell dataKey="revisions">
-              {(rowData: FullCommentFragment) => (
+              {(rowData: RowDataType<FullCommentFragment>) => (
                 <>
                   {rowData.revisions?.length ? (
                     <RichTextBlock
@@ -225,16 +229,16 @@ function CommentList() {
           <Column width={150} align="left" verticalAlign="middle" resizable>
             <HeaderCell>{t('comments.overview.userName')}</HeaderCell>
             <Cell>
-              {(rowData: FullCommentFragment) => (
-                <>{rowData.user ? rowData.user?.name : rowData.guestUsername}</>
-              )}
+              {(rowData: RowDataType<FullCommentFragment>) =>
+                rowData.user ? rowData.user?.name : rowData.guestUsername
+              }
             </Cell>
           </Column>
           {/* eslint-disable-next-line i18next/no-literal-string */}
           <Column width={150} align="left" verticalAlign="middle" resizable sortable>
             <HeaderCell>{t('comments.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: Comment) =>
+              {({modifiedAt}: RowDataType<FullCommentFragment>) =>
                 t('comments.overview.modifiedAtDate', {modifiedAtDate: new Date(modifiedAt)})
               }
             </Cell>
@@ -244,10 +248,10 @@ function CommentList() {
           <Column width={200} align="right" verticalAlign="middle" fixed="right">
             <HeaderCell>{t('comments.overview.editState')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
-              {(rowData: FullCommentFragment) => (
+              {(rowData: RowDataType<FullCommentFragment>) => (
                 <PermissionControl qualifyingPermissions={['CAN_TAKE_COMMENT_ACTION']}>
                   <CommentStateDropdown
-                    comment={rowData}
+                    comment={rowData as FullCommentFragment}
                     size="xs"
                     onStateChanged={async () => {
                       await refetch()
@@ -262,7 +266,7 @@ function CommentList() {
           <Column width={150} align="center" verticalAlign="middle" fixed="right">
             <HeaderCell>{t('comments.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
-              {(rowData: FullCommentFragment) => (
+              {(rowData: RowDataType<FullCommentFragment>) => (
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
                   {/* edit comment */}
                   <span style={{marginRight: '5px'}}>

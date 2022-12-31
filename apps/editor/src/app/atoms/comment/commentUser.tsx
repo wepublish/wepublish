@@ -59,6 +59,7 @@ export function CommentUser({comment, setComment}: CommentUserProps) {
             openChooseModalOpen={() => setOpen(true)}
             removeImage={() => setImage(undefined)}
             header={t('commentUser.selectImage')}
+            minHeight={150}
           />
         </Col>
       </Row>

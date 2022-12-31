@@ -50,8 +50,8 @@ export function LinkPageBreakBlock({
           <IconButton size="lg" icon={<MdEdit />} onClick={() => setEditPanelOpen(true)} />
         </div>
       </div>
-      <div style={{display: 'flex', flexFlow: 'row wrap', marginTop: 50}}>
-        <div style={{flex: '1 0 25%', alignSelf: 'center', marginBottom: '10px'}}>
+      <div style={{display: 'flex', flexFlow: 'row wrap', marginTop: 50, gap: '24px'}}>
+        <div style={{flex: '1 0 25%', alignSelf: 'flex-start', marginBottom: '10px'}}>
           <ChooseEditImage
             header={''}
             image={image}
@@ -59,6 +59,7 @@ export function LinkPageBreakBlock({
             openChooseModalOpen={() => setChooseModalOpen(true)}
             openEditModalOpen={() => setEditModalOpen(true)}
             removeImage={() => onChange(value => ({...value, image: undefined}))}
+            minHeight={150}
           />
         </div>
         <div style={{flex: '1 0 70%'}}>

@@ -34,7 +34,7 @@ spec:
           command: ['node', 'dist/apps/editor/main.js']
           ports:
             - name: http
-              containerPort: 3000
+              containerPort: 8000
               protocol: TCP
           envFrom:
             - secretRef:
