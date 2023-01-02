@@ -26,18 +26,19 @@ import {
 } from '../../utility'
 
 const {Column, HeaderCell, Cell} = Table
-const StyledCell = styled(Cell)`
+
+const PaddedCell = styled(Cell)`
   padding: 6px 0;
 `
 
-const StyledTableWrapper = styled.div`
+const TableWrapper = styled.div`
   display: flex;
   flex-flow: column;
   margin-top: 20px;
   gap: 20px;
 `
 
-const StyledListView = styled.div`
+const ListView = styled.div`
   margin-top: 20px;
   gap: 8px;
   display: flex;
@@ -115,7 +116,7 @@ function CommentList() {
           <h2>{t('comments.overview.comments')}</h2>
         </div>
 
-        <StyledListView>
+        <ListView>
           <Toggle
             defaultChecked={filter.states?.includes?.(CommentState.Approved)}
             onChange={enabled =>
@@ -187,10 +188,10 @@ function CommentList() {
             checkedChildren={t('comments.state.rejected')}
             unCheckedChildren={t('comments.state.rejected')}
           />
-        </StyledListView>
+        </ListView>
       </ListViewContainer>
 
-      <StyledTableWrapper>
+      <TableWrapper>
         <Table
           autoHeight
           rowHeight={60}
@@ -259,7 +260,7 @@ function CommentList() {
           {/* eslint-disable-next-line i18next/no-literal-string */}
           <Column width={200} align="right" verticalAlign="middle" fixed="right">
             <HeaderCell>{t('comments.overview.editState')}</HeaderCell>
-            <StyledCell>
+            <PaddedCell>
               {(rowData: FullCommentFragment) => (
                 <PermissionControl qualifyingPermissions={['CAN_TAKE_COMMENT_ACTION']}>
                   <CommentStateDropdown
@@ -271,13 +272,13 @@ function CommentList() {
                   />
                 </PermissionControl>
               )}
-            </StyledCell>
+            </PaddedCell>
           </Column>
 
           {/* eslint-disable-next-line i18next/no-literal-string */}
           <Column width={150} align="center" verticalAlign="middle" fixed="right">
             <HeaderCell>{t('comments.overview.action')}</HeaderCell>
-            <StyledCell>
+            <PaddedCell>
               {(rowData: FullCommentFragment) => (
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
                   {/* edit comment */}
@@ -293,7 +294,7 @@ function CommentList() {
                   <ReplyCommentBtn comment={rowData} size="sm" circle hideText />
                 </PermissionControl>
               )}
-            </StyledCell>
+            </PaddedCell>
           </Column>
         </Table>
 
@@ -313,7 +314,7 @@ function CommentList() {
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </StyledTableWrapper>
+      </TableWrapper>
     </>
   )
 }
