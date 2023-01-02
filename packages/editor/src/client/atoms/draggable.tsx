@@ -20,7 +20,7 @@ export interface DraggableContainerProps {
   readonly children?: ReactNode
 }
 
-const StyledContainer = styled.div`
+const Container = styled.div`
   position: relative;
   overflow: hidden;
   width: 100%;
@@ -28,7 +28,7 @@ const StyledContainer = styled.div`
   user-select: none;
 `
 
-const StyledDraggable = styled.div<{layouted: boolean}>`
+const DraggableWrapper = styled.div<{layouted: boolean}>`
   cursor: move;
   position: absolute;
   transform: translate(-50%, -50%);
@@ -41,9 +41,9 @@ export function DraggableContainer({children}: DraggableContainerProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   return (
-    <StyledContainer ref={ref}>
+    <Container ref={ref}>
       <DraggableContext.Provider value={ref}>{children}</DraggableContext.Provider>
-    </StyledContainer>
+    </Container>
   )
 }
 
@@ -149,8 +149,8 @@ export function Draggable({children, point, disabled, onChange}: DraggableProps)
   }, [containerRef, draggableRef, point, disabled])
 
   return (
-    <StyledDraggable layouted={layouted} ref={draggableRef}>
+    <DraggableWrapper layouted={layouted} ref={draggableRef}>
       {children}
-    </StyledDraggable>
+    </DraggableWrapper>
   )
 }

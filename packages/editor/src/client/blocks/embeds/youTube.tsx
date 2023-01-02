@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-const StyledIframe = styled.iframe`
+const Iframe = styled.iframe`
   position: absolute;
   top: 0;
   left: 0;
@@ -9,7 +9,7 @@ const StyledIframe = styled.iframe`
   height: 100%;
 `
 
-const StyledYouTubeEmbed = styled.div`
+const YouTubeEmbed = styled.div`
   position: relative;
   padding-top: 56.25%;
   width: 100%;
@@ -21,13 +21,13 @@ export interface YouTubeVideoEmbedProps {
 
 export function YouTubeVideoEmbed({videoID}: YouTubeVideoEmbedProps) {
   return (
-    <StyledYouTubeEmbed>
-      <StyledIframe
+    <YouTubeEmbed>
+      <Iframe
         src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoID)}`}
         scrolling="no"
         frameBorder="0"
         allowFullScreen
       />
-    </StyledYouTubeEmbed>
+    </YouTubeEmbed>
   )
 }

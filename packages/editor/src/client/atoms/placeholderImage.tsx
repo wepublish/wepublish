@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React, {forwardRef} from 'react'
 
-const StyledPlaceholderImage = styled.svg`
+const Image = styled.svg`
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -11,7 +11,7 @@ const StyledPlaceholderImage = styled.svg`
 
 export const PlaceholderImage = forwardRef<SVGSVGElement>(function PlaceholderImage(props, ref) {
   return (
-    <StyledPlaceholderImage ref={ref} viewBox="0 0 64 64" preserveAspectRatio="none">
+    <Image ref={ref} viewBox="0 0 64 64" preserveAspectRatio="none">
       <line
         x1="0"
         y1="0"
@@ -30,6 +30,6 @@ export const PlaceholderImage = forwardRef<SVGSVGElement>(function PlaceholderIm
         strokeWidth="1"
         vectorEffect="non-scaling-stroke"
       />
-    </StyledPlaceholderImage>
+    </Image>
   )
 })

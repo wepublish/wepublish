@@ -4,7 +4,7 @@ import nanoid from 'nanoid'
 import React from 'react'
 import {MdAddCircle, MdDelete, MdDragIndicator} from 'react-icons/md'
 import {SortableContainer, SortableElement, SortableHandle} from 'react-sortable-hoc'
-import {IconButton, Panel} from 'rsuite'
+import {IconButton, Panel as RPanel} from 'rsuite'
 
 import {isFunctionalUpdate} from '../utility'
 
@@ -12,20 +12,20 @@ const IconButtonWrapper = styled.div`
   margin-left: 10px;
 `
 
-const StyledChildrenWrapper = styled.div`
+const ChildrenWrapper = styled.div`
   min-height: 100%;
   display: flex;
 `
 
-const StyledPanel = styled(Panel)`
+const Panel = styled(RPanel)`
   width: 100%;
 `
 
-const StyledDragHandleWrapper = styled.div`
+const DragHandleWrapper = styled.div`
   margin-right: 10px;
 `
 
-const StyledListItem = styled.div`
+const ListItemWrapper = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: 10px;
@@ -75,19 +75,19 @@ const ListItem = SortableElement(
     }
 
     return (
-      <StyledListItem>
-        <StyledDragHandleWrapper>
+      <ListItemWrapper>
+        <DragHandleWrapper>
           <DragHandle disabled={itemDisabled} />
-        </StyledDragHandleWrapper>
-        <StyledPanel bodyFill>
-          <StyledChildrenWrapper>
+        </DragHandleWrapper>
+        <Panel bodyFill>
+          <ChildrenWrapper>
             {children({value: value.value, onChange: handleValueChange})}
-          </StyledChildrenWrapper>
-        </StyledPanel>
+          </ChildrenWrapper>
+        </Panel>
         <IconButtonWrapper>
           <IconButton icon={<MdDelete />} onClick={handleRemove} disabled={itemDisabled} />
         </IconButtonWrapper>
-      </StyledListItem>
+      </ListItemWrapper>
     )
   }
 )

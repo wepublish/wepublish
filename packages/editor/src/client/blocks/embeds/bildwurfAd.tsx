@@ -3,7 +3,7 @@ import React, {useEffect} from 'react'
 
 import {useScript} from '../../utility'
 
-const StyledBildwurf = styled.div`
+const Bildwurf = styled.div`
   pointer-events: none;
 `
 
@@ -36,8 +36,8 @@ export function BildwurfAdEmbed({zoneID}: BildwurfAdEmbedProps) {
   }, [])
 
   return (
-    <StyledBildwurf id="bildwurf-injection-wrapper">
+    <Bildwurf id="bildwurf-injection-wrapper">
       <ins className="aso-zone" data-zone={zoneID}></ins>
-    </StyledBildwurf>
+    </Bildwurf>
   )
 }

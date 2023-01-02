@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
-import {Drawer, IconButton, Panel} from 'rsuite'
+import {Drawer, IconButton, Panel as RPanel} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
@@ -19,19 +19,19 @@ import {VimeoVideoEmbed} from './embeds/vimeo'
 import {YouTubeVideoEmbed} from './embeds/youTube'
 import {EmbedBlockValue, EmbedType} from './types'
 
-const StyledPanel = styled(Panel)<{isEmpty: boolean}>`
+const Panel = styled(RPanel)<{isEmpty: boolean}>`
   height: ${({isEmpty}) => (isEmpty ? '300px' : undefined)};
   padding: 0;
   overflow: hidden;
   background-color: #f7f9fa;
 `
 
-const StyledWrapper = styled.div`
+const Wrapper = styled.div`
   position: relative;
   width: 100%;
 `
 
-const StyledIconWrapper = styled.div`
+const IconWrapper = styled.div`
   position: absolute;
   z-index: 100;
   height: 100%;
@@ -52,20 +52,20 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
 
   return (
     <>
-      <StyledPanel bodyFill bordered isEmpty={isEmpty}>
+      <Panel bodyFill bordered isEmpty={isEmpty}>
         <PlaceholderInput onAddClick={() => setEmbedDialogOpen(true)}>
           {!isEmpty && (
-            <StyledWrapper>
-              <StyledIconWrapper>
+            <Wrapper>
+              <IconWrapper>
                 <IconButton size="lg" icon={<MdEdit />} onClick={() => setEmbedDialogOpen(true)}>
                   {t('blocks.embeds.overview.editEmbed')}
                 </IconButton>
-              </StyledIconWrapper>
+              </IconWrapper>
               <EmbedPreview value={value} />
-            </StyledWrapper>
+            </Wrapper>
           )}
         </PlaceholderInput>
-      </StyledPanel>
+      </Panel>
       <Drawer size="sm" open={isEmbedDialogOpen} onClose={() => setEmbedDialogOpen(false)}>
         <EmbedEditPanel
           value={value}

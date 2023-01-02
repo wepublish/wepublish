@@ -1,13 +1,13 @@
 import styled from '@emotion/styled'
 import React, {ReactNode} from 'react'
 
-const StyledChildren = styled.div`
+const Children = styled.div`
   display: flex;
   width: 100%;
   max-width: 920px;
 `
 
-const StyledChildrenWrapper = styled.div`
+const ChildrenWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,7 +18,7 @@ const StyledChildrenWrapper = styled.div`
   padding-right: 40;
 `
 
-const StyledNavigationChildren = styled.div`
+const NavigationChildren = styled.div`
   display: flex;
   position: sticky;
   top: 0;
@@ -26,7 +26,7 @@ const StyledNavigationChildren = styled.div`
   width: 100%;
 `
 
-const StyledEditorTemplate = styled.div`
+const EditorTemplateWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -40,11 +40,11 @@ export interface EditorTemplateProps {
 
 export function EditorTemplate({children, navigationChildren}: EditorTemplateProps) {
   return (
-    <StyledEditorTemplate>
-      <StyledNavigationChildren>{navigationChildren}</StyledNavigationChildren>
-      <StyledChildrenWrapper>
-        <StyledChildren>{children}</StyledChildren>
-      </StyledChildrenWrapper>
-    </StyledEditorTemplate>
+    <EditorTemplateWrapper>
+      <NavigationChildren>{navigationChildren}</NavigationChildren>
+      <ChildrenWrapper>
+        <Children>{children}</Children>
+      </ChildrenWrapper>
+    </EditorTemplateWrapper>
   )
 }

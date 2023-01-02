@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAddCircle, MdArrowLeft, MdArrowRight, MdBuild, MdEdit, MdPhoto} from 'react-icons/md'
-import {Drawer, Dropdown, IconButton, Panel} from 'rsuite'
+import {Drawer, Dropdown, IconButton} from 'rsuite'
 
 import {ImageRefFragment} from '../api'
 import {BlockProps} from '../atoms/blockList'
@@ -11,10 +11,10 @@ import {TypographicTextArea} from '../atoms/typographicTextArea'
 import {GalleryListEditPanel} from '../panel/galleryListEditPanel'
 import {ImageEditPanel} from '../panel/imageEditPanel'
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
-import {StyledImagePanel, StyledPanel} from './imageBlock'
+import {ImagePanel, Panel} from './imageBlock'
 import {ImageGalleryBlockValue} from './types'
 
-const StyledBlock = styled.div`
+const Block = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
@@ -111,7 +111,7 @@ export function ImageGalleryBlock({
 
   return (
     <>
-      <StyledBlock>
+      <Block>
         <EditIconWrapper>
           <IconButton
             icon={<MdEdit />}
@@ -141,11 +141,11 @@ export function ImageGalleryBlock({
             disabled={disabled || isNewIndex}
           />
         </LeftArrowWrapper>
-      </StyledBlock>
-      <StyledPanel bordered bodyFill>
+      </Block>
+      <Panel bordered bodyFill>
         <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
           {image && (
-            <StyledImagePanel image={image}>
+            <ImagePanel image={image}>
               <Dropdown
                 renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
                   <IconButton {...props} ref={ref} icon={<MdBuild />} circle appearance="subtle" />
@@ -158,10 +158,10 @@ export function ImageGalleryBlock({
                 </Dropdown.Item>
                 {/* TODO: Meta sync */}
               </Dropdown>
-            </StyledImagePanel>
+            </ImagePanel>
           )}
         </PlaceholderInput>
-      </StyledPanel>
+      </Panel>
       <TypographicTextArea
         variant="subtitle2"
         align="center"

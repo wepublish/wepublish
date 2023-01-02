@@ -10,7 +10,7 @@ import {
   Drawer,
   Form,
   IconButton,
-  Message,
+  Message as RMessage,
   Pagination,
   Table,
   toaster,
@@ -26,28 +26,28 @@ import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {CommentBlockValue} from '../blocks/types'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
 
-const StyledCheckboxWrapper = styled.div`
+const CheckboxWrapper = styled.div`
   height: 46px;
   display: flex;
   align-items: center;
 `
 
-const StyledToggleWrapper = styled.div`
+const ToggleWrapper = styled.div`
   display: flex;
   gap: 12px;
   margin-bottom: 12px;
   margin-top: 48px;
 `
 
-const StyledMessage = styled(Message)`
+const Message = styled(RMessage)`
   margin-top: 12px;
 `
 
-const StyledFormGroupWrapper = styled.div`
+const FormGroupWrapper = styled.div`
   width: 250px;
 `
 
-const StyledDrawerBody = styled(Drawer.Body)`
+const DrawerBody = styled(Drawer.Body)`
   padding: 24px;
 `
 
@@ -55,16 +55,16 @@ const TableCellNoPadding = styled(Table.Cell)`
   padding: 0;
 `
 
-const StyledPermissionControlWrapper = styled(Table.Cell)`
+const PermissionControlWrapper = styled(Table.Cell)`
   padding: 6px 0;
 `
 
 const onErrorToast = (error: ApolloError) => {
   if (error?.message) {
     toaster.push(
-      <Message type="error" showIcon closable duration={3000}>
+      <RMessage type="error" showIcon closable duration={3000}>
         {error?.message}
-      </Message>
+      </RMessage>
     )
   }
 }
@@ -151,8 +151,8 @@ export function SelectCommentPanel({
         </Drawer.Actions>
       </Drawer.Header>
 
-      <StyledDrawerBody>
-        <StyledFormGroupWrapper>
+      <DrawerBody>
+        <FormGroupWrapper>
           <Form.Group controlId="tags">
             <Form.ControlLabel>{t('blocks.comment.filterByTag')}</Form.ControlLabel>
 
@@ -163,18 +163,18 @@ export function SelectCommentPanel({
               selectedTags={tagFilter}
             />
           </Form.Group>
-        </StyledFormGroupWrapper>
+        </FormGroupWrapper>
 
         {!allowCherryPicking && !!tagFilter?.length && (
-          <StyledMessage showIcon type="info">
+          <Message showIcon type="info">
             {t('blocks.comment.commentsFilterByTagInformation')}
-          </StyledMessage>
+          </Message>
         )}
 
-        <StyledToggleWrapper>
+        <ToggleWrapper>
           <Toggle defaultChecked={allowCherryPicking} onChange={toggleCherryPicking} />
           {t('blocks.comment.cherryPick')}
-        </StyledToggleWrapper>
+        </ToggleWrapper>
 
         <Table
           minHeight={600}
@@ -187,7 +187,7 @@ export function SelectCommentPanel({
               <Table.HeaderCell>{}</Table.HeaderCell>
               <TableCellNoPadding>
                 {(rowData: FullCommentFragment) => (
-                  <StyledCheckboxWrapper>
+                  <CheckboxWrapper>
                     <Checkbox
                       defaultChecked={commentFilter?.includes(rowData.id) ?? false}
                       checked={commentFilter?.includes(rowData.id) ?? false}
@@ -200,7 +200,7 @@ export function SelectCommentPanel({
                         )
                       }
                     />
-                  </StyledCheckboxWrapper>
+                  </CheckboxWrapper>
                 )}
               </TableCellNoPadding>
             </Table.Column>
@@ -233,7 +233,7 @@ export function SelectCommentPanel({
 
           <Table.Column width={150} align="center" fixed="right">
             <Table.HeaderCell>{t('comments.overview.edit')}</Table.HeaderCell>
-            <StyledPermissionControlWrapper>
+            <PermissionControlWrapper>
               {(rowData: FullCommentFragment) => (
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
                   <IconButtonTooltip caption={t('comments.overview.edit')}>
@@ -243,7 +243,7 @@ export function SelectCommentPanel({
                   </IconButtonTooltip>
                 </PermissionControl>
               )}
-            </StyledPermissionControlWrapper>
+            </PermissionControlWrapper>
           </Table.Column>
         </Table>
 
@@ -263,7 +263,7 @@ export function SelectCommentPanel({
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </StyledDrawerBody>
+      </DrawerBody>
     </>
   )
 }

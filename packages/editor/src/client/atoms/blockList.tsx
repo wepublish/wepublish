@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import nanoid from 'nanoid'
 import React, {Fragment, memo, ReactNode, useCallback, useMemo, useState} from 'react'
 import {MdArrowDownward, MdArrowUpward, MdDelete} from 'react-icons/md'
-import {IconButton, Panel} from 'rsuite'
+import {IconButton, Panel as RPanel} from 'rsuite'
 
 import {
   isFunctionalUpdate,
@@ -12,22 +12,22 @@ import {
 } from '../utility'
 import {AddBlockInput} from './addBlockInput'
 
-const StyledIconWrapper = styled.div`
+const IconWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 10;
   fill: gray;
 `
 
-const StyledChildrenWrapper = styled.div`
+const ChildrenWrapper = styled.div`
   padding: 20;
 `
 
-const StyledPanel = styled(Panel)`
+const Panel = styled(RPanel)`
   width: 100%;
 `
 
-const StyledPanelWrapper = styled.div`
+const PanelWrapper = styled.div`
   display: flex;
   width: 100%;
 `
@@ -45,13 +45,13 @@ const FlexGrow = styled.div`
   flex-grow: 1;
 `
 
-const StyledWrapper = styled.div`
+const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-right: 10;
 `
 
-const StyledListItemWrapper = styled.div`
+const ListItem = styled.div`
   display: flex;
   width: 100%;
 `
@@ -302,8 +302,8 @@ function ListItemWrapper({
   onMoveDown
 }: ListItemWrapperProps) {
   return (
-    <StyledListItemWrapper>
-      <StyledWrapper>
+    <ListItem>
+      <Wrapper>
         <IconButton
           icon={<MdDelete />}
           onClick={onDelete}
@@ -326,13 +326,13 @@ function ListItemWrapper({
           />
         </DownwardButtonWrapper>
         <FlexGrow />
-      </StyledWrapper>
-      <StyledPanelWrapper>
-        <StyledPanel bordered>
-          <StyledChildrenWrapper>{children}</StyledChildrenWrapper>
-        </StyledPanel>
-      </StyledPanelWrapper>
-      <StyledIconWrapper>{icon}</StyledIconWrapper>
-    </StyledListItemWrapper>
+      </Wrapper>
+      <PanelWrapper>
+        <Panel bordered>
+          <ChildrenWrapper>{children}</ChildrenWrapper>
+        </Panel>
+      </PanelWrapper>
+      <IconWrapper>{icon}</IconWrapper>
+    </ListItem>
   )
 }

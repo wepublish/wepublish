@@ -1,17 +1,17 @@
 import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Input, Message} from 'rsuite'
+import {Button, Drawer, Input as RInput, Message} from 'rsuite'
 
 import {EmbedPreview} from '../blocks/embedBlock'
 import {EmbedBlockValue, EmbedType} from '../blocks/types'
 import {flattenDOMTokenList} from '../utility'
 
-const StyledMetadata = styled.div`
+const Metadata = styled.div`
   margin-bottom: 8;
 `
 
-const StyledInput = styled(Input)`
+const Input = styled(RInput)`
   width: 100%;
 `
 
@@ -125,7 +125,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <StyledInput
+        <Input
           as="textarea"
           rows={3}
           placeholder={t('blocks.embeds.panels.embed')}
@@ -133,7 +133,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
           onChange={input => setInput(input)}
         />
         {errorMessage && <Message type="error">{errorMessage}</Message>}
-        <StyledMetadata>
+        <Metadata>
           <p>{t('blocks.embeds.panels.socialMediaList')}</p>
           <code>{t('blocks.embeds.panels.fbPosts')}</code>
           <p>{t('blocks.embeds.panels.embedCodeAttributes')}</p>
@@ -141,7 +141,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
           <p>{t('blocks.embeds.panels.alternativeStyling')}</p>
           <code>{t('blocks.embeds.panels.iframe2Sample')}</code>
           <p>{t('blocks.embeds.panels.GDPRInfo')}</p>
-        </StyledMetadata>
+        </Metadata>
         <EmbedPreview value={embed} />
       </Drawer.Body>
     </>

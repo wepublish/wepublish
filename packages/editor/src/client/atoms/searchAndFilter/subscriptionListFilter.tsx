@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose} from 'react-icons/md'
-import {Button, DateRangePicker, Form, SelectPicker} from 'rsuite'
+import {Button, DateRangePicker, Form as RForm, SelectPicker} from 'rsuite'
 
 import {
   DateFilterComparison,
@@ -17,17 +17,19 @@ import {
 import {ALL_PAYMENT_PERIODICITIES} from '../../utility'
 import {UserSearch} from './userSearch'
 
-const StyledForm = styled(Form)`
+const {Group} = RForm
+
+const Form = styled(RForm)`
   display: flex;
   flex-wrap: wrap;
   margin-top: 15px;
 `
 
-const StyledCloseIcon = styled(MdClose)`
+const CloseIcon = styled(MdClose)`
   margin-right: 5px;
 `
 
-const StyledFormGroup = styled(Form.Group)`
+const FormGroup = styled(Group)`
   margin-right: 15px;
   margin-top: 15px;
 `
@@ -134,20 +136,20 @@ export function SubscriptionListFilter({
     }
     return (
       <>
-        <StyledFormGroup>
+        <FormGroup>
           <Button onClick={() => resetFilter()} color="red" appearance="ghost">
-            <StyledCloseIcon />
+            <CloseIcon />
             {t('subscriptionList.filter.reset')}
           </Button>
-        </StyledFormGroup>
+        </FormGroup>
       </>
     )
   }
 
   return (
     <>
-      <StyledForm>
-        <Form.Group style={formInputStyle}>
+      <Form>
+        <Group style={formInputStyle}>
           <UserSearch
             name="user"
             resetFilterKey={resetFilterKey}
@@ -160,8 +162,8 @@ export function SubscriptionListFilter({
             }}
             placeholder={t('subscriptionList.filter.searchPlaceholder')}
           />
-        </Form.Group>
-        <Form.Group style={formInputStyle}>
+        </Group>
+        <Group style={formInputStyle}>
           <SelectPicker
             key={`member-plan-${resetFilterKey}`}
             placeholder={t('userSubscriptionEdit.selectMemberPlan')}
@@ -172,8 +174,8 @@ export function SubscriptionListFilter({
               updateFilter({memberPlanID: memberPlans.find(mp => mp.id === value)?.id})
             }
           />
-        </Form.Group>
-        <Form.Group style={formInputStyle}>
+        </Group>
+        <Group style={formInputStyle}>
           <SelectPicker
             key={`payment-periodicity-${resetFilterKey}`}
             placeholder={t('memberPlanList.paymentPeriodicities')}
@@ -185,8 +187,8 @@ export function SubscriptionListFilter({
             }))}
             onChange={value => updateFilter({paymentPeriodicity: value || undefined})}
           />
-        </Form.Group>
-        <Form.Group style={formInputStyle}>
+        </Group>
+        <Group style={formInputStyle}>
           <SelectPicker
             key={`payment-method-${resetFilterKey}`}
             placeholder={t('userSubscriptionEdit.paymentMethod')}
@@ -197,8 +199,8 @@ export function SubscriptionListFilter({
               updateFilter({paymentMethodID: paymentMethods.find(pm => pm.id === value)?.id})
             }
           />
-        </Form.Group>
-        <Form.Group style={formInputStyle}>
+        </Group>
+        <Group style={formInputStyle}>
           <DateRangePicker
             key={`starts-at-${resetFilterKey}`}
             placeholder={t('userSubscriptionEdit.startsAt')}
@@ -220,8 +222,8 @@ export function SubscriptionListFilter({
             onClean={() => updateFilter({startsAtFrom: undefined, startsAtTo: undefined})}
             placement="auto"
           />
-        </Form.Group>
-        <Form.Group style={formInputStyle}>
+        </Group>
+        <Group style={formInputStyle}>
           <SelectPicker
             key={`auto-renew-${resetFilterKey}`}
             placeholder={t('userSubscriptionEdit.autoRenew')}
@@ -240,8 +242,8 @@ export function SubscriptionListFilter({
             placement="auto"
             onChange={value => updateFilter({autoRenew: value === 'true'})}
           />
-        </Form.Group>
-        <Form.Group style={formInputStyle}>
+        </Group>
+        <Group style={formInputStyle}>
           <SelectPicker
             key={`deactivation-reason-${resetFilterKey}`}
             placeholder={t('subscriptionList.filter.deactivationReason')}
@@ -264,8 +266,8 @@ export function SubscriptionListFilter({
             placement="auto"
             onChange={value => updateFilter({deactivationReason: value})}
           />
-        </Form.Group>
-        <Form.Group style={formInputStyle}>
+        </Group>
+        <Group style={formInputStyle}>
           <DateRangePicker
             key={`deactivation-date-${resetFilterKey}`}
             placeholder={t('userSubscriptionEdit.deactivation.date')}
@@ -289,8 +291,8 @@ export function SubscriptionListFilter({
               updateFilter({deactivationDateFrom: undefined, deactivationDateTo: undefined})
             }
           />
-        </Form.Group>
-        <Form.Group style={formInputStyle}>
+        </Group>
+        <Group style={formInputStyle}>
           <DateRangePicker
             key={`paid-until-${resetFilterKey}`}
             placeholder={t('userSubscriptionEdit.paidUntil')}
@@ -312,8 +314,8 @@ export function SubscriptionListFilter({
             }}
             onClean={() => updateFilter({paidUntilFrom: undefined, paidUntilTo: undefined})}
           />
-        </Form.Group>
-      </StyledForm>
+        </Group>
+      </Form>
       {resetFilterView()}
     </>
   )

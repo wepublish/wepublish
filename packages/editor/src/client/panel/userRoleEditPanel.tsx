@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, CheckPicker, Drawer, Form, Message, Schema, toaster} from 'rsuite'
+import {Button, CheckPicker, Drawer, Form as RForm, Message, Schema, toaster} from 'rsuite'
 
 import {
   FullUserRoleFragment,
@@ -18,7 +18,9 @@ import {
 } from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
-const StyledForm = styled(Form)`
+const {Group, ControlLabel, Control} = RForm
+
+const Form = styled(RForm)`
   height: 100%;
 `
 
@@ -130,7 +132,7 @@ function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
 
   return (
     <>
-      <StyledForm
+      <Form
         onSubmit={validationPassed => validationPassed && handleSave()}
         fluid
         model={validationModel}
@@ -157,27 +159,27 @@ function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
         </Drawer.Header>
 
         <Drawer.Body>
-          <Form.Group controlId="name">
-            <Form.ControlLabel>{toggleRequiredLabel(t('userRoles.panels.name'))}</Form.ControlLabel>
-            <Form.Control
+          <Group controlId="name">
+            <ControlLabel>{toggleRequiredLabel(t('userRoles.panels.name'))}</ControlLabel>
+            <Control
               name="name"
               value={name}
               disabled={isDisabled}
               onChange={(value: string) => setName(value)}
             />
-          </Form.Group>
-          <Form.Group controlId="description">
-            <Form.ControlLabel>{t('userRoles.panels.description')}</Form.ControlLabel>
-            <Form.Control
+          </Group>
+          <Group controlId="description">
+            <ControlLabel>{t('userRoles.panels.description')}</ControlLabel>
+            <Control
               name={t('userRoles.panels.description')}
               value={description}
               disabled={isDisabled}
               onChange={(value: string) => setDescription(value)}
             />
-          </Form.Group>
+          </Group>
           {systemRole && <p>{t('userRoles.panels.systemRole')}</p>}
-          <Form.Group controlId="permissions">
-            <Form.ControlLabel>{t('userRoles.panels.permissions')}</Form.ControlLabel>
+          <Group controlId="permissions">
+            <ControlLabel>{t('userRoles.panels.permissions')}</ControlLabel>
             <CheckPicker
               disabled={isDisabled}
               virtualized
@@ -192,9 +194,9 @@ function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
                 setPermissions(allPermissions.filter(permissions => value.includes(permissions.id)))
               }}
             />
-          </Form.Group>
+          </Group>
         </Drawer.Body>
-      </StyledForm>
+      </Form>
     </>
   )
 }

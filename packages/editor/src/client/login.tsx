@@ -3,7 +3,7 @@ import React, {FormEvent, useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {IoIosRocket, IoLogoFacebook, IoLogoGoogle, IoLogoTwitter} from 'react-icons/io'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
-import {Button, Divider, Form, IconButton, Message, toaster} from 'rsuite'
+import {Button, Divider, Form as RForm, IconButton as RIconButton, Message, toaster} from 'rsuite'
 
 import {
   FullUserRoleFragment,
@@ -22,13 +22,15 @@ function useQuery() {
   return React.useMemo(() => new URLSearchParams(search), [search])
 }
 
-const StyledForm = styled(Form)`
+const {Group, ControlLabel, Control} = RForm
+
+const Form = styled(RForm)`
   display: flex;
   flex-direction: column;
   margin: 0;
 `
 
-const StyledIconButton = styled(IconButton)`
+const IconButton = styled(RIconButton)`
   margin-bottom: 10px;
 `
 
@@ -185,20 +187,20 @@ export function Login() {
     <LoginTemplate backgroundChildren={<Background />}>
       {!loadingOAuth2 && (
         <>
-          <StyledForm fluid>
-            <Form.Group controlId="loginEmail">
-              <Form.ControlLabel>{t('login.email')}</Form.ControlLabel>
-              <Form.Control
+          <Form fluid>
+            <Group controlId="loginEmail">
+              <ControlLabel>{t('login.email')}</ControlLabel>
+              <Control
                 name="username"
                 className="username"
                 value={email}
                 autoComplete={'username'}
                 onChange={(email: string) => setEmail(email)}
               />
-            </Form.Group>
-            <Form.Group controlId="loginPassword">
-              <Form.ControlLabel>{t('login.password')}</Form.ControlLabel>
-              <Form.Control
+            </Group>
+            <Group controlId="loginPassword">
+              <ControlLabel>{t('login.password')}</ControlLabel>
+              <Control
                 name="password"
                 className="password"
                 type="password"
@@ -206,20 +208,20 @@ export function Login() {
                 autoComplete={'currentPassword'}
                 onChange={(password: string) => setPassword(password)}
               />
-            </Form.Group>
+            </Group>
             <Button appearance="primary" type="submit" disabled={loading} onClick={login}>
               {t('login.login')}
             </Button>
-          </StyledForm>
+          </Form>
           {!!providerData?.authProviders?.length && (
             <>
               <Divider />
               {providerData.authProviders.map(
                 (provider: {url: string; name: string}, index: number) => (
                   <Link to={provider.url} key={index}>
-                    <StyledIconButton appearance="subtle" icon={getAuthLogo(provider.name)}>
+                    <IconButton appearance="subtle" icon={getAuthLogo(provider.name)}>
                       {provider.name}
-                    </StyledIconButton>
+                    </IconButton>
                   </Link>
                 )
               )}

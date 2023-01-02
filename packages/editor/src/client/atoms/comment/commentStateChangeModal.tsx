@@ -16,7 +16,7 @@ import {
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 import {DescriptionList, DescriptionListItem} from '../descriptionList'
 
-const StyledPanel = styled(Panel)`
+const ParentCommentPanel = styled(Panel)`
   margin-right: 40;
   font-style: italic;
   color: lightslategrey;
@@ -27,7 +27,7 @@ const IconWrapper = styled.div`
   margin-left: 10px;
 `
 
-const StyledRevisionPanel = styled(Panel)`
+const RevisionPanel = styled(Panel)`
   max-height: 300px;
   overflow-y: scroll;
 `
@@ -198,7 +198,7 @@ export function CommentStateChangeModal({
           {comment?.parentComment && (
             <>
               <DescriptionListItem label={t('comments.panels.parent')}>
-                <StyledPanel bordered>
+                <ParentCommentPanel bordered>
                   <>
                     <div>
                       {t('comments.panels.parentDate', {
@@ -218,7 +218,7 @@ export function CommentStateChangeModal({
                       }
                     />
                   </>
-                </StyledPanel>
+                </ParentCommentPanel>
                 <IconWrapper>
                   <MdReplay rotate={180} />
                 </IconWrapper>
@@ -261,7 +261,7 @@ export function CommentStateChangeModal({
           ) : null}
 
           <DescriptionListItem label={t('comments.panels.revisions')} />
-          <StyledRevisionPanel bordered>
+          <RevisionPanel bordered>
             <Timeline align="left">
               {sortedRevisions.length
                 ? sortedRevisions.map(({text, createdAt}, index) => (
@@ -285,7 +285,7 @@ export function CommentStateChangeModal({
                   ))
                 : null}
             </Timeline>
-          </StyledRevisionPanel>
+          </RevisionPanel>
         </DescriptionList>
       </Modal.Body>
       <Modal.Footer>

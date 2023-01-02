@@ -3,7 +3,7 @@ import React from 'react'
 
 import {transformCssStringToObject} from '../../utility'
 
-const StyledIframeEmbed = styled.div`
+const Iframe = styled.div`
   width: 100%;
 `
 
@@ -28,7 +28,7 @@ export function IframeEmbed({url, title, width, height, styleCustom, sandbox}: I
         }
 
   return (
-    <StyledIframeEmbed>
+    <Iframe>
       <div
         style={{
           position: 'relative',
@@ -50,6 +50,6 @@ export function IframeEmbed({url, title, width, height, styleCustom, sandbox}: I
           sandbox={sandbox}
         />
       </div>
-    </StyledIframeEmbed>
+    </Iframe>
   )
 }

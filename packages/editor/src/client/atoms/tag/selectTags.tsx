@@ -2,16 +2,16 @@ import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
 import React, {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Divider, Message, Pagination, TagPicker, toaster} from 'rsuite'
+import {Divider as RDivider, Message, Pagination as RPagination, TagPicker, toaster} from 'rsuite'
 
 import {SortOrder, TagSort, TagType, useTagListQuery} from '../../api'
 import {DEFAULT_MAX_TABLE_PAGES} from '../../utility'
 
-const StyledDivider = styled(Divider)`
+const Divider = styled(RDivider)`
   margin: '12px 0';
 `
 
-const StyledPagination = styled(Pagination)`
+const Pagination = styled(RPagination)`
   margin: '0 12px 12px';
 `
 
@@ -80,9 +80,9 @@ export function SelectTags({name, tagType, selectedTags, setSelectedTags}: Selec
           <>
             {menu}
 
-            <StyledDivider />
+            <Divider />
 
-            <StyledPagination
+            <Pagination
               limit={50}
               maxButtons={DEFAULT_MAX_TABLE_PAGES}
               first

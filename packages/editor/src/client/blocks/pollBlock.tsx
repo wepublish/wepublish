@@ -2,21 +2,21 @@ import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
-import {Drawer, IconButton, Panel} from 'rsuite'
+import {Drawer, IconButton, Panel as RPanel} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {SelectPollPanel} from '../panel/selectPollPanel'
 import {PollBlockValue} from './types'
 
-const StyledIconWrapper = styled.div`
+const IconWrapper = styled.div`
   position: absolute;
   z-index: 100;
   height: 100%;
   right: 0;
 `
 
-const StyledPoll = styled.div`
+const Poll = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
@@ -25,7 +25,7 @@ const StyledPoll = styled.div`
   justify-content: center;
 `
 
-const StyledPanel = styled(Panel)`
+const Panel = styled(RPanel)`
   height: 200;
   padding: 0;
   overflow: hidden;
@@ -44,21 +44,21 @@ export const PollBlock = ({value: {poll}, onChange, autofocus}: BlockProps<PollB
 
   return (
     <>
-      <StyledPanel bodyFill bordered>
+      <Panel bodyFill bordered>
         <PlaceholderInput onAddClick={() => setIsDialogOpen(true)}>
           {poll && (
-            <StyledPoll>
-              <StyledIconWrapper>
+            <Poll>
+              <IconWrapper>
                 <IconButton size="lg" icon={<MdEdit />} onClick={() => setIsDialogOpen(true)}>
                   {t('blocks.poll.edit')}
                 </IconButton>
-              </StyledIconWrapper>
+              </IconWrapper>
 
               {poll.question}
-            </StyledPoll>
+            </Poll>
           )}
         </PlaceholderInput>
-      </StyledPanel>
+      </Panel>
 
       <Drawer size="lg" open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
         <SelectPollPanel

@@ -1,7 +1,16 @@
 import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, Input, Message, Panel, SelectPicker, toaster} from 'rsuite'
+import {
+  Button,
+  Drawer,
+  Form,
+  Input as RInput,
+  Message,
+  Panel,
+  SelectPicker as RSelectPicker,
+  toaster
+} from 'rsuite'
 
 import {
   ArticleRefFragment,
@@ -23,11 +32,11 @@ import {
 } from '../atoms/permissionControl'
 import {generateID, getOperationNameFromDocument} from '../utility'
 
-const StyledSelectPicker = styled(SelectPicker)`
+const SelectPicker = styled(RSelectPicker)`
   margin-bottom: 4;
 `
 
-const StyledInput = styled(Input)`
+const Input = styled(RInput)`
   margin-bottom: 8;
 `
 
@@ -268,25 +277,25 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
             defaultValue={{label: '', url: '', type: 'ExternalNavigationLink'}}>
             {({value, onChange}) => (
               <>
-                <StyledInput
+                <Input
                   placeholder={t('navigation.panels.label')}
                   value={value.label}
                   onChange={label => {
                     onChange({...value, label})
                   }}
                 />
-                <StyledSelectPicker
+                <SelectPicker
                   block
                   virtualized
                   value={value.type}
                   data={linkTypes}
-                  onChange={(type: string) => {
+                  onChange={type => {
                     if (!type) return
                     onChange({...value, type})
                   }}
                 />
                 {value.type === 'PageNavigationLink' || value.type === 'ArticleNavigationLink' ? (
-                  <SelectPicker
+                  <RSelectPicker
                     block
                     virtualized
                     placeholder={
@@ -313,7 +322,7 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
                     }}
                   />
                 ) : (
-                  <StyledInput
+                  <Input
                     placeholder={t('navigation.panels.url')}
                     value={value.url}
                     onChange={url =>

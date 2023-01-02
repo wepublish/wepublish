@@ -2,21 +2,21 @@ import styled from '@emotion/styled'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdReplay, MdSend} from 'react-icons/md'
-import {Button, Form, Message, Modal, toaster} from 'rsuite'
+import {Button as RButton, Form, Message, Modal, toaster} from 'rsuite'
 
 import {FullUserFragment, useSendWebsiteLoginMutation} from '../../api'
 import {toggleRequiredLabel} from '../../toggleRequiredLabel'
 import {ResetUserPasswordForm} from './resetUserPasswordForm'
 
-const StyledReplayIcon = styled(MdReplay)`
+const ReplayIcon = styled(MdReplay)`
   margin-right: 5px;
 `
 
-const StyledSendIcon = styled(MdSend)`
+const SendIcon = styled(MdSend)`
   margin-right: 5px;
 `
 
-const StyledButton = styled(Button)`
+const Button = styled(RButton)`
   margin-left: 20px;
 `
 
@@ -74,18 +74,18 @@ export function EditUserPassword({
       return (
         <>
           <Form.Group>
-            <Button appearance="primary" onClick={() => setIsResetUserPasswordOpen(true)}>
-              <StyledReplayIcon />
+            <RButton appearance="primary" onClick={() => setIsResetUserPasswordOpen(true)}>
+              <ReplayIcon />
               {t('userCreateOrEditView.resetPassword')}
-            </Button>
-            <StyledButton
+            </RButton>
+            <Button
               appearance="primary"
               color="red"
               disabled={isDisabled || !user.email || !user.active}
               onClick={() => setSendLoginModalOpen(true)}>
-              <StyledSendIcon />
+              <SendIcon />
               {t('userCreateOrEditView.sendWebsiteLogin')}
-            </StyledButton>
+            </Button>
           </Form.Group>
         </>
       )
@@ -130,9 +130,9 @@ export function EditUserPassword({
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
+          <RButton onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
             {t('userCreateOrEditView.cancel')}
-          </Button>
+          </RButton>
         </Modal.Footer>
       </Modal>
     )
@@ -153,12 +153,12 @@ export function EditUserPassword({
             })}
           </Modal.Body>
           <Modal.Footer>
-            <Button appearance="ghost" onClick={() => setSendLoginModalOpen(false)}>
+            <RButton appearance="ghost" onClick={() => setSendLoginModalOpen(false)}>
               {t('cancel')}
-            </Button>
-            <Button appearance="primary" onClick={sendLoginLink}>
+            </RButton>
+            <RButton appearance="primary" onClick={sendLoginLink}>
               {t('userCreateOrEditView.sendWebsiteLogin')}
-            </Button>
+            </RButton>
           </Modal.Footer>
         </Modal>
       </>

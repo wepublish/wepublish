@@ -6,11 +6,11 @@ import {Tooltip, Whisper} from 'rsuite'
 
 import {dateTimeLocalString} from '../../utility'
 
-const StyledClosedIcon = styled(MdPowerOff)`
+const ClosedIcon = styled(MdPowerOff)`
   color: red;
 `
 
-const StyledOpensIcon = styled(MdPlayCircleOutline)`
+const OpensIcon = styled(MdPlayCircleOutline)`
   color: green;
 `
 
@@ -31,7 +31,7 @@ export function PollStateIndication({
   if (closedAt && now.getTime() >= closedAt.getTime()) {
     return (
       <Whisper speaker={<Tooltip>{t('pollStateIndication.closed')}</Tooltip>}>
-        <StyledClosedIcon />
+        <ClosedIcon />
       </Whisper>
     )
   }
@@ -41,7 +41,7 @@ export function PollStateIndication({
   if (now.getTime() > opensAt.getTime()) {
     return (
       <Whisper speaker={<Tooltip>{t('pollStateIndication.open')}</Tooltip>}>
-        <StyledOpensIcon />
+        <OpensIcon />
       </Whisper>
     )
   }

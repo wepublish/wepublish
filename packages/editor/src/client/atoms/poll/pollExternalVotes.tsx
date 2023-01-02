@@ -3,7 +3,17 @@ import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
-import {Button, Col, IconButton, InputNumber, Message, Modal, Row, Table, toaster} from 'rsuite'
+import {
+  Button,
+  Col,
+  IconButton,
+  InputNumber,
+  Message,
+  Modal,
+  Row as RRow,
+  Table,
+  toaster
+} from 'rsuite'
 import FormControl from 'rsuite/FormControl'
 
 import {
@@ -15,7 +25,7 @@ import {
   useDeletePollExternalVoteSourceMutation
 } from '../../api'
 
-const StyledRow = styled(Row)`
+const Row = styled(RRow)`
   margin-top: 20px;
 `
 
@@ -172,7 +182,7 @@ export function AddSource({poll, setLoading, onPollChange}: addSourceProps) {
   }
   return (
     <>
-      <StyledRow>
+      <Row>
         <Col xs={12}>
           <FormControl
             name="addNewSource"
@@ -186,7 +196,7 @@ export function AddSource({poll, setLoading, onPollChange}: addSourceProps) {
             {t('pollExternalVotes.addSourceBtn')}
           </IconButton>
         </Col>
-      </StyledRow>
+      </Row>
     </>
   )
 }

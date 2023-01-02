@@ -11,7 +11,7 @@ import React, {
 
 import {useScript} from '../../utility'
 
-const StyledWrapper = styled.div`
+const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   min-height: 300;
@@ -114,14 +114,14 @@ export function FacebookPostEmbed({userID, postID}: FacebookPostEmbedProps) {
   const encodedPostID = encodeURIComponent(postID)
 
   return (
-    <StyledWrapper ref={wrapperRef}>
+    <Wrapper ref={wrapperRef}>
       <div
         className="fb-post"
         data-href={`https://www.facebook.com/${encodedUserID}/posts/${encodedPostID}/`}
         data-show-text="true"
         data-width="200"
       />
-    </StyledWrapper>
+    </Wrapper>
   )
 }
 
@@ -154,12 +154,12 @@ export function FacebookVideoEmbed({userID, videoID}: FacebookVideoEmbedProps) {
   const encodedVideoID = encodeURIComponent(videoID)
 
   return (
-    <StyledWrapper ref={wrapperRef}>
+    <Wrapper ref={wrapperRef}>
       <div
         className="fb-video"
         data-href={`https://www.facebook.com/${encodedUserID}/videos/${encodedVideoID}/`}
         data-show-text="true"
       />
-    </StyledWrapper>
+    </Wrapper>
   )
 }

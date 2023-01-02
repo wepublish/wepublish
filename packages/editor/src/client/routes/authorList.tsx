@@ -8,12 +8,12 @@ import {
   Button,
   Drawer,
   FlexboxGrid,
-  IconButton,
+  IconButton as RIconButton,
   Input,
   InputGroup,
   Modal,
   Pagination,
-  Table
+  Table as RTable
 } from 'rsuite'
 
 import {AuthorSort, FullAuthorFragment, useAuthorListQuery, useDeleteAuthorMutation} from '../api'
@@ -27,25 +27,25 @@ import {
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
 
-const {Column, HeaderCell, Cell} = Table
+const {Column, HeaderCell, Cell} = RTable
 
-const StyledIconButton = styled(MdDelete)`
+const IconButton = styled(RIconButton)`
   margin-left: 5px;
 `
 
-const StyledCell = styled(Cell)`
+const CellWithPadding = styled(Cell)`
   padding: 6px 0;
 `
 
-const StyledCellSmallPadding = styled(Cell)`
+const CellSmallPadding = styled(Cell)`
   padding: 2;
 `
 
-const StyledTable = styled(Table)`
+const Table = styled(RTable)`
   flex: 1;
 `
 
-const StyledFlexColumn = styled.div`
+const FlexColumn = styled.div`
   display: flex;
   flex-flow: column;
   margin-top: 20px;
@@ -142,9 +142,9 @@ function AuthorList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_AUTHOR']}>
           <FlexItemTextAlign colspan={8}>
             <Link to="/authors/create">
-              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
+              <RIconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('authors.overview.newAuthor')}
-              </IconButton>
+              </RIconButton>
             </Link>
           </FlexItemTextAlign>
         </PermissionControl>
@@ -157,8 +157,8 @@ function AuthorList() {
           </InputGroup>
         </FlexItemMarginTop>
       </FlexboxGrid>
-      <StyledFlexColumn>
-        <StyledTable
+      <FlexColumn>
+        <Table
           minHeight={600}
           autoHeight
           loading={isLoading}
@@ -171,11 +171,11 @@ function AuthorList() {
           }}>
           <Column width={100} align="left" resizable>
             <HeaderCell>{}</HeaderCell>
-            <StyledCellSmallPadding>
+            <CellSmallPadding>
               {(rowData: FullAuthorFragment) => (
                 <Avatar circle src={rowData.image?.squareURL || undefined} />
               )}
-            </StyledCellSmallPadding>
+            </CellSmallPadding>
           </Column>
           <Column width={300} align="left" resizable sortable>
             <HeaderCell>{t('authors.overview.name')}</HeaderCell>
@@ -199,27 +199,25 @@ function AuthorList() {
           </Column>
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('authors.overview.action')}</HeaderCell>
-            <StyledCell>
+            <CellWithPadding>
               {(rowData: FullAuthorFragment) => (
                 <>
-                  <PermissionControl qualifyingPermissions={['CAN_DELETE_AUTHOR']}>
-                    <IconButtonTooltip caption={t('delete')}>
-                      <StyledIconButton
-                        icon={<MdDelete />}
-                        circle
-                        size="sm"
-                        onClick={() => {
-                          setConfirmationDialogOpen(true)
-                          setCurrentAuthor(rowData)
-                        }}
-                      />
-                    </IconButtonTooltip>
-                  </PermissionControl>
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButton
+                      icon={<MdDelete />}
+                      circle
+                      size="sm"
+                      onClick={() => {
+                        setConfirmationDialogOpen(true)
+                        setCurrentAuthor(rowData)
+                      }}
+                    />
+                  </IconButtonTooltip>
                 </>
               )}
-            </StyledCell>
+            </CellWithPadding>
           </Column>
-        </StyledTable>
+        </Table>
 
         <Pagination
           limit={limit}
@@ -237,7 +235,7 @@ function AuthorList() {
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </StyledFlexColumn>
+      </FlexColumn>
 
       <Drawer
         open={isEditModalOpen}

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React, {useEffect, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, Message, Panel, Schema, toaster} from 'rsuite'
+import {Button, Drawer, Form as RForm, Message as RMessage, Panel, Schema, toaster} from 'rsuite'
 import {FormInstance} from 'rsuite/esm/Form'
 
 import {
@@ -33,11 +33,13 @@ export interface ImageEditPanelProps {
   onSave?(): void
 }
 
-const StyledForm = styled(Form)`
+const {Group, ControlLabel, Control} = RForm
+
+const Form = styled(RForm)`
   height: 100%;
 `
 
-const HiddenFontControl = styled(Form.Control)`
+const HiddenFontControl = styled(Control)`
   display: none;
 `
 
@@ -48,7 +50,7 @@ const BoxWrapper = styled.div`
   margin-top: 4px;
 `
 
-const StyledMessage = styled(Message)`
+const Message = styled(RMessage)`
   margin-top: 5px;
 `
 
@@ -99,9 +101,9 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     const error = fetchError?.message ?? saveError?.message
     if (error)
       toaster.push(
-        <Message type="error" showIcon closable duration={0}>
+        <RMessage type="error" showIcon closable duration={0}>
           {error}
-        </Message>
+        </RMessage>
       )
   }, [fetchError, saveError])
 
@@ -145,7 +147,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
 
   return (
     <>
-      <StyledForm
+      <Form
         onSubmit={validationPassed => validationPassed && handleSave()}
         fluid
         disabled={isDisabled}
@@ -191,20 +193,18 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
               }}
               removeImage={() => setLogoImage(undefined)}
             />
-            <Form.Group>
+            <Group>
               <HiddenFontControl name="profileImg" value={logoImage?.id || ''} />
-            </Form.Group>
+            </Group>
           </Panel>
 
           <Panel header={t('peerList.panels.information')}>
-            <Form.Group controlId="peerListName">
-              <Form.ControlLabel>
-                {toggleRequiredLabel(t('peerList.panels.name'))}
-              </Form.ControlLabel>
-              <Form.Control name="name" value={name} onChange={(value: string) => setName(value)} />
-            </Form.Group>
-            <Form.Group controlId="peerListThemeColor">
-              <Form.ControlLabel>{t('peerList.panels.themeColor')}</Form.ControlLabel>
+            <Group controlId="peerListName">
+              <ControlLabel>{toggleRequiredLabel(t('peerList.panels.name'))}</ControlLabel>
+              <Control name="name" value={name} onChange={(value: string) => setName(value)} />
+            </Group>
+            <Group controlId="peerListThemeColor">
+              <ControlLabel>{t('peerList.panels.themeColor')}</ControlLabel>
               <ColorPicker
                 disabled={isDisabled}
                 setColor={color => {
@@ -212,9 +212,9 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 }}
                 currentColor={themeColor}
               />
-            </Form.Group>
-            <Form.Group controlId="peerListThemeFontColor">
-              <Form.ControlLabel>{t('peerList.panels.themeFontColor')}</Form.ControlLabel>
+            </Group>
+            <Group controlId="peerListThemeFontColor">
+              <ControlLabel>{t('peerList.panels.themeFontColor')}</ControlLabel>
               <ColorPicker
                 disabled={isDisabled}
                 setColor={color => {
@@ -222,38 +222,36 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 }}
                 currentColor={themeFontColor}
               />
-            </Form.Group>
+            </Group>
 
-            <Form.ControlLabel>{t('peerList.panels.callToActionText')}</Form.ControlLabel>
+            <ControlLabel>{t('peerList.panels.callToActionText')}</ControlLabel>
             <BoxWrapper>
-              <Form.Group controlId="peerListCallToAction">
-                <Form.ControlLabel>{t('peerList.panels.text')}</Form.ControlLabel>
-                <Form.Control
+              <Group controlId="peerListCallToAction">
+                <ControlLabel>{t('peerList.panels.text')}</ControlLabel>
+                <Control
                   name="callToActionText"
                   value={callToActionText}
                   onChange={setCallToActionText}
                   accepter={RichTextBlock}
                   disabled={isDisabled}
                 />
-              </Form.Group>
-              <Form.Group>
-                <Form.Control
+              </Group>
+              <Group>
+                <Control
                   placeholder={t('peerList.panels.URL')}
                   name="callToActionTextURL"
                   value={callToActionTextURL}
                   onChange={setCallToActionTextURL}
                 />
-              </Form.Group>
+              </Group>
             </BoxWrapper>
             <br />
-            <Form.ControlLabel>
+            <ControlLabel>
               {toggleRequiredLabel(t('peerList.panels.callToActionImage'))}
-            </Form.ControlLabel>
+            </ControlLabel>
             <BoxWrapper>
-              <Form.Group controlId="peerListImage">
-                <Form.ControlLabel>
-                  {toggleRequiredLabel(t('peerList.panels.image'))}
-                </Form.ControlLabel>
+              <Group controlId="peerListImage">
+                <ControlLabel>{toggleRequiredLabel(t('peerList.panels.image'))}</ControlLabel>
                 <ChooseEditImage
                   image={callToActionImage}
                   header={''}
@@ -271,18 +269,18 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                   removeImage={() => setCallToActionImage(undefined)}
                 />
                 <HiddenFontControl name="callToActionImage" value={callToActionImage?.filename} />
-              </Form.Group>
-              <Form.Group>
-                <Form.Control
+              </Group>
+              <Group>
+                <Control
                   placeholder={t('peerList.panels.URL')}
                   name="callToActionImageURL"
                   value={callToActionImageURL}
                   onChange={setCallToActionImageURL}
                 />
-                <StyledMessage showIcon type="info">
+                <Message showIcon type="info">
                   {t('peerList.panels.ctaImageInfo')}
-                </StyledMessage>
-              </Form.Group>
+                </Message>
+              </Group>
             </BoxWrapper>
           </Panel>
         </Drawer.Body>
@@ -308,7 +306,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
             />
           )}
         </Drawer>
-      </StyledForm>
+      </Form>
     </>
   )
 }

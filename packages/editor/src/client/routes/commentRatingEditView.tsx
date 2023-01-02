@@ -7,8 +7,8 @@ import {
   Button,
   FlexboxGrid,
   Form,
-  IconButton,
-  Loader,
+  IconButton as RIconButton,
+  Loader as RLoader,
   Message,
   Modal,
   SelectPicker,
@@ -27,26 +27,26 @@ import {
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
-const StyledIconButton = styled(IconButton)`
+const IconButton = styled(RIconButton)`
   margin-top: 12px;
 `
 
-const StyledAnswerGrid = styled(FlexboxGrid)`
+const AnswerGrid = styled(FlexboxGrid)`
   margin-bottom: 12px;
   gap: 12px;
 `
 
-const StyledLoader = styled(Loader)`
+const Loader = styled(RLoader)`
   margin: 30px;
 `
 
-const StyledP = styled.p`
+const P = styled.p`
   display: flex;
   align-items: center;
   gap: 8px;
 `
 
-const StyledFlexboxGrid = styled(FlexboxGrid)`
+const FlexGrid = styled(FlexboxGrid)`
   margin-bottom: 40px;
 `
 
@@ -132,14 +132,14 @@ function CommentRatingEditView() {
 
   return (
     <>
-      <StyledFlexboxGrid>
+      <FlexGrid>
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('comments.ratingEdit.title')}</h2>
         </FlexboxGrid.Item>
 
         {ratingSystem && (
           <RatingSystem colspan={8}>
-            <IconButton
+            <RIconButton
               type="button"
               appearance="primary"
               data-testid="save"
@@ -154,16 +154,16 @@ function CommentRatingEditView() {
                 })
               }>
               {isLoading ? (
-                <StyledP>
+                <P>
                   <MdReplay /> {t('comments.ratingEdit.loading')}
-                </StyledP>
+                </P>
               ) : (
                 t('save')
               )}
-            </IconButton>
+            </RIconButton>
           </RatingSystem>
         )}
-      </StyledFlexboxGrid>
+      </FlexGrid>
 
       <Form>
         {ratingSystem && (
@@ -185,7 +185,7 @@ function CommentRatingEditView() {
 
       {isFetching && (
         <FlexboxGrid justify="center">
-          <StyledLoader size="lg" />
+          <Loader size="lg" />
         </FlexboxGrid>
       )}
 
@@ -242,7 +242,7 @@ export function RatingAnswers({
   return (
     <>
       {answers?.map(answer => (
-        <StyledAnswerGrid key={answer.id}>
+        <AnswerGrid key={answer.id}>
           <Form.Control
             name={`answer-${answer.id}`}
             placeholder={t('comments.ratingEdit.placeholder')}
@@ -258,7 +258,7 @@ export function RatingAnswers({
           />
 
           <IconButtonTooltip caption={t('delete')}>
-            <IconButton
+            <RIconButton
               icon={<MdDelete />}
               circle
               size="sm"
@@ -267,13 +267,13 @@ export function RatingAnswers({
               onClick={() => onDeleteAnswer(answer.id)}
             />
           </IconButtonTooltip>
-        </StyledAnswerGrid>
+        </AnswerGrid>
       ))}
 
-      <StyledIconButton appearance="ghost" onClick={() => onAddAnswer()}>
+      <IconButton appearance="ghost" onClick={() => onAddAnswer()}>
         <MdAdd />
         {t('comments.ratingEdit.newAnswer')}
-      </StyledIconButton>
+      </IconButton>
     </>
   )
 }

@@ -5,7 +5,15 @@ import React, {useState} from 'react'
 import DatePicker from 'react-datepicker'
 import {useTranslation} from 'react-i18next'
 import {MdInfo} from 'react-icons/md'
-import {Button, ButtonGroup, ButtonToolbar, Form, IconButton, Popover, Whisper} from 'rsuite'
+import {
+  Button,
+  ButtonGroup,
+  ButtonToolbar,
+  Form,
+  IconButton,
+  Popover as RPopover,
+  Whisper
+} from 'rsuite'
 
 export interface DateTimePreset {
   label: string
@@ -27,7 +35,7 @@ const Header = styled.div`
   margin: 5px auto;
 `
 
-const StyledPopover = styled(Popover)`
+const Popover = styled(RPopover)`
   max-width: 300px;
 `
 
@@ -102,9 +110,9 @@ export function DateTimePicker({
             trigger="hover"
             controlId="control-id-hover"
             speaker={
-              <StyledPopover>
+              <Popover>
                 <p>{helpInfo}</p>
-              </StyledPopover>
+              </Popover>
             }>
             <IconButton icon={<MdInfo />} circle size="xs" />
           </Whisper>

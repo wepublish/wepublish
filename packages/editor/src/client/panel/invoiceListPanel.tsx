@@ -7,7 +7,7 @@ import {InvoiceFragment, useMeQuery} from '../api'
 import {Invoice} from '../atoms/invoice'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
-const StyledInvoiceWrapper = styled.div`
+const InvoiceWrapper = styled.div`
   margin-bottom: 10px;
 `
 
@@ -54,7 +54,7 @@ function InvoiceListPanel({
     return (
       <Drawer.Body>
         {invoices?.map((invoice, invoiceId) => (
-          <StyledInvoiceWrapper key={invoiceId}>
+          <InvoiceWrapper key={invoiceId}>
             <Invoice
               subscriptionId={subscriptionId}
               invoice={invoice}
@@ -62,7 +62,7 @@ function InvoiceListPanel({
               disabled={disabled}
               onInvoicePaid={() => onInvoicePaid()}
             />
-          </StyledInvoiceWrapper>
+          </InvoiceWrapper>
         ))}
       </Drawer.Body>
     )

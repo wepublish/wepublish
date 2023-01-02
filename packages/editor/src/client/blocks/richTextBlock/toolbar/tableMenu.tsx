@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import React, {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdDisabledByDefault} from 'react-icons/md'
-import {Button, Col, IconButton, InputGroup, InputNumber, Row} from 'rsuite'
+import {Button, Col as RCol, IconButton, InputGroup as RInputGroup, InputNumber, Row} from 'rsuite'
 import {Transforms} from 'slate'
 import {useSlate} from 'slate-react'
 
@@ -14,7 +14,7 @@ import {DEFAULT_BORDER_COLOR, emptyCellsTable} from '../editor/elements'
 import {BlockFormat} from '../editor/formats'
 import {WepublishEditor} from '../editor/wepublishEditor'
 
-const StyledControlsWrapper = styled.div`
+const ControlsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -23,7 +23,7 @@ const StyledControlsWrapper = styled.div`
   width: 15em;
 `
 
-const StyledCol = styled(Col)`
+const Col = styled(RCol)`
   text-align: right;
   margin-top: 0px;
   margin-bottom: 20px;
@@ -33,11 +33,11 @@ const RedIcon = styled(MdDisabledByDefault)`
   color: #ff0000;
 `
 
-const StyledInputGroup = styled(InputGroup)`
+const InputGroup = styled(RInputGroup)`
   width: 150px;
 `
 
-const StyledInputAddon = styled(InputGroup.Addon)`
+const InputAddon = styled(RInputGroup.Addon)`
   width: 80px;
 `
 
@@ -97,12 +97,10 @@ export function TableMenu() {
           setNumber: setNcols
         }
       ].map(({label, num, setNumber}, i) => (
-        <StyledInputGroup
-          disabled={WepublishEditor.isFormatActive(editor, BlockFormat.Table)}
-          key={i}>
-          <StyledInputAddon>{label}</StyledInputAddon>
+        <InputGroup disabled={WepublishEditor.isFormatActive(editor, BlockFormat.Table)} key={i}>
+          <InputAddon>{label}</InputAddon>
           <InputNumber value={num} onChange={val => setNumber(val as number)} min={1} max={100} />
-        </StyledInputGroup>
+        </InputGroup>
       ))}
       <Button
         onClick={() => {
@@ -169,15 +167,15 @@ export function TableMenu() {
   return (
     <>
       <Row>
-        <StyledCol xs={24}>
+        <Col xs={24}>
           <IconButton icon={<MdClose />} onClick={() => closeMenu()} />
-        </StyledCol>
+        </Col>
       </Row>
-      <StyledControlsWrapper>
+      <ControlsWrapper>
         {WepublishEditor.isFormatActive(editor, BlockFormat.Table)
           ? tableModifyControls
           : tableInsertControls}
-      </StyledControlsWrapper>
+      </ControlsWrapper>
     </>
   )
 }

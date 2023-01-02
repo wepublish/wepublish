@@ -3,7 +3,7 @@ import React, {createContext, ReactNode, useContext, useEffect, useRef} from 're
 
 import {useScript} from '../../utility'
 
-const StyledTwitterEmbed = styled.div`
+const TwitterEmbed = styled.div`
   display: flex;
   justify-content: center;
   min-height: 300;
@@ -63,7 +63,7 @@ export function TwitterTweetEmbed({userID, tweetID}: TwitterTweetEmbedProps) {
   }, [isLoaded, isLoading])
 
   return (
-    <StyledTwitterEmbed ref={wrapperRef}>
+    <TwitterEmbed ref={wrapperRef}>
       <blockquote className="twitter-tweet">
         <a
           href={`https://twitter.com/${encodeURIComponent(userID)}/status/${encodeURIComponent(
@@ -71,6 +71,6 @@ export function TwitterTweetEmbed({userID, tweetID}: TwitterTweetEmbedProps) {
           )}`}
         />
       </blockquote>
-    </StyledTwitterEmbed>
+    </TwitterEmbed>
   )
 }

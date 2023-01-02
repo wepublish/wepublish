@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Form, Message, Modal, Slider, toaster} from 'rsuite'
+import {Button, Form, Message as RMessage, Modal, Slider, toaster} from 'rsuite'
 
 import {usePagePreviewLinkQuery} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
-const StyledMessage = styled(Message)`
+const Message = styled(RMessage)`
   margin-bottom: 20px;
 `
 
@@ -48,9 +48,9 @@ function PagePreviewLinkPanel({props, onClose}: PagePreviewLinkPanelProps) {
   useEffect(() => {
     if (loadError?.message) {
       toaster.push(
-        <Message type="error" showIcon closable duration={0}>
+        <RMessage type="error" showIcon closable duration={0}>
           {loadError.message}
-        </Message>
+        </RMessage>
       )
     }
   }, [loadError])
@@ -62,9 +62,7 @@ function PagePreviewLinkPanel({props, onClose}: PagePreviewLinkPanelProps) {
       </Modal.Header>
 
       <Modal.Body>
-        <StyledMessage type="warning">
-          {t('articleEditor.panels.articlePreviewLinkDesc')}
-        </StyledMessage>
+        <Message type="warning">{t('articleEditor.panels.articlePreviewLinkDesc')}</Message>
 
         <Form fluid>
           <FormGroupPaddingHorizontal controlId="articlePreviewLinkHours">

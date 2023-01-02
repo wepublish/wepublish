@@ -7,7 +7,7 @@ import {Button, Drawer, Form, Notification, toaster} from 'rsuite'
 import {FileDropInput} from '../atoms/fileDropInput'
 import {getImgMinSizeToCompress} from '../utility'
 
-const StyledInputWrapper = styled.div`
+const InputWrapper = styled.div`
   height: 100px;
 `
 
@@ -50,13 +50,13 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <StyledInputWrapper>
+        <InputWrapper>
           <FileDropInput
             icon={<MdUploadFile />}
             text={t('articleEditor.panels.dropImage')}
             onDrop={handleDrop}
           />
-        </StyledInputWrapper>
+        </InputWrapper>
         <Form.ControlLabel>
           <br />
           {t('images.panels.resizedImage', {sizeMB: getImgMinSizeToCompress()})}

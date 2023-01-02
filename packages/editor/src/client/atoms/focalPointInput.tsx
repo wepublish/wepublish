@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
 import React, {useLayoutEffect, useRef, useState} from 'react'
 import {MdCropSquare} from 'react-icons/md'
-import {Panel} from 'rsuite'
+import {Panel as RPanel} from 'rsuite'
 
 import {Draggable, DraggableContainer, Point} from './draggable'
 
-const StyledFocalPoint = styled.div`
+const FocalPointElement = styled.div`
   width: 50;
   height: 50;
   background-color: rgba(0, 0, 0, 0.2);
@@ -18,7 +18,7 @@ const StyledFocalPoint = styled.div`
   font-size: 24px;
 `
 
-const StyledDraggableContainerWrapper = styled.div`
+const DraggableContainerWrapper = styled.div`
   position: absolute;
   top: 0;
   left: 0;
@@ -26,11 +26,11 @@ const StyledDraggableContainerWrapper = styled.div`
   height: 100%;
 `
 
-const StyledImage = styled.img`
+const Image = styled.img`
   max-height: 300;
 `
 
-const StyledPanel = styled(Panel)`
+const Panel = styled(RPanel)`
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -39,13 +39,13 @@ const StyledPanel = styled(Panel)`
   width: 100%;
 `
 
-const StyledPanelWrapper = styled.div`
+const PanelWrapper = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
 `
 
-const StyledFocalPointInput = styled.div`
+const FocalPointInputWrapper = styled.div`
   display: flex;
   width: 100%;
   justify-content: center;
@@ -109,14 +109,14 @@ export function FocalPointInput({
   }, [])
 
   return (
-    <StyledFocalPointInput ref={containerRef}>
+    <FocalPointInputWrapper ref={containerRef}>
       <div ref={imageContainer}>
         {layouted && (
-          <StyledPanelWrapper>
-            <StyledPanel>
-              <StyledImage src={imageURL} />
-            </StyledPanel>
-            <StyledDraggableContainerWrapper>
+          <PanelWrapper>
+            <Panel>
+              <Image src={imageURL} />
+            </Panel>
+            <DraggableContainerWrapper>
               <DraggableContainer>
                 {focalPoint && (
                   <Draggable point={focalPoint} onChange={onChange} disabled={disabled}>
@@ -124,18 +124,18 @@ export function FocalPointInput({
                   </Draggable>
                 )}
               </DraggableContainer>
-            </StyledDraggableContainerWrapper>
-          </StyledPanelWrapper>
+            </DraggableContainerWrapper>
+          </PanelWrapper>
         )}
       </div>
-    </StyledFocalPointInput>
+    </FocalPointInputWrapper>
   )
 }
 
 export function FocalPoint() {
   return (
-    <StyledFocalPoint>
+    <FocalPointElement>
       <MdCropSquare />
-    </StyledFocalPoint>
+    </FocalPointElement>
   )
 }

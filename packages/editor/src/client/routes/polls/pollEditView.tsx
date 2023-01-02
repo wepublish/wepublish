@@ -17,11 +17,11 @@ import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {PollAnswers} from '../../atoms/poll/pollAnswers'
 import {PollExternalVotes} from '../../atoms/poll/pollExternalVotes'
 
-const StyledOpensAtLabel = styled(Form.ControlLabel)`
+const OpensAtLabel = styled(Form.ControlLabel)`
   margin-right: 5px;
 `
 
-const StyledClosesAtLabel = styled(Form.ControlLabel)`
+const ClosesAtLabel = styled(Form.ControlLabel)`
   margin-left: 20px;
   margin-right: 5px;
 `
@@ -192,7 +192,7 @@ function PollEditView() {
               <Col xs={24}>
                 <Panel header={t('pollEditView.settingsPanelHeader')} bordered>
                   {/* opens at */}
-                  <StyledOpensAtLabel>{t('pollEditView.opensAtLabel')}</StyledOpensAtLabel>
+                  <OpensAtLabel>{t('pollEditView.opensAtLabel')}</OpensAtLabel>
                   <DatePicker
                     value={poll?.opensAt ? new Date(poll.opensAt) : undefined}
                     format="yyyy-MM-dd HH:mm"
@@ -208,7 +208,7 @@ function PollEditView() {
                   />
 
                   {/* closes at */}
-                  <StyledClosesAtLabel>{t('pollEditView.closesAtLabel')}</StyledClosesAtLabel>
+                  <ClosesAtLabel>{t('pollEditView.closesAtLabel')}</ClosesAtLabel>
                   <DatePicker
                     value={poll?.closedAt ? new Date(poll.closedAt) : undefined}
                     format="yyyy-MM-dd HH:mm"

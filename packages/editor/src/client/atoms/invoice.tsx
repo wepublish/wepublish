@@ -2,11 +2,11 @@ import styled from '@emotion/styled'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdDone, MdMail} from 'react-icons/md'
-import {Button, FlexboxGrid, Message, Modal, Panel, toaster} from 'rsuite'
+import {Button as RButton, FlexboxGrid, Message, Modal, Panel, toaster} from 'rsuite'
 
 import {FullUserFragment, InvoiceFragment, InvoiceItem, useUpdateInvoiceMutation} from '../api'
 
-const StyledButton = styled(Button)`
+const Button = styled(RButton)`
   margin-top: 20px;
 `
 
@@ -25,7 +25,7 @@ const DoneIcon = styled(MdDone)`
   font-size: 2em;
 `
 
-const StyledFlexboxItem = styled(FlexboxGrid.Item)`
+const FlexboxItem = styled(FlexboxGrid.Item)`
   text-align: right;
 `
 
@@ -114,12 +114,12 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
     } else {
       return (
         <>
-          <StyledButton
+          <Button
             onClick={() => setModalOpen(true)}
             appearance="primary"
             disabled={!me?.id || disabled}>
             {t('invoice.payManually')}
-          </StyledButton>
+          </Button>
         </>
       )
     }
@@ -132,7 +132,7 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
           {`${t('invoice.invoiceNo')} ${invoice.id}`}{' '}
           {!invoice.paidAt && <span>({t('invoice.unpaid')})</span>}
         </FlexboxGrid.Item>
-        <StyledFlexboxItem>{invoiceIconView()}</StyledFlexboxItem>
+        <FlexboxItem>{invoiceIconView()}</FlexboxItem>
       </FlexboxGrid>
     )
   }
@@ -161,12 +161,12 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
         <Modal.Title>{t('invoice.areYouSure')}</Modal.Title>
         <Modal.Body>{t('invoice.manuallyPaidModalBody')}</Modal.Body>
         <Modal.Footer>
-          <Button appearance="primary" onClick={payManually}>
+          <RButton appearance="primary" onClick={payManually}>
             {t('confirm')}
-          </Button>
-          <Button appearance="subtle" onClick={() => setModalOpen(false)}>
+          </RButton>
+          <RButton appearance="subtle" onClick={() => setModalOpen(false)}>
             {t('cancel')}
-          </Button>
+          </RButton>
         </Modal.Footer>
       </Modal>
     </>

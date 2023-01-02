@@ -2,21 +2,21 @@ import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
-import {Drawer, IconButton, Panel} from 'rsuite'
+import {Drawer, IconButton, Panel as RPanel} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {SelectCommentPanel} from '../panel/selectCommentsPanel'
 import {CommentBlockValue} from './types'
 
-const StyledPanel = styled(Panel)`
+const Panel = styled(RPanel)`
   height: 200px;
   padding: 0;
   overflow: hidden;
   background-color: #f7f9fa;
 `
 
-const StyledWrapper = styled.div`
+const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
@@ -25,7 +25,7 @@ const StyledWrapper = styled.div`
   justify-content: center;
 `
 
-const StyledIconWrapper = styled.div`
+const IconWrapper = styled.div`
   position: absolute;
   z-index: 100;
   height: 100%;
@@ -51,25 +51,25 @@ export const CommentBlock = ({
 
   return (
     <>
-      <StyledPanel bodyFill bordered>
+      <Panel bodyFill bordered>
         <PlaceholderInput onAddClick={() => setIsDialogOpen(true)}>
           {!isEmpty && (
-            <StyledWrapper>
-              <StyledIconWrapper>
+            <Wrapper>
+              <IconWrapper>
                 <IconButton size="lg" icon={<MdEdit />} onClick={() => setIsDialogOpen(true)}>
                   {t('blocks.comment.edit')}
                 </IconButton>
-              </StyledIconWrapper>
+              </IconWrapper>
 
               <p>
                 {t('blocks.comment.comments', {
                   count: comments.length ? comments.length : filter.comments?.length ?? 0
                 })}
               </p>
-            </StyledWrapper>
+            </Wrapper>
           )}
         </PlaceholderInput>
-      </StyledPanel>
+      </Panel>
 
       <Drawer size="lg" open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
         <SelectCommentPanel

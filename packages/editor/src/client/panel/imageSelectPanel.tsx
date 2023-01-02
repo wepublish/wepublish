@@ -12,7 +12,7 @@ import {
   Loader,
   Message,
   Notification,
-  Panel,
+  Panel as RPanel,
   toaster
 } from 'rsuite'
 
@@ -24,15 +24,15 @@ import {Typography} from '../atoms/typography'
 import {getImgMinSizeToCompress} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 
-const StyledImgWrapper = styled.div`
+const ImgWrapper = styled.div`
   background-color: #f7f7fa;
 `
 
-const StyledPanel = styled(Panel)`
+const Panel = styled(RPanel)`
   cursor: pointer;
 `
 
-const StyledImg = styled.img`
+const Img = styled.img`
   display: block;
   margin: 0 auto;
   max-width: 240;
@@ -40,11 +40,11 @@ const StyledImg = styled.img`
   width: 100%;
 `
 
-const StyledFileDropWrapper = styled(Panel)`
+const FileDropWrapper = styled(RPanel)`
   height: 150px;
 `
 
-const StyledFlexItem = styled(FlexboxGrid.Item)`
+const FlexItem = styled(FlexboxGrid.Item)`
   margin-bottom: 20px;
 `
 
@@ -141,47 +141,47 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <StyledFileDropWrapper bodyFill>
+        <FileDropWrapper bodyFill>
           <FileDropInput
             icon={<MdFileUpload />}
             text={t('articleEditor.panels.dropImage')}
             onDrop={handleDrop}
           />
-        </StyledFileDropWrapper>
+        </FileDropWrapper>
         <Form.ControlLabel>
           <br />
           {t('images.panels.resizedImage', {sizeMB: getImgMinSizeToCompress()})}
         </Form.ControlLabel>
 
-        <Panel header={t('articleEditor.panels.images')}>
+        <RPanel header={t('articleEditor.panels.images')}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
-        </Panel>
+        </RPanel>
         {images.length ? (
           <>
             <FlexboxGrid justify="space-around">
               {images.map(image => {
                 const {id, mediumURL, title, filename, extension} = image
                 return (
-                  <StyledFlexItem key={id} colspan={10}>
-                    <StyledPanel onClick={() => onSelect(image)} shaded bordered bodyFill>
-                      <StyledImgWrapper>
-                        <StyledImg src={mediumURL || ''} />
-                      </StyledImgWrapper>
-                      <Panel>
+                  <FlexItem key={id} colspan={10}>
+                    <Panel onClick={() => onSelect(image)} shaded bordered bodyFill>
+                      <ImgWrapper>
+                        <Img src={mediumURL || ''} />
+                      </ImgWrapper>
+                      <RPanel>
                         <Typography variant={'subtitle1'} ellipsize>{`${
                           filename || t('images.panels.untitled')
                         }${extension}`}</Typography>
                         <Typography variant={'body2'}>
                           {title || t('images.panels.Untitled')}
                         </Typography>
-                      </Panel>
-                    </StyledPanel>
-                  </StyledFlexItem>
+                      </RPanel>
+                    </Panel>
+                  </FlexItem>
                 )
               })}
             </FlexboxGrid>

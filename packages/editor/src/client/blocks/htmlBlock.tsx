@@ -3,33 +3,33 @@ import InnerHTML from 'dangerously-set-html-content'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
-import {Drawer, IconButton, Panel} from 'rsuite'
+import {Drawer, IconButton, Panel as RPanel} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {HtmlEditPanel} from '../panel/htmlEditPanel'
 import {HTMLBlockValue} from './types'
 
-const StyledPanel = styled(Panel)<{isEmpty: boolean}>`
+const Panel = styled(RPanel)<{isEmpty: boolean}>`
   height: ${({isEmpty}) => (isEmpty ? '200px' : undefined)};
   padding: 0;
   overflow: hidden;
   background-color: #f7f9fa;
 `
 
-const StyledWrapper = styled.div`
+const Wrapper = styled.div`
   position: relative;
   width: 100%;
 `
 
-const StyledIconWrapper = styled.div`
+const IconWrapper = styled.div`
   position: absolute;
   z-index: 100;
   height: 100%;
   right: 0;
 `
 
-const StyledInnerHtmlWrapper = styled.div`
+const InnerHtmlWrapper = styled.div`
   margin-top: 30px;
 `
 
@@ -46,22 +46,22 @@ export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValu
 
   return (
     <>
-      <StyledPanel isEmpty={isEmpty} bodyFill bordered>
+      <Panel isEmpty={isEmpty} bodyFill bordered>
         <PlaceholderInput onAddClick={() => setHtmlDialogOpen(true)}>
           {!isEmpty && (
-            <StyledWrapper>
-              <StyledIconWrapper>
+            <Wrapper>
+              <IconWrapper>
                 <IconButton size="lg" icon={<MdEdit />} onClick={() => setHtmlDialogOpen(true)}>
                   {t('blocks.html.edit')}
                 </IconButton>
-              </StyledIconWrapper>
-              <StyledInnerHtmlWrapper>
+              </IconWrapper>
+              <InnerHtmlWrapper>
                 <InnerHTML html={value.html} />
-              </StyledInnerHtmlWrapper>
-            </StyledWrapper>
+              </InnerHtmlWrapper>
+            </Wrapper>
           )}
         </PlaceholderInput>
-      </StyledPanel>
+      </Panel>
 
       <Drawer size="sm" open={isHtmlDialogOpen} onClose={() => setHtmlDialogOpen(false)}>
         <HtmlEditPanel

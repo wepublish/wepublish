@@ -5,7 +5,7 @@ import {
   Button,
   CheckPicker,
   Drawer,
-  Form,
+  Form as RForm,
   Message,
   Panel,
   Schema,
@@ -47,7 +47,9 @@ import {
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 
-const StyledForm = styled(Form)`
+const {ControlLabel, Group, Control, HelpText} = RForm
+
+const Form = styled(RForm)`
   height: 100%;
 `
 
@@ -214,7 +216,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
 
   return (
     <>
-      <StyledForm
+      <Form
         onSubmit={validationPassed => validationPassed && handleSave()}
         fluid
         model={validationModel}
@@ -237,9 +239,9 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
         </Drawer.Header>
         <Drawer.Body>
           <Panel>
-            <Form.Group controlId="memberPlanName">
-              <Form.ControlLabel>{toggleRequiredLabel(t('memberPlanList.name'))}</Form.ControlLabel>
-              <Form.Control
+            <Group controlId="memberPlanName">
+              <ControlLabel>{toggleRequiredLabel(t('memberPlanList.name'))}</ControlLabel>
+              <Control
                 name="name"
                 value={name}
                 disabled={isDisabled}
@@ -248,14 +250,14 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
                   setSlug(slugify(value))
                 }}
               />
-            </Form.Group>
-            <Form.Group controlId="memberPlanSlug">
-              <Form.ControlLabel>{t('memberPlanList.slug')}</Form.ControlLabel>
-              <Form.Control name={t('memberPlanList.slug')} value={slug} plaintext />
-            </Form.Group>
+            </Group>
+            <Group controlId="memberPlanSlug">
+              <ControlLabel>{t('memberPlanList.slug')}</ControlLabel>
+              <Control name={t('memberPlanList.slug')} value={slug} plaintext />
+            </Group>
 
-            <Form.Group controlId="memberPlanTags">
-              <Form.ControlLabel>{t('articleEditor.panels.tags')}</Form.ControlLabel>
+            <Group controlId="memberPlanTags">
+              <ControlLabel>{t('articleEditor.panels.tags')}</ControlLabel>
               <TagPicker
                 disabled={isDisabled}
                 block
@@ -265,18 +267,18 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
                 data={tags ? tags.map(tag => ({label: tag, value: tag})) : []}
                 onChange={tagsValue => setTags(tagsValue ?? [])}
               />
-            </Form.Group>
+            </Group>
 
-            <Form.Group controlId="memberPlanActive">
-              <Form.ControlLabel>{t('memberPlanList.active')}</Form.ControlLabel>
+            <Group controlId="memberPlanActive">
+              <ControlLabel>{t('memberPlanList.active')}</ControlLabel>
               <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
-              <Form.HelpText>{t('memberPlanList.activeDescription')}</Form.HelpText>
-            </Form.Group>
+              <HelpText>{t('memberPlanList.activeDescription')}</HelpText>
+            </Group>
 
-            <Form.Group controlId="memberPlanMinimumMonthlyAmount">
-              <Form.ControlLabel>
+            <Group controlId="memberPlanMinimumMonthlyAmount">
+              <ControlLabel>
                 {toggleRequiredLabel(t('memberPlanList.minimumMonthlyAmount'))}
-              </Form.ControlLabel>
+              </ControlLabel>
               <CurrencyInput
                 name="currency"
                 currency="CHF"
@@ -286,9 +288,9 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
                   setAmountPerMonthMin(centAmount)
                 }}
               />
-            </Form.Group>
-            <Form.Group controlId="memberPlanDescription">
-              <Form.ControlLabel>{t('memberPlanList.description')}</Form.ControlLabel>
+            </Group>
+            <Group controlId="memberPlanDescription">
+              <ControlLabel>{t('memberPlanList.description')}</ControlLabel>
               <div className="richTextFrame">
                 <RichTextBlock
                   value={description}
@@ -296,7 +298,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
                   onChange={value => setDescription(value)}
                 />
               </div>
-            </Form.Group>
+            </Group>
           </Panel>
 
           <ChooseEditImage
@@ -319,19 +321,17 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
               }}>
               {({value, onChange}) => (
                 <Form fluid>
-                  <Form.Group controlId="memberPlanAutoRenewal">
-                    <Form.ControlLabel>{t('memberPlanList.autoRenewal')}</Form.ControlLabel>
+                  <Group controlId="memberPlanAutoRenewal">
+                    <ControlLabel>{t('memberPlanList.autoRenewal')}</ControlLabel>
                     <Toggle
                       checked={value.forceAutoRenewal}
                       disabled={isDisabled}
                       onChange={forceAutoRenewal => onChange({...value, forceAutoRenewal})}
                     />
-                    <Form.HelpText>{t('memberPlanList.autoRenewalDescription')}</Form.HelpText>
-                  </Form.Group>
-                  <Form.Group controlId="memberPlanPaymentPeriodicity">
-                    <Form.ControlLabel>
-                      {t('memberPlanList.paymentPeriodicities')}
-                    </Form.ControlLabel>
+                    <HelpText>{t('memberPlanList.autoRenewalDescription')}</HelpText>
+                  </Group>
+                  <Group controlId="memberPlanPaymentPeriodicity">
+                    <ControlLabel>{t('memberPlanList.paymentPeriodicities')}</ControlLabel>
                     <CheckPicker
                       virtualized
                       value={value.paymentPeriodicities}
@@ -343,9 +343,9 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
                       block
                       placement="auto"
                     />
-                  </Form.Group>
-                  <Form.Group controlId="memberPlanPaymentMethod">
-                    <Form.ControlLabel>{t('memberPlanList.paymentMethods')}</Form.ControlLabel>
+                  </Group>
+                  <Group controlId="memberPlanPaymentMethod">
+                    <ControlLabel>{t('memberPlanList.paymentMethods')}</ControlLabel>
                     <CheckPicker
                       virtualized
                       value={value.paymentMethods.map(pm => pm.id)}
@@ -362,7 +362,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
                       block
                       placement="auto"
                     />
-                  </Form.Group>
+                  </Group>
                 </Form>
               )}
             </ListInput>
@@ -387,7 +387,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
             />
           </Drawer>
         )}
-      </StyledForm>
+      </Form>
     </>
   )
 }

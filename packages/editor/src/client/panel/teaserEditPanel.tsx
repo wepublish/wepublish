@@ -1,7 +1,16 @@
 import styled from '@emotion/styled'
 import React, {useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, Input, Panel, Radio, RadioGroup, Toggle} from 'rsuite'
+import {
+  Button,
+  Drawer,
+  Form,
+  Input,
+  Panel as RPanel,
+  Radio,
+  RadioGroup,
+  Toggle as RToggle
+} from 'rsuite'
 
 import {TeaserStyle} from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
@@ -12,7 +21,9 @@ import {generateID} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 
-const StyledPanel = styled(Panel)<{imageUrl: string}>`
+const {Group, ControlLabel, Control} = Form
+
+const Panel = styled(RPanel)<{imageUrl?: string | null}>`
   height: 200px;
   background-size: cover;
   background-image: url();
@@ -20,7 +31,7 @@ const StyledPanel = styled(Panel)<{imageUrl: string}>`
   background-image: ${({imageUrl}) => `url(${imageUrl || 'https://via.placeholder.com/240x240'})`};
 `
 
-const StyledToggle = styled(Toggle)`
+const Toggle = styled(RToggle)`
   max-width: 70px;
   min-width: 70px;
 `
@@ -34,12 +45,12 @@ const InputWidth40 = styled(Input)`
   margin-right: 10px;
 `
 
-const StyledInputsWrapper = styled.div`
+const InputsWrapper = styled.div`
   display: flex;
   flex-direction: row;
 `
 
-const StyledFormGroup = styled(Form.Group)`
+const FormGroup = styled(Group)`
   padding-top: 6px;
   padding-left: 8px;
 `
@@ -119,10 +130,10 @@ export function TeaserEditPanel({
 
       <Drawer.Body>
         {previewForTeaser(initialTeaser, t)}
-        <Panel header={t('articleEditor.panels.displayOptions')}>
+        <RPanel header={t('articleEditor.panels.displayOptions')}>
           <Form fluid>
-            <Form.Group controlId="articleStyle">
-              <Form.ControlLabel>{t('articleEditor.panels.style')}</Form.ControlLabel>
+            <Group controlId="articleStyle">
+              <ControlLabel>{t('articleEditor.panels.style')}</ControlLabel>
               <RadioGroup
                 inline
                 value={style}
@@ -131,45 +142,41 @@ export function TeaserEditPanel({
                 <Radio value={TeaserStyle.Light}>{t('articleEditor.panels.light')}</Radio>
                 <Radio value={TeaserStyle.Text}>{t('articleEditor.panels.text')}</Radio>
               </RadioGroup>
-            </Form.Group>
-            <Form.Group controlId="articlePreTitle">
-              <Form.ControlLabel>{t('articleEditor.panels.preTitle')}</Form.ControlLabel>
-              <Form.Control
+            </Group>
+            <Group controlId="articlePreTitle">
+              <ControlLabel>{t('articleEditor.panels.preTitle')}</ControlLabel>
+              <Control
                 name="pre-title"
                 value={preTitle}
                 onChange={(preTitle: string) => setPreTitle(preTitle)}
               />
-            </Form.Group>
-            <Form.Group controlId="articleTitle">
-              <Form.ControlLabel>{t('articleEditor.panels.title')}</Form.ControlLabel>
-              <Form.Control
-                name="title"
-                value={title}
-                onChange={(title: string) => setTitle(title)}
-              />
-            </Form.Group>
-            <Form.Group controlId="articleLead">
-              <Form.ControlLabel>{t('articleEditor.panels.lead')}</Form.ControlLabel>
-              <Form.Control name="lead" value={lead} onChange={(lead: string) => setLead(lead)} />
-            </Form.Group>
+            </Group>
+            <Group controlId="articleTitle">
+              <ControlLabel>{t('articleEditor.panels.title')}</ControlLabel>
+              <Control name="title" value={title} onChange={(title: string) => setTitle(title)} />
+            </Group>
+            <Group controlId="articleLead">
+              <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
+              <Control name="lead" value={lead} onChange={(lead: string) => setLead(lead)} />
+            </Group>
             {initialTeaser.type === TeaserType.Custom && (
               <>
-                <Form.Group controlId="contentUrl">
-                  <Form.ControlLabel>{t('articleEditor.panels.contentUrl')}</Form.ControlLabel>
-                  <Form.Control
+                <Group controlId="contentUrl">
+                  <ControlLabel>{t('articleEditor.panels.contentUrl')}</ControlLabel>
+                  <Control
                     name="content-url"
                     value={contentUrl}
                     onChange={(contentUrl: string) => setContentUrl(contentUrl)}
                   />
-                </Form.Group>
-                <Form.Group controlId="properties">
-                  <Form.ControlLabel>{t('articleEditor.panels.properties')}</Form.ControlLabel>
+                </Group>
+                <Group controlId="properties">
+                  <ControlLabel>{t('articleEditor.panels.properties')}</ControlLabel>
                   <ListInput
                     value={metaDataProperties}
                     onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
                     defaultValue={{key: '', value: '', public: true}}>
                     {({value, onChange}) => (
-                      <StyledInputsWrapper>
+                      <InputsWrapper>
                         <InputWidth40
                           placeholder={t('articleEditor.panels.key')}
                           value={value.key}
@@ -180,22 +187,22 @@ export function TeaserEditPanel({
                           value={value.value}
                           onChange={propertyValue => onChange({...value, value: propertyValue})}
                         />
-                        <StyledFormGroup controlId="articleProperty">
-                          <StyledToggle
+                        <FormGroup controlId="articleProperty">
+                          <Toggle
                             checkedChildren={t('articleEditor.panels.public')}
                             unCheckedChildren={t('articleEditor.panels.private')}
                             checked={value.public}
                             onChange={isPublic => onChange({...value, public: isPublic})}
                           />
-                        </StyledFormGroup>
-                      </StyledInputsWrapper>
+                        </FormGroup>
+                      </InputsWrapper>
                     )}
                   </ListInput>
-                </Form.Group>
+                </Group>
               </>
             )}
           </Form>
-        </Panel>
+        </RPanel>
 
         <ChooseEditImage
           image={image}
@@ -267,8 +274,8 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
   }
 
   return (
-    <Panel>
-      <StyledPanel bordered />
+    <RPanel>
+      <Panel bordered imageUrl={imageURL} />
       <DescriptionList>
         {contentUrl && (
           <DescriptionListItem label={t('articleEditor.panels.contentUrl')}>
@@ -288,6 +295,6 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
           {lead || '-'}
         </DescriptionListItem>
       </DescriptionList>
-    </Panel>
+    </RPanel>
   )
 }

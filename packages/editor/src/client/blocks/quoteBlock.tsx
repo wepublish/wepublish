@@ -10,7 +10,7 @@ const Dash = styled.div`
   margin-right: 5;
 `
 
-const StyledWrapper = styled.div`
+const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -37,7 +37,7 @@ export function QuoteBlock({value, onChange, autofocus, disabled}: QuoteBlockPro
         disabled={disabled}
         onChange={e => onChange({...value, quote: e.target.value})}
       />
-      <StyledWrapper>
+      <Wrapper>
         <Dash>—</Dash>
         <TypographicTextArea
           variant="body1"
@@ -46,7 +46,7 @@ export function QuoteBlock({value, onChange, autofocus, disabled}: QuoteBlockPro
           disabled={disabled}
           onChange={e => onChange({...value, author: e.target.value})}
         />
-      </StyledWrapper>
+      </Wrapper>
     </>
   )
 }

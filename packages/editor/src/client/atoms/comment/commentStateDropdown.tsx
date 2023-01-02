@@ -2,21 +2,29 @@ import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdArrowDropDown} from 'react-icons/md'
-import {Badge, Button, ButtonGroup, Dropdown, IconButton, Popover, Whisper} from 'rsuite'
+import {
+  Badge,
+  Button,
+  ButtonGroup,
+  Dropdown,
+  IconButton as RIconButton,
+  Popover as RPopover,
+  Whisper
+} from 'rsuite'
 import {TypeAttributes} from 'rsuite/cjs/@types/common'
 
 import {CommentRejectionReason, CommentState, FullCommentFragment} from '../../api'
 import {CommentStateChangeModal, mapCommentActionToBtnTitle} from './commentStateChangeModal'
 
-const StyledBadgeWrapper = styled.div`
+const BadgeWrapper = styled.div`
   margin-bottom: 5px;
 `
 
-const StyledPopover = styled(Popover)<{left: number; top: number}>`
+const Popover = styled(RPopover)<{left: number; top: number}>`
   left: ${({left}) => left};
   top: ${({top}) => top};
 `
-const StyledIconButton = styled(IconButton)`
+const IconButton = styled(RIconButton)`
   padding: 2px;
 `
 
@@ -65,9 +73,9 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
   return (
     <>
       {showBadge && (
-        <StyledBadgeWrapper>
+        <BadgeWrapper>
           <Badge content={comment.rejectionReason} color={mapCommentStateToColor(comment.state)} />
-        </StyledBadgeWrapper>
+        </BadgeWrapper>
       )}
       <div>
         <ButtonGroup>
@@ -86,7 +94,7 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
                 setNewCommentState(tmpCommentState as CommentState)
               }
               return (
-                <StyledPopover ref={ref} className={className} left={left} top={top} full>
+                <Popover ref={ref} className={className} left={left} top={top} full>
                   <Dropdown.Menu onSelect={handleSelect}>
                     {Object.keys(CommentState)
                       .filter(tmpState => tmpState !== CommentState.PendingApproval)
@@ -96,10 +104,10 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
                         </Dropdown.Item>
                       ))}
                   </Dropdown.Menu>
-                </StyledPopover>
+                </Popover>
               )
             }}>
-            <StyledIconButton
+            <IconButton
               size={size || 'md'}
               appearance="primary"
               color={mapCommentStateToColor(comment.state)}

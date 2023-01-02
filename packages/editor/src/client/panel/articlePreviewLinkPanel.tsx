@@ -1,20 +1,20 @@
 import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Form, Message, Modal, Slider, toaster} from 'rsuite'
+import {Button, Form, Message as RMessage, Modal, Slider, toaster} from 'rsuite'
 
 import {useArticlePreviewLinkQuery} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
-const StyledMessage = styled(Message)`
+const Message = styled(RMessage)`
   margin-bottom: 20px;
 `
 
-const StyledFormGroupTop = styled(Form.Group)`
+const FormGroupTop = styled(Form.Group)`
   padding-top: 20px;
 `
 
-const StyledFormGroupHorizontal = styled(Form.Group)`
+const FormGroupHorizontal = styled(Form.Group)`
   padding-left: 20px;
   padding-right: 20px;
 `
@@ -62,12 +62,10 @@ function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPanelProps)
       </Modal.Header>
 
       <Modal.Body>
-        <StyledMessage type="warning">
-          {t('articleEditor.panels.articlePreviewLinkDesc')}
-        </StyledMessage>
+        <Message type="warning">{t('articleEditor.panels.articlePreviewLinkDesc')}</Message>
 
         <Form fluid>
-          <StyledFormGroupHorizontal controlId="hours">
+          <FormGroupHorizontal controlId="hours">
             <Form.ControlLabel>
               {t('articleEditor.panels.articlePreviewLinkHours')}
             </Form.ControlLabel>
@@ -83,8 +81,8 @@ function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPanelProps)
               }}
               onChange={value => setHours(value)}
             />
-          </StyledFormGroupHorizontal>
-          <StyledFormGroupTop controlId="field">
+          </FormGroupHorizontal>
+          <FormGroupTop controlId="field">
             <Form.ControlLabel>
               {t('articleEditor.panels.articlePreviewLinkField')}
             </Form.ControlLabel>
@@ -93,7 +91,7 @@ function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPanelProps)
               disabled={isLoading}
               value={data?.articlePreviewLink}
             />
-          </StyledFormGroupTop>
+          </FormGroupTop>
         </Form>
       </Modal.Body>
 

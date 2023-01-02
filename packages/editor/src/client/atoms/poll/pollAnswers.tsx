@@ -4,14 +4,14 @@ import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdContentCopy, MdDelete} from 'react-icons/md'
 import {
-  Badge,
+  Badge as RBadge,
   Button,
-  Col,
+  Col as RCol,
   Form,
-  IconButton,
+  IconButton as RIconButton,
   Message,
   Modal,
-  Row,
+  Row as RRow,
   toaster,
   Tooltip,
   Whisper
@@ -25,19 +25,19 @@ import {
   useDeletePollAnswerMutation
 } from '../../api'
 
-const StyledIconButton = styled(IconButton)`
+const IconButton = styled(RIconButton)`
   margin-right: 10px;
 `
 
-const StyledBadge = styled(Badge)`
+const Badge = styled(RBadge)`
   width: 100%;
 `
 
-const StyledCol = styled(Col)`
+const Col = styled(RCol)`
   padding-right: 30px;
 `
 
-const StyledRow = styled(Row)`
+const Row = styled(RRow)`
   align-items: center;
 `
 
@@ -224,11 +224,11 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
 
   return (
     <>
-      <StyledRow>
+      <Row>
         {poll?.answers?.map(answer => (
           <div key={`answer-${answer.id}`}>
-            <StyledCol xs={16}>
-              <StyledBadge
+            <Col xs={16}>
+              <Badge
                 content={`${getTotalVotesByAnswerId(poll, answer.id)} ${t('pollAnswer.votes')}`}>
                 <Form.Control
                   name={`answer-${answer.id}`}
@@ -240,11 +240,11 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
                     })
                   }}
                 />
-              </StyledBadge>
-            </StyledCol>
+              </Badge>
+            </Col>
             {/* copy link btn */}
-            <Col xs={8}>
-              <StyledIconButton
+            <RCol xs={8}>
+              <IconButton
                 icon={<MdDelete />}
                 circle
                 size="sm"
@@ -256,7 +256,7 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
                 }}
               />
               <Whisper speaker={<Tooltip>{t('pollAnswer.copyVoteUrl')}</Tooltip>}>
-                <IconButton
+                <RIconButton
                   icon={<MdContentCopy />}
                   circle
                   size="sm"
@@ -264,13 +264,13 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
                   onClick={() => copyUrlParamsIntoClipboard(answer)}
                 />
               </Whisper>
-            </Col>
+            </RCol>
           </div>
         ))}
-      </StyledRow>
+      </Row>
       {/* adding new poll answer */}
-      <Row>
-        <Col xs={16}>
+      <RRow>
+        <RCol xs={16}>
           <Form.Control
             name="createNewFormAnswer"
             placeholder={t('pollAnswer.insertYourNewAnswer')}
@@ -279,17 +279,17 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
               setNewAnswer(value)
             }}
           />
-        </Col>
-        <Col xs={8}>
-          <IconButton
+        </RCol>
+        <RCol xs={8}>
+          <RIconButton
             icon={<MdAdd />}
             loading={loading}
             appearance="primary"
             onClick={createAnswer}>
             {t('pollEditView.addAndSaveNewAnswer')}
-          </IconButton>
-        </Col>
-      </Row>
+          </RIconButton>
+        </RCol>
+      </RRow>
 
       {/* delete modal */}
       <Modal

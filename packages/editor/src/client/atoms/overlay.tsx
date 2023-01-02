@@ -7,7 +7,7 @@ export interface OverlayProps extends React.ComponentPropsWithRef<'div'> {
   children?: ReactNode
 }
 
-const StyledOverlay = styled.div<{position?: string}>`
+const OverlayWrapper = styled.div<{position?: string}>`
   color: white;
   display: block;
   position: absolute;
@@ -20,8 +20,8 @@ export const Overlay = forwardRef<HTMLImageElement, OverlayProps>(function Image
   ref
 ) {
   return (
-    <StyledOverlay className={className} {...props} ref={ref}>
+    <OverlayWrapper className={className} {...props} ref={ref}>
       {children}
-    </StyledOverlay>
+    </OverlayWrapper>
   )
 })

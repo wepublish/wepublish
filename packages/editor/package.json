@@ -146,6 +146,7 @@
       "simple-import-sort"
     ],
     "rules": {
+      "react/react-in-jsx-scope": "off",
       "react/display-name": [
         0
       ],

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React, {ReactNode} from 'react'
 
-const StyledRightChildren = styled.div`
+const RightChildren = styled.div`
   display: flex;
   flex-grow: 1;
   flex-basis: 0;
@@ -9,19 +9,19 @@ const StyledRightChildren = styled.div`
   justify-content: flex-end;
 `
 
-const StyledCenterChildren = styled.div`
+const CenterChildren = styled.div`
   display: flex;
   margin: 0 10;
 `
 
-const StyledLeftChildren = styled.div`
+const LeftChildren = styled.div`
   display: flex;
   flex-grow: 1;
   flex-basis: 0;
   align-items: flex-start;
 `
 
-const StyledNavigationBar = styled.div`
+const NavigationBarWrapper = styled.div`
   display: flex;
   overflow: hidden;
   width: 100%;
@@ -36,10 +36,10 @@ export interface NavigationBarProps {
 
 export function NavigationBar({leftChildren, rightChildren, centerChildren}: NavigationBarProps) {
   return (
-    <StyledNavigationBar>
-      <StyledLeftChildren>{leftChildren}</StyledLeftChildren>
-      <StyledCenterChildren>{centerChildren}</StyledCenterChildren>
-      <StyledRightChildren>{rightChildren}</StyledRightChildren>
-    </StyledNavigationBar>
+    <NavigationBarWrapper>
+      <LeftChildren>{leftChildren}</LeftChildren>
+      <CenterChildren>{centerChildren}</CenterChildren>
+      <RightChildren>{rightChildren}</RightChildren>
+    </NavigationBarWrapper>
   )
 }

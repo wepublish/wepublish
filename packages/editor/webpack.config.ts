@@ -37,7 +37,14 @@ export default (env: any, {mode}: any) =>
           loader: 'babel-loader',
           options: {
             presets: [
-              ['@babel/preset-react', {runtime: 'automatic', importSource: '@emotion/react'}],
+              [
+                '@babel/preset-react',
+                {
+                  runtime: 'automatic',
+                  importSource: '@emotion/react',
+                  jsxImportSource: '@emotion/react'
+                }
+              ],
               '@babel/preset-typescript',
               ['@babel/preset-env', {modules: false}]
             ],

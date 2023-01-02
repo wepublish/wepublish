@@ -2,7 +2,14 @@ import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose} from 'react-icons/md'
-import {Button, DateRangePicker, Form, Input, SelectPicker, Toggle} from 'rsuite'
+import {
+  Button,
+  DateRangePicker,
+  Form as RForm,
+  Input,
+  SelectPicker as RSelectPicker,
+  Toggle as RToggle
+} from 'rsuite'
 
 import {
   ArticleFilter,
@@ -13,26 +20,28 @@ import {
 } from '../../api'
 import {AuthorCheckPicker} from '../../panel/authorCheckPicker'
 
-const StyledForm = styled(Form)`
+const {Group} = RForm
+
+const Form = styled(RForm)`
   display: flex;
   flex-wrap: wrap;
   margin-top: 15px;
 `
 
-const StyledCloseIcon = styled(MdClose)`
+const CloseIcon = styled(MdClose)`
   margin-right: 5px;
 `
 
-const StyledSelectPicker = styled(SelectPicker)`
+const SelectPicker = styled(RSelectPicker)`
   width: 150;
 `
 
-const StyledToggle = styled(Toggle)`
+const Toggle = styled(RToggle)`
   display: inline-block;
   margin-top: 6px;
 `
 
-const StyledFormGroup = styled(Form.Group)`
+const FormGroup = styled(Group)`
   width: 100%;
 `
 
@@ -122,12 +131,12 @@ export function ListViewFilters({
     }
     return (
       <>
-        <StyledFormGroup>
+        <FormGroup>
           <Button onClick={() => resetFilter()} color="red" appearance="ghost">
-            <StyledCloseIcon />
+            <CloseIcon />
             {t('articleList.filter.reset')}
           </Button>
-        </StyledFormGroup>
+        </FormGroup>
       </>
     )
   }
@@ -136,49 +145,49 @@ export function ListViewFilters({
 
   return (
     <>
-      <StyledForm className={className}>
+      <Form className={className}>
         {fields.includes('title') && (
-          <Form.Group style={formInputStyle}>
+          <Group style={formInputStyle}>
             <Input
               value={filter.title || ''}
               placeholder={t('articleList.filter.title')}
               onChange={value => updateFilter({title: value})}
             />
-          </Form.Group>
+          </Group>
         )}
 
         {fields.includes('description') && (
-          <Form.Group style={formInputStyle}>
+          <Group style={formInputStyle}>
             <Input
               value={filter.description || ''}
               placeholder={t('articleList.filter.description')}
               onChange={value => updateFilter({description: value})}
             />
-          </Form.Group>
+          </Group>
         )}
 
         {fields.includes('preTitle') && (
-          <Form.Group style={formInputStyle}>
+          <Group style={formInputStyle}>
             <Input
               value={filter.preTitle || ''}
               placeholder={t('articleList.filter.preTitle')}
               onChange={value => updateFilter({preTitle: value})}
             />
-          </Form.Group>
+          </Group>
         )}
 
         {fields.includes('lead') && (
-          <Form.Group style={formInputStyle}>
+          <Group style={formInputStyle}>
             <Input
               value={filter.lead || ''}
               placeholder={t('articleList.filter.lead')}
               onChange={value => updateFilter({lead: value})}
             />
-          </Form.Group>
+          </Group>
         )}
 
         {fields.includes('authors') && (
-          <Form.Group style={formInputStyle}>
+          <Group style={formInputStyle}>
             <AuthorCheckPicker
               list={authorsData as AuthorRefFragment[]}
               onChange={value => {
@@ -186,44 +195,44 @@ export function ListViewFilters({
                 return updateFilter({authors: value ? value.map(author => author.id) : []})
               }}
             />
-          </Form.Group>
+          </Group>
         )}
 
         {fields.includes('draft') && (
-          <Form.Group style={formInputStyle}>
-            <StyledToggle
+          <Group style={formInputStyle}>
+            <Toggle
               defaultChecked={!!filter.draft}
               onChange={value => updateFilter({draft: value || null})}
               checkedChildren={t('articleList.filter.isDraft')}
               unCheckedChildren={t('articleList.filter.isDraft')}
             />
-          </Form.Group>
+          </Group>
         )}
 
         {fields.includes('pending') && (
-          <Form.Group style={formInputStyle}>
-            <StyledToggle
+          <Group style={formInputStyle}>
+            <Toggle
               defaultChecked={!!filter.pending}
               onChange={value => updateFilter({pending: value || null})}
               checkedChildren={t('articleList.filter.isPending')}
               unCheckedChildren={t('articleList.filter.isPending')}
             />
-          </Form.Group>
+          </Group>
         )}
 
         {fields.includes('published') && (
-          <Form.Group style={formInputStyle}>
-            <StyledToggle
+          <Group style={formInputStyle}>
+            <Toggle
               defaultChecked={!!filter.published}
               onChange={value => updateFilter({published: value || null})}
               checkedChildren={t('articleList.filter.isPublished')}
               unCheckedChildren={t('articleList.filter.isPublished')}
             />
-          </Form.Group>
+          </Group>
         )}
 
         {fields.includes('publicationDate') && (
-          <Form.Group style={formInputStyle}>
+          <Group style={formInputStyle}>
             <DateRangePicker
               key={`publication-date-${resetFilterKey}`}
               placeholder={t('articleList.filter.publicationDate')}
@@ -247,12 +256,12 @@ export function ListViewFilters({
                 updateFilter({publicationDateFrom: undefined, publicationDateTo: undefined})
               }
             />
-          </Form.Group>
+          </Group>
         )}
 
         {isPeerFilter && !!allPeers && (
-          <Form.Group style={formInputStyle}>
-            <StyledSelectPicker
+          <Group style={formInputStyle}>
+            <SelectPicker
               virtualized
               data={allPeers.map(peer => ({
                 value: peer.name,
@@ -263,9 +272,9 @@ export function ListViewFilters({
               onSelect={value => setPeerFilter(value)}
               onClean={() => setPeerFilter('')}
             />
-          </Form.Group>
+          </Group>
         )}
-      </StyledForm>
+      </Form>
       {resetFilterView()}
     </>
   )

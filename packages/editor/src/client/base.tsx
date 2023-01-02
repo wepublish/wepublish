@@ -29,7 +29,14 @@ import {
   MdVpnKey
 } from 'react-icons/md'
 import {Link, useLocation} from 'react-router-dom'
-import {Container, IconButton, Nav, Navbar, Sidebar, Sidenav} from 'rsuite'
+import {
+  Container,
+  IconButton as RIconButton,
+  Nav,
+  Navbar,
+  Sidebar as RSidebar,
+  Sidenav as RSidenav
+} from 'rsuite'
 
 import {PermissionControl} from './atoms/permissionControl'
 
@@ -75,16 +82,16 @@ const Wrapper = styled.div`
   width: 100vw;
 `
 
-const StyledSidebar = styled(Sidebar)`
+const Sidebar = styled(RSidebar)`
   display: flex;
   flex-direction: column;
 `
 
-const StyledSidenav = styled(Sidenav)`
+const Sidenav = styled(RSidenav)`
   flex: 1 1 auto;
 `
 
-const FloatingButton = styled(IconButton)`
+const FloatingButton = styled(RIconButton)`
   display: block;
   opacity: 0;
   width: 32px;
@@ -100,11 +107,11 @@ const FloatingButton = styled(IconButton)`
   }
 `
 
-const StyledNav = styled(Nav)`
+const Navigation = styled(Nav)`
   margin-top: 1rem;
 `
 
-const StyledContainer = styled(Container)`
+const ChildrenContainer = styled(Container)`
   padding: 60px 40px;
   overflow-y: scroll;
 `
@@ -126,9 +133,9 @@ export function Base({children}: BaseProps) {
   return (
     <Wrapper>
       <Container>
-        <StyledSidebar isExpanded={isExpanded} collapsible width={isExpanded ? 260 : 56}>
-          <StyledSidenav expanded={isExpanded} defaultOpenKeys={['1']} appearance="default">
-            <Sidenav.Body>
+        <Sidebar isExpanded={isExpanded} collapsible width={isExpanded ? 260 : 56}>
+          <Sidenav expanded={isExpanded} defaultOpenKeys={['1']} appearance="default">
+            <RSidenav.Body>
               <FloatingButton
                 isExpanded={isExpanded}
                 appearance="primary"
@@ -138,7 +145,7 @@ export function Base({children}: BaseProps) {
                 icon={isExpanded ? <MdChevronLeft /> : <MdChevronRight />}
               />
 
-              <StyledNav>
+              <Navigation>
                 <PermissionControl
                   qualifyingPermissions={[
                     'CAN_GET_ARTICLES',
@@ -440,16 +447,16 @@ export function Base({children}: BaseProps) {
                     {t('navbar.settings')}
                   </Nav.Item>
                 </PermissionControl>
-              </StyledNav>
-            </Sidenav.Body>
-          </StyledSidenav>
+              </Navigation>
+            </RSidenav.Body>
+          </Sidenav>
           <Navbar appearance="default" className="nav-toggle">
             <Nav>
               <Nav.Menu
                 placement="topStart"
                 trigger="click"
                 renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
-                  <IconButton
+                  <RIconButton
                     {...props}
                     placement="left"
                     ref={ref}
@@ -468,7 +475,7 @@ export function Base({children}: BaseProps) {
                 placement="topStart"
                 trigger="click"
                 renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
-                  <IconButton
+                  <RIconButton
                     {...props}
                     placement="left"
                     ref={ref}
@@ -488,8 +495,8 @@ export function Base({children}: BaseProps) {
               </Nav.Menu>
             </Nav>
           </Navbar>
-        </StyledSidebar>
-        <StyledContainer>{children}</StyledContainer>
+        </Sidebar>
+        <ChildrenContainer>{children}</ChildrenContainer>
       </Container>
     </Wrapper>
   )

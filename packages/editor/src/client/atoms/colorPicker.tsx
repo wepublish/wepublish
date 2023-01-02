@@ -9,7 +9,7 @@ interface ColorPickerProps {
   disabled?: boolean
 }
 
-const StyledInput = styled.input`
+const Input = styled.input`
   cursor: pointer;
 `
 
@@ -18,7 +18,7 @@ export function ColorPicker({setColor, currentColor, label, disabled}: ColorPick
   return (
     <>
       {label && <label htmlFor={id}>{label}</label>}
-      <StyledInput
+      <Input
         disabled={disabled}
         id={id}
         type="color"

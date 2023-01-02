@@ -4,7 +4,7 @@ import {RenderElementProps, RenderLeafProps} from 'slate-react'
 
 import {BlockFormat, InlineFormat, TextFormat} from './formats'
 
-const StyledTD = styled.td<{borderColor: string}>`
+const TD = styled.td<{borderColor: string}>`
   border-color: ${({borderColor}) =>
     borderColor === 'transparent' ? 'rgba(0, 0, 0, 0.1)' : borderColor};
 `
@@ -41,9 +41,9 @@ export function renderElement({attributes, children, element}: RenderElementProp
 
     case BlockFormat.TableCell:
       return (
-        <StyledTD borderColor={element.borderColor as string} {...attributes}>
+        <TD borderColor={element.borderColor as string} {...attributes}>
           {children}
-        </StyledTD>
+        </TD>
       )
 
     case InlineFormat.Link:

@@ -12,7 +12,7 @@ import {PollBlockValue} from '../blocks/types'
 import {PollClosedAtView, PollOpensAtView} from '../routes/polls/pollList'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
 
-const StyledDrawerBody = styled(Drawer.Body)`
+const DrawerBody = styled(Drawer.Body)`
   padding: 24px;
 `
 
@@ -62,7 +62,7 @@ export function SelectPollPanel({selectedPoll, onClose, onSelect}: SelectPollPan
         </Drawer.Actions>
       </Drawer.Header>
 
-      <StyledDrawerBody>
+      <DrawerBody>
         <Table
           minHeight={600}
           autoHeight
@@ -132,7 +132,7 @@ export function SelectPollPanel({selectedPoll, onClose, onSelect}: SelectPollPan
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </StyledDrawerBody>
+      </DrawerBody>
     </>
   )
 }

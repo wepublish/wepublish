@@ -3,7 +3,7 @@ import React, {ReactNode} from 'react'
 import {MdAddCircle} from 'react-icons/md'
 import {IconButton} from 'rsuite'
 
-const StyledPlaceholderInput = styled.div<{maxHeight: number}>`
+const PlaceholderInputWrapper = styled.div<{maxHeight: number}>`
   display: flex;
   width: 100%;
   height: 100%;
@@ -42,13 +42,13 @@ export function PlaceholderInput({
   }
 
   return (
-    <StyledPlaceholderInput maxHeight={maxHeight}>
+    <PlaceholderInputWrapper maxHeight={maxHeight}>
       <IconButton
         disabled={disabled}
         size="sm"
         icon={<MdAddCircle />}
         onClick={() => onAddClick && onAddClick()}
       />
-    </StyledPlaceholderInput>
+    </PlaceholderInputWrapper>
   )
 }

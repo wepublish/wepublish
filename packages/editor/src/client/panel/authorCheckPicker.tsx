@@ -11,7 +11,7 @@ import {
 } from '../api'
 import {getOperationNameFromDocument, slugify} from '../utility'
 
-const StyledButtonWrapper = styled.div`
+const ButtonWrapper = styled.div`
   margin: 10px;
 `
 
@@ -78,11 +78,11 @@ export function AuthorCheckPicker({list, disabled, onChange}: AuthorCheckPickerP
       renderExtraFooter={() =>
         authorsFilter &&
         !data?.authors.nodes.length && (
-          <StyledButtonWrapper>
+          <ButtonWrapper>
             <Button onClick={() => handleCreateAuthor()} appearance="primary">
               {t('articles.panels.createAuthorProfile', {name: authorsFilter})}
             </Button>
-          </StyledButtonWrapper>
+          </ButtonWrapper>
         )
       }
     />

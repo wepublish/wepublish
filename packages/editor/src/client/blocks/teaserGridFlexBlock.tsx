@@ -8,23 +8,17 @@ import React, {useEffect, useState} from 'react'
 import GridLayout from 'react-grid-layout'
 import {useTranslation} from 'react-i18next'
 import {MdAddBox, MdDelete, MdEdit, MdLock, MdLockOpen} from 'react-icons/md'
-import {ButtonToolbar, Drawer, IconButton} from 'rsuite'
+import {ButtonToolbar as RButtonToolbar, Drawer, IconButton as RIconButton} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
-import {
-  contentForTeaser,
-  StyledIconButton,
-  StyledIconWrapper,
-  StyledPanel,
-  StyledTeaser
-} from './teaserGridBlock'
-import {FlexAlignment, FlexTeaser, Teaser, TeaserGridFlexBlockValue} from './types'
+import {contentForTeaser, IconButton, IconWrapper, Panel, Teaser} from './teaserGridBlock'
+import {FlexAlignment, FlexTeaser, Teaser as TeaserType, TeaserGridFlexBlockValue} from './types'
 
-const StyledButtonToolbar = styled(ButtonToolbar)`
+const ButtonToolbar = styled(RButtonToolbar)`
   top: 1;
   left: 1;
   position: absolute;
@@ -38,27 +32,27 @@ export function FlexTeaserBlock({
   onRemove
 }: FlexTeaserBlockProps) {
   return (
-    <StyledPanel bodyFill showGrabCursor={showGrabCursor}>
+    <Panel bodyFill showGrabCursor={showGrabCursor}>
       <PlaceholderInput onAddClick={onChoose}>
         {teaser && (
-          <StyledTeaser>
+          <Teaser>
             {contentForTeaser(teaser)}
 
-            <StyledIconWrapper>
+            <IconWrapper>
               <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.chooseTeaser')}>
-                <StyledIconButton icon={<MdEdit />} onClick={onChoose} />
+                <IconButton icon={<MdEdit />} onClick={onChoose} />
               </IconButtonTooltip>
               <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.editTeaser')}>
-                <StyledIconButton icon={<MdEdit />} onClick={onEdit} />
+                <IconButton icon={<MdEdit />} onClick={onEdit} />
               </IconButtonTooltip>
               <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.deleteTeaser')}>
-                <StyledIconButton icon={<MdDelete />} onClick={onRemove} />
+                <IconButton icon={<MdDelete />} onClick={onRemove} />
               </IconButtonTooltip>
-            </StyledIconWrapper>
-          </StyledTeaser>
+            </IconWrapper>
+          </Teaser>
         )}
       </PlaceholderInput>
-    </StyledPanel>
+    </Panel>
   )
 }
 
@@ -136,7 +130,7 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
   }
 
   // Teaser functions: change, remove
-  function handleTeaserLinkChange(index: string, teaserLink: Teaser | null) {
+  function handleTeaserLinkChange(index: string, teaserLink: TeaserType | null) {
     onChange({
       ...value,
       flexTeasers: flexTeasers.map(ft => {
@@ -157,7 +151,7 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
   return (
     <>
       <IconButtonTooltip caption={t('blocks.flexTeaser.addBlock')}>
-        <IconButton
+        <RIconButton
           icon={<MdAddBox />}
           appearance="primary"
           circle
@@ -193,10 +187,10 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
               }}
               onRemove={() => handleRemoveTeaser(flexTeaser.alignment.i)}
             />
-            <StyledButtonToolbar>
+            <ButtonToolbar>
               {!flexTeaser.teaser && (
                 <IconButtonTooltip caption={t('blocks.flexTeaser.removeBlock')}>
-                  <IconButton
+                  <RIconButton
                     disabled={flexTeaser.alignment.static}
                     block
                     appearance="subtle"
@@ -211,14 +205,14 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
                     ? t('blocks.flexTeaser.lockBlock')
                     : t('blocks.flexTeaser.unlockBlock')
                 }>
-                <IconButton
+                <RIconButton
                   block
                   appearance="subtle"
                   icon={flexTeaser.alignment.static ? <MdLockOpen /> : <MdLock />}
                   onClick={() => handlePinTeaserBlock(flexTeaser.alignment.i)}
                 />
               </IconButtonTooltip>
-            </StyledButtonToolbar>
+            </ButtonToolbar>
           </div>
         ))}
       </GridLayout>
@@ -250,7 +244,7 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
 }
 
 interface FlexTeaserBlockProps {
-  teaser: Teaser | null
+  teaser: TeaserType | null
   showGrabCursor: boolean
   onEdit: () => void
   onChoose: () => void

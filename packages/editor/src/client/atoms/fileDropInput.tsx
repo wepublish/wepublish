@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React, {useRef, useState} from 'react'
 
-const StyledInput = styled.input`
+const Input = styled.input`
   position: absolute;
   top: 0;
   left: 0;
@@ -10,7 +10,7 @@ const StyledInput = styled.input`
   opacity: 0;
 `
 
-const StyledFileDropInput = styled.div`
+const FileDropInputWrapper = styled.div<{dragging: boolean; disabled: boolean}>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,6 +27,10 @@ const StyledFileDropInput = styled.div`
   position: relative;
   font-size: 16px;
   text-align: center;
+  border-color: ${({dragging}) => (dragging ? '#3498ff' : '#004299')};
+  color: ${({dragging}) => (dragging ? '#3498ff' : '#004299')};
+  fill: ${({dragging}) => (dragging ? '#3498ff' : '#004299')};
+  cursor: ${({disabled}) => (disabled ? 'not-allowed' : 'pointer')};
 `
 
 export interface FileDropInputProps {
@@ -75,20 +79,22 @@ export function FileDropInput({disabled = false, onDrop, icon, text}: FileDropIn
   }
 
   return (
-    <StyledFileDropInput
+    <FileDropInputWrapper
+      dragging={dragging}
+      disabled={disabled}
       onDrop={!disabled ? handleDrop : undefined}
       onDragOver={!disabled ? handleDragIn : undefined}
       onDragLeave={!disabled ? handleDragOut : undefined}
       onClick={() => inputRef.current!.click()}>
       {icon && icon}
       <div>{text}</div>
-      <StyledInput
+      <Input
         ref={inputRef}
         type="file"
         value={''}
         onChange={handleInputChange}
         disabled={disabled}
       />
-    </StyledFileDropInput>
+    </FileDropInputWrapper>
   )
 }

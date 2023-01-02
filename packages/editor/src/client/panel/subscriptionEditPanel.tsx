@@ -3,11 +3,11 @@ import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdRequestQuote} from 'react-icons/md'
 import {
-  Button,
+  Button as RButton,
   DatePicker,
   Drawer,
   FlexboxGrid,
-  Form,
+  Form as RForm,
   Message,
   Modal,
   Panel,
@@ -48,19 +48,21 @@ import {ALL_PAYMENT_PERIODICITIES} from '../utility'
 import {InvoiceListPanel} from './invoiceListPanel'
 import {UserSubscriptionDeactivatePanel} from './userSubscriptionDeactivatePanel'
 
-const StyledForm = styled(Form)`
+const {Group, ControlLabel, Control, HelpText} = RForm
+
+const Form = styled(RForm)`
   height: 100%;
 `
 
-const StyledQuoteIcon = styled(MdRequestQuote)`
+const QuoteIcon = styled(MdRequestQuote)`
   margin-right: 10px;
 `
 
-const StyledButton = styled(Button)`
+const Button = styled(RButton)`
   margin-top: 10px;
 `
 
-const StyledGridItem = styled(FlexboxGrid.Item)`
+const GridItem = styled(FlexboxGrid.Item)`
   padding-right: 10px;
 `
 
@@ -345,17 +347,17 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
       return <></>
     }
     return (
-      <Form.Group>
+      <Group>
         <FormControlLabel>
           {t('userSubscriptionEdit.paidUntil')}
 
-          <Button appearance="link" onClick={() => setIsInvoiceListOpen(true)}>
+          <RButton appearance="link" onClick={() => setIsInvoiceListOpen(true)}>
             ({t('invoice.seeInvoiceHistory')})
-          </Button>
+          </RButton>
         </FormControlLabel>
 
         <DatePicker block value={paidUntil ?? undefined} disabled />
-      </Form.Group>
+      </Group>
     )
   }
 
@@ -365,18 +367,15 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
     }
     return (
       <FlexboxGrid>
-        <StyledGridItem>
-          <StyledButton
-            color="green"
-            appearance="primary"
-            onClick={() => setIsInvoiceListOpen(true)}>
-            <StyledQuoteIcon />
+        <GridItem>
+          <Button color="green" appearance="primary" onClick={() => setIsInvoiceListOpen(true)}>
+            <QuoteIcon />
             {t('invoice.panel.invoiceHistory')} ({unpaidInvoices} {t('invoice.unpaid')})
-          </StyledButton>
-        </StyledGridItem>
+          </Button>
+        </GridItem>
 
         <FlexboxGrid.Item>
-          <StyledButton
+          <Button
             appearance="ghost"
             disabled={isDisabled}
             onClick={() => setDeactivationPanelOpen(true)}>
@@ -385,14 +384,14 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
                 ? 'userSubscriptionEdit.deactivation.title.deactivated'
                 : 'userSubscriptionEdit.deactivation.title.activated'
             )}
-          </StyledButton>
+          </Button>
         </FlexboxGrid.Item>
       </FlexboxGrid>
     )
   }
   return (
     <>
-      <StyledForm
+      <Form
         onSubmit={validationPassed => validationPassed && handleSave()}
         model={validationModel}
         fluid
@@ -410,13 +409,13 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
 
           <Drawer.Actions>
             <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
-              <Button appearance="primary" disabled={isDisabled || isDeactivated} type="submit">
+              <RButton appearance="primary" disabled={isDisabled || isDeactivated} type="submit">
                 {id ? t('save') : t('create')}
-              </Button>
+              </RButton>
             </PermissionControl>
-            <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            <RButton appearance={'subtle'} onClick={() => onClose?.()}>
               {t('close')}
-            </Button>
+            </RButton>
           </Drawer.Actions>
         </Drawer.Header>
 
@@ -433,12 +432,12 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
           )}
 
           <Panel>
-            <Form.Group controlId="memberPlan">
-              <Form.ControlLabel>
+            <Group controlId="memberPlan">
+              <ControlLabel>
                 {toggleRequiredLabel(t('userSubscriptionEdit.selectMemberPlan'))}
-              </Form.ControlLabel>
+              </ControlLabel>
 
-              <Form.Control
+              <Control
                 block
                 name="memberPlan"
                 virtualized
@@ -450,20 +449,20 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
               />
 
               {memberPlan && (
-                <Form.HelpText>
+                <HelpText>
                   <DescriptionList>
                     <DescriptionListItem label={t('userSubscriptionEdit.memberPlanMonthlyAmount')}>
                       {(memberPlan.amountPerMonthMin / 100).toFixed(2)}
                     </DescriptionListItem>
                   </DescriptionList>
-                </Form.HelpText>
+                </HelpText>
               )}
-            </Form.Group>
+            </Group>
 
-            <Form.Group controlId="user">
-              <Form.ControlLabel>
+            <Group controlId="user">
+              <ControlLabel>
                 {toggleRequiredLabel(t('userSubscriptionEdit.selectUser'))}
-              </Form.ControlLabel>
+              </ControlLabel>
 
               <UserSearch
                 name="user"
@@ -472,12 +471,12 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
                   setUser(user)
                 }}
               />
-            </Form.Group>
+            </Group>
 
-            <Form.Group controlId="monthlyAmount">
-              <Form.ControlLabel>
+            <Group controlId="monthlyAmount">
+              <ControlLabel>
                 {toggleRequiredLabel(t('userSubscriptionEdit.monthlyAmount'))}
-              </Form.ControlLabel>
+              </ControlLabel>
 
               <CurrencyInput
                 name="currency"
@@ -488,14 +487,14 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
                 }}
                 disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
               />
-            </Form.Group>
+            </Group>
 
-            <Form.Group controlId="paymentPeriodicities">
-              <Form.ControlLabel>
+            <Group controlId="paymentPeriodicities">
+              <ControlLabel>
                 {toggleRequiredLabel(t('memberPlanList.paymentPeriodicities'))}
-              </Form.ControlLabel>
+              </ControlLabel>
 
-              <Form.Control
+              <Control
                 virtualized
                 value={paymentPeriodicity}
                 name="paymentPeriodicity"
@@ -508,10 +507,10 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
                 block
                 accepter={SelectPicker}
               />
-            </Form.Group>
+            </Group>
 
-            <Form.Group controlId="autoRenew">
-              <Form.ControlLabel>{t('userSubscriptionEdit.autoRenew')}</Form.ControlLabel>
+            <Group controlId="autoRenew">
+              <ControlLabel>{t('userSubscriptionEdit.autoRenew')}</ControlLabel>
 
               <Toggle
                 checked={autoRenew}
@@ -519,11 +518,11 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
                 onChange={value => setAutoRenew(value)}
               />
 
-              <Form.HelpText>{t('userSubscriptionEdit.autoRenewDescription')}</Form.HelpText>
-            </Form.Group>
+              <HelpText>{t('userSubscriptionEdit.autoRenewDescription')}</HelpText>
+            </Group>
 
-            <Form.Group controlId="startsAt">
-              <Form.ControlLabel>{t('userSubscriptionEdit.startsAt')}</Form.ControlLabel>
+            <Group controlId="startsAt">
+              <ControlLabel>{t('userSubscriptionEdit.startsAt')}</ControlLabel>
               <DatePicker
                 block
                 cleanable={false}
@@ -531,25 +530,25 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
                 disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
                 onChange={value => setStartsAt(value!)}
               />
-            </Form.Group>
+            </Group>
 
             {subscriptionActionsViewLink()}
 
-            <Form.Group>
+            <Group>
               <FormControlLabel>{t('userSubscriptionEdit.paymentMethod')}</FormControlLabel>
-            </Form.Group>
+            </Group>
 
-            <Form.Group controlId="paidUntil">
-              <Form.ControlLabel>{t('userSubscriptionEdit.paidUntil')}</Form.ControlLabel>
+            <Group controlId="paidUntil">
+              <ControlLabel>{t('userSubscriptionEdit.paidUntil')}</ControlLabel>
               <DatePicker block value={paidUntil ?? undefined} disabled />
-            </Form.Group>
+            </Group>
 
-            <Form.Group controlId="paymentMethod">
-              <Form.ControlLabel>
+            <Group controlId="paymentMethod">
+              <ControlLabel>
                 {toggleRequiredLabel(t('userSubscriptionEdit.paymentMethod'))}
-              </Form.ControlLabel>
+              </ControlLabel>
 
-              <Form.Control
+              <Control
                 name="paymentMethod"
                 block
                 virtualized
@@ -562,23 +561,23 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
                 accepter={SelectPicker}
                 placement="auto"
               />
-            </Form.Group>
+            </Group>
           </Panel>
           <Panel>{subscriptionActionsView()}</Panel>
         </Drawer.Body>
 
         <Drawer.Footer>
           <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
-            <Button
+            <RButton
               appearance={'primary'}
               disabled={isDisabled || isDeactivated}
               onClick={() => handleSave()}>
               {id ? t('save') : t('create')}
-            </Button>
+            </RButton>
           </PermissionControl>
-          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          <RButton appearance={'subtle'} onClick={() => onClose?.()}>
             {t('close')}
-          </Button>
+          </RButton>
         </Drawer.Footer>
 
         <Drawer open={isInvoiceListOpen} size="sm" onClose={() => setIsInvoiceListOpen(false)}>
@@ -615,7 +614,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
             />
           </Modal>
         )}
-      </StyledForm>
+      </Form>
     </>
   )
 }

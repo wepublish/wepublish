@@ -1,12 +1,14 @@
 import styled from '@emotion/styled'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, DatePicker, Form, Message, Modal, SelectPicker} from 'rsuite'
+import {Button, DatePicker, Form as RForm, Message, Modal, SelectPicker} from 'rsuite'
 
 import {SubscriptionDeactivationReason} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
-const StyledForm = styled(Form)`
+const {Group, ControlLabel} = RForm
+
+const Form = styled(RForm)`
   margin-top: 20px;
 `
 
@@ -67,19 +69,19 @@ function UserSubscriptionDeactivatePanel({
           )}
         </p>
         {!isDeactivated && (
-          <StyledForm fluid>
-            <Form.Group controlId="deactivationDate">
-              <Form.ControlLabel>{t('userSubscriptionEdit.deactivation.date')}</Form.ControlLabel>
+          <Form fluid>
+            <Group controlId="deactivationDate">
+              <ControlLabel>{t('userSubscriptionEdit.deactivation.date')}</ControlLabel>
               <DatePicker
                 block
                 placement="auto"
                 value={deactivationDate}
                 onChange={value => setDeactivationDate(value)}
               />
-            </Form.Group>
+            </Group>
 
-            <Form.Group controlId="deactivationReason">
-              <Form.ControlLabel>{t('userSubscriptionEdit.deactivation.reason')}</Form.ControlLabel>
+            <Group controlId="deactivationReason">
+              <ControlLabel>{t('userSubscriptionEdit.deactivation.reason')}</ControlLabel>
               <SelectPicker
                 virtualized
                 searchable={false}
@@ -102,11 +104,11 @@ function UserSubscriptionDeactivatePanel({
                 placement="auto"
                 onChange={value => setDeactivationReason(value)}
               />
-            </Form.Group>
+            </Group>
             <Message showIcon type="info">
               {t('userSubscriptionEdit.deactivation.help')}
             </Message>
-          </StyledForm>
+          </Form>
         )}
       </Modal.Body>
 

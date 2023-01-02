@@ -35,7 +35,7 @@ const CharCount = styled.p`
   text-align: right;
 `
 
-const StyledAltPlaceholder = styled.div`
+const AltPlaceholder = styled.div`
   color: #cad5e4;
 `
 
@@ -171,9 +171,9 @@ export const RichTextBlock = memo(function RichTextBlock({
             </SubMenuButton>
           </Toolbar>
           {WepublishEditor.isEmpty(editor) && ( // Alternative placeholder
-            <StyledAltPlaceholder onClick={() => ReactEditor.focus(editor)}>
+            <AltPlaceholder onClick={() => ReactEditor.focus(editor)}>
               {t('blocks.richText.startWriting')}
-            </StyledAltPlaceholder>
+            </AltPlaceholder>
           )}
         </>
       )}

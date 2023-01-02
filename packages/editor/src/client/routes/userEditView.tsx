@@ -12,9 +12,9 @@ import {
   Form,
   Grid as RGrid,
   Input,
-  Loader,
+  Loader as RLoader,
   Message,
-  Panel,
+  Panel as RPanel,
   Row,
   Schema,
   toaster,
@@ -63,27 +63,27 @@ const FlexRow = styled.div`
   flex-direction: row;
 `
 
-const StyledPanel = styled(Panel)`
+const Panel = styled(RPanel)`
   margin-top: 20px;
 `
 
-const StyledColTextAlign = styled(Col)`
+const ColTextAlign = styled(Col)`
   text-align: end;
 `
 
-const StyledGrid = styled(Grid)`
+const UserFormGrid = styled(RGrid)`
   width: 100%;
   padding-left: 0px;
   height: calc(100vh - 160px);
   overflow-y: scroll;
 `
 
-const StyledCol = styled(Col)`
+const PaddedCol = styled(Col)`
   padding-top: 3px;
   margin-right: 1rem;
 `
 
-const StyledFlexboxGrid = styled(FlexboxGrid)`
+const FlexGrid = styled(FlexboxGrid)`
   padding-right: 5px;
   padding-bottom: 20px;
 `
@@ -92,7 +92,7 @@ const ButtonMarginRight = styled(Button)`
   margin-right: 10px;
 `
 
-const StyledLoader = styled(Loader)`
+const Loader = styled(RLoader)`
   margin-right: 5px;
 `
 
@@ -357,7 +357,7 @@ function UserEditView() {
     if (isDisabled) {
       return (
         <>
-          <StyledLoader />
+          <Loader />
           {t('userCreateOrEditView.loadingUser')}
         </>
       )
@@ -402,17 +402,17 @@ function UserEditView() {
         model={validationModel}
         formValue={{name, email, password}}>
         {/* heading */}
-        <StyledFlexboxGrid align="middle">
+        <FlexGrid align="middle">
           {/* title */}
           <FlexboxGrid.Item colspan={12}>
             <Row>
-              <StyledCol xs={2}>
+              <PaddedCol xs={2}>
                 <Link to="/users">
                   <h1>
                     <MdChevronLeft />
                   </h1>
                 </Link>
-              </StyledCol>
+              </PaddedCol>
               <Col xs={16}>
                 <h2>{titleView()}</h2>
               </Col>
@@ -420,14 +420,14 @@ function UserEditView() {
           </FlexboxGrid.Item>
           {/* actions */}
           <FlexItemAlignRight colspan={12}>{actionsView()}</FlexItemAlignRight>
-        </StyledFlexboxGrid>
+        </FlexGrid>
         {/* user form */}
-        <StyledGrid>
+        <UserFormGrid>
           <Row gutter={10}>
             <Col xs={12}>
               <RGrid fluid>
                 {/* general user data */}
-                <Panel bordered header={t('userCreateOrEditView.userDataTitle')}>
+                <RPanel bordered header={t('userCreateOrEditView.userDataTitle')}>
                   <Row>
                     {/* profile image */}
                     <Col xs={12}>
@@ -441,7 +441,7 @@ function UserEditView() {
                       />
                     </Col>
                     {/* active / inactive */}
-                    <StyledColTextAlign xs={12}>
+                    <ColTextAlign xs={12}>
                       <Form.Group controlId="active">
                         <Form.ControlLabel>{t('userCreateOrEditView.active')}</Form.ControlLabel>
                         <RToggle
@@ -450,7 +450,7 @@ function UserEditView() {
                           onChange={value => setActive(value)}
                         />
                       </Form.Group>
-                    </StyledColTextAlign>
+                    </ColTextAlign>
                   </Row>
 
                   <Row gutter={10}>
@@ -605,9 +605,9 @@ function UserEditView() {
                       </Form.Group>
                     </Col>
                   </Row>
-                </Panel>
+                </RPanel>
                 {/* roles */}
-                <StyledPanel bordered header={t('userCreateOrEditView.userRoles')}>
+                <Panel bordered header={t('userCreateOrEditView.userRoles')}>
                   <Row gutter={10}>
                     <Col xs={24}>
                       <Form.Group controlId="userRoles">
@@ -628,9 +628,9 @@ function UserEditView() {
                       </Form.Group>
                     </Col>
                   </Row>
-                </StyledPanel>
+                </Panel>
                 {/* properties */}
-                <StyledPanel bordered header={t('userCreateOrEditView.properties')}>
+                <Panel bordered header={t('userCreateOrEditView.properties')}>
                   <Row gutter={10}>
                     <Col xs={24}>
                       <Form.Group controlId="userProperties">
@@ -673,9 +673,9 @@ function UserEditView() {
                       </Form.Group>
                     </Col>
                   </Row>
-                </StyledPanel>
+                </Panel>
                 {/* password */}
-                <StyledPanel bordered header={t('userCreateOrEditView.passwordHeader')}>
+                <Panel bordered header={t('userCreateOrEditView.passwordHeader')}>
                   <Row gutter={10}>
                     <Col xs={24}>
                       <EditUserPassword
@@ -686,19 +686,19 @@ function UserEditView() {
                       />
                     </Col>
                   </Row>
-                </StyledPanel>
+                </Panel>
               </RGrid>
             </Col>
             {/* subscriptions */}
             <Col xs={12}>
               <Grid fluid>
-                <Panel bordered header={t('userCreateOrEditView.subscriptionsHeader')}>
+                <RPanel bordered header={t('userCreateOrEditView.subscriptionsHeader')}>
                   <UserSubscriptionsList subscriptions={user?.subscriptions} />
-                </Panel>
+                </RPanel>
               </Grid>
             </Col>
           </Row>
-        </StyledGrid>
+        </UserFormGrid>
       </Form>
 
       {/* image selection panel */}

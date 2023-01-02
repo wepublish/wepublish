@@ -1,15 +1,15 @@
 import styled from '@emotion/styled'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Input} from 'rsuite'
+import {Button, Drawer, Input as RInput} from 'rsuite'
 
 import {HTMLBlockValue} from '../blocks/types'
 
-const StyledWarning = styled.div`
+const Warning = styled.div`
   margin-top: 20px;
 `
 
-const StyledInput = styled(Input)`
+const Input = styled(RInput)`
   width: 100%;
 `
 
@@ -40,16 +40,16 @@ export function HtmlEditPanel({value, onClose, onConfirm}: HtmlEditPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <StyledInput
+        <Input
           as="textarea"
           rows={3}
           placeholder={t('blocks.html.placeholder')}
           value={htmlBlock.html}
           onChange={input => setHtmlBlock({html: input})}
         />
-        <StyledWarning>
+        <Warning>
           <span>{t('blocks.html.warning')}</span>
-        </StyledWarning>
+        </Warning>
       </Drawer.Body>
     </>
   )

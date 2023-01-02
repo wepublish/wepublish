@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 
-const StyledImage = styled.img`
+const Image = styled.img`
   max-width: 605px;
   max-height: 500px;
   display: block;
@@ -13,7 +13,7 @@ const BoldParagraph = styled.p`
   font-weight: bold;
 `
 
-const StyledTikTokEmbed = styled.div`
+const TikTokEmbed = styled.div`
   justify-content: center;
   padding: 20;
   background-color: rgb(247, 249, 250);
@@ -39,7 +39,7 @@ export function TikTokVideoEmbed({userID, videoID}: TikTokVideoEmbedProps) {
   }, [userID, videoID])
 
   return (
-    <StyledTikTokEmbed>
+    <TikTokEmbed>
       <a href={tikTokData?.author_url} target="_blank" rel="noreferrer">
         <BoldParagraph>@{userID}</BoldParagraph>
       </a>
@@ -48,9 +48,9 @@ export function TikTokVideoEmbed({userID, videoID}: TikTokVideoEmbedProps) {
         href={`https://www.tiktok.com/@${userID}/video/${videoID}`}
         rel="noreferrer"
         target="_blank">
-        <StyledImage src={tikTokData?.thumbnail_url} />
+        <Image src={tikTokData?.thumbnail_url} />
       </a>
       <p>{tikTokData?.title}</p>
-    </StyledTikTokEmbed>
+    </TikTokEmbed>
   )
 }
