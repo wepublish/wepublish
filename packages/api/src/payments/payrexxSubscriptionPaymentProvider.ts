@@ -211,6 +211,16 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
             }
           }
         }
+        subscription.properties = {
+          update: {
+            where: {
+              id: isPayrexxExt.id
+            },
+            data: {
+              key: isPayrexxExt.key
+            }
+          }
+        }
 
         // Update subscription
       } else {
