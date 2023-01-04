@@ -931,7 +931,7 @@ async function applyEditor() {
             {
               name: appName,
               image,
-              command: ['npx', '@wepublish/editor'],
+              command: ['node', 'dist/apps/editor/main.js'],
               env: [
                 {
                   name: 'NODE_ENV',

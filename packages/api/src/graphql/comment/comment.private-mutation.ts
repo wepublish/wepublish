@@ -92,7 +92,7 @@ export const updateComment = async (
       revisions: revision
         ? {
             create: {
-              text: (revision.text as unknown) as string,
+              text: revision.text as unknown as string,
               title: revision.title,
               lead: revision.lead
             }

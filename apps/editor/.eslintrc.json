@@ -1,0 +1,80 @@
+{
+  "extends": ["plugin:@nrwl/nx/react", "../../.eslintrc.json"],
+  "ignorePatterns": ["!**/*"],
+  "plugins": ["i18next", "simple-import-sort"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {
+        "no-empty": "warn",
+        "react/display-name": [0],
+        "react/jsx-boolean-value": [1],
+        "react/prop-types": [0],
+        "i18next/no-literal-string": [
+          2,
+          {
+            "markupOnly": true,
+            "ignoreAttribute": [
+              "as",
+              "dateFormat",
+              "componentClass",
+              "autoComplete",
+              "controlId",
+              "value",
+              "name",
+              "placement",
+              "trigger",
+              "dataKey",
+              "eventKey",
+              "appearance",
+              "icon",
+              "iconActive",
+              "size",
+              "display",
+              "fixed",
+              "flexDirection",
+              "alignItems",
+              "element",
+              "variant",
+              "color",
+              "align",
+              "position",
+              "justifyContent",
+              "justify",
+              "overflow",
+              "target",
+              "spacing",
+              "sdkLanguage",
+              "axis",
+              "flexWrap",
+              "minHeight",
+              "href",
+              "fixed",
+              "format",
+              "stack",
+              "backdrop",
+              "data-testid",
+              "to",
+              "path"
+            ],
+            "ignoreComponent": ["code"],
+            "ignore": ["—", "&"]
+          }
+        ],
+        "simple-import-sort/imports": 1,
+        "simple-import-sort/exports": 1,
+        "import/first": 1,
+        "import/newline-after-import": 1,
+        "import/no-duplicates": 1
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {}
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "rules": {}
+    }
+  ]
+}

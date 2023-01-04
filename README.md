@@ -94,10 +94,7 @@ TBD
 ## Packages
 
 - [@wepublish/api](./packages/api)
-  - Media Adapter:
-    - [@wepublish/api-media-karma](./packages/api-media-karma)
-- [@wepublish/editor](./packages/editor)
-- [@wepublish/oauth2](./packages/oauth2)
+- [@wepublish/editor](./apps/editor)
 
 <!-- GETTING STARTED -->
 
