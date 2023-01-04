@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdPassword, MdSearch} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Button, FlexboxGrid, IconButton, Input, InputGroup, Modal, Pagination, Table} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
 import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -45,7 +46,11 @@ function UserList() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [users, setUsers] = useState<FullUserFragment[]>([])
 
-  const {data, refetch, loading: isLoading} = useUserListQuery({
+  const {
+    data,
+    refetch,
+    loading: isLoading
+  } = useUserListQuery({
     variables: {
       filter: filter || undefined,
       take: limit,
@@ -143,7 +148,7 @@ function UserList() {
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.createdAt')}</HeaderCell>
             <Cell dataKey="createdAt">
-              {({createdAt}: FullUserFragment) =>
+              {({createdAt}: RowDataType<FullUserFragment>) =>
                 t('userList.overview.createdAtDate', {createdAtDate: new Date(createdAt)})
               }
             </Cell>
@@ -151,7 +156,7 @@ function UserList() {
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: FullUserFragment) =>
+              {({modifiedAt}: RowDataType<FullUserFragment>) =>
                 t('userList.overview.modifiedAtDate', {modifiedAtDate: new Date(modifiedAt)})
               }
             </Cell>
@@ -159,7 +164,7 @@ function UserList() {
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.firstName')}</HeaderCell>
             <Cell dataKey={'firstName'}>
-              {(rowData: FullUserFragment) => (
+              {(rowData: RowDataType<FullUserFragment>) => (
                 <Link to={`/users/edit/${rowData.id}`}>{rowData.firstName || ''}</Link>
               )}
             </Cell>
@@ -167,7 +172,7 @@ function UserList() {
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.name')}</HeaderCell>
             <Cell dataKey={'name'}>
-              {(rowData: FullUserFragment) => (
+              {(rowData: RowDataType<FullUserFragment>) => (
                 <Link to={`/users/edit/${rowData.id}`}>
                   {rowData.name || t('userList.overview.unknown')}
                 </Link>
@@ -182,13 +187,15 @@ function UserList() {
           <Column width={400} align="left" resizable>
             <HeaderCell>{t('userList.overview.subscriptions')}</HeaderCell>
             <Cell>
-              {(rowData: FullUserFragment) => <div>{getSubscriptionCellView(rowData)}</div>}
+              {(rowData: RowDataType<FullUserFragment>) => (
+                <div>{getSubscriptionCellView(rowData as FullUserFragment)}</div>
+              )}
             </Cell>
           </Column>
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
-              {(rowData: FullUserFragment) => (
+              {(rowData: RowDataType<FullUserFragment>) => (
                 <>
                   <PermissionControl qualifyingPermissions={['CAN_RESET_USER_PASSWORD']}>
                     <IconButtonTooltip caption={t('userList.overview.resetPassword')}>
@@ -198,7 +205,7 @@ function UserList() {
                         size="sm"
                         style={{marginLeft: '5px'}}
                         onClick={e => {
-                          setCurrentUser(rowData)
+                          setCurrentUser(rowData as FullUserFragment)
                           setIsResetUserPasswordOpen(true)
                         }}
                       />
@@ -215,7 +222,7 @@ function UserList() {
                         style={{marginLeft: '5px'}}
                         onClick={() => {
                           setConfirmationDialogOpen(true)
-                          setCurrentUser(rowData)
+                          setCurrentUser(rowData as FullUserFragment)
                         }}
                       />
                     </IconButtonTooltip>

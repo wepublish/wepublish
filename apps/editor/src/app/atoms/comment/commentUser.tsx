@@ -34,6 +34,7 @@ export function CommentUser({comment, setComment}: CommentUserProps) {
         <Col xs={24}>
           <Form.ControlLabel>{t('commentUser.selectExistingUser')}</Form.ControlLabel>
           <UserSearch
+            key={`user-${comment?.user}`}
             name="selectFromExistingUser"
             placeholder={t('commentUser.selectExistingUser')}
             onUpdateUser={setUser}
@@ -58,6 +59,7 @@ export function CommentUser({comment, setComment}: CommentUserProps) {
             openChooseModalOpen={() => setOpen(true)}
             removeImage={() => setImage(undefined)}
             header={t('commentUser.selectImage')}
+            minHeight={150}
           />
         </Col>
       </Row>

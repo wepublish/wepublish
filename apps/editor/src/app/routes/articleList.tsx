@@ -1,8 +1,9 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdComment, MdContentCopy, MdDelete, MdPreview, MdUnpublished} from 'react-icons/md'
 import {Link, useNavigate} from 'react-router-dom'
 import {Button, FlexboxGrid, IconButton, Message, Modal, Pagination, Table} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
 import {
   ArticleFilter,
@@ -11,7 +12,6 @@ import {
   ArticleRefFragment,
   ArticleSort,
   CommentItemType,
-  PageRefFragment,
   useArticleListQuery,
   useCreateCommentMutation,
   useDeleteArticleMutation,
@@ -78,7 +78,11 @@ function ArticleList() {
     order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
   }
 
-  const {data, refetch, loading: isLoading} = useArticleListQuery({
+  const {
+    data,
+    refetch,
+    loading: isLoading
+  } = useArticleListQuery({
     variables: articleListVariables,
     fetchPolicy: 'network-only'
   })
@@ -159,7 +163,7 @@ function ArticleList() {
           <Column width={210} align="left" resizable sortable>
             <HeaderCell>{t('articles.overview.publicationDate')}</HeaderCell>
             <Cell dataKey="published">
-              {(articleRef: ArticleRefFragment) =>
+              {(articleRef: RowDataType<ArticleRefFragment>) =>
                 articleRef.published?.publishedAt
                   ? t('articleEditor.overview.publishedAt', {
                       publicationDate: new Date(articleRef.published.publishedAt)
@@ -175,7 +179,7 @@ function ArticleList() {
           <Column width={210} align="left" resizable sortable>
             <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: ArticleRefFragment) =>
+              {({modifiedAt}: RowDataType<ArticleRefFragment>) =>
                 t('articleEditor.overview.modifiedAt', {
                   modificationDate: new Date(modifiedAt)
                 })
@@ -185,7 +189,7 @@ function ArticleList() {
           <Column width={400} align="left" resizable>
             <HeaderCell>{t('articles.overview.title')}</HeaderCell>
             <Cell>
-              {(rowData: ArticleRefFragment) => (
+              {(rowData: RowDataType<ArticleRefFragment>) => (
                 <Link to={`/articles/edit/${rowData.id}`}>
                   {rowData.latest.title || t('articles.overview.untitled')}
                 </Link>
@@ -195,17 +199,20 @@ function ArticleList() {
           <Column width={200} align="left" resizable>
             <HeaderCell>{t('articles.overview.authors')}</HeaderCell>
             <Cell>
-              {(rowData: ArticleRefFragment) => {
-                return rowData.latest.authors.reduce((allAuthors, author, index) => {
-                  return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`
-                }, '')
+              {(rowData: RowDataType<ArticleRefFragment>) => {
+                return (rowData as ArticleRefFragment).latest.authors.reduce(
+                  (allAuthors, author, index) => {
+                    return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`
+                  },
+                  ''
+                )
               }}
             </Cell>
           </Column>
           <Column width={150} align="left" resizable>
             <HeaderCell>{t('articles.overview.states')}</HeaderCell>
             <Cell>
-              {(rowData: PageRefFragment) => {
+              {(rowData: RowDataType<ArticleRefFragment>) => {
                 const states = []
 
                 if (rowData.draft) states.push(t('articles.overview.draft'))
@@ -234,7 +241,7 @@ function ArticleList() {
           <Column width={200} align="center" fixed="right">
             <HeaderCell>{t('articles.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
-              {(rowData: ArticleRefFragment) => (
+              {(rowData: RowDataType<ArticleRefFragment>) => (
                 <>
                   <PermissionControl qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}>
                     <IconButtonTooltip caption={t('articleEditor.overview.unpublish')}>
@@ -244,7 +251,7 @@ function ArticleList() {
                         disabled={!(rowData.published || rowData.pending)}
                         size="sm"
                         onClick={e => {
-                          setCurrentArticle(rowData)
+                          setCurrentArticle(rowData as ArticleRefFragment)
                           setConfirmAction(ConfirmAction.Unpublish)
                           setConfirmationDialogOpen(true)
                         }}
@@ -260,7 +267,7 @@ function ArticleList() {
                         size="sm"
                         style={{marginLeft: '5px'}}
                         onClick={() => {
-                          setCurrentArticle(rowData)
+                          setCurrentArticle(rowData as ArticleRefFragment)
                           setConfirmAction(ConfirmAction.Duplicate)
                           setConfirmationDialogOpen(true)
                         }}
@@ -277,7 +284,7 @@ function ArticleList() {
                         size="sm"
                         style={{marginLeft: '5px'}}
                         onClick={() => {
-                          setCurrentArticle(rowData)
+                          setCurrentArticle(rowData as ArticleRefFragment)
                           setArticlePreviewLinkOpen(true)
                         }}
                       />
@@ -316,7 +323,7 @@ function ArticleList() {
                         color="red"
                         style={{marginLeft: '5px'}}
                         onClick={() => {
-                          setCurrentArticle(rowData)
+                          setCurrentArticle(rowData as ArticleRefFragment)
                           setConfirmAction(ConfirmAction.Delete)
                           setConfirmationDialogOpen(true)
                         }}

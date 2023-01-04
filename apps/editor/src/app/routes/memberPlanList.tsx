@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
 import {
   FullMemberPlanFragment,
@@ -96,7 +97,7 @@ function MemberPlanList() {
         <Column width={200} align="left" resizable>
           <HeaderCell>{t('memberPlanList.name')}</HeaderCell>
           <Cell>
-            {(rowData: FullMemberPlanFragment) => (
+            {(rowData: RowDataType<FullMemberPlanFragment>) => (
               <Link to={`/memberplans/edit/${rowData.id}`}>{rowData.name || t('untitled')}</Link>
             )}
           </Cell>
@@ -104,7 +105,7 @@ function MemberPlanList() {
         <Column width={100} align="center" fixed="right">
           <HeaderCell>{t('memberPlanList.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
-            {(rowData: FullMemberPlanFragment) => (
+            {(rowData: RowDataType<FullMemberPlanFragment>) => (
               <PermissionControl qualifyingPermissions={['CAN_DELETE_MEMBER_PLAN']}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
@@ -116,7 +117,7 @@ function MemberPlanList() {
                     style={{marginLeft: '5px'}}
                     onClick={() => {
                       setConfirmationDialogOpen(true)
-                      setCurrentMemberPlan(rowData)
+                      setCurrentMemberPlan(rowData as FullMemberPlanFragment)
                     }}
                   />
                 </IconButtonTooltip>

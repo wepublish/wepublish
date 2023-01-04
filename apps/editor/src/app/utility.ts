@@ -224,13 +224,26 @@ export function flattenDOMTokenList(list: DOMTokenList) {
   return string.substring(1)
 }
 
+export function getSettings(): ClientSettings {
+  const defaultSettings = {
+    apiURL: 'http://localhost:4000',
+    peerByDefault: false,
+    imgMinSizeToCompress: 10
+  }
+
+  const settingsJson = document.getElementById(ElementID.Settings)
+
+  return settingsJson
+    ? JSON.parse(document.getElementById(ElementID.Settings)!.textContent!)
+    : defaultSettings
+}
+
 /**
  * Helper function to read env variable IMG_MIN_SIZE_TO_COMPRESS
  */
 export function getImgMinSizeToCompress(): number {
-  const {imgMinSizeToCompress}: ClientSettings = JSON.parse(
-    document.getElementById(ElementID.Settings)!.textContent!
-  )
+  const {imgMinSizeToCompress} = getSettings()
+
   return imgMinSizeToCompress
 }
 

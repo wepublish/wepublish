@@ -57,7 +57,7 @@ export function ListViewFilters({
     if (isPeerFilter) {
       peerListFetch()
     }
-  }, [isPeerFilter])
+  }, [isPeerFilter, peerListFetch])
 
   const allPeers = peerListData?.peers
 
@@ -92,8 +92,9 @@ export function ListViewFilters({
    */
   function resetFilterView() {
     if (!isAnyFilterSet()) {
-      return <></>
+      return null
     }
+
     return (
       <Form.Group style={{width: '100%'}}>
         <Button onClick={() => resetFilter()} color="red" appearance="ghost">

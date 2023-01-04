@@ -68,18 +68,13 @@ export function ModelTitle({
     <FlexboxGrid align="middle" style={{paddingRight: '5px', paddingBottom: '20px'}}>
       {/* title */}
       <FlexboxGrid.Item colspan={12}>
-        <Row>
-          <Col xs={2} style={{paddingTop: '3px'}}>
-            <Link to={closePath}>
-              <h1>
-                <MdChevronLeft />
-              </h1>
-            </Link>
-          </Col>
-          <Col xs={16}>
-            <h2>{titleView()}</h2>
-          </Col>
-        </Row>
+        <FlexboxGrid align="middle">
+          <Link to={closePath}>
+            <MdChevronLeft style={{fontSize: '48px'}} />
+          </Link>
+
+          <h1>{titleView()}</h1>
+        </FlexboxGrid>
       </FlexboxGrid.Item>
 
       {/* actions */}

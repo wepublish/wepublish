@@ -14,6 +14,7 @@ import {
   Pagination,
   Table
 } from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
 import {AuthorSort, FullAuthorFragment, useAuthorListQuery, useDeleteAuthorMutation} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -151,7 +152,7 @@ function AuthorList() {
           <Column width={100} align="left" resizable>
             <HeaderCell>{}</HeaderCell>
             <Cell style={{padding: 2}}>
-              {(rowData: FullAuthorFragment) => (
+              {(rowData: RowDataType<FullAuthorFragment>) => (
                 <Avatar circle src={rowData.image?.squareURL || undefined} />
               )}
             </Cell>
@@ -159,7 +160,7 @@ function AuthorList() {
           <Column width={300} align="left" resizable sortable>
             <HeaderCell>{t('authors.overview.name')}</HeaderCell>
             <Cell dataKey="name">
-              {(rowData: FullAuthorFragment) => (
+              {(rowData: RowDataType<FullAuthorFragment>) => (
                 <Link to={`/authors/edit/${rowData.id}`}>
                   {rowData.name || t('authors.overview.untitled')}
                 </Link>
@@ -169,7 +170,7 @@ function AuthorList() {
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('authors.overview.created')}</HeaderCell>
             <Cell dataKey="createdAt">
-              {({createdAt}: FullAuthorFragment) =>
+              {({createdAt}: RowDataType<FullAuthorFragment>) =>
                 t('authors.overview.createdAt', {
                   createdAt: new Date(createdAt)
                 })
@@ -179,7 +180,7 @@ function AuthorList() {
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('authors.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
-              {(rowData: FullAuthorFragment) => (
+              {(rowData: RowDataType<FullAuthorFragment>) => (
                 <PermissionControl qualifyingPermissions={['CAN_DELETE_AUTHOR']}>
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
@@ -189,7 +190,7 @@ function AuthorList() {
                       style={{marginLeft: '5px'}}
                       onClick={() => {
                         setConfirmationDialogOpen(true)
-                        setCurrentAuthor(rowData)
+                        setCurrentAuthor(rowData as FullAuthorFragment)
                       }}
                     />
                   </IconButtonTooltip>

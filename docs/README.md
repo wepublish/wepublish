@@ -188,4 +188,7 @@ Within this event another invoice event will be triggered which is handled in `e
 To perform migrations on the database two steps are necessary.
 
 1. add an object in migrations.ts.
-2. restart the API (npm run watch)
+   <<<<<<< HEAD
+2. # restart the API (npm run watch)
+3. restart the API (yarn watch)
+   > > > > > > > master

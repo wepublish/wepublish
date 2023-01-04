@@ -52,7 +52,6 @@ async function main() {
   await applyMediaServer()
   await applyApiServer()
   await applyEditor()
-  await applyMongo()
   await applyPostgres()
 }
 
@@ -235,7 +234,7 @@ async function applyWebsite() {
             {
               name: appName,
               image,
-              command: ['node', 'dist/apps/editor/main.js'],
+              command: ['node', 'dist/apps/website-example/main.js'],
               env: [
                 {
                   name: 'NODE_ENV',
@@ -586,7 +585,7 @@ async function applyApiServer() {
               name: appName,
               image,
               command: ['/bin/sh'],
-              args: ['-c', 'npm run migrate && node dist/apps/editor/main.js'],
+              args: ['-c', 'yarn migrate && node dist/apps/api-example/main.js'],
               volumeMounts: [
                 {
                   name: 'google-cloud-key',
@@ -634,11 +633,6 @@ async function applyApiServer() {
                   name: 'DATABASE_URL',
                   value: databaseURL
                 },
-                {
-                  name: 'MONGO_LOCALE',
-                  value: 'de'
-                },
-
                 {
                   name: 'HOST_URL',
                   value: `https://${domainAPI}`
@@ -1181,137 +1175,6 @@ async function applyPostgres() {
               name: 'postgres-volume',
               persistentVolumeClaim: {
                 claimName: `${GITHUB_REF_SHORT}-postgres-data`
-              }
-            }
-          ]
-        }
-      }
-    }
-  }
-  await applyConfig(`deployment-${app}`, deployment)
-
-  const service = {
-    apiVersion: 'v1',
-    kind: 'Service',
-    metadata: {
-      name: appName,
-      namespace: NAMESPACE
-    },
-    spec: {
-      ports: [
-        {
-          name: 'http',
-          port,
-          protocol: 'TCP',
-          targetPort: port
-        }
-      ],
-      selector: {
-        app,
-        slug: GITHUB_REF_SHORT,
-        release: ENVIRONMENT_NAME
-      },
-      type: 'ClusterIP'
-    }
-  }
-  await applyConfig(`service-${app}`, service)
-}
-
-async function applyMongo() {
-  const app = 'mongo'
-  const port = 27017
-  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
-
-  const pvc = {
-    apiVersion: 'v1',
-    kind: 'PersistentVolumeClaim',
-    metadata: {
-      name: `${GITHUB_REF_SHORT}-mongo-data`,
-      namespace: NAMESPACE
-    },
-    spec: {
-      accessModes: ['ReadWriteOnce'],
-      resources: {
-        requests: {
-          storage: envSwitch(ENVIRONMENT_NAME, '30Gi', '1Gi')
-        }
-      }
-    }
-  }
-
-  await applyConfig(`pvc-${app}`, pvc)
-
-  const deployment = {
-    apiVersion: 'apps/v1',
-    kind: 'Deployment',
-    metadata: {
-      name: appName,
-      namespace: NAMESPACE,
-      labels: {
-        app,
-        slug: GITHUB_REF_SHORT,
-        release: ENVIRONMENT_NAME
-      }
-    },
-    spec: {
-      replicas: 1,
-      selector: {
-        matchLabels: {
-          app,
-          slug: GITHUB_REF_SHORT,
-          release: ENVIRONMENT_NAME
-        }
-      },
-      strategy: {
-        type: 'Recreate'
-      },
-      template: {
-        metadata: {
-          name: appName,
-          labels: {
-            app,
-            slug: GITHUB_REF_SHORT,
-            release: ENVIRONMENT_NAME
-          }
-        },
-        spec: {
-          containers: [
-            {
-              name: appName,
-              image: 'mongo:4.2.3-bionic',
-              env: [],
-              ports: [
-                {
-                  containerPort: port,
-                  protocol: 'TCP'
-                }
-              ],
-              imagePullPolicy: 'IfNotPresent',
-              resources: {
-                requests: {
-                  cpu: '0m',
-                  memory: '128Mi'
-                }
-              },
-              terminationMessagePath: '/dev/termination-log',
-              terminationMessagePolicy: 'File',
-              volumeMounts: [
-                {
-                  name: 'mongo-volume',
-                  mountPath: '/data/db'
-                }
-              ]
-            }
-          ],
-          dnsPolicy: 'ClusterFirst',
-          restartPolicy: 'Always',
-          schedulerName: 'default-scheduler',
-          terminationGracePeriodSeconds: 30,
-          volumes: [
-            {
-              name: 'mongo-volume',
-              persistentVolumeClaim: {
-                claimName: `${GITHUB_REF_SHORT}-mongo-data`
               }
             }
           ]

@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
 import {FullNavigationFragment, useDeleteNavigationMutation, useNavigationListQuery} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -90,7 +91,7 @@ function NavigationList() {
         <Column width={400} align="left" resizable>
           <HeaderCell>{t('navigation.overview.name')}</HeaderCell>
           <Cell>
-            {(rowData: FullNavigationFragment) => (
+            {(rowData: RowDataType<FullNavigationFragment>) => (
               <Link to={`/navigations/edit/${rowData.id}`}>
                 {rowData.name || t('navigation.overview.unknown')}
               </Link>
@@ -100,7 +101,7 @@ function NavigationList() {
         <Column width={100} align="center" fixed="right">
           <HeaderCell>{t('navigation.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
-            {(rowData: FullNavigationFragment) => (
+            {(rowData: RowDataType<FullNavigationFragment>) => (
               <PermissionControl qualifyingPermissions={['CAN_DELETE_NAVIGATION']}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
