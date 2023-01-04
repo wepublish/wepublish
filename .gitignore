@@ -1,15 +1,11 @@
 .DS_Store
 .idea/
-examples/**/lib/
 dist/
-examples/**/LICENSE
-examples/**/assets/
 node_modules
 npm-debug.log
 yarn-error.log
 .tsbuildinfo
 .media
-examples/**/.env
 .changelog
 coverage/
 screenshots

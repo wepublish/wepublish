@@ -1,5 +1,2 @@
 **/dist
 **/node_modules
-examples/**/.env
-examples/**/lib
-examples/**/assets

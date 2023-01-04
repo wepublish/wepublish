@@ -138,10 +138,10 @@ const CommentEditView = memo(() => {
     setRevision(lastRevision)
   }, [commentData])
 
-  const commentTags = useMemo(() => selectedTags ?? comment?.tags?.map(tag => tag.id), [
-    comment,
-    selectedTags
-  ])
+  const commentTags = useMemo(
+    () => selectedTags ?? comment?.tags?.map(tag => tag.id),
+    [comment, selectedTags]
+  )
 
   const ratingOverrides = useMemo(
     () =>
