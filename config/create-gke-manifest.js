@@ -234,7 +234,7 @@ async function applyWebsite() {
             {
               name: appName,
               image,
-              command: ['node', 'dist/apps/editor/main.js'],
+              command: ['node', 'dist/apps/website-example/main.js'],
               env: [
                 {
                   name: 'NODE_ENV',
