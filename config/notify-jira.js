@@ -35,10 +35,6 @@ function getJiraCommentBody() {
     {
       name: 'Media',
       url: `https://media.${GITHUB_REF_SHORT}.wepublish.dev`
-    },
-    {
-      name: 'Login',
-      url: `https://login.${GITHUB_REF_SHORT}.wepublish.dev`
     }
   ]
 
