@@ -10,7 +10,7 @@ import {
   GraphQLInt
 } from 'graphql'
 
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDateTime} from 'graphql-scalars'
 
 import {Context} from '../context'
 
@@ -247,107 +247,107 @@ export const GraphQLPeerArticleConnection = new GraphQLObjectType({
   }
 })
 
-export const GraphQLPublicArticle: GraphQLObjectType<
-  PublicArticle,
-  Context
-> = new GraphQLObjectType<PublicArticle, Context>({
-  name: 'Article',
-  fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
+  new GraphQLObjectType<PublicArticle, Context>({
+    name: 'Article',
+    fields: {
+      id: {type: GraphQLNonNull(GraphQLID)},
 
-    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+      updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+      publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
-    slug: {type: GraphQLNonNull(GraphQLSlug)},
+      slug: {type: GraphQLNonNull(GraphQLSlug)},
 
-    url: {
-      type: GraphQLNonNull(GraphQLString),
-      resolve: createProxyingResolver((article, {}, {urlAdapter}) => {
-        return urlAdapter.getPublicArticleURL(article)
-      })
-    },
+      url: {
+        type: GraphQLNonNull(GraphQLString),
+        resolve: createProxyingResolver((article, {}, {urlAdapter}) => {
+          return urlAdapter.getPublicArticleURL(article)
+        })
+      },
 
-    preTitle: {type: GraphQLString},
-    title: {type: GraphQLNonNull(GraphQLString)},
-    lead: {type: GraphQLString},
-    seoTitle: {type: GraphQLString},
-    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+      preTitle: {type: GraphQLString},
+      title: {type: GraphQLNonNull(GraphQLString)},
+      lead: {type: GraphQLString},
+      seoTitle: {type: GraphQLString},
+      tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
-    canonicalUrl: {type: GraphQLString},
+      canonicalUrl: {type: GraphQLString},
 
-    properties: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublic))),
-      resolve: ({properties}) => {
-        return properties.filter(property => property.public).map(({key, value}) => ({key, value}))
+      properties: {
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublic))),
+        resolve: ({properties}) => {
+          return properties
+            .filter(property => property.public)
+            .map(({key, value}) => ({key, value}))
+        }
+      },
+
+      image: {
+        type: GraphQLImage,
+        resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
+          return imageID ? loaders.images.load(imageID) : null
+        })
+      },
+
+      authors: {
+        type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
+        resolve: createProxyingResolver(({authors, hideAuthor}, args, {loaders}) => {
+          if (hideAuthor) {
+            return []
+          }
+
+          return authors.map(({authorId}) => loaders.authorsByID.load(authorId))
+        })
+      },
+
+      breaking: {type: GraphQLNonNull(GraphQLBoolean)},
+
+      socialMediaTitle: {type: GraphQLString},
+      socialMediaDescription: {type: GraphQLString},
+      socialMediaAuthors: {
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
+        resolve: createProxyingResolver(({socialMediaAuthors, hideAuthor}, args, {loaders}) => {
+          if (hideAuthor) {
+            return []
+          }
+
+          return loaders.authorsByID.loadMany(socialMediaAuthors.map(({authorId}) => authorId))
+        })
+      },
+      socialMediaImage: {
+        type: GraphQLImage,
+        resolve: createProxyingResolver(({socialMediaImageID}, args, {loaders}, info) => {
+          return socialMediaImageID ? loaders.images.load(socialMediaImageID) : null
+        })
+      },
+
+      blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))},
+
+      comments: {
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
+        resolve: createProxyingResolver(
+          async (
+            {id},
+            _,
+            {session, authenticateUser, prisma: {comment, commentRatingSystemAnswer}}
+          ) => {
+            // if session exists, should get user's un-approved comments as well
+            // if not we should get approved ones
+            const userSession = session?.type === SessionType.User ? authenticateUser() : null
+
+            return getPublicCommentsForItemById(
+              id,
+              userSession?.user?.id ?? null,
+              null,
+              -1,
+              commentRatingSystemAnswer,
+              comment
+            )
+          }
+        )
       }
-    },
-
-    image: {
-      type: GraphQLImage,
-      resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
-        return imageID ? loaders.images.load(imageID) : null
-      })
-    },
-
-    authors: {
-      type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
-      resolve: createProxyingResolver(({authors, hideAuthor}, args, {loaders}) => {
-        if (hideAuthor) {
-          return []
-        }
-
-        return authors.map(({authorId}) => loaders.authorsByID.load(authorId))
-      })
-    },
-
-    breaking: {type: GraphQLNonNull(GraphQLBoolean)},
-
-    socialMediaTitle: {type: GraphQLString},
-    socialMediaDescription: {type: GraphQLString},
-    socialMediaAuthors: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
-      resolve: createProxyingResolver(({socialMediaAuthors, hideAuthor}, args, {loaders}) => {
-        if (hideAuthor) {
-          return []
-        }
-
-        return loaders.authorsByID.loadMany(socialMediaAuthors.map(({authorId}) => authorId))
-      })
-    },
-    socialMediaImage: {
-      type: GraphQLImage,
-      resolve: createProxyingResolver(({socialMediaImageID}, args, {loaders}, info) => {
-        return socialMediaImageID ? loaders.images.load(socialMediaImageID) : null
-      })
-    },
-
-    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))},
-
-    comments: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
-      resolve: createProxyingResolver(
-        async (
-          {id},
-          _,
-          {session, authenticateUser, prisma: {comment, commentRatingSystemAnswer}}
-        ) => {
-          // if session exists, should get user's un-approved comments as well
-          // if not we should get approved ones
-          const userSession = session?.type === SessionType.User ? authenticateUser() : null
-
-          return getPublicCommentsForItemById(
-            id,
-            userSession?.user?.id ?? null,
-            null,
-            -1,
-            commentRatingSystemAnswer,
-            comment
-          )
-        }
-      )
     }
-  }
-})
+  })
 
 export const GraphQLPublicArticleConnection = new GraphQLObjectType({
   name: 'ArticleConnection',

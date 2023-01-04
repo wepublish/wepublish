@@ -1,0 +1,171 @@
+{
+  "name": "editor",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/editor/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "npx nx browser editor"
+          },
+          {
+            "command": "npx nx server editor"
+          }
+        ]
+      }
+    },
+    "serve-ssr": {
+      "executor": "@nrwl/webpack:ssr-dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "browserTarget": "editor:build:development",
+        "serverTarget": "editor:serve-server:development",
+        "port": 3000,
+        "browserTargetOptions": {
+          "watch": true
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "browserTarget": "editor:build:production",
+          "serverTarget": "editor:serve-server:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/editor/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/editor/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "browser": {
+      "executor": "@nrwl/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/editor/browser",
+        "index": "apps/editor/src/index.html",
+        "baseHref": "/",
+        "main": "apps/editor/src/main.tsx",
+        "polyfills": "apps/editor/src/polyfills.ts",
+        "tsConfig": "apps/editor/tsconfig.app.json",
+        "assets": ["apps/editor/src/assets"],
+        "styles": [],
+        "scripts": [],
+        "webpackConfig": "@nrwl/react/plugins/webpack"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/editor/src/environments/environment.ts",
+              "with": "apps/editor/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "server": {
+      "executor": "@nrwl/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "main": "apps/editor/server.ts",
+        "outputPath": "dist/apps/editor",
+        "tsConfig": "apps/editor/tsconfig.server.json",
+        "compiler": "babel",
+        "externalDependencies": "all",
+        "generatePackageJson": true,
+        "outputHashing": "none",
+        "webpackConfig": "@nrwl/react/plugins/webpack"
+      },
+      "configurations": {
+        "development": {
+          "optimization": false,
+          "sourceMap": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/editor/src/environments/environment.ts",
+              "with": "apps/editor/src/environments/environment.prod.ts"
+            }
+          ],
+          "sourceMap": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/webpack:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "editor:browser",
+        "port": 3000,
+        "hmr": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "editor:browser:development"
+        },
+        "production": {
+          "buildTarget": "editor:browser:production",
+          "hmr": false
+        }
+      }
+    },
+    "serve-server": {
+      "executor": "@nrwl/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "editor:server:development",
+        "buildTargetOptions": {
+          "watch": true
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "buildTarget": "editor:server:production"
+        }
+      }
+    },
+    "generate-api": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "npx graphql-codegen -r dotenv/config --config codegen.yml"
+          }
+        ]
+      }
+    }
+  },
+  "tags": []
+}

@@ -5,7 +5,7 @@ Object {
   "data": Object {
     "createUser": Object {
       "email": Any<String>,
-      "emailVerifiedAt": Any<String>,
+      "emailVerifiedAt": Any<Date>,
       "id": Any<String>,
       "name": "Robin Wayne",
       "roles": Array [],
@@ -47,7 +47,7 @@ Object {
   "data": Object {
     "user": Object {
       "email": Any<String>,
-      "emailVerifiedAt": Any<String>,
+      "emailVerifiedAt": Any<Date>,
       "id": Any<String>,
       "name": "Robin Wayne",
       "roles": Array [],
@@ -109,7 +109,7 @@ Object {
   "data": Object {
     "resetUserPassword": Object {
       "email": Any<String>,
-      "emailVerifiedAt": Any<String>,
+      "emailVerifiedAt": Any<Date>,
       "id": Any<String>,
       "name": "Robin Wayne",
       "roles": Array [],

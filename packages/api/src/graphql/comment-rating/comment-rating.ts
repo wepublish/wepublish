@@ -15,7 +15,7 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../../context'
 
 export const GraphQLCommentRatingSystem = new GraphQLObjectType<CommentRatingSystem, Context>({

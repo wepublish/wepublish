@@ -310,7 +310,6 @@ export async function runServer() {
     urlAdapter: new WepublishURLAdapter({websiteURL}),
     playground: true,
     introspection: true,
-    tracing: true,
     logger,
     challenge
   })

@@ -1,6 +1,6 @@
 import {SubscriptionDeactivationReason} from '@prisma/client'
 import {GraphQLEnumType, GraphQLNonNull, GraphQLObjectType} from 'graphql'
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDateTime} from 'graphql-scalars'
 
 export const GraphQLSubscriptionDeactivationReason = new GraphQLEnumType({
   name: 'SubscriptionDeactivationReason',

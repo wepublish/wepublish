@@ -1,25 +1,25 @@
 import React from 'react'
 import ReactDOM from 'react-dom/server'
-import {HelmetProvider, FilledContext} from 'react-helmet-async'
+import {FilledContext, HelmetProvider} from 'react-helmet-async'
 
 // Add this import to the top of the file
+import {ApolloClient, ApolloProvider, createHttpLink, InMemoryCache} from '@apollo/client'
 import {getDataFromTree} from '@apollo/client/react/ssr'
-import {ApolloProvider, ApolloClient, createHttpLink, InMemoryCache} from '@apollo/client'
+import {LazyCapture, renderStylesToComponents, StyleProvider} from '@karma.run/react'
 import {fetch} from 'cross-fetch'
-import {LazyCapture, StyleProvider, renderStylesToComponents} from '@karma.run/react'
 
-import {RouteProvider, Route} from '../shared/route/routeContext'
 import {FacebookProvider} from '../shared/atoms/facebookEmbed'
 import {InstagramProvider} from '../shared/atoms/instagramEmbed'
-import {TwitterProvider} from '../shared/atoms/twitterEmbed'
 import {TikTokProvider} from '../shared/atoms/tikTokEmbed'
+import {TwitterProvider} from '../shared/atoms/twitterEmbed'
+import {Route, RouteProvider} from '../shared/route/routeContext'
 
-import {ElementID} from '../shared/elementID'
 import {App} from '../shared/app'
 import {AppContextProvider} from '../shared/appContext'
+import {ElementID} from '../shared/elementID'
 
-import {createStyleRenderer, fetchIntrospectionQueryResultData} from '../shared/utility'
 import {AuthProvider} from '../shared/authContext'
+import {createStyleRenderer, fetchIntrospectionQueryResultData} from '../shared/utility'
 
 export interface RenderOptions {
   apiURL: string
@@ -107,14 +107,8 @@ export async function renderMarkup(opts: RenderOptions) {
     canonicalHost
   } = opts
 
-  const {
-    componentString,
-    renderedLazyPaths,
-    styleRenderer,
-    helmet,
-    initialState,
-    error
-  } = await renderApp(opts)
+  const {componentString, renderedLazyPaths, styleRenderer, helmet, initialState, error} =
+    await renderApp(opts)
 
   const bundles: string[][] = renderedLazyPaths.map(path => moduleMap[path])
   const bundleSet = Array.from(
@@ -131,54 +125,57 @@ export async function renderMarkup(opts: RenderOptions) {
       ReactDOM.renderToStaticMarkup(
         <html>
           <head>
-            {helmet.title.toComponent()}
-            {helmet.meta.toComponent()}
-            {helmet.link.toComponent()}
-            {helmet.script.toComponent()}
-            {helmet.noscript.toComponent()}
+            <>
+              {helmet.title.toComponent()}
+              {helmet.meta.toComponent()}
+              {helmet.link.toComponent()}
+              {helmet.script.toComponent()}
+              {helmet.noscript.toComponent()}
 
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
+              <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-            <link rel="manifest" href="/static/manifest.json" />
-            <link rel="icon" type="image/png" sizes="128x128" href="/static/favicon-128.png" />
-            <link rel="icon" type="image/png" sizes="64x64" href="/static/favicon-64.png" />
+              <link rel="manifest" href="/static/manifest.json" />
+              <link rel="icon" type="image/png" sizes="128x128" href="/static/favicon-128.png" />
+              <link rel="icon" type="image/png" sizes="64x64" href="/static/favicon-64.png" />
 
-            {scriptElements}
+              {scriptElements}
 
-            <script async src={`${staticHost}/${clientEntryFile}`} />
+              <script async src={`${staticHost}/${clientEntryFile}`} />
 
-            <script
-              type="application/json"
-              id={ElementID.APIURL}
-              dangerouslySetInnerHTML={{__html: JSON.stringify(apiURL)}}
-            />
+              <script
+                type="application/json"
+                id={ElementID.APIURL}
+                dangerouslySetInnerHTML={{__html: JSON.stringify(apiURL)}}
+              />
 
-            <script
-              type="application/json"
-              id={ElementID.CanonicalHost}
-              dangerouslySetInnerHTML={{__html: JSON.stringify(canonicalHost)}}
-            />
+              <script
+                type="application/json"
+                id={ElementID.CanonicalHost}
+                dangerouslySetInnerHTML={{__html: JSON.stringify(canonicalHost)}}
+              />
 
-            <script
-              type="application/json"
-              id={ElementID.RenderedPaths}
-              dangerouslySetInnerHTML={{__html: JSON.stringify(renderedLazyPaths)}}
-            />
+              <script
+                type="application/json"
+                id={ElementID.RenderedPaths}
+                dangerouslySetInnerHTML={{__html: JSON.stringify(renderedLazyPaths)}}
+              />
 
-            <script
-              type="application/json"
-              id={ElementID.IntrospectionResult}
-              dangerouslySetInnerHTML={{__html: JSON.stringify(introspectionQueryResultData)}}
-            />
+              <script
+                type="application/json"
+                id={ElementID.IntrospectionResult}
+                dangerouslySetInnerHTML={{__html: JSON.stringify(introspectionQueryResultData)}}
+              />
 
-            <script
-              type="application/json"
-              id={ElementID.InitialState}
-              dangerouslySetInnerHTML={{__html: JSON.stringify(initialState)}}
-            />
+              <script
+                type="application/json"
+                id={ElementID.InitialState}
+                dangerouslySetInnerHTML={{__html: JSON.stringify(initialState)}}
+              />
 
-            {renderStylesToComponents(styleRenderer)}
+              {renderStylesToComponents(styleRenderer)}
+            </>
           </head>
+
           <body>
             <div id={ElementID.ReactRoot} dangerouslySetInnerHTML={{__html: componentString}}></div>
           </body>

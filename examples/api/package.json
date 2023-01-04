@@ -21,7 +21,7 @@
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cross-fetch": "^3.0.6",
-    "graphql": "^14.6.0",
+    "graphql": "^15.8.0",
     "pino": "^6.11.0",
     "pino-multi-stream": "^5.2.0",
     "pino-sentry": "^0.6.0",

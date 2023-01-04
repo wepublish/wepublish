@@ -18,7 +18,6 @@ jobs:
     needs: date_sha_tag
     uses: ./.github/workflows/publish-docker-image.yml
     with:
-      target: production
       tags: |
         ghcr.io/wepublish/wepublish:master-${{ needs.date_sha_tag.outputs.tag }}
     secrets: inherit
@@ -27,7 +26,6 @@ jobs:
     needs: date_sha_tag
     uses: ./.github/workflows/publish-docker-image.yml
     with:
-      target: dev
       tags: |
         ghcr.io/wepublish/wepublish:demo-${{ needs.date_sha_tag.outputs.tag }}
     secrets: inherit
