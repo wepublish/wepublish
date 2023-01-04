@@ -7067,10 +7067,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.38.tgz#f8bb07c371ccb1903f3752872c89f44006132947"
   integrity sha512-5jY9RhV7c0Z4Jy09G+NIDTsCZ5G0L5n+Z+p+Y7t5VJHM30bgwzSjVtlcBxqAj+6L/swIlvtOSzr8rBk/aNyV2g==
 
-"@types/node@18.7.18":
-  version "18.7.18"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.18.tgz#633184f55c322e4fb08612307c274ee6d5ed3154"
-  integrity sha512-m+6nTEOadJZuTPkKR/SYK3A2d7FZrgElol9UP1Kae90VVU4a6mxnPuLiIW1m4Cq4gZ/nWb9GrdVXJCoCazDAbg==
+"@types/node@18.11.9":
+  version "18.11.9"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.9.tgz#02d013de7058cea16d36168ef2fc653464cfbad4"
+  integrity sha512-CRpX21/kGdzjOpFsZSkcrXMGIBWMGNIHXXBVFSH+ggkftxg+XYP20TESbh+zFvFj3EQOl5byk0HTRn1IL6hbqg==
 
 "@types/node@^10.1.0":
   version "10.17.24"
@@ -7839,18 +7839,24 @@
     nanoid "^2.1.11"
     typescript "^4.7.4"
 
-"@wepublish/api-media-karma@*":
-  version "5.0.0"
-  resolved "https://registry.npmjs.org/@wepublish/api-media-karma/-/api-media-karma-5.0.0.tgz#4a32c679e829ae408e90eb80469772ec7374f52b"
-  integrity sha512-UpsLKKLLp2++LJWpqd34gibXefGdKT32GfsaaC+D1ZqzgYEZUSF913zwmtsd9M7QFlfAG3OmX84WIibA+/1eiA==
-  dependencies:
-    form-data "^3.0.0"
-    node-fetch "^2.6.0"
-
-"@whatwg-node/fetch@0.5.3", "@whatwg-node/fetch@^0.5.0":
+"@whatwg-node/fetch@0.5.3":
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/@whatwg-node/fetch/-/fetch-0.5.3.tgz#afbd38a2e5392d91318845b967529076ca654b9e"
   integrity sha512-cuAKL3Z7lrJJuUrfF1wxkQTb24Qd1QO/lsjJpM5ZSZZzUMms5TPnbGeGUKWA3hVKNHh30lVfr2MyRCT5Jfkucw==
+  dependencies:
+    "@peculiar/webcrypto" "^1.4.0"
+    abort-controller "^3.0.0"
+    busboy "^1.6.0"
+    form-data-encoder "^1.7.1"
+    formdata-node "^4.3.1"
+    node-fetch "^2.6.7"
+    undici "^5.12.0"
+    web-streams-polyfill "^3.2.0"
+
+"@whatwg-node/fetch@^0.5.0":
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/@whatwg-node/fetch/-/fetch-0.5.4.tgz#ef7c409078fc4a5087415043f87c9d9589cda8d6"
+  integrity sha512-dR5PCzvOeS7OaW6dpIlPt+Ou3pak7IEG+ZVAV26ltcaiDB3+IpuvjqRdhsY6FKHcqBo1qD+S99WXY9Z6+9Rwnw==
   dependencies:
     "@peculiar/webcrypto" "^1.4.0"
     abort-controller "^3.0.0"
