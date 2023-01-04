@@ -42,7 +42,7 @@ const QuoteStyle = cssRule<{showBackground: boolean}>(({showBackground}) => ({
 }))
 
 export function QuoteBlock({text, author}: QuoteBlockProps) {
-  const ref = React.createRef<HTMLParagraphElement>()
+  const ref = React.createRef<HTMLQuoteElement>()
   const show = usePermanentVisibility(ref, {threshold: 0})
   const css = useStyle({showBackground: show})
   return (

@@ -14,10 +14,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: "Use NodeJS 12"
+      - name: "Use NodeJS 16"
         uses: actions/setup-node@v3
         with:
-          node-version: '12'
+          node-version: '16'
           cache: yarn
 
       - name: "Setup yarn/npm"
