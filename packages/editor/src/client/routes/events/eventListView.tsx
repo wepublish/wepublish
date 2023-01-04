@@ -10,19 +10,19 @@ import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/p
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
 import {DeleteEventModal} from './deleteEventModal'
 
-export function EventStartsAtView({event}: {event: Event}) {
-  const startsAt = new Date(event.startsAt)
+export function EventStartsAtView({startsAt}: {startsAt: string}) {
+  const startsAtDate = new Date(startsAt)
   const {t} = useTranslation()
 
-  return <>{t('event.list.startsAt', {startsAt})}</>
+  return <>{t('event.list.startsAt', {startsAt: startsAtDate})}</>
 }
 
-export function EventEndsAtView({event}: {event: Event}) {
-  const endsAt = event.endsAt ? new Date(event.endsAt) : undefined
+export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
+  const endsAtDate = endsAt ? new Date(endsAt) : undefined
   const {t} = useTranslation()
 
   if (endsAt) {
-    return <>{t('event.list.endsAt', {endsAt})}</>
+    return <>{t('event.list.endsAt', {endsAt: endsAtDate})}</>
   }
 
   return <>{t('event.list.endsAtNone')}</>
@@ -90,12 +90,16 @@ function EventListView() {
 
             <Table.Column width={250} resizable>
               <Table.HeaderCell>{t('event.list.startsAt')}</Table.HeaderCell>
-              <Table.Cell>{(rowData: Event) => <EventStartsAtView event={rowData} />}</Table.Cell>
+              <Table.Cell>
+                {(rowData: Event) => <EventStartsAtView startsAt={rowData.startsAt} />}
+              </Table.Cell>
             </Table.Column>
 
             <Table.Column width={250} resizable>
               <Table.HeaderCell>{t('event.list.endsAt')}</Table.HeaderCell>
-              <Table.Cell>{(rowData: Event) => <EventEndsAtView event={rowData} />}</Table.Cell>
+              <Table.Cell>
+                {(rowData: Event) => <EventEndsAtView endsAt={rowData.endsAt} />}
+              </Table.Cell>
             </Table.Column>
 
             <Table.Column resizable>

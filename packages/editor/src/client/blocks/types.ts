@@ -352,7 +352,10 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
     case BlockType.EventBlock:
       return {
         event: {
-          filter: block.value?.filter ?? {}
+          filter: {
+            events: block.value?.filter.events,
+            tags: block.value?.filter.tags
+          }
         }
       }
 
