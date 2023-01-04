@@ -31,7 +31,8 @@ export function FlexTeaserBlock({
         cursor: showGrabCursor ? 'grab' : '',
         height: 'inherit',
         overflow: 'hidden',
-        zIndex: 1
+        zIndex: 1,
+        display: 'grid'
       }}>
       <PlaceholderInput onAddClick={onChoose}>
         {teaser && (

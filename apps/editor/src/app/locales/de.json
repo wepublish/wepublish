@@ -142,7 +142,8 @@
         "enterSocialMediaTitle": "Bitte Titel für Social Media hinzufügen",
         "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen",
         "enterAuthors": "Bitte Autor:in hinzufügen",
-        "peerDisabled": "Dieser Peer ist momentan deaktiviert"
+        "peerDisabled": "Dieser Peer ist momentan deaktiviert",
+        "comments": "Kommentare"
       }
     },
     "articles": {
@@ -450,7 +451,21 @@
       "userPanelHeader": "Verfasser:in des Kommentars",
       "actions": "Aktionen",
       "ratingOverrides": "Kommentarbewertung überschreiben",
-      "noOverride": "Nicht überschreiben"
+      "noOverride": "Nicht überschreiben",
+      "commentContextHeader": "Kommentar-Historie",
+      "goToArticle": "Zum Artikel"
+    },
+    "commentHistory": {
+      "guestUser": "Unauthentifizierter Gast",
+      "unknownUser": "Benutzer ohne Namen",
+      "addComment": "Neuen Kommentar erstellen"
+    },
+    "commentPreview": {
+      "noTags": "Keine Tags",
+      "source": "Quelle",
+      "noSource": "Keine Quelle",
+      "editComment": "Kommentar bearbeiten",
+      "noContent": "Dieser Kommentar hat keinen Inhalt."
     },
     "commentUser": {
       "selectExistingUser": "Registrierte Benutzer:in wählen",
@@ -673,7 +688,7 @@
       "authors": "Autor*innen",
       "comments": "Kommentare",
       "commentRating": "Bewertungssystem",
-      "commentTags": "Etiketten",
+      "commentTags": "Tags",
       "imageLibrary": "Bilder",
       "settings": "Einstellungen",
       "languageSwitch": {
@@ -1243,12 +1258,12 @@
     },
     "tags": {
       "overview": {
-        "title": "Etiketten",
-        "createTag": "Neues Etikett",
-        "placeholder": "Name des Etiketts",
+        "title": "Tags",
+        "createTag": "Neuen Tag",
+        "placeholder": "Name des Tags",
         "areYouSure": "Bist Du sicher?",
-        "areYouSureConfirmation": "Etikett löschen",
-        "areYouSureBody": "Das Etikett \"{{ tag }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden."
+        "areYouSureConfirmation": "Tag löschen",
+        "areYouSureBody": "Das Tag \"{{ tag }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden."
       }
     },
     "permissions": {

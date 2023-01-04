@@ -42,7 +42,7 @@ As of now you’re good to go the execute queries/mutations in the GraphQL-Playg
 
 ## Installation troubleshooting
 
-### Q: While running `yarn install` I get the following error `The engine "node" is incompatible with this module. Expected version "^10.13.0 || ^12.13.0 || >=14.0.0". Got "12.0.0"`. What can I do?
+### Q: While running `yarn install` I get the following error `The engine "node" is incompatible with this module. Expected version "^16.0.0". Got "12.0.0"`. What can I do?
 
 A: Your local node environment is ahead (or behind) of wepublish.
 As a workaround you can run `yarn install --ignore-engines`

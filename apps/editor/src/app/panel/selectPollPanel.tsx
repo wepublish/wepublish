@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAddCircle} from 'react-icons/md'
 import {Button, Drawer, IconButton, Message, Pagination, Table, toaster} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
 import {Poll, usePollsLazyQuery} from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
@@ -67,7 +68,7 @@ export function SelectPollPanel({selectedPoll, onClose, onSelect}: SelectPollPan
           <Table.Column resizable>
             <Table.HeaderCell>{t('pollList.state')}</Table.HeaderCell>
             <Table.Cell>
-              {(rowData: Poll) => (
+              {(rowData: RowDataType<Poll>) => (
                 <PollStateIndication closedAt={rowData.closedAt} opensAt={rowData.opensAt} />
               )}
             </Table.Cell>
@@ -76,24 +77,28 @@ export function SelectPollPanel({selectedPoll, onClose, onSelect}: SelectPollPan
           <Table.Column resizable width={200}>
             <Table.HeaderCell>{t('pollList.question')}</Table.HeaderCell>
             <Table.Cell>
-              {(rowData: Poll) => rowData.question || t('pollList.noQuestion')}
+              {(rowData: RowDataType<Poll>) => rowData.question || t('pollList.noQuestion')}
             </Table.Cell>
           </Table.Column>
 
           <Table.Column width={250} resizable>
             <Table.HeaderCell>{t('pollList.opensAt')}</Table.HeaderCell>
-            <Table.Cell>{(rowData: Poll) => <PollOpensAtView poll={rowData} />}</Table.Cell>
+            <Table.Cell>
+              {(rowData: RowDataType<Poll>) => <PollOpensAtView poll={rowData} />}
+            </Table.Cell>
           </Table.Column>
 
           <Table.Column width={250} resizable>
             <Table.HeaderCell>{t('pollList.closedAt')}</Table.HeaderCell>
-            <Table.Cell>{(rowData: Poll) => <PollClosedAtView poll={rowData} />}</Table.Cell>
+            <Table.Cell>
+              {(rowData: RowDataType<Poll>) => <PollClosedAtView poll={rowData} />}
+            </Table.Cell>
           </Table.Column>
 
           <Table.Column width={125}>
             <Table.HeaderCell align="center">{t('blocks.poll.select')}</Table.HeaderCell>
             <Table.Cell align="center">
-              {(rowData: Poll) => (
+              {(rowData: RowDataType<Poll>) => (
                 <IconButtonTooltip caption={t('blocks.poll.select')}>
                   <IconButton
                     icon={<MdAddCircle />}

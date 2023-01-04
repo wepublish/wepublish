@@ -29,7 +29,8 @@ export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValu
           height: isEmpty ? 200 : undefined,
           padding: 0,
           overflow: 'hidden',
-          backgroundColor: '#f7f9fa'
+          backgroundColor: '#f7f9fa',
+          display: 'grid'
         }}>
         <PlaceholderInput onAddClick={() => setHtmlDialogOpen(true)}>
           {!isEmpty && (

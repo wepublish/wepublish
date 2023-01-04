@@ -10,7 +10,7 @@ import {FacebookProvider} from './app/blocks/embeds/facebook'
 import {InstagramProvider} from './app/blocks/embeds/instagram'
 import {TwitterProvider} from './app/blocks/embeds/twitter'
 import {initI18N} from './app/i18n'
-import {LocalStorageKey} from './app/utility'
+import {LocalStorageKey, getSettings} from './app/utility'
 import {ElementID} from './shared/elementID'
 import {ClientSettings} from './shared/types'
 
@@ -51,9 +51,7 @@ export async function fetchIntrospectionQueryResultData(url: string) {
 }
 
 const onDOMContentLoaded = async () => {
-  const {apiURL}: ClientSettings = JSON.parse(
-    document.getElementById(ElementID.Settings)!.textContent!
-  )
+  const {apiURL} = getSettings()
 
   const adminAPIURL = `${apiURL}/admin`
 
@@ -88,6 +86,7 @@ const onDOMContentLoaded = async () => {
         }
       })
     }
+
     forward(operation)
   })
 
@@ -106,7 +105,7 @@ const onDOMContentLoaded = async () => {
   ReactDOM.render(
     <ApolloProvider client={client}>
       <AuthProvider>
-        <IconContext.Provider value={{className: 'react-icons'}}>
+        <IconContext.Provider value={{className: 'rs-icon'}}>
           <FacebookProvider sdkLanguage={'en_US'}>
             <InstagramProvider>
               <TwitterProvider>
@@ -124,7 +123,13 @@ const onDOMContentLoaded = async () => {
 initI18N()
 
 if (document.readyState !== 'loading') {
-  onDOMContentLoaded()
+  onDOMContentLoaded().catch(console.error)
 } else {
-  document.addEventListener('DOMContentLoaded', onDOMContentLoaded)
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      await onDOMContentLoaded()
+    } catch (e) {
+      console.log(e)
+    }
+  })
 }

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Avatar, FlexboxGrid, Message, Pagination, Popover, Table, toaster, Whisper} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
 import {ArticleFilter, ArticleSort, PeerArticle, usePeerArticleListQuery} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
@@ -114,7 +115,7 @@ function PeerArticleList() {
           <Column width={200} align="left" resizable>
             <HeaderCell>{t('peerArticles.title')}</HeaderCell>
             <Cell>
-              {(rowData: PeerArticle) => (
+              {(rowData: RowDataType<PeerArticle>) => (
                 <a href={rowData.peeredArticleURL} target="_blank" rel="noreferrer">
                   {rowData.article.latest.title || t('articles.overview.untitled')}
                 </a>
@@ -125,7 +126,7 @@ function PeerArticleList() {
           <Column width={200} align="left" resizable>
             <HeaderCell>{t('peerArticles.lead')}</HeaderCell>
             <Cell>
-              {(rowData: PeerArticle) =>
+              {(rowData: RowDataType<PeerArticle>) =>
                 rowData.article.latest.lead || t('articles.overview.untitled')
               }
             </Cell>
@@ -134,7 +135,7 @@ function PeerArticleList() {
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('peerArticles.publishedAt')}</HeaderCell>
             <Cell dataKey="publishedAt">
-              {(rowData: PeerArticle) =>
+              {(rowData: RowDataType<PeerArticle>) =>
                 rowData.article.latest.publishedAt
                   ? t('peerArticles.publicationDate', {
                       publicationDate: new Date(rowData.article.latest.publishedAt)
@@ -147,7 +148,7 @@ function PeerArticleList() {
           <Column width={150} align="left" resizable>
             <HeaderCell>{t('peerArticles.peer')}</HeaderCell>
             <Cell dataKey="peer" style={{display: 'flex'}}>
-              {(rowData: PeerArticle) => (
+              {(rowData: RowDataType<PeerArticle>) => (
                 <>
                   <Avatar
                     src={rowData.peer.profile?.logo?.url || undefined}
@@ -166,10 +167,13 @@ function PeerArticleList() {
           <Column width={120} align="left" resizable>
             <HeaderCell>{t('peerArticles.authors')}</HeaderCell>
             <Cell>
-              {(rowData: PeerArticle) => {
-                return rowData.article.latest.authors.reduce((allAuthors, author, index) => {
-                  return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`
-                }, '')
+              {(rowData: RowDataType<PeerArticle>) => {
+                return (rowData as PeerArticle).article.latest.authors.reduce(
+                  (allAuthors, author, index) => {
+                    return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`
+                  },
+                  ''
+                )
               }}
             </Cell>
           </Column>
@@ -178,7 +182,7 @@ function PeerArticleList() {
             <HeaderCell>{t('peerArticles.articleImage')}</HeaderCell>
 
             <Cell>
-              {(rowData: PeerArticle) =>
+              {(rowData: RowDataType<PeerArticle>) =>
                 rowData.article.latest.image?.url ? (
                   <Whisper
                     placement="left"
@@ -210,7 +214,7 @@ function PeerArticleList() {
           {/* <Column width={200} align="left" resizable>
             <HeaderCell>{t('peerArticles.originalArticle')}</HeaderCell>
             <Cell>
-              {(rowData: PeerArticle) => (
+              {(rowData: RowDataType<PeerArticle>) => (
                 <Link href={rowData.article.latest?.url ?? rowData.peer.hostURL} target="blank">
                   {t('peerArticles.toOriginalArticle')}
                 </Link>

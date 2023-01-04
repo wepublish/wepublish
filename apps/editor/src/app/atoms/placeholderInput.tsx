@@ -14,6 +14,7 @@ export interface PlaceholderInputProps {
   onAddClick?: () => void
   disabled?: boolean
   maxHeight?: number
+  minHeight?: number
 }
 
 /**
@@ -23,7 +24,8 @@ export function PlaceholderInput({
   children,
   onAddClick,
   disabled,
-  maxHeight = 450
+  maxHeight = 450,
+  minHeight
 }: PlaceholderInputProps) {
   if (children) {
     return <>{children}</>
@@ -32,13 +34,12 @@ export function PlaceholderInput({
   return (
     <div
       style={{
-        display: 'flex',
+        display: 'grid',
         width: '100%',
         height: '100%',
         maxHeight,
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
+        minHeight,
+        placeItems: 'center',
         backgroundColor: '#f7f9fa'
       }}>
       <IconButton

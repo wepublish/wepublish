@@ -13,6 +13,7 @@ import {
   Pagination,
   Table
 } from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
 import {
   FullImageFragment,
@@ -60,7 +61,11 @@ function ImageList() {
     skip: (activePage - 1) * limit
   }
 
-  const {data, refetch, loading: isLoading} = useImageListQuery({
+  const {
+    data,
+    refetch,
+    loading: isLoading
+  } = useImageListQuery({
     fetchPolicy: 'network-only',
     variables: listVariables
   })
@@ -129,7 +134,7 @@ function ImageList() {
           <Column width={160} align="left" resizable>
             <HeaderCell>{t('images.overview.image')}</HeaderCell>
             <Cell>
-              {(rowData: ImageRefFragment) => (
+              {(rowData: RowDataType<ImageRefFragment>) => (
                 // <Link route={ImageEditRoute.create({id: rowData.id}, current ?? undefined)}>
                 // <img
                 //   src={rowData.thumbURL || ''}
@@ -148,7 +153,7 @@ function ImageList() {
           <Column width={160} align="left" resizable>
             <HeaderCell>{t('images.overview.title')}</HeaderCell>
             <Cell className="displayThreeLinesOnly">
-              {(rowData: ImageRefFragment) => (
+              {(rowData: RowDataType<ImageRefFragment>) => (
                 <p className={'displayThreeLinesOnly'}>
                   {rowData.title ? rowData.title : t('images.overview.untitled')}
                 </p>
@@ -158,7 +163,7 @@ function ImageList() {
           <Column width={340} align="left" resizable>
             <HeaderCell>{t('images.overview.description')}</HeaderCell>
             <Cell className={'displayThreeLinesOnly'}>
-              {(rowData: ImageRefFragment) => (
+              {(rowData: RowDataType<ImageRefFragment>) => (
                 <p className={'displayThreeLinesOnly'}>
                   {rowData.description ? rowData.description : t('images.overview.noDescription')}
                 </p>
@@ -169,7 +174,7 @@ function ImageList() {
           <Column width={250} align="left" resizable>
             <HeaderCell>{t('images.overview.filename')}</HeaderCell>
             <Cell>
-              {(rowData: ImageRefFragment) => (
+              {(rowData: RowDataType<ImageRefFragment>) => (
                 <p className={'displayThreeLinesOnly'}>
                   {rowData.filename ? rowData.filename : ''}
                 </p>
@@ -180,7 +185,7 @@ function ImageList() {
           <Column width={160} align="center" resizable>
             <HeaderCell>{t('images.overview.actions')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
-              {(rowData: ImageRefFragment) => (
+              {(rowData: RowDataType<ImageRefFragment>) => (
                 <>
                   <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
                     <IconButtonTooltip caption={t('images.overview.edit')}>
@@ -207,7 +212,7 @@ function ImageList() {
                         style={{marginLeft: '5px'}}
                         onClick={event => {
                           event.preventDefault()
-                          setCurrentImage(rowData)
+                          setCurrentImage(rowData as ImageRefFragment)
                           setConfirmationDialogOpen(true)
                         }}
                       />
