@@ -1,4 +1,3 @@
-// import { User } from '../../../../../packages/api/lib/db/user'
 import {PublishedArticle, Author, ArticleMeta, Comment, Peer} from '../types'
 import {imageAdapter, getArticleBlocks} from './blockAdapters'
 

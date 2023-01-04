@@ -1,5 +1,0 @@
-{
-  "watch": ["../../node_modules/@wepublish/api/lib/**/*.js", "./dist/**/*.js"],
-  "delay": 250,
-  "ignoreRoot": [".git"]
-}
