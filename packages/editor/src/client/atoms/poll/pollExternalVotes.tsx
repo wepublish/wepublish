@@ -100,25 +100,23 @@ export function ExternalVoteTable({
   }
 
   return (
-    <>
-      <Table data={poll?.externalVoteSources || []} loading={loading} autoHeight rowHeight={64}>
-        {/* source columns */}
-        <Table.Column>
-          <Table.HeaderCell>{t('pollExternalVotes.sourceHeaderCell')}</Table.HeaderCell>
-          <Table.Cell>{(voteSource: any) => voteSource.source}</Table.Cell>
-        </Table.Column>
-        {iterateAnswerColumns()}
-        {/* delete button */}
-        <Table.Column>
-          <Table.HeaderCell>{t('delete')}</Table.HeaderCell>
-          <Table.Cell>
-            {(voteSource: PollExternalVoteSource) => (
-              <IconButton icon={<MdDelete />} onClick={() => onClickDeleteBtn(voteSource)} />
-            )}
-          </Table.Cell>
-        </Table.Column>
-      </Table>
-    </>
+    <Table data={poll?.externalVoteSources || []} loading={loading} autoHeight rowHeight={64}>
+      {/* source columns */}
+      <Table.Column>
+        <Table.HeaderCell>{t('pollExternalVotes.sourceHeaderCell')}</Table.HeaderCell>
+        <Table.Cell>{(voteSource: any) => voteSource.source}</Table.Cell>
+      </Table.Column>
+      {iterateAnswerColumns()}
+      {/* delete button */}
+      <Table.Column>
+        <Table.HeaderCell>{t('delete')}</Table.HeaderCell>
+        <Table.Cell>
+          {(voteSource: PollExternalVoteSource) => (
+            <IconButton icon={<MdDelete />} onClick={() => onClickDeleteBtn(voteSource)} />
+          )}
+        </Table.Cell>
+      </Table.Column>
+    </Table>
   )
 }
 
@@ -181,23 +179,21 @@ export function AddSource({poll, setLoading, onPollChange}: addSourceProps) {
     setNewSource(undefined)
   }
   return (
-    <>
-      <Row>
-        <Col xs={12}>
-          <FormControl
-            name="addNewSource"
-            placeholder={t('pollExternalVotes.newSourcePlaceholder')}
-            value={newSource || ''}
-            onChange={setNewSource}
-          />
-        </Col>
-        <Col xs={12}>
-          <IconButton icon={<MdAdd />} appearance="primary" onClick={createPoll}>
-            {t('pollExternalVotes.addSourceBtn')}
-          </IconButton>
-        </Col>
-      </Row>
-    </>
+    <Row>
+      <Col xs={12}>
+        <FormControl
+          name="addNewSource"
+          placeholder={t('pollExternalVotes.newSourcePlaceholder')}
+          value={newSource || ''}
+          onChange={setNewSource}
+        />
+      </Col>
+      <Col xs={12}>
+        <IconButton icon={<MdAdd />} appearance="primary" onClick={createPoll}>
+          {t('pollExternalVotes.addSourceBtn')}
+        </IconButton>
+      </Col>
+    </Row>
   )
 }
 
@@ -245,30 +241,26 @@ export function DeleteModal({
   }
 
   return (
-    <>
-      <Modal open={openModal}>
-        <Modal.Title>{t('pollExternalVotes.deleteTitle')}</Modal.Title>
-        <Modal.Body>
-          {t('pollExternalVotes.deleteBody', {source: sourceToDelete?.source})}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            appearance="primary"
-            onClick={async () => {
-              await deletePoll()
-            }}>
-            {t('pollExternalVotes.deleteExternalVoteBtn')}
-          </Button>
-          <Button
-            appearance="subtle"
-            onClick={() => {
-              closeModal()
-            }}>
-            {t('cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+    <Modal open={openModal}>
+      <Modal.Title>{t('pollExternalVotes.deleteTitle')}</Modal.Title>
+      <Modal.Body>{t('pollExternalVotes.deleteBody', {source: sourceToDelete?.source})}</Modal.Body>
+      <Modal.Footer>
+        <Button
+          appearance="primary"
+          onClick={async () => {
+            await deletePoll()
+          }}>
+          {t('pollExternalVotes.deleteExternalVoteBtn')}
+        </Button>
+        <Button
+          appearance="subtle"
+          onClick={() => {
+            closeModal()
+          }}>
+          {t('cancel')}
+        </Button>
+      </Modal.Footer>
+    </Modal>
   )
 }
 

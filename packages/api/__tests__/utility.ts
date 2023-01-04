@@ -1,7 +1,5 @@
 import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
-import {ApolloServer} from 'apollo-server'
-import {createTestClient} from 'apollo-server-testing'
-import {ApolloServerTestClient} from 'apollo-server-testing/dist/createTestClient'
+import {ApolloServer} from 'apollo-server-express'
 import * as crypto from 'crypto'
 import {URL} from 'url'
 import {
@@ -21,8 +19,8 @@ import {DefaultSessionTTL} from '../src/db/common'
 import {createUserSession} from '../src/graphql/session/session.mutation'
 
 export interface TestClient {
-  testClientPublic: ApolloServerTestClient
-  testClientPrivate: ApolloServerTestClient
+  testServerPublic: ApolloServer
+  testServerPrivate: ApolloServer
 }
 
 class ExampleURLAdapter implements URLAdapter {
@@ -108,11 +106,9 @@ export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
 
   const challenge = new AlgebraicCaptchaChallenge('secret', 600, {})
 
-  const apolloServerPublic = new ApolloServer({
+  const testServerPublic = new ApolloServer({
     schema: GraphQLWepublishPublicSchema,
-    playground: false,
     introspection: false,
-    tracing: false,
     context: async () =>
       await contextFromRequest(request, {
         hostURL: 'https://fakeURL',
@@ -130,12 +126,11 @@ export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
         challenge
       })
   })
+  // await testServerPublic.start()
 
-  const apolloServerPrivate = new ApolloServer({
+  const testServerPrivate = new ApolloServer({
     schema: GraphQLWepublishSchema,
-    playground: false,
     introspection: false,
-    tracing: false,
     context: async () =>
       await contextFromRequest(request, {
         hostURL: 'https://fakeURL',
@@ -153,13 +148,11 @@ export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
         challenge
       })
   })
-
-  const testClientPrivate = createTestClient(apolloServerPrivate)
-  const testClientPublic = createTestClient(apolloServerPublic)
+  // await testServerPrivate.start()
 
   return {
-    testClientPublic,
-    testClientPrivate
+    testServerPublic,
+    testServerPrivate
   }
 }
 

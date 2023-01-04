@@ -1,4 +1,5 @@
 import {ApolloError} from '@apollo/client'
+import {Visible} from '@rsuite/icons'
 import styled from '@emotion/styled'
 import React, {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -8,6 +9,7 @@ import {
   FlexboxGrid,
   Form,
   Grid,
+  IconButton,
   Message,
   Panel as RPanel,
   Row,
@@ -26,9 +28,9 @@ import {
 } from '../../api'
 import {stripTypename} from '../../api/strip-typename'
 import {CommentDeleteBtn} from '../../atoms/comment/commentDeleteBtn'
+import {CommentHistory} from '../../atoms/comment/commentHistory'
 import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {CommentUser} from '../../atoms/comment/commentUser'
-import {ReplyCommentBtn} from '../../atoms/comment/replyCommentBtn'
 import {ModelTitle} from '../../atoms/modelTitle'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {SelectTags} from '../../atoms/tag/selectTags'
@@ -63,7 +65,9 @@ const showErrors = (error: ApolloError): void => {
  * Helper function to parse comment revision input object out of full revision fragment.
  * @param comment
  */
-function getLastRevision(comment: FullCommentFragment): CommentRevisionUpdateInput | undefined {
+export function getLastRevision(
+  comment: FullCommentFragment
+): CommentRevisionUpdateInput | undefined {
   const revisions = comment.revisions
   if (!revisions.length) {
     return
@@ -117,6 +121,7 @@ const CommentEditView = memo(() => {
     variables: {
       id: commentId
     },
+    fetchPolicy: 'no-cache',
     onError: showErrors
   })
 
@@ -145,16 +150,17 @@ const CommentEditView = memo(() => {
     if (!tmpComment) {
       return
     }
+    setSelectedTags(null)
     setComment(tmpComment)
 
     const lastRevision = getLastRevision(tmpComment)
     setRevision(lastRevision)
   }, [commentData])
 
-  const commentTags = useMemo(() => selectedTags ?? comment?.tags?.map(tag => tag.id), [
-    comment,
-    selectedTags
-  ])
+  const commentTags = useMemo(
+    () => selectedTags ?? comment?.tags?.map(tag => tag.id),
+    [comment, selectedTags]
+  )
 
   const ratingOverrides = useMemo(
     () =>
@@ -201,7 +207,12 @@ const CommentEditView = memo(() => {
   }
 
   return (
-    <Form onSubmit={() => updateComment()} model={validationModel} fluid disabled={loading}>
+    <Form
+      onSubmit={() => updateComment()}
+      model={validationModel}
+      fluid
+      disabled={loading}
+      style={{maxHeight: 'calc(100vh - 135px)', maxWidth: 'calc(100vw - 260px - 80px)'}}>
       <ModelTitle
         loading={loading}
         title={t('comments.edit.title')}
@@ -270,8 +281,16 @@ const CommentEditView = memo(() => {
               <ColNoMargin xs={24}>
                 <RPanel bordered header={t('commentEditView.actions')}>
                   <FlexboxGrid>
-                    <FlexboxGrid.Item colspan={24}>
-                      <ReplyCommentBtn comment={comment} appearance="ghost" />
+                    <FlexboxGrid.Item colspan={24} style={{textAlign: 'end'}}>
+                      <IconButton
+                        appearance="ghost"
+                        color="violet"
+                        icon={<Visible />}
+                        onClick={() => {
+                          navigate(`/articles/edit/${comment?.itemID}`)
+                        }}>
+                        {t('commentEditView.goToArticle')}
+                      </IconButton>
                     </FlexboxGrid.Item>
 
                     <FlexItem colspan={24}>

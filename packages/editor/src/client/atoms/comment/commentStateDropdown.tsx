@@ -28,7 +28,7 @@ const IconButton = styled(RIconButton)`
   padding: 2px;
 `
 
-function mapCommentStateToColor(commentState: CommentState) {
+export function mapCommentStateToColor(commentState: CommentState) {
   switch (commentState) {
     case CommentState.Approved:
       return 'green'
@@ -40,7 +40,7 @@ function mapCommentStateToColor(commentState: CommentState) {
   }
 }
 
-function humanReadableCommentState(commentState: CommentState) {
+export function humanReadableCommentState(commentState: CommentState) {
   switch (commentState) {
     case CommentState.Approved:
       return 'comments.state.approved'
@@ -70,6 +70,33 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
   const showBadge =
     comment.state === CommentState.Rejected || comment.state === CommentState.PendingUserChanges
 
+  const renderMenu = ({onClose, className}: {className: any; onClose: () => void}, ref: any) => {
+    const handleSelect = (eventKey: string | undefined) => {
+      onClose()
+      if (eventKey) {
+        setNewCommentState(eventKey as CommentState)
+      }
+    }
+
+    return (
+      <RPopover ref={ref} className={className} full>
+        <Dropdown.Menu onSelect={handleSelect}>
+          {Object.keys(CommentState)
+            .filter(tmpState => tmpState !== CommentState.PendingApproval)
+            .map((tmpState, index) => (
+              <Dropdown.Item
+                key={index}
+                eventKey={tmpState}
+                /* onClick={() => setNewCommentState(tmpState as CommentState)} */
+              >
+                {t(mapCommentActionToBtnTitle(tmpState as CommentState))}
+              </Dropdown.Item>
+            ))}
+        </Dropdown.Menu>
+      </RPopover>
+    )
+  }
+
   return (
     <>
       {showBadge && (
@@ -85,28 +112,7 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
             size={size || 'md'}>
             {t(humanReadableCommentState(comment.state))}
           </Button>
-          <Whisper
-            placement="bottomEnd"
-            trigger="click"
-            speaker={({onClose, left, top, className}, ref) => {
-              const handleSelect = (tmpCommentState: any) => {
-                onClose()
-                setNewCommentState(tmpCommentState as CommentState)
-              }
-              return (
-                <Popover ref={ref} className={className} left={left} top={top} full>
-                  <Dropdown.Menu onSelect={handleSelect}>
-                    {Object.keys(CommentState)
-                      .filter(tmpState => tmpState !== CommentState.PendingApproval)
-                      .map((tmpState, index) => (
-                        <Dropdown.Item key={index} eventKey={tmpState}>
-                          {t(mapCommentActionToBtnTitle(tmpState as CommentState))}
-                        </Dropdown.Item>
-                      ))}
-                  </Dropdown.Menu>
-                </Popover>
-              )
-            }}>
+          <Whisper placement="bottomEnd" trigger="click" speaker={renderMenu}>
             <IconButton
               size={size || 'md'}
               appearance="primary"

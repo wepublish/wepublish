@@ -62,7 +62,11 @@ function NavigationList() {
   const [navigations, setNavigations] = useState<FullNavigationFragment[]>([])
   const [currentNavigation, setCurrentNavigation] = useState<FullNavigationFragment>()
 
-  const {data, refetch, loading: isLoading} = useNavigationListQuery({
+  const {
+    data,
+    refetch,
+    loading: isLoading
+  } = useNavigationListQuery({
     fetchPolicy: 'network-only'
   })
 
@@ -127,23 +131,21 @@ function NavigationList() {
           <HeaderCell>{t('navigation.overview.action')}</HeaderCell>
           <Cell>
             {(rowData: FullNavigationFragment) => (
-              <>
-                <PermissionControl qualifyingPermissions={['CAN_DELETE_NAVIGATION']}>
-                  <IconButtonTooltip caption={t('delete')}>
-                    <IconButton
-                      icon={<MdDelete />}
-                      circle
-                      size="sm"
-                      appearance="ghost"
-                      color="red"
-                      onClick={() => {
-                        setCurrentNavigation(rowData)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-                  </IconButtonTooltip>
-                </PermissionControl>
-              </>
+              <PermissionControl qualifyingPermissions={['CAN_DELETE_NAVIGATION']}>
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    icon={<MdDelete />}
+                    circle
+                    size="sm"
+                    appearance="ghost"
+                    color="red"
+                    onClick={() => {
+                      setCurrentNavigation(rowData)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                </IconButtonTooltip>
+              </PermissionControl>
             )}
           </Cell>
         </Column>

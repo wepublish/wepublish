@@ -11,11 +11,9 @@ interface RejectionMessageProps {
 export function RejectionMessage({requiredPermissions}: RejectionMessageProps) {
   const {t} = useTranslation()
   return (
-    <>
-      <Message type="error" header={t('permissions.noAccess')} showIcon>
-        {t('permissions.contactAdmin', {permissions: requiredPermissions.join(', ')})}
-      </Message>
-    </>
+    <Message type="error" header={t('permissions.noAccess')} showIcon>
+      {t('permissions.contactAdmin', {permissions: requiredPermissions.join(', ')})}
+    </Message>
   )
 }
 
@@ -52,25 +50,25 @@ export function PermissionControl({
   ) : null
 }
 
-export const createCheckedPermissionComponent = (
-  permissions: string[],
-  showRejectionMessage?: boolean
-) => <
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object
->(
-  ControlledComponent: ComponentType<P>
-) => (props: P) => {
-  return (
-    <PermissionControl
-      qualifyingPermissions={permissions}
-      showRejectionMessage={showRejectionMessage ?? true}>
-      <ControlledComponent {...props} />
-    </PermissionControl>
-  )
-}
+export const createCheckedPermissionComponent =
+  (permissions: string[], showRejectionMessage?: boolean) =>
+  <
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    P extends object
+  >(
+    ControlledComponent: ComponentType<P>
+  ) =>
+  (props: P) => {
+    return (
+      <PermissionControl
+        qualifyingPermissions={permissions}
+        showRejectionMessage={showRejectionMessage ?? true}>
+        <ControlledComponent {...props} />
+      </PermissionControl>
+    )
+  }
 
-export function authorise(permissionID: string) {
+export function useAuthorisation(permissionID: string) {
   return useContext(AuthContext)?.session?.sessionRoles?.some(role =>
     role.permissions.some(permission => permission.id === permissionID)
   )

@@ -135,14 +135,12 @@ export function SubscriptionListFilter({
       return <></>
     }
     return (
-      <>
-        <FormGroup>
-          <Button onClick={() => resetFilter()} color="red" appearance="ghost">
-            <CloseIcon />
-            {t('subscriptionList.filter.reset')}
-          </Button>
-        </FormGroup>
-      </>
+      <FormGroup>
+        <Button onClick={() => resetFilter()} color="red" appearance="ghost">
+          <CloseIcon />
+          {t('subscriptionList.filter.reset')}
+        </Button>
+      </FormGroup>
     )
   }
 

@@ -1,4 +1,4 @@
-FROM ghcr.io/wepublish/node:latest as production
+FROM ghcr.io/wepublish/node:16.1 as production
 
 RUN apk update
 
@@ -8,7 +8,7 @@ WORKDIR /home/node/wepublish
 
 COPY --chown=node:node ./package.json ./package.json
 COPY --chown=node:node ./yarn.lock ./yarn.lock
-COPY --chown=node:node ./tsconfig.base.json ./tsconfig.base.json
+COPY --chown=node:node ./tsconfig.base.old.json ./tsconfig.base.old.json
 COPY --chown=node:node ./LICENSE ./LICENSE
 
 COPY --chown=node:node ./packages/ ./packages/

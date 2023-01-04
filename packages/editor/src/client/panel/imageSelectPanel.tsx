@@ -66,7 +66,11 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
     link: '',
     licence: ''
   })
-  const {data, fetchMore, loading: isLoading} = useImageListQuery({
+  const {
+    data,
+    fetchMore,
+    loading: isLoading
+  } = useImageListQuery({
     fetchPolicy: 'network-only',
     variables: {
       filter,
@@ -110,7 +114,7 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
         return {
           images: {
             ...fetchMoreResult.images,
-            nodes: [...prev.images.nodes, ...fetchMoreResult?.images.nodes]
+            nodes: [...prev.images.nodes, ...fetchMoreResult.images.nodes]
           }
         }
       }

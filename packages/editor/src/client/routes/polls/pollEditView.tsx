@@ -135,108 +135,106 @@ function PollEditView() {
   }
 
   return (
-    <>
-      <Form
-        onSubmit={validationPassed => validationPassed && saveOrUpdate()}
-        model={validationModel}
-        fluid
-        disabled={loading}
-        formValue={{question: poll?.question}}>
-        <FlexboxGrid>
-          {/* model title */}
-          <FlexboxGrid.Item colspan={24}>
-            <ModelTitle
-              loading={loading}
-              title={poll?.question || t('pollList.noQuestion')}
-              loadingTitle={t('pollEditView.loadingTitle')}
-              saveBtnTitle={t('pollEditView.saveTitle')}
-              saveAndCloseBtnTitle={t('pollEditView.saveAndCloseTitle')}
-              closePath={closePath}
-              setCloseFn={setClose}
-            />
-          </FlexboxGrid.Item>
+    <Form
+      onSubmit={validationPassed => validationPassed && saveOrUpdate()}
+      model={validationModel}
+      fluid
+      disabled={loading}
+      formValue={{question: poll?.question}}>
+      <FlexboxGrid>
+        {/* model title */}
+        <FlexboxGrid.Item colspan={24}>
+          <ModelTitle
+            loading={loading}
+            title={poll?.question || t('pollList.noQuestion')}
+            loadingTitle={t('pollEditView.loadingTitle')}
+            saveBtnTitle={t('pollEditView.saveTitle')}
+            saveAndCloseBtnTitle={t('pollEditView.saveAndCloseTitle')}
+            closePath={closePath}
+            setCloseFn={setClose}
+          />
+        </FlexboxGrid.Item>
 
-          {/* content */}
-          <FlexboxGrid.Item colspan={12}>
-            <Row>
-              {/* question */}
-              <Col xs={24}>
-                <Panel header={t('pollEditView.questionPanelHeader')} bordered>
-                  <Form.Group controlId="question">
-                    <Form.Control
-                      name="question"
-                      placeholder={t('pollEditView.toBeOrNotToBe')}
-                      value={poll?.question || ''}
-                      onChange={(value: string) => {
-                        if (!poll) {
-                          return
-                        }
-                        setPoll(p => (p ? {...p, question: value} : undefined))
-                      }}
-                    />
-                  </Form.Group>
-                </Panel>
-              </Col>
-              {/* answers */}
-              <Col xs={24}>
-                <Panel header={t('pollEditView.answerPanelHeader')} bordered>
-                  <PollAnswers
-                    poll={poll}
-                    onPollChange={(poll: FullPoll) => {
-                      setPoll(poll)
-                    }}
-                  />
-                </Panel>
-              </Col>
-              {/* settings */}
-              <Col xs={24}>
-                <Panel header={t('pollEditView.settingsPanelHeader')} bordered>
-                  {/* opens at */}
-                  <OpensAtLabel>{t('pollEditView.opensAtLabel')}</OpensAtLabel>
-                  <DatePicker
-                    value={poll?.opensAt ? new Date(poll.opensAt) : undefined}
-                    format="yyyy-MM-dd HH:mm"
-                    onChange={(opensAt: Date | null) => {
+        {/* content */}
+        <FlexboxGrid.Item colspan={12}>
+          <Row>
+            {/* question */}
+            <Col xs={24}>
+              <Panel header={t('pollEditView.questionPanelHeader')} bordered>
+                <Form.Group controlId="question">
+                  <Form.Control
+                    name="question"
+                    placeholder={t('pollEditView.toBeOrNotToBe')}
+                    value={poll?.question || ''}
+                    onChange={(value: string) => {
                       if (!poll) {
                         return
                       }
-                      setPoll({
-                        ...poll,
-                        opensAt: opensAt?.toISOString() || new Date().toISOString()
-                      })
+                      setPoll(p => (p ? {...p, question: value} : undefined))
                     }}
                   />
+                </Form.Group>
+              </Panel>
+            </Col>
+            {/* answers */}
+            <Col xs={24}>
+              <Panel header={t('pollEditView.answerPanelHeader')} bordered>
+                <PollAnswers
+                  poll={poll}
+                  onPollChange={(poll: FullPoll) => {
+                    setPoll(poll)
+                  }}
+                />
+              </Panel>
+            </Col>
+            {/* settings */}
+            <Col xs={24}>
+              <Panel header={t('pollEditView.settingsPanelHeader')} bordered>
+                {/* opens at */}
+                <OpensAtLabel>{t('pollEditView.opensAtLabel')}</OpensAtLabel>
+                <DatePicker
+                  value={poll?.opensAt ? new Date(poll.opensAt) : undefined}
+                  format="yyyy-MM-dd HH:mm"
+                  onChange={(opensAt: Date | null) => {
+                    if (!poll) {
+                      return
+                    }
+                    setPoll({
+                      ...poll,
+                      opensAt: opensAt?.toISOString() || new Date().toISOString()
+                    })
+                  }}
+                />
 
-                  {/* closes at */}
-                  <ClosesAtLabel>{t('pollEditView.closesAtLabel')}</ClosesAtLabel>
-                  <DatePicker
-                    value={poll?.closedAt ? new Date(poll.closedAt) : undefined}
-                    format="yyyy-MM-dd HH:mm"
-                    onChange={(closedAt: Date | null) => {
-                      if (!poll) {
-                        return
-                      }
-                      setPoll({...poll, closedAt: closedAt?.toISOString()})
-                    }}
-                  />
-                </Panel>
-              </Col>
-              {/* poll external votes */}
-              <Col xs={24}>
-                <Panel header={t('pollEditView.pollExternalVotesPanelHeader')} bordered>
-                  <PollExternalVotes
-                    poll={poll}
-                    onPollChange={(poll: FullPoll) => {
-                      setPoll(poll)
-                    }}
-                  />
-                </Panel>
-              </Col>
-            </Row>
-          </FlexboxGrid.Item>
-        </FlexboxGrid>
-      </Form>
-    </>
+                {/* closes at */}
+                <ClosesAtLabel>{t('pollEditView.closesAtLabel')}</ClosesAtLabel>
+                <DatePicker
+                  value={poll?.closedAt ? new Date(poll.closedAt) : undefined}
+                  format="yyyy-MM-dd HH:mm"
+                  onChange={(closedAt: Date | null) => {
+                    if (!poll) {
+                      return
+                    }
+                    setPoll({...poll, closedAt: closedAt?.toISOString()})
+                  }}
+                />
+              </Panel>
+            </Col>
+            {/* poll external votes */}
+            <Col xs={24}>
+              <Panel header={t('pollEditView.pollExternalVotesPanelHeader')} bordered>
+                <PollExternalVotes
+                  poll={poll}
+                  onPollChange={(poll: FullPoll) => {
+                    setPoll(poll)
+                  }}
+                />
+              </Panel>
+            </Col>
+          </Row>
+        </FlexboxGrid.Item>
+      </FlexboxGrid>
+    </Form>
   )
 }
 

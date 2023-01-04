@@ -121,11 +121,9 @@ function PollList() {
               <HeaderCell>{t('pollList.question')}</HeaderCell>
               <RCell>
                 {(rowData: Poll) => (
-                  <>
-                    <Link to={`/polls/edit/${rowData.id}`}>
-                      {rowData.question || t('pollList.noQuestion')}
-                    </Link>
-                  </>
+                  <Link to={`/polls/edit/${rowData.id}`}>
+                    {rowData.question || t('pollList.noQuestion')}
+                  </Link>
                 )}
               </RCell>
             </Column>

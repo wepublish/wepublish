@@ -1,12 +1,12 @@
 // import {CommentInput, AddComment} from '../api/public'
 // import {CommentAuthorType, CommentItemType} from '../../lib'
 
-// let testClientPrivate: ApolloServerTestClient
+// let testServerPrivate: ApolloServer
 
 beforeAll(async () => {
   try {
     // const setupClient = await createGraphQLTestClientWithPrisma()
-    // testClientPrivate = setupClient.testClientPrivate
+    // testServerPrivate = setupClient.testServerPrivate
   } catch (error) {
     console.log('Error', error)
 
@@ -16,7 +16,7 @@ beforeAll(async () => {
 
 describe('Comments', () => {
   test('can be created', async () => {
-    // const {mutate} = testClientPublic
+    // const {mutate} = testServerPublic
     // const CommentInput: CommentInput = {
     //   itemID: 'd',
     //   itemType: CommentItemType.Article,

@@ -12,9 +12,9 @@ import {
   useUserRoleQuery
 } from '../api'
 import {
-  authorise,
   createCheckedPermissionComponent,
-  PermissionControl
+  PermissionControl,
+  useAuthorisation
 } from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
@@ -32,14 +32,18 @@ export interface UserRoleEditPanelProps {
 }
 
 function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
-  const isAuthorized = authorise('CAN_CREATE_USER_ROLE')
+  const isAuthorized = useAuthorisation('CAN_CREATE_USER_ROLE')
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [systemRole, setSystemRole] = useState(false)
   const [permissions, setPermissions] = useState<Permission[]>([])
   const [allPermissions, setAllPermissions] = useState<Permission[]>([])
 
-  const {data, loading: isLoading, error: loadError} = useUserRoleQuery({
+  const {
+    data,
+    loading: isLoading,
+    error: loadError
+  } = useUserRoleQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
     skip: id === undefined

@@ -347,6 +347,8 @@ export type CommentFilter = {
   item?: Maybe<Scalars['ID']>
   tags?: Maybe<Array<Scalars['ID']>>
   states?: Maybe<Array<CommentState>>
+  itemType?: Maybe<CommentItemType>
+  itemID?: Maybe<Scalars['ID']>
 }
 
 export enum CommentItemType {
@@ -1359,8 +1361,8 @@ export type PageRevision = {
   publishAt?: Maybe<Scalars['DateTime']>
   updatedAt?: Maybe<Scalars['DateTime']>
   publishedAt?: Maybe<Scalars['DateTime']>
-  slug: Scalars['Slug']
-  title: Scalars['String']
+  slug?: Maybe<Scalars['Slug']>
+  title?: Maybe<Scalars['String']>
   description?: Maybe<Scalars['String']>
   tags: Array<Scalars['String']>
   properties: Array<Properties>

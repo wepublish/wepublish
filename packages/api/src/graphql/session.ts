@@ -1,5 +1,5 @@
 import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLID} from 'graphql'
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDateTime} from 'graphql-scalars'
 import {GraphQLPublicUser, GraphQLUser} from './user'
 
 export const GraphQLSessionWithToken = new GraphQLObjectType({

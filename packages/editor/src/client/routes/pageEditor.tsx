@@ -34,9 +34,9 @@ import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
 import {NavigationBar} from '../atoms/navigationBar'
 import {
-  authorise,
   createCheckedPermissionComponent,
-  PermissionControl
+  PermissionControl,
+  useAuthorisation
 } from '../atoms/permissionControl'
 import {BlockMap} from '../blocks/blockMap'
 import {blockForQueryBlock, BlockValue, unionMapForBlock} from '../blocks/types'
@@ -90,21 +90,17 @@ function PageEditor() {
     }
   }, [data?.pagePreviewLink])
 
-  const [
-    createPage,
-    {data: createData, loading: isCreating, error: createError}
-  ] = useCreatePageMutation()
+  const [createPage, {data: createData, loading: isCreating, error: createError}] =
+    useCreatePageMutation()
 
   const [updatePage, {loading: isUpdating, error: updateError}] = useUpdatePageMutation({
     fetchPolicy: 'no-cache'
   })
 
-  const [
-    publishPage,
-    {data: publishData, loading: isPublishing, error: publishError}
-  ] = usePublishPageMutation({
-    fetchPolicy: 'no-cache'
-  })
+  const [publishPage, {data: publishData, loading: isPublishing, error: publishError}] =
+    usePublishPageMutation({
+      fetchPolicy: 'no-cache'
+    })
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
@@ -130,7 +126,11 @@ function PageEditor() {
 
   const pageID = id || createData?.createPage.id
 
-  const {data: pageData, refetch, loading: isLoading} = usePageQuery({
+  const {
+    data: pageData,
+    refetch,
+    loading: isLoading
+  } = usePageQuery({
     errorPolicy: 'all',
     fetchPolicy: 'no-cache',
     variables: {id: pageID!}
@@ -150,7 +150,7 @@ function PageEditor() {
   const [hasChanged, setChanged] = useState(false)
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
 
-  const isAuthorized = authorise('CAN_CREATE_PAGE')
+  const isAuthorized = useAuthorisation('CAN_CREATE_PAGE')
 
   const handleChange = useCallback((blocks: React.SetStateAction<BlockValue[]>) => {
     setBlocks(blocks)
@@ -183,8 +183,8 @@ function PageEditor() {
       if (publishAt) setPublishAt(new Date(publishAt))
 
       setMetadata({
-        slug,
-        title,
+        slug: slug ?? '',
+        title: title ?? '',
         description: description ?? '',
         tags,
         url,
@@ -239,8 +239,8 @@ function PageEditor() {
 
   function createInput(): PageInput {
     return {
-      slug: metadata.slug,
-      title: metadata.title,
+      slug: metadata.slug ?? '',
+      title: metadata.title ?? '',
       description: metadata.description,
       imageID: metadata.image?.id,
       tags: metadata.tags,

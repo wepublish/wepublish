@@ -26,9 +26,9 @@ import {Point} from '../atoms/draggable'
 import {FocalPointInput} from '../atoms/focalPointInput'
 import {ImageMetaData} from '../atoms/imageMetaData'
 import {
-  authorise,
   createCheckedPermissionComponent,
-  PermissionControl
+  PermissionControl,
+  useAuthorisation
 } from '../atoms/permissionControl'
 import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
 
@@ -88,7 +88,7 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
   })
 
   const [isLoading, setLoading] = useState(true)
-  const isAuthorized = authorise('CAN_CREATE_IMAGE')
+  const isAuthorized = useAuthorisation('CAN_CREATE_IMAGE')
   const isDisabled = isLoading || isUpdating || isUploading || !isAuthorized
   const isUpload = file !== undefined
   console.log('isLoading', isLoading)
@@ -268,152 +268,154 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
   })
 
   return (
-    <>
-      <Form
-        fluid
-        model={validationModel}
-        onSubmit={validationPassed => validationPassed && handleSave()}>
-        <Drawer.Header>
-          <Drawer.Title>
-            {isUpload ? t('images.panels.uploadImage') : t('images.panels.editImage')}
-          </Drawer.Title>
+    <Form
+      fluid
+      model={validationModel}
+      onSubmit={validationPassed => validationPassed && handleSave()}>
+      <Drawer.Header>
+        <Drawer.Title>
+          {isUpload ? t('images.panels.uploadImage') : t('images.panels.editImage')}
+        </Drawer.Title>
 
-          <Drawer.Actions>
-            <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
-              <Button appearance={'primary'} disabled={isDisabled} type="submit">
-                {isUpload ? t('images.panels.upload') : t('save')}
-              </Button>
-            </PermissionControl>
-            <Button appearance={'subtle'} onClick={() => onClose?.()}>
-              {isUpload ? t('images.panels.cancel') : t('images.panels.close')}
+        <Drawer.Actions>
+          <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
+            <Button appearance={'primary'} disabled={isDisabled} type="submit">
+              {isUpload ? t('images.panels.upload') : t('save')}
             </Button>
-          </Drawer.Actions>
-        </Drawer.Header>
+          </PermissionControl>
+          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            {isUpload ? t('images.panels.cancel') : t('images.panels.close')}
+          </Button>
+        </Drawer.Actions>
+      </Drawer.Header>
 
-        <Drawer.Body>
-          {!isLoading && (
-            <>
-              <Panel>
-                {imageURL && imageWidth && imageHeight && (
-                  <FocalPointInput
-                    imageURL={imageURL}
-                    imageWidth={imageWidth}
-                    imageHeight={imageHeight}
-                    maxHeight={300}
-                    focalPoint={focalPoint}
-                    onChange={point => setFocalPoint(point)}
-                  />
+      <Drawer.Body>
+        {!isLoading && (
+          <>
+            <Panel>
+              {imageURL && imageWidth && imageHeight && (
+                <FocalPointInput
+                  imageURL={imageURL}
+                  imageWidth={imageWidth}
+                  imageHeight={imageHeight}
+                  maxHeight={300}
+                  focalPoint={focalPoint}
+                  onChange={point => setFocalPoint(point)}
+                />
+              )}
+            </Panel>
+            <RPanel header={t('images.panels.description')}>
+              <DescriptionList>
+                <DescriptionListItem label={t('images.panels.filename')}>
+                  {filename || t('images.panels.untitled')}
+                  {extension}
+                </DescriptionListItem>
+                <DescriptionListItem label={t('images.panels.dimension')}>
+                  {t('images.panels.imageDimension', {imageWidth, imageHeight})}
+                </DescriptionListItem>
+                {createdAt && (
+                  <DescriptionListItem label={t('images.panels.created')}>
+                    {t('images.panels.createdAt', {createdAt: new Date(createdAt)})}
+                  </DescriptionListItem>
                 )}
-              </Panel>
-              <RPanel header={t('images.panels.description')}>
-                <DescriptionList>
-                  <DescriptionListItem label={t('images.panels.filename')}>
-                    {filename || t('images.panels.untitled')}
-                    {extension}
+                {updatedAt && (
+                  <DescriptionListItem label={t('images.panels.updated')}>
+                    {t('images.panels.updatedAt', {updatedAt: new Date(updatedAt)})}
                   </DescriptionListItem>
-                  <DescriptionListItem label={t('images.panels.dimension')}>
-                    {t('images.panels.imageDimension', {imageWidth, imageHeight})}
-                  </DescriptionListItem>
-                  {createdAt && (
-                    <DescriptionListItem label={t('images.panels.created')}>
-                      {t('images.panels.createdAt', {createdAt: new Date(createdAt)})}
-                    </DescriptionListItem>
-                  )}
-                  {updatedAt && (
-                    <DescriptionListItem label={t('images.panels.updated')}>
-                      {t('images.panels.updatedAt', {updatedAt: new Date(updatedAt)})}
-                    </DescriptionListItem>
-                  )}
-                  <DescriptionListItem label={t('images.panels.fileSize')}>
-                    {prettyBytes(fileSize)}
-                  </DescriptionListItem>
+                )}
+                <DescriptionListItem label={t('images.panels.fileSize')}>
+                  {prettyBytes(fileSize)}
+                </DescriptionListItem>
 
-                  {originalImageURL && (
-                    <DescriptionListItem label={t('images.panels.link')}>
-                      <a href={originalImageURL} target="_blank" rel="noreferrer">
-                        {originalImageURL}
-                      </a>
-                    </DescriptionListItem>
-                  )}
-                </DescriptionList>
-              </RPanel>
-              <RPanel header={t('images.panels.information')}>
-                <Group controlId="imageFilename">
-                  <ControlLabel>{t('images.panels.filename')}</ControlLabel>
-                  <Control
-                    name="filename"
-                    value={filename}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setFilename(value)}
-                  />
-                </Group>
-                <Group controlId="imageTitle">
-                  <ControlLabel>{t('images.panels.title')}</ControlLabel>
-                  <Control
-                    name="title"
-                    value={title}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setTitle(value)}
-                  />
-                </Group>
-                <Group controlId="imageDescription">
-                  <ControlLabel>{t('images.panels.description')}</ControlLabel>
-                  <Control
-                    name="description"
-                    value={description}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setDescription(value)}
-                  />
-                </Group>
-                <Group controlId="imageTags">
-                  <ControlLabel>{t('images.panels.tags')}</ControlLabel>
-                  <TagPicker
-                    virtualized
-                    block
-                    creatable
-                    disabled={isDisabled}
-                    value={tags}
-                    data={tags.map(tag => ({value: tag, label: tag}))}
-                    onChange={value => setTags(value ?? [])}
-                  />
-                </Group>
-              </RPanel>
-              <RPanel header={t('images.panels.attribution')}>
-                <Group controlId="imageSource">
-                  <ControlLabel>{t('images.panels.source')}</ControlLabel>
-                  <Control
-                    name="source"
-                    value={source}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setSource(value)}
-                  />
-                </Group>
-                <Group controlId="imageLink">
-                  <ControlLabel>{t('images.panels.link')}</ControlLabel>
-                  <Control
-                    name="link"
-                    value={link}
-                    placeholder={t('images.panels.urlPlaceholder')}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setLink(value)}
-                  />
-                  <p>{t('images.panels.sourceLink')}</p>
-                </Group>
-                <Group controlId="imageLicense">
-                  <ControlLabel>{t('images.panels.license')}</ControlLabel>
-                  <Control
-                    name="license"
-                    value={license}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setLicense(value)}
-                  />
-                </Group>
-              </RPanel>
-            </>
-          )}
-        </Drawer.Body>
-      </Form>
-    </>
+                <DescriptionListItem label={t('images.panels.fileSize')}>
+                  {prettyBytes(fileSize)}
+                </DescriptionListItem>
+
+                {originalImageURL && (
+                  <DescriptionListItem label={t('images.panels.link')}>
+                    <a href={originalImageURL} target="_blank" rel="noreferrer">
+                      {originalImageURL}
+                    </a>
+                  </DescriptionListItem>
+                )}
+              </DescriptionList>
+            </RPanel>
+            <RPanel header={t('images.panels.information')}>
+              <Group controlId="imageFilename">
+                <ControlLabel>{t('images.panels.filename')}</ControlLabel>
+                <Control
+                  name="filename"
+                  value={filename}
+                  disabled={isDisabled}
+                  onChange={(value: string) => setFilename(value)}
+                />
+              </Group>
+              <Group controlId="imageTitle">
+                <ControlLabel>{t('images.panels.title')}</ControlLabel>
+                <Control
+                  name="title"
+                  value={title}
+                  disabled={isDisabled}
+                  onChange={(value: string) => setTitle(value)}
+                />
+              </Group>
+              <Group controlId="imageDescription">
+                <ControlLabel>{t('images.panels.description')}</ControlLabel>
+                <Control
+                  name="description"
+                  value={description}
+                  disabled={isDisabled}
+                  onChange={(value: string) => setDescription(value)}
+                />
+              </Group>
+              <Group controlId="imageTags">
+                <ControlLabel>{t('images.panels.tags')}</ControlLabel>
+                <TagPicker
+                  virtualized
+                  block
+                  creatable
+                  disabled={isDisabled}
+                  value={tags}
+                  data={tags.map(tag => ({value: tag, label: tag}))}
+                  onChange={value => setTags(value ?? [])}
+                />
+              </Group>
+            </RPanel>
+            <RPanel header={t('images.panels.attribution')}>
+              <Group controlId="imageSource">
+                <ControlLabel>{t('images.panels.source')}</ControlLabel>
+                <Control
+                  name="source"
+                  value={source}
+                  disabled={isDisabled}
+                  onChange={(value: string) => setSource(value)}
+                />
+              </Group>
+              <Group controlId="imageLink">
+                <ControlLabel>{t('images.panels.link')}</ControlLabel>
+                <Control
+                  name="link"
+                  value={link}
+                  placeholder={t('images.panels.urlPlaceholder')}
+                  disabled={isDisabled}
+                  onChange={(value: string) => setLink(value)}
+                />
+                <p>{t('images.panels.sourceLink')}</p>
+              </Group>
+              <Group controlId="imageLicense">
+                <ControlLabel>{t('images.panels.license')}</ControlLabel>
+                <Control
+                  name="license"
+                  value={license}
+                  disabled={isDisabled}
+                  onChange={(value: string) => setLicense(value)}
+                />
+              </Group>
+            </RPanel>
+          </>
+        )}
+      </Drawer.Body>
+    </Form>
   )
 }
 

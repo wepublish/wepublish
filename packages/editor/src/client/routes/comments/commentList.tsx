@@ -14,7 +14,7 @@ import {
   useCommentListQuery
 } from '../../api'
 import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
-import {ReplyCommentBtn} from '../../atoms/comment/replyCommentBtn'
+import {CreateCommentBtn} from '../../atoms/comment/createCommentBtn'
 import {IconButtonTooltip} from '../../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
@@ -85,9 +85,13 @@ function CommentList() {
     filter
   }
 
-  const {data, refetch, loading: isLoading} = useCommentListQuery({
+  const {
+    data,
+    refetch,
+    loading: isLoading
+  } = useCommentListQuery({
     variables: commentListVariables,
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'no-cache'
   })
 
   useEffect(() => {
@@ -291,7 +295,13 @@ function CommentList() {
                   </EditIcon>
 
                   {/* reply to comment */}
-                  <ReplyCommentBtn comment={rowData} size="sm" circle hideText />
+                  <CreateCommentBtn
+                    itemType={rowData.itemType}
+                    itemID={rowData.itemID}
+                    parentID={rowData.id}
+                    size="sm"
+                    circle
+                  />
                 </PermissionControl>
               )}
             </PaddedCell>

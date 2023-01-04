@@ -1,4 +1,4 @@
-import {ApolloServerTestClient} from 'apollo-server-testing'
+import {ApolloServer} from 'apollo-server-express'
 import jwt, {SignOptions} from 'jsonwebtoken'
 import {CreateSession, CreateSessionWithJwt, Me} from '../api/private'
 import {
@@ -8,14 +8,14 @@ import {
 
 import {createGraphQLTestClientWithPrisma} from '../utility'
 
-let testClientPublic: ApolloServerTestClient
-let testClientPrivate: ApolloServerTestClient
+let testServerPublic: ApolloServer
+let testServerPrivate: ApolloServer
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithPrisma()
-    testClientPublic = setupClient.testClientPublic
-    testClientPrivate = setupClient.testClientPrivate
+    testServerPublic = setupClient.testServerPublic
+    testServerPrivate = setupClient.testServerPrivate
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')
@@ -25,25 +25,21 @@ beforeAll(async () => {
 describe('Sessions', () => {
   describe('Admin API', () => {
     test('can be created via mail and password', async () => {
-      const {mutate} = testClientPrivate
-
-      const res = await mutate({
-        mutation: CreateSession,
+      const res = await testServerPrivate.executeOperation({
+        query: CreateSession,
         variables: {
           email: 'dev@wepublish.ch',
           password: '123'
         }
       })
-      const session = res.data.createSession
+      const session = res.data?.createSession
       expect(session.user.email).toBe('dev@wepublish.ch')
       expect(session.token).toBeDefined()
     })
 
     test('can be create via JWT', async () => {
-      const {mutate} = testClientPrivate
-
-      const userRes = await mutate({
-        mutation: Me
+      const userRes = await testServerPrivate.executeOperation({
+        query: Me
       })
 
       const user = userRes.data?.me
@@ -61,14 +57,14 @@ describe('Sessions', () => {
 
       const token = jwt.sign({sub: user.id}, process.env.JWT_SECRET_KEY, jwtOptions)
 
-      const res = await mutate({
-        mutation: CreateSessionWithJwt,
+      const res = await testServerPrivate.executeOperation({
+        query: CreateSessionWithJwt,
         variables: {
           jwt: token
         }
       })
 
-      const session = res.data.createSessionWithJWT
+      const session = res.data?.createSessionWithJWT
       expect(session.user.email).toBe('dev@wepublish.ch')
       expect(session.token).toBeDefined()
     })
@@ -78,26 +74,21 @@ describe('Sessions', () => {
 
   describe('Public API', () => {
     test('can be created via mail and password', async () => {
-      const {mutate} = testClientPublic
-
-      const res = await mutate({
-        mutation: CreateSessionPublic,
+      const res = await testServerPublic.executeOperation({
+        query: CreateSessionPublic,
         variables: {
           email: 'dev@wepublish.ch',
           password: '123'
         }
       })
-      const session = res.data.createSession
+      const session = res.data?.createSession
       expect(session.user.email).toBe('dev@wepublish.ch')
       expect(session.token).toBeDefined()
     })
 
     test('can be create via JWT', async () => {
-      const {mutate: mutateAdmin} = testClientPrivate
-      const {mutate} = testClientPublic
-
-      const userRes = await mutateAdmin({
-        mutation: Me
+      const userRes = await testServerPrivate.executeOperation({
+        query: Me
       })
 
       const user = userRes.data?.me
@@ -115,14 +106,14 @@ describe('Sessions', () => {
 
       const token = jwt.sign({sub: user.id}, process.env.JWT_SECRET_KEY, jwtOptions)
 
-      const res = await mutate({
-        mutation: CreateSessionWithJwtPublic,
+      const res = await testServerPublic.executeOperation({
+        query: CreateSessionWithJwtPublic,
         variables: {
           jwt: token
         }
       })
 
-      const session = res.data.createSessionWithJWT
+      const session = res.data?.createSessionWithJWT
       expect(session.user.email).toBe('dev@wepublish.ch')
       expect(session.token).toBeDefined()
     })

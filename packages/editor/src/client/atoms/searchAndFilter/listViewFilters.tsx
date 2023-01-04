@@ -130,14 +130,12 @@ export function ListViewFilters({
       return <></>
     }
     return (
-      <>
-        <FormGroup>
-          <Button onClick={() => resetFilter()} color="red" appearance="ghost">
-            <CloseIcon />
-            {t('articleList.filter.reset')}
-          </Button>
-        </FormGroup>
-      </>
+      <FormGroup>
+        <Button onClick={() => resetFilter()} color="red" appearance="ghost">
+          <CloseIcon />
+          {t('articleList.filter.reset')}
+        </Button>
+      </FormGroup>
     )
   }
 

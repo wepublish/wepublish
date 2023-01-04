@@ -104,7 +104,11 @@ function AuthorList() {
     order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
   }
 
-  const {data, loading: isLoading, refetch: authorListRefetch} = useAuthorListQuery({
+  const {
+    data,
+    loading: isLoading,
+    refetch: authorListRefetch
+  } = useAuthorListQuery({
     variables: authorListQueryVariables,
     fetchPolicy: 'network-only'
   })
@@ -201,7 +205,7 @@ function AuthorList() {
             <HeaderCell>{t('authors.overview.action')}</HeaderCell>
             <CellWithPadding>
               {(rowData: FullAuthorFragment) => (
-                <>
+                <PermissionControl qualifyingPermissions={['CAN_DELETE_AUTHOR']}>
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       icon={<MdDelete />}
@@ -213,7 +217,7 @@ function AuthorList() {
                       }}
                     />
                   </IconButtonTooltip>
-                </>
+                </PermissionControl>
               )}
             </CellWithPadding>
           </Column>

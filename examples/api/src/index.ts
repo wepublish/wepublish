@@ -343,7 +343,6 @@ export async function runServer() {
     urlAdapter: new ExampleURLAdapter({websiteURL}),
     playground: true,
     introspection: true,
-    tracing: true,
     logger,
     challenge
   })

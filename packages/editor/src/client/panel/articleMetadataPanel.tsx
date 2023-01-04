@@ -19,13 +19,14 @@ import {
   Whisper
 } from 'rsuite'
 
-import {AuthorRefFragment, ImageRefFragment} from '../api'
+import {AuthorRefFragment, CommentItemType, ImageRefFragment} from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {CommentHistory} from '../atoms/comment/commentHistory'
 import {ListInput, ListValue} from '../atoms/listInput'
 import {
-  authorise,
   createCheckedPermissionComponent,
-  PermissionControl
+  PermissionControl,
+  useAuthorisation
 } from '../atoms/permissionControl'
 import {Textarea} from '../atoms/textarea'
 import {MetaDataType} from '../blocks/types'
@@ -118,6 +119,7 @@ export interface InfoData {
 }
 
 export interface ArticleMetadataPanelProps {
+  readonly articleID?: string
   readonly value: ArticleMetadata
   readonly infoData: InfoData
 
@@ -125,7 +127,13 @@ export interface ArticleMetadataPanelProps {
   onChange?(value: ArticleMetadata): void
 }
 
-function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetadataPanelProps) {
+function ArticleMetadataPanel({
+  articleID,
+  value,
+  infoData,
+  onClose,
+  onChange
+}: ArticleMetadataPanelProps) {
   const {
     canonicalUrl,
     preTitle,
@@ -164,7 +172,7 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
 
   const {t} = useTranslation()
 
-  const isAuthorized = authorise('CAN_CREATE_ARTICLE')
+  const isAuthorized = useAuthorisation('CAN_CREATE_ARTICLE')
 
   useEffect(() => {
     if (metaDataProperties) {
@@ -539,73 +547,79 @@ function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetad
             </Group>
           </Panel>
         )
+      case MetaDataType.Comments:
+        return (
+          <Panel>
+            {articleID && (
+              <CommentHistory commentItemType={CommentItemType.Article} commentItemID={articleID} />
+            )}
+          </Panel>
+        )
       default:
         return <></>
     }
   }
 
   return (
-    <>
-      <Form fluid model={model} onSubmit={validationPassed => validationPassed && onClose?.()}>
-        <Drawer.Header>
-          <Drawer.Title>{t('articleEditor.panels.metadata')}</Drawer.Title>
+    <Form fluid model={model} onSubmit={validationPassed => validationPassed && onClose?.()}>
+      <Drawer.Header>
+        <Drawer.Title>{t('articleEditor.panels.metadata')}</Drawer.Title>
 
-          <Drawer.Actions>
-            <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
-              <Button appearance="primary" type="submit">
-                {t('saveAndClose')}
-              </Button>
-            </PermissionControl>
-          </Drawer.Actions>
-        </Drawer.Header>
+        <Drawer.Actions>
+          <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
+            <Button appearance="primary" type="submit">
+              {t('saveAndClose')}
+            </Button>
+          </PermissionControl>
+        </Drawer.Actions>
+      </Drawer.Header>
 
-        <Drawer.Body>
-          <Nav
-            appearance="tabs"
-            activeKey={activeKey}
-            onSelect={activeKey => setActiveKey(activeKey)}>
-            <Item eventKey={MetaDataType.General} icon={<MdSettings />}>
-              {t('articleEditor.panels.general')}
-            </Item>
-            <Item eventKey={MetaDataType.SocialMedia} icon={<MdShare />}>
-              {t('articleEditor.panels.socialMedia')}
-            </Item>
-            <Item eventKey={MetaDataType.Properties} icon={<MdListAlt />}>
-              {t('articleEditor.panels.properties')}
-            </Item>
-          </Nav>
-          {currentContent()}
-        </Drawer.Body>
+      <Drawer.Body>
+        <Nav
+          appearance="tabs"
+          activeKey={activeKey}
+          onSelect={activeKey => setActiveKey(activeKey)}>
+          <Item eventKey={MetaDataType.General} icon={<MdSettings />}>
+            {t('articleEditor.panels.general')}
+          </Item>
+          <Item eventKey={MetaDataType.SocialMedia} icon={<MdShare />}>
+            {t('articleEditor.panels.socialMedia')}
+          </Item>
+          <Item eventKey={MetaDataType.Properties} icon={<MdListAlt />}>
+            {t('articleEditor.panels.properties')}
+          </Item>
+        </Nav>
+        {currentContent()}
+      </Drawer.Body>
 
+      <Drawer
+        open={isChooseModalOpen}
+        size="sm"
+        onClose={() => {
+          setChooseModalOpen(false)
+        }}>
+        <ImageSelectPanel
+          onClose={() => setChooseModalOpen(false)}
+          onSelect={value => {
+            setChooseModalOpen(false)
+            handleImageChange(value)
+          }}
+        />
+      </Drawer>
+      {(value.image || value.socialMediaImage) && (
         <Drawer
-          open={isChooseModalOpen}
+          open={isEditModalOpen}
           size="sm"
           onClose={() => {
-            setChooseModalOpen(false)
+            setEditModalOpen(false)
           }}>
-          <ImageSelectPanel
-            onClose={() => setChooseModalOpen(false)}
-            onSelect={value => {
-              setChooseModalOpen(false)
-              handleImageChange(value)
-            }}
+          <ImageEditPanel
+            id={activeKey === MetaDataType.General ? value.image?.id : value.socialMediaImage?.id}
+            onClose={() => setEditModalOpen(false)}
           />
         </Drawer>
-        {(value.image || value.socialMediaImage) && (
-          <Drawer
-            open={isEditModalOpen}
-            size="sm"
-            onClose={() => {
-              setEditModalOpen(false)
-            }}>
-            <ImageEditPanel
-              id={activeKey === MetaDataType.General ? value.image?.id : value.socialMediaImage?.id}
-              onClose={() => setEditModalOpen(false)}
-            />
-          </Drawer>
-        )}
-      </Form>
-    </>
+      )}
+    </Form>
   )
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([

@@ -1,5 +1,6 @@
+import React, {useEffect, useMemo, useState} from 'react'
 import {Form, Message, SelectPicker, toaster} from 'rsuite'
-import React, {useEffect, useState} from 'react'
+
 import {FullUserFragment, useUserListQuery} from '../../api'
 
 export interface UserSearchProps {
@@ -19,7 +20,12 @@ export function UserSearch({
 }: UserSearchProps) {
   const [userSearch, setUserSearch] = useState<string>('')
   const [users, setUsers] = useState<(FullUserFragment | undefined | null)[]>([])
-  const {data: userData, loading, error, refetch} = useUserListQuery({
+  const {
+    data: userData,
+    loading,
+    error,
+    refetch
+  } = useUserListQuery({
     variables: {
       take: 100,
       filter: userSearch
@@ -67,52 +73,52 @@ export function UserSearch({
     return userLabel
   }
 
+  const formData = useMemo(() => {
+    return users.map(usr => ({value: usr?.id, label: getUserLabel(usr)}))
+  }, [users])
+
   // if one wants to reset a filter, it's not working when setting the value property
   function getResetableSelectPicker() {
     if (resetFilterKey) {
       return (
-        <>
-          <Form.Group>
-            <Form.Control
-              key={`user-id-${resetFilterKey}`}
-              placeholder={placeholder}
-              block
-              name={name}
-              disabled={loading || !!error}
-              data={users.map(usr => ({value: usr?.id, label: getUserLabel(usr)}))}
-              cleanable
-              accepter={SelectPicker}
-              onChange={(userId: any) => setUser(userId)}
-              onSearch={(searchString: any) => {
-                setUserSearch(searchString)
-                refetch()
-              }}
-            />
-          </Form.Group>
-        </>
-      )
-    }
-    return (
-      <>
         <Form.Group>
           <Form.Control
             key={`user-id-${resetFilterKey}`}
             placeholder={placeholder}
             block
-            disabled={loading || !!error}
-            data={users.map(usr => ({value: usr?.id, label: getUserLabel(usr)}))}
-            cleanable
             name={name}
+            disabled={loading || !!error}
+            data={formData}
+            cleanable
+            accepter={SelectPicker}
             onChange={(userId: any) => setUser(userId)}
             onSearch={(searchString: any) => {
               setUserSearch(searchString)
               refetch()
             }}
-            value={user?.id}
-            accepter={SelectPicker}
           />
         </Form.Group>
-      </>
+      )
+    }
+    return (
+      <Form.Group>
+        <Form.Control
+          key={`user-id-${resetFilterKey}`}
+          placeholder={placeholder}
+          block
+          disabled={loading || !!error}
+          data={users.map(usr => ({value: usr?.id, label: getUserLabel(usr)}))}
+          cleanable
+          name={name}
+          onChange={(userId: any) => setUser(userId)}
+          onSearch={(searchString: any) => {
+            setUserSearch(searchString)
+            refetch()
+          }}
+          value={user?.id}
+          accepter={SelectPicker}
+        />
+      </Form.Group>
     )
   }
 

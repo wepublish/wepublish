@@ -1,4 +1,4 @@
-import {ApolloServerTestClient} from 'apollo-server-testing'
+import {ApolloServer} from 'apollo-server-express'
 import {
   Article,
   ArticleInput,
@@ -12,12 +12,12 @@ import {
 
 import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
 
-let testClientPrivate: ApolloServerTestClient
+let testServerPrivate: ApolloServer
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithPrisma()
-    testClientPrivate = setupClient.testClientPrivate
+    testServerPrivate = setupClient.testServerPrivate
   } catch (error) {
     console.log('Error', error)
 
@@ -30,7 +30,6 @@ describe('Articles', () => {
     const articleIds: string[] = []
 
     beforeAll(async () => {
-      const {mutate} = testClientPrivate
       const articleInput: ArticleInput = {
         title: 'This is the best test article',
         slug: generateRandomString(),
@@ -51,18 +50,17 @@ describe('Articles', () => {
         socialMediaImageID: null,
         blocks: []
       }
-      const res = await mutate({
-        mutation: CreateArticle,
+      const res = await testServerPrivate.executeOperation({
+        query: CreateArticle,
         variables: {
           input: articleInput
         }
       })
 
-      articleIds.unshift(res.data.createArticle.id)
+      articleIds.unshift(res.data?.createArticle.id)
     })
 
     test('can be created', async () => {
-      const {mutate} = testClientPrivate
       const articleInput: ArticleInput = {
         title: 'This is the best test article',
         slug: generateRandomString(),
@@ -83,8 +81,8 @@ describe('Articles', () => {
         socialMediaImageID: null,
         blocks: []
       }
-      const res = await mutate({
-        mutation: CreateArticle,
+      const res = await testServerPrivate.executeOperation({
+        query: CreateArticle,
         variables: {
           input: articleInput
         }
@@ -101,24 +99,22 @@ describe('Articles', () => {
         }
       })
 
-      articleIds.unshift(res.data.createArticle.id)
+      articleIds.unshift(res.data?.createArticle.id)
     })
 
     test('can be read in list', async () => {
-      const {query} = testClientPrivate
-      const res = await query({
+      const res = await testServerPrivate.executeOperation({
         query: ArticleList,
         variables: {
           take: 100
         }
       })
 
-      expect(res.data.articles.nodes).not.toHaveLength(0)
+      expect(res.data?.articles.nodes).not.toHaveLength(0)
     })
 
     test('can be read by id', async () => {
-      const {query} = testClientPrivate
-      const article = await query({
+      const article = await testServerPrivate.executeOperation({
         query: Article,
         variables: {
           id: articleIds[0]
@@ -138,9 +134,8 @@ describe('Articles', () => {
     })
 
     test('can be updated', async () => {
-      const {mutate} = testClientPrivate
-      const updatedArticle = await mutate({
-        mutation: UpdateArticle,
+      const updatedArticle = await testServerPrivate.executeOperation({
+        query: UpdateArticle,
         variables: {
           input: {
             title: 'New Updated Title',
@@ -148,8 +143,7 @@ describe('Articles', () => {
             shared: false,
             tags: ['testing', 'awesome', 'another'],
             breaking: true,
-            lead:
-              'This updated article will rock your world. Never has there been a better article',
+            lead: 'This updated article will rock your world. Never has there been a better article',
             preTitle: 'Testing GraphQL',
             hideAuthor: false,
             properties: [
@@ -180,9 +174,8 @@ describe('Articles', () => {
     })
 
     test('can be published', async () => {
-      const {mutate} = testClientPrivate
-      const res = await mutate({
-        mutation: PublishArticle,
+      const res = await testServerPrivate.executeOperation({
+        query: PublishArticle,
         variables: {
           id: articleIds[0],
           publishAt: '2020-11-25T23:55:35.000Z',
@@ -204,9 +197,8 @@ describe('Articles', () => {
     })
 
     test('can be unpublished', async () => {
-      const {mutate} = testClientPrivate
-      const res = await mutate({
-        mutation: UnpublishArticle,
+      const res = await testServerPrivate.executeOperation({
+        query: UnpublishArticle,
         variables: {
           id: articleIds[0]
         }
@@ -225,9 +217,8 @@ describe('Articles', () => {
     })
 
     test('can be deleted', async () => {
-      const {mutate} = testClientPrivate
-      const res = await mutate({
-        mutation: DeleteArticle,
+      const res = await testServerPrivate.executeOperation({
+        query: DeleteArticle,
         variables: {
           id: articleIds[0]
         }

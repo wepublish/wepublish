@@ -22,7 +22,7 @@ import {
   SubscriptionDeactivationReason,
   UserSubscriptionFragment
 } from '../../api'
-import {newSubscriptionButton} from '../../routes/subscriptionList'
+import {NewSubscriptionButton} from '../../routes/subscriptionList'
 import {createCheckedPermissionComponent} from '../permissionControl'
 
 const NewSubscriptionButtonWrapper = styled.div`
@@ -294,7 +294,7 @@ function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
         </div>
       ))}
 
-      <NewSubscriptionButtonWrapper>{newSubscriptionButton({t})}</NewSubscriptionButtonWrapper>
+      <NewSubscriptionButtonWrapper>{NewSubscriptionButton({t})}</NewSubscriptionButtonWrapper>
     </>
   )
 }

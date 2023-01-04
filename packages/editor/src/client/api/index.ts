@@ -3,10 +3,11 @@ import {Node} from 'slate'
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-const defaultOptions =  {}
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -14,37 +15,32 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
-  DateTime: string;
-  /** A hexidecimal color value. */
   Color: string;
+  Date: any;
+  DateTime: string;
   RichText: Node[];
   Slug: string;
-  /** A valid vote value */
-  VoteValue: any;
-  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
-  Date: any;
-  Value: any;
-  /** The `Upload` scalar type represents a file upload. */
   Upload: File;
+  Value: any;
+  VoteValue: any;
 };
 
 export type AllowedSettingVals = {
   __typename?: 'AllowedSettingVals';
-  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>;
   boolChoice?: Maybe<Scalars['Boolean']>;
+  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type Article = {
   __typename?: 'Article';
-  id: Scalars['ID'];
-  shared: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
   draft?: Maybe<ArticleRevision>;
-  published?: Maybe<ArticleRevision>;
-  pending?: Maybe<ArticleRevision>;
+  id: Scalars['ID'];
   latest: ArticleRevision;
+  modifiedAt: Scalars['DateTime'];
+  pending?: Maybe<ArticleRevision>;
+  published?: Maybe<ArticleRevision>;
+  shared: Scalars['Boolean'];
 };
 
 export type ArticleConnection = {
@@ -55,116 +51,122 @@ export type ArticleConnection = {
 };
 
 export type ArticleFilter = {
-  title?: Maybe<Scalars['String']>;
-  preTitle?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-  publicationDateFrom?: Maybe<DateFilter>;
-  publicationDateTo?: Maybe<DateFilter>;
-  draft?: Maybe<Scalars['Boolean']>;
-  published?: Maybe<Scalars['Boolean']>;
-  pending?: Maybe<Scalars['Boolean']>;
-  authors?: Maybe<Array<Scalars['ID']>>;
-  tags?: Maybe<Array<Scalars['String']>>;
+  authors?: InputMaybe<Array<Scalars['ID']>>;
+  draft?: InputMaybe<Scalars['Boolean']>;
+  lead?: InputMaybe<Scalars['String']>;
+  pending?: InputMaybe<Scalars['Boolean']>;
+  preTitle?: InputMaybe<Scalars['String']>;
+  publicationDateFrom?: InputMaybe<DateFilter>;
+  publicationDateTo?: InputMaybe<DateFilter>;
+  published?: InputMaybe<Scalars['Boolean']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type ArticleInput = {
-  slug?: Maybe<Scalars['Slug']>;
-  preTitle?: Maybe<Scalars['String']>;
-  title: Scalars['String'];
-  lead?: Maybe<Scalars['String']>;
-  seoTitle?: Maybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  properties: Array<PropertiesInput>;
-  canonicalUrl?: Maybe<Scalars['String']>;
-  imageID?: Maybe<Scalars['ID']>;
   authorIDs: Array<Scalars['ID']>;
-  shared: Scalars['Boolean'];
-  breaking: Scalars['Boolean'];
-  hideAuthor: Scalars['Boolean'];
-  socialMediaTitle?: Maybe<Scalars['String']>;
-  socialMediaDescription?: Maybe<Scalars['String']>;
-  socialMediaAuthorIDs: Array<Scalars['ID']>;
-  socialMediaImageID?: Maybe<Scalars['ID']>;
   blocks: Array<BlockInput>;
+  breaking: Scalars['Boolean'];
+  canonicalUrl?: InputMaybe<Scalars['String']>;
+  hideAuthor: Scalars['Boolean'];
+  imageID?: InputMaybe<Scalars['ID']>;
+  lead?: InputMaybe<Scalars['String']>;
+  preTitle?: InputMaybe<Scalars['String']>;
+  properties: Array<PropertiesInput>;
+  seoTitle?: InputMaybe<Scalars['String']>;
+  shared: Scalars['Boolean'];
+  slug?: InputMaybe<Scalars['Slug']>;
+  socialMediaAuthorIDs: Array<Scalars['ID']>;
+  socialMediaDescription?: InputMaybe<Scalars['String']>;
+  socialMediaImageID?: InputMaybe<Scalars['ID']>;
+  socialMediaTitle?: InputMaybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  title: Scalars['String'];
 };
 
 export type ArticleNavigationLink = BaseNavigationLink & {
   __typename?: 'ArticleNavigationLink';
-  label: Scalars['String'];
   article?: Maybe<Article>;
+  label: Scalars['String'];
 };
 
 export type ArticleNavigationLinkInput = {
-  label: Scalars['String'];
   articleID: Scalars['ID'];
+  label: Scalars['String'];
 };
 
 export type ArticleRevision = {
   __typename?: 'ArticleRevision';
-  revision: Scalars['Int'];
+  authors: Array<Author>;
+  blocks: Array<Block>;
+  breaking: Scalars['Boolean'];
+  canonicalUrl?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
-  publishAt?: Maybe<Scalars['DateTime']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
   hideAuthor: Scalars['Boolean'];
-  preTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
+  image?: Maybe<Image>;
   lead?: Maybe<Scalars['String']>;
+  preTitle?: Maybe<Scalars['String']>;
+  properties: Array<Properties>;
+  publishAt?: Maybe<Scalars['DateTime']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  revision: Scalars['Int'];
   seoTitle?: Maybe<Scalars['String']>;
   slug?: Maybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  properties: Array<Properties>;
-  canonicalUrl?: Maybe<Scalars['String']>;
-  url: Scalars['String'];
-  image?: Maybe<Image>;
-  authors: Array<Author>;
-  breaking: Scalars['Boolean'];
-  socialMediaTitle?: Maybe<Scalars['String']>;
-  socialMediaDescription?: Maybe<Scalars['String']>;
   socialMediaAuthors: Array<Author>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
   socialMediaImage?: Maybe<Image>;
-  blocks: Array<Block>;
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  url: Scalars['String'];
 };
 
 export enum ArticleSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT',
-  PublishAt = 'PUBLISH_AT',
   PublishedAt = 'PUBLISHED_AT',
+  PublishAt = 'PUBLISH_AT',
   UpdatedAt = 'UPDATED_AT'
 }
 
 export type ArticleTeaser = {
   __typename?: 'ArticleTeaser';
-  style: TeaserStyle;
-  image?: Maybe<Image>;
-  preTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
   article?: Maybe<Article>;
+  image?: Maybe<Image>;
+  lead?: Maybe<Scalars['String']>;
+  preTitle?: Maybe<Scalars['String']>;
+  style: TeaserStyle;
+  title?: Maybe<Scalars['String']>;
 };
 
 export type ArticleTeaserInput = {
-  style: TeaserStyle;
-  imageID?: Maybe<Scalars['ID']>;
-  preTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
   articleID: Scalars['ID'];
+  imageID?: InputMaybe<Scalars['ID']>;
+  lead?: InputMaybe<Scalars['String']>;
+  preTitle?: InputMaybe<Scalars['String']>;
+  style: TeaserStyle;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type AuthProvider = {
+  __typename?: 'AuthProvider';
+  name: Scalars['String'];
+  url: Scalars['String'];
 };
 
 export type Author = {
   __typename?: 'Author';
-  id: Scalars['ID'];
+  bio?: Maybe<Scalars['RichText']>;
   createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  image?: Maybe<Image>;
+  jobTitle?: Maybe<Scalars['String']>;
+  links?: Maybe<Array<AuthorLink>>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   slug: Scalars['Slug'];
   url: Scalars['String'];
-  links?: Maybe<Array<AuthorLink>>;
-  bio?: Maybe<Scalars['RichText']>;
-  jobTitle?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
 };
 
 export type AuthorConnection = {
@@ -175,16 +177,16 @@ export type AuthorConnection = {
 };
 
 export type AuthorFilter = {
-  name?: Maybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
 };
 
 export type AuthorInput = {
+  bio?: InputMaybe<Scalars['RichText']>;
+  imageID?: InputMaybe<Scalars['ID']>;
+  jobTitle?: InputMaybe<Scalars['String']>;
+  links?: InputMaybe<Array<AuthorLinkInput>>;
   name: Scalars['String'];
   slug: Scalars['Slug'];
-  links?: Maybe<Array<AuthorLinkInput>>;
-  bio?: Maybe<Scalars['RichText']>;
-  jobTitle?: Maybe<Scalars['String']>;
-  imageID?: Maybe<Scalars['ID']>;
 };
 
 export type AuthorLink = {
@@ -204,23 +206,17 @@ export enum AuthorSort {
   Name = 'NAME'
 }
 
-export type AuthProvider = {
-  __typename?: 'AuthProvider';
-  name: Scalars['String'];
-  url: Scalars['String'];
-};
-
 export type AvailablePaymentMethod = {
   __typename?: 'AvailablePaymentMethod';
+  forceAutoRenewal: Scalars['Boolean'];
   paymentMethods: Array<PaymentMethod>;
   paymentPeriodicities: Array<PaymentPeriodicity>;
-  forceAutoRenewal: Scalars['Boolean'];
 };
 
 export type AvailablePaymentMethodInput = {
+  forceAutoRenewal: Scalars['Boolean'];
   paymentMethodIDs: Array<Scalars['String']>;
   paymentPeriodicities: Array<PaymentPeriodicity>;
-  forceAutoRenewal: Scalars['Boolean'];
 };
 
 export type BaseNavigationLink = {
@@ -236,74 +232,73 @@ export type BildwurfAdBlockInput = {
   zoneID: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HtmlBlock | PollBlock | CommentBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock;
+export type Block = BildwurfAdBlock | CommentBlock | EmbedBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | LinkPageBreakBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | TeaserGridBlock | TeaserGridFlexBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockInput = {
-  richText?: Maybe<RichTextBlockInput>;
-  image?: Maybe<ImageBlockInput>;
-  imageGallery?: Maybe<ImageGalleryBlockInput>;
-  listicle?: Maybe<ListicleBlockInput>;
-  title?: Maybe<TitleBlockInput>;
-  quote?: Maybe<QuoteBlockInput>;
-  facebookPost?: Maybe<FacebookPostBlockInput>;
-  facebookVideo?: Maybe<FacebookVideoBlockInput>;
-  instagramPost?: Maybe<InstagramPostBlockInput>;
-  twitterTweet?: Maybe<TwitterTweetBlockInput>;
-  vimeoVideo?: Maybe<VimeoVideoBlockInput>;
-  youTubeVideo?: Maybe<YouTubeVideoBlockInput>;
-  soundCloudTrack?: Maybe<SoundCloudTrackBlockInput>;
-  polisConversation?: Maybe<PolisConversationBlockInput>;
-  tikTokVideo?: Maybe<TikTokVideoBlockInput>;
-  bildwurfAd?: Maybe<BildwurfAdBlockInput>;
-  embed?: Maybe<EmbedBlockInput>;
-  html?: Maybe<HtmlBlockInput>;
-  poll?: Maybe<PollBlockInput>;
-  comment?: Maybe<CommentBlockInput>;
-  linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
-  teaserGrid?: Maybe<TeaserGridBlockInput>;
-  teaserGridFlex?: Maybe<TeaserGridFlexBlockInput>;
+  bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
+  comment?: InputMaybe<CommentBlockInput>;
+  embed?: InputMaybe<EmbedBlockInput>;
+  facebookPost?: InputMaybe<FacebookPostBlockInput>;
+  facebookVideo?: InputMaybe<FacebookVideoBlockInput>;
+  html?: InputMaybe<HtmlBlockInput>;
+  image?: InputMaybe<ImageBlockInput>;
+  imageGallery?: InputMaybe<ImageGalleryBlockInput>;
+  instagramPost?: InputMaybe<InstagramPostBlockInput>;
+  linkPageBreak?: InputMaybe<LinkPageBreakBlockInput>;
+  listicle?: InputMaybe<ListicleBlockInput>;
+  polisConversation?: InputMaybe<PolisConversationBlockInput>;
+  poll?: InputMaybe<PollBlockInput>;
+  quote?: InputMaybe<QuoteBlockInput>;
+  richText?: InputMaybe<RichTextBlockInput>;
+  soundCloudTrack?: InputMaybe<SoundCloudTrackBlockInput>;
+  teaserGrid?: InputMaybe<TeaserGridBlockInput>;
+  teaserGridFlex?: InputMaybe<TeaserGridFlexBlockInput>;
+  tikTokVideo?: InputMaybe<TikTokVideoBlockInput>;
+  title?: InputMaybe<TitleBlockInput>;
+  twitterTweet?: InputMaybe<TwitterTweetBlockInput>;
+  vimeoVideo?: InputMaybe<VimeoVideoBlockInput>;
+  youTubeVideo?: InputMaybe<YouTubeVideoBlockInput>;
 };
-
 
 export type Comment = {
   __typename?: 'Comment';
-  id: Scalars['ID'];
-  guestUsername?: Maybe<Scalars['String']>;
-  guestUserImage?: Maybe<Image>;
-  user?: Maybe<User>;
-  tags?: Maybe<Array<Tag>>;
   authorType: CommentAuthorType;
+  createdAt: Scalars['DateTime'];
+  guestUserImage?: Maybe<Image>;
+  guestUsername?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
   itemID: Scalars['ID'];
   itemType: CommentItemType;
-  peerId?: Maybe<Scalars['ID']>;
+  modifiedAt: Scalars['DateTime'];
+  overriddenRatings?: Maybe<Array<OverriddenRating>>;
   parentComment?: Maybe<Comment>;
+  peerId?: Maybe<Scalars['ID']>;
+  rejectionReason?: Maybe<CommentRejectionReason>;
   revisions: Array<CommentRevision>;
   source?: Maybe<Scalars['String']>;
   state: CommentState;
-  rejectionReason?: Maybe<CommentRejectionReason>;
-  createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  overriddenRatings?: Maybe<Array<OverriddenRating>>;
+  tags?: Maybe<Array<Tag>>;
+  user?: Maybe<User>;
 };
 
 export enum CommentAuthorType {
   Author = 'Author',
+  GuestUser = 'GuestUser',
   Team = 'Team',
-  VerifiedUser = 'VerifiedUser',
-  GuestUser = 'GuestUser'
+  VerifiedUser = 'VerifiedUser'
 }
 
 export type CommentBlock = {
   __typename?: 'CommentBlock';
-  filter: CommentBlockFilter;
   comments: Array<Comment>;
+  filter: CommentBlockFilter;
 };
 
 export type CommentBlockFilter = {
   __typename?: 'CommentBlockFilter';
+  comments?: Maybe<Array<Scalars['ID']>>;
   item?: Maybe<Scalars['ID']>;
   tags?: Maybe<Array<Scalars['ID']>>;
-  comments?: Maybe<Array<Scalars['ID']>>;
 };
 
 export type CommentBlockInput = {
@@ -311,9 +306,9 @@ export type CommentBlockInput = {
 };
 
 export type CommentBlockInputFilter = {
-  item?: Maybe<Scalars['ID']>;
-  tags?: Maybe<Array<Scalars['ID']>>;
-  comments?: Maybe<Array<Scalars['ID']>>;
+  comments?: InputMaybe<Array<Scalars['ID']>>;
+  item?: InputMaybe<Scalars['ID']>;
+  tags?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 export type CommentConnection = {
@@ -327,24 +322,26 @@ export type CommentFilter = {
   item?: Maybe<Scalars['ID']>;
   tags?: Maybe<Array<Scalars['ID']>>;
   states?: Maybe<Array<CommentState>>;
+  itemType?: Maybe<CommentItemType>;
+  itemID?: Maybe<Scalars['ID']>;
 };
 
 export enum CommentItemType {
   Article = 'Article',
-  PeerArticle = 'PeerArticle',
-  Page = 'Page'
+  Page = 'Page',
+  PeerArticle = 'PeerArticle'
 }
 
 export type CommentRatingOverrideUpdateInput = {
   answerId: Scalars['ID'];
-  value?: Maybe<Scalars['Int']>;
+  value?: InputMaybe<Scalars['Int']>;
 };
 
 export type CommentRatingSystemAnswer = {
   __typename?: 'CommentRatingSystemAnswer';
+  answer?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   ratingSystemId: Scalars['ID'];
-  answer?: Maybe<Scalars['String']>;
   type: RatingSystemType;
 };
 
@@ -355,21 +352,21 @@ export enum CommentRejectionReason {
 
 export type CommentRevision = {
   __typename?: 'CommentRevision';
+  createdAt: Scalars['DateTime'];
+  lead?: Maybe<Scalars['String']>;
   text?: Maybe<Scalars['RichText']>;
   title?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-  createdAt: Scalars['DateTime'];
 };
 
 export type CommentRevisionUpdateInput = {
-  text?: Maybe<Scalars['RichText']>;
-  title?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
+  lead?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['RichText']>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export enum CommentSort {
-  ModifiedAt = 'ModifiedAt',
-  CreatedAt = 'CreatedAt'
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt'
 }
 
 export enum CommentState {
@@ -379,75 +376,73 @@ export enum CommentState {
   Rejected = 'Rejected'
 }
 
+export type CreatePeerInput = {
+  hostURL: Scalars['String'];
+  name: Scalars['String'];
+  slug: Scalars['String'];
+  token: Scalars['String'];
+};
+
 export type CreatedToken = {
   __typename?: 'CreatedToken';
-  id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   token: Scalars['String'];
 };
 
-export type CreatePeerInput = {
-  name: Scalars['String'];
-  slug: Scalars['String'];
-  hostURL: Scalars['String'];
-  token: Scalars['String'];
-};
-
 export type CustomTeaser = {
   __typename?: 'CustomTeaser';
-  style: TeaserStyle;
-  image?: Maybe<Image>;
-  preTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
   contentUrl?: Maybe<Scalars['String']>;
+  image?: Maybe<Image>;
+  lead?: Maybe<Scalars['String']>;
+  preTitle?: Maybe<Scalars['String']>;
   properties?: Maybe<Array<Properties>>;
+  style: TeaserStyle;
+  title?: Maybe<Scalars['String']>;
 };
 
 export type CustomTeaserInput = {
-  style: TeaserStyle;
-  imageID?: Maybe<Scalars['ID']>;
-  preTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-  contentUrl?: Maybe<Scalars['String']>;
+  contentUrl?: InputMaybe<Scalars['String']>;
+  imageID?: InputMaybe<Scalars['ID']>;
+  lead?: InputMaybe<Scalars['String']>;
+  preTitle?: InputMaybe<Scalars['String']>;
   properties: Array<PropertiesInput>;
+  style: TeaserStyle;
+  title?: InputMaybe<Scalars['String']>;
 };
 
-
 export type DateFilter = {
-  date?: Maybe<Scalars['DateTime']>;
   comparison: DateFilterComparison;
+  date?: InputMaybe<Scalars['DateTime']>;
 };
 
 export enum DateFilterComparison {
+  Equal = 'EQUAL',
   Greater = 'GREATER',
   GreaterOrEqual = 'GREATER_OR_EQUAL',
-  Equal = 'EQUAL',
   Lower = 'LOWER',
   LowerOrEqual = 'LOWER_OR_EQUAL'
 }
 
-
 export type EmbedBlock = {
   __typename?: 'EmbedBlock';
-  url?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  width?: Maybe<Scalars['Int']>;
   height?: Maybe<Scalars['Int']>;
-  styleCustom?: Maybe<Scalars['String']>;
   sandbox?: Maybe<Scalars['String']>;
+  styleCustom?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+  width?: Maybe<Scalars['Int']>;
 };
 
 export type EmbedBlockInput = {
-  url?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  width?: Maybe<Scalars['Int']>;
-  height?: Maybe<Scalars['Int']>;
-  styleCustom?: Maybe<Scalars['String']>;
-  sandbox?: Maybe<Scalars['String']>;
+  height?: InputMaybe<Scalars['Int']>;
+  sandbox?: InputMaybe<Scalars['String']>;
+  styleCustom?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+  url?: InputMaybe<Scalars['String']>;
+  width?: InputMaybe<Scalars['Int']>;
 };
 
 export type ExternalNavigationLink = BaseNavigationLink & {
@@ -463,13 +458,13 @@ export type ExternalNavigationLinkInput = {
 
 export type FacebookPostBlock = {
   __typename?: 'FacebookPostBlock';
-  userID: Scalars['String'];
   postID: Scalars['String'];
+  userID: Scalars['String'];
 };
 
 export type FacebookPostBlockInput = {
-  userID: Scalars['String'];
   postID: Scalars['String'];
+  userID: Scalars['String'];
 };
 
 export type FacebookVideoBlock = {
@@ -485,21 +480,21 @@ export type FacebookVideoBlockInput = {
 
 export type FlexAlignment = {
   __typename?: 'FlexAlignment';
+  h: Scalars['Int'];
   i: Scalars['String'];
+  static: Scalars['Boolean'];
+  w: Scalars['Int'];
   x: Scalars['Int'];
   y: Scalars['Int'];
-  w: Scalars['Int'];
-  h: Scalars['Int'];
-  static: Scalars['Boolean'];
 };
 
 export type FlexAlignmentInput = {
+  h: Scalars['Int'];
   i: Scalars['String'];
+  static: Scalars['Boolean'];
+  w: Scalars['Int'];
   x: Scalars['Int'];
   y: Scalars['Int'];
-  w: Scalars['Int'];
-  h: Scalars['Int'];
-  static: Scalars['Boolean'];
 };
 
 export type FlexTeaser = {
@@ -509,25 +504,25 @@ export type FlexTeaser = {
 };
 
 export type FlexTeaserInput = {
-  teaser?: Maybe<TeaserInput>;
   alignment: FlexAlignmentInput;
+  teaser?: InputMaybe<TeaserInput>;
 };
 
 export type FullCommentRatingSystem = {
   __typename?: 'FullCommentRatingSystem';
+  answers: Array<CommentRatingSystemAnswer>;
   id: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
-  answers: Array<CommentRatingSystemAnswer>;
 };
 
 export type FullPoll = {
   __typename?: 'FullPoll';
-  id: Scalars['ID'];
-  question?: Maybe<Scalars['String']>;
-  opensAt: Scalars['DateTime'];
-  closedAt?: Maybe<Scalars['DateTime']>;
   answers?: Maybe<Array<PollAnswerWithVoteCount>>;
+  closedAt?: Maybe<Scalars['DateTime']>;
   externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
+  id: Scalars['ID'];
+  opensAt: Scalars['DateTime'];
+  question?: Maybe<Scalars['String']>;
 };
 
 export type GalleryImageEdge = {
@@ -537,8 +532,8 @@ export type GalleryImageEdge = {
 };
 
 export type GalleryImageEdgeInput = {
-  caption?: Maybe<Scalars['String']>;
-  imageID?: Maybe<Scalars['ID']>;
+  caption?: InputMaybe<Scalars['String']>;
+  imageID?: InputMaybe<Scalars['ID']>;
 };
 
 export type HtmlBlock = {
@@ -547,58 +542,58 @@ export type HtmlBlock = {
 };
 
 export type HtmlBlockInput = {
-  html?: Maybe<Scalars['String']>;
+  html?: InputMaybe<Scalars['String']>;
 };
 
 export type Image = {
   __typename?: 'Image';
-  id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  filename?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  link?: Maybe<Scalars['String']>;
-  source?: Maybe<Scalars['String']>;
-  license?: Maybe<Scalars['String']>;
-  fileSize: Scalars['Int'];
   extension: Scalars['String'];
-  mimeType: Scalars['String'];
-  format: Scalars['String'];
-  width: Scalars['Int'];
-  height: Scalars['Int'];
+  fileSize: Scalars['Int'];
+  filename?: Maybe<Scalars['String']>;
   focalPoint?: Maybe<Point>;
-  url?: Maybe<Scalars['String']>;
+  format: Scalars['String'];
+  height: Scalars['Int'];
+  id: Scalars['ID'];
+  license?: Maybe<Scalars['String']>;
+  link?: Maybe<Scalars['String']>;
+  mimeType: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  source?: Maybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
   transformURL?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+  width: Scalars['Int'];
 };
 
 
 export type ImageTransformUrlArgs = {
-  input?: Maybe<ImageTransformation>;
+  input?: InputMaybe<ImageTransformation>;
 };
 
 export type ImageBlock = {
   __typename?: 'ImageBlock';
-  image?: Maybe<Image>;
   caption?: Maybe<Scalars['String']>;
+  image?: Maybe<Image>;
 };
 
 export type ImageBlockInput = {
-  caption?: Maybe<Scalars['String']>;
-  imageID?: Maybe<Scalars['ID']>;
+  caption?: InputMaybe<Scalars['String']>;
+  imageID?: InputMaybe<Scalars['ID']>;
 };
 
 export type ImageConnection = {
   __typename?: 'ImageConnection';
   nodes: Array<Image>;
-  totalCount: Scalars['Int'];
   pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
 };
 
 export type ImageFilter = {
-  title?: Maybe<Scalars['String']>;
-  tags?: Maybe<Array<Scalars['String']>>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type ImageGalleryBlock = {
@@ -607,12 +602,12 @@ export type ImageGalleryBlock = {
 };
 
 export type ImageGalleryBlockInput = {
-  images?: Maybe<Array<Maybe<GalleryImageEdgeInput>>>;
+  images?: InputMaybe<Array<InputMaybe<GalleryImageEdgeInput>>>;
 };
 
 export enum ImageOutput {
-  Png = 'PNG',
   Jpeg = 'JPEG',
+  Png = 'PNG',
   Webp = 'WEBP'
 }
 
@@ -630,11 +625,11 @@ export enum ImageSort {
 }
 
 export type ImageTransformation = {
-  width?: Maybe<Scalars['Int']>;
-  height?: Maybe<Scalars['Int']>;
-  rotation?: Maybe<ImageRotation>;
-  quality?: Maybe<Scalars['Float']>;
-  output?: Maybe<ImageOutput>;
+  height?: InputMaybe<Scalars['Int']>;
+  output?: InputMaybe<ImageOutput>;
+  quality?: InputMaybe<Scalars['Float']>;
+  rotation?: InputMaybe<ImageRotation>;
+  width?: InputMaybe<Scalars['Int']>;
 };
 
 export type InputPoint = {
@@ -653,15 +648,15 @@ export type InstagramPostBlockInput = {
 
 export type Invoice = {
   __typename?: 'Invoice';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  mail: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  paidAt?: Maybe<Scalars['DateTime']>;
-  manuallySetAsPaidByUserId?: Maybe<Scalars['ID']>;
-  items: Array<InvoiceItem>;
   canceledAt?: Maybe<Scalars['DateTime']>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  items: Array<InvoiceItem>;
+  mail: Scalars['String'];
+  manuallySetAsPaidByUserId?: Maybe<Scalars['ID']>;
+  modifiedAt: Scalars['DateTime'];
+  paidAt?: Maybe<Scalars['DateTime']>;
   total: Scalars['Int'];
 };
 
@@ -673,40 +668,40 @@ export type InvoiceConnection = {
 };
 
 export type InvoiceFilter = {
-  mail?: Maybe<Scalars['String']>;
-  paidAt?: Maybe<Scalars['Date']>;
-  canceledAt?: Maybe<Scalars['Date']>;
-  userID?: Maybe<Scalars['ID']>;
-  subscriptionID?: Maybe<Scalars['ID']>;
+  canceledAt?: InputMaybe<Scalars['Date']>;
+  mail?: InputMaybe<Scalars['String']>;
+  paidAt?: InputMaybe<Scalars['Date']>;
+  subscriptionID?: InputMaybe<Scalars['ID']>;
+  userID?: InputMaybe<Scalars['ID']>;
 };
 
 export type InvoiceInput = {
-  mail: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  paidAt?: Maybe<Scalars['DateTime']>;
-  subscriptionID?: Maybe<Scalars['ID']>;
-  manuallySetAsPaidByUserId?: Maybe<Scalars['ID']>;
+  description?: InputMaybe<Scalars['String']>;
   items: Array<InvoiceItemInput>;
+  mail: Scalars['String'];
+  manuallySetAsPaidByUserId?: InputMaybe<Scalars['ID']>;
+  paidAt?: InputMaybe<Scalars['DateTime']>;
+  subscriptionID?: InputMaybe<Scalars['ID']>;
 };
 
 export type InvoiceItem = {
   __typename?: 'InvoiceItem';
+  amount: Scalars['Int'];
   createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
   quantity: Scalars['Int'];
-  amount: Scalars['Int'];
   total: Scalars['Int'];
 };
 
 export type InvoiceItemInput = {
-  name: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  quantity: Scalars['Int'];
   amount: Scalars['Int'];
   createdAt: Scalars['DateTime'];
+  description?: InputMaybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  quantity: Scalars['Int'];
 };
 
 export enum InvoiceSort {
@@ -717,35 +712,35 @@ export enum InvoiceSort {
 
 export type JwtToken = {
   __typename?: 'JWTToken';
-  token: Scalars['String'];
   expiresAt: Scalars['String'];
+  token: Scalars['String'];
 };
 
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock';
-  text?: Maybe<Scalars['String']>;
-  richText: Scalars['RichText'];
-  linkURL?: Maybe<Scalars['String']>;
-  linkText?: Maybe<Scalars['String']>;
-  linkTarget?: Maybe<Scalars['String']>;
   hideButton: Scalars['Boolean'];
-  styleOption?: Maybe<Scalars['String']>;
-  layoutOption?: Maybe<Scalars['String']>;
-  templateOption?: Maybe<Scalars['String']>;
   image?: Maybe<Image>;
+  layoutOption?: Maybe<Scalars['String']>;
+  linkTarget?: Maybe<Scalars['String']>;
+  linkText?: Maybe<Scalars['String']>;
+  linkURL?: Maybe<Scalars['String']>;
+  richText: Scalars['RichText'];
+  styleOption?: Maybe<Scalars['String']>;
+  templateOption?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['String']>;
 };
 
 export type LinkPageBreakBlockInput = {
-  text?: Maybe<Scalars['String']>;
-  richText: Scalars['RichText'];
-  linkURL?: Maybe<Scalars['String']>;
-  linkText?: Maybe<Scalars['String']>;
-  linkTarget?: Maybe<Scalars['String']>;
   hideButton: Scalars['Boolean'];
-  styleOption?: Maybe<Scalars['String']>;
-  templateOption?: Maybe<Scalars['String']>;
-  layoutOption?: Maybe<Scalars['String']>;
-  imageID?: Maybe<Scalars['ID']>;
+  imageID?: InputMaybe<Scalars['ID']>;
+  layoutOption?: InputMaybe<Scalars['String']>;
+  linkTarget?: InputMaybe<Scalars['String']>;
+  linkText?: InputMaybe<Scalars['String']>;
+  linkURL?: InputMaybe<Scalars['String']>;
+  richText: Scalars['RichText'];
+  styleOption?: InputMaybe<Scalars['String']>;
+  templateOption?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['String']>;
 };
 
 export type ListicleBlock = {
@@ -754,35 +749,35 @@ export type ListicleBlock = {
 };
 
 export type ListicleBlockInput = {
-  items?: Maybe<Array<Maybe<ListicleItemInput>>>;
+  items?: InputMaybe<Array<InputMaybe<ListicleItemInput>>>;
 };
 
 export type ListicleItem = {
   __typename?: 'ListicleItem';
-  title: Scalars['String'];
   image?: Maybe<Image>;
   richText: Scalars['RichText'];
+  title: Scalars['String'];
 };
 
 export type ListicleItemInput = {
-  title: Scalars['String'];
-  imageID?: Maybe<Scalars['ID']>;
+  imageID?: InputMaybe<Scalars['ID']>;
   richText: Scalars['RichText'];
+  title: Scalars['String'];
 };
 
 export type MemberPlan = {
   __typename?: 'MemberPlan';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  slug: Scalars['String'];
-  image?: Maybe<Image>;
-  description?: Maybe<Scalars['RichText']>;
-  tags?: Maybe<Array<Scalars['String']>>;
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethod>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['RichText']>;
+  id: Scalars['ID'];
+  image?: Maybe<Image>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  slug: Scalars['String'];
+  tags?: Maybe<Array<Scalars['String']>>;
 };
 
 export type MemberPlanConnection = {
@@ -793,20 +788,20 @@ export type MemberPlanConnection = {
 };
 
 export type MemberPlanFilter = {
-  name?: Maybe<Scalars['String']>;
-  active?: Maybe<Scalars['Boolean']>;
-  tags?: Maybe<Array<Scalars['String']>>;
+  active?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type MemberPlanInput = {
-  name: Scalars['String'];
-  slug: Scalars['String'];
-  imageID?: Maybe<Scalars['ID']>;
-  description?: Maybe<Scalars['RichText']>;
-  tags?: Maybe<Array<Scalars['String']>>;
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
+  description?: InputMaybe<Scalars['RichText']>;
+  imageID?: InputMaybe<Scalars['ID']>;
+  name: Scalars['String'];
+  slug: Scalars['String'];
+  tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export enum MemberPlanSort {
@@ -816,86 +811,135 @@ export enum MemberPlanSort {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  updatePeerProfile: PeerProfile;
-  createPeer: Peer;
-  updatePeer: Peer;
-  deletePeer?: Maybe<Peer>;
-  createSession: SessionWithToken;
-  createSessionWithJWT: SessionWithToken;
-  createSessionWithOAuth2Code: SessionWithToken;
-  revokeSession: Scalars['Boolean'];
-  revokeActiveSession: Scalars['Boolean'];
-  sessions: Array<Session>;
-  sendJWTLogin: Scalars['String'];
-  sendWebsiteLogin: Scalars['String'];
-  createToken: CreatedToken;
-  deleteToken?: Maybe<CreatedToken>;
-  createUser?: Maybe<User>;
-  updateUser?: Maybe<User>;
-  resetUserPassword?: Maybe<User>;
-  deleteUser?: Maybe<User>;
-  createSubscription?: Maybe<Subscription>;
-  updateSubscription?: Maybe<Subscription>;
-  deleteSubscription?: Maybe<Subscription>;
-  createUserRole?: Maybe<UserRole>;
-  updateUserRole?: Maybe<UserRole>;
-  deleteUserRole?: Maybe<UserRole>;
-  createNavigation?: Maybe<Navigation>;
-  updateNavigation?: Maybe<Navigation>;
-  deleteNavigation?: Maybe<Navigation>;
-  createAuthor?: Maybe<Author>;
-  updateAuthor?: Maybe<Author>;
-  deleteAuthor?: Maybe<Author>;
-  uploadImage?: Maybe<Image>;
-  updateImage?: Maybe<Image>;
-  deleteImage?: Maybe<Image>;
-  createArticle: Article;
-  updateArticle?: Maybe<Article>;
-  deleteArticle?: Maybe<Article>;
-  publishArticle?: Maybe<Article>;
-  unpublishArticle?: Maybe<Article>;
-  duplicateArticle: Article;
-  createPage: Page;
-  updatePage?: Maybe<Page>;
-  deletePage?: Maybe<Page>;
-  publishPage?: Maybe<Page>;
-  unpublishPage?: Maybe<Page>;
-  duplicatePage: Page;
-  createMemberPlan?: Maybe<MemberPlan>;
-  updateMemberPlan?: Maybe<MemberPlan>;
-  deleteMemberPlan?: Maybe<MemberPlan>;
-  createPaymentMethod?: Maybe<PaymentMethod>;
-  updatePaymentMethod?: Maybe<PaymentMethod>;
-  deletePaymentMethod?: Maybe<PaymentMethod>;
-  createInvoice?: Maybe<Invoice>;
-  createPaymentFromInvoice?: Maybe<Payment>;
-  updateInvoice?: Maybe<Invoice>;
-  deleteInvoice?: Maybe<Invoice>;
-  updateComment: Comment;
-  createComment: Comment;
   approveComment: Comment;
-  rejectComment: Comment;
-  requestChangesOnComment: Comment;
-  deleteComment: Comment;
-  updateSettingList?: Maybe<Array<Maybe<Setting>>>;
-  createRatingSystemAnswer: CommentRatingSystemAnswer;
-  updateRatingSystem: FullCommentRatingSystem;
-  deleteRatingSystemAnswer: CommentRatingSystemAnswer;
+  createArticle: Article;
+  createAuthor?: Maybe<Author>;
+  createComment: Comment;
+  createInvoice?: Maybe<Invoice>;
+  createMemberPlan?: Maybe<MemberPlan>;
+  createNavigation?: Maybe<Navigation>;
+  createPage: Page;
+  createPaymentFromInvoice?: Maybe<Payment>;
+  createPaymentMethod?: Maybe<PaymentMethod>;
+  createPeer: Peer;
   createPoll?: Maybe<PollWithAnswers>;
   createPollAnswer?: Maybe<PollAnswer>;
   createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
-  updatePoll?: Maybe<FullPoll>;
+  createRatingSystemAnswer: CommentRatingSystemAnswer;
+  createSession: SessionWithToken;
+  createSessionWithJWT: SessionWithToken;
+  createSessionWithOAuth2Code: SessionWithToken;
+  createSubscription?: Maybe<Subscription>;
+  createTag?: Maybe<Tag>;
+  createToken: CreatedToken;
+  createUser?: Maybe<User>;
+  createUserRole?: Maybe<UserRole>;
+  deleteArticle?: Maybe<Article>;
+  deleteAuthor?: Maybe<Author>;
+  deleteComment: Comment;
+  deleteImage?: Maybe<Image>;
+  deleteInvoice?: Maybe<Invoice>;
+  deleteMemberPlan?: Maybe<MemberPlan>;
+  deleteNavigation?: Maybe<Navigation>;
+  deletePage?: Maybe<Page>;
+  deletePaymentMethod?: Maybe<PaymentMethod>;
+  deletePeer?: Maybe<Peer>;
   deletePoll?: Maybe<FullPoll>;
   deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
-  createTag?: Maybe<Tag>;
-  updateTag?: Maybe<Tag>;
+  deleteRatingSystemAnswer: CommentRatingSystemAnswer;
+  deleteSubscription?: Maybe<Subscription>;
   deleteTag?: Maybe<Tag>;
+  deleteToken?: Maybe<CreatedToken>;
+  deleteUser?: Maybe<User>;
+  deleteUserRole?: Maybe<UserRole>;
+  duplicateArticle: Article;
+  duplicatePage: Page;
+  publishArticle?: Maybe<Article>;
+  publishPage?: Maybe<Page>;
+  rejectComment: Comment;
+  requestChangesOnComment: Comment;
+  resetUserPassword?: Maybe<User>;
+  revokeActiveSession: Scalars['Boolean'];
+  revokeSession: Scalars['Boolean'];
+  sendJWTLogin: Scalars['String'];
+  sendWebsiteLogin: Scalars['String'];
+  sessions: Array<Session>;
+  unpublishArticle?: Maybe<Article>;
+  unpublishPage?: Maybe<Page>;
+  updateArticle?: Maybe<Article>;
+  updateAuthor?: Maybe<Author>;
+  updateComment: Comment;
+  updateImage?: Maybe<Image>;
+  updateInvoice?: Maybe<Invoice>;
+  updateMemberPlan?: Maybe<MemberPlan>;
+  updateNavigation?: Maybe<Navigation>;
+  updatePage?: Maybe<Page>;
+  updatePaymentMethod?: Maybe<PaymentMethod>;
+  updatePeer: Peer;
+  updatePeerProfile: PeerProfile;
+  updatePoll?: Maybe<FullPoll>;
+  updateRatingSystem: FullCommentRatingSystem;
+  updateSettingList?: Maybe<Array<Maybe<Setting>>>;
+  updateSubscription?: Maybe<Subscription>;
+  updateTag?: Maybe<Tag>;
+  updateUser?: Maybe<User>;
+  updateUserRole?: Maybe<UserRole>;
+  uploadImage?: Maybe<Image>;
 };
 
 
-export type MutationUpdatePeerProfileArgs = {
-  input: PeerProfileInput;
+export type MutationApproveCommentArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationCreateArticleArgs = {
+  input: ArticleInput;
+};
+
+
+export type MutationCreateAuthorArgs = {
+  input: AuthorInput;
+};
+
+
+export type MutationCreateCommentArgs = {
+  itemID: Scalars['ID'];
+  itemType: CommentItemType;
+  parentID?: InputMaybe<Scalars['ID']>;
+  tagIds?: InputMaybe<Array<Scalars['ID']>>;
+  text?: InputMaybe<Scalars['RichText']>;
+};
+
+
+export type MutationCreateInvoiceArgs = {
+  input: InvoiceInput;
+};
+
+
+export type MutationCreateMemberPlanArgs = {
+  input: MemberPlanInput;
+};
+
+
+export type MutationCreateNavigationArgs = {
+  input: NavigationInput;
+};
+
+
+export type MutationCreatePageArgs = {
+  input: PageInput;
+};
+
+
+export type MutationCreatePaymentFromInvoiceArgs = {
+  input: PaymentFromInvoiceInput;
+};
+
+
+export type MutationCreatePaymentMethodArgs = {
+  input: PaymentMethodInput;
 };
 
 
@@ -904,14 +948,29 @@ export type MutationCreatePeerArgs = {
 };
 
 
-export type MutationUpdatePeerArgs = {
-  id: Scalars['ID'];
-  input: UpdatePeerInput;
+export type MutationCreatePollArgs = {
+  closedAt?: InputMaybe<Scalars['DateTime']>;
+  opensAt?: InputMaybe<Scalars['DateTime']>;
+  question?: InputMaybe<Scalars['String']>;
 };
 
 
-export type MutationDeletePeerArgs = {
-  id: Scalars['ID'];
+export type MutationCreatePollAnswerArgs = {
+  answer?: InputMaybe<Scalars['String']>;
+  pollId: Scalars['ID'];
+};
+
+
+export type MutationCreatePollExternalVoteSourceArgs = {
+  pollId: Scalars['ID'];
+  source?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationCreateRatingSystemAnswerArgs = {
+  answer?: InputMaybe<Scalars['String']>;
+  ratingSystemId: Scalars['ID'];
+  type?: InputMaybe<RatingSystemType>;
 };
 
 
@@ -927,35 +986,25 @@ export type MutationCreateSessionWithJwtArgs = {
 
 
 export type MutationCreateSessionWithOAuth2CodeArgs = {
-  name: Scalars['String'];
   code: Scalars['String'];
+  name: Scalars['String'];
   redirectUri: Scalars['String'];
 };
 
 
-export type MutationRevokeSessionArgs = {
-  id: Scalars['ID'];
+export type MutationCreateSubscriptionArgs = {
+  input: SubscriptionInput;
 };
 
 
-export type MutationSendJwtLoginArgs = {
-  url: Scalars['String'];
-  email: Scalars['String'];
-};
-
-
-export type MutationSendWebsiteLoginArgs = {
-  email: Scalars['String'];
+export type MutationCreateTagArgs = {
+  tag?: InputMaybe<Scalars['String']>;
+  type: TagType;
 };
 
 
 export type MutationCreateTokenArgs = {
   input: TokenInput;
-};
-
-
-export type MutationDeleteTokenArgs = {
-  id: Scalars['ID'];
 };
 
 
@@ -965,112 +1014,8 @@ export type MutationCreateUserArgs = {
 };
 
 
-export type MutationUpdateUserArgs = {
-  id: Scalars['ID'];
-  input: UserInput;
-};
-
-
-export type MutationResetUserPasswordArgs = {
-  id: Scalars['ID'];
-  password: Scalars['String'];
-  sendMail?: Maybe<Scalars['Boolean']>;
-};
-
-
-export type MutationDeleteUserArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationCreateSubscriptionArgs = {
-  input: SubscriptionInput;
-};
-
-
-export type MutationUpdateSubscriptionArgs = {
-  id: Scalars['ID'];
-  input: SubscriptionInput;
-};
-
-
-export type MutationDeleteSubscriptionArgs = {
-  id: Scalars['ID'];
-};
-
-
 export type MutationCreateUserRoleArgs = {
   input: UserRoleInput;
-};
-
-
-export type MutationUpdateUserRoleArgs = {
-  id: Scalars['ID'];
-  input: UserRoleInput;
-};
-
-
-export type MutationDeleteUserRoleArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationCreateNavigationArgs = {
-  input: NavigationInput;
-};
-
-
-export type MutationUpdateNavigationArgs = {
-  id: Scalars['ID'];
-  input: NavigationInput;
-};
-
-
-export type MutationDeleteNavigationArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationCreateAuthorArgs = {
-  input: AuthorInput;
-};
-
-
-export type MutationUpdateAuthorArgs = {
-  id: Scalars['ID'];
-  input: AuthorInput;
-};
-
-
-export type MutationDeleteAuthorArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationUploadImageArgs = {
-  input: UploadImageInput;
-};
-
-
-export type MutationUpdateImageArgs = {
-  id: Scalars['ID'];
-  input: UpdateImageInput;
-};
-
-
-export type MutationDeleteImageArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationCreateArticleArgs = {
-  input: ArticleInput;
-};
-
-
-export type MutationUpdateArticleArgs = {
-  id: Scalars['ID'];
-  input: ArticleInput;
 };
 
 
@@ -1079,146 +1024,8 @@ export type MutationDeleteArticleArgs = {
 };
 
 
-export type MutationPublishArticleArgs = {
+export type MutationDeleteAuthorArgs = {
   id: Scalars['ID'];
-  publishAt?: Maybe<Scalars['DateTime']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-};
-
-
-export type MutationUnpublishArticleArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationDuplicateArticleArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationCreatePageArgs = {
-  input: PageInput;
-};
-
-
-export type MutationUpdatePageArgs = {
-  id: Scalars['ID'];
-  input: PageInput;
-};
-
-
-export type MutationDeletePageArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationPublishPageArgs = {
-  id: Scalars['ID'];
-  publishAt?: Maybe<Scalars['DateTime']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-};
-
-
-export type MutationUnpublishPageArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationDuplicatePageArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationCreateMemberPlanArgs = {
-  input: MemberPlanInput;
-};
-
-
-export type MutationUpdateMemberPlanArgs = {
-  id: Scalars['ID'];
-  input: MemberPlanInput;
-};
-
-
-export type MutationDeleteMemberPlanArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationCreatePaymentMethodArgs = {
-  input: PaymentMethodInput;
-};
-
-
-export type MutationUpdatePaymentMethodArgs = {
-  id: Scalars['ID'];
-  input: PaymentMethodInput;
-};
-
-
-export type MutationDeletePaymentMethodArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationCreateInvoiceArgs = {
-  input: InvoiceInput;
-};
-
-
-export type MutationCreatePaymentFromInvoiceArgs = {
-  input: PaymentFromInvoiceInput;
-};
-
-
-export type MutationUpdateInvoiceArgs = {
-  id: Scalars['ID'];
-  input: InvoiceInput;
-};
-
-
-export type MutationDeleteInvoiceArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationUpdateCommentArgs = {
-  id: Scalars['ID'];
-  revision?: Maybe<CommentRevisionUpdateInput>;
-  userID?: Maybe<Scalars['ID']>;
-  guestUsername?: Maybe<Scalars['String']>;
-  guestUserImageID?: Maybe<Scalars['ID']>;
-  source?: Maybe<Scalars['String']>;
-  tagIds?: Maybe<Array<Scalars['ID']>>;
-  ratingOverrides?: Maybe<Array<CommentRatingOverrideUpdateInput>>;
-};
-
-
-export type MutationCreateCommentArgs = {
-  text?: Maybe<Scalars['RichText']>;
-  tagIds?: Maybe<Array<Scalars['ID']>>;
-  itemID: Scalars['ID'];
-  parentID?: Maybe<Scalars['ID']>;
-  itemType: CommentItemType;
-};
-
-
-export type MutationApproveCommentArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationRejectCommentArgs = {
-  id: Scalars['ID'];
-  rejectionReason?: Maybe<CommentRejectionReason>;
-};
-
-
-export type MutationRequestChangesOnCommentArgs = {
-  id: Scalars['ID'];
-  rejectionReason: CommentRejectionReason;
 };
 
 
@@ -1227,56 +1034,38 @@ export type MutationDeleteCommentArgs = {
 };
 
 
-export type MutationUpdateSettingListArgs = {
-  value?: Maybe<Array<Maybe<UpdateSettingArgs>>>;
-};
-
-
-export type MutationCreateRatingSystemAnswerArgs = {
-  ratingSystemId: Scalars['ID'];
-  type?: Maybe<RatingSystemType>;
-  answer?: Maybe<Scalars['String']>;
-};
-
-
-export type MutationUpdateRatingSystemArgs = {
-  ratingSystemId: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  answers?: Maybe<Array<UpdateCommentRatingSystemAnswer>>;
-};
-
-
-export type MutationDeleteRatingSystemAnswerArgs = {
+export type MutationDeleteImageArgs = {
   id: Scalars['ID'];
 };
 
 
-export type MutationCreatePollArgs = {
-  opensAt?: Maybe<Scalars['DateTime']>;
-  closedAt?: Maybe<Scalars['DateTime']>;
-  question?: Maybe<Scalars['String']>;
+export type MutationDeleteInvoiceArgs = {
+  id: Scalars['ID'];
 };
 
 
-export type MutationCreatePollAnswerArgs = {
-  pollId: Scalars['ID'];
-  answer?: Maybe<Scalars['String']>;
+export type MutationDeleteMemberPlanArgs = {
+  id: Scalars['ID'];
 };
 
 
-export type MutationCreatePollExternalVoteSourceArgs = {
-  pollId: Scalars['ID'];
-  source?: Maybe<Scalars['String']>;
+export type MutationDeleteNavigationArgs = {
+  id: Scalars['ID'];
 };
 
 
-export type MutationUpdatePollArgs = {
-  pollId: Scalars['ID'];
-  opensAt?: Maybe<Scalars['DateTime']>;
-  closedAt?: Maybe<Scalars['DateTime']>;
-  question?: Maybe<Scalars['String']>;
-  answers?: Maybe<Array<UpdatePollAnswer>>;
-  externalVoteSources?: Maybe<Array<UpdatePollExternalVoteSources>>;
+export type MutationDeletePageArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeletePaymentMethodArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeletePeerArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -1295,15 +1084,13 @@ export type MutationDeletePollExternalVoteSourceArgs = {
 };
 
 
-export type MutationCreateTagArgs = {
-  tag?: Maybe<Scalars['String']>;
-  type: TagType;
+export type MutationDeleteRatingSystemAnswerArgs = {
+  id: Scalars['ID'];
 };
 
 
-export type MutationUpdateTagArgs = {
+export type MutationDeleteSubscriptionArgs = {
   id: Scalars['ID'];
-  tag?: Maybe<Scalars['String']>;
 };
 
 
@@ -1311,51 +1098,253 @@ export type MutationDeleteTagArgs = {
   id: Scalars['ID'];
 };
 
+
+export type MutationDeleteTokenArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeleteUserArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeleteUserRoleArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDuplicateArticleArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDuplicatePageArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationPublishArticleArgs = {
+  id: Scalars['ID'];
+  publishAt?: InputMaybe<Scalars['DateTime']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+
+export type MutationPublishPageArgs = {
+  id: Scalars['ID'];
+  publishAt?: InputMaybe<Scalars['DateTime']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+
+export type MutationRejectCommentArgs = {
+  id: Scalars['ID'];
+  rejectionReason?: InputMaybe<CommentRejectionReason>;
+};
+
+
+export type MutationRequestChangesOnCommentArgs = {
+  id: Scalars['ID'];
+  rejectionReason: CommentRejectionReason;
+};
+
+
+export type MutationResetUserPasswordArgs = {
+  id: Scalars['ID'];
+  password: Scalars['String'];
+  sendMail?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationRevokeSessionArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationSendJwtLoginArgs = {
+  email: Scalars['String'];
+  url: Scalars['String'];
+};
+
+
+export type MutationSendWebsiteLoginArgs = {
+  email: Scalars['String'];
+};
+
+
+export type MutationUnpublishArticleArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationUnpublishPageArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationUpdateArticleArgs = {
+  id: Scalars['ID'];
+  input: ArticleInput;
+};
+
+
+export type MutationUpdateAuthorArgs = {
+  id: Scalars['ID'];
+  input: AuthorInput;
+};
+
+
+export type MutationUpdateCommentArgs = {
+  guestUserImageID?: InputMaybe<Scalars['ID']>;
+  guestUsername?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  ratingOverrides?: InputMaybe<Array<CommentRatingOverrideUpdateInput>>;
+  revision?: InputMaybe<CommentRevisionUpdateInput>;
+  source?: InputMaybe<Scalars['String']>;
+  tagIds?: InputMaybe<Array<Scalars['ID']>>;
+  userID?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type MutationUpdateImageArgs = {
+  id: Scalars['ID'];
+  input: UpdateImageInput;
+};
+
+
+export type MutationUpdateInvoiceArgs = {
+  id: Scalars['ID'];
+  input: InvoiceInput;
+};
+
+
+export type MutationUpdateMemberPlanArgs = {
+  id: Scalars['ID'];
+  input: MemberPlanInput;
+};
+
+
+export type MutationUpdateNavigationArgs = {
+  id: Scalars['ID'];
+  input: NavigationInput;
+};
+
+
+export type MutationUpdatePageArgs = {
+  id: Scalars['ID'];
+  input: PageInput;
+};
+
+
+export type MutationUpdatePaymentMethodArgs = {
+  id: Scalars['ID'];
+  input: PaymentMethodInput;
+};
+
+
+export type MutationUpdatePeerArgs = {
+  id: Scalars['ID'];
+  input: UpdatePeerInput;
+};
+
+
+export type MutationUpdatePeerProfileArgs = {
+  input: PeerProfileInput;
+};
+
+
+export type MutationUpdatePollArgs = {
+  answers?: InputMaybe<Array<UpdatePollAnswer>>;
+  closedAt?: InputMaybe<Scalars['DateTime']>;
+  externalVoteSources?: InputMaybe<Array<UpdatePollExternalVoteSources>>;
+  opensAt?: InputMaybe<Scalars['DateTime']>;
+  pollId: Scalars['ID'];
+  question?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateRatingSystemArgs = {
+  answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswer>>;
+  name?: InputMaybe<Scalars['String']>;
+  ratingSystemId: Scalars['ID'];
+};
+
+
+export type MutationUpdateSettingListArgs = {
+  value?: InputMaybe<Array<InputMaybe<UpdateSettingArgs>>>;
+};
+
+
+export type MutationUpdateSubscriptionArgs = {
+  id: Scalars['ID'];
+  input: SubscriptionInput;
+};
+
+
+export type MutationUpdateTagArgs = {
+  id: Scalars['ID'];
+  tag?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateUserArgs = {
+  id: Scalars['ID'];
+  input: UserInput;
+};
+
+
+export type MutationUpdateUserRoleArgs = {
+  id: Scalars['ID'];
+  input: UserRoleInput;
+};
+
+
+export type MutationUploadImageArgs = {
+  input: UploadImageInput;
+};
+
 export type Navigation = {
   __typename?: 'Navigation';
   id: Scalars['ID'];
   key: Scalars['String'];
-  name: Scalars['String'];
   links: Array<NavigationLink>;
+  name: Scalars['String'];
 };
 
 export type NavigationInput = {
   key: Scalars['String'];
-  name: Scalars['String'];
   links: Array<NavigationLinkInput>;
+  name: Scalars['String'];
 };
 
-export type NavigationLink = PageNavigationLink | ArticleNavigationLink | ExternalNavigationLink;
+export type NavigationLink = ArticleNavigationLink | ExternalNavigationLink | PageNavigationLink;
 
 export type NavigationLinkInput = {
-  page?: Maybe<PageNavigationLinkInput>;
-  article?: Maybe<ArticleNavigationLinkInput>;
-  external?: Maybe<ExternalNavigationLinkInput>;
+  article?: InputMaybe<ArticleNavigationLinkInput>;
+  external?: InputMaybe<ExternalNavigationLinkInput>;
+  page?: InputMaybe<PageNavigationLinkInput>;
 };
 
 export type OAuth2Account = {
   __typename?: 'OAuth2Account';
-  type: Scalars['String'];
   provider: Scalars['String'];
   scope: Scalars['String'];
-};
-
-export type OverriddenRating = {
-  __typename?: 'overriddenRating';
-  answerId: Scalars['ID'];
-  value?: Maybe<Scalars['Int']>;
+  type: Scalars['String'];
 };
 
 export type Page = {
   __typename?: 'Page';
-  id: Scalars['ID'];
-  shared: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
   draft?: Maybe<PageRevision>;
-  published?: Maybe<PageRevision>;
-  pending?: Maybe<PageRevision>;
+  id: Scalars['ID'];
   latest: PageRevision;
+  modifiedAt: Scalars['DateTime'];
+  pending?: Maybe<PageRevision>;
+  published?: Maybe<PageRevision>;
+  shared: Scalars['Boolean'];
 };
 
 export type PageConnection = {
@@ -1366,35 +1355,35 @@ export type PageConnection = {
 };
 
 export type PageFilter = {
-  title?: Maybe<Scalars['String']>;
-  draft?: Maybe<Scalars['Boolean']>;
-  description?: Maybe<Scalars['String']>;
-  publicationDateFrom?: Maybe<DateFilter>;
-  publicationDateTo?: Maybe<DateFilter>;
-  published?: Maybe<Scalars['Boolean']>;
-  pending?: Maybe<Scalars['Boolean']>;
-  tags?: Maybe<Array<Scalars['String']>>;
+  description?: InputMaybe<Scalars['String']>;
+  draft?: InputMaybe<Scalars['Boolean']>;
+  pending?: InputMaybe<Scalars['Boolean']>;
+  publicationDateFrom?: InputMaybe<DateFilter>;
+  publicationDateTo?: InputMaybe<DateFilter>;
+  published?: InputMaybe<Scalars['Boolean']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type PageInfo = {
   __typename?: 'PageInfo';
-  startCursor?: Maybe<Scalars['String']>;
   endCursor?: Maybe<Scalars['String']>;
   hasNextPage: Scalars['Boolean'];
   hasPreviousPage: Scalars['Boolean'];
+  startCursor?: Maybe<Scalars['String']>;
 };
 
 export type PageInput = {
-  slug: Scalars['Slug'];
-  title: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  properties: Array<PropertiesInput>;
-  imageID?: Maybe<Scalars['ID']>;
-  socialMediaTitle?: Maybe<Scalars['String']>;
-  socialMediaDescription?: Maybe<Scalars['String']>;
-  socialMediaImageID?: Maybe<Scalars['ID']>;
   blocks: Array<BlockInput>;
+  description?: InputMaybe<Scalars['String']>;
+  imageID?: InputMaybe<Scalars['ID']>;
+  properties: Array<PropertiesInput>;
+  slug: Scalars['Slug'];
+  socialMediaDescription?: InputMaybe<Scalars['String']>;
+  socialMediaImageID?: InputMaybe<Scalars['ID']>;
+  socialMediaTitle?: InputMaybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  title: Scalars['String'];
 };
 
 export type PageNavigationLink = BaseNavigationLink & {
@@ -1410,63 +1399,63 @@ export type PageNavigationLinkInput = {
 
 export type PageRevision = {
   __typename?: 'PageRevision';
-  revision: Scalars['Int'];
+  blocks: Array<Block>;
   createdAt: Scalars['DateTime'];
-  publishAt?: Maybe<Scalars['DateTime']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  slug: Scalars['Slug'];
-  title: Scalars['String'];
   description?: Maybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  properties: Array<Properties>;
-  url: Scalars['String'];
   image?: Maybe<Image>;
-  socialMediaTitle?: Maybe<Scalars['String']>;
+  properties: Array<Properties>;
+  publishAt?: Maybe<Scalars['DateTime']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  revision: Scalars['Int'];
+  slug?: Maybe<Scalars['Slug']>;
   socialMediaDescription?: Maybe<Scalars['String']>;
   socialMediaImage?: Maybe<Image>;
-  blocks: Array<Block>;
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  url: Scalars['String'];
 };
 
 export enum PageSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT',
-  PublishAt = 'PUBLISH_AT',
   PublishedAt = 'PUBLISHED_AT',
+  PublishAt = 'PUBLISH_AT',
   UpdatedAt = 'UPDATED_AT'
 }
 
 export type PageTeaser = {
   __typename?: 'PageTeaser';
-  style: TeaserStyle;
   image?: Maybe<Image>;
-  preTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   page?: Maybe<Page>;
+  preTitle?: Maybe<Scalars['String']>;
+  style: TeaserStyle;
+  title?: Maybe<Scalars['String']>;
 };
 
 export type PageTeaserInput = {
-  style: TeaserStyle;
-  imageID?: Maybe<Scalars['ID']>;
-  preTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
+  imageID?: InputMaybe<Scalars['ID']>;
+  lead?: InputMaybe<Scalars['String']>;
   pageID: Scalars['ID'];
+  preTitle?: InputMaybe<Scalars['String']>;
+  style: TeaserStyle;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type Payment = {
   __typename?: 'Payment';
-  id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  intentData?: Maybe<Scalars['String']>;
   intentID?: Maybe<Scalars['String']>;
   intentSecret?: Maybe<Scalars['String']>;
-  state: PaymentState;
   invoice: Invoice;
-  intentData?: Maybe<Scalars['String']>;
-  paymentMethod: PaymentMethod;
+  modifiedAt: Scalars['DateTime'];
   paymentData?: Maybe<Scalars['String']>;
+  paymentMethod: PaymentMethod;
+  state: PaymentState;
 };
 
 export type PaymentConnection = {
@@ -1477,41 +1466,41 @@ export type PaymentConnection = {
 };
 
 export type PaymentFilter = {
-  intentID?: Maybe<Scalars['String']>;
+  intentID?: InputMaybe<Scalars['String']>;
 };
 
 export type PaymentFromInvoiceInput = {
+  failureURL?: InputMaybe<Scalars['String']>;
   invoiceID: Scalars['String'];
-  paymentMethodID?: Maybe<Scalars['ID']>;
-  paymentMethodSlug?: Maybe<Scalars['Slug']>;
-  successURL?: Maybe<Scalars['String']>;
-  failureURL?: Maybe<Scalars['String']>;
+  paymentMethodID?: InputMaybe<Scalars['ID']>;
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
+  successURL?: InputMaybe<Scalars['String']>;
 };
 
 export type PaymentMethod = {
   __typename?: 'PaymentMethod';
-  id: Scalars['ID'];
+  active: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
+  description: Scalars['String'];
+  id: Scalars['ID'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
-  slug: Scalars['Slug'];
-  description: Scalars['String'];
   paymentProvider: PaymentProvider;
-  active: Scalars['Boolean'];
+  slug: Scalars['Slug'];
 };
 
 export type PaymentMethodInput = {
-  name: Scalars['String'];
-  slug: Scalars['Slug'];
-  description: Scalars['String'];
-  paymentProviderID: Scalars['String'];
   active: Scalars['Boolean'];
+  description: Scalars['String'];
+  name: Scalars['String'];
+  paymentProviderID: Scalars['String'];
+  slug: Scalars['Slug'];
 };
 
 export enum PaymentPeriodicity {
+  Biannual = 'BIANNUAL',
   Monthly = 'MONTHLY',
   Quarterly = 'QUARTERLY',
-  Biannual = 'BIANNUAL',
   Yearly = 'YEARLY'
 }
 
@@ -1523,8 +1512,8 @@ export type PaymentProvider = {
 
 export type PaymentProviderCustomer = {
   __typename?: 'PaymentProviderCustomer';
-  paymentProviderID: Scalars['String'];
   customerID: Scalars['String'];
+  paymentProviderID: Scalars['String'];
 };
 
 export enum PaymentSort {
@@ -1533,32 +1522,32 @@ export enum PaymentSort {
 }
 
 export enum PaymentState {
-  Created = 'Created',
-  Submitted = 'Submitted',
-  RequiresUserAction = 'RequiresUserAction',
-  Processing = 'Processing',
-  Paid = 'Paid',
   Canceled = 'Canceled',
-  Declined = 'Declined'
+  Created = 'Created',
+  Declined = 'Declined',
+  Paid = 'Paid',
+  Processing = 'Processing',
+  RequiresUserAction = 'RequiresUserAction',
+  Submitted = 'Submitted'
 }
 
 export type Peer = {
   __typename?: 'Peer';
-  id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
+  hostURL: Scalars['String'];
+  id: Scalars['ID'];
+  isDisabled?: Maybe<Scalars['Boolean']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
-  slug: Scalars['String'];
-  isDisabled?: Maybe<Scalars['Boolean']>;
-  hostURL: Scalars['String'];
   profile?: Maybe<PeerProfile>;
+  slug: Scalars['String'];
 };
 
 export type PeerArticle = {
   __typename?: 'PeerArticle';
+  article: Article;
   peer: Peer;
   peeredArticleURL: Scalars['String'];
-  article: Article;
 };
 
 export type PeerArticleConnection = {
@@ -1570,56 +1559,56 @@ export type PeerArticleConnection = {
 
 export type PeerArticleTeaser = {
   __typename?: 'PeerArticleTeaser';
-  style: TeaserStyle;
+  article?: Maybe<Article>;
+  articleID: Scalars['ID'];
   image?: Maybe<Image>;
-  preTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   peer?: Maybe<Peer>;
-  articleID: Scalars['ID'];
-  article?: Maybe<Article>;
+  preTitle?: Maybe<Scalars['String']>;
+  style: TeaserStyle;
+  title?: Maybe<Scalars['String']>;
 };
 
 export type PeerArticleTeaserInput = {
-  style: TeaserStyle;
-  imageID?: Maybe<Scalars['ID']>;
-  preTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-  peerID: Scalars['ID'];
   articleID: Scalars['ID'];
+  imageID?: InputMaybe<Scalars['ID']>;
+  lead?: InputMaybe<Scalars['String']>;
+  peerID: Scalars['ID'];
+  preTitle?: InputMaybe<Scalars['String']>;
+  style: TeaserStyle;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type PeerProfile = {
   __typename?: 'PeerProfile';
-  name: Scalars['String'];
-  logo?: Maybe<Image>;
-  themeColor: Scalars['Color'];
-  themeFontColor: Scalars['Color'];
-  hostURL: Scalars['String'];
-  websiteURL: Scalars['String'];
+  callToActionImage?: Maybe<Image>;
+  callToActionImageURL?: Maybe<Scalars['String']>;
   callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
-  callToActionImageURL?: Maybe<Scalars['String']>;
-  callToActionImage?: Maybe<Image>;
+  hostURL: Scalars['String'];
+  logo?: Maybe<Image>;
+  name: Scalars['String'];
+  themeColor: Scalars['Color'];
+  themeFontColor: Scalars['Color'];
+  websiteURL: Scalars['String'];
 };
 
 export type PeerProfileInput = {
-  name: Scalars['String'];
-  logoID?: Maybe<Scalars['ID']>;
-  themeColor: Scalars['Color'];
-  themeFontColor: Scalars['Color'];
+  callToActionImageID?: InputMaybe<Scalars['ID']>;
+  callToActionImageURL?: InputMaybe<Scalars['String']>;
   callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
-  callToActionImageURL?: Maybe<Scalars['String']>;
-  callToActionImageID?: Maybe<Scalars['ID']>;
+  logoID?: InputMaybe<Scalars['ID']>;
+  name: Scalars['String'];
+  themeColor: Scalars['Color'];
+  themeFontColor: Scalars['Color'];
 };
 
 export type Permission = {
   __typename?: 'Permission';
-  id: Scalars['String'];
-  description: Scalars['String'];
   deprecated: Scalars['Boolean'];
+  description: Scalars['String'];
+  id: Scalars['String'];
 };
 
 export type Point = {
@@ -1639,24 +1628,24 @@ export type PolisConversationBlockInput = {
 
 export type Poll = {
   __typename?: 'Poll';
-  id: Scalars['ID'];
-  question?: Maybe<Scalars['String']>;
-  opensAt: Scalars['DateTime'];
   closedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  opensAt: Scalars['DateTime'];
+  question?: Maybe<Scalars['String']>;
 };
 
 export type PollAnswer = {
   __typename?: 'PollAnswer';
+  answer?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   pollId: Scalars['ID'];
-  answer?: Maybe<Scalars['String']>;
 };
 
 export type PollAnswerWithVoteCount = {
   __typename?: 'PollAnswerWithVoteCount';
+  answer?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   pollId: Scalars['ID'];
-  answer?: Maybe<Scalars['String']>;
   votes: Scalars['Int'];
 };
 
@@ -1666,7 +1655,7 @@ export type PollBlock = {
 };
 
 export type PollBlockInput = {
-  pollId?: Maybe<Scalars['ID']>;
+  pollId?: InputMaybe<Scalars['ID']>;
 };
 
 export type PollConnection = {
@@ -1678,9 +1667,9 @@ export type PollConnection = {
 
 export type PollExternalVote = {
   __typename?: 'PollExternalVote';
-  id: Scalars['ID'];
-  answerId: Scalars['ID'];
   amount?: Maybe<Scalars['VoteValue']>;
+  answerId: Scalars['ID'];
+  id: Scalars['ID'];
 };
 
 export type PollExternalVoteSource = {
@@ -1691,196 +1680,129 @@ export type PollExternalVoteSource = {
 };
 
 export type PollFilter = {
-  openOnly?: Maybe<Scalars['Boolean']>;
+  openOnly?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum PollSort {
-  OpensAt = 'OPENS_AT',
   CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  ModifiedAt = 'MODIFIED_AT',
+  OpensAt = 'OPENS_AT'
 }
 
 export type PollWithAnswers = {
   __typename?: 'PollWithAnswers';
-  id: Scalars['ID'];
-  question?: Maybe<Scalars['String']>;
-  opensAt: Scalars['DateTime'];
-  closedAt?: Maybe<Scalars['DateTime']>;
   answers?: Maybe<Array<PollAnswer>>;
+  closedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  opensAt: Scalars['DateTime'];
+  question?: Maybe<Scalars['String']>;
 };
 
 export type Properties = {
   __typename?: 'Properties';
   key: Scalars['String'];
-  value: Scalars['String'];
   public: Scalars['Boolean'];
+  value: Scalars['String'];
 };
 
 export type PropertiesInput = {
   key: Scalars['String'];
-  value: Scalars['String'];
   public: Scalars['Boolean'];
+  value: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  remotePeerProfile?: Maybe<PeerProfile>;
-  createJWTForUser?: Maybe<JwtToken>;
-  peerProfile: PeerProfile;
-  peers?: Maybe<Array<Peer>>;
-  peer?: Maybe<Peer>;
-  me?: Maybe<User>;
-  sessions: Array<Session>;
+  article?: Maybe<Article>;
+  articlePreviewLink?: Maybe<Scalars['String']>;
+  articles: ArticleConnection;
   authProviders: Array<AuthProvider>;
-  user?: Maybe<User>;
-  users: UserConnection;
-  subscription?: Maybe<Subscription>;
-  subscriptions: SubscriptionConnection;
-  subscriptionsAsCsv?: Maybe<Scalars['String']>;
-  userRole?: Maybe<UserRole>;
-  userRoles: UserRoleConnection;
-  permissions?: Maybe<Array<Permission>>;
-  tokens: Array<Token>;
-  navigation?: Maybe<Navigation>;
-  navigations: Array<Navigation>;
   author?: Maybe<Author>;
   authors: AuthorConnection;
-  image?: Maybe<Image>;
-  images: ImageConnection;
   comment?: Maybe<Comment>;
   comments: CommentConnection;
-  article?: Maybe<Article>;
-  articles: ArticleConnection;
-  peerArticle?: Maybe<Article>;
-  peerArticles: PeerArticleConnection;
-  articlePreviewLink?: Maybe<Scalars['String']>;
-  page?: Maybe<Page>;
-  pages: PageConnection;
-  pagePreviewLink?: Maybe<Scalars['String']>;
+  createJWTForUser?: Maybe<JwtToken>;
+  image?: Maybe<Image>;
+  images: ImageConnection;
+  invoice?: Maybe<Invoice>;
+  invoices: InvoiceConnection;
+  me?: Maybe<User>;
   memberPlan?: Maybe<MemberPlan>;
   memberPlans: MemberPlanConnection;
+  navigation?: Maybe<Navigation>;
+  navigations: Array<Navigation>;
+  page?: Maybe<Page>;
+  pagePreviewLink?: Maybe<Scalars['String']>;
+  pages: PageConnection;
+  payment?: Maybe<Payment>;
   paymentMethod?: Maybe<PaymentMethod>;
   paymentMethods: Array<PaymentMethod>;
   paymentProviders: Array<PaymentProvider>;
-  invoice?: Maybe<Invoice>;
-  invoices: InvoiceConnection;
-  payment?: Maybe<Payment>;
   payments: PaymentConnection;
+  peer?: Maybe<Peer>;
+  peerArticle?: Maybe<Article>;
+  peerArticles: PeerArticleConnection;
+  peerProfile: PeerProfile;
+  peers?: Maybe<Array<Peer>>;
+  permissions?: Maybe<Array<Permission>>;
+  poll?: Maybe<FullPoll>;
+  polls?: Maybe<PollConnection>;
+  ratingSystem: FullCommentRatingSystem;
+  remotePeerProfile?: Maybe<PeerProfile>;
+  sessions: Array<Session>;
   setting?: Maybe<Setting>;
   settings: Array<Setting>;
-  ratingSystem: FullCommentRatingSystem;
+  subscription?: Maybe<Subscription>;
+  subscriptions: SubscriptionConnection;
+  subscriptionsAsCsv?: Maybe<Scalars['String']>;
   tags?: Maybe<TagConnection>;
-  polls?: Maybe<PollConnection>;
-  poll?: Maybe<FullPoll>;
+  tokens: Array<Token>;
+  user?: Maybe<User>;
+  userRole?: Maybe<UserRole>;
+  userRoles: UserRoleConnection;
+  users: UserConnection;
 };
 
 
-export type QueryRemotePeerProfileArgs = {
-  hostURL: Scalars['String'];
-  token: Scalars['String'];
-};
-
-
-export type QueryCreateJwtForUserArgs = {
-  userId: Scalars['String'];
-  expiresInMinutes: Scalars['Int'];
-};
-
-
-export type QueryPeerArgs = {
+export type QueryArticleArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryArticlePreviewLinkArgs = {
+  hours: Scalars['Int'];
+  id: Scalars['ID'];
+};
+
+
+export type QueryArticlesArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<ArticleFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<ArticleSort>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
 export type QueryAuthProvidersArgs = {
-  redirectUri?: Maybe<Scalars['String']>;
-};
-
-
-export type QueryUserArgs = {
-  id?: Maybe<Scalars['ID']>;
-};
-
-
-export type QueryUsersArgs = {
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<UserFilter>;
-  sort?: Maybe<UserSort>;
-  order?: Maybe<SortOrder>;
-};
-
-
-export type QuerySubscriptionArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QuerySubscriptionsArgs = {
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<SubscriptionFilter>;
-  sort?: Maybe<SubscriptionSort>;
-  order?: Maybe<SortOrder>;
-};
-
-
-export type QuerySubscriptionsAsCsvArgs = {
-  filter?: Maybe<SubscriptionFilter>;
-};
-
-
-export type QueryUserRoleArgs = {
-  id?: Maybe<Scalars['ID']>;
-};
-
-
-export type QueryUserRolesArgs = {
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<UserRoleFilter>;
-  sort?: Maybe<UserRoleSort>;
-  order?: Maybe<SortOrder>;
-};
-
-
-export type QueryNavigationArgs = {
-  id?: Maybe<Scalars['ID']>;
-  key?: Maybe<Scalars['ID']>;
+  redirectUri?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryAuthorArgs = {
-  id?: Maybe<Scalars['ID']>;
-  slug?: Maybe<Scalars['Slug']>;
+  id?: InputMaybe<Scalars['ID']>;
+  slug?: InputMaybe<Scalars['Slug']>;
 };
 
 
 export type QueryAuthorsArgs = {
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<AuthorFilter>;
-  sort?: Maybe<AuthorSort>;
-  order?: Maybe<SortOrder>;
-};
-
-
-export type QueryImageArgs = {
-  id?: Maybe<Scalars['ID']>;
-};
-
-
-export type QueryImagesArgs = {
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<ImageFilter>;
-  sort?: Maybe<ImageSort>;
-  order?: Maybe<SortOrder>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<AuthorFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<AuthorSort>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -1890,168 +1812,234 @@ export type QueryCommentArgs = {
 
 
 export type QueryCommentsArgs = {
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<CommentFilter>;
-  sort?: Maybe<CommentSort>;
-  order?: Maybe<SortOrder>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<CommentFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<CommentSort>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
-export type QueryArticleArgs = {
-  id: Scalars['ID'];
+export type QueryCreateJwtForUserArgs = {
+  expiresInMinutes: Scalars['Int'];
+  userId: Scalars['String'];
 };
 
 
-export type QueryArticlesArgs = {
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<ArticleFilter>;
-  sort?: Maybe<ArticleSort>;
-  order?: Maybe<SortOrder>;
+export type QueryImageArgs = {
+  id?: InputMaybe<Scalars['ID']>;
 };
 
 
-export type QueryPeerArticleArgs = {
-  peerID: Scalars['ID'];
-  id: Scalars['ID'];
-};
-
-
-export type QueryPeerArticlesArgs = {
-  cursors?: Maybe<Scalars['String']>;
-  take?: Maybe<Scalars['Int']>;
-  sort?: Maybe<ArticleSort>;
-  order?: Maybe<SortOrder>;
-  peerFilter?: Maybe<Scalars['String']>;
-  filter?: Maybe<ArticleFilter>;
-};
-
-
-export type QueryArticlePreviewLinkArgs = {
-  id: Scalars['ID'];
-  hours: Scalars['Int'];
-};
-
-
-export type QueryPageArgs = {
-  id?: Maybe<Scalars['ID']>;
-};
-
-
-export type QueryPagesArgs = {
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<PageFilter>;
-  sort?: Maybe<PageSort>;
-  order?: Maybe<SortOrder>;
-};
-
-
-export type QueryPagePreviewLinkArgs = {
-  id: Scalars['ID'];
-  hours: Scalars['Int'];
-};
-
-
-export type QueryMemberPlanArgs = {
-  id?: Maybe<Scalars['ID']>;
-  slug?: Maybe<Scalars['Slug']>;
-};
-
-
-export type QueryMemberPlansArgs = {
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<MemberPlanFilter>;
-  sort?: Maybe<MemberPlanSort>;
-  order?: Maybe<SortOrder>;
-};
-
-
-export type QueryPaymentMethodArgs = {
-  id?: Maybe<Scalars['ID']>;
+export type QueryImagesArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<ImageFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<ImageSort>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
 export type QueryInvoiceArgs = {
-  id?: Maybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['ID']>;
 };
 
 
 export type QueryInvoicesArgs = {
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<InvoiceFilter>;
-  sort?: Maybe<InvoiceSort>;
-  order?: Maybe<SortOrder>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<InvoiceFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<InvoiceSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryMemberPlanArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  slug?: InputMaybe<Scalars['Slug']>;
+};
+
+
+export type QueryMemberPlansArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<MemberPlanFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<MemberPlanSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryNavigationArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+  key?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryPageArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryPagePreviewLinkArgs = {
+  hours: Scalars['Int'];
+  id: Scalars['ID'];
+};
+
+
+export type QueryPagesArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<PageFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<PageSort>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
 export type QueryPaymentArgs = {
-  id?: Maybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryPaymentMethodArgs = {
+  id?: InputMaybe<Scalars['ID']>;
 };
 
 
 export type QueryPaymentsArgs = {
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<PaymentFilter>;
-  sort?: Maybe<PaymentSort>;
-  order?: Maybe<SortOrder>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<PaymentFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<PaymentSort>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
-export type QuerySettingArgs = {
-  name?: Maybe<Scalars['String']>;
+export type QueryPeerArgs = {
+  id: Scalars['ID'];
 };
 
 
-export type QueryTagsArgs = {
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<TagFilter>;
-  sort?: Maybe<TagSort>;
-  order?: Maybe<SortOrder>;
+export type QueryPeerArticleArgs = {
+  id: Scalars['ID'];
+  peerID: Scalars['ID'];
 };
 
 
-export type QueryPollsArgs = {
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<PollFilter>;
-  sort?: Maybe<PollSort>;
-  order?: Maybe<SortOrder>;
+export type QueryPeerArticlesArgs = {
+  cursors?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<ArticleFilter>;
+  order?: InputMaybe<SortOrder>;
+  peerFilter?: InputMaybe<Scalars['String']>;
+  sort?: InputMaybe<ArticleSort>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
 export type QueryPollArgs = {
-  id?: Maybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryPollsArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<PollFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<PollSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryRemotePeerProfileArgs = {
+  hostURL: Scalars['String'];
+  token: Scalars['String'];
+};
+
+
+export type QuerySettingArgs = {
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QuerySubscriptionArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QuerySubscriptionsArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<SubscriptionFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<SubscriptionSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QuerySubscriptionsAsCsvArgs = {
+  filter?: InputMaybe<SubscriptionFilter>;
+};
+
+
+export type QueryTagsArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<TagFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<TagSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryUserArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryUserRoleArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryUserRolesArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<UserRoleFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<UserRoleSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryUsersArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<UserFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<UserSort>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 export type QuoteBlock = {
   __typename?: 'QuoteBlock';
-  quote?: Maybe<Scalars['String']>;
   author?: Maybe<Scalars['String']>;
+  quote?: Maybe<Scalars['String']>;
 };
 
 export type QuoteBlockInput = {
-  quote?: Maybe<Scalars['String']>;
-  author?: Maybe<Scalars['String']>;
+  author?: InputMaybe<Scalars['String']>;
+  quote?: InputMaybe<Scalars['String']>;
 };
 
 export enum RatingSystemType {
   Star = 'STAR'
 }
-
 
 export type RichTextBlock = {
   __typename?: 'RichTextBlock';
@@ -2064,48 +2052,47 @@ export type RichTextBlockInput = {
 
 export type Session = {
   __typename?: 'Session';
-  id: Scalars['ID'];
-  user: User;
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  user: User;
 };
 
 export type SessionWithToken = {
   __typename?: 'SessionWithToken';
-  id: Scalars['ID'];
-  user: User;
-  token: Scalars['String'];
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  token: Scalars['String'];
+  user: User;
 };
 
 export type Setting = {
   __typename?: 'Setting';
   id: Scalars['ID'];
   name: SettingName;
-  value: Scalars['Value'];
   settingRestriction?: Maybe<SettingRestriction>;
+  value: Scalars['Value'];
 };
 
 export enum SettingName {
   AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
-  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
-  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
-  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
   InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
-  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES'
+  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES',
+  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
+  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN'
 }
 
 export type SettingRestriction = {
   __typename?: 'SettingRestriction';
+  allowedValues?: Maybe<AllowedSettingVals>;
+  inputLength?: Maybe<Scalars['Int']>;
   maxValue?: Maybe<Scalars['Int']>;
   minValue?: Maybe<Scalars['Int']>;
-  inputLength?: Maybe<Scalars['Int']>;
-  allowedValues?: Maybe<AllowedSettingVals>;
 };
-
 
 export enum SortOrder {
   Ascending = 'ASCENDING',
@@ -2123,19 +2110,19 @@ export type SoundCloudTrackBlockInput = {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  user?: Maybe<User>;
-  memberPlan: MemberPlan;
-  paymentPeriodicity: PaymentPeriodicity;
-  monthlyAmount: Scalars['Int'];
   autoRenew: Scalars['Boolean'];
-  startsAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTime'];
+  deactivation?: Maybe<SubscriptionDeactivation>;
+  id: Scalars['ID'];
+  memberPlan: MemberPlan;
+  modifiedAt: Scalars['DateTime'];
+  monthlyAmount: Scalars['Int'];
   paidUntil?: Maybe<Scalars['DateTime']>;
   paymentMethod: PaymentMethod;
+  paymentPeriodicity: PaymentPeriodicity;
   properties: Array<Properties>;
-  deactivation?: Maybe<SubscriptionDeactivation>;
+  startsAt: Scalars['DateTime'];
+  user?: Maybe<User>;
 };
 
 export type SubscriptionConnection = {
@@ -2157,51 +2144,51 @@ export type SubscriptionDeactivationInput = {
 };
 
 export enum SubscriptionDeactivationReason {
+  InvoiceNotPaid = 'INVOICE_NOT_PAID',
   None = 'NONE',
-  UserSelfDeactivated = 'USER_SELF_DEACTIVATED',
-  InvoiceNotPaid = 'INVOICE_NOT_PAID'
+  UserSelfDeactivated = 'USER_SELF_DEACTIVATED'
 }
 
 export type SubscriptionFilter = {
-  startsAt?: Maybe<DateFilter>;
-  paidUntil?: Maybe<DateFilter>;
-  startsAtFrom?: Maybe<DateFilter>;
-  startsAtTo?: Maybe<DateFilter>;
-  paidUntilFrom?: Maybe<DateFilter>;
-  paidUntilTo?: Maybe<DateFilter>;
-  deactivationDateFrom?: Maybe<DateFilter>;
-  deactivationDateTo?: Maybe<DateFilter>;
-  deactivationReason?: Maybe<SubscriptionDeactivationReason>;
-  autoRenew?: Maybe<Scalars['Boolean']>;
-  paymentMethodID?: Maybe<Scalars['String']>;
-  memberPlanID?: Maybe<Scalars['String']>;
-  paymentPeriodicity?: Maybe<PaymentPeriodicity>;
-  userHasAddress?: Maybe<Scalars['Boolean']>;
-  userID?: Maybe<Scalars['ID']>;
+  autoRenew?: InputMaybe<Scalars['Boolean']>;
+  deactivationDateFrom?: InputMaybe<DateFilter>;
+  deactivationDateTo?: InputMaybe<DateFilter>;
+  deactivationReason?: InputMaybe<SubscriptionDeactivationReason>;
+  memberPlanID?: InputMaybe<Scalars['String']>;
+  paidUntil?: InputMaybe<DateFilter>;
+  paidUntilFrom?: InputMaybe<DateFilter>;
+  paidUntilTo?: InputMaybe<DateFilter>;
+  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
+  startsAt?: InputMaybe<DateFilter>;
+  startsAtFrom?: InputMaybe<DateFilter>;
+  startsAtTo?: InputMaybe<DateFilter>;
+  userHasAddress?: InputMaybe<Scalars['Boolean']>;
+  userID?: InputMaybe<Scalars['ID']>;
 };
 
 export type SubscriptionInput = {
-  userID: Scalars['ID'];
-  memberPlanID: Scalars['String'];
-  paymentPeriodicity: PaymentPeriodicity;
-  monthlyAmount: Scalars['Int'];
   autoRenew: Scalars['Boolean'];
-  startsAt: Scalars['DateTime'];
-  paidUntil?: Maybe<Scalars['DateTime']>;
+  deactivation?: InputMaybe<SubscriptionDeactivationInput>;
+  memberPlanID: Scalars['String'];
+  monthlyAmount: Scalars['Int'];
+  paidUntil?: InputMaybe<Scalars['DateTime']>;
   paymentMethodID: Scalars['String'];
+  paymentPeriodicity: PaymentPeriodicity;
   properties: Array<PropertiesInput>;
-  deactivation?: Maybe<SubscriptionDeactivationInput>;
+  startsAt: Scalars['DateTime'];
+  userID: Scalars['ID'];
 };
 
 export type SubscriptionPeriod = {
   __typename?: 'SubscriptionPeriod';
-  id: Scalars['ID'];
-  invoiceID: Scalars['ID'];
   amount: Scalars['Int'];
   createdAt: Scalars['DateTime'];
-  startsAt: Scalars['DateTime'];
   endsAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  invoiceID: Scalars['ID'];
   paymentPeriodicity: PaymentPeriodicity;
+  startsAt: Scalars['DateTime'];
 };
 
 export enum SubscriptionSort {
@@ -2224,8 +2211,8 @@ export type TagConnection = {
 };
 
 export type TagFilter = {
-  type?: Maybe<TagType>;
-  tag?: Maybe<Scalars['String']>;
+  tag?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TagType>;
 };
 
 export enum TagSort {
@@ -2238,17 +2225,17 @@ export enum TagType {
   Comment = 'Comment'
 }
 
-export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser;
+export type Teaser = ArticleTeaser | CustomTeaser | PageTeaser | PeerArticleTeaser;
 
 export type TeaserGridBlock = {
   __typename?: 'TeaserGridBlock';
-  teasers: Array<Maybe<Teaser>>;
   numColumns: Scalars['Int'];
+  teasers: Array<Maybe<Teaser>>;
 };
 
 export type TeaserGridBlockInput = {
-  teasers: Array<Maybe<TeaserInput>>;
   numColumns: Scalars['Int'];
+  teasers: Array<InputMaybe<TeaserInput>>;
 };
 
 export type TeaserGridFlexBlock = {
@@ -2261,10 +2248,10 @@ export type TeaserGridFlexBlockInput = {
 };
 
 export type TeaserInput = {
-  article?: Maybe<ArticleTeaserInput>;
-  peerArticle?: Maybe<PeerArticleTeaserInput>;
-  page?: Maybe<PageTeaserInput>;
-  custom?: Maybe<CustomTeaserInput>;
+  article?: InputMaybe<ArticleTeaserInput>;
+  custom?: InputMaybe<CustomTeaserInput>;
+  page?: InputMaybe<PageTeaserInput>;
+  peerArticle?: InputMaybe<PeerArticleTeaserInput>;
 };
 
 export enum TeaserStyle {
@@ -2275,30 +2262,30 @@ export enum TeaserStyle {
 
 export type TikTokVideoBlock = {
   __typename?: 'TikTokVideoBlock';
-  videoID: Scalars['String'];
   userID: Scalars['String'];
+  videoID: Scalars['String'];
 };
 
 export type TikTokVideoBlockInput = {
-  videoID: Scalars['String'];
   userID: Scalars['String'];
+  videoID: Scalars['String'];
 };
 
 export type TitleBlock = {
   __typename?: 'TitleBlock';
-  title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
 };
 
 export type TitleBlockInput = {
-  title?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
+  lead?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type Token = {
   __typename?: 'Token';
-  id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
 };
@@ -2309,13 +2296,13 @@ export type TokenInput = {
 
 export type TwitterTweetBlock = {
   __typename?: 'TwitterTweetBlock';
-  userID: Scalars['String'];
   tweetID: Scalars['String'];
+  userID: Scalars['String'];
 };
 
 export type TwitterTweetBlockInput = {
-  userID: Scalars['String'];
   tweetID: Scalars['String'];
+  userID: Scalars['String'];
 };
 
 export type UnidirectionalPageInfo = {
@@ -2325,44 +2312,44 @@ export type UnidirectionalPageInfo = {
 };
 
 export type UpdateCommentRatingSystemAnswer = {
+  answer?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
-  type?: Maybe<RatingSystemType>;
-  answer?: Maybe<Scalars['String']>;
+  type?: InputMaybe<RatingSystemType>;
 };
 
 export type UpdateImageInput = {
-  filename?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  tags?: Maybe<Array<Scalars['String']>>;
-  link?: Maybe<Scalars['String']>;
-  source?: Maybe<Scalars['String']>;
-  license?: Maybe<Scalars['String']>;
-  focalPoint?: Maybe<InputPoint>;
+  description?: InputMaybe<Scalars['String']>;
+  filename?: InputMaybe<Scalars['String']>;
+  focalPoint?: InputMaybe<InputPoint>;
+  license?: InputMaybe<Scalars['String']>;
+  link?: InputMaybe<Scalars['String']>;
+  source?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdatePeerInput = {
-  name?: Maybe<Scalars['String']>;
-  slug?: Maybe<Scalars['String']>;
-  hostURL?: Maybe<Scalars['String']>;
-  isDisabled?: Maybe<Scalars['Boolean']>;
-  token?: Maybe<Scalars['String']>;
+  hostURL?: InputMaybe<Scalars['String']>;
+  isDisabled?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  token?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdatePollAnswer = {
+  answer?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
-  answer?: Maybe<Scalars['String']>;
 };
 
 export type UpdatePollExternalVote = {
+  amount?: InputMaybe<Scalars['VoteValue']>;
   id: Scalars['ID'];
-  amount?: Maybe<Scalars['VoteValue']>;
 };
 
 export type UpdatePollExternalVoteSources = {
   id: Scalars['ID'];
-  source?: Maybe<Scalars['String']>;
-  voteAmounts?: Maybe<Array<UpdatePollExternalVote>>;
+  source?: InputMaybe<Scalars['String']>;
+  voteAmounts?: InputMaybe<Array<UpdatePollExternalVote>>;
 };
 
 export type UpdateSettingArgs = {
@@ -2370,57 +2357,56 @@ export type UpdateSettingArgs = {
   value: Scalars['Value'];
 };
 
-
 export type UploadImageInput = {
+  description?: InputMaybe<Scalars['String']>;
   file: Scalars['Upload'];
-  filename?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  tags?: Maybe<Array<Scalars['String']>>;
-  link?: Maybe<Scalars['String']>;
-  source?: Maybe<Scalars['String']>;
-  license?: Maybe<Scalars['String']>;
-  focalPoint?: Maybe<InputPoint>;
+  filename?: InputMaybe<Scalars['String']>;
+  focalPoint?: InputMaybe<InputPoint>;
+  license?: InputMaybe<Scalars['String']>;
+  link?: InputMaybe<Scalars['String']>;
+  source?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type User = {
   __typename?: 'User';
-  id: Scalars['String'];
+  active: Scalars['Boolean'];
+  address?: Maybe<UserAddress>;
   createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  firstName?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
-  preferredName?: Maybe<Scalars['String']>;
-  address?: Maybe<UserAddress>;
-  userImage?: Maybe<Image>;
-  active: Scalars['Boolean'];
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
   lastLogin?: Maybe<Scalars['DateTime']>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  oauth2Accounts: Array<OAuth2Account>;
+  paymentProviderCustomers: Array<PaymentProviderCustomer>;
+  preferredName?: Maybe<Scalars['String']>;
   properties: Array<Properties>;
   roles: Array<UserRole>;
-  paymentProviderCustomers: Array<PaymentProviderCustomer>;
-  oauth2Accounts: Array<OAuth2Account>;
   subscriptions: Array<UserSubscription>;
+  userImage?: Maybe<Image>;
 };
 
 export type UserAddress = {
   __typename?: 'UserAddress';
+  city?: Maybe<Scalars['String']>;
   company?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
   streetAddress?: Maybe<Scalars['String']>;
   streetAddress2?: Maybe<Scalars['String']>;
   zipCode?: Maybe<Scalars['String']>;
-  city?: Maybe<Scalars['String']>;
-  country?: Maybe<Scalars['String']>;
 };
 
 export type UserAddressInput = {
-  company?: Maybe<Scalars['String']>;
-  streetAddress?: Maybe<Scalars['String']>;
-  streetAddress2?: Maybe<Scalars['String']>;
-  zipCode?: Maybe<Scalars['String']>;
-  city?: Maybe<Scalars['String']>;
-  country?: Maybe<Scalars['String']>;
+  city?: InputMaybe<Scalars['String']>;
+  company?: InputMaybe<Scalars['String']>;
+  country?: InputMaybe<Scalars['String']>;
+  streetAddress?: InputMaybe<Scalars['String']>;
+  streetAddress2?: InputMaybe<Scalars['String']>;
+  zipCode?: InputMaybe<Scalars['String']>;
 };
 
 export type UserConnection = {
@@ -2431,30 +2417,30 @@ export type UserConnection = {
 };
 
 export type UserFilter = {
-  name?: Maybe<Scalars['String']>;
-  text?: Maybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['String']>;
 };
 
 export type UserInput = {
-  name: Scalars['String'];
-  firstName?: Maybe<Scalars['String']>;
-  email: Scalars['String'];
-  emailVerifiedAt?: Maybe<Scalars['DateTime']>;
-  preferredName?: Maybe<Scalars['String']>;
-  address?: Maybe<UserAddressInput>;
-  userImageID?: Maybe<Scalars['ID']>;
   active: Scalars['Boolean'];
+  address?: InputMaybe<UserAddressInput>;
+  email: Scalars['String'];
+  emailVerifiedAt?: InputMaybe<Scalars['DateTime']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  preferredName?: InputMaybe<Scalars['String']>;
   properties: Array<PropertiesInput>;
-  roleIDs?: Maybe<Array<Scalars['String']>>;
+  roleIDs?: InputMaybe<Array<Scalars['String']>>;
+  userImageID?: InputMaybe<Scalars['ID']>;
 };
 
 export type UserRole = {
   __typename?: 'UserRole';
+  description?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   name: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  systemRole: Scalars['Boolean'];
   permissions: Array<Permission>;
+  systemRole: Scalars['Boolean'];
 };
 
 export type UserRoleConnection = {
@@ -2465,13 +2451,13 @@ export type UserRoleConnection = {
 };
 
 export type UserRoleFilter = {
-  name?: Maybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
 };
 
 export type UserRoleInput = {
-  name: Scalars['String'];
   description: Scalars['String'];
-  permissionIDs?: Maybe<Array<Scalars['String']>>;
+  name: Scalars['String'];
+  permissionIDs?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export enum UserRoleSort {
@@ -2481,28 +2467,27 @@ export enum UserRoleSort {
 
 export enum UserSort {
   CreatedAt = 'CREATED_AT',
+  FirstName = 'FIRST_NAME',
   ModifiedAt = 'MODIFIED_AT',
-  Name = 'NAME',
-  FirstName = 'FIRST_NAME'
+  Name = 'NAME'
 }
 
 export type UserSubscription = {
   __typename?: 'UserSubscription';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  paymentPeriodicity: PaymentPeriodicity;
-  monthlyAmount: Scalars['Int'];
   autoRenew: Scalars['Boolean'];
-  startsAt: Scalars['DateTime'];
-  paidUntil?: Maybe<Scalars['DateTime']>;
-  properties: Array<Properties>;
+  createdAt: Scalars['DateTime'];
   deactivation?: Maybe<SubscriptionDeactivation>;
-  periods: Array<SubscriptionPeriod>;
-  memberPlan: MemberPlan;
+  id: Scalars['ID'];
   invoices: Array<Invoice>;
+  memberPlan: MemberPlan;
+  modifiedAt: Scalars['DateTime'];
+  monthlyAmount: Scalars['Int'];
+  paidUntil?: Maybe<Scalars['DateTime']>;
+  paymentPeriodicity: PaymentPeriodicity;
+  periods: Array<SubscriptionPeriod>;
+  properties: Array<Properties>;
+  startsAt: Scalars['DateTime'];
 };
-
 
 export type VimeoVideoBlock = {
   __typename?: 'VimeoVideoBlock';
@@ -2513,7 +2498,6 @@ export type VimeoVideoBlockInput = {
   videoID: Scalars['String'];
 };
 
-
 export type YouTubeVideoBlock = {
   __typename?: 'YouTubeVideoBlock';
   videoID: Scalars['String'];
@@ -2523,117 +2507,45 @@ export type YouTubeVideoBlockInput = {
   videoID: Scalars['String'];
 };
 
-export type MutationArticleFragment = (
-  { __typename?: 'Article' }
-  & Pick<Article, 'id'>
-  & { draft?: Maybe<(
-    { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision'>
-  )>, pending?: Maybe<(
-    { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'publishAt' | 'revision'>
-  )>, published?: Maybe<(
-    { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'revision'>
-  )>, latest: (
-    { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'revision'>
-  ) }
-);
+export type OverriddenRating = {
+  __typename?: 'overriddenRating';
+  answerId: Scalars['ID'];
+  value?: Maybe<Scalars['Int']>;
+};
 
-export type ArticleRefFragment = (
-  { __typename?: 'Article' }
-  & Pick<Article, 'id' | 'createdAt' | 'modifiedAt'>
-  & { draft?: Maybe<(
-    { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'revision'>
-  )>, pending?: Maybe<(
-    { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'publishAt' | 'revision'>
-  )>, published?: Maybe<(
-    { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision'>
-  )>, latest: (
-    { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead' | 'canonicalUrl'>
-    & { authors: Array<(
-      { __typename?: 'Author' }
-      & Pick<Author, 'name'>
-    )>, image?: Maybe<(
-      { __typename?: 'Image' }
-      & ImageRefFragment
-    )> }
-  ) }
-);
+export type MutationArticleFragment = { __typename?: 'Article', id: string, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } };
+
+export type ArticleRefFragment = { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
 
 export type ArticleListQueryVariables = Exact<{
-  filter?: Maybe<ArticleFilter>;
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  order?: Maybe<SortOrder>;
-  sort?: Maybe<ArticleSort>;
+  filter?: InputMaybe<ArticleFilter>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<ArticleSort>;
 }>;
 
 
-export type ArticleListQuery = (
-  { __typename?: 'Query' }
-  & { articles: (
-    { __typename?: 'ArticleConnection' }
-    & Pick<ArticleConnection, 'totalCount'>
-    & { nodes: Array<(
-      { __typename?: 'Article' }
-      & ArticleRefFragment
-    )>, pageInfo: (
-      { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
-    ) }
-  ) }
-);
+export type ArticleListQuery = { __typename?: 'Query', articles: { __typename?: 'ArticleConnection', totalCount: number, nodes: Array<{ __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type PeerArticleListQueryVariables = Exact<{
-  filter?: Maybe<ArticleFilter>;
-  cursors?: Maybe<Scalars['String']>;
-  peerFilter?: Maybe<Scalars['String']>;
-  order?: Maybe<SortOrder>;
-  sort?: Maybe<ArticleSort>;
+  filter?: InputMaybe<ArticleFilter>;
+  cursors?: InputMaybe<Scalars['String']>;
+  peerFilter?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<ArticleSort>;
 }>;
 
 
-export type PeerArticleListQuery = (
-  { __typename?: 'Query' }
-  & { peerArticles: (
-    { __typename?: 'PeerArticleConnection' }
-    & Pick<PeerArticleConnection, 'totalCount'>
-    & { nodes: Array<(
-      { __typename?: 'PeerArticle' }
-      & Pick<PeerArticle, 'peeredArticleURL'>
-      & { peer: (
-        { __typename?: 'Peer' }
-        & PeerWithProfileFragment
-      ), article: (
-        { __typename?: 'Article' }
-        & ArticleRefFragment
-      ) }
-    )>, pageInfo: (
-      { __typename?: 'UnidirectionalPageInfo' }
-      & Pick<UnidirectionalPageInfo, 'endCursor' | 'hasNextPage'>
-    ) }
-  ) }
-);
+export type PeerArticleListQuery = { __typename?: 'Query', peerArticles: { __typename?: 'PeerArticleConnection', totalCount: number, nodes: Array<{ __typename?: 'PeerArticle', peeredArticleURL: string, peer: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null }, article: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } }>, pageInfo: { __typename?: 'UnidirectionalPageInfo', endCursor?: string | null, hasNextPage: boolean } } };
 
 export type CreateArticleMutationVariables = Exact<{
   input: ArticleInput;
 }>;
 
 
-export type CreateArticleMutation = (
-  { __typename?: 'Mutation' }
-  & { createArticle: (
-    { __typename?: 'Article' }
-    & MutationArticleFragment
-  ) }
-);
+export type CreateArticleMutation = { __typename?: 'Mutation', createArticle: { __typename?: 'Article', id: string, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } };
 
 export type UpdateArticleMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -2641,13 +2553,7 @@ export type UpdateArticleMutationVariables = Exact<{
 }>;
 
 
-export type UpdateArticleMutation = (
-  { __typename?: 'Mutation' }
-  & { updateArticle?: Maybe<(
-    { __typename?: 'Article' }
-    & MutationArticleFragment
-  )> }
-);
+export type UpdateArticleMutation = { __typename?: 'Mutation', updateArticle?: { __typename?: 'Article', id: string, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } | null };
 
 export type PublishArticleMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -2657,52 +2563,28 @@ export type PublishArticleMutationVariables = Exact<{
 }>;
 
 
-export type PublishArticleMutation = (
-  { __typename?: 'Mutation' }
-  & { publishArticle?: Maybe<(
-    { __typename?: 'Article' }
-    & MutationArticleFragment
-  )> }
-);
+export type PublishArticleMutation = { __typename?: 'Mutation', publishArticle?: { __typename?: 'Article', id: string, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } | null };
 
 export type UnpublishArticleMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type UnpublishArticleMutation = (
-  { __typename?: 'Mutation' }
-  & { unpublishArticle?: Maybe<(
-    { __typename?: 'Article' }
-    & MutationArticleFragment
-  )> }
-);
+export type UnpublishArticleMutation = { __typename?: 'Mutation', unpublishArticle?: { __typename?: 'Article', id: string, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } | null };
 
 export type DeleteArticleMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeleteArticleMutation = (
-  { __typename?: 'Mutation' }
-  & { deleteArticle?: Maybe<(
-    { __typename?: 'Article' }
-    & MutationArticleFragment
-  )> }
-);
+export type DeleteArticleMutation = { __typename?: 'Mutation', deleteArticle?: { __typename?: 'Article', id: string, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } | null };
 
 export type DuplicateArticleMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DuplicateArticleMutation = (
-  { __typename?: 'Mutation' }
-  & { duplicateArticle: (
-    { __typename?: 'Article' }
-    & MutationArticleFragment
-  ) }
-);
+export type DuplicateArticleMutation = { __typename?: 'Mutation', duplicateArticle: { __typename?: 'Article', id: string, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } };
 
 export type ArticlePreviewLinkQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -2710,121 +2592,14 @@ export type ArticlePreviewLinkQueryVariables = Exact<{
 }>;
 
 
-export type ArticlePreviewLinkQuery = (
-  { __typename?: 'Query' }
-  & Pick<Query, 'articlePreviewLink'>
-);
+export type ArticlePreviewLinkQuery = { __typename?: 'Query', articlePreviewLink?: string | null };
 
 export type ArticleQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type ArticleQuery = (
-  { __typename?: 'Query' }
-  & { article?: Maybe<(
-    { __typename?: 'Article' }
-    & Pick<Article, 'id' | 'shared'>
-    & { draft?: Maybe<(
-      { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishAt'>
-    )>, pending?: Maybe<(
-      { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishAt'>
-    )>, published?: Maybe<(
-      { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'publishAt'>
-    )>, latest: (
-      { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'url' | 'canonicalUrl' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
-      & { image?: Maybe<(
-        { __typename?: 'Image' }
-        & ImageRefFragment
-      )>, properties: Array<(
-        { __typename?: 'Properties' }
-        & Pick<Properties, 'key' | 'value' | 'public'>
-      )>, authors: Array<(
-        { __typename?: 'Author' }
-        & AuthorRefFragment
-      )>, socialMediaAuthors: Array<(
-        { __typename?: 'Author' }
-        & AuthorRefFragment
-      )>, socialMediaImage?: Maybe<(
-        { __typename?: 'Image' }
-        & ImageRefFragment
-      )>, blocks: Array<(
-        { __typename?: 'RichTextBlock' }
-        & FullBlock_RichTextBlock_Fragment
-      ) | (
-        { __typename?: 'ImageBlock' }
-        & FullBlock_ImageBlock_Fragment
-      ) | (
-        { __typename?: 'ImageGalleryBlock' }
-        & FullBlock_ImageGalleryBlock_Fragment
-      ) | (
-        { __typename?: 'ListicleBlock' }
-        & FullBlock_ListicleBlock_Fragment
-      ) | (
-        { __typename?: 'FacebookPostBlock' }
-        & FullBlock_FacebookPostBlock_Fragment
-      ) | (
-        { __typename?: 'FacebookVideoBlock' }
-        & FullBlock_FacebookVideoBlock_Fragment
-      ) | (
-        { __typename?: 'InstagramPostBlock' }
-        & FullBlock_InstagramPostBlock_Fragment
-      ) | (
-        { __typename?: 'TwitterTweetBlock' }
-        & FullBlock_TwitterTweetBlock_Fragment
-      ) | (
-        { __typename?: 'VimeoVideoBlock' }
-        & FullBlock_VimeoVideoBlock_Fragment
-      ) | (
-        { __typename?: 'YouTubeVideoBlock' }
-        & FullBlock_YouTubeVideoBlock_Fragment
-      ) | (
-        { __typename?: 'SoundCloudTrackBlock' }
-        & FullBlock_SoundCloudTrackBlock_Fragment
-      ) | (
-        { __typename?: 'PolisConversationBlock' }
-        & FullBlock_PolisConversationBlock_Fragment
-      ) | (
-        { __typename?: 'TikTokVideoBlock' }
-        & FullBlock_TikTokVideoBlock_Fragment
-      ) | (
-        { __typename?: 'BildwurfAdBlock' }
-        & FullBlock_BildwurfAdBlock_Fragment
-      ) | (
-        { __typename?: 'EmbedBlock' }
-        & FullBlock_EmbedBlock_Fragment
-      ) | (
-        { __typename?: 'HTMLBlock' }
-        & FullBlock_HtmlBlock_Fragment
-      ) | (
-        { __typename?: 'PollBlock' }
-        & FullBlock_PollBlock_Fragment
-      ) | (
-        { __typename?: 'CommentBlock' }
-        & FullBlock_CommentBlock_Fragment
-      ) | (
-        { __typename?: 'LinkPageBreakBlock' }
-        & FullBlock_LinkPageBreakBlock_Fragment
-      ) | (
-        { __typename?: 'TitleBlock' }
-        & FullBlock_TitleBlock_Fragment
-      ) | (
-        { __typename?: 'QuoteBlock' }
-        & FullBlock_QuoteBlock_Fragment
-      ) | (
-        { __typename?: 'TeaserGridBlock' }
-        & FullBlock_TeaserGridBlock_Fragment
-      ) | (
-        { __typename?: 'TeaserGridFlexBlock' }
-        & FullBlock_TeaserGridFlexBlock_Fragment
-      )> }
-    ) }
-  )> }
-);
+export type ArticleQuery = { __typename?: 'Query', article?: { __typename?: 'Article', id: string, shared: boolean, draft?: { __typename?: 'ArticleRevision', publishAt?: string | null } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number, slug?: string | null, preTitle?: string | null, title?: string | null, lead?: string | null, seoTitle?: string | null, tags: Array<string>, url: string, canonicalUrl?: string | null, hideAuthor: boolean, breaking: boolean, socialMediaTitle?: string | null, socialMediaDescription?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, authors: Array<{ __typename?: 'Author', id: string, name: string, jobTitle?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, socialMediaAuthors: Array<{ __typename?: 'Author', id: string, name: string, jobTitle?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, socialMediaImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, blocks: Array<{ __typename: 'BildwurfAdBlock', zoneID: string } | { __typename: 'CommentBlock', filter: { __typename?: 'CommentBlockFilter', item?: string | null, tags?: Array<string> | null, comments?: Array<string> | null }, comments: Array<{ __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null }> } | { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'FacebookPostBlock', userID: string, postID: string } | { __typename: 'FacebookVideoBlock', userID: string, videoID: string } | { __typename: 'HTMLBlock', html?: string | null } | { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', postID: string } | { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null, styleOption?: string | null, richText: Node[], linkTarget?: string | null, hideButton: boolean, templateOption?: string | null, layoutOption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Node[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock', conversationID: string } | { __typename: 'PollBlock', poll?: { __typename?: 'FullPoll', id: string, question?: string | null } | null } | { __typename: 'QuoteBlock', quote?: string | null, author?: string | null } | { __typename: 'RichTextBlock', richText: Node[] } | { __typename: 'SoundCloudTrackBlock', trackID: string } | { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, contentUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties?: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null> } | { __typename: 'TeaserGridFlexBlock', flexTeasers: Array<{ __typename?: 'FlexTeaser', alignment: { __typename?: 'FlexAlignment', i: string, x: number, y: number, w: number, h: number, static: boolean }, teaser?: { __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, contentUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties?: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null } | null> } | { __typename: 'TikTokVideoBlock', userID: string, videoID: string } | { __typename: 'TitleBlock', title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', videoID: string } | { __typename: 'YouTubeVideoBlock', videoID: string }> } } | null };
 
 export type CreateSessionMutationVariables = Exact<{
   email: Scalars['String'];
@@ -2832,34 +2607,14 @@ export type CreateSessionMutationVariables = Exact<{
 }>;
 
 
-export type CreateSessionMutation = (
-  { __typename?: 'Mutation' }
-  & { createSession: (
-    { __typename?: 'SessionWithToken' }
-    & Pick<SessionWithToken, 'token'>
-    & { user: (
-      { __typename?: 'User' }
-      & Pick<User, 'email'>
-      & { roles: Array<(
-        { __typename?: 'UserRole' }
-        & FullUserRoleFragment
-      )> }
-    ) }
-  ) }
-);
+export type CreateSessionMutation = { __typename?: 'Mutation', createSession: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'User', email: string, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } } };
 
 export type GetAuthProvidersQueryVariables = Exact<{
   redirectUri: Scalars['String'];
 }>;
 
 
-export type GetAuthProvidersQuery = (
-  { __typename?: 'Query' }
-  & { authProviders: Array<(
-    { __typename?: 'AuthProvider' }
-    & Pick<AuthProvider, 'name' | 'url'>
-  )> }
-);
+export type GetAuthProvidersQuery = { __typename?: 'Query', authProviders: Array<{ __typename?: 'AuthProvider', name: string, url: string }> };
 
 export type CreateSessionWithOAuth2CodeMutationVariables = Exact<{
   redirectUri: Scalars['String'];
@@ -2868,112 +2623,44 @@ export type CreateSessionWithOAuth2CodeMutationVariables = Exact<{
 }>;
 
 
-export type CreateSessionWithOAuth2CodeMutation = (
-  { __typename?: 'Mutation' }
-  & { createSessionWithOAuth2Code: (
-    { __typename?: 'SessionWithToken' }
-    & Pick<SessionWithToken, 'token'>
-    & { user: (
-      { __typename?: 'User' }
-      & Pick<User, 'email'>
-      & { roles: Array<(
-        { __typename?: 'UserRole' }
-        & FullUserRoleFragment
-      )> }
-    ) }
-  ) }
-);
+export type CreateSessionWithOAuth2CodeMutation = { __typename?: 'Mutation', createSessionWithOAuth2Code: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'User', email: string, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } } };
 
 export type CreateSessionWithJwtMutationVariables = Exact<{
   jwt: Scalars['String'];
 }>;
 
 
-export type CreateSessionWithJwtMutation = (
-  { __typename?: 'Mutation' }
-  & { createSessionWithJWT: (
-    { __typename?: 'SessionWithToken' }
-    & Pick<SessionWithToken, 'token'>
-    & { user: (
-      { __typename?: 'User' }
-      & Pick<User, 'email'>
-      & { roles: Array<(
-        { __typename?: 'UserRole' }
-        & FullUserRoleFragment
-      )> }
-    ) }
-  ) }
-);
+export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'User', email: string, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } } };
 
-export type AuthorRefFragment = (
-  { __typename?: 'Author' }
-  & Pick<Author, 'id' | 'name' | 'jobTitle'>
-  & { image?: Maybe<(
-    { __typename?: 'Image' }
-    & ImageRefFragment
-  )> }
-);
+export type AuthorRefFragment = { __typename?: 'Author', id: string, name: string, jobTitle?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
-export type FullAuthorFragment = (
-  { __typename?: 'Author' }
-  & Pick<Author, 'slug' | 'bio' | 'createdAt'>
-  & { links?: Maybe<Array<(
-    { __typename?: 'AuthorLink' }
-    & Pick<AuthorLink, 'title' | 'url'>
-  )>> }
-  & AuthorRefFragment
-);
+export type FullAuthorFragment = { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
 export type AuthorListQueryVariables = Exact<{
-  filter?: Maybe<Scalars['String']>;
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  order?: Maybe<SortOrder>;
-  sort?: Maybe<AuthorSort>;
+  filter?: InputMaybe<Scalars['String']>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<AuthorSort>;
 }>;
 
 
-export type AuthorListQuery = (
-  { __typename?: 'Query' }
-  & { authors: (
-    { __typename?: 'AuthorConnection' }
-    & Pick<AuthorConnection, 'totalCount'>
-    & { nodes: Array<(
-      { __typename?: 'Author' }
-      & FullAuthorFragment
-    )>, pageInfo: (
-      { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
-    ) }
-  ) }
-);
+export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'AuthorConnection', totalCount: number, nodes: Array<{ __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type AuthorQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type AuthorQuery = (
-  { __typename?: 'Query' }
-  & { author?: Maybe<(
-    { __typename?: 'Author' }
-    & FullAuthorFragment
-  )> }
-);
+export type AuthorQuery = { __typename?: 'Query', author?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 export type CreateAuthorMutationVariables = Exact<{
   input: AuthorInput;
 }>;
 
 
-export type CreateAuthorMutation = (
-  { __typename?: 'Mutation' }
-  & { createAuthor?: Maybe<(
-    { __typename?: 'Author' }
-    & FullAuthorFragment
-  )> }
-);
+export type CreateAuthorMutation = { __typename?: 'Mutation', createAuthor?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 export type UpdateAuthorMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -2981,426 +2668,142 @@ export type UpdateAuthorMutationVariables = Exact<{
 }>;
 
 
-export type UpdateAuthorMutation = (
-  { __typename?: 'Mutation' }
-  & { updateAuthor?: Maybe<(
-    { __typename?: 'Author' }
-    & FullAuthorFragment
-  )> }
-);
+export type UpdateAuthorMutation = { __typename?: 'Mutation', updateAuthor?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 export type DeleteAuthorMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeleteAuthorMutation = (
-  { __typename?: 'Mutation' }
-  & { deleteAuthor?: Maybe<(
-    { __typename?: 'Author' }
-    & FullAuthorFragment
-  )> }
-);
+export type DeleteAuthorMutation = { __typename?: 'Mutation', deleteAuthor?: { __typename?: 'Author', slug: string, bio?: Node[] | null, createdAt: string, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
-type FullTeaser_ArticleTeaser_Fragment = (
-  { __typename?: 'ArticleTeaser' }
-  & Pick<ArticleTeaser, 'style' | 'preTitle' | 'title' | 'lead'>
-  & { image?: Maybe<(
-    { __typename?: 'Image' }
-    & ImageRefFragment
-  )>, article?: Maybe<(
-    { __typename?: 'Article' }
-    & ArticleRefFragment
-  )> }
-);
+type FullTeaser_ArticleTeaser_Fragment = { __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null };
 
-type FullTeaser_PeerArticleTeaser_Fragment = (
-  { __typename?: 'PeerArticleTeaser' }
-  & Pick<PeerArticleTeaser, 'style' | 'preTitle' | 'title' | 'lead' | 'articleID'>
-  & { image?: Maybe<(
-    { __typename?: 'Image' }
-    & ImageRefFragment
-  )>, peer?: Maybe<(
-    { __typename?: 'Peer' }
-    & PeerWithProfileFragment
-  )>, article?: Maybe<(
-    { __typename?: 'Article' }
-    & ArticleRefFragment
-  )> }
-);
+type FullTeaser_CustomTeaser_Fragment = { __typename?: 'CustomTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, contentUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties?: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> | null };
 
-type FullTeaser_PageTeaser_Fragment = (
-  { __typename?: 'PageTeaser' }
-  & Pick<PageTeaser, 'style' | 'preTitle' | 'title' | 'lead'>
-  & { image?: Maybe<(
-    { __typename?: 'Image' }
-    & ImageRefFragment
-  )>, page?: Maybe<(
-    { __typename?: 'Page' }
-    & PageRefFragment
-  )> }
-);
+type FullTeaser_PageTeaser_Fragment = { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null };
 
-type FullTeaser_CustomTeaser_Fragment = (
-  { __typename?: 'CustomTeaser' }
-  & Pick<CustomTeaser, 'style' | 'preTitle' | 'title' | 'lead' | 'contentUrl'>
-  & { image?: Maybe<(
-    { __typename?: 'Image' }
-    & ImageRefFragment
-  )>, properties?: Maybe<Array<(
-    { __typename?: 'Properties' }
-    & Pick<Properties, 'key' | 'value' | 'public'>
-  )>> }
-);
+type FullTeaser_PeerArticleTeaser_Fragment = { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null };
 
-export type FullTeaserFragment = FullTeaser_ArticleTeaser_Fragment | FullTeaser_PeerArticleTeaser_Fragment | FullTeaser_PageTeaser_Fragment | FullTeaser_CustomTeaser_Fragment;
+export type FullTeaserFragment = FullTeaser_ArticleTeaser_Fragment | FullTeaser_CustomTeaser_Fragment | FullTeaser_PageTeaser_Fragment | FullTeaser_PeerArticleTeaser_Fragment;
 
-type FullBlock_RichTextBlock_Fragment = (
-  { __typename: 'RichTextBlock' }
-  & Pick<RichTextBlock, 'richText'>
-);
+type FullBlock_BildwurfAdBlock_Fragment = { __typename: 'BildwurfAdBlock', zoneID: string };
 
-type FullBlock_ImageBlock_Fragment = (
-  { __typename: 'ImageBlock' }
-  & Pick<ImageBlock, 'caption'>
-  & { image?: Maybe<(
-    { __typename?: 'Image' }
-    & ImageRefFragment
-  )> }
-);
+type FullBlock_CommentBlock_Fragment = { __typename: 'CommentBlock', filter: { __typename?: 'CommentBlockFilter', item?: string | null, tags?: Array<string> | null, comments?: Array<string> | null }, comments: Array<{ __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null }> };
 
-type FullBlock_ImageGalleryBlock_Fragment = (
-  { __typename: 'ImageGalleryBlock' }
-  & { images: Array<(
-    { __typename?: 'GalleryImageEdge' }
-    & Pick<GalleryImageEdge, 'caption'>
-    & { image?: Maybe<(
-      { __typename?: 'Image' }
-      & ImageRefFragment
-    )> }
-  )> }
-);
+type FullBlock_EmbedBlock_Fragment = { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null };
 
-type FullBlock_ListicleBlock_Fragment = (
-  { __typename: 'ListicleBlock' }
-  & { items: Array<(
-    { __typename?: 'ListicleItem' }
-    & Pick<ListicleItem, 'title' | 'richText'>
-    & { image?: Maybe<(
-      { __typename?: 'Image' }
-      & ImageRefFragment
-    )> }
-  )> }
-);
+type FullBlock_FacebookPostBlock_Fragment = { __typename: 'FacebookPostBlock', userID: string, postID: string };
 
-type FullBlock_FacebookPostBlock_Fragment = (
-  { __typename: 'FacebookPostBlock' }
-  & Pick<FacebookPostBlock, 'userID' | 'postID'>
-);
+type FullBlock_FacebookVideoBlock_Fragment = { __typename: 'FacebookVideoBlock', userID: string, videoID: string };
 
-type FullBlock_FacebookVideoBlock_Fragment = (
-  { __typename: 'FacebookVideoBlock' }
-  & Pick<FacebookVideoBlock, 'userID' | 'videoID'>
-);
+type FullBlock_HtmlBlock_Fragment = { __typename: 'HTMLBlock', html?: string | null };
 
-type FullBlock_InstagramPostBlock_Fragment = (
-  { __typename: 'InstagramPostBlock' }
-  & Pick<InstagramPostBlock, 'postID'>
-);
+type FullBlock_ImageBlock_Fragment = { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
-type FullBlock_TwitterTweetBlock_Fragment = (
-  { __typename: 'TwitterTweetBlock' }
-  & Pick<TwitterTweetBlock, 'userID' | 'tweetID'>
-);
+type FullBlock_ImageGalleryBlock_Fragment = { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> };
 
-type FullBlock_VimeoVideoBlock_Fragment = (
-  { __typename: 'VimeoVideoBlock' }
-  & Pick<VimeoVideoBlock, 'videoID'>
-);
+type FullBlock_InstagramPostBlock_Fragment = { __typename: 'InstagramPostBlock', postID: string };
 
-type FullBlock_YouTubeVideoBlock_Fragment = (
-  { __typename: 'YouTubeVideoBlock' }
-  & Pick<YouTubeVideoBlock, 'videoID'>
-);
+type FullBlock_LinkPageBreakBlock_Fragment = { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null, styleOption?: string | null, richText: Node[], linkTarget?: string | null, hideButton: boolean, templateOption?: string | null, layoutOption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
-type FullBlock_SoundCloudTrackBlock_Fragment = (
-  { __typename: 'SoundCloudTrackBlock' }
-  & Pick<SoundCloudTrackBlock, 'trackID'>
-);
+type FullBlock_ListicleBlock_Fragment = { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Node[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> };
 
-type FullBlock_PolisConversationBlock_Fragment = (
-  { __typename: 'PolisConversationBlock' }
-  & Pick<PolisConversationBlock, 'conversationID'>
-);
+type FullBlock_PolisConversationBlock_Fragment = { __typename: 'PolisConversationBlock', conversationID: string };
 
-type FullBlock_TikTokVideoBlock_Fragment = (
-  { __typename: 'TikTokVideoBlock' }
-  & Pick<TikTokVideoBlock, 'userID' | 'videoID'>
-);
+type FullBlock_PollBlock_Fragment = { __typename: 'PollBlock', poll?: { __typename?: 'FullPoll', id: string, question?: string | null } | null };
 
-type FullBlock_BildwurfAdBlock_Fragment = (
-  { __typename: 'BildwurfAdBlock' }
-  & Pick<BildwurfAdBlock, 'zoneID'>
-);
+type FullBlock_QuoteBlock_Fragment = { __typename: 'QuoteBlock', quote?: string | null, author?: string | null };
 
-type FullBlock_EmbedBlock_Fragment = (
-  { __typename: 'EmbedBlock' }
-  & Pick<EmbedBlock, 'url' | 'title' | 'width' | 'height' | 'styleCustom' | 'sandbox'>
-);
+type FullBlock_RichTextBlock_Fragment = { __typename: 'RichTextBlock', richText: Node[] };
 
-type FullBlock_HtmlBlock_Fragment = (
-  { __typename: 'HTMLBlock' }
-  & Pick<HtmlBlock, 'html'>
-);
+type FullBlock_SoundCloudTrackBlock_Fragment = { __typename: 'SoundCloudTrackBlock', trackID: string };
 
-type FullBlock_PollBlock_Fragment = (
-  { __typename: 'PollBlock' }
-  & { poll?: Maybe<(
-    { __typename?: 'FullPoll' }
-    & Pick<FullPoll, 'id' | 'question'>
-  )> }
-);
+type FullBlock_TeaserGridBlock_Fragment = { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, contentUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties?: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null> };
 
-type FullBlock_CommentBlock_Fragment = (
-  { __typename: 'CommentBlock' }
-  & { filter: (
-    { __typename?: 'CommentBlockFilter' }
-    & Pick<CommentBlockFilter, 'item' | 'tags' | 'comments'>
-  ), comments: Array<(
-    { __typename?: 'Comment' }
-    & FullCommentFragment
-  )> }
-);
+type FullBlock_TeaserGridFlexBlock_Fragment = { __typename: 'TeaserGridFlexBlock', flexTeasers: Array<{ __typename?: 'FlexTeaser', alignment: { __typename?: 'FlexAlignment', i: string, x: number, y: number, w: number, h: number, static: boolean }, teaser?: { __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, contentUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties?: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null } | null> };
 
-type FullBlock_LinkPageBreakBlock_Fragment = (
-  { __typename: 'LinkPageBreakBlock' }
-  & Pick<LinkPageBreakBlock, 'text' | 'linkText' | 'linkURL' | 'styleOption' | 'richText' | 'linkTarget' | 'hideButton' | 'templateOption' | 'layoutOption'>
-  & { image?: Maybe<(
-    { __typename?: 'Image' }
-    & ImageRefFragment
-  )> }
-);
+type FullBlock_TikTokVideoBlock_Fragment = { __typename: 'TikTokVideoBlock', userID: string, videoID: string };
 
-type FullBlock_TitleBlock_Fragment = (
-  { __typename: 'TitleBlock' }
-  & Pick<TitleBlock, 'title' | 'lead'>
-);
+type FullBlock_TitleBlock_Fragment = { __typename: 'TitleBlock', title?: string | null, lead?: string | null };
 
-type FullBlock_QuoteBlock_Fragment = (
-  { __typename: 'QuoteBlock' }
-  & Pick<QuoteBlock, 'quote' | 'author'>
-);
+type FullBlock_TwitterTweetBlock_Fragment = { __typename: 'TwitterTweetBlock', userID: string, tweetID: string };
 
-type FullBlock_TeaserGridBlock_Fragment = (
-  { __typename: 'TeaserGridBlock' }
-  & Pick<TeaserGridBlock, 'numColumns'>
-  & { teasers: Array<Maybe<(
-    { __typename?: 'ArticleTeaser' }
-    & FullTeaser_ArticleTeaser_Fragment
-  ) | (
-    { __typename?: 'PeerArticleTeaser' }
-    & FullTeaser_PeerArticleTeaser_Fragment
-  ) | (
-    { __typename?: 'PageTeaser' }
-    & FullTeaser_PageTeaser_Fragment
-  ) | (
-    { __typename?: 'CustomTeaser' }
-    & FullTeaser_CustomTeaser_Fragment
-  )>> }
-);
+type FullBlock_VimeoVideoBlock_Fragment = { __typename: 'VimeoVideoBlock', videoID: string };
 
-type FullBlock_TeaserGridFlexBlock_Fragment = (
-  { __typename: 'TeaserGridFlexBlock' }
-  & { flexTeasers: Array<Maybe<(
-    { __typename?: 'FlexTeaser' }
-    & { alignment: (
-      { __typename?: 'FlexAlignment' }
-      & Pick<FlexAlignment, 'i' | 'x' | 'y' | 'w' | 'h' | 'static'>
-    ), teaser?: Maybe<(
-      { __typename?: 'ArticleTeaser' }
-      & FullTeaser_ArticleTeaser_Fragment
-    ) | (
-      { __typename?: 'PeerArticleTeaser' }
-      & FullTeaser_PeerArticleTeaser_Fragment
-    ) | (
-      { __typename?: 'PageTeaser' }
-      & FullTeaser_PageTeaser_Fragment
-    ) | (
-      { __typename?: 'CustomTeaser' }
-      & FullTeaser_CustomTeaser_Fragment
-    )> }
-  )>> }
-);
+type FullBlock_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock', videoID: string };
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_BildwurfAdBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment;
+export type FullBlockFragment = FullBlock_BildwurfAdBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_RichTextBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment;
 
 export type RatingSystemQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RatingSystemQuery = (
-  { __typename?: 'Query' }
-  & { ratingSystem: (
-    { __typename?: 'FullCommentRatingSystem' }
-    & Pick<FullCommentRatingSystem, 'id' | 'name'>
-    & { answers: Array<(
-      { __typename?: 'CommentRatingSystemAnswer' }
-      & Pick<CommentRatingSystemAnswer, 'id' | 'type' | 'answer' | 'ratingSystemId'>
-    )> }
-  ) }
-);
+export type RatingSystemQuery = { __typename?: 'Query', ratingSystem: { __typename?: 'FullCommentRatingSystem', id: string, name?: string | null, answers: Array<{ __typename?: 'CommentRatingSystemAnswer', id: string, type: RatingSystemType, answer?: string | null, ratingSystemId: string }> } };
 
 export type UpdateRatingSystemMutationVariables = Exact<{
   ratingSystemId: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  answers?: Maybe<Array<UpdateCommentRatingSystemAnswer> | UpdateCommentRatingSystemAnswer>;
+  name?: InputMaybe<Scalars['String']>;
+  answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswer> | UpdateCommentRatingSystemAnswer>;
 }>;
 
 
-export type UpdateRatingSystemMutation = (
-  { __typename?: 'Mutation' }
-  & { updateRatingSystem: (
-    { __typename?: 'FullCommentRatingSystem' }
-    & Pick<FullCommentRatingSystem, 'id' | 'name'>
-    & { answers: Array<(
-      { __typename?: 'CommentRatingSystemAnswer' }
-      & Pick<CommentRatingSystemAnswer, 'id' | 'type' | 'answer' | 'ratingSystemId'>
-    )> }
-  ) }
-);
+export type UpdateRatingSystemMutation = { __typename?: 'Mutation', updateRatingSystem: { __typename?: 'FullCommentRatingSystem', id: string, name?: string | null, answers: Array<{ __typename?: 'CommentRatingSystemAnswer', id: string, type: RatingSystemType, answer?: string | null, ratingSystemId: string }> } };
 
 export type CreateRatingSystemAnswerMutationVariables = Exact<{
   ratingSystemId: Scalars['ID'];
   type: RatingSystemType;
-  answer?: Maybe<Scalars['String']>;
+  answer?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type CreateRatingSystemAnswerMutation = (
-  { __typename?: 'Mutation' }
-  & { createRatingSystemAnswer: (
-    { __typename?: 'CommentRatingSystemAnswer' }
-    & Pick<CommentRatingSystemAnswer, 'answer' | 'id' | 'type' | 'ratingSystemId'>
-  ) }
-);
+export type CreateRatingSystemAnswerMutation = { __typename?: 'Mutation', createRatingSystemAnswer: { __typename?: 'CommentRatingSystemAnswer', answer?: string | null, id: string, type: RatingSystemType, ratingSystemId: string } };
 
 export type DeleteRatingSystemAnswerMutationVariables = Exact<{
   answerId: Scalars['ID'];
 }>;
 
 
-export type DeleteRatingSystemAnswerMutation = (
-  { __typename?: 'Mutation' }
-  & { deleteRatingSystemAnswer: (
-    { __typename?: 'CommentRatingSystemAnswer' }
-    & Pick<CommentRatingSystemAnswer, 'id'>
-  ) }
-);
+export type DeleteRatingSystemAnswerMutation = { __typename?: 'Mutation', deleteRatingSystemAnswer: { __typename?: 'CommentRatingSystemAnswer', id: string } };
 
-export type CommentRevisionFragment = (
-  { __typename?: 'CommentRevision' }
-  & Pick<CommentRevision, 'text' | 'title' | 'lead' | 'createdAt'>
-);
+export type CommentRevisionFragment = { __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string };
 
-export type FullParentCommentFragment = (
-  { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'createdAt' | 'modifiedAt'>
-  & { user?: Maybe<(
-    { __typename?: 'User' }
-    & FullUserFragment
-  )>, revisions: Array<(
-    { __typename?: 'CommentRevision' }
-    & CommentRevisionFragment
-  )> }
-);
+export type FullParentCommentFragment = { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> };
 
-export type FullCommentFragment = (
-  { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'guestUsername' | 'source' | 'createdAt' | 'modifiedAt' | 'itemID' | 'itemType'>
-  & { guestUserImage?: Maybe<(
-    { __typename?: 'Image' }
-    & ImageRefFragment
-  )>, user?: Maybe<(
-    { __typename?: 'User' }
-    & FullUserFragment
-  )>, revisions: Array<(
-    { __typename?: 'CommentRevision' }
-    & CommentRevisionFragment
-  )>, parentComment?: Maybe<(
-    { __typename?: 'Comment' }
-    & FullParentCommentFragment
-  )>, tags?: Maybe<Array<(
-    { __typename?: 'Tag' }
-    & Pick<Tag, 'id' | 'tag'>
-  )>>, overriddenRatings?: Maybe<Array<(
-    { __typename?: 'overriddenRating' }
-    & Pick<OverriddenRating, 'answerId' | 'value'>
-  )>> }
-);
+export type FullCommentFragment = { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null };
 
 export type CommentListQueryVariables = Exact<{
-  filter?: Maybe<CommentFilter>;
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  order?: Maybe<SortOrder>;
-  sort?: Maybe<CommentSort>;
+  filter?: InputMaybe<CommentFilter>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<CommentSort>;
 }>;
 
 
-export type CommentListQuery = (
-  { __typename?: 'Query' }
-  & { comments: (
-    { __typename?: 'CommentConnection' }
-    & Pick<CommentConnection, 'totalCount'>
-    & { nodes: Array<(
-      { __typename?: 'Comment' }
-      & FullCommentFragment
-    )>, pageInfo: (
-      { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
-    ) }
-  ) }
-);
+export type CommentListQuery = { __typename?: 'Query', comments: { __typename?: 'CommentConnection', totalCount: number, nodes: Array<{ __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type CommentQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type CommentQuery = (
-  { __typename?: 'Query' }
-  & { comment?: Maybe<(
-    { __typename?: 'Comment' }
-    & FullCommentFragment
-  )> }
-);
+export type CommentQuery = { __typename?: 'Query', comment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } | null };
 
 export type ApproveCommentMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type ApproveCommentMutation = (
-  { __typename?: 'Mutation' }
-  & { approveComment: (
-    { __typename?: 'Comment' }
-    & Pick<Comment, 'state'>
-  ) }
-);
+export type ApproveCommentMutation = { __typename?: 'Mutation', approveComment: { __typename?: 'Comment', state: CommentState } };
 
 export type RejectCommentMutationVariables = Exact<{
   id: Scalars['ID'];
-  rejectionReason?: Maybe<CommentRejectionReason>;
+  rejectionReason?: InputMaybe<CommentRejectionReason>;
 }>;
 
 
-export type RejectCommentMutation = (
-  { __typename?: 'Mutation' }
-  & { rejectComment: (
-    { __typename?: 'Comment' }
-    & Pick<Comment, 'state' | 'rejectionReason'>
-  ) }
-);
+export type RejectCommentMutation = { __typename?: 'Mutation', rejectComment: { __typename?: 'Comment', state: CommentState, rejectionReason?: CommentRejectionReason | null } };
 
 export type RequestChangesOnCommentMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -3408,144 +2811,73 @@ export type RequestChangesOnCommentMutationVariables = Exact<{
 }>;
 
 
-export type RequestChangesOnCommentMutation = (
-  { __typename?: 'Mutation' }
-  & { requestChangesOnComment: (
-    { __typename?: 'Comment' }
-    & Pick<Comment, 'state' | 'rejectionReason'>
-  ) }
-);
+export type RequestChangesOnCommentMutation = { __typename?: 'Mutation', requestChangesOnComment: { __typename?: 'Comment', state: CommentState, rejectionReason?: CommentRejectionReason | null } };
 
 export type UpdateCommentMutationVariables = Exact<{
   id: Scalars['ID'];
-  revision?: Maybe<CommentRevisionUpdateInput>;
-  userID?: Maybe<Scalars['ID']>;
-  guestUsername?: Maybe<Scalars['String']>;
-  guestUserImageID?: Maybe<Scalars['ID']>;
-  source?: Maybe<Scalars['String']>;
-  tagIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
-  ratingOverrides?: Maybe<Array<CommentRatingOverrideUpdateInput> | CommentRatingOverrideUpdateInput>;
+  revision?: InputMaybe<CommentRevisionUpdateInput>;
+  userID?: InputMaybe<Scalars['ID']>;
+  guestUsername?: InputMaybe<Scalars['String']>;
+  guestUserImageID?: InputMaybe<Scalars['ID']>;
+  source?: InputMaybe<Scalars['String']>;
+  tagIds?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+  ratingOverrides?: InputMaybe<Array<CommentRatingOverrideUpdateInput> | CommentRatingOverrideUpdateInput>;
 }>;
 
 
-export type UpdateCommentMutation = (
-  { __typename?: 'Mutation' }
-  & { updateComment: (
-    { __typename?: 'Comment' }
-    & FullCommentFragment
-  ) }
-);
+export type UpdateCommentMutation = { __typename?: 'Mutation', updateComment: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } };
 
 export type CreateCommentMutationVariables = Exact<{
   itemID: Scalars['ID'];
   itemType: CommentItemType;
-  parentID?: Maybe<Scalars['ID']>;
-  text?: Maybe<Scalars['RichText']>;
-  tagIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
+  parentID?: InputMaybe<Scalars['ID']>;
+  text?: InputMaybe<Scalars['RichText']>;
+  tagIds?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
 }>;
 
 
-export type CreateCommentMutation = (
-  { __typename?: 'Mutation' }
-  & { createComment: (
-    { __typename?: 'Comment' }
-    & Pick<Comment, 'id'>
-  ) }
-);
+export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'Comment', id: string } };
 
 export type DeleteCommentMutationVariables = Exact<{
   deleteCommentId: Scalars['ID'];
 }>;
 
 
-export type DeleteCommentMutation = (
-  { __typename?: 'Mutation' }
-  & { deleteComment: (
-    { __typename?: 'Comment' }
-    & Pick<Comment, 'id'>
-  ) }
-);
+export type DeleteCommentMutation = { __typename?: 'Mutation', deleteComment: { __typename?: 'Comment', id: string } };
 
-export type MetadataPropertyFragment = (
-  { __typename?: 'Properties' }
-  & Pick<Properties, 'key' | 'value' | 'public'>
-);
+export type MetadataPropertyFragment = { __typename?: 'Properties', key: string, value: string, public: boolean };
 
-export type PageInfoFragment = (
-  { __typename?: 'PageInfo' }
-  & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
-);
+export type PageInfoFragment = { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean };
 
-export type ImageUrLsFragment = (
-  { __typename?: 'Image' }
-  & Pick<Image, 'url'>
-  & { largeURL: Image['transformURL'], mediumURL: Image['transformURL'], thumbURL: Image['transformURL'], squareURL: Image['transformURL'], previewURL: Image['transformURL'], column1URL: Image['transformURL'], column6URL: Image['transformURL'] }
-);
+export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
-export type ImageRefFragment = (
-  { __typename?: 'Image' }
-  & Pick<Image, 'id' | 'filename' | 'extension' | 'title' | 'description' | 'width' | 'height'>
-  & ImageUrLsFragment
-);
+export type ImageRefFragment = { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
-export type FullImageFragment = (
-  { __typename?: 'Image' }
-  & Pick<Image, 'id' | 'createdAt' | 'modifiedAt' | 'filename' | 'extension' | 'width' | 'height' | 'fileSize' | 'description' | 'tags' | 'source' | 'link' | 'license'>
-  & { focalPoint?: Maybe<(
-    { __typename?: 'Point' }
-    & Pick<Point, 'x' | 'y'>
-  )> }
-  & ImageRefFragment
-);
+export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null };
 
 export type ImageListQueryVariables = Exact<{
-  filter?: Maybe<Scalars['String']>;
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
+  filter?: InputMaybe<Scalars['String']>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type ImageListQuery = (
-  { __typename?: 'Query' }
-  & { images: (
-    { __typename?: 'ImageConnection' }
-    & Pick<ImageConnection, 'totalCount'>
-    & { nodes: Array<(
-      { __typename?: 'Image' }
-      & ImageRefFragment
-    )>, pageInfo: (
-      { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
-    ) }
-  ) }
-);
+export type ImageListQuery = { __typename?: 'Query', images: { __typename?: 'ImageConnection', totalCount: number, nodes: Array<{ __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type ImageQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type ImageQuery = (
-  { __typename?: 'Query' }
-  & { image?: Maybe<(
-    { __typename?: 'Image' }
-    & FullImageFragment
-  )> }
-);
+export type ImageQuery = { __typename?: 'Query', image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null };
 
 export type UploadImageMutationVariables = Exact<{
   input: UploadImageInput;
 }>;
 
 
-export type UploadImageMutation = (
-  { __typename?: 'Mutation' }
-  & { uploadImage?: Maybe<(
-    { __typename?: 'Image' }
-    & ImageRefFragment
-  )> }
-);
+export type UploadImageMutation = { __typename?: 'Mutation', uploadImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
 export type UpdateImageMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -3553,60 +2885,28 @@ export type UpdateImageMutationVariables = Exact<{
 }>;
 
 
-export type UpdateImageMutation = (
-  { __typename?: 'Mutation' }
-  & { updateImage?: Maybe<(
-    { __typename?: 'Image' }
-    & FullImageFragment
-  )> }
-);
+export type UpdateImageMutation = { __typename?: 'Mutation', updateImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null };
 
 export type DeleteImageMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeleteImageMutation = (
-  { __typename?: 'Mutation' }
-  & { deleteImage?: Maybe<(
-    { __typename?: 'Image' }
-    & FullImageFragment
-  )> }
-);
+export type DeleteImageMutation = { __typename?: 'Mutation', deleteImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null };
 
-export type InvoiceFragment = (
-  { __typename?: 'Invoice' }
-  & Pick<Invoice, 'id' | 'total' | 'paidAt' | 'description' | 'mail' | 'manuallySetAsPaidByUserId' | 'canceledAt' | 'modifiedAt' | 'createdAt'>
-  & { items: Array<(
-    { __typename?: 'InvoiceItem' }
-    & Pick<InvoiceItem, 'createdAt' | 'modifiedAt' | 'name' | 'description' | 'quantity' | 'amount' | 'total'>
-  )> }
-);
+export type InvoiceFragment = { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> };
 
 export type InvoicesQueryVariables = Exact<{
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<InvoiceFilter>;
-  sort?: Maybe<InvoiceSort>;
-  order?: Maybe<SortOrder>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  filter?: InputMaybe<InvoiceFilter>;
+  sort?: InputMaybe<InvoiceSort>;
+  order?: InputMaybe<SortOrder>;
 }>;
 
 
-export type InvoicesQuery = (
-  { __typename?: 'Query' }
-  & { invoices: (
-    { __typename?: 'InvoiceConnection' }
-    & Pick<InvoiceConnection, 'totalCount'>
-    & { nodes: Array<(
-      { __typename?: 'Invoice' }
-      & InvoiceFragment
-    )>, pageInfo: (
-      { __typename?: 'PageInfo' }
-      & PageInfoFragment
-    ) }
-  ) }
-);
+export type InvoicesQuery = { __typename?: 'Query', invoices: { __typename?: 'InvoiceConnection', totalCount: number, nodes: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type UpdateInvoiceMutationVariables = Exact<{
   updateInvoiceId: Scalars['ID'];
@@ -3614,85 +2914,35 @@ export type UpdateInvoiceMutationVariables = Exact<{
 }>;
 
 
-export type UpdateInvoiceMutation = (
-  { __typename?: 'Mutation' }
-  & { updateInvoice?: Maybe<(
-    { __typename?: 'Invoice' }
-    & InvoiceFragment
-  )> }
-);
+export type UpdateInvoiceMutation = { __typename?: 'Mutation', updateInvoice?: { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> } | null };
 
-export type MemberPlanRefFragment = (
-  { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'id' | 'name' | 'description' | 'slug' | 'active' | 'tags'>
-  & { image?: Maybe<(
-    { __typename?: 'Image' }
-    & ImageRefFragment
-  )> }
-);
+export type MemberPlanRefFragment = { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
-export type FullMemberPlanFragment = (
-  { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'tags' | 'amountPerMonthMin'>
-  & { availablePaymentMethods: Array<(
-    { __typename?: 'AvailablePaymentMethod' }
-    & Pick<AvailablePaymentMethod, 'paymentPeriodicities' | 'forceAutoRenewal'>
-    & { paymentMethods: Array<(
-      { __typename?: 'PaymentMethod' }
-      & FullPaymentMethodFragment
-    )> }
-  )> }
-  & MemberPlanRefFragment
-);
+export type FullMemberPlanFragment = { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
 export type MemberPlanListQueryVariables = Exact<{
-  filter?: Maybe<Scalars['String']>;
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
+  filter?: InputMaybe<Scalars['String']>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type MemberPlanListQuery = (
-  { __typename?: 'Query' }
-  & { memberPlans: (
-    { __typename?: 'MemberPlanConnection' }
-    & Pick<MemberPlanConnection, 'totalCount'>
-    & { nodes: Array<(
-      { __typename?: 'MemberPlan' }
-      & FullMemberPlanFragment
-    )>, pageInfo: (
-      { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
-    ) }
-  ) }
-);
+export type MemberPlanListQuery = { __typename?: 'Query', memberPlans: { __typename?: 'MemberPlanConnection', totalCount: number, nodes: Array<{ __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type MemberPlanQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type MemberPlanQuery = (
-  { __typename?: 'Query' }
-  & { memberPlan?: Maybe<(
-    { __typename?: 'MemberPlan' }
-    & FullMemberPlanFragment
-  )> }
-);
+export type MemberPlanQuery = { __typename?: 'Query', memberPlan?: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 export type CreateMemberPlanMutationVariables = Exact<{
   input: MemberPlanInput;
 }>;
 
 
-export type CreateMemberPlanMutation = (
-  { __typename?: 'Mutation' }
-  & { createMemberPlan?: Maybe<(
-    { __typename?: 'MemberPlan' }
-    & FullMemberPlanFragment
-  )> }
-);
+export type CreateMemberPlanMutation = { __typename?: 'Mutation', createMemberPlan?: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 export type UpdateMemberPlanMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -3700,86 +2950,35 @@ export type UpdateMemberPlanMutationVariables = Exact<{
 }>;
 
 
-export type UpdateMemberPlanMutation = (
-  { __typename?: 'Mutation' }
-  & { updateMemberPlan?: Maybe<(
-    { __typename?: 'MemberPlan' }
-    & FullMemberPlanFragment
-  )> }
-);
+export type UpdateMemberPlanMutation = { __typename?: 'Mutation', updateMemberPlan?: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 export type DeleteMemberPlanMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeleteMemberPlanMutation = (
-  { __typename?: 'Mutation' }
-  & { deleteMemberPlan?: Maybe<(
-    { __typename?: 'MemberPlan' }
-    & FullMemberPlanFragment
-  )> }
-);
+export type DeleteMemberPlanMutation = { __typename?: 'Mutation', deleteMemberPlan?: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
-export type FullNavigationFragment = (
-  { __typename?: 'Navigation' }
-  & Pick<Navigation, 'id' | 'key' | 'name'>
-  & { links: Array<(
-    { __typename: 'PageNavigationLink' }
-    & Pick<PageNavigationLink, 'label'>
-    & { page?: Maybe<(
-      { __typename?: 'Page' }
-      & PageRefFragment
-    )> }
-  ) | (
-    { __typename: 'ArticleNavigationLink' }
-    & Pick<ArticleNavigationLink, 'label'>
-    & { article?: Maybe<(
-      { __typename?: 'Article' }
-      & ArticleRefFragment
-    )> }
-  ) | (
-    { __typename: 'ExternalNavigationLink' }
-    & Pick<ExternalNavigationLink, 'label' | 'url'>
-  )> }
-);
+export type FullNavigationFragment = { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> };
 
 export type NavigationListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NavigationListQuery = (
-  { __typename?: 'Query' }
-  & { navigations: Array<(
-    { __typename?: 'Navigation' }
-    & FullNavigationFragment
-  )> }
-);
+export type NavigationListQuery = { __typename?: 'Query', navigations: Array<{ __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> }> };
 
 export type NavigationQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type NavigationQuery = (
-  { __typename?: 'Query' }
-  & { navigation?: Maybe<(
-    { __typename?: 'Navigation' }
-    & FullNavigationFragment
-  )> }
-);
+export type NavigationQuery = { __typename?: 'Query', navigation?: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> } | null };
 
 export type CreateNavigationMutationVariables = Exact<{
   input: NavigationInput;
 }>;
 
 
-export type CreateNavigationMutation = (
-  { __typename?: 'Mutation' }
-  & { createNavigation?: Maybe<(
-    { __typename?: 'Navigation' }
-    & FullNavigationFragment
-  )> }
-);
+export type CreateNavigationMutation = { __typename?: 'Mutation', createNavigation?: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> } | null };
 
 export type UpdateNavigationMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -3787,104 +2986,37 @@ export type UpdateNavigationMutationVariables = Exact<{
 }>;
 
 
-export type UpdateNavigationMutation = (
-  { __typename?: 'Mutation' }
-  & { updateNavigation?: Maybe<(
-    { __typename?: 'Navigation' }
-    & FullNavigationFragment
-  )> }
-);
+export type UpdateNavigationMutation = { __typename?: 'Mutation', updateNavigation?: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> } | null };
 
 export type DeleteNavigationMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeleteNavigationMutation = (
-  { __typename?: 'Mutation' }
-  & { deleteNavigation?: Maybe<(
-    { __typename?: 'Navigation' }
-    & FullNavigationFragment
-  )> }
-);
+export type DeleteNavigationMutation = { __typename?: 'Mutation', deleteNavigation?: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> } | null };
 
-export type MutationPageFragment = (
-  { __typename?: 'Page' }
-  & Pick<Page, 'id'>
-  & { draft?: Maybe<(
-    { __typename?: 'PageRevision' }
-    & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'revision'>
-  )>, pending?: Maybe<(
-    { __typename?: 'PageRevision' }
-    & Pick<PageRevision, 'publishAt' | 'revision'>
-  )>, published?: Maybe<(
-    { __typename?: 'PageRevision' }
-    & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'revision'>
-  )>, latest: (
-    { __typename?: 'PageRevision' }
-    & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'revision'>
-  ) }
-);
+export type MutationPageFragment = { __typename?: 'Page', id: string, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } };
 
-export type PageRefFragment = (
-  { __typename?: 'Page' }
-  & Pick<Page, 'id' | 'createdAt' | 'modifiedAt'>
-  & { draft?: Maybe<(
-    { __typename?: 'PageRevision' }
-    & Pick<PageRevision, 'revision'>
-  )>, pending?: Maybe<(
-    { __typename?: 'PageRevision' }
-    & Pick<PageRevision, 'publishAt' | 'revision'>
-  )>, published?: Maybe<(
-    { __typename?: 'PageRevision' }
-    & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'revision'>
-  )>, latest: (
-    { __typename?: 'PageRevision' }
-    & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'title' | 'description'>
-    & { image?: Maybe<(
-      { __typename?: 'Image' }
-      & ImageRefFragment
-    )> }
-  ) }
-);
+export type PageRefFragment = { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
 
 export type PageListQueryVariables = Exact<{
-  filter?: Maybe<PageFilter>;
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  order?: Maybe<SortOrder>;
-  sort?: Maybe<PageSort>;
+  filter?: InputMaybe<PageFilter>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<PageSort>;
 }>;
 
 
-export type PageListQuery = (
-  { __typename?: 'Query' }
-  & { pages: (
-    { __typename?: 'PageConnection' }
-    & Pick<PageConnection, 'totalCount'>
-    & { nodes: Array<(
-      { __typename?: 'Page' }
-      & PageRefFragment
-    )>, pageInfo: (
-      { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
-    ) }
-  ) }
-);
+export type PageListQuery = { __typename?: 'Query', pages: { __typename?: 'PageConnection', totalCount: number, nodes: Array<{ __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type CreatePageMutationVariables = Exact<{
   input: PageInput;
 }>;
 
 
-export type CreatePageMutation = (
-  { __typename?: 'Mutation' }
-  & { createPage: (
-    { __typename?: 'Page' }
-    & MutationPageFragment
-  ) }
-);
+export type CreatePageMutation = { __typename?: 'Mutation', createPage: { __typename?: 'Page', id: string, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } };
 
 export type UpdatePageMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -3892,68 +3024,38 @@ export type UpdatePageMutationVariables = Exact<{
 }>;
 
 
-export type UpdatePageMutation = (
-  { __typename?: 'Mutation' }
-  & { updatePage?: Maybe<(
-    { __typename?: 'Page' }
-    & MutationPageFragment
-  )> }
-);
+export type UpdatePageMutation = { __typename?: 'Mutation', updatePage?: { __typename?: 'Page', id: string, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } | null };
 
 export type PublishPageMutationVariables = Exact<{
   id: Scalars['ID'];
-  publishAt?: Maybe<Scalars['DateTime']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
+  publishAt?: InputMaybe<Scalars['DateTime']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
 }>;
 
 
-export type PublishPageMutation = (
-  { __typename?: 'Mutation' }
-  & { publishPage?: Maybe<(
-    { __typename?: 'Page' }
-    & MutationPageFragment
-  )> }
-);
+export type PublishPageMutation = { __typename?: 'Mutation', publishPage?: { __typename?: 'Page', id: string, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } | null };
 
 export type UnpublishPageMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type UnpublishPageMutation = (
-  { __typename?: 'Mutation' }
-  & { unpublishPage?: Maybe<(
-    { __typename?: 'Page' }
-    & MutationPageFragment
-  )> }
-);
+export type UnpublishPageMutation = { __typename?: 'Mutation', unpublishPage?: { __typename?: 'Page', id: string, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } | null };
 
 export type DeletePageMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeletePageMutation = (
-  { __typename?: 'Mutation' }
-  & { deletePage?: Maybe<(
-    { __typename?: 'Page' }
-    & MutationPageFragment
-  )> }
-);
+export type DeletePageMutation = { __typename?: 'Mutation', deletePage?: { __typename?: 'Page', id: string, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } | null };
 
 export type DuplicatePageMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DuplicatePageMutation = (
-  { __typename?: 'Mutation' }
-  & { duplicatePage: (
-    { __typename?: 'Page' }
-    & MutationPageFragment
-  ) }
-);
+export type DuplicatePageMutation = { __typename?: 'Mutation', duplicatePage: { __typename?: 'Page', id: string, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } } };
 
 export type PagePreviewLinkQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -3961,177 +3063,42 @@ export type PagePreviewLinkQueryVariables = Exact<{
 }>;
 
 
-export type PagePreviewLinkQuery = (
-  { __typename?: 'Query' }
-  & Pick<Query, 'pagePreviewLink'>
-);
+export type PagePreviewLinkQuery = { __typename?: 'Query', pagePreviewLink?: string | null };
 
 export type PageQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type PageQuery = (
-  { __typename?: 'Query' }
-  & { page?: Maybe<(
-    { __typename?: 'Page' }
-    & Pick<Page, 'id'>
-    & { draft?: Maybe<(
-      { __typename?: 'PageRevision' }
-      & Pick<PageRevision, 'publishAt'>
-    )>, pending?: Maybe<(
-      { __typename?: 'PageRevision' }
-      & Pick<PageRevision, 'publishAt'>
-    )>, published?: Maybe<(
-      { __typename?: 'PageRevision' }
-      & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'publishAt'>
-    )>, latest: (
-      { __typename?: 'PageRevision' }
-      & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'publishAt' | 'slug' | 'title' | 'description' | 'tags' | 'url' | 'socialMediaTitle' | 'socialMediaDescription'>
-      & { image?: Maybe<(
-        { __typename?: 'Image' }
-        & ImageRefFragment
-      )>, properties: Array<(
-        { __typename?: 'Properties' }
-        & Pick<Properties, 'key' | 'value' | 'public'>
-      )>, socialMediaImage?: Maybe<(
-        { __typename?: 'Image' }
-        & ImageRefFragment
-      )>, blocks: Array<(
-        { __typename?: 'RichTextBlock' }
-        & FullBlock_RichTextBlock_Fragment
-      ) | (
-        { __typename?: 'ImageBlock' }
-        & FullBlock_ImageBlock_Fragment
-      ) | (
-        { __typename?: 'ImageGalleryBlock' }
-        & FullBlock_ImageGalleryBlock_Fragment
-      ) | (
-        { __typename?: 'ListicleBlock' }
-        & FullBlock_ListicleBlock_Fragment
-      ) | (
-        { __typename?: 'FacebookPostBlock' }
-        & FullBlock_FacebookPostBlock_Fragment
-      ) | (
-        { __typename?: 'FacebookVideoBlock' }
-        & FullBlock_FacebookVideoBlock_Fragment
-      ) | (
-        { __typename?: 'InstagramPostBlock' }
-        & FullBlock_InstagramPostBlock_Fragment
-      ) | (
-        { __typename?: 'TwitterTweetBlock' }
-        & FullBlock_TwitterTweetBlock_Fragment
-      ) | (
-        { __typename?: 'VimeoVideoBlock' }
-        & FullBlock_VimeoVideoBlock_Fragment
-      ) | (
-        { __typename?: 'YouTubeVideoBlock' }
-        & FullBlock_YouTubeVideoBlock_Fragment
-      ) | (
-        { __typename?: 'SoundCloudTrackBlock' }
-        & FullBlock_SoundCloudTrackBlock_Fragment
-      ) | (
-        { __typename?: 'PolisConversationBlock' }
-        & FullBlock_PolisConversationBlock_Fragment
-      ) | (
-        { __typename?: 'TikTokVideoBlock' }
-        & FullBlock_TikTokVideoBlock_Fragment
-      ) | (
-        { __typename?: 'BildwurfAdBlock' }
-        & FullBlock_BildwurfAdBlock_Fragment
-      ) | (
-        { __typename?: 'EmbedBlock' }
-        & FullBlock_EmbedBlock_Fragment
-      ) | (
-        { __typename?: 'HTMLBlock' }
-        & FullBlock_HtmlBlock_Fragment
-      ) | (
-        { __typename?: 'PollBlock' }
-        & FullBlock_PollBlock_Fragment
-      ) | (
-        { __typename?: 'CommentBlock' }
-        & FullBlock_CommentBlock_Fragment
-      ) | (
-        { __typename?: 'LinkPageBreakBlock' }
-        & FullBlock_LinkPageBreakBlock_Fragment
-      ) | (
-        { __typename?: 'TitleBlock' }
-        & FullBlock_TitleBlock_Fragment
-      ) | (
-        { __typename?: 'QuoteBlock' }
-        & FullBlock_QuoteBlock_Fragment
-      ) | (
-        { __typename?: 'TeaserGridBlock' }
-        & FullBlock_TeaserGridBlock_Fragment
-      ) | (
-        { __typename?: 'TeaserGridFlexBlock' }
-        & FullBlock_TeaserGridFlexBlock_Fragment
-      )> }
-    ) }
-  )> }
-);
+export type PageQuery = { __typename?: 'Query', page?: { __typename?: 'Page', id: string, draft?: { __typename?: 'PageRevision', publishAt?: string | null } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, slug: string, title: string, description?: string | null, tags: Array<string>, url: string, socialMediaTitle?: string | null, socialMediaDescription?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, socialMediaImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, blocks: Array<{ __typename: 'BildwurfAdBlock', zoneID: string } | { __typename: 'CommentBlock', filter: { __typename?: 'CommentBlockFilter', item?: string | null, tags?: Array<string> | null, comments?: Array<string> | null }, comments: Array<{ __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null }> } | { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'FacebookPostBlock', userID: string, postID: string } | { __typename: 'FacebookVideoBlock', userID: string, videoID: string } | { __typename: 'HTMLBlock', html?: string | null } | { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', postID: string } | { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null, styleOption?: string | null, richText: Node[], linkTarget?: string | null, hideButton: boolean, templateOption?: string | null, layoutOption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Node[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock', conversationID: string } | { __typename: 'PollBlock', poll?: { __typename?: 'FullPoll', id: string, question?: string | null } | null } | { __typename: 'QuoteBlock', quote?: string | null, author?: string | null } | { __typename: 'RichTextBlock', richText: Node[] } | { __typename: 'SoundCloudTrackBlock', trackID: string } | { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, contentUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties?: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null> } | { __typename: 'TeaserGridFlexBlock', flexTeasers: Array<{ __typename?: 'FlexTeaser', alignment: { __typename?: 'FlexAlignment', i: string, x: number, y: number, w: number, h: number, static: boolean }, teaser?: { __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, contentUrl?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties?: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null } | null> } | { __typename: 'TikTokVideoBlock', userID: string, videoID: string } | { __typename: 'TitleBlock', title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', videoID: string } | { __typename: 'YouTubeVideoBlock', videoID: string }> } } | null };
 
-export type FullPaymentProviderFragment = (
-  { __typename?: 'PaymentProvider' }
-  & Pick<PaymentProvider, 'id' | 'name'>
-);
+export type FullPaymentProviderFragment = { __typename?: 'PaymentProvider', id: string, name: string };
 
-export type FullPaymentMethodFragment = (
-  { __typename?: 'PaymentMethod' }
-  & Pick<PaymentMethod, 'id' | 'name' | 'slug' | 'createdAt' | 'modifiedAt' | 'description' | 'active'>
-  & { paymentProvider: (
-    { __typename?: 'PaymentProvider' }
-    & FullPaymentProviderFragment
-  ) }
-);
+export type FullPaymentMethodFragment = { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } };
 
 export type PaymentProviderListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PaymentProviderListQuery = (
-  { __typename?: 'Query' }
-  & { paymentProviders: Array<(
-    { __typename?: 'PaymentProvider' }
-    & FullPaymentProviderFragment
-  )> }
-);
+export type PaymentProviderListQuery = { __typename?: 'Query', paymentProviders: Array<{ __typename?: 'PaymentProvider', id: string, name: string }> };
 
 export type PaymentMethodListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PaymentMethodListQuery = (
-  { __typename?: 'Query' }
-  & { paymentMethods: Array<(
-    { __typename?: 'PaymentMethod' }
-    & FullPaymentMethodFragment
-  )> }
-);
+export type PaymentMethodListQuery = { __typename?: 'Query', paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }> };
 
 export type PaymentMethodQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type PaymentMethodQuery = (
-  { __typename?: 'Query' }
-  & { paymentMethod?: Maybe<(
-    { __typename?: 'PaymentMethod' }
-    & FullPaymentMethodFragment
-  )> }
-);
+export type PaymentMethodQuery = { __typename?: 'Query', paymentMethod?: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } } | null };
 
 export type CreatePaymentMethodMutationVariables = Exact<{
   input: PaymentMethodInput;
 }>;
 
 
-export type CreatePaymentMethodMutation = (
-  { __typename?: 'Mutation' }
-  & { createPaymentMethod?: Maybe<(
-    { __typename?: 'PaymentMethod' }
-    & FullPaymentMethodFragment
-  )> }
-);
+export type CreatePaymentMethodMutation = { __typename?: 'Mutation', createPaymentMethod?: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } } | null };
 
 export type UpdatePaymentMethodMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -4139,67 +3106,25 @@ export type UpdatePaymentMethodMutationVariables = Exact<{
 }>;
 
 
-export type UpdatePaymentMethodMutation = (
-  { __typename?: 'Mutation' }
-  & { updatePaymentMethod?: Maybe<(
-    { __typename?: 'PaymentMethod' }
-    & FullPaymentMethodFragment
-  )> }
-);
+export type UpdatePaymentMethodMutation = { __typename?: 'Mutation', updatePaymentMethod?: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } } | null };
 
 export type DeletePaymentMethodMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeletePaymentMethodMutation = (
-  { __typename?: 'Mutation' }
-  & { deletePaymentMethod?: Maybe<(
-    { __typename?: 'PaymentMethod' }
-    & FullPaymentMethodFragment
-  )> }
-);
+export type DeletePaymentMethodMutation = { __typename?: 'Mutation', deletePaymentMethod?: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } } | null };
 
-export type FullPeerProfileFragment = (
-  { __typename?: 'PeerProfile' }
-  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'themeFontColor' | 'callToActionText' | 'callToActionURL' | 'callToActionImageURL'>
-  & { logo?: Maybe<(
-    { __typename?: 'Image' }
-    & ImageRefFragment
-  )>, callToActionImage?: Maybe<(
-    { __typename?: 'Image' }
-    & ImageRefFragment
-  )> }
-);
+export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
-export type PeerRefFragment = (
-  { __typename?: 'Peer' }
-  & Pick<Peer, 'id' | 'name' | 'slug' | 'isDisabled' | 'hostURL'>
-  & { profile?: Maybe<(
-    { __typename?: 'PeerProfile' }
-    & FullPeerProfileFragment
-  )> }
-);
+export type PeerRefFragment = { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
-export type PeerWithProfileFragment = (
-  { __typename?: 'Peer' }
-  & { profile?: Maybe<(
-    { __typename?: 'PeerProfile' }
-    & FullPeerProfileFragment
-  )> }
-  & PeerRefFragment
-);
+export type PeerWithProfileFragment = { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 export type PeerProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PeerProfileQuery = (
-  { __typename?: 'Query' }
-  & { peerProfile: (
-    { __typename?: 'PeerProfile' }
-    & FullPeerProfileFragment
-  ) }
-);
+export type PeerProfileQuery = { __typename?: 'Query', peerProfile: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
 
 export type RemotePeerProfileQueryVariables = Exact<{
   hostURL: Scalars['String'];
@@ -4207,63 +3132,33 @@ export type RemotePeerProfileQueryVariables = Exact<{
 }>;
 
 
-export type RemotePeerProfileQuery = (
-  { __typename?: 'Query' }
-  & { remotePeerProfile?: Maybe<(
-    { __typename?: 'PeerProfile' }
-    & FullPeerProfileFragment
-  )> }
-);
+export type RemotePeerProfileQuery = { __typename?: 'Query', remotePeerProfile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 export type UpdatePeerProfileMutationVariables = Exact<{
   input: PeerProfileInput;
 }>;
 
 
-export type UpdatePeerProfileMutation = (
-  { __typename?: 'Mutation' }
-  & { updatePeerProfile: (
-    { __typename?: 'PeerProfile' }
-    & FullPeerProfileFragment
-  ) }
-);
+export type UpdatePeerProfileMutation = { __typename?: 'Mutation', updatePeerProfile: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
 
 export type PeerListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PeerListQuery = (
-  { __typename?: 'Query' }
-  & { peers?: Maybe<Array<(
-    { __typename?: 'Peer' }
-    & PeerWithProfileFragment
-  )>> }
-);
+export type PeerListQuery = { __typename?: 'Query', peers?: Array<{ __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null }> | null };
 
 export type PeerQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type PeerQuery = (
-  { __typename?: 'Query' }
-  & { peer?: Maybe<(
-    { __typename?: 'Peer' }
-    & PeerRefFragment
-  )> }
-);
+export type PeerQuery = { __typename?: 'Query', peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null };
 
 export type CreatePeerMutationVariables = Exact<{
   input: CreatePeerInput;
 }>;
 
 
-export type CreatePeerMutation = (
-  { __typename?: 'Mutation' }
-  & { createPeer: (
-    { __typename?: 'Peer' }
-    & PeerRefFragment
-  ) }
-);
+export type CreatePeerMutation = { __typename?: 'Mutation', createPeer: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } };
 
 export type UpdatePeerMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -4271,319 +3166,144 @@ export type UpdatePeerMutationVariables = Exact<{
 }>;
 
 
-export type UpdatePeerMutation = (
-  { __typename?: 'Mutation' }
-  & { updatePeer: (
-    { __typename?: 'Peer' }
-    & PeerRefFragment
-  ) }
-);
+export type UpdatePeerMutation = { __typename?: 'Mutation', updatePeer: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } };
 
 export type DeletePeerMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeletePeerMutation = (
-  { __typename?: 'Mutation' }
-  & { deletePeer?: Maybe<(
-    { __typename?: 'Peer' }
-    & PeerRefFragment
-  )> }
-);
+export type DeletePeerMutation = { __typename?: 'Mutation', deletePeer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null };
 
-export type PollExternalVoteSourceFragment = (
-  { __typename?: 'PollExternalVoteSource' }
-  & Pick<PollExternalVoteSource, 'id' | 'source'>
-  & { voteAmounts?: Maybe<Array<(
-    { __typename?: 'PollExternalVote' }
-    & Pick<PollExternalVote, 'id' | 'answerId' | 'amount'>
-  )>> }
-);
+export type PollExternalVoteSourceFragment = { __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: any | null }> | null };
 
 export type CreatePollMutationVariables = Exact<{
-  opensAt?: Maybe<Scalars['DateTime']>;
-  closedAt?: Maybe<Scalars['DateTime']>;
-  question?: Maybe<Scalars['String']>;
+  opensAt?: InputMaybe<Scalars['DateTime']>;
+  closedAt?: InputMaybe<Scalars['DateTime']>;
+  question?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type CreatePollMutation = (
-  { __typename?: 'Mutation' }
-  & { createPoll?: Maybe<(
-    { __typename?: 'PollWithAnswers' }
-    & Pick<PollWithAnswers, 'id' | 'question' | 'opensAt' | 'closedAt'>
-    & { answers?: Maybe<Array<(
-      { __typename?: 'PollAnswer' }
-      & Pick<PollAnswer, 'id' | 'pollId' | 'answer'>
-    )>> }
-  )> }
-);
+export type CreatePollMutation = { __typename?: 'Mutation', createPoll?: { __typename?: 'PollWithAnswers', id: string, question?: string | null, opensAt: string, closedAt?: string | null, answers?: Array<{ __typename?: 'PollAnswer', id: string, pollId: string, answer?: string | null }> | null } | null };
 
 export type UpdatePollMutationVariables = Exact<{
   pollId: Scalars['ID'];
-  opensAt?: Maybe<Scalars['DateTime']>;
-  closedAt?: Maybe<Scalars['DateTime']>;
-  question?: Maybe<Scalars['String']>;
-  answers?: Maybe<Array<UpdatePollAnswer> | UpdatePollAnswer>;
-  externalVoteSources?: Maybe<Array<UpdatePollExternalVoteSources> | UpdatePollExternalVoteSources>;
+  opensAt?: InputMaybe<Scalars['DateTime']>;
+  closedAt?: InputMaybe<Scalars['DateTime']>;
+  question?: InputMaybe<Scalars['String']>;
+  answers?: InputMaybe<Array<UpdatePollAnswer> | UpdatePollAnswer>;
+  externalVoteSources?: InputMaybe<Array<UpdatePollExternalVoteSources> | UpdatePollExternalVoteSources>;
 }>;
 
 
-export type UpdatePollMutation = (
-  { __typename?: 'Mutation' }
-  & { updatePoll?: Maybe<(
-    { __typename?: 'FullPoll' }
-    & Pick<FullPoll, 'id' | 'question' | 'opensAt' | 'closedAt'>
-    & { answers?: Maybe<Array<(
-      { __typename?: 'PollAnswerWithVoteCount' }
-      & Pick<PollAnswerWithVoteCount, 'id' | 'pollId' | 'answer' | 'votes'>
-    )>>, externalVoteSources?: Maybe<Array<(
-      { __typename?: 'PollExternalVoteSource' }
-      & PollExternalVoteSourceFragment
-    )>> }
-  )> }
-);
+export type UpdatePollMutation = { __typename?: 'Mutation', updatePoll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, answers?: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }> | null, externalVoteSources?: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: any | null }> | null }> | null } | null };
 
 export type DeletePollMutationVariables = Exact<{
   deletePollId: Scalars['ID'];
 }>;
 
 
-export type DeletePollMutation = (
-  { __typename?: 'Mutation' }
-  & { deletePoll?: Maybe<(
-    { __typename?: 'FullPoll' }
-    & Pick<FullPoll, 'id'>
-  )> }
-);
+export type DeletePollMutation = { __typename?: 'Mutation', deletePoll?: { __typename?: 'FullPoll', id: string } | null };
 
 export type CreatePollAnswerMutationVariables = Exact<{
   pollId: Scalars['ID'];
-  answer?: Maybe<Scalars['String']>;
+  answer?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type CreatePollAnswerMutation = (
-  { __typename?: 'Mutation' }
-  & { createPollAnswer?: Maybe<(
-    { __typename?: 'PollAnswer' }
-    & Pick<PollAnswer, 'answer' | 'id' | 'pollId'>
-  )> }
-);
+export type CreatePollAnswerMutation = { __typename?: 'Mutation', createPollAnswer?: { __typename?: 'PollAnswer', answer?: string | null, id: string, pollId: string } | null };
 
 export type DeletePollAnswerMutationVariables = Exact<{
   deletePollAnswerId: Scalars['ID'];
 }>;
 
 
-export type DeletePollAnswerMutation = (
-  { __typename?: 'Mutation' }
-  & { deletePollAnswer?: Maybe<(
-    { __typename?: 'PollAnswerWithVoteCount' }
-    & Pick<PollAnswerWithVoteCount, 'id'>
-  )> }
-);
+export type DeletePollAnswerMutation = { __typename?: 'Mutation', deletePollAnswer?: { __typename?: 'PollAnswerWithVoteCount', id: string } | null };
 
 export type CreatePollExternalVoteSourceMutationVariables = Exact<{
   pollId: Scalars['ID'];
-  source?: Maybe<Scalars['String']>;
+  source?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type CreatePollExternalVoteSourceMutation = (
-  { __typename?: 'Mutation' }
-  & { createPollExternalVoteSource?: Maybe<(
-    { __typename?: 'PollExternalVoteSource' }
-    & PollExternalVoteSourceFragment
-  )> }
-);
+export type CreatePollExternalVoteSourceMutation = { __typename?: 'Mutation', createPollExternalVoteSource?: { __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: any | null }> | null } | null };
 
 export type DeletePollExternalVoteSourceMutationVariables = Exact<{
   deletePollExternalVoteSourceId: Scalars['ID'];
 }>;
 
 
-export type DeletePollExternalVoteSourceMutation = (
-  { __typename?: 'Mutation' }
-  & { deletePollExternalVoteSource?: Maybe<(
-    { __typename?: 'PollExternalVoteSource' }
-    & PollExternalVoteSourceFragment
-  )> }
-);
+export type DeletePollExternalVoteSourceMutation = { __typename?: 'Mutation', deletePollExternalVoteSource?: { __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: any | null }> | null } | null };
 
 export type PollsQueryVariables = Exact<{
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  filter?: Maybe<PollFilter>;
-  sort?: Maybe<PollSort>;
-  order?: Maybe<SortOrder>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  filter?: InputMaybe<PollFilter>;
+  sort?: InputMaybe<PollSort>;
+  order?: InputMaybe<SortOrder>;
 }>;
 
 
-export type PollsQuery = (
-  { __typename?: 'Query' }
-  & { polls?: Maybe<(
-    { __typename?: 'PollConnection' }
-    & Pick<PollConnection, 'totalCount'>
-    & { nodes: Array<(
-      { __typename?: 'Poll' }
-      & Pick<Poll, 'id' | 'question' | 'opensAt' | 'closedAt'>
-    )>, pageInfo: (
-      { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
-    ) }
-  )> }
-);
+export type PollsQuery = { __typename?: 'Query', polls?: { __typename?: 'PollConnection', totalCount: number, nodes: Array<{ __typename?: 'Poll', id: string, question?: string | null, opensAt: string, closedAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
 
 export type PollQueryVariables = Exact<{
-  pollId?: Maybe<Scalars['ID']>;
+  pollId?: InputMaybe<Scalars['ID']>;
 }>;
 
 
-export type PollQuery = (
-  { __typename?: 'Query' }
-  & { poll?: Maybe<(
-    { __typename?: 'FullPoll' }
-    & Pick<FullPoll, 'id' | 'question' | 'opensAt' | 'closedAt'>
-    & { answers?: Maybe<Array<(
-      { __typename?: 'PollAnswerWithVoteCount' }
-      & Pick<PollAnswerWithVoteCount, 'id' | 'pollId' | 'answer' | 'votes'>
-    )>>, externalVoteSources?: Maybe<Array<(
-      { __typename?: 'PollExternalVoteSource' }
-      & PollExternalVoteSourceFragment
-    )>> }
-  )> }
-);
+export type PollQuery = { __typename?: 'Query', poll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, answers?: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }> | null, externalVoteSources?: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: any | null }> | null }> | null } | null };
 
-export type FullSettingFragment = (
-  { __typename?: 'Setting' }
-  & Pick<Setting, 'id' | 'name' | 'value'>
-  & { settingRestriction?: Maybe<(
-    { __typename?: 'SettingRestriction' }
-    & Pick<SettingRestriction, 'maxValue' | 'minValue' | 'inputLength'>
-  )> }
-);
+export type FullSettingFragment = { __typename?: 'Setting', id: string, name: SettingName, value: any, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null } | null };
 
 export type SettingListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SettingListQuery = (
-  { __typename?: 'Query' }
-  & { settings: Array<(
-    { __typename?: 'Setting' }
-    & Pick<Setting, 'id' | 'name' | 'value'>
-    & { settingRestriction?: Maybe<(
-      { __typename?: 'SettingRestriction' }
-      & Pick<SettingRestriction, 'maxValue' | 'minValue' | 'inputLength'>
-      & { allowedValues?: Maybe<(
-        { __typename?: 'AllowedSettingVals' }
-        & Pick<AllowedSettingVals, 'stringChoice' | 'boolChoice'>
-      )> }
-    )> }
-  )> }
-);
+export type SettingListQuery = { __typename?: 'Query', settings: Array<{ __typename?: 'Setting', id: string, name: SettingName, value: any, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null, allowedValues?: { __typename?: 'AllowedSettingVals', stringChoice?: Array<string | null> | null, boolChoice?: boolean | null } | null } | null }> };
 
 export type UpdateSettingListMutationVariables = Exact<{
-  input?: Maybe<Array<UpdateSettingArgs> | UpdateSettingArgs>;
+  input?: InputMaybe<Array<UpdateSettingArgs> | UpdateSettingArgs>;
 }>;
 
 
-export type UpdateSettingListMutation = (
-  { __typename?: 'Mutation' }
-  & { updateSettingList?: Maybe<Array<Maybe<(
-    { __typename?: 'Setting' }
-    & Pick<Setting, 'value'>
-  )>>> }
-);
+export type UpdateSettingListMutation = { __typename?: 'Mutation', updateSettingList?: Array<{ __typename?: 'Setting', value: any } | null> | null };
 
-export type FullSubscriptionFragment = (
-  { __typename?: 'Subscription' }
-  & Pick<Subscription, 'id' | 'createdAt' | 'modifiedAt' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil'>
-  & { user?: Maybe<(
-    { __typename?: 'User' }
-    & FullUserFragment
-  )>, memberPlan: (
-    { __typename?: 'MemberPlan' }
-    & FullMemberPlanFragment
-  ), properties: Array<(
-    { __typename?: 'Properties' }
-    & MetadataPropertyFragment
-  )>, paymentMethod: (
-    { __typename?: 'PaymentMethod' }
-    & FullPaymentMethodFragment
-  ), deactivation?: Maybe<(
-    { __typename?: 'SubscriptionDeactivation' }
-    & DeactivationFragment
-  )> }
-);
+export type FullSubscriptionFragment = { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null };
 
-export type DeactivationFragment = (
-  { __typename?: 'SubscriptionDeactivation' }
-  & Pick<SubscriptionDeactivation, 'date' | 'reason'>
-);
+export type DeactivationFragment = { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason };
 
 export type SubscriptionListQueryVariables = Exact<{
-  filter?: Maybe<SubscriptionFilter>;
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  order?: Maybe<SortOrder>;
-  sort?: Maybe<SubscriptionSort>;
+  filter?: InputMaybe<SubscriptionFilter>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<SubscriptionSort>;
 }>;
 
 
-export type SubscriptionListQuery = (
-  { __typename?: 'Query' }
-  & { subscriptions: (
-    { __typename?: 'SubscriptionConnection' }
-    & Pick<SubscriptionConnection, 'totalCount'>
-    & { nodes: Array<(
-      { __typename?: 'Subscription' }
-      & FullSubscriptionFragment
-    )>, pageInfo: (
-      { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
-    ) }
-  ) }
-);
+export type SubscriptionListQuery = { __typename?: 'Query', subscriptions: { __typename?: 'SubscriptionConnection', totalCount: number, nodes: Array<{ __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type SubscriptionQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type SubscriptionQuery = (
-  { __typename?: 'Query' }
-  & { subscription?: Maybe<(
-    { __typename?: 'Subscription' }
-    & FullSubscriptionFragment
-  )> }
-);
+export type SubscriptionQuery = { __typename?: 'Query', subscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
 
 export type SubscriptionsAsCsvQueryVariables = Exact<{
-  filter?: Maybe<SubscriptionFilter>;
+  filter?: InputMaybe<SubscriptionFilter>;
 }>;
 
 
-export type SubscriptionsAsCsvQuery = (
-  { __typename?: 'Query' }
-  & Pick<Query, 'subscriptionsAsCsv'>
-);
+export type SubscriptionsAsCsvQuery = { __typename?: 'Query', subscriptionsAsCsv?: string | null };
 
 export type CreateSubscriptionMutationVariables = Exact<{
   input: SubscriptionInput;
 }>;
 
 
-export type CreateSubscriptionMutation = (
-  { __typename?: 'Mutation' }
-  & { createSubscription?: Maybe<(
-    { __typename?: 'Subscription' }
-    & FullSubscriptionFragment
-  )> }
-);
+export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
 
 export type UpdateSubscriptionMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -4591,225 +3311,98 @@ export type UpdateSubscriptionMutationVariables = Exact<{
 }>;
 
 
-export type UpdateSubscriptionMutation = (
-  { __typename?: 'Mutation' }
-  & { updateSubscription?: Maybe<(
-    { __typename?: 'Subscription' }
-    & FullSubscriptionFragment
-  )> }
-);
+export type UpdateSubscriptionMutation = { __typename?: 'Mutation', updateSubscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
 
 export type DeleteSubscriptionMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeleteSubscriptionMutation = (
-  { __typename?: 'Mutation' }
-  & { deleteSubscription?: Maybe<(
-    { __typename?: 'Subscription' }
-    & FullSubscriptionFragment
-  )> }
-);
+export type DeleteSubscriptionMutation = { __typename?: 'Mutation', deleteSubscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
 
 export type TagListQueryVariables = Exact<{
-  filter?: Maybe<TagFilter>;
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  order?: Maybe<SortOrder>;
-  sort?: Maybe<TagSort>;
+  filter?: InputMaybe<TagFilter>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<TagSort>;
 }>;
 
 
-export type TagListQuery = (
-  { __typename?: 'Query' }
-  & { tags?: Maybe<(
-    { __typename?: 'TagConnection' }
-    & Pick<TagConnection, 'totalCount'>
-    & { nodes: Array<(
-      { __typename?: 'Tag' }
-      & Pick<Tag, 'id' | 'tag'>
-    )>, pageInfo: (
-      { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
-    ) }
-  )> }
-);
+export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
 
 export type CreateTagMutationVariables = Exact<{
-  tag?: Maybe<Scalars['String']>;
+  tag?: InputMaybe<Scalars['String']>;
   type: TagType;
 }>;
 
 
-export type CreateTagMutation = (
-  { __typename?: 'Mutation' }
-  & { createTag?: Maybe<(
-    { __typename?: 'Tag' }
-    & Pick<Tag, 'id' | 'tag'>
-  )> }
-);
+export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null } | null };
 
 export type UpdateTagMutationVariables = Exact<{
   id: Scalars['ID'];
-  tag?: Maybe<Scalars['String']>;
+  tag?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type UpdateTagMutation = (
-  { __typename?: 'Mutation' }
-  & { updateTag?: Maybe<(
-    { __typename?: 'Tag' }
-    & Pick<Tag, 'id' | 'tag'>
-  )> }
-);
+export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null } | null };
 
 export type DeleteTagMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeleteTagMutation = (
-  { __typename?: 'Mutation' }
-  & { deleteTag?: Maybe<(
-    { __typename?: 'Tag' }
-    & Pick<Tag, 'id' | 'tag'>
-  )> }
-);
+export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag?: { __typename?: 'Tag', id: string, tag?: string | null } | null };
 
-export type TokenRefFragment = (
-  { __typename?: 'Token' }
-  & Pick<Token, 'id' | 'name'>
-);
+export type TokenRefFragment = { __typename?: 'Token', id: string, name: string };
 
 export type TokenListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TokenListQuery = (
-  { __typename?: 'Query' }
-  & { tokens: Array<(
-    { __typename?: 'Token' }
-    & TokenRefFragment
-  )> }
-);
+export type TokenListQuery = { __typename?: 'Query', tokens: Array<{ __typename?: 'Token', id: string, name: string }> };
 
 export type CreateTokenMutationVariables = Exact<{
   input: TokenInput;
 }>;
 
 
-export type CreateTokenMutation = (
-  { __typename?: 'Mutation' }
-  & { createToken: (
-    { __typename?: 'CreatedToken' }
-    & Pick<CreatedToken, 'id' | 'name' | 'token'>
-  ) }
-);
+export type CreateTokenMutation = { __typename?: 'Mutation', createToken: { __typename?: 'CreatedToken', id: string, name: string, token: string } };
 
 export type DeleteTokenMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeleteTokenMutation = (
-  { __typename?: 'Mutation' }
-  & { deleteToken?: Maybe<(
-    { __typename?: 'CreatedToken' }
-    & Pick<CreatedToken, 'id' | 'name' | 'token'>
-  )> }
-);
+export type DeleteTokenMutation = { __typename?: 'Mutation', deleteToken?: { __typename?: 'CreatedToken', id: string, name: string, token: string } | null };
 
-export type FullUserFragment = (
-  { __typename?: 'User' }
-  & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'firstName' | 'preferredName' | 'active' | 'lastLogin' | 'email' | 'emailVerifiedAt'>
-  & { address?: Maybe<(
-    { __typename?: 'UserAddress' }
-    & Pick<UserAddress, 'company' | 'streetAddress' | 'streetAddress2' | 'zipCode' | 'city' | 'country'>
-  )>, userImage?: Maybe<(
-    { __typename?: 'Image' }
-    & ImageRefFragment
-  )>, properties: Array<(
-    { __typename?: 'Properties' }
-    & Pick<Properties, 'key' | 'value' | 'public'>
-  )>, roles: Array<(
-    { __typename?: 'UserRole' }
-    & FullUserRoleFragment
-  )>, subscriptions: Array<(
-    { __typename?: 'UserSubscription' }
-    & UserSubscriptionFragment
-  )> }
-);
+export type FullUserFragment = { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> };
 
-export type UserSubscriptionFragment = (
-  { __typename?: 'UserSubscription' }
-  & Pick<UserSubscription, 'id' | 'createdAt' | 'modifiedAt' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil'>
-  & { periods: Array<(
-    { __typename?: 'SubscriptionPeriod' }
-    & Pick<SubscriptionPeriod, 'id' | 'amount' | 'createdAt' | 'endsAt' | 'invoiceID' | 'paymentPeriodicity' | 'startsAt'>
-  )>, properties: Array<(
-    { __typename?: 'Properties' }
-    & Pick<Properties, 'key' | 'value' | 'public'>
-  )>, deactivation?: Maybe<(
-    { __typename?: 'SubscriptionDeactivation' }
-    & DeactivationFragment
-  )>, memberPlan: (
-    { __typename?: 'MemberPlan' }
-    & MemberPlanRefFragment
-  ), invoices: Array<(
-    { __typename?: 'Invoice' }
-    & InvoiceFragment
-  )> }
-);
+export type UserSubscriptionFragment = { __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> };
 
 export type UserListQueryVariables = Exact<{
-  filter?: Maybe<Scalars['String']>;
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  order?: Maybe<SortOrder>;
-  sort?: Maybe<UserSort>;
+  filter?: InputMaybe<Scalars['String']>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<UserSort>;
 }>;
 
 
-export type UserListQuery = (
-  { __typename?: 'Query' }
-  & { users: (
-    { __typename?: 'UserConnection' }
-    & Pick<UserConnection, 'totalCount'>
-    & { nodes: Array<(
-      { __typename?: 'User' }
-      & FullUserFragment
-    )>, pageInfo: (
-      { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
-    ) }
-  ) }
-);
+export type UserListQuery = { __typename?: 'Query', users: { __typename?: 'UserConnection', totalCount: number, nodes: Array<{ __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type UserQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type UserQuery = (
-  { __typename?: 'Query' }
-  & { user?: Maybe<(
-    { __typename?: 'User' }
-    & FullUserFragment
-  )> }
-);
+export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = (
-  { __typename?: 'Query' }
-  & { me?: Maybe<(
-    { __typename?: 'User' }
-    & FullUserFragment
-  )> }
-);
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
 
 export type CreateUserMutationVariables = Exact<{
   input: UserInput;
@@ -4817,13 +3410,7 @@ export type CreateUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserMutation = (
-  { __typename?: 'Mutation' }
-  & { createUser?: Maybe<(
-    { __typename?: 'User' }
-    & FullUserFragment
-  )> }
-);
+export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
 
 export type UpdateUserMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -4831,13 +3418,7 @@ export type UpdateUserMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserMutation = (
-  { __typename?: 'Mutation' }
-  & { updateUser?: Maybe<(
-    { __typename?: 'User' }
-    & FullUserFragment
-  )> }
-);
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
 
 export type ResetUserPasswordMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -4845,110 +3426,54 @@ export type ResetUserPasswordMutationVariables = Exact<{
 }>;
 
 
-export type ResetUserPasswordMutation = (
-  { __typename?: 'Mutation' }
-  & { resetUserPassword?: Maybe<(
-    { __typename?: 'User' }
-    & FullUserFragment
-  )> }
-);
+export type ResetUserPasswordMutation = { __typename?: 'Mutation', resetUserPassword?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
 
 export type DeleteUserMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeleteUserMutation = (
-  { __typename?: 'Mutation' }
-  & { deleteUser?: Maybe<(
-    { __typename?: 'User' }
-    & FullUserFragment
-  )> }
-);
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null };
 
 export type SendWebsiteLoginMutationVariables = Exact<{
   email: Scalars['String'];
 }>;
 
 
-export type SendWebsiteLoginMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'sendWebsiteLogin'>
-);
+export type SendWebsiteLoginMutation = { __typename?: 'Mutation', sendWebsiteLogin: string };
 
-export type FullPermissionFragment = (
-  { __typename?: 'Permission' }
-  & Pick<Permission, 'id' | 'description' | 'deprecated'>
-);
+export type FullPermissionFragment = { __typename?: 'Permission', id: string, description: string, deprecated: boolean };
 
-export type FullUserRoleFragment = (
-  { __typename?: 'UserRole' }
-  & Pick<UserRole, 'id' | 'name' | 'description' | 'systemRole'>
-  & { permissions: Array<(
-    { __typename?: 'Permission' }
-    & FullPermissionFragment
-  )> }
-);
+export type FullUserRoleFragment = { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> };
 
 export type UserRoleListQueryVariables = Exact<{
-  filter?: Maybe<Scalars['String']>;
-  cursor?: Maybe<Scalars['ID']>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
+  filter?: InputMaybe<Scalars['String']>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type UserRoleListQuery = (
-  { __typename?: 'Query' }
-  & { userRoles: (
-    { __typename?: 'UserRoleConnection' }
-    & Pick<UserRoleConnection, 'totalCount'>
-    & { nodes: Array<(
-      { __typename?: 'UserRole' }
-      & FullUserRoleFragment
-    )>, pageInfo: (
-      { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
-    ) }
-  ) }
-);
+export type UserRoleListQuery = { __typename?: 'Query', userRoles: { __typename?: 'UserRoleConnection', totalCount: number, nodes: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type PermissionListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PermissionListQuery = (
-  { __typename?: 'Query' }
-  & { permissions?: Maybe<Array<(
-    { __typename?: 'Permission' }
-    & FullPermissionFragment
-  )>> }
-);
+export type PermissionListQuery = { __typename?: 'Query', permissions?: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> | null };
 
 export type UserRoleQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type UserRoleQuery = (
-  { __typename?: 'Query' }
-  & { userRole?: Maybe<(
-    { __typename?: 'UserRole' }
-    & FullUserRoleFragment
-  )> }
-);
+export type UserRoleQuery = { __typename?: 'Query', userRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
 
 export type CreateUserRoleMutationVariables = Exact<{
   input: UserRoleInput;
 }>;
 
 
-export type CreateUserRoleMutation = (
-  { __typename?: 'Mutation' }
-  & { createUserRole?: Maybe<(
-    { __typename?: 'UserRole' }
-    & FullUserRoleFragment
-  )> }
-);
+export type CreateUserRoleMutation = { __typename?: 'Mutation', createUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
 
 export type UpdateUserRoleMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -4956,26 +3481,14 @@ export type UpdateUserRoleMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserRoleMutation = (
-  { __typename?: 'Mutation' }
-  & { updateUserRole?: Maybe<(
-    { __typename?: 'UserRole' }
-    & FullUserRoleFragment
-  )> }
-);
+export type UpdateUserRoleMutation = { __typename?: 'Mutation', updateUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
 
 export type DeleteUserRoleMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeleteUserRoleMutation = (
-  { __typename?: 'Mutation' }
-  & { deleteUserRole?: Maybe<(
-    { __typename?: 'UserRole' }
-    & FullUserRoleFragment
-  )> }
-);
+export type DeleteUserRoleMutation = { __typename?: 'Mutation', deleteUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
 
 export const MutationArticleFragmentDoc = gql`
     fragment MutationArticle on Article {
@@ -5731,7 +4244,14 @@ export const TokenRefFragmentDoc = gql`
     `;
 export const ArticleListDocument = gql`
     query ArticleList($filter: ArticleFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
-  articles(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  articles(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...ArticleRef
     }
@@ -5780,7 +4300,13 @@ export type ArticleListLazyQueryHookResult = ReturnType<typeof useArticleListLaz
 export type ArticleListQueryResult = Apollo.QueryResult<ArticleListQuery, ArticleListQueryVariables>;
 export const PeerArticleListDocument = gql`
     query PeerArticleList($filter: ArticleFilter, $cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort) {
-  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort, filter: $filter) {
+  peerArticles(
+    cursors: $cursors
+    peerFilter: $peerFilter
+    order: $order
+    sort: $sort
+    filter: $filter
+  ) {
     nodes {
       peer {
         ...PeerWithProfile
@@ -5900,7 +4426,12 @@ export type UpdateArticleMutationResult = Apollo.MutationResult<UpdateArticleMut
 export type UpdateArticleMutationOptions = Apollo.BaseMutationOptions<UpdateArticleMutation, UpdateArticleMutationVariables>;
 export const PublishArticleDocument = gql`
     mutation PublishArticle($id: ID!, $publishAt: DateTime!, $publishedAt: DateTime!, $updatedAt: DateTime!) {
-  publishArticle(id: $id, publishAt: $publishAt, publishedAt: $publishedAt, updatedAt: $updatedAt) {
+  publishArticle(
+    id: $id
+    publishAt: $publishAt
+    publishedAt: $publishedAt
+    updatedAt: $updatedAt
+  ) {
     ...MutationArticle
   }
 }
@@ -6312,7 +4843,14 @@ export type CreateSessionWithJwtMutationResult = Apollo.MutationResult<CreateSes
 export type CreateSessionWithJwtMutationOptions = Apollo.BaseMutationOptions<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>;
 export const AuthorListDocument = gql`
     query AuthorList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: AuthorSort) {
-  authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  authors(
+    filter: {name: $filter}
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullAuthor
     }
@@ -6537,7 +5075,11 @@ export type RatingSystemLazyQueryHookResult = ReturnType<typeof useRatingSystemL
 export type RatingSystemQueryResult = Apollo.QueryResult<RatingSystemQuery, RatingSystemQueryVariables>;
 export const UpdateRatingSystemDocument = gql`
     mutation UpdateRatingSystem($ratingSystemId: ID!, $name: String, $answers: [UpdateCommentRatingSystemAnswer!]) {
-  updateRatingSystem(ratingSystemId: $ratingSystemId, name: $name, answers: $answers) {
+  updateRatingSystem(
+    ratingSystemId: $ratingSystemId
+    name: $name
+    answers: $answers
+  ) {
     id
     name
     answers {
@@ -6579,7 +5121,11 @@ export type UpdateRatingSystemMutationResult = Apollo.MutationResult<UpdateRatin
 export type UpdateRatingSystemMutationOptions = Apollo.BaseMutationOptions<UpdateRatingSystemMutation, UpdateRatingSystemMutationVariables>;
 export const CreateRatingSystemAnswerDocument = gql`
     mutation CreateRatingSystemAnswer($ratingSystemId: ID!, $type: RatingSystemType!, $answer: String) {
-  createRatingSystemAnswer(ratingSystemId: $ratingSystemId, type: $type, answer: $answer) {
+  createRatingSystemAnswer(
+    ratingSystemId: $ratingSystemId
+    type: $type
+    answer: $answer
+  ) {
     answer
     id
     type
@@ -6650,7 +5196,14 @@ export type DeleteRatingSystemAnswerMutationResult = Apollo.MutationResult<Delet
 export type DeleteRatingSystemAnswerMutationOptions = Apollo.BaseMutationOptions<DeleteRatingSystemAnswerMutation, DeleteRatingSystemAnswerMutationVariables>;
 export const CommentListDocument = gql`
     query CommentList($filter: CommentFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
-  comments(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  comments(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullComment
     }
@@ -6837,7 +5390,16 @@ export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<Reques
 export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
 export const UpdateCommentDocument = gql`
     mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $guestUserImageID: ID, $source: String, $tagIds: [ID!], $ratingOverrides: [CommentRatingOverrideUpdateInput!]) {
-  updateComment(id: $id, revision: $revision, userID: $userID, guestUsername: $guestUsername, guestUserImageID: $guestUserImageID, source: $source, tagIds: $tagIds, ratingOverrides: $ratingOverrides) {
+  updateComment(
+    id: $id
+    revision: $revision
+    userID: $userID
+    guestUsername: $guestUsername
+    guestUserImageID: $guestUserImageID
+    source: $source
+    tagIds: $tagIds
+    ratingOverrides: $ratingOverrides
+  ) {
     ...FullComment
   }
 }
@@ -6877,7 +5439,13 @@ export type UpdateCommentMutationResult = Apollo.MutationResult<UpdateCommentMut
 export type UpdateCommentMutationOptions = Apollo.BaseMutationOptions<UpdateCommentMutation, UpdateCommentMutationVariables>;
 export const CreateCommentDocument = gql`
     mutation createComment($itemID: ID!, $itemType: CommentItemType!, $parentID: ID, $text: RichText, $tagIds: [ID!]) {
-  createComment(itemID: $itemID, itemType: $itemType, parentID: $parentID, text: $text, tagIds: $tagIds) {
+  createComment(
+    itemID: $itemID
+    itemType: $itemType
+    parentID: $parentID
+    text: $text
+    tagIds: $tagIds
+  ) {
     id
   }
 }
@@ -7129,7 +5697,14 @@ export type DeleteImageMutationResult = Apollo.MutationResult<DeleteImageMutatio
 export type DeleteImageMutationOptions = Apollo.BaseMutationOptions<DeleteImageMutation, DeleteImageMutationVariables>;
 export const InvoicesDocument = gql`
     query Invoices($cursor: ID, $take: Int, $skip: Int, $filter: InvoiceFilter, $sort: InvoiceSort, $order: SortOrder) {
-  invoices(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
+  invoices(
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    filter: $filter
+    sort: $sort
+    order: $order
+  ) {
     nodes {
       ...Invoice
     }
@@ -7561,7 +6136,14 @@ export type DeleteNavigationMutationResult = Apollo.MutationResult<DeleteNavigat
 export type DeleteNavigationMutationOptions = Apollo.BaseMutationOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
 export const PageListDocument = gql`
     query PageList($filter: PageFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
-  pages(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  pages(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...PageRef
     }
@@ -7677,7 +6259,12 @@ export type UpdatePageMutationResult = Apollo.MutationResult<UpdatePageMutation>
 export type UpdatePageMutationOptions = Apollo.BaseMutationOptions<UpdatePageMutation, UpdatePageMutationVariables>;
 export const PublishPageDocument = gql`
     mutation PublishPage($id: ID!, $publishAt: DateTime, $publishedAt: DateTime, $updatedAt: DateTime) {
-  publishPage(id: $id, publishAt: $publishAt, publishedAt: $publishedAt, updatedAt: $updatedAt) {
+  publishPage(
+    id: $id
+    publishAt: $publishAt
+    publishedAt: $publishedAt
+    updatedAt: $updatedAt
+  ) {
     ...MutationPage
   }
 }
@@ -8437,7 +7024,14 @@ export type CreatePollMutationResult = Apollo.MutationResult<CreatePollMutation>
 export type CreatePollMutationOptions = Apollo.BaseMutationOptions<CreatePollMutation, CreatePollMutationVariables>;
 export const UpdatePollDocument = gql`
     mutation UpdatePoll($pollId: ID!, $opensAt: DateTime, $closedAt: DateTime, $question: String, $answers: [UpdatePollAnswer!], $externalVoteSources: [UpdatePollExternalVoteSources!]) {
-  updatePoll(pollId: $pollId, opensAt: $opensAt, closedAt: $closedAt, question: $question, answers: $answers, externalVoteSources: $externalVoteSources) {
+  updatePoll(
+    pollId: $pollId
+    opensAt: $opensAt
+    closedAt: $closedAt
+    question: $question
+    answers: $answers
+    externalVoteSources: $externalVoteSources
+  ) {
     id
     question
     opensAt
@@ -8656,7 +7250,14 @@ export type DeletePollExternalVoteSourceMutationResult = Apollo.MutationResult<D
 export type DeletePollExternalVoteSourceMutationOptions = Apollo.BaseMutationOptions<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>;
 export const PollsDocument = gql`
     query Polls($cursor: ID, $take: Int, $skip: Int, $filter: PollFilter, $sort: PollSort, $order: SortOrder) {
-  polls(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
+  polls(
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    filter: $filter
+    sort: $sort
+    order: $order
+  ) {
     nodes {
       id
       question
@@ -8833,7 +7434,14 @@ export type UpdateSettingListMutationResult = Apollo.MutationResult<UpdateSettin
 export type UpdateSettingListMutationOptions = Apollo.BaseMutationOptions<UpdateSettingListMutation, UpdateSettingListMutationVariables>;
 export const SubscriptionListDocument = gql`
     query SubscriptionList($filter: SubscriptionFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
-  subscriptions(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  subscriptions(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullSubscription
     }
@@ -9050,7 +7658,14 @@ export type DeleteSubscriptionMutationResult = Apollo.MutationResult<DeleteSubsc
 export type DeleteSubscriptionMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>;
 export const TagListDocument = gql`
     query TagList($filter: TagFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
-  tags(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  tags(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       id
       tag
@@ -9308,7 +7923,14 @@ export type DeleteTokenMutationResult = Apollo.MutationResult<DeleteTokenMutatio
 export type DeleteTokenMutationOptions = Apollo.BaseMutationOptions<DeleteTokenMutation, DeleteTokenMutationVariables>;
 export const UserListDocument = gql`
     query UserList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
-  users(filter: {text: $filter}, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  users(
+    filter: {text: $filter}
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullUser
     }

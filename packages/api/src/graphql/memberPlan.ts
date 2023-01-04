@@ -15,7 +15,7 @@ import {
   GraphQLInputObjectType,
   GraphQLEnumType
 } from 'graphql'
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDateTime} from 'graphql-scalars'
 import {GraphQLPageInfo} from './common'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
 import {AvailablePaymentMethod, PaymentPeriodicity} from '@prisma/client'

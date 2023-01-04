@@ -14,9 +14,9 @@ import {
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {
-  authorise,
   createCheckedPermissionComponent,
-  PermissionControl
+  PermissionControl,
+  useAuthorisation
 } from '../atoms/permissionControl'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
@@ -51,14 +51,18 @@ const ThemeColorBox = styled.div<{themeColor: string}>`
 `
 
 function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
-  const isAuthorized = authorise('CAN_CREATE_PEER')
+  const isAuthorized = useAuthorisation('CAN_CREATE_PEER')
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [urlString, setURLString] = useState('')
   const [token, setToken] = useState('')
   const [profile, setProfile] = useState<FullPeerProfileFragment | null>(null)
 
-  const {data, loading: isLoading, error: loadError} = usePeerQuery({
+  const {
+    data,
+    loading: isLoading,
+    error: loadError
+  } = usePeerQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
     skip: id === undefined
@@ -159,137 +163,135 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
   })
 
   return (
-    <>
-      <Form
-        fluid
-        disabled={!isAuthorized}
-        onSubmit={validationPassed => validationPassed && handleSave()}
-        model={validationModel}
-        formValue={{name, url: urlString, token}}>
-        <Drawer.Header>
-          <Drawer.Title>
-            {id ? t('peerList.panels.editPeer') : t('peerList.panels.createPeer')}
-          </Drawer.Title>
+    <Form
+      fluid
+      disabled={!isAuthorized}
+      onSubmit={validationPassed => validationPassed && handleSave()}
+      model={validationModel}
+      formValue={{name, url: urlString, token}}>
+      <Drawer.Header>
+        <Drawer.Title>
+          {id ? t('peerList.panels.editPeer') : t('peerList.panels.createPeer')}
+        </Drawer.Title>
 
-          <Drawer.Actions>
-            <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
-              <Button
-                type="submit"
-                appearance="primary"
-                data-testid="saveButton"
-                disabled={isDisabled}>
-                {id ? t('save') : t('create')}
-              </Button>
-            </PermissionControl>
-            <Button appearance={'subtle'} onClick={() => onClose?.()}>
-              {t('peerList.panels.close')}
+        <Drawer.Actions>
+          <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
+            <Button
+              type="submit"
+              appearance="primary"
+              data-testid="saveButton"
+              disabled={isDisabled}>
+              {id ? t('save') : t('create')}
             </Button>
-          </Drawer.Actions>
-        </Drawer.Header>
-
-        <Drawer.Body>
-          <PermissionControl
-            qualifyingPermissions={
-              !id
-                ? ['CAN_CREATE_PEER']
-                : [
-                    'CAN_GET_PEER',
-                    'CAN_GET_PEERS',
-                    'CAN_CREATE_PEER',
-                    'CAN_DELETE_PEER',
-                    'CAN_GET_PEER_PROFILE'
-                  ]
-            }
-            showRejectionMessage>
-            <Panel>
-              <Group controlId="name">
-                <ControlLabel>{toggleRequiredLabel(t('peerList.panels.name'))}</ControlLabel>
-
-                <Control
-                  value={name}
-                  name="name"
-                  onChange={(value: string) => {
-                    setName(value)
-                    setSlug(slugify(value))
-                  }}
-                />
-              </Group>
-              <Group controlId="url">
-                <ControlLabel>{toggleRequiredLabel(t('peerList.panels.URL'))}</ControlLabel>
-                <Control
-                  value={urlString}
-                  name="url"
-                  onChange={(value: string) => {
-                    setURLString(value)
-                  }}
-                />
-              </Group>
-              <Group controlId="token">
-                <ControlLabel>{toggleRequiredLabel(t('peerList.panels.token'), !id)}</ControlLabel>
-
-                <Control
-                  value={token}
-                  name="token"
-                  placeholder={id ? t('peerList.panels.leaveEmpty') : undefined}
-                  onChange={(value: string) => {
-                    setToken(value)
-                  }}
-                />
-              </Group>
-              <Button
-                disabled={!isAuthorized}
-                className="fetchButton"
-                appearance="primary"
-                onClick={() => handleFetch()}>
-                {t('peerList.panels.getRemote')}
-              </Button>
-            </Panel>
-            {profile && (
-              <Panel header={t('peerList.panels.information')}>
-                <ChooseEditImage disabled image={profile?.logo} />
-                <DescriptionList>
-                  <DescriptionListItem label={t('peerList.panels.name')}>
-                    {profile?.name}
-                  </DescriptionListItem>
-                  <DescriptionListItem label={t('peerList.panels.themeColor')}>
-                    <ThemeColor>
-                      <p>{profile?.themeColor}</p>
-                      <ThemeColorBox themeColor={profile.themeColor} />
-                    </ThemeColor>
-                  </DescriptionListItem>
-                  <DescriptionListItem label={t('peerList.panels.themeFontColor')}>
-                    <ThemeColor>
-                      <p>{profile?.themeFontColor}</p>
-                      <ThemeColorBox themeColor={profile?.themeFontColor} />
-                    </ThemeColor>
-                  </DescriptionListItem>
-                  <DescriptionListItem label={t('peerList.panels.callToActionText')}>
-                    {!!profile?.callToActionText && (
-                      <RichTextBlock
-                        disabled
-                        displayOnly
-                        // TODO: remove this
-                        onChange={console.log}
-                        value={profile?.callToActionText}
-                      />
-                    )}
-                  </DescriptionListItem>
-                  <DescriptionListItem label={t('peerList.panels.callToActionURL')}>
-                    {profile?.callToActionURL}
-                  </DescriptionListItem>
-                  <DescriptionListItem label={t('peerList.panels.callToActionImage')}>
-                    <img src={profile?.callToActionImage?.thumbURL || undefined} />
-                  </DescriptionListItem>
-                  <DescriptionListItem label={t('peerList.panels.callToActionImageURL')}>
-                    {profile?.callToActionImageURL}
-                  </DescriptionListItem>
-                </DescriptionList>
-              </Panel>
-            )}
           </PermissionControl>
-        </Drawer.Body>
-      </Form>
-    </>
+          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            {t('peerList.panels.close')}
+          </Button>
+        </Drawer.Actions>
+      </Drawer.Header>
+
+      <Drawer.Body>
+        <PermissionControl
+          qualifyingPermissions={
+            !id
+              ? ['CAN_CREATE_PEER']
+              : [
+                  'CAN_GET_PEER',
+                  'CAN_GET_PEERS',
+                  'CAN_CREATE_PEER',
+                  'CAN_DELETE_PEER',
+                  'CAN_GET_PEER_PROFILE'
+                ]
+          }
+          showRejectionMessage>
+          <Panel>
+            <Group controlId="name">
+              <ControlLabel>{toggleRequiredLabel(t('peerList.panels.name'))}</ControlLabel>
+
+              <Control
+                value={name}
+                name="name"
+                onChange={(value: string) => {
+                  setName(value)
+                  setSlug(slugify(value))
+                }}
+              />
+            </Group>
+            <Group controlId="url">
+              <ControlLabel>{toggleRequiredLabel(t('peerList.panels.URL'))}</ControlLabel>
+              <Control
+                value={urlString}
+                name="url"
+                onChange={(value: string) => {
+                  setURLString(value)
+                }}
+              />
+            </Group>
+            <Group controlId="token">
+              <ControlLabel>{toggleRequiredLabel(t('peerList.panels.token'), !id)}</ControlLabel>
+
+              <Control
+                value={token}
+                name="token"
+                placeholder={id ? t('peerList.panels.leaveEmpty') : undefined}
+                onChange={(value: string) => {
+                  setToken(value)
+                }}
+              />
+            </Group>
+            <Button
+              disabled={!isAuthorized}
+              className="fetchButton"
+              appearance="primary"
+              onClick={() => handleFetch()}>
+              {t('peerList.panels.getRemote')}
+            </Button>
+          </Panel>
+          {profile && (
+            <Panel header={t('peerList.panels.information')}>
+              <ChooseEditImage disabled image={profile?.logo} />
+              <DescriptionList>
+                <DescriptionListItem label={t('peerList.panels.name')}>
+                  {profile?.name}
+                </DescriptionListItem>
+                <DescriptionListItem label={t('peerList.panels.themeColor')}>
+                  <ThemeColor>
+                    <p>{profile?.themeColor}</p>
+                    <ThemeColorBox themeColor={profile.themeColor} />
+                  </ThemeColor>
+                </DescriptionListItem>
+                <DescriptionListItem label={t('peerList.panels.themeFontColor')}>
+                  <ThemeColor>
+                    <p>{profile?.themeFontColor}</p>
+                    <ThemeColorBox themeColor={profile?.themeFontColor} />
+                  </ThemeColor>
+                </DescriptionListItem>
+                <DescriptionListItem label={t('peerList.panels.callToActionText')}>
+                  {!!profile?.callToActionText && (
+                    <RichTextBlock
+                      disabled
+                      displayOnly
+                      // TODO: remove this
+                      onChange={console.log}
+                      value={profile?.callToActionText}
+                    />
+                  )}
+                </DescriptionListItem>
+                <DescriptionListItem label={t('peerList.panels.callToActionURL')}>
+                  {profile?.callToActionURL}
+                </DescriptionListItem>
+                <DescriptionListItem label={t('peerList.panels.callToActionImage')}>
+                  <img src={profile?.callToActionImage?.thumbURL || undefined} />
+                </DescriptionListItem>
+                <DescriptionListItem label={t('peerList.panels.callToActionImageURL')}>
+                  {profile?.callToActionImageURL}
+                </DescriptionListItem>
+              </DescriptionList>
+            </Panel>
+          )}
+        </PermissionControl>
+      </Drawer.Body>
+    </Form>
   )
 }
 

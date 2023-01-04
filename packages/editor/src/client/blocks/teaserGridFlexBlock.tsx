@@ -15,7 +15,7 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
-import {contentForTeaser, IconButton, IconWrapper, Panel, Teaser} from './teaserGridBlock'
+import {ContentForTeaser, IconButton, IconWrapper, Panel, Teaser} from './teaserGridBlock'
 import {FlexAlignment, FlexTeaser, Teaser as TeaserType, TeaserGridFlexBlockValue} from './types'
 
 const ButtonToolbar = styled(RButtonToolbar)`
@@ -36,7 +36,7 @@ export function FlexTeaserBlock({
       <PlaceholderInput onAddClick={onChoose}>
         {teaser && (
           <Teaser>
-            {contentForTeaser(teaser)}
+            {ContentForTeaser(teaser)}
 
             <IconWrapper>
               <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.chooseTeaser')}>

@@ -57,5 +57,7 @@ export enum PublicCommentSort {
 export interface CommentFilter {
   readonly states?: CommentState[]
   readonly tags?: string[]
+  readonly itemType?: CommentItemType
+  readonly itemID?: string
   readonly item?: string
 }
