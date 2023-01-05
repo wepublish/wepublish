@@ -2,8 +2,7 @@
   "name": "wepublish",
   "private": true,
   "engines": {
-    "node": "^16.0.0",
-    "yarn": "^1.16.0"
+    "node": "^16.0.0"
   },
   "scripts": {
     "migrate": "prisma migrate deploy && prisma db seed",
@@ -15,7 +14,7 @@
     "changelog": "node -r dotenv/config ./node_modules/.bin/lerna-changelog",
     "publish": "lerna publish from-package --ignore-scripts",
     "publish:next": "lerna publish from-package --ignore-scripts --dist-tag next",
-    "watch": "yarn migrate && run-p --print-label watch:*",
+    "watch": "npm run migrate && run-p --print-label watch:*",
     "lint": "run-p --print-label lint:*",
     "start:docker": "docker-compose up --detach database pgadmin media",
     "build:api": "nx build api",
@@ -48,7 +47,6 @@
     "@graphql-codegen/typescript-operations": "^2.5.8",
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@nrwl/cli": "15.3.0",
-    "@nrwl/cypress": "15.3.0",
     "@nrwl/eslint-plugin-nx": "15.3.0",
     "@nrwl/jest": "15.3.3",
     "@nrwl/linter": "15.3.0",
@@ -165,6 +163,7 @@
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "browser-image-compression": "^1.0.16",
+    "buffer": "^6.0.3",
     "core-js": "^3.6.5",
     "cors": "~2.8.5",
     "cross-fetch": "^3.0.4",

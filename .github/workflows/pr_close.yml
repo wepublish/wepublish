@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-          cache: yarn
+          cache: npm
       - name: Create manifest
         env:
           BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
