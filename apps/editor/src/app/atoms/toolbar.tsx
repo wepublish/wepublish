@@ -1,5 +1,3 @@
-import './toolbar.less'
-
 import styled from '@emotion/styled'
 import React, {
   createContext,
@@ -44,6 +42,10 @@ const CloseIcon = styled(MdClose)`
 const ToolbarButtonElement = styled.button<{active: boolean}>`
   border: 1px solid;
   border-color: ${({active}) => (active ? 'blue' : 'black')};
+  border-radius: 3px;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 2px;
 `
 
 const ChildrenWrapper = styled.div<{fadeOut: boolean}>`

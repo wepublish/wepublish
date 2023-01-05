@@ -1,6 +1,4 @@
-import './tableMenu.less'
-import '../../../atoms/emojiPicker.less'
-
+import {css, Global} from '@emotion/react'
 import styled from '@emotion/styled'
 import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -167,6 +165,21 @@ export function TableMenu() {
 
   return (
     <>
+      <Global
+        styles={css`
+          table {
+            white-space: pre-wrap;
+            width: 100%;
+            margin: 10px;
+            table-layout: fixed;
+          }
+
+          td {
+            border: 1px solid;
+            padding: 8px;
+          }
+        `}
+      />
       <Row>
         <Col xs={24}>
           <IconButton icon={<MdClose />} onClick={() => closeMenu()} />

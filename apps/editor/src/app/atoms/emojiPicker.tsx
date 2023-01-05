@@ -1,5 +1,6 @@
-import './emojiPicker.less'
+import 'emoji-mart/css/emoji-mart.css'
 
+import {css, Global} from '@emotion/react'
 import styled from '@emotion/styled'
 import {BaseEmoji, Picker} from 'emoji-mart'
 import {useContext} from 'react'
@@ -23,6 +24,20 @@ export function EmojiPicker({setEmoji}: EmojiPickerProps) {
 
   return (
     <>
+      <Global
+        styles={css`
+          .emoji-mart-bar:last-child {
+            display: none;
+          }
+          .emoji-mart-scroll {
+            overflow-y: scroll;
+            overflow-x: hidden;
+            height: 12em;
+            padding: 0 6px 6px 6px;
+            will-change: transform;
+          }
+        `}
+      />
       <Row>
         <Col xs={24}>
           <IconButton icon={<MdClose />} onClick={() => closeMenu()} />
