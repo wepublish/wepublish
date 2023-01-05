@@ -91,7 +91,9 @@ export const GraphQLCommentFilter = new GraphQLInputObjectType({
   fields: {
     item: {type: GraphQLID},
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
-    states: {type: GraphQLList(GraphQLNonNull(GraphQLCommentState))}
+    states: {type: GraphQLList(GraphQLNonNull(GraphQLCommentState))},
+    itemType: {type: GraphQLCommentItemType},
+    itemID: {type: GraphQLID}
   }
 })
 
@@ -235,7 +237,7 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
                 id: parentID
               },
               include: {
-                revisions: true
+                revisions: {orderBy: {createdAt: 'asc'}}
               }
             })
           : null

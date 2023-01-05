@@ -18,7 +18,7 @@ export const getPublicChildrenCommentsByParentId = async (
       modifiedAt: 'desc'
     },
     include: {
-      revisions: true,
+      revisions: {orderBy: {createdAt: 'asc'}},
       tags: true
     }
   })
@@ -44,7 +44,10 @@ export type CalculatedRating = {
 const sortCommentsByRating = (orderFn: typeof ascend) =>
   sortWith<Comment & {calculatedRatings: CalculatedRating[]}>([
     orderFn(({calculatedRatings}: Comment & {calculatedRatings: CalculatedRating[]}) =>
-      calculatedRatings.reduce((ratingsTotal, rating) => ratingsTotal + rating.mean, 0)
+      calculatedRatings.reduce(
+        (ratingsTotal, calculatedRating) => ratingsTotal + calculatedRating.mean,
+        0
+      )
     ),
     ascend(({createdAt}: Comment) => createdAt)
   ])
@@ -67,7 +70,7 @@ export const getPublicCommentsForItemById = async (
         ]
       },
       include: {
-        revisions: true,
+        revisions: {orderBy: {createdAt: 'asc'}},
         ratings: true,
         overriddenRatings: true
       },

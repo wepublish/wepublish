@@ -27,7 +27,8 @@ export const PollBlock = ({value: {poll}, onChange, autofocus}: BlockProps<PollB
           height: 200,
           padding: 0,
           overflow: 'hidden',
-          backgroundColor: '#f7f9fa'
+          backgroundColor: '#f7f9fa',
+          display: 'grid'
         }}>
         <PlaceholderInput onAddClick={() => setIsDialogOpen(true)}>
           {poll && (

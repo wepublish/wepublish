@@ -58,7 +58,8 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
             width: 200,
             height: 150,
             marginRight: 10,
-            flexShrink: 0
+            flexShrink: 0,
+            display: 'grid'
           }}>
           <ChooseEditImage
             header={''}

@@ -206,8 +206,8 @@ model Image {
 
 enum CommentItemType {
   peerArticle @map("peerArticle")
-  article     @map("article")
-  page        @map("page")
+  article  @map("article")
+  page     @map("page")
 }
 
 enum CommentRejectionReason {

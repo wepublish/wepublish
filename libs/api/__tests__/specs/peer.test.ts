@@ -43,7 +43,7 @@ describe('Peers', () => {
       const res = await testServerPrivate.executeOperation({
         query: CreatePeer,
         variables: {
-          input: input
+          input
         }
       })
       ids.unshift(res.data?.createPeer?.id)
@@ -59,7 +59,7 @@ describe('Peers', () => {
       const res = await testServerPrivate.executeOperation({
         query: CreatePeer,
         variables: {
-          input: input
+          input
         }
       })
       expect(res).toMatchSnapshot({
@@ -150,7 +150,6 @@ describe('Peers', () => {
     test('can update peer profile', async () => {
       const input: PeerProfileInput = {
         name: 'test peer profile',
-        logoID: 'logoID123',
         themeColor: '#4287f5',
         themeFontColor: '#d67c15',
         callToActionText: [{text: 'rich text call to action'}],
@@ -160,7 +159,7 @@ describe('Peers', () => {
       const res = await testServerPrivate.executeOperation({
         query: UpdatePeerProfile,
         variables: {
-          input: input
+          input
         }
       })
 

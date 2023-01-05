@@ -67,7 +67,6 @@ services:
       STORAGE_PATH: ./.media
       TOKEN: secret
 
-
   database:
     image: bitnami/postgresql:14
     platform: linux/amd64
@@ -95,19 +94,6 @@ services:
       - database
     networks:
       - app-tier
-
-  mongo:
-    image: mongo:4.2.3-bionic
-    ports:
-      - 27017:27017
-
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8001:8081
-    depends_on:
-      - mongo
 
 volumes:
   database_data:

@@ -29,7 +29,7 @@ export const takeActionOnComment = (
     where: {id},
     data: input,
     include: {
-      revisions: true
+      revisions: {orderBy: {createdAt: 'asc'}}
     }
   })
 }
@@ -92,7 +92,7 @@ export const updateComment = async (
       revisions: revision
         ? {
             create: {
-              text: (revision.text as unknown) as string,
+              text: revision.text as unknown as string,
               title: revision.title,
               lead: revision.lead
             }
@@ -138,7 +138,7 @@ export const updateComment = async (
       }
     },
     include: {
-      revisions: true,
+      revisions: {orderBy: {createdAt: 'asc'}},
       overriddenRatings: true
     }
   })
@@ -177,7 +177,7 @@ export const createAdminComment = async (
       }
     },
     include: {
-      revisions: true
+      revisions: {orderBy: {createdAt: 'asc'}}
     }
   })
 }

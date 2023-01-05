@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, FlexboxGrid, IconButton, Modal, Table} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
 import {
   FullPaymentMethodFragment,
@@ -35,7 +36,11 @@ function PaymentMethodList() {
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState<FullPaymentMethodFragment>()
 
-  const {data, loading: isLoading, refetch} = usePaymentMethodListQuery({
+  const {
+    data,
+    loading: isLoading,
+    refetch
+  } = usePaymentMethodListQuery({
     fetchPolicy: 'network-only'
   })
 
@@ -80,7 +85,7 @@ function PaymentMethodList() {
         <Column width={200} align="left" resizable>
           <HeaderCell>{t('paymentMethodList.name')}</HeaderCell>
           <Cell>
-            {(rowData: FullPaymentMethodFragment) => (
+            {(rowData: RowDataType<FullPaymentMethodFragment>) => (
               <Link to={`/paymentmethods/edit/${rowData.id}`}>{rowData.name || t('untitled')}</Link>
             )}
           </Cell>
@@ -88,7 +93,7 @@ function PaymentMethodList() {
         <Column width={100} align="center" fixed="right">
           <HeaderCell>{t('paymentMethodList.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
-            {(rowData: FullPaymentMethodFragment) => (
+            {(rowData: RowDataType<FullPaymentMethodFragment>) => (
               <PermissionControl qualifyingPermissions={['CAN_DELETE_PAYMENT_METHOD']}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton

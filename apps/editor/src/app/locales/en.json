@@ -142,7 +142,8 @@
         "yes": "Yes",
         "canonicalUrl": "Canonical Url",
         "canonicalUrLHelpBlock": "A canonical link element is an HTML element that helps webmasters prevent duplicate content issues in search engine optimization by specifying the 'canonical' or 'preferred' version of a web page. <2>Canonical Url Guide</2>",
-        "peerDisabled": "Currently this peer is disabled"
+        "peerDisabled": "Currently this peer is disabled",
+        "comments": "Comments"
       }
     },
     "articles": {
@@ -450,7 +451,21 @@
       "userPanelHeader": "Author of the comment",
       "actions": "Actions",
       "ratingOverrides": "Override comment rating",
-      "noOverride": "Don't override"
+      "noOverride": "Don't override",
+      "commentContextHeader": "Comment history",
+      "goToArticle": "To the article"
+    },
+    "commentHistory": {
+      "guestUser": "UnauthenticatedGuest",
+      "unknownUser": "User without name",
+      "addComment": "Create new comment"
+    },
+    "commentPreview": {
+      "noTags": "No tags",
+      "source": "Source",
+      "noSource": "No source",
+      "editComment": "Edit comment",
+      "noContent": "This comment has no content."
     },
     "commentUser": {
       "selectExistingUser": "Select from registered users",

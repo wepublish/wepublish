@@ -6,7 +6,7 @@ import {handleRequest} from './src/main.server'
 
 if (!process.env.API_URL) throw new Error('No API_URL specified in environment.')
 
-const port = process.env['port'] || 3000
+const port = process.env['PORT'] || 3000
 const app = express()
 
 const browserDist = path.join(process.cwd(), 'dist/apps/editor/browser')

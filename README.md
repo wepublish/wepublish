@@ -122,7 +122,7 @@ cd wepublish
 npm i
 ```
 
-3. Setup and build project. The setup command will create the necessary `.env` files.
+3. Build project.
 
 ```sh
 npm run build

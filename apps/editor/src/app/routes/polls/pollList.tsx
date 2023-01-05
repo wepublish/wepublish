@@ -4,6 +4,7 @@ import {useTranslation} from 'react-i18next'
 import {MdDelete} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {FlexboxGrid, IconButton, Message, Pagination, Table, toaster} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
 import {Poll, usePollsQuery} from '../../api'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
@@ -95,7 +96,7 @@ function PollList() {
             <Table.Column resizable>
               <Table.HeaderCell>{t('pollList.state')}</Table.HeaderCell>
               <Table.Cell>
-                {(rowData: Poll) => (
+                {(rowData: RowDataType<Poll>) => (
                   <PollStateIndication closedAt={rowData.closedAt} opensAt={rowData.opensAt} />
                 )}
               </Table.Cell>
@@ -104,7 +105,7 @@ function PollList() {
             <Table.Column width={200} resizable>
               <Table.HeaderCell>{t('pollList.question')}</Table.HeaderCell>
               <Table.Cell>
-                {(rowData: Poll) => (
+                {(rowData: RowDataType<Poll>) => (
                   <Link to={`/polls/edit/${rowData.id}`}>
                     {rowData.question || t('pollList.noQuestion')}
                   </Link>
@@ -114,25 +115,29 @@ function PollList() {
             {/* opens at */}
             <Table.Column width={250} resizable>
               <Table.HeaderCell>{t('pollList.opensAt')}</Table.HeaderCell>
-              <Table.Cell>{(rowData: Poll) => <PollOpensAtView poll={rowData} />}</Table.Cell>
+              <Table.Cell>
+                {(rowData: RowDataType<Poll>) => <PollOpensAtView poll={rowData as Poll} />}
+              </Table.Cell>
             </Table.Column>
             {/* opens at */}
             <Table.Column width={250} resizable>
               <Table.HeaderCell>{t('pollList.closedAt')}</Table.HeaderCell>
-              <Table.Cell>{(rowData: Poll) => <PollClosedAtView poll={rowData} />}</Table.Cell>
+              <Table.Cell>
+                {(rowData: RowDataType<Poll>) => <PollClosedAtView poll={rowData as Poll} />}
+              </Table.Cell>
             </Table.Column>
             {/* delete */}
             <Table.Column resizable>
               <Table.HeaderCell align={'center'}>{t('pollList.delete')}</Table.HeaderCell>
               <Table.Cell align={'center'} style={{padding: '5px 0'}}>
-                {(poll: Poll) => (
+                {(poll: RowDataType<Poll>) => (
                   <IconButton
                     icon={<MdDelete />}
                     circle
                     appearance="ghost"
                     color="red"
                     size="sm"
-                    onClick={() => setPollDelete(poll)}
+                    onClick={() => setPollDelete(poll as Poll)}
                   />
                 )}
               </Table.Cell>

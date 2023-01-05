@@ -1,3 +1,5 @@
 dist/
 static/
 apps/editor/src/app/api/index.ts
+libs/api/__tests__/api/private/index.ts
+libs/api/__tests__/api/public/index.ts

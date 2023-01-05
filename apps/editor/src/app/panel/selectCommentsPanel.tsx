@@ -15,6 +15,7 @@ import {
   toaster,
   Toggle
 } from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
 import {FullCommentFragment, TagType} from '../api'
 import {useCommentListLazyQuery} from '../api/index'
@@ -152,7 +153,7 @@ export function SelectCommentPanel({
             <Table.Column width={36}>
               <Table.HeaderCell>{}</Table.HeaderCell>
               <Table.Cell style={{padding: 0}}>
-                {(rowData: FullCommentFragment) => (
+                {(rowData: RowDataType<FullCommentFragment>) => (
                   <div
                     style={{
                       height: '46px',
@@ -179,13 +180,17 @@ export function SelectCommentPanel({
 
           <Table.Column width={250} resizable>
             <Table.HeaderCell>{t('blocks.comment.displayName')}</Table.HeaderCell>
-            <Table.Cell>{(rowData: FullCommentFragment) => getUsername(rowData)}</Table.Cell>
+            <Table.Cell>
+              {(rowData: RowDataType<FullCommentFragment>) =>
+                getUsername(rowData as FullCommentFragment)
+              }
+            </Table.Cell>
           </Table.Column>
 
           <Table.Column width={350} align="left" resizable>
             <Table.HeaderCell>{t('comments.overview.text')}</Table.HeaderCell>
             <Table.Cell dataKey="revisions">
-              {(rowData: FullCommentFragment) => (
+              {(rowData: RowDataType<FullCommentFragment>) => (
                 <>
                   {rowData?.revisions?.length ? (
                     <RichTextBlock
@@ -205,7 +210,7 @@ export function SelectCommentPanel({
           <Table.Column width={150} align="center" fixed="right">
             <Table.HeaderCell>{t('comments.overview.edit')}</Table.HeaderCell>
             <Table.Cell style={{padding: '6px 0'}}>
-              {(rowData: FullCommentFragment) => (
+              {(rowData: RowDataType<FullCommentFragment>) => (
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
                   <IconButtonTooltip caption={t('comments.overview.edit')}>
                     <Link target="_blank" to={`/comments/edit/${rowData.id}`}>

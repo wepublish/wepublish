@@ -29,7 +29,7 @@ jobs:
         run: npm ci
 
       - name: "Build"
-        run: npm run build:production
+        run: npm run build
 
       - if: |
           contains(github.ref, 'tags/') && contains(github.ref, 'alpha')

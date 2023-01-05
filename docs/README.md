@@ -180,12 +180,3 @@ example: https://fonts.google.com/icons?icon.query=trash
 The webhook will call `paymentProvider.updatePaymentWithIntentState()` which will create a payment.
 This creates a payment creation event which is caught by `paymentProvider.setupPaymentProvider()`.
 Within this event another invoice event will be triggered which is handled in `events.invoiceModelEvents()`
-
-## packages/mongo-db
-
-### Migrations
-
-To perform migrations on the database two steps are necessary.
-
-1. add an object in migrations.ts.
-2. restart the API (npm run watch)
