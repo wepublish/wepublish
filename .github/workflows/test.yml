@@ -23,7 +23,6 @@ jobs:
         with:
           node-version: '16'
       - run: yarn install
-      - run: yarn build:production
       - run: yarn test
         env:
           JWT_SECRET_KEY: 'ThisIsSuperSecret'

@@ -234,7 +234,7 @@ async function applyWebsite() {
             {
               name: appName,
               image,
-              command: ['npx', '@wepublish/website-example'],
+              command: ['node', 'dist/apps/website-example/main.js'],
               env: [
                 {
                   name: 'NODE_ENV',
@@ -585,7 +585,7 @@ async function applyApiServer() {
               name: appName,
               image,
               command: ['/bin/sh'],
-              args: ['-c', 'yarn migrate && npx @wepublish/api-example'],
+              args: ['-c', 'yarn migrate && node dist/apps/api-example/main.js'],
               volumeMounts: [
                 {
                   name: 'google-cloud-key',

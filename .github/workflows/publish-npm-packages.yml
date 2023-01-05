@@ -29,7 +29,7 @@ jobs:
         run: yarn install --pure-lockfile
 
       - name: "Build"
-        run: yarn run build:production
+        run: yarn run build
 
       - if: |
           contains(github.ref, 'tags/') && contains(github.ref, 'alpha')

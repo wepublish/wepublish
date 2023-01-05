@@ -93,7 +93,7 @@ TBD
 
 ## Packages
 
-- [@wepublish/api](./packages/api)
+- [@wepublish/api](./libs/api)
 - [@wepublish/editor](./apps/editor)
 
 <!-- GETTING STARTED -->
@@ -126,7 +126,7 @@ yarn
 3. Setup and build project. The setup command will create the necessary `.env` files.
 
 ```sh
-yarn setup && yarn build
+yarn build
 ```
 
 4. Run the project (starts a postgresql with Docker)
