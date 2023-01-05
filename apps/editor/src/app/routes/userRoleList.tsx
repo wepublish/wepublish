@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
@@ -64,7 +64,11 @@ function UserRoleList() {
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
   const [currentUserRole, setCurrentUserRole] = useState<FullUserRoleFragment>()
 
-  const {data, refetch, loading: isLoading} = useUserRoleListQuery({
+  const {
+    data,
+    refetch,
+    loading: isLoading
+  } = useUserRoleListQuery({
     variables: {
       filter: filter || undefined,
       take: 200

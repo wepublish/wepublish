@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import imageCompression from 'browser-image-compression'
 import prettyBytes from 'pretty-bytes'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
   Button,

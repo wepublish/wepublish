@@ -1,4 +1,3 @@
-import React from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdFileDownload} from 'react-icons/md'
 import {IconButton} from 'rsuite'

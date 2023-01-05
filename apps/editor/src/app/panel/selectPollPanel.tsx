@@ -1,6 +1,6 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAddCircle} from 'react-icons/md'
 import {Button, Drawer, IconButton, Message, Pagination, Table, toaster} from 'rsuite'

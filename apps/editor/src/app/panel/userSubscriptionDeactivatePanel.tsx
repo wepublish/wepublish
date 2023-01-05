@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {useState} from 'react'
+import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, DatePicker, Form as RForm, Message, Modal, SelectPicker} from 'rsuite'
 
@@ -42,10 +42,8 @@ function UserSubscriptionDeactivatePanel({
   const [deactivationDate, setDeactivationDate] = useState<Date | null>(
     paidUntil ? new Date(paidUntil) : new Date()
   )
-  const [
-    deactivationReason,
-    setDeactivationReason
-  ] = useState<SubscriptionDeactivationReason | null>(null)
+  const [deactivationReason, setDeactivationReason] =
+    useState<SubscriptionDeactivationReason | null>(null)
 
   return (
     <>

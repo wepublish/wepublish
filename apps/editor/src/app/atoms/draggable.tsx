@@ -1,13 +1,5 @@
 import styled from '@emotion/styled'
-import React, {
-  createContext,
-  ReactNode,
-  RefObject,
-  useContext,
-  useEffect,
-  useRef,
-  useState
-} from 'react'
+import {createContext, ReactNode, RefObject, useContext, useEffect, useRef, useState} from 'react'
 
 export interface Point {
   readonly x: number

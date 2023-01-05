@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {useState} from 'react'
+import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdReplay, MdSend} from 'react-icons/md'
 import {Button as RButton, Form, Message, Modal, toaster} from 'rsuite'

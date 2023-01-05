@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
@@ -176,13 +176,8 @@ function AuthorList() {
           }}>
           <Column width={100} align="left" resizable>
             <HeaderCell>{}</HeaderCell>
-<<<<<<< HEAD:packages/editor/src/client/routes/authorList.tsx
             <CellSmallPadding>
-              {(rowData: FullAuthorFragment) => (
-=======
-            <Cell style={{padding: 2}}>
               {(rowData: RowDataType<FullAuthorFragment>) => (
->>>>>>> master:apps/editor/src/app/routes/authorList.tsx
                 <Avatar circle src={rowData.image?.squareURL || undefined} />
               )}
             </CellSmallPadding>
@@ -209,13 +204,8 @@ function AuthorList() {
           </Column>
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('authors.overview.action')}</HeaderCell>
-<<<<<<< HEAD:packages/editor/src/client/routes/authorList.tsx
             <CellWithPadding>
-              {(rowData: FullAuthorFragment) => (
-=======
-            <Cell style={{padding: '6px 0'}}>
               {(rowData: RowDataType<FullAuthorFragment>) => (
->>>>>>> master:apps/editor/src/app/routes/authorList.tsx
                 <PermissionControl qualifyingPermissions={['CAN_DELETE_AUTHOR']}>
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton

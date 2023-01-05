@@ -1,6 +1,6 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
-import React, {useMemo, useState} from 'react'
+import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Divider as RDivider, Message, Pagination as RPagination, TagPicker, toaster} from 'rsuite'
 

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {useContext, useEffect, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdLinkOff} from 'react-icons/md'
 import {Button, ButtonToolbar, Col as RCol, Form, IconButton, InputGroup, Row} from 'rsuite'
@@ -171,10 +171,10 @@ async function validateURL(url: string) {
   if (url) {
     const pattern = new RegExp(
       '^(https?:\\/\\/)?' + // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
         '(\\#[-a-z\\d_]*)?$',
       'i'
     )

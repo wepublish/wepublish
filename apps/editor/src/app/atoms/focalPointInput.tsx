@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {useLayoutEffect, useRef, useState} from 'react'
+import {useLayoutEffect, useRef, useState} from 'react'
 import {MdCropSquare} from 'react-icons/md'
 import {Panel as RPanel} from 'rsuite'
 

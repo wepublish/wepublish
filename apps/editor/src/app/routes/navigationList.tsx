@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
@@ -63,7 +63,11 @@ function NavigationList() {
   const [navigations, setNavigations] = useState<FullNavigationFragment[]>([])
   const [currentNavigation, setCurrentNavigation] = useState<FullNavigationFragment>()
 
-  const {data, refetch, loading: isLoading} = useNavigationListQuery({
+  const {
+    data,
+    refetch,
+    loading: isLoading
+  } = useNavigationListQuery({
     fetchPolicy: 'network-only'
   })
 

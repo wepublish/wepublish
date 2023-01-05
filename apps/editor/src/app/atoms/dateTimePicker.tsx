@@ -1,7 +1,7 @@
 import './dateTimePicker.less'
 
 import styled from '@emotion/styled'
-import React, {useState} from 'react'
+import {useState} from 'react'
 import DatePicker from 'react-datepicker'
 import {useTranslation} from 'react-i18next'
 import {MdInfo} from 'react-icons/md'

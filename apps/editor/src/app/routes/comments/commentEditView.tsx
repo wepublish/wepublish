@@ -1,7 +1,7 @@
 import {ApolloError} from '@apollo/client'
-import {Visible} from '@rsuite/icons'
 import styled from '@emotion/styled'
-import React, {memo, useEffect, useMemo, useState} from 'react'
+import {Visible} from '@rsuite/icons'
+import {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {

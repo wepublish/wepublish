@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
   Button,
@@ -80,7 +80,11 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
-  const {data, loading: isLoading, error: loadError} = useMemberPlanQuery({
+  const {
+    data,
+    loading: isLoading,
+    error: loadError
+  } = useMemberPlanQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
     skip: id === undefined
@@ -100,10 +104,8 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
     }
   )
 
-  const [
-    updateMemberPlan,
-    {loading: isUpdating, error: updateError}
-  ] = useUpdateMemberPlanMutation()
+  const [updateMemberPlan, {loading: isUpdating, error: updateError}] =
+    useUpdateMemberPlanMutation()
 
   const isDisabled =
     isLoading ||

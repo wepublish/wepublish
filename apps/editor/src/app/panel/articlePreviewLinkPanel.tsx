@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Form, Message as RMessage, Modal, Slider, toaster} from 'rsuite'
 
@@ -34,7 +34,12 @@ function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPanelProps)
 
   const {t} = useTranslation()
 
-  const {data, loading: isLoading, error: loadError, refetch} = useArticlePreviewLinkQuery({
+  const {
+    data,
+    loading: isLoading,
+    error: loadError,
+    refetch
+  } = useArticlePreviewLinkQuery({
     variables: {
       id: props.id,
       hours

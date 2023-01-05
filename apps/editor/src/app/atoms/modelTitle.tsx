@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {ReactChild} from 'react'
+import {ReactChild} from 'react'
 import {MdChevronLeft} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Button, Col as RCol, FlexboxGrid, Loader as RLoader, Row} from 'rsuite'

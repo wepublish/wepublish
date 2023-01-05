@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import arrayMove from 'array-move'
 import nanoid from 'nanoid'
-import React, {ReactNode, useState} from 'react'
+import {ReactNode, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdArticle, MdDelete, MdEdit} from 'react-icons/md'
 import {SortableContainer, SortableElement, SortEnd} from 'react-sortable-hoc'

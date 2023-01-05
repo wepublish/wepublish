@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {FormEvent, useContext, useEffect, useState, useRef} from 'react'
+import React, {FormEvent, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {IoIosRocket, IoLogoFacebook, IoLogoGoogle, IoLogoTwitter} from 'react-icons/io'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
@@ -19,7 +19,7 @@ import {LocalStorageKey} from './utility'
 
 function useQuery() {
   const {search} = useLocation()
-  return React.useMemo(() => new URLSearchParams(search), [search])
+  return useMemo(() => new URLSearchParams(search), [search])
 }
 
 const {Group, ControlLabel, Control} = RForm
@@ -49,15 +49,11 @@ export function Login() {
 
   const [authenticate, {loading, error: errorLogin}] = useCreateSessionMutation()
 
-  const [
-    authenticateWithOAuth2Code,
-    {loading: loadingOAuth2, error: errorOAuth2}
-  ] = useCreateSessionWithOAuth2CodeMutation()
+  const [authenticateWithOAuth2Code, {loading: loadingOAuth2, error: errorOAuth2}] =
+    useCreateSessionWithOAuth2CodeMutation()
 
-  const [
-    authenticateWithJWT,
-    {loading: loadingJWT, error: errorJWT}
-  ] = useCreateSessionWithJwtMutation()
+  const [authenticateWithJWT, {loading: loadingJWT, error: errorJWT}] =
+    useCreateSessionWithJwtMutation()
 
   const {data: providerData} = useGetAuthProvidersQuery({
     variables: {

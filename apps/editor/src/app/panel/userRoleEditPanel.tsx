@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, CheckPicker, Drawer, Form as RForm, Message, Schema, toaster} from 'rsuite'
 
@@ -135,73 +135,71 @@ function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
   })
 
   return (
-    <>
-      <Form
-        onSubmit={validationPassed => validationPassed && handleSave()}
-        fluid
-        model={validationModel}
-        formValue={{name}}>
-        <Drawer.Header>
-          <Drawer.Title>
-            {id ? t('userRoles.panels.editUserRole') : t('userRoles.panels.createUserRole')}
-          </Drawer.Title>
+    <Form
+      onSubmit={validationPassed => validationPassed && handleSave()}
+      fluid
+      model={validationModel}
+      formValue={{name}}>
+      <Drawer.Header>
+        <Drawer.Title>
+          {id ? t('userRoles.panels.editUserRole') : t('userRoles.panels.createUserRole')}
+        </Drawer.Title>
 
-          <Drawer.Actions>
-            <PermissionControl qualifyingPermissions={['CAN_CREATE_USER_ROLE']}>
-              <Button
-                type="submit"
-                appearance="primary"
-                disabled={isDisabled}
-                data-testid="saveButton">
-                {id ? t('save') : t('create')}
-              </Button>
-            </PermissionControl>
-            <Button appearance={'subtle'} onClick={() => onClose?.()}>
-              {t('userRoles.panels.close')}
+        <Drawer.Actions>
+          <PermissionControl qualifyingPermissions={['CAN_CREATE_USER_ROLE']}>
+            <Button
+              type="submit"
+              appearance="primary"
+              disabled={isDisabled}
+              data-testid="saveButton">
+              {id ? t('save') : t('create')}
             </Button>
-          </Drawer.Actions>
-        </Drawer.Header>
+          </PermissionControl>
+          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            {t('userRoles.panels.close')}
+          </Button>
+        </Drawer.Actions>
+      </Drawer.Header>
 
-        <Drawer.Body>
-          <Group controlId="name">
-            <ControlLabel>{toggleRequiredLabel(t('userRoles.panels.name'))}</ControlLabel>
-            <Control
-              name="name"
-              value={name}
-              disabled={isDisabled}
-              onChange={(value: string) => setName(value)}
-            />
-          </Group>
-          <Group controlId="description">
-            <ControlLabel>{t('userRoles.panels.description')}</ControlLabel>
-            <Control
-              name={t('userRoles.panels.description')}
-              value={description}
-              disabled={isDisabled}
-              onChange={(value: string) => setDescription(value)}
-            />
-          </Group>
-          {systemRole && <p>{t('userRoles.panels.systemRole')}</p>}
-          <Group controlId="permissions">
-            <ControlLabel>{t('userRoles.panels.permissions')}</ControlLabel>
-            <CheckPicker
-              disabled={isDisabled}
-              virtualized
-              block
-              disabledItemValues={systemRole ? allPermissions.map(per => per.id) : []}
-              value={permissions.map(per => per.id)}
-              data={allPermissions.map(permission => ({
-                value: permission.id,
-                label: permission.description
-              }))}
-              onChange={value => {
-                setPermissions(allPermissions.filter(permissions => value.includes(permissions.id)))
-              }}
-            />
-          </Group>
-        </Drawer.Body>
-      </Form>
-    </>
+      <Drawer.Body>
+        <Group controlId="name">
+          <ControlLabel>{toggleRequiredLabel(t('userRoles.panels.name'))}</ControlLabel>
+          <Control
+            name="name"
+            value={name}
+            disabled={isDisabled}
+            onChange={(value: string) => setName(value)}
+          />
+        </Group>
+        <Group controlId="description">
+          <ControlLabel>{t('userRoles.panels.description')}</ControlLabel>
+          <Control
+            name={t('userRoles.panels.description')}
+            value={description}
+            disabled={isDisabled}
+            onChange={(value: string) => setDescription(value)}
+          />
+        </Group>
+        {systemRole && <p>{t('userRoles.panels.systemRole')}</p>}
+        <Group controlId="permissions">
+          <ControlLabel>{t('userRoles.panels.permissions')}</ControlLabel>
+          <CheckPicker
+            disabled={isDisabled}
+            virtualized
+            block
+            disabledItemValues={systemRole ? allPermissions.map(per => per.id) : []}
+            value={permissions.map(per => per.id)}
+            data={allPermissions.map(permission => ({
+              value: permission.id,
+              label: permission.description
+            }))}
+            onChange={value => {
+              setPermissions(allPermissions.filter(permissions => value.includes(permissions.id)))
+            }}
+          />
+        </Group>
+      </Drawer.Body>
+    </Form>
   )
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([

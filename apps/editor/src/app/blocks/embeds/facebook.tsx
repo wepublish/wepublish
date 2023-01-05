@@ -1,13 +1,5 @@
 import styled from '@emotion/styled'
-import React, {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react'
+import {createContext, ReactNode, useContext, useEffect, useMemo, useRef, useState} from 'react'
 
 import {useScript} from '../../utility'
 

@@ -2,7 +2,7 @@ import './tableMenu.less'
 import '../../../atoms/emojiPicker.less'
 
 import styled from '@emotion/styled'
-import React, {useContext, useEffect, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdDisabledByDefault} from 'react-icons/md'
 import {Button, Col as RCol, IconButton, InputGroup as RInputGroup, InputNumber, Row} from 'rsuite'

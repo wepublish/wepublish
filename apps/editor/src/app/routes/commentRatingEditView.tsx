@@ -1,6 +1,6 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
-import React, {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdOutlineSave, MdReplay} from 'react-icons/md'
 import {

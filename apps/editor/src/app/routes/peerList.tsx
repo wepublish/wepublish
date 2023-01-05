@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSettings, MdVisibility, MdVisibilityOff} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
@@ -87,7 +87,11 @@ function PeerList() {
     error: peerInfoError
   } = usePeerProfileQuery({fetchPolicy: 'network-only'})
 
-  const {data: peerListData, loading: isPeerListLoading, error: peerListError} = usePeerListQuery({
+  const {
+    data: peerListData,
+    loading: isPeerListLoading,
+    error: peerListError
+  } = usePeerListQuery({
     fetchPolicy: 'network-only',
     errorPolicy: 'ignore'
   })

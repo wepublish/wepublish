@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Form, Notification, Schema, toaster} from 'rsuite'
 
@@ -13,10 +13,8 @@ export interface ResetUserPasswordPanelProps {
 export function ResetUserPasswordForm({userID, userName, onClose}: ResetUserPasswordPanelProps) {
   const [password, setPassword] = useState('')
 
-  const [
-    resetUserPassword,
-    {loading: isUpdating, error: updateError}
-  ] = useResetUserPasswordMutation()
+  const [resetUserPassword, {loading: isUpdating, error: updateError}] =
+    useResetUserPasswordMutation()
 
   const isDisabled = isUpdating
 

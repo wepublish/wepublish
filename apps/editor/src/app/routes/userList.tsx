@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdPassword, MdSearch} from 'react-icons/md'
 import {Link} from 'react-router-dom'
@@ -82,7 +82,11 @@ function UserList() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [users, setUsers] = useState<FullUserFragment[]>([])
 
-  const {data, refetch, loading: isLoading} = useUserListQuery({
+  const {
+    data,
+    refetch,
+    loading: isLoading
+  } = useUserListQuery({
     variables: {
       filter: filter || undefined,
       take: limit,

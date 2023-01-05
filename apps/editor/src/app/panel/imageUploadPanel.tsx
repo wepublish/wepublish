@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import React from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdUploadFile} from 'react-icons/md'
 import {Button, Drawer, Form, Notification, toaster} from 'rsuite'

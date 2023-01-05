@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
 import {Link} from 'react-router-dom'
@@ -85,7 +85,11 @@ function CommentList() {
     filter
   }
 
-  const {data, refetch, loading: isLoading} = useCommentListQuery({
+  const {
+    data,
+    refetch,
+    loading: isLoading
+  } = useCommentListQuery({
     variables: commentListVariables,
     fetchPolicy: 'no-cache'
   })

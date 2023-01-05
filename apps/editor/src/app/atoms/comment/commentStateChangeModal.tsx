@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {useEffect, useMemo, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdReplay} from 'react-icons/md'
 import {Button, Dropdown, Message, Modal, Panel, Timeline, toaster} from 'rsuite'

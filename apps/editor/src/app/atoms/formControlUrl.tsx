@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {useCallback, useState} from 'react'
+import {useCallback, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Form, Message as RMessage} from 'rsuite'
 

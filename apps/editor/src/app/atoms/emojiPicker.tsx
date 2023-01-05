@@ -2,7 +2,7 @@ import './emojiPicker.less'
 
 import styled from '@emotion/styled'
 import {BaseEmoji, Picker} from 'emoji-mart'
-import React, {useContext} from 'react'
+import {useContext} from 'react'
 import {MdClose} from 'react-icons/md'
 import {Col as RCol, IconButton, Row} from 'rsuite'
 

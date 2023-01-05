@@ -1,5 +1,4 @@
 import {ApolloError, ApolloQueryResult} from '@apollo/client'
-import React from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Message, Modal, toaster} from 'rsuite'
 

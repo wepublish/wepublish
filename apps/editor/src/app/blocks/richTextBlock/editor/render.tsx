@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import React from 'react'
 import {RenderElementProps, RenderLeafProps} from 'slate-react'
 
 import {BlockFormat, InlineFormat, TextFormat} from './formats'

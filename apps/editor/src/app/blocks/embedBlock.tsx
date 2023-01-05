@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
 import {Drawer, IconButton, Panel as RPanel} from 'rsuite'

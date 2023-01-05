@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import CommentIcon from '@rsuite/icons/legacy/Comment'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
 import {MdAutoFixHigh, MdListAlt, MdSettings, MdShare} from 'react-icons/md'
 import {
