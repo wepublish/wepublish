@@ -127,12 +127,14 @@ describe('Phrases', () => {
       })
     ])
 
+    const result = [...bodyRes.data.phrase.articles, ...titleRes.data.phrase.articles].filter(
+      article => article.id === articleRes.data.createArticle.id
+    )
+
     if (match) {
-      expect(bodyRes.data.phrase.articles.length).toBeTruthy()
-      expect(titleRes.data.phrase.articles.length).toBeTruthy()
+      expect(result.length).toBeTruthy()
     } else {
-      expect(bodyRes.data.phrase.articles.length).toBeFalsy()
-      expect(titleRes.data.phrase.articles.length).toBeFalsy()
+      expect(result.length).toBeFalsy()
     }
   })
 
@@ -237,12 +239,14 @@ describe('Phrases', () => {
       })
     ])
 
+    const result = [...bodyRes.data.phrase.pages, ...titleRes.data.phrase.pages].filter(
+      page => page.id === pageRes.data.createPage.id
+    )
+
     if (match) {
-      expect(bodyRes.data.phrase.pages.length).toBeTruthy()
-      expect(titleRes.data.phrase.pages.length).toBeTruthy()
+      expect(result.length).toBeTruthy()
     } else {
-      expect(bodyRes.data.phrase.pages.length).toBeFalsy()
-      expect(titleRes.data.phrase.pages.length).toBeFalsy()
+      expect(result.length).toBeFalsy()
     }
   })
 })
