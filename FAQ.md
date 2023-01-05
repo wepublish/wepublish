@@ -54,9 +54,7 @@ A: You can solve it by running the following commands:
 
 `brew install vips` (eventually install brew first: https://docs.brew.sh/Homebrew-on-Linux)
 
-`rm -rf node_modules` => Within all packages!
-
-`npm install`
+`npm ci`
 
 ### Q: `Couldn't connect to Docker daemon` while running `npm run dev`
 
