@@ -3,9 +3,6 @@ name: Publish docker image
 on:
   workflow_call:
     inputs:
-      target:
-        required: true
-        type: string
       tags:
         required: true
         type: string
@@ -25,7 +22,6 @@ jobs:
 
       - uses: docker/build-push-action@v2
         with:
-          target: ${{ inputs.target }}
           push: true
           tags: |
             ${{ inputs.tags }}

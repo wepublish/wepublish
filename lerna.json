@@ -1,5 +1,5 @@
 {
-  "version": "8.1.0",
+  "version": "8.1.1",
   "changelog": {
     "repo": "wepublish/wepublish",
     "cacheDir": ".changelog",
@@ -19,17 +19,9 @@
       "allowBranch": "master"
     },
     "publish": {
-      "ignoreChanges": [
-        "*.md",
-        "*.txt"
-      ],
+      "ignoreChanges": ["*.md", "*.txt"],
       "message": "chore(release): publish %s"
     }
   },
-  "packages": [
-    "packages/api",
-    "packages/api-media-karma",
-    "packages/editor",
-    "packages/oauth2"
-  ]
+  "packages": ["libs/api", "apps/editor"]
 }

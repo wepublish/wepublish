@@ -93,11 +93,8 @@ TBD
 
 ## Packages
 
-- [@wepublish/api](./packages/api)
-  - Media Adapter:
-    - [@wepublish/api-media-karma](./packages/api-media-karma)
-- [@wepublish/editor](./packages/editor)
-- [@wepublish/oauth2](./packages/oauth2)
+- [@wepublish/api](./libs/api)
+- [@wepublish/editor](./apps/editor)
 
 <!-- GETTING STARTED -->
 
@@ -107,7 +104,7 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-- [Node v12.x.x][node-download-url]
+- [Node v16.x.x][node-download-url]
 - [Yarn v1.17.x][yarn-download-url]
 - [Docker v19.x.x][docker-download-url]
 
@@ -129,7 +126,7 @@ yarn
 3. Setup and build project. The setup command will create the necessary `.env` files.
 
 ```sh
-yarn setup && yarn build
+yarn build
 ```
 
 4. Run the project (starts a postgresql with Docker)

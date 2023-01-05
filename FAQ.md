@@ -42,7 +42,7 @@ As of now you’re good to go the execute queries/mutations in the GraphQL-Playg
 
 ## Installation troubleshooting
 
-### Q: While running `yarn install` I get the following error `The engine "node" is incompatible with this module. Expected version "^10.13.0 || ^12.13.0 || >=14.0.0". Got "12.0.0"`. What can I do?
+### Q: While running `yarn install` I get the following error `The engine "node" is incompatible with this module. Expected version "^16.0.0". Got "12.0.0"`. What can I do?
 
 A: Your local node environment is ahead (or behind) of wepublish.
 As a workaround you can run `yarn install --ignore-engines`
@@ -71,12 +71,3 @@ You can solve it by running: `sudo chown $USER /var/run/docker.sock`
 A: You can solve this issue by resetting the database, running `npx prisma migrate reset`. This command will delete the current database and re-create it.
 
 Now if you run `yarn dev` you'll get a fresh new database. and everything should be running again.
-
-## Windows Specific Problem
-
-### Q: What do I do if I'm using Windows and 'examples/media' doesn't run and I receive the error `Error: Cannot find module '../build/Release/magic'` in the terminal and I receive an error when trying to install this module?
-
-A: If you are using Windows then run this command after checking that you can reach the “MSBuild.exe” file.
-`npm config set msbuild_path "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe"`
-
-Now you can go in the terminal to examples/media and run `yarn` and the magic module should be installed successfully.

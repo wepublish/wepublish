@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
@@ -30,76 +21,48 @@
   </p>
 </p>
 
-
-
 <!-- TABLE OF CONTENTS -->
+
 ## Table of Contents
 
-* [Setup Commenting](commenting.md)
-* [Email Templates](emailtemplates.md)
-* [Releases](Releases.md)
+- [Setup Commenting](commenting.md)
+- [Email Templates](emailtemplates.md)
+- [Releases](Releases.md)
 
 ## Automated Testing
+
 It might happen, that your tests are failing. Try to update your snapshots
 by running (eventually in the package in question) `yarn test -- -u`
 
 For more information: [https://jestjs.io/docs/cli#--updatesnapshot](https://jestjs.io/docs/cli#--updatesnapshot)
 
-## packages/editor
+## apps/editor
+
 ### How to call an api endpoint from the UI (.tsx file)?
+
 Prerequisite: In the API (packages/api) exists a corresponding GraphQL endpoint.
 
-1) In `editor/src/client/api` you have to create a corresponding graphql file or define your mutation or query in an existing one.
-2) Start the API (`yarn watch`)
-3) Navigate in your terminal to `packages/editor` and run `yarn generate:api`
-4) Now the file `index.ts` will be generated automatically `in editor/src/client/api`
-5) Now you can import your desired endpoint in your .tsx file. See for example `subscriptionEditPanel.tsx`
-
+1. In `editor/src/app/api` you have to create a corresponding graphql file or define your mutation or query in an existing one.
+2. Start the API (`yarn watch`)
+3. Navigate in your terminal to `apps/editor` and run `yarn nx generate-api editor`
+4. Now the file `index.ts` will be generated automatically in `apps/editor/src/app/api`
+5. Now you can import your desired endpoint in your .tsx file. See for example `subscriptionEditPanel.tsx`
 
 ### Analytics
-In order to use analytics and send data to WePublish, we prepared an analytics.js plugin that's available here:
 
-https://github.com/wepublish/analytics
-
-it integrates with https://github.com/DavidWells/analytics
-
-Usage:
-
-Import and initialise the tracker anywhere in the project
-
-    import  Analytics  from  'analytics'
-    import { wepublish } from '@wepublish/analytics'
-    
-    const  analytics = Analytics({
-	    app: 'Your app name',
-	    plugins: [wepublish()]
-    })
-
-then call the method on page load e.g.
-
-    const { current } = useRoute()
-    
-    useEffect(() => {
-    	analytics.page()
-    }, [current])
-
-The tracker will automatically look in the html structure for an element with an id "peer-element" and take data from this element. Example element to send peer tracking data should look like the following:
-
-    <div id="peer-element" data-peer-name="Some peer name" data-peer-article-id="123" data-publisher-name="Your name" />
-
-If you want to track page views and send peer name and peer article id, please make sure that this element is present on the peered article page. Otherwise the tracker won't be called.
-
-The above can be seen in examples/website/src/shared/route/router.tsx
+Please refer to the documentation
+https://github.com/wepublish/analytics#readme
 
 ### Form validation
+
 Validation is based on rsuite validation: https://rsuitejs.com/components/form-validation/
 
 Validation takes a schema which defines the content type and requirements necessary to specific fields. In the example below, the form to register a new user takes:
-* a name of type string, the name is required, 
-* an email address of type string, which is also required and needs to be a valid email address
 
+- a name of type string, the name is required,
+- an email address of type string, which is also required and needs to be a valid email address
 
-````
+```
 const userValidationModel = Schema.Model({
   name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
   email: StringType()
@@ -107,40 +70,40 @@ const userValidationModel = Schema.Model({
     .isEmail(t('errorMessages.invalidEmailErrorMessage')),
   password: validatePassword
 })
-````
+```
 
 All validation types are listed on the schema type [here](https://github.com/rsuite/schema-typed#table-of-contents).
 
 Error messages are by default defined by rsuite but can be customized. In this example, they are customized in all 3 languages wePublish uses.
 
+The model then needs to be specified in the related `<Form>` and the name of the field needs to be specified in the related `<FormControl>` as follow
 
-The model then needs to be specified in the related `<Form>` and the name of the field needs to be specified in the related `<FormControl>` as follow 
-
-````
+```
 <Form
   model={validationModel}
   onSubmit={validationPassed => validationPassed && handleSave()}
   formValue={{name: name, email: email, password: password}}>
 
-  <FormControl 
+  <FormControl
     name="name"
     />
   ...
 </Form>
-````
-The validation will be triggered `onSubmit`. The `handleSave()` function will be triggered only if validation is successful. 
-This part differs from the Rsuite documentation, where validation is checked with an if statement, which is less clean. 
+```
 
-For validation to be triggered on `onSubmit`, the form button needs to be of type `submit` and needs to be inside the form: 
+The validation will be triggered `onSubmit`. The `handleSave()` function will be triggered only if validation is successful.
+This part differs from the Rsuite documentation, where validation is checked with an if statement, which is less clean.
 
-````
+For validation to be triggered on `onSubmit`, the form button needs to be of type `submit` and needs to be inside the form:
+
+```
 <Form>
   ...
   <Button type = "submit"/>
 </Form>
-````
+```
 
-Finally, the `<Form>` needs to retrieve the values of the to-be-validated fields through `formValue`. This will allow the validation to run correctly when the fields are pre-filled as well. 
+Finally, the `<Form>` needs to retrieve the values of the to-be-validated fields through `formValue`. This will allow the validation to run correctly when the fields are pre-filled as well.
 
 Validation only runs on type `<Form>`. Inputs of other types, like `SelectPicker` or other input types need to be turned into a form with the prop `accepter={SelectPicker}`.
 
@@ -148,26 +111,26 @@ Validation only runs on type `<Form>`. Inputs of other types, like `SelectPicker
 
 Permission control allows for restricting Editor content dependent on the current user's role.
 
-```createCheckedPermissionComponent``` takes a list of permission IDs, any of which would permit access, followed by the component that is being controlled.
-
+`createCheckedPermissionComponent` takes a list of permission IDs, any of which would permit access, followed by the component that is being controlled.
 
 ```
 const CheckedPermissionComponent = createCheckedPermissionComponent(listOfPermissions)(ControlledComponent)
 ```
-The controlled component can then be exported to replace the uncontrolled version. 
 
-```export {CheckedPermissionComponent as ControlledComponent}```
+The controlled component can then be exported to replace the uncontrolled version.
+
+`export {CheckedPermissionComponent as ControlledComponent}`
 
 If checks pass, and the user retains the specified permissions then the original component will be returned, otherwise the component will return an error message notifying the user that they aren't authorized to access that content.
-It is possible to hide the component without the error message by passing false as a second argument to ```createCheckedPermissionComponent()```.
+It is possible to hide the component without the error message by passing false as a second argument to `createCheckedPermissionComponent()`.
 
-To check whether a user retains an individual permission, the ```authorise()``` can be called.
-This takes a permission ID and returns ```true``` or ```false``` depending on whether the current user has that permission.
+To check whether a user retains an individual permission, the `authorise()` can be called.
+This takes a permission ID and returns `true` or `false` depending on whether the current user has that permission.
 
-``authorise(permissionID)``
-
+`authorise(permissionID)`
 
 ### Form accessibility
+
 To properly attach label to input, as well as utilize auto-generated `aria-labelledby` and `aria-describeby`, rsuite provides a `controlId` prop on `Form.Group`. This should be watched throughout the project to ensure the best possible performance and usability of the forms. More information can be found under this link: https://rsuitejs.com/components/form/#accessibility
 
 ### Custom HTML block
@@ -178,18 +141,51 @@ To give further control over the content of HTML block, whitelisting certain tag
 
 We have, however, to be aware that it's almost impossible to be 100% sure that none of the code displayed as custom HTML is dangerous.
 
-## packages/api
+### Icon Library
+
+The icon library used throughout the editor is react-icons. https://react-icons.github.io/react-icons
+
+It's a great library created reasonably long time ago, with a good support, that includes few of the most widely used icon packages, all for free.
+For consistency, we decided to only use one of the icon sets in our project, and we chose material-icons from Google.
+
+- it contains lots of icons
+- it utilizes ES6 imports that allows us to include only the icons that we are using in our project
+- it's free (Apache License 2.0)
+- it's widely used
+- it's supported by Google
+
+The usage is very simple. In your component import the icon as a React component like this:
+
+`import { IconName } from "react-icons/md";`
+
+then just use the icon by rendering it as JSX like this:
+
+`<IconName />`
+
+Here is the complete list of icons by material-design that are supported by react-icons https://react-icons.github.io/react-icons/icons?name=md
+For reasearch purposes, if you want to add a new icons but struggle to find it by name (e.g. trash), you can search under this link
+https://fonts.google.com/icons as the search is a bit more intelligent than just looking on the string representing the icon's name. Here's an
+example: https://fonts.google.com/icons?icon.query=trash
+
+## libs/api
+
 ### Environment Variables
+
 - MAX_AUTO_RENEW_SUBSCRIPTION_BATCH: Maximal amount of subscriptions which are going to be auto-renewed. If any other value than number is set, no batch maxima are considered. Possible types: `number`, any other type is being ignored.
+
 ### Subscriptions
+
 #### Receiving webhooks from payment providers such as Stripe or Payrexx
+
 The webhook will call `paymentProvider.updatePaymentWithIntentState()` which will create a payment.
 This creates a payment creation event which is caught by `paymentProvider.setupPaymentProvider()`.
 Within this event another invoice event will be triggered which is handled in `events.invoiceModelEvents()`
 
 ## packages/mongo-db
+
 ### Migrations
+
 To perform migrations on the database two steps are necessary.
+
 1. add an object in migrations.ts.
 2. restart the API (yarn watch)
-
