@@ -10,6 +10,7 @@ import {SelectCommentPanel} from '../panel/selectCommentsPanel'
 import {CommentBlockValue} from './types'
 
 const Panel = styled(RPanel)`
+  display: grid;
   height: 200px;
   padding: 0;
   overflow: hidden;

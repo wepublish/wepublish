@@ -29,6 +29,7 @@ const SortableContainerComponent = styled.div<{numColumns: number}>`
 `
 
 export const Panel = styled(RPanel)<{showGrabCursor: boolean}>`
+  display: grid;
   cursor: ${({showGrabCursor}) => showGrabCursor && 'grab'};
   height: 300px;
   overflow: hidden;

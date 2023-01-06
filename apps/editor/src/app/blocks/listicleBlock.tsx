@@ -19,6 +19,7 @@ const ListicleWrapper = styled.div`
 `
 
 const ImageWrapper = styled.div`
+  display: grid;
   overflow: hidden;
   width: 200px;
   height: 150px;

@@ -4,8 +4,8 @@ import {MdChevronLeft} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Button, Col as RCol, FlexboxGrid, Loader as RLoader, Row} from 'rsuite'
 
-const Col = styled(RCol)`
-  padding-top: 3px;
+const ChevronLeft = styled(MdChevronLeft)`
+  fontsize: 48px;
 `
 
 const FlexGrid = styled(FlexboxGrid)`
@@ -85,18 +85,13 @@ export function ModelTitle({
     <FlexGrid align="middle">
       {/* title */}
       <FlexboxGrid.Item colspan={12}>
-        <Row>
-          <Col xs={2}>
-            <Link to={closePath}>
-              <h1>
-                <MdChevronLeft />
-              </h1>
-            </Link>
-          </Col>
-          <RCol xs={16}>
-            <h2>{titleView()}</h2>
-          </RCol>
-        </Row>
+        <FlexboxGrid align="middle">
+          <Link to={closePath}>
+            <ChevronLeft />
+          </Link>
+
+          <h1>{titleView()}</h1>
+        </FlexboxGrid>
       </FlexboxGrid.Item>
 
       {/* actions */}

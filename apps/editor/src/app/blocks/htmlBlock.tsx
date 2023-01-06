@@ -11,6 +11,7 @@ import {HtmlEditPanel} from '../panel/htmlEditPanel'
 import {HTMLBlockValue} from './types'
 
 const Panel = styled(RPanel)<{isEmpty: boolean}>`
+  display: grid;
   height: ${({isEmpty}) => (isEmpty ? '200px' : undefined)};
   padding: 0;
   overflow: hidden;

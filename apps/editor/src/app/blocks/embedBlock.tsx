@@ -20,6 +20,7 @@ import {YouTubeVideoEmbed} from './embeds/youTube'
 import {EmbedBlockValue, EmbedType} from './types'
 
 const Panel = styled(RPanel)<{isEmpty: boolean}>`
+  display: grid;
   height: ${({isEmpty}) => (isEmpty ? '300px' : undefined)};
   padding: 0;
   overflow: hidden;

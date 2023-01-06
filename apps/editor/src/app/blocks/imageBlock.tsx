@@ -13,8 +13,9 @@ import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImageBlockValue} from './types'
 
 export const Panel = styled(RPanel)`
+  display: grid;
   height: 300px;
-  margin-bottom: 0;
+  margin-bottom: 10px;
   overflow: hidden;
 `
 

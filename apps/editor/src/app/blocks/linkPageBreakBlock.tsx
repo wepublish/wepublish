@@ -24,7 +24,7 @@ const InputWrapper = styled.div`
 
 const ChooseImageWrapper = styled.div`
   flex: 1 0 25%;
-  align-self: center;
+  align-self: flex-start;
   margin-bottom: 10px;
 `
 
@@ -32,6 +32,7 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-flow: row wrap;
   margin-top: 50px;
+  gap: 24px;
 `
 
 const IconWrapper = styled.div`

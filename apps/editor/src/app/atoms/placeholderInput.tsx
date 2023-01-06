@@ -4,12 +4,10 @@ import {MdAddCircle} from 'react-icons/md'
 import {IconButton} from 'rsuite'
 
 const PlaceholderInputWrapper = styled.div<{maxHeight: number}>`
-  display: flex;
+  display: grid;
   width: 100%;
   height: 100%;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  place-items: center;
   background-color: #f7f9fa;
   max-height: ${({maxHeight}) => `${maxHeight}px`};
 `
