@@ -12,10 +12,10 @@ const ChildrenWrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding-top: 40;
-  padding-bottom: 60;
-  padding-left: 40;
-  padding-right: 40;
+  padding-top: 40px;
+  padding-bottom: 60px;
+  padding-left: 40px;
+  padding-right: 40px;
 `
 
 const NavigationChildren = styled.div`

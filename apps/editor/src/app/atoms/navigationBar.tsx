@@ -11,7 +11,7 @@ const RightChildren = styled.div`
 
 const CenterChildren = styled.div`
   display: flex;
-  margin: 0 10;
+  margin: 0 10px;
 `
 
 const LeftChildren = styled.div`

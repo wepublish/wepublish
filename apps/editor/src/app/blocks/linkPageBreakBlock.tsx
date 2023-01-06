@@ -15,7 +15,7 @@ import {LinkPageBreakBlockValue, RichTextBlockValue} from './types'
 
 const Input = styled(RInput)`
   font-size: 24px;
-  margin-bottom: 20;
+  margin-bottom: 20px;
 `
 
 const InputWrapper = styled.div`
@@ -31,7 +31,7 @@ const ChooseImageWrapper = styled.div`
 const ContentWrapper = styled.div`
   display: flex;
   flex-flow: row wrap;
-  margin-top: 50;
+  margin-top: 50px;
 `
 
 const IconWrapper = styled.div`

@@ -23,24 +23,26 @@ import {
 } from '../utility'
 
 const Img = styled.img`
-  height: 25;
+  height: 25px;
   width: auto;
 `
 
 const PopoverImg = styled.img`
-  height: 175;
+  height: 175px;
   width: auto;
 `
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 
 const Avatar = styled(RAvatar)`
-  margin-right: 5;
-  min-width: 20;
+  margin-right: 5px;
+  min-width: 20px;
 `
 
 const FlexCell = styled(RCell)`
-  display: flex;
+  .rs-table-cell-content {
+    display: flex;
+  }
 `
 
 const Table = styled(RTable)`

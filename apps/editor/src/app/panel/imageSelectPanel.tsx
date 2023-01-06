@@ -35,8 +35,8 @@ const Panel = styled(RPanel)`
 const Img = styled.img`
   display: block;
   margin: 0 auto;
-  max-width: 240;
-  max-height: 240;
+  max-width: 240px;
+  max-height: 240px;
   width: 100%;
 `
 

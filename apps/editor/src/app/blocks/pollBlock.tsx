@@ -26,7 +26,7 @@ const Poll = styled.div`
 `
 
 const Panel = styled(RPanel)`
-  height: 200;
+  height: 200px;
   padding: 0;
   overflow: hidden;
   background-color: #f7f9fa;

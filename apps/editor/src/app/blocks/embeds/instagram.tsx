@@ -6,8 +6,8 @@ import {useScript} from '../../utility'
 const InstagramEmbed = styled.div`
   display: flex;
   justify-content: center;
-  min-height: 300;
-  padding: 20;
+  min-height: 300px;
+  padding: 20px;
 `
 
 // Define some globals set by the SDKs.

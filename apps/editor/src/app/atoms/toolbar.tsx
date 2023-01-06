@@ -57,9 +57,9 @@ const ChildrenWrapper = styled.div<{fadeOut: boolean}>`
 
 const ToolbarInner = styled.div`
   pointer-events: auto;
-  padding: 5;
+  padding: 5px;
   background-color: white;
-  border-radius: 6;
+  border-radius: 6px;
   transition-property: opacity;
   transition-duration: 100ms;
 `
@@ -71,7 +71,7 @@ const ToolbarWrapper = styled.div`
   align-items: center;
   position: sticky;
   z-index: 1;
-  margin-bottom: 30;
+  margin-bottom: 30px;
 `
 
 export interface ToolbarProps {

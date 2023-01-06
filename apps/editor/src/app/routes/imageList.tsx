@@ -39,7 +39,7 @@ const Cell = styled(RCell)`
 `
 
 const Img = styled.img`
-  height: 70;
+  height: 70px;
   width: auto;
   display: block;
   margin: 0 auto;

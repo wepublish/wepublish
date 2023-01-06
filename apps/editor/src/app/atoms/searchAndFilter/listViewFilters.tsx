@@ -33,7 +33,7 @@ const CloseIcon = styled(MdClose)`
 `
 
 const SelectPicker = styled(RSelectPicker)`
-  width: 150;
+  width: 150px;
 `
 
 const Toggle = styled(RToggle)`

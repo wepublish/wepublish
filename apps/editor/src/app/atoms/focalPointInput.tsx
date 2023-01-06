@@ -6,8 +6,8 @@ import {Panel as RPanel} from 'rsuite'
 import {Draggable, DraggableContainer, Point} from './draggable'
 
 const FocalPointElement = styled.div`
-  width: 50;
-  height: 50;
+  width: 50px;
+  height: 50px;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 100%;
   border: 1px solid #ffffff;
@@ -27,7 +27,7 @@ const DraggableContainerWrapper = styled.div`
 `
 
 const Image = styled.img`
-  max-height: 300;
+  max-height: 300px;
 `
 
 const Panel = styled(RPanel)`

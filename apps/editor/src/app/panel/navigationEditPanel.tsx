@@ -33,11 +33,11 @@ import {
 import {generateID, getOperationNameFromDocument} from '../utility'
 
 const SelectPicker = styled(RSelectPicker)`
-  margin-bottom: 4;
+  margin-bottom: 4px;
 `
 
 const Input = styled(RInput)`
-  margin-bottom: 8;
+  margin-bottom: 8px;
 `
 
 export interface NavigationEditPanelProps {

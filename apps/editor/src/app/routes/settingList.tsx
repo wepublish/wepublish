@@ -32,7 +32,7 @@ import {
 } from '../atoms/permissionControl'
 
 const Panel = styled(RPanel)`
-  margin-bottom: 10;
+  margin-bottom: 10px;
 `
 
 function SettingList() {

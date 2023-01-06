@@ -15,7 +15,7 @@ const BoldParagraph = styled.p`
 
 const TikTokEmbed = styled.div`
   justify-content: center;
-  padding: 20;
+  padding: 20px;
   background-color: rgb(247, 249, 250);
 `
 

@@ -17,7 +17,7 @@ import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 import {DescriptionList, DescriptionListItem} from '../descriptionList'
 
 const ParentCommentPanel = styled(Panel)`
-  margin-right: 40;
+  margin-right: 40px;
   font-style: italic;
   color: lightslategrey;
 `

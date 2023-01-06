@@ -15,12 +15,12 @@ import {AddBlockInput} from './addBlockInput'
 const IconWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 10;
+  margin-left: 10px;
   fill: gray;
 `
 
 const ChildrenWrapper = styled.div`
-  padding: 20;
+  padding: 20px;
 `
 
 const Panel = styled(RPanel)`
@@ -33,12 +33,12 @@ const PanelWrapper = styled.div`
 `
 
 const DownwardButtonWrapper = styled.div`
-  margin-bottom: 10;
+  margin-bottom: 10px;
 `
 
 const UpwardButtonWrapper = styled.div`
-  margin-top: 10;
-  margin-bottom: 5;
+  margin-top: 10px;
+  margin-bottom: 5px;
 `
 
 const FlexGrow = styled.div`
@@ -48,7 +48,7 @@ const FlexGrow = styled.div`
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-right: 10;
+  margin-right: 10px;
 `
 
 const ListItem = styled.div`
@@ -61,10 +61,10 @@ const AddButton = styled.div`
 `
 
 const AddBlockInputWrapper = styled.div`
-  padding-left: 30;
-  padding-right: 30;
-  margin-top: 10;
-  margin-bottom: 10;
+  padding-left: 30px;
+  padding-right: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   text-align: center;
 `
 

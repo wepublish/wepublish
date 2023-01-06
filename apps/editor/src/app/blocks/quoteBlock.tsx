@@ -7,7 +7,7 @@ import {TypographicTextArea} from '../atoms/typographicTextArea'
 import {QuoteBlockValue} from './types'
 
 const Dash = styled.div`
-  margin-right: 5;
+  margin-right: 5px;
 `
 
 const Wrapper = styled.div`

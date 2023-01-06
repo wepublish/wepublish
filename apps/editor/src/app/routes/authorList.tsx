@@ -35,11 +35,15 @@ const IconButton = styled(RIconButton)`
 `
 
 const CellWithPadding = styled(Cell)`
-  padding: 6px 0;
+  .rs-table-cell-content {
+    padding: 6px 0;
+  }
 `
 
 const CellSmallPadding = styled(Cell)`
-  padding: 2;
+  .rs-table-cell-content {
+    padding: 2px;
+  }
 `
 
 const Table = styled(RTable)`

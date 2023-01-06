@@ -8,7 +8,7 @@ import {EmbedBlockValue, EmbedType} from '../blocks/types'
 import {flattenDOMTokenList} from '../utility'
 
 const Metadata = styled.div`
-  margin-bottom: 8;
+  margin-bottom: 8px;
 `
 
 const Input = styled(RInput)`

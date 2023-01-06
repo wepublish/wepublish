@@ -29,7 +29,7 @@ import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 
 const Nav = styled(RNav)`
-  margin-bottom: 20;
+  margin-bottom: 20px;
 `
 
 const Toggle = styled(RToggle)`

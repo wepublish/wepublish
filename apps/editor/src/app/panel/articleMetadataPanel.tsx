@@ -45,7 +45,7 @@ const InputGroup = styled(RInputGroup)`
 `
 
 const Nav = styled(RNav)`
-  margin-bottom: 20;
+  margin-bottom: 20px;
 `
 
 const Form = styled(RForm)`

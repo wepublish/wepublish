@@ -49,11 +49,11 @@ const List = styled(RList)`
 `
 
 const InputGroup = styled(RInputGroup)`
-  margin-bottom: 20;
+  margin-bottom: 20px;
 `
 
 const Nav = styled(RNav)`
-  margin-bottom: 20;
+  margin-bottom: 20px;
 `
 
 const Toggle = styled(RToggle)`
@@ -67,13 +67,13 @@ const ButtonWithMargin = styled(Button)`
 
 const InlineDivWithMargin = styled.div`
   display: inline;
-  font-size: 12;
-  margin-left: 8;
+  font-size: 12px;
+  margin-left: 8px;
 `
 
 const InlineDiv = styled.div`
   display: inline;
-  font-size: 12;
+  font-size: 12px;
 `
 
 const InputW60 = styled(Input)`
