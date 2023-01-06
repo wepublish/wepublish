@@ -287,11 +287,7 @@ export function CommentStateChangeModal({
       <Modal.Footer>
         <Button
           disabled={isApproving || isRequestingChanges || isRejecting}
-          appearance={
-            newCommentState === CommentState.PendingUserChanges && !rejectionReason
-              ? 'subtle'
-              : 'primary'
-          }
+          appearance={'primary'}
           onClick={async () => await changeState()}>
           {t(mapCommentActionToBtnTitle(newCommentState))}
         </Button>
