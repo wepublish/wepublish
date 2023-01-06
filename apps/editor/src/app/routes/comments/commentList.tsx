@@ -35,7 +35,6 @@ const TableWrapper = styled.div`
 `
 
 const ListView = styled.div`
-  margin-top: 20px;
   gap: 8px;
   display: flex;
 `
