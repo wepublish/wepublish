@@ -13,6 +13,7 @@ const Wrapper = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+  min-height: 100vh;
 `
 
 const Content = styled.div`
@@ -23,9 +24,9 @@ const Content = styled.div`
   z-index: 1;
   width: 100%;
   max-width: 560px;
-  padding: 40;
+  padding: 40px;
   background-color: white;
-  border-radius: 10;
+  border-radius: 10px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 `
 
