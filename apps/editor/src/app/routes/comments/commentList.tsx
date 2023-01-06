@@ -27,10 +27,6 @@ import {
 
 const {Column, HeaderCell, Cell} = Table
 
-const PaddedCell = styled(Cell)`
-  padding: 6px 0;
-`
-
 const TableWrapper = styled.div`
   display: flex;
   flex-flow: column;
@@ -264,7 +260,7 @@ function CommentList() {
           {/* eslint-disable-next-line i18next/no-literal-string */}
           <Column width={200} align="right" verticalAlign="middle" fixed="right">
             <HeaderCell>{t('comments.overview.editState')}</HeaderCell>
-            <PaddedCell>
+            <Cell>
               {(rowData: RowDataType<FullCommentFragment>) => (
                 <PermissionControl qualifyingPermissions={['CAN_TAKE_COMMENT_ACTION']}>
                   <CommentStateDropdown
@@ -276,13 +272,13 @@ function CommentList() {
                   />
                 </PermissionControl>
               )}
-            </PaddedCell>
+            </Cell>
           </Column>
 
           {/* eslint-disable-next-line i18next/no-literal-string */}
           <Column width={150} align="center" verticalAlign="middle" fixed="right">
             <HeaderCell>{t('comments.overview.action')}</HeaderCell>
-            <PaddedCell>
+            <Cell>
               {(rowData: RowDataType<FullCommentFragment>) => (
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
                   {/* edit comment */}
@@ -304,7 +300,7 @@ function CommentList() {
                   />
                 </PermissionControl>
               )}
-            </PaddedCell>
+            </Cell>
           </Column>
         </Table>
 
