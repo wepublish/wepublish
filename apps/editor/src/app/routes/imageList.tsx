@@ -33,7 +33,9 @@ import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_IMAGE_PAGE_SIZES} from '../utilit
 const {Column, HeaderCell, Cell: RCell} = Table
 
 const Cell = styled(RCell)`
-  padding: 6px 0;
+  .rs-table-cell-content {
+    padding: 6px 0;
+  }
 `
 
 const Img = styled.img`
@@ -85,7 +87,11 @@ function ImageList() {
     skip: (activePage - 1) * limit
   }
 
-  const {data, refetch, loading: isLoading} = useImageListQuery({
+  const {
+    data,
+    refetch,
+    loading: isLoading
+  } = useImageListQuery({
     fetchPolicy: 'network-only',
     variables: listVariables
   })

@@ -40,7 +40,9 @@ import {
 const {Column, HeaderCell, Cell: RCell} = RTable
 
 const Cell = styled(RCell)`
-  padding: 6px 0;
+  .rs-table-cell-content {
+    padding: 6px 0;
+  }
 `
 
 const IconButtonSmallMargin = styled(RIconButton)`
@@ -123,7 +125,11 @@ function SubscriptionList() {
       delete filter[el as keyof SubscriptionFilter]
   })
 
-  const {data, refetch, loading: isLoading} = useSubscriptionListQuery({
+  const {
+    data,
+    refetch,
+    loading: isLoading
+  } = useSubscriptionListQuery({
     variables: {
       filter,
       take: limit,

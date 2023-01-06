@@ -17,7 +17,9 @@ import {dateTimeLocalString, DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} 
 const {Column, HeaderCell, Cell: RCell} = RTable
 
 const Cell = styled(RCell)`
-  padding: 5px 0;
+  .rs-table-cell-content {
+    padding: 6px 0;
+  }
 `
 
 const FlexItem = styled(FlexboxGrid.Item)`

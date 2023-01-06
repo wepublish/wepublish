@@ -24,7 +24,9 @@ import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
 const {Column, HeaderCell, Cell: RCell} = RTable
 
 const Cell = styled(RCell)`
-  padding: 6px 0;
+  .rs-table-cell-content {
+    padding: 6px 0;
+  }
 `
 
 const IconButton = styled(RIconButton)`
