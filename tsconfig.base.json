@@ -17,7 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@wepublish/api": ["libs/api/src/index.ts"],
-      "@wepublish/api/seed": ["libs/api/prisma/seed.ts"],
+      "@wepublish/api/seed": ["libs/api/prisma/seed.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
