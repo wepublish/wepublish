@@ -192,7 +192,7 @@ function PageList() {
               )}
             </Cell>
           </Column>
-          <Column width={100} align="left" resizable>
+          <Column width={150} align="left" resizable>
             <HeaderCell>{t('pages.overview.states')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<PageRefFragment>) => {

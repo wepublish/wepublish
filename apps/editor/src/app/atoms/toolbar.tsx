@@ -31,8 +31,15 @@ const Controls = styled.div`
   width: 100%;
 `
 
-const Icon = styled.div`
-  min-width: 15px;
+const IconWrapper = styled.div`
+  width: 18px;
+  height: 18px;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
 `
 
 const CloseIcon = styled(MdClose)`
@@ -40,12 +47,23 @@ const CloseIcon = styled(MdClose)`
 `
 
 const ToolbarButtonElement = styled.button<{active: boolean}>`
-  border: 1px solid;
-  border-color: ${({active}) => (active ? 'blue' : 'black')};
+  border: 1px solid rgba(0, 0, 0, 0);
+  background-color: white;
   border-radius: 3px;
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
+  border-color: ${({active}) => (active ? 'blue' : 'white')};
+  height: 24px;
+  width: 24px;
+  margin: 0 1px;
   padding: 2px;
+  position: relative;
+
+  svg {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+  }
 `
 
 const ChildrenWrapper = styled.div<{fadeOut: boolean}>`
@@ -101,12 +119,7 @@ export interface ToolbarButtonProps extends BaseToolbarButtonProps {
 export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   ({active, children, ...props}, ref) => {
     return (
-      <ToolbarButtonElement
-        type="button"
-        active={!!active}
-        className="icon-button"
-        ref={ref}
-        {...props}>
+      <ToolbarButtonElement type="button" active={!!active} ref={ref} {...props}>
         {children}
       </ToolbarButtonElement>
     )
@@ -181,7 +194,7 @@ export const SubMenuButton = forwardRef<OverlayTriggerInstance, SubMenuButtonPro
               e.preventDefault()
               isMenuOpen ? closeMenu() : openMenu()
             }}>
-            {isMenuOpen ? <CloseIcon /> : <Icon>{icon}</Icon>}
+            {isMenuOpen ? <CloseIcon /> : <IconWrapper>{icon}</IconWrapper>}
           </ToolbarButton>
         </Whisper>
       </SubMenuContext.Provider>

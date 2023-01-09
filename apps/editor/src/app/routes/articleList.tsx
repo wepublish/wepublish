@@ -2,7 +2,7 @@ import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdComment, MdContentCopy, MdDelete, MdPreview, MdUnpublished} from 'react-icons/md'
 import {Link, useNavigate} from 'react-router-dom'
-import {Button, FlexboxGrid, IconButton, Message, Modal, Pagination, Table} from 'rsuite'
+import {Button, IconButton, Message, Modal, Pagination, Table} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {
@@ -90,7 +90,11 @@ function ArticleList() {
     order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
   }
 
-  const {data, refetch, loading: isLoading} = useArticleListQuery({
+  const {
+    data,
+    refetch,
+    loading: isLoading
+  } = useArticleListQuery({
     variables: articleListVariables,
     fetchPolicy: 'network-only'
   })

@@ -270,7 +270,7 @@ export function RatingAnswers({
         </AnswerGrid>
       ))}
 
-      <IconButton appearance="ghost" onClick={() => onAddAnswer()}>
+      <IconButton appearance="primary" onClick={() => onAddAnswer()}>
         <MdAdd />
         {t('comments.ratingEdit.newAnswer')}
       </IconButton>

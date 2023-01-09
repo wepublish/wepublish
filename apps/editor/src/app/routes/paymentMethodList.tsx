@@ -110,11 +110,11 @@ function PaymentMethodList() {
       <Table autoHeight loading={isLoading} data={paymentMethods}>
         <Column width={200} align="left" resizable>
           <HeaderCell>{t('paymentMethodList.name')}</HeaderCell>
-          <Cell>
+          <RCell>
             {(rowData: RowDataType<FullPaymentMethodFragment>) => (
               <Link to={`/paymentmethods/edit/${rowData.id}`}>{rowData.name || t('untitled')}</Link>
             )}
-          </Cell>
+          </RCell>
         </Column>
         <Column width={100} align="center" fixed="right">
           <HeaderCell>{t('paymentMethodList.action')}</HeaderCell>

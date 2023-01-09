@@ -1,5 +1,3 @@
-import './routes.less'
-
 import styled from '@emotion/styled'
 import React, {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'

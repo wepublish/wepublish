@@ -8,20 +8,33 @@ import {useEffect, useState} from 'react'
 import GridLayout from 'react-grid-layout'
 import {useTranslation} from 'react-i18next'
 import {MdAddBox, MdDelete, MdEdit, MdLock, MdLockOpen} from 'react-icons/md'
-import {ButtonToolbar as RButtonToolbar, Drawer, IconButton as RIconButton} from 'rsuite'
+import {
+  ButtonToolbar as RButtonToolbar,
+  Drawer,
+  IconButton as RIconButton,
+  Panel as RPanel
+} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
-import {ContentForTeaser, IconButton, IconWrapper, Panel, Teaser} from './teaserGridBlock'
+import {ContentForTeaser, IconButton, IconWrapper, Teaser} from './teaserGridBlock'
 import {FlexAlignment, FlexTeaser, Teaser as TeaserType, TeaserGridFlexBlockValue} from './types'
 
 const ButtonToolbar = styled(RButtonToolbar)`
-  top: 1;
-  left: 1;
+  top: 0;
+  left: 0;
   position: absolute;
+`
+
+export const Panel = styled(RPanel)<{showGrabCursor: boolean}>`
+  display: grid;
+  cursor: ${({showGrabCursor}) => showGrabCursor && 'grab'};
+  height: inherit;
+  overflow: hidden;
+  z-index: 1;
 `
 
 export function FlexTeaserBlock({

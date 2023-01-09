@@ -140,7 +140,7 @@ function PeerList() {
                 alt={profile?.name?.substr(0, 2)}
               />
             </FlexItem>
-            <FlexboxGrid.Item colspan={18}>
+            <FlexboxGrid.Item colspan={17}>
               <h5>{name}</h5>
               <p>
                 {profile && `${profile.name} - `}
@@ -180,7 +180,7 @@ function PeerList() {
                 </IconButton>
               </PermissionControl>
             </FlexboxGrid.Item>
-            <FlexItem colspan={1}>
+            <FlexItem colspan={2}>
               <PermissionControl qualifyingPermissions={['CAN_DELETE_PEER']}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton

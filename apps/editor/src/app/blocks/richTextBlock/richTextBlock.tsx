@@ -39,6 +39,10 @@ const AltPlaceholder = styled.div`
   color: #cad5e4;
 `
 
+const Divider = styled(ToolbarDivider)`
+  height: 1.8em;
+`
+
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
   displayOnly?: boolean
   showCharCount?: boolean
@@ -121,7 +125,6 @@ export const RichTextBlock = memo(function RichTextBlock({
           <Toolbar
             fadeOut={!hasFocus}
             onMouseDown={() => {
-              // e.preventDefault()
               if (!hasFocus && location) focusAtPreviousLocation(location)
             }}>
             <FormatButton format={BlockFormat.H1}>
@@ -134,18 +137,18 @@ export const RichTextBlock = memo(function RichTextBlock({
               <H3Icon />
             </FormatButton>
 
-            <ToolbarDivider />
+            <Divider />
 
             <FormatIconButton icon={<MdFormatListBulleted />} format={BlockFormat.UnorderedList} />
             <FormatIconButton icon={<MdFormatListNumbered />} format={BlockFormat.OrderedList} />
 
-            <ToolbarDivider />
+            <Divider />
 
             <EditorSubMenuButton icon={<MdTableChart />} editorHasFocus={hasFocus}>
               <TableMenu />
             </EditorSubMenuButton>
 
-            <ToolbarDivider />
+            <Divider />
 
             <FormatIconButton icon={<MdFormatBold />} format={TextFormat.Bold} />
             <FormatIconButton icon={<MdFormatItalic />} format={TextFormat.Italic} />
@@ -154,13 +157,13 @@ export const RichTextBlock = memo(function RichTextBlock({
             <FormatIconButton icon={<MdSuperscript />} format={TextFormat.Superscript} />
             <FormatIconButton icon={<MdSubscript />} format={TextFormat.Subscript} />
 
-            <ToolbarDivider />
+            <Divider />
 
             <SubMenuButton icon={<MdLink />} format={InlineFormat.Link}>
               <LinkMenu />
             </SubMenuButton>
 
-            <ToolbarDivider />
+            <Divider />
 
             <SubMenuButton icon={<MdMood />}>
               <EmojiPicker
