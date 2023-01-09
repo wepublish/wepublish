@@ -89,14 +89,14 @@ export class WepublishServer {
 
     adminServer.applyMiddleware({
       app,
-      path: '/admin',
+      path: '/v1/admin',
       cors: corsOptions,
       bodyParserConfig: {limit: MAX_PAYLOAD_SIZE}
     })
 
     publicServer.applyMiddleware({
       app,
-      path: '/',
+      path: '/v1',
       cors: corsOptions
     })
 
