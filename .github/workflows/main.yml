@@ -25,7 +25,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '10.x'
-          cache: yarn
+          cache: npm
       - name: Create manifest
         env:
           PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}

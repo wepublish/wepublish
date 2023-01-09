@@ -26,5 +26,8 @@
   "prisma": {
     "schema": "prisma/schema.prisma",
     "seed": "npx ts-node __tests__/seed.ts"
+  },
+  "publishConfig": {
+    "directory": "../../dist/libs/api"
   }
 }

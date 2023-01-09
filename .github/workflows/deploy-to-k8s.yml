@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-          cache: yarn
+          cache: npm
 
       - name: Create manifest
         env:
@@ -57,7 +57,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-          cache: yarn
+          cache: npm
 
       - name: Create Deployment Text
         id: deploymentComment
@@ -66,7 +66,7 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           cd ./config
-          yarn install
+          npm ci
           OUTPUT=$(node ./notify-github.js)
           OUTPUT="${OUTPUT//$'\n'/'%0A'}"
           OUTPUT="${OUTPUT//$'\r'/'%0D'}"
@@ -88,7 +88,7 @@ jobs:
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
         run: |
           cd ./config
-          yarn install
+          npm ci
           node ./notify-jira.js
 
 #  e2eTest:
