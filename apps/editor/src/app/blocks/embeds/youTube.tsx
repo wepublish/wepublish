@@ -23,8 +23,6 @@ export function YouTubeVideoEmbed({videoID}: YouTubeVideoEmbedProps) {
     <YouTubeEmbed>
       <Iframe
         src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoID)}`}
-        scrolling="no"
-        frameBorder="0"
         allowFullScreen
       />
     </YouTubeEmbed>

@@ -23,8 +23,6 @@ export function VimeoVideoEmbed({videoID}: VimeoVideoEmbedProps) {
     <VimeoEmbed>
       <Iframe
         src={`https://player.vimeo.com/video/${encodeURIComponent(videoID)}`}
-        scrolling="no"
-        frameBorder="0"
         allowFullScreen
       />
     </VimeoEmbed>
