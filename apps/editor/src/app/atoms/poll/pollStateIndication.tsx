@@ -3,8 +3,6 @@ import {useTranslation} from 'react-i18next'
 import {MdHourglassEmpty, MdPlayCircleOutline, MdPowerOff} from 'react-icons/md'
 import {Tooltip, Whisper} from 'rsuite'
 
-import {dateTimeLocalString} from '../../utility'
-
 const ClosedIcon = styled(MdPowerOff)`
   color: red;
 `
@@ -49,9 +47,7 @@ export function PollStateIndication({
   return (
     <Whisper
       speaker={
-        <Tooltip>
-          {t('pollStateIndication.waiting', {date: dateTimeLocalString(new Date(pollOpensAt))})}
-        </Tooltip>
+        <Tooltip>{t('pollStateIndication.waiting', {date: new Date(pollOpensAt)})}</Tooltip>
       }>
       <MdHourglassEmpty />
     </Whisper>

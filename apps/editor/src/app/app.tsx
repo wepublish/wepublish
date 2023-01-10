@@ -20,6 +20,9 @@ import {AuthorList} from './routes/authorList'
 import {CommentRatingEditView} from './routes/commentRatingEditView'
 import {CommentEditView} from './routes/comments/commentEditView'
 import {CommentList} from './routes/comments/commentList'
+import {EventCreateView} from './routes/events/eventCreateView'
+import {EventEditView} from './routes/events/eventEditView'
+import {EventListView} from './routes/events/eventListView'
 import {ImageList} from './routes/imageList'
 import {MemberPlanList} from './routes/memberPlanList'
 import {NavigationList} from './routes/navigationList'
@@ -288,6 +291,43 @@ export function App() {
               element={
                 <Base>
                   <CommentRatingEditView />
+                </Base>
+              }
+            />
+
+            {/* Events Routes */}
+            <Route
+              path="events"
+              element={
+                <Base>
+                  <EventListView />
+                </Base>
+              }
+            />
+
+            <Route
+              path="events/create"
+              element={
+                <Base>
+                  <EventCreateView />
+                </Base>
+              }
+            />
+
+            <Route
+              path="events/edit/:id"
+              element={
+                <Base>
+                  <EventEditView />
+                </Base>
+              }
+            />
+
+            <Route
+              path="events/tags"
+              element={
+                <Base>
+                  <TagList type={TagType.Event} />
                 </Base>
               }
             />

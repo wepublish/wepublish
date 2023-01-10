@@ -195,12 +195,14 @@ model Image {
   pageRevisionSocialMediaImages PageRevision[] @relation("pageRevisionSocialMediaImage")
   pageRevisionImages            PageRevision[] @relation("pageRevisionImage")
 
+  users  User[]
+  events Event[]
+
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([title])
   @@index([tags])
   @@map("images")
-  User User[]
 }
 
 enum CommentItemType {
@@ -210,8 +212,8 @@ enum CommentItemType {
 }
 
 enum CommentRejectionReason {
-  misconduct  @map("misconduct")
-  spam        @map("spam")
+  misconduct @map("misconduct")
+  spam       @map("spam")
 }
 
 model CommentsRevisions {
@@ -229,17 +231,17 @@ model CommentsRevisions {
 }
 
 enum CommentState {
-  approved            @map("approved")
-  pendingApproval     @map("pendingApproval")
-  pendingUserChanges  @map("pendingUserChanges")
-  rejected            @map("rejected")
+  approved           @map("approved")
+  pendingApproval    @map("pendingApproval")
+  pendingUserChanges @map("pendingUserChanges")
+  rejected           @map("rejected")
 }
 
 enum CommentAuthorType {
-  team          @map("team")
-  author        @map("author")
-  verifiedUser  @map("verifiedUser")
-  guestUser     @map("guestUser")
+  team         @map("team")
+  author       @map("author")
+  verifiedUser @map("verifiedUser")
+  guestUser    @map("guestUser")
 }
 
 model Comment {
@@ -298,7 +300,7 @@ model CommentRatingSystem {
 }
 
 enum RatingSystemType {
-  star  @map("star")
+  star @map("star")
 }
 
 model CommentRatingSystemAnswer {
@@ -400,12 +402,12 @@ model Invoice {
 }
 
 enum MailLogState {
-  submitted  @map("submitted")
-  accepted   @map("accepted")
-  delivered  @map("delivered")
-  deferred   @map("deferred")
-  bounced    @map("bounced")
-  rejected   @map("rejected")
+  submitted @map("submitted")
+  accepted  @map("accepted")
+  delivered @map("delivered")
+  deferred  @map("deferred")
+  bounced   @map("bounced")
+  rejected  @map("rejected")
 }
 
 model MailLog {
@@ -424,10 +426,10 @@ model MailLog {
 }
 
 enum PaymentPeriodicity {
-  monthly    @map("monthly")
-  quarterly  @map("quarterly")
-  biannual   @map("biannual")
-  yearly     @map("yearly")
+  monthly   @map("monthly")
+  quarterly @map("quarterly")
+  biannual  @map("biannual")
+  yearly    @map("yearly")
 }
 
 model AvailablePaymentMethod {
@@ -572,13 +574,13 @@ model PaymentMethod {
 }
 
 enum PaymentState {
-  created             @map("created")
-  submitted           @map("submitted")
-  requiresUserAction  @map("requiresUserAction")
-  processing          @map("processing")
-  paid                @map("paid")
-  canceled            @map("canceled")
-  declined            @map("declined")
+  created            @map("created")
+  submitted          @map("submitted")
+  requiresUserAction @map("requiresUserAction")
+  processing         @map("processing")
+  paid               @map("paid")
+  canceled           @map("canceled")
+  declined           @map("declined")
 }
 
 model Payment {
@@ -678,9 +680,9 @@ model SubscriptionPeriod {
 }
 
 enum SubscriptionDeactivationReason {
-  none                 @map("none")
-  userSelfDeactivated  @map("userSelfDeactivated")
-  invoiceNotPaid       @map("invoiceNotPaid")
+  none                @map("none")
+  userSelfDeactivated @map("userSelfDeactivated")
+  invoiceNotPaid      @map("invoiceNotPaid")
 }
 
 model SubscriptionDeactivation {
@@ -835,7 +837,8 @@ model Setting {
 }
 
 enum TagType {
-  Comment  @map("comment")
+  Comment @map("comment")
+  Event   @map("event")
 }
 
 model Tag {
@@ -847,6 +850,7 @@ model Tag {
   tag  String?
 
   comments TaggedComments[]
+  events   TaggedEvents[]
 
   @@unique([type, tag])
   @@map("tags")
@@ -937,4 +941,44 @@ model PollExternalVote {
 
   @@unique([answerId, sourceId])
   @@map("polls.external-votes")
+}
+
+enum EventStatus {
+  Cancelled   @map("cancelled")
+  Rescheduled @map("rescheduled")
+  Postponed   @map("postponed")
+  Scheduled   @map("scheduled")
+}
+
+model Event {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name        String
+  description Json[]
+  status      EventStatus @default(Scheduled)
+
+  imageId String?
+  image   Image?  @relation(fields: [imageId], references: [id])
+
+  location String?
+  startsAt DateTime
+  endsAt   DateTime?
+
+  tags TaggedEvents[]
+
+  @@map("events")
+}
+
+model TaggedEvents {
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId    String   @db.Uuid
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId      String
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  @@id([eventId, tagId])
+  @@map("events.tagged-events")
 }

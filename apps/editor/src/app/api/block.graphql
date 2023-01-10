@@ -114,6 +114,16 @@ fragment FullBlock on Block {
     }
   }
 
+  ... on EventBlock {
+    filter {
+      tags
+      events
+    }
+    events {
+      ...EventRef
+    }
+  }
+
   ... on CommentBlock {
     filter {
       item

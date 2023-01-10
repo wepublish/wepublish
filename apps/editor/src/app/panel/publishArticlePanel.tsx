@@ -65,16 +65,21 @@ function PublishArticlePanel({
           </Message>
         )}
 
-        <DateTimePicker
-          dateTime={publishedAt}
-          label={t('articleEditor.panels.publishDate')}
-          changeDate={date => setPublishedAt(date)}
-        />
-        <DateTimePicker
-          dateTime={updatedAt}
-          label={t('articleEditor.panels.updateDate')}
-          changeDate={date => setUpdatedAt(date)}
-        />
+        <div style={{maxWidth: '200px'}}>
+          <DateTimePicker
+            dateTime={publishedAt}
+            label={t('articleEditor.panels.publishDate')}
+            changeDate={date => setPublishedAt(date)}
+          />
+        </div>
+
+        <div style={{maxWidth: '200px'}}>
+          <DateTimePicker
+            dateTime={updatedAt}
+            label={t('articleEditor.panels.updateDate')}
+            changeDate={date => setUpdatedAt(date)}
+          />
+        </div>
 
         {updatedAt && publishedAt && updatedAt < publishedAt ? (
           <Message type="warning">{t('articleEditor.panels.updateDateWarning')}</Message>
@@ -91,12 +96,14 @@ function PublishArticlePanel({
         </Checkbox>
 
         {isPublishDateActive ? (
-          <DateTimePicker
-            dateTime={publishAt}
-            label={t('articleEditor.panels.publishAt')}
-            changeDate={date => setPublishAt(date)}
-            helpInfo={t('articleEditor.panels.dateExplanationPopOver')}
-          />
+          <div style={{maxWidth: '200px'}}>
+            <DateTimePicker
+              dateTime={publishAt}
+              label={t('articleEditor.panels.publishAt')}
+              changeDate={date => setPublishAt(date)}
+              helpInfo={t('articleEditor.panels.dateExplanationPopOver')}
+            />
+          </div>
         ) : (
           ''
         )}

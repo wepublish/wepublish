@@ -12,7 +12,7 @@ import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {CreatePollBtn} from '../../atoms/poll/createPollBtn'
 import {DeletePollModal} from '../../atoms/poll/deletePollModal'
 import {PollStateIndication} from '../../atoms/poll/pollStateIndication'
-import {dateTimeLocalString, DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
+import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 
@@ -34,16 +34,15 @@ const FlexItemMarginTop = styled(FlexboxGrid.Item)`
 export function PollOpensAtView({poll}: {poll: Poll}) {
   const now = new Date()
   const opensAt = new Date(poll.opensAt)
-  const opensAtLocalString = dateTimeLocalString(opensAt)
   const {t} = useTranslation()
 
   // poll is open
   if (now.getTime() > opensAt.getTime()) {
-    return <>{t('pollList.openedAt', {openedAt: opensAtLocalString})}</>
+    return <>{t('pollList.openedAt', {openedAt: opensAt})}</>
   }
 
   // poll is waiting to open
-  return <>{t('pollList.pollWillOpenAt', {opensAt: opensAtLocalString})}</>
+  return <>{t('pollList.pollWillOpenAt', {opensAt})}</>
 }
 
 export function PollClosedAtView({poll}: {poll: Poll}) {
@@ -53,8 +52,7 @@ export function PollClosedAtView({poll}: {poll: Poll}) {
 
   // poll has been closed
   if (closedAt && now.getTime() >= closedAt.getTime()) {
-    const closedAtLocal = dateTimeLocalString(closedAt)
-    return <>{t('pollList.hasBeenClosedAt', {closedAt: closedAtLocal})}</>
+    return <>{t('pollList.hasBeenClosedAt', {closedAt})}</>
   }
 
   return <>{t('pollList.closedAtNone')}</>
@@ -131,14 +129,14 @@ function PollList() {
               </RCell>
             </Column>
             {/* opens at */}
-            <Column width={250} resizable>
+            <Column width={300} resizable>
               <HeaderCell>{t('pollList.opensAt')}</HeaderCell>
               <RCell>
                 {(rowData: RowDataType<Poll>) => <PollOpensAtView poll={rowData as Poll} />}
               </RCell>
             </Column>
             {/* opens at */}
-            <Column width={250} resizable>
+            <Column width={300} resizable>
               <HeaderCell>{t('pollList.closedAt')}</HeaderCell>
               <RCell>
                 {(rowData: RowDataType<Poll>) => <PollClosedAtView poll={rowData as Poll} />}
@@ -181,7 +179,11 @@ function PollList() {
         </FlexItemMarginTop>
       </FlexboxGrid>
 
-      <DeletePollModal poll={pollDelete} afterDelete={refetch} setPoll={setPollDelete} />
+      <DeletePollModal
+        poll={pollDelete}
+        onDelete={refetch}
+        onClose={() => setPollDelete(undefined)}
+      />
     </>
   )
 }
