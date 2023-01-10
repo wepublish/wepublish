@@ -3,9 +3,8 @@
 dist/
 node_modules
 npm-debug.log
-yarn-error.log
-.tsbuildinfo
 .media
 .changelog
 coverage/
 screenshots
+.env.local

@@ -32,7 +32,7 @@
 ## Automated Testing
 
 It might happen, that your tests are failing. Try to update your snapshots
-by running (eventually in the package in question) `yarn test -- -u`
+by running (eventually in the package in question) `npm run test -- -u`
 
 For more information: [https://jestjs.io/docs/cli#--updatesnapshot](https://jestjs.io/docs/cli#--updatesnapshot)
 
@@ -43,8 +43,8 @@ For more information: [https://jestjs.io/docs/cli#--updatesnapshot](https://jest
 Prerequisite: In the API (packages/api) exists a corresponding GraphQL endpoint.
 
 1. In `editor/src/app/api` you have to create a corresponding graphql file or define your mutation or query in an existing one.
-2. Start the API (`yarn watch`)
-3. Navigate in your terminal to `apps/editor` and run `yarn nx generate-api editor`
+2. Start the API (`npm run watch`)
+3. Navigate in your terminal to `apps/editor` and run `npx nx generate-api editor`
 4. Now the file `index.ts` will be generated automatically in `apps/editor/src/app/api`
 5. Now you can import your desired endpoint in your .tsx file. See for example `subscriptionEditPanel.tsx`
 
@@ -180,12 +180,3 @@ example: https://fonts.google.com/icons?icon.query=trash
 The webhook will call `paymentProvider.updatePaymentWithIntentState()` which will create a payment.
 This creates a payment creation event which is caught by `paymentProvider.setupPaymentProvider()`.
 Within this event another invoice event will be triggered which is handled in `events.invoiceModelEvents()`
-
-## packages/mongo-db
-
-### Migrations
-
-To perform migrations on the database two steps are necessary.
-
-1. add an object in migrations.ts.
-2. restart the API (yarn watch)
