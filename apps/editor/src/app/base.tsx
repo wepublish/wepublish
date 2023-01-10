@@ -56,13 +56,6 @@ const AVAILABLE_LANG = [
   {id: 'de', lang: 'de_CH', name: 'Deutsch'}
 ]
 
-const iconStyles = {
-  width: 56,
-  height: 56,
-  lineHeight: '56px',
-  textAlign: 'center' as const
-}
-
 function useStickyState(defaultValue: string, key: string) {
   const [value, setValue] = useState(() => {
     const stickyValue = window.localStorage.getItem(key)
@@ -89,6 +82,19 @@ const Sidebar = styled(RSidebar)`
 
 const Sidenav = styled(RSidenav)`
   flex: 1 1 auto;
+`
+
+const IconButton = styled(RIconButton)`
+  width: 56px;
+  height: 56px;
+  line-height: 56px;
+  text-align: center;
+
+  svg {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+  }
 `
 
 const FloatingButton = styled(RIconButton)`
@@ -450,20 +456,13 @@ export function Base({children}: BaseProps) {
               </Navigation>
             </RSidenav.Body>
           </Sidenav>
-          <Navbar appearance="default" className="nav-toggle">
+          <Navbar appearance="default">
             <Nav>
               <Nav.Menu
                 placement="topStart"
                 trigger="click"
                 renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
-                  <RIconButton
-                    {...props}
-                    placement="left"
-                    ref={ref}
-                    style={iconStyles}
-                    className="icon-selector"
-                    icon={<MdLogout />}
-                  />
+                  <IconButton {...props} placement="left" ref={ref} icon={<MdLogout />} />
                 )}>
                 <Nav.Item as={NavLink} href="/logout">
                   {t('navbar.logout')}
@@ -475,14 +474,7 @@ export function Base({children}: BaseProps) {
                 placement="topStart"
                 trigger="click"
                 renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
-                  <RIconButton
-                    {...props}
-                    placement="left"
-                    ref={ref}
-                    style={iconStyles}
-                    className="icon-selector"
-                    icon={<MdTranslate />}
-                  />
+                  <IconButton {...props} placement="left" ref={ref} icon={<MdTranslate />} />
                 )}>
                 {AVAILABLE_LANG.map(lang => (
                   <Nav.Item
