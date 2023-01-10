@@ -53,7 +53,7 @@ export async function fetchIntrospectionQueryResultData(url: string) {
 const onDOMContentLoaded = async () => {
   const {apiURL} = getSettings()
 
-  const adminAPIURL = `${apiURL}/admin`
+  const adminAPIURL = `${apiURL}/v1/admin`
 
   const authLink = new ApolloLink((operation, forward) => {
     const token = localStorage.getItem(LocalStorageKey.SessionToken)
