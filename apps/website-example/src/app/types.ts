@@ -183,6 +183,7 @@ export enum BlockType {
   HTMLBlock = 'html',
   CommentBlock = 'comment',
   PollBlock = 'poll',
+  EventBlock = 'event',
 
   // Layout
   Grid = 'grid',

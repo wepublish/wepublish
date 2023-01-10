@@ -65,13 +65,10 @@ export function SelectCommentPanel({
   const {t} = useTranslation()
   const [fetchComments, {data, loading}] = useCommentListLazyQuery({
     onError: onErrorToast,
-    variables: {
-      filter: {
-        item: itemId
-      }
-    },
     fetchPolicy: 'cache-and-network'
   })
+
+  console.log(itemId)
 
   const getUsername = useMemo(() => commentUsernameGenerator(t), [t])
 
@@ -90,17 +87,18 @@ export function SelectCommentPanel({
   }
 
   useEffect(() => {
-    fetchComments({
-      variables: {
-        take: limit,
-        skip: (page - 1) * limit,
-        filter: {
-          item: itemId,
-          tags: tagFilter
+    itemId &&
+      fetchComments({
+        variables: {
+          take: limit,
+          skip: (page - 1) * limit,
+          filter: {
+            item: itemId,
+            tags: tagFilter
+          }
         }
-      }
-    })
-  }, [page, limit, tagFilter])
+      })
+  }, [page, limit, tagFilter, fetchComments, itemId])
 
   return (
     <>

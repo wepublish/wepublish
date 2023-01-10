@@ -203,10 +203,13 @@ const TagList = memo<TagListProps>(({type}) => {
     fetch({
       variables: {
         take: limit,
-        skip: (page - 1) * limit
+        skip: (page - 1) * limit,
+        filter: {
+          type
+        }
       }
     })
-  }, [limit, page])
+  }, [type, limit, page])
 
   return (
     <>

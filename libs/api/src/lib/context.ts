@@ -1,5 +1,6 @@
 import {
   Author,
+  Event,
   Image,
   MailLog,
   Payment,
@@ -47,6 +48,7 @@ import {MemberContext} from './memberContext'
 import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
 import {URLAdapter} from './urlAdapter'
+import {getEvent} from './graphql/event/event.queries'
 
 /**
  * Peered article cache configuration and setup
@@ -104,6 +106,7 @@ export interface DataLoaderContext {
   readonly paymentsByID: DataLoader<string, Payment | null>
 
   readonly pollById: DataLoader<string, FullPoll | null>
+  readonly eventById: DataLoader<string, Event | null>
 }
 
 export interface OAuth2Clients {
@@ -856,7 +859,8 @@ export async function contextFromRequest(
       )
     ),
 
-    pollById: new DataLoader(async ids => Promise.all(ids.map(id => getPoll(id, prisma.poll))))
+    pollById: new DataLoader(async ids => Promise.all(ids.map(id => getPoll(id, prisma.poll)))),
+    eventById: new DataLoader(async ids => Promise.all(ids.map(id => getEvent(id, prisma.event))))
   }
 
   const mailContext = new MailContext({

@@ -50,17 +50,8 @@ export async function uploadPublicUserProfileImage(
   let newImage = null
   if (uploadImageInput) {
     // upload new image
-    const {
-      file,
-      filename,
-      title,
-      description,
-      tags,
-      source,
-      link,
-      license,
-      focalPoint
-    } = uploadImageInput
+    const {file, filename, title, description, tags, source, link, license, focalPoint} =
+      uploadImageInput
     const {id: newImageId, ...image} = await mediaAdapter.uploadImage(file)
     const prismaImgData = {
       id: newImageId,

@@ -1,6 +1,6 @@
 import './dateTimePicker.less'
 
-import React, {useState} from 'react'
+import {useEffect, useState} from 'react'
 import DatePicker from 'react-datepicker'
 import {useTranslation} from 'react-i18next'
 import {MdInfo} from 'react-icons/md'
@@ -33,7 +33,11 @@ export function DateTimePicker({
 }: DateTimePickerProps) {
   const {t} = useTranslation()
 
-  const [dateSelection, setDateSelection] = useState<any>(dateTime)
+  const [dateSelection, setDateSelection] = useState<Date | null>(dateTime ?? null)
+
+  useEffect(() => {
+    setDateSelection(dateTime ?? null)
+  }, [dateTime])
 
   const dateButtonPresets = dateRanges ?? [
     {label: t('dateTimePicker.today'), offset: 0},
@@ -103,7 +107,7 @@ export function DateTimePicker({
         shouldCloseOnSelect={false}
         selected={dateSelection}
         onChange={value => {
-          setDateSelection(value)
+          setDateSelection(value instanceof Date ? value : null)
           changeDate(value instanceof Date ? value : undefined)
         }}
         dateFormat="Pp"

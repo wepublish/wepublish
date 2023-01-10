@@ -63,6 +63,13 @@ import {GraphQLPublicSubscription} from './subscription'
 import {GraphQLPublicUser} from './user'
 import {GraphQLPublicComment, GraphQLPublicCommentSort} from './comment/comment'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
+import {EventSort, getEvent, getEvents} from './event/event.queries'
+import {
+  GraphQLEvent,
+  GraphQLEventConnection,
+  GraphQLEventFilter,
+  GraphQLEventSort
+} from './event/event'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -520,6 +527,32 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {pollId}, {authenticateUser, prisma: {pollVote}}) =>
         userPollVote(pollId, authenticateUser, pollVote)
+    },
+
+    // Event
+    // =======
+    events: {
+      type: GraphQLEventConnection,
+      description: 'This query returns a list of events',
+      args: {
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
+        filter: {type: GraphQLEventFilter},
+        sort: {type: GraphQLEventSort, defaultValue: EventSort.StartsAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve: (root, {cursor, take, skip, filter, sort, order}, {prisma: {event}}) =>
+        getEvents(filter, sort, order, cursor, skip, take, event)
+    },
+
+    event: {
+      type: GraphQLNonNull(GraphQLEvent),
+      description: 'This query returns an event',
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {id}, {prisma: {event}}) => getEvent(id, event)
     }
   }
 })

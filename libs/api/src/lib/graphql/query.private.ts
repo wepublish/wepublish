@@ -41,6 +41,8 @@ import {
   GraphQLAuthorSort
 } from './author'
 import {getAdminAuthors, getAuthorByIdOrSlug} from './author/author.private-queries'
+import {GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
+import {getRatingSystem} from './comment-rating/comment-rating.public-queries'
 import {
   GraphQLComment,
   GraphQLCommentConnection,
@@ -49,6 +51,14 @@ import {
 } from './comment/comment'
 import {getAdminComments, getComment} from './comment/comment.private-queries'
 import {GraphQLSortOrder} from './common'
+import {
+  GraphQLEvent,
+  GraphQLEventConnection,
+  GraphQLEventFilter,
+  GraphQLEventSort
+} from './event/event'
+import {getAdminEvents} from './event/event.private-queries'
+import {EventSort, getEvent} from './event/event.queries'
 import {GraphQLImage, GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort} from './image'
 import {getAdminImages, getImageById} from './image/image.private-queries'
 import {
@@ -129,7 +139,6 @@ import {getTokens} from './token/token.private-queries'
 import {GraphQLUser, GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort} from './user'
 import {getAdminUserRoles, getUserRoleById} from './user-role/user-role.private-queries'
 import {getAdminUsers, getMe, getUserById} from './user/user.private-queries'
-import {getRatingSystem} from './comment-rating/comment-rating.public-queries'
 import {
   GraphQLPermission,
   GraphQLUserRole,
@@ -137,7 +146,6 @@ import {
   GraphQLUserRoleFilter,
   GraphQLUserRoleSort
 } from './userRole'
-import {GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -715,6 +723,31 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLID}
       },
       resolve: (root, {id}, {prisma: {poll}}) => getPoll(id, poll)
+    },
+
+    // Events
+    // =======
+
+    events: {
+      type: GraphQLEventConnection,
+      args: {
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
+        filter: {type: GraphQLEventFilter},
+        sort: {type: GraphQLEventSort, defaultValue: EventSort.StartsAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve: (root, {cursor, take, skip, filter, sort, order}, {authenticate, prisma: {event}}) =>
+        getAdminEvents(filter, sort, order, cursor, skip, take, authenticate, event)
+    },
+
+    event: {
+      type: GraphQLEvent,
+      args: {
+        id: {type: GraphQLID}
+      },
+      resolve: (root, {id}, {prisma: {event}}) => getEvent(id, event)
     }
   }
 })

@@ -101,7 +101,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
   private isCustomerDeleted(
     customer: Stripe.Customer | Stripe.DeletedCustomer
   ): customer is Stripe.DeletedCustomer {
-    return !!customer.deleted;
+    return !!customer.deleted
   }
 
   async createIntent({

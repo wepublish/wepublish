@@ -236,6 +236,16 @@
         "select": "Auswählen",
         "label": "Umfrage"
       },
+      "event": {
+        "title": "Eventblock Bearbeiten",
+        "edit": "Bearbeiten",
+        "filterByTag": "Events filtern nach Etikett",
+        "eventsFilterByTagInformation": "Alle untenstehenden Events werden angezeigt",
+        "cherryPick": "Spezifische Events auswählen",
+        "events": "{{count}} Event",
+        "events_plural": "{{count}} Events",
+        "label": "Events"
+      },
       "embeds": {
         "label": "Embed",
         "overview": {
@@ -620,10 +630,10 @@
       "createNew": "Umfrage erstellen",
       "question": "Frage",
       "opensAt": "Beginnt am",
-      "openedAt": "Begonnen am {{openedAt}}",
-      "pollWillOpenAt": "Beginnt am {{opensAt}}",
+      "openedAt": "Begonnen am {{openedAt, ccc PP p}}",
+      "pollWillOpenAt": "Beginnt am {{opensAt, ccc PP p}}",
       "noQuestion": "Keine Frage erfasst",
-      "hasBeenClosedAt": "Geschlossen am {{closedAt}}",
+      "hasBeenClosedAt": "Geschlossen am {{closedAt, ccc PP p}}",
       "closedAt": "Geschlossen am",
       "closedAtNone": "Nicht geschlossen",
       "answersCount": "Erfasste Antworten",
@@ -634,8 +644,7 @@
     "deletePollModal": {
       "title": "Umfrage löschen?",
       "body": "Willst Du die Umfrage \"{{pollQuestion}}\" wirklich löschen?",
-      "deleteBtn": "Ja, löschen",
-      "cancelBtn": "Abbrechen"
+      "deleteBtn": "Ja, löschen"
     },
     "pollEditView": {
       "loadingTitle": "Lade Umfrage...",
@@ -677,9 +686,11 @@
     "pollStateIndication": {
       "closed": "Umfrage geschlossen",
       "open": "Umfrage läuft",
-      "waiting": "Umfrage wartet auf Öffnung am {{date}}"
+      "waiting": "Umfrage wartet auf Öffnung am {{date, ccc PP p}}"
     },
     "navbar": {
+      "events": "Events",
+      "eventTags": "Etiketten",
       "articles": "Artikel",
       "blocks": {
         "topMenu": "Inhalts-Blöcke",
@@ -1269,6 +1280,43 @@
     "permissions": {
       "noAccess": "Du verfügst nicht über genügend Berechtigungen, um den Inhalt zu sehen.",
       "contactAdmin": "Bitte kontaktiere den Administrator, um Dir folgende Berechtigungen zu erteilen: {{permissions}}"
+    },
+    "event": {
+      "list": {
+        "title": "Events",
+        "name": "Name",
+        "edit": "Bearbeiten",
+        "delete": "Löschen",
+        "create": "Neues Event erstellen",
+        "startsAt": "Startet um {{startsAt, ccc PP p}}",
+        "endsAt": "Ended um {{endsAt, ccc PP p}}",
+        "endsAtNone": "Offenes Ende"
+      },
+      "create": {
+        "title": "Event Erstellen"
+      },
+      "edit": {
+        "title": "Event Bearbeiten"
+      },
+      "form": {
+        "name": "Name",
+        "location": "Veranstaltungsort",
+        "status": "Status",
+        "startsAt": "Startet um",
+        "endsAt": "Ended um",
+        "description": "Beschreibung",
+        "tags": "Etiketten",
+        "image": "Bild",
+        "scheduled": "Geplant",
+        "cancelled": "Abgesagt",
+        "postponed": "Verschoben",
+        "rescheduled": "Verlegt"
+      },
+      "delete": {
+        "title": "Event Löschen?",
+        "body": "Willst Du das Event \"{{name}}\" wirklich löschen?",
+        "delete": "Ja, lösche das Event"
+      }
     }
   }
 }
