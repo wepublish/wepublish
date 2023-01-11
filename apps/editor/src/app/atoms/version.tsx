@@ -4,14 +4,12 @@ import {useEffect, useMemo, useState} from 'react'
 import {useVersionInformationQuery} from '../api/v2'
 import {getApiClientV2} from '../utility'
 
-export interface VersionProps {}
-
 const StyledVersion = styled.div`
   padding: 5px;
   padding-left: 25px;
 `
 
-export function Version(props: VersionProps) {
+export function Version() {
   const [version, setVersion] = useState<string | null>(null)
 
   const client = useMemo(() => getApiClientV2(), [])
