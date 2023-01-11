@@ -1,4 +1,5 @@
-import React, {useState} from 'react'
+import styled from '@emotion/styled'
+import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdFileUpload, MdSearch} from 'react-icons/md'
 import {
@@ -11,7 +12,7 @@ import {
   Loader,
   Message,
   Notification,
-  Panel,
+  Panel as RPanel,
   toaster
 } from 'rsuite'
 
@@ -22,6 +23,30 @@ import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {Typography} from '../atoms/typography'
 import {getImgMinSizeToCompress} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
+
+const ImgWrapper = styled.div`
+  background-color: #f7f7fa;
+`
+
+const Panel = styled(RPanel)`
+  cursor: pointer;
+`
+
+const Img = styled.img`
+  display: block;
+  margin: 0 auto;
+  max-width: 240px;
+  max-height: 240px;
+  width: 100%;
+`
+
+const FileDropWrapper = styled(RPanel)`
+  height: 150px;
+`
+
+const FlexItem = styled(FlexboxGrid.Item)`
+  margin-bottom: 20px;
+`
 
 export interface ImageSelectPanelProps {
   onClose(): void
@@ -120,61 +145,47 @@ function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <Panel bodyFill style={{height: '150px'}}>
+        <FileDropWrapper bodyFill>
           <FileDropInput
             icon={<MdFileUpload />}
             text={t('articleEditor.panels.dropImage')}
             onDrop={handleDrop}
           />
-        </Panel>
+        </FileDropWrapper>
         <Form.ControlLabel>
           <br />
           {t('images.panels.resizedImage', {sizeMB: getImgMinSizeToCompress()})}
         </Form.ControlLabel>
 
-        <Panel header={t('articleEditor.panels.images')}>
+        <RPanel header={t('articleEditor.panels.images')}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
-        </Panel>
+        </RPanel>
         {images.length ? (
           <>
             <FlexboxGrid justify="space-around">
               {images.map(image => {
                 const {id, mediumURL, title, filename, extension} = image
                 return (
-                  <FlexboxGrid.Item key={id} colspan={10} style={{marginBottom: 20}}>
-                    <Panel
-                      style={{cursor: 'pointer'}}
-                      onClick={() => onSelect(image)}
-                      shaded
-                      bordered
-                      bodyFill>
-                      <div style={{backgroundColor: '#f7f7fa'}}>
-                        <img
-                          src={mediumURL || ''}
-                          style={{
-                            display: 'block',
-                            margin: '0 auto',
-                            maxWidth: '240',
-                            maxHeight: '240',
-                            width: '100%'
-                          }}
-                        />
-                      </div>
-                      <Panel>
+                  <FlexItem key={id} colspan={10}>
+                    <Panel onClick={() => onSelect(image)} shaded bordered bodyFill>
+                      <ImgWrapper>
+                        <Img src={mediumURL || ''} />
+                      </ImgWrapper>
+                      <RPanel>
                         <Typography variant={'subtitle1'} ellipsize>{`${
                           filename || t('images.panels.untitled')
                         }${extension}`}</Typography>
                         <Typography variant={'body2'}>
                           {title || t('images.panels.Untitled')}
                         </Typography>
-                      </Panel>
+                      </RPanel>
                     </Panel>
-                  </FlexboxGrid.Item>
+                  </FlexItem>
                 )
               })}
             </FlexboxGrid>

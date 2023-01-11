@@ -1,8 +1,18 @@
+import styled from '@emotion/styled'
 import imageCompression from 'browser-image-compression'
 import prettyBytes from 'pretty-bytes'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, Message, Panel, Schema, TagPicker, toaster} from 'rsuite'
+import {
+  Button,
+  Drawer,
+  Form as RForm,
+  Message,
+  Panel as RPanel,
+  Schema,
+  TagPicker,
+  toaster
+} from 'rsuite'
 
 import {
   ImageListDocument,
@@ -21,6 +31,16 @@ import {
   useAuthorisation
 } from '../atoms/permissionControl'
 import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
+
+const {ControlLabel, Control, Group} = RForm
+
+const Panel = styled(RPanel)`
+  background-color: dark;
+`
+
+const Form = styled(RForm)`
+  height: 100%;
+`
 
 export interface ImageEditPanelProps {
   readonly id?: string
@@ -251,8 +271,7 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
     <Form
       fluid
       model={validationModel}
-      onSubmit={validationPassed => validationPassed && handleSave()}
-      style={{height: '100%'}}>
+      onSubmit={validationPassed => validationPassed && handleSave()}>
       <Drawer.Header>
         <Drawer.Title>
           {isUpload ? t('images.panels.uploadImage') : t('images.panels.editImage')}
@@ -273,7 +292,7 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
       <Drawer.Body>
         {!isLoading && (
           <>
-            <Panel style={{backgroundColor: 'dark'}}>
+            <Panel>
               {imageURL && imageWidth && imageHeight && (
                 <FocalPointInput
                   imageURL={imageURL}
@@ -285,7 +304,7 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
                 />
               )}
             </Panel>
-            <Panel header={t('images.panels.description')}>
+            <RPanel header={t('images.panels.description')}>
               <DescriptionList>
                 <DescriptionListItem label={t('images.panels.filename')}>
                   {filename || t('images.panels.untitled')}
@@ -308,6 +327,10 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
                   {prettyBytes(fileSize)}
                 </DescriptionListItem>
 
+                <DescriptionListItem label={t('images.panels.fileSize')}>
+                  {prettyBytes(fileSize)}
+                </DescriptionListItem>
+
                 {originalImageURL && (
                   <DescriptionListItem label={t('images.panels.link')}>
                     <a href={originalImageURL} target="_blank" rel="noreferrer">
@@ -316,37 +339,37 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
                   </DescriptionListItem>
                 )}
               </DescriptionList>
-            </Panel>
-            <Panel header={t('images.panels.information')}>
-              <Form.Group controlId="imageFilename">
-                <Form.ControlLabel>{t('images.panels.filename')}</Form.ControlLabel>
-                <Form.Control
+            </RPanel>
+            <RPanel header={t('images.panels.information')}>
+              <Group controlId="imageFilename">
+                <ControlLabel>{t('images.panels.filename')}</ControlLabel>
+                <Control
                   name="filename"
                   value={filename}
                   disabled={isDisabled}
                   onChange={(value: string) => setFilename(value)}
                 />
-              </Form.Group>
-              <Form.Group controlId="imageTitle">
-                <Form.ControlLabel>{t('images.panels.title')}</Form.ControlLabel>
-                <Form.Control
+              </Group>
+              <Group controlId="imageTitle">
+                <ControlLabel>{t('images.panels.title')}</ControlLabel>
+                <Control
                   name="title"
                   value={title}
                   disabled={isDisabled}
                   onChange={(value: string) => setTitle(value)}
                 />
-              </Form.Group>
-              <Form.Group controlId="imageDescription">
-                <Form.ControlLabel>{t('images.panels.description')}</Form.ControlLabel>
-                <Form.Control
+              </Group>
+              <Group controlId="imageDescription">
+                <ControlLabel>{t('images.panels.description')}</ControlLabel>
+                <Control
                   name="description"
                   value={description}
                   disabled={isDisabled}
                   onChange={(value: string) => setDescription(value)}
                 />
-              </Form.Group>
-              <Form.Group controlId="imageTags">
-                <Form.ControlLabel>{t('images.panels.tags')}</Form.ControlLabel>
+              </Group>
+              <Group controlId="imageTags">
+                <ControlLabel>{t('images.panels.tags')}</ControlLabel>
                 <TagPicker
                   virtualized
                   block
@@ -356,21 +379,21 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
                   data={tags.map(tag => ({value: tag, label: tag}))}
                   onChange={value => setTags(value ?? [])}
                 />
-              </Form.Group>
-            </Panel>
-            <Panel header={t('images.panels.attribution')}>
-              <Form.Group controlId="imageSource">
-                <Form.ControlLabel>{t('images.panels.source')}</Form.ControlLabel>
-                <Form.Control
+              </Group>
+            </RPanel>
+            <RPanel header={t('images.panels.attribution')}>
+              <Group controlId="imageSource">
+                <ControlLabel>{t('images.panels.source')}</ControlLabel>
+                <Control
                   name="source"
                   value={source}
                   disabled={isDisabled}
                   onChange={(value: string) => setSource(value)}
                 />
-              </Form.Group>
-              <Form.Group controlId="imageLink">
-                <Form.ControlLabel>{t('images.panels.link')}</Form.ControlLabel>
-                <Form.Control
+              </Group>
+              <Group controlId="imageLink">
+                <ControlLabel>{t('images.panels.link')}</ControlLabel>
+                <Control
                   name="link"
                   value={link}
                   placeholder={t('images.panels.urlPlaceholder')}
@@ -378,17 +401,17 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
                   onChange={(value: string) => setLink(value)}
                 />
                 <p>{t('images.panels.sourceLink')}</p>
-              </Form.Group>
-              <Form.Group controlId="imageLicense">
-                <Form.ControlLabel>{t('images.panels.license')}</Form.ControlLabel>
-                <Form.Control
+              </Group>
+              <Group controlId="imageLicense">
+                <ControlLabel>{t('images.panels.license')}</ControlLabel>
+                <Control
                   name="license"
                   value={license}
                   disabled={isDisabled}
                   onChange={(value: string) => setLicense(value)}
                 />
-              </Form.Group>
-            </Panel>
+              </Group>
+            </RPanel>
           </>
         )}
       </Drawer.Body>

@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
   Button,
   CheckPicker,
   Drawer,
-  Form,
+  Form as RForm,
   Message,
   Panel,
   Schema,
@@ -45,6 +46,12 @@ import {
 } from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
+
+const {ControlLabel, Group, Control, HelpText} = RForm
+
+const Form = styled(RForm)`
+  height: 100%;
+`
 
 export interface MemberPlanEditPanelProps {
   id?: string
@@ -214,8 +221,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
       onSubmit={validationPassed => validationPassed && handleSave()}
       fluid
       model={validationModel}
-      formValue={{name, currency: amountPerMonthMin}}
-      style={{height: '100%'}}>
+      formValue={{name, currency: amountPerMonthMin}}>
       <Drawer.Header>
         <Drawer.Title>
           {id ? t('memberPlanList.editTitle') : t('memberPlanList.createTitle')}

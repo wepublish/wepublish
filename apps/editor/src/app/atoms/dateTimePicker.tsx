@@ -1,10 +1,20 @@
-import './dateTimePicker.less'
+import 'react-datepicker/dist/react-datepicker.css'
 
+import {css, Global} from '@emotion/react'
+import styled from '@emotion/styled'
 import {useEffect, useState} from 'react'
 import DatePicker from 'react-datepicker'
 import {useTranslation} from 'react-i18next'
 import {MdInfo} from 'react-icons/md'
-import {Button, ButtonGroup, ButtonToolbar, Form, IconButton, Popover, Whisper} from 'rsuite'
+import {
+  Button,
+  ButtonGroup,
+  ButtonToolbar,
+  Form,
+  IconButton,
+  Popover as RPopover,
+  Whisper
+} from 'rsuite'
 
 export interface DateTimePreset {
   label: string
@@ -21,6 +31,20 @@ export interface DateTimePickerProps {
   helpInfo?: string
   disabled?: boolean
 }
+
+const Header = styled.div`
+  margin: 5px auto;
+`
+
+const Popover = styled(RPopover)`
+  max-width: 300px;
+`
+
+const PresetsButton = styled(Button)`
+  white-space: break-spaces;
+  padding: 3px;
+  margin: 1px;
+`
 
 export function DateTimePicker({
   dateTime,
@@ -80,17 +104,110 @@ export function DateTimePicker({
       changeDate(day)
     }
   }
+
   return (
     <>
-      <div style={{marginTop: '5px', marginBottom: '5px'}}>
-        <Form.ControlLabel style={{marginRight: '5px'}}>{label}</Form.ControlLabel>
+      <Global
+        styles={css`
+          .react-datepicker {
+            color: darkgray;
+            padding: 10px;
+            font-family: arial;
+            border: none;
+            box-shadow: 0 0 5px 0 gray;
+            right: -10px;
+
+            &-popper {
+              padding-top: 0;
+              z-index: 5;
+            }
+            &__header {
+              background-color: transparent;
+              border-bottom: none;
+            }
+            &__navigation {
+              height: 70px;
+              width: 66px;
+            }
+            &__time-container {
+              right: -90px;
+              border: none;
+              box-shadow: 0 0 5px 0 gray;
+              margin-bottom: 5px;
+              margin-left: 10px;
+            }
+            &__month-container {
+              padding: 5px;
+            }
+            &__day {
+              &-name {
+                color: #8e8e99;
+              }
+              &-names {
+                border: none;
+              }
+              &:not(&--selected):hover {
+                background-color: #f2faff;
+              }
+            }
+            &__today-button {
+              background-color: transparent;
+              color: #216ba5;
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+            &__current-month,
+            &-time__header,
+            &-year-header {
+              color: #8e8e99;
+              font-weight: unset;
+            }
+
+            &__close-icon::after {
+              padding: unset;
+            }
+
+            &__input-container {
+              margin-bottom: 10px;
+              width: unset;
+              input {
+                outline: none;
+                padding: 7px;
+                border-radius: 5px;
+                border: 1px solid #e5e5ea;
+                &:hover,
+                &:focus-visible {
+                  border: 1px solid #1675e0;
+                  transition: border-color 0.3s;
+                }
+              }
+            }
+          }
+
+          .react-datepicker__time-container
+            .react-datepicker__time
+            .react-datepicker__time-box
+            ul.react-datepicker__time-list
+            li.react-datepicker__time-list-item {
+            &:not(&--selected) {
+              color: #000;
+              &:hover {
+                background-color: #f2faff;
+              }
+            }
+          }
+        `}
+      />
+      <Header>
+        <Form.ControlLabel>{label}</Form.ControlLabel>
         {helpInfo ? (
           <Whisper
             placement="right"
             trigger="hover"
             controlId="control-id-hover"
             speaker={
-              <Popover style={{maxWidth: 300}}>
+              <Popover>
                 <p>{helpInfo}</p>
               </Popover>
             }>
@@ -99,7 +216,7 @@ export function DateTimePicker({
         ) : (
           ''
         )}
-      </div>
+      </Header>
       <DatePicker
         disabled={disabled}
         isClearable
@@ -115,26 +232,24 @@ export function DateTimePicker({
         <ButtonToolbar>
           <ButtonGroup justified>
             {dateButtonPresets.map((datePreset, i) => (
-              <Button
-                style={{whiteSpace: 'break-spaces', padding: '3px', margin: '1px'}}
+              <PresetsButton
                 key={i}
                 size="xs"
                 onClick={() => handleDatePresetButton(datePreset.offset)}>
                 {datePreset.label}
-              </Button>
+              </PresetsButton>
             ))}
           </ButtonGroup>
         </ButtonToolbar>
         <ButtonToolbar>
           <ButtonGroup justified>
             {timeButtonPresets.map((timePreset, i) => (
-              <Button
-                style={{whiteSpace: 'break-spaces', padding: '3px', margin: '1px'}}
+              <PresetsButton
                 key={i}
                 size="xs"
                 onClick={() => handleTimePresetButton(timePreset.offset)}>
                 {timePreset.label}
-              </Button>
+              </PresetsButton>
             ))}
           </ButtonGroup>
         </ButtonToolbar>

@@ -1,7 +1,18 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdListAlt, MdSettings, MdShare} from 'react-icons/md'
-import {Button, Drawer, Form, Input, Message, Nav, Panel, TagPicker, Toggle} from 'rsuite'
+import {
+  Button,
+  Drawer,
+  Form,
+  Input,
+  Message,
+  Nav as RNav,
+  Panel,
+  TagPicker as RTagPicker,
+  Toggle as RToggle
+} from 'rsuite'
 
 import {ImageRefFragment} from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
@@ -16,6 +27,38 @@ import {MetaDataType} from '../blocks/types'
 import {generateID} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
+
+const Nav = styled(RNav)`
+  margin-bottom: 20px;
+`
+
+const Toggle = styled(RToggle)`
+  max-width: 70px;
+  min-width: 70px;
+`
+
+const InputWidth60 = styled(Input)`
+  width: 60%;
+`
+
+const InputWidth40 = styled(Input)`
+  width: 40%;
+  margin-right: 10px;
+`
+
+const InputList = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const TagPicker = styled(RTagPicker)`
+  width: 100%;
+`
+
+const FormGroup = styled(Form.Group)`
+  padding-top: 6px;
+  padding-left: 8px;
+`
 
 export interface PageMetadataProperty {
   readonly key: string
@@ -182,7 +225,6 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
               <TagPicker
                 disabled={!isAuthorized}
                 virtualized
-                style={{width: '100%'}}
                 creatable
                 value={tags}
                 data={tags.map(tag => ({label: tag, value: tag}))}
@@ -222,38 +264,30 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
                 onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
                 defaultValue={{key: '', value: '', public: true}}>
                 {({value, onChange}) => (
-                  <div style={{display: 'flex', flexDirection: 'row'}}>
-                    <Input
+                  <InputList>
+                    <InputWidth40
                       placeholder={t('pageEditor.panels.key')}
-                      style={{
-                        width: '40%',
-                        marginRight: '10px'
-                      }}
                       value={value.key}
                       onChange={propertyKey => {
                         onChange({...value, key: propertyKey})
                       }}
                     />
-                    <Input
+                    <InputWidth60
                       placeholder={t('pageEditor.panels.value')}
-                      style={{
-                        width: '60%'
-                      }}
                       value={value.value}
                       onChange={propertyValue => {
                         onChange({...value, value: propertyValue})
                       }}
                     />
-                    <Form.Group style={{paddingTop: '6px', paddingLeft: '8px'}}>
+                    <FormGroup>
                       <Toggle
-                        style={{maxWidth: '70px', minWidth: '70px'}}
                         checkedChildren={t('pageEditor.panels.public')}
                         unCheckedChildren={t('pageEditor.panels.private')}
                         checked={value.public}
                         onChange={isPublic => onChange({...value, public: isPublic})}
                       />
-                    </Form.Group>
-                  </div>
+                    </FormGroup>
+                  </InputList>
                 )}
               </ListInput>
             </Form.Group>
@@ -282,17 +316,16 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
         <Nav
           appearance="tabs"
           activeKey={activeKey}
-          onSelect={activeKey => setActiveKey(activeKey)}
-          style={{marginBottom: 20}}>
-          <Nav.Item eventKey={MetaDataType.General} icon={<MdSettings />}>
+          onSelect={activeKey => setActiveKey(activeKey)}>
+          <RNav.Item eventKey={MetaDataType.General} icon={<MdSettings />}>
             {t('articleEditor.panels.general')}
-          </Nav.Item>
-          <Nav.Item eventKey={MetaDataType.SocialMedia} icon={<MdShare />}>
+          </RNav.Item>
+          <RNav.Item eventKey={MetaDataType.SocialMedia} icon={<MdShare />}>
             {t('articleEditor.panels.socialMedia')}
-          </Nav.Item>
-          <Nav.Item eventKey={MetaDataType.Properties} icon={<MdListAlt />}>
+          </RNav.Item>
+          <RNav.Item eventKey={MetaDataType.Properties} icon={<MdListAlt />}>
             {t('pageEditor.panels.properties')}
-          </Nav.Item>
+          </RNav.Item>
         </Nav>
 
         <Panel>

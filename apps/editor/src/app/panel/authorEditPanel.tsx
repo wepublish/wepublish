@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdLink} from 'react-icons/md'
 import {
   Button,
   Drawer,
-  Form,
+  Form as RForm,
   Input,
-  InputGroup,
+  InputGroup as RInputGroup,
   Message,
   Panel,
   PanelGroup,
@@ -37,6 +38,22 @@ import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {generateID, getOperationNameFromDocument, slugify} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
+
+const {ControlLabel, Group, Control} = RForm
+
+const InputGroup = styled(RInputGroup)`
+  width: 230px;
+  margin-left: 5px;
+`
+
+const Controls = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const Form = styled(RForm)`
+  height: 100%;
+`
 
 export interface AuthorEditPanelProps {
   id?: string
@@ -164,8 +181,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         onSubmit={validationPassed => validationPassed && handleSave()}
         fluid
         model={validationModel}
-        formValue={{name}}
-        style={{height: '100%'}}>
+        formValue={{name}}>
         <Drawer.Header>
           <Drawer.Title>
             {id ? t('authors.panels.editAuthor') : t('authors.panels.createAuthor')}
@@ -190,12 +206,10 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         <Drawer.Body>
           <PanelGroup>
             <Panel>
-              <Form.Group controlId="name">
-                <Form.ControlLabel>
-                  {toggleRequiredLabel(t('authors.panels.name'))}
-                </Form.ControlLabel>
+              <Group controlId="name">
+                <ControlLabel>{toggleRequiredLabel(t('authors.panels.name'))}</ControlLabel>
 
-                <Form.Control
+                <Control
                   name="name"
                   value={name}
                   disabled={isDisabled}
@@ -204,10 +218,10 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                     setSlug(slugify(value))
                   }}
                 />
-              </Form.Group>
-              <Form.Group controlId="jobTitle">
-                <Form.ControlLabel>{t('authors.panels.jobTitle')}</Form.ControlLabel>
-                <Form.Control
+              </Group>
+              <Group controlId="jobTitle">
+                <ControlLabel>{t('authors.panels.jobTitle')}</ControlLabel>
+                <Control
                   name={t('authors.panels.jobTitle')}
                   value={jobTitle}
                   disabled={isDisabled}
@@ -215,7 +229,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                     setJobTitle(value)
                   }}
                 />
-              </Form.Group>
+              </Group>
             </Panel>
             <Panel header={t('authors.panels.image')}>
               <ChooseEditImage
@@ -238,20 +252,20 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                 }}
                 defaultValue={{title: '', url: ''}}>
                 {({value, onChange}) => (
-                  <div style={{display: 'flex', flexDirection: 'row'}}>
-                    <Form.Control
+                  <Controls>
+                    <Control
                       name="title"
                       placeholder={t('authors.panels.title')}
                       value={value.title}
                       onChange={(title: string) => onChange({...value, title})}
                     />
-                    <Form.Group>
-                      <InputGroup inside style={{width: '230px', marginLeft: '5px'}}>
-                        <InputGroup.Addon>
+                    <Group>
+                      <InputGroup inside>
+                        <RInputGroup.Addon>
                           <MdLink />
-                        </InputGroup.Addon>
+                        </RInputGroup.Addon>
 
-                        <Form.Control
+                        <Control
                           name="link"
                           placeholder={t('authors.panels.link') + ':https//link.com'}
                           value={value.url}
@@ -259,8 +273,8 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                           accepter={Input}
                         />
                       </InputGroup>
-                    </Form.Group>
-                  </div>
+                    </Group>
+                  </Controls>
                 )}
               </ListInput>
             </Panel>

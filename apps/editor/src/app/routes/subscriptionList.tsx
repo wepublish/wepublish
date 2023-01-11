@@ -1,8 +1,17 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
-import {Button, Drawer, FlexboxGrid, IconButton, Modal, Pagination, Table} from 'rsuite'
+import {
+  Button,
+  Drawer,
+  FlexboxGrid,
+  IconButton as RIconButton,
+  Modal,
+  Pagination,
+  Table as RTable
+} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {
@@ -28,7 +37,36 @@ import {
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
 
-const {Column, HeaderCell, Cell} = Table
+const {Column, HeaderCell, Cell: RCell} = RTable
+
+const Cell = styled(RCell)`
+  .rs-table-cell-content {
+    padding: 6px 0;
+  }
+`
+
+const IconButtonSmallMargin = styled(RIconButton)`
+  margin-left: 5px;
+`
+
+const Table = styled(RTable)`
+  flex: 1;
+  cursor: pointer;
+`
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-flow: column;
+  margin-top: 20px;
+`
+
+const IconButton = styled(RIconButton)`
+  margin-left: 20px;
+`
+
+const FlexItem = styled(FlexboxGrid.Item)`
+  text-align: right;
+`
 
 function mapColumFieldToGraphQLField(columnField: string): SubscriptionSort | null {
   switch (columnField) {
@@ -51,10 +89,7 @@ export const NewSubscriptionButton = ({
   const canCreate = useAuthorisation('CAN_CREATE_SUBSCRIPTION')
   return (
     <Link to="/subscriptions/create">
-      <IconButton
-        appearance="primary"
-        disabled={isLoading || !canCreate}
-        style={{marginLeft: '20px'}}>
+      <IconButton appearance="primary" disabled={isLoading || !canCreate}>
         <MdAdd />
         {t('subscriptionList.overview.newSubscription')}
       </IconButton>
@@ -164,12 +199,12 @@ function SubscriptionList() {
         <FlexboxGrid.Item colspan={12}>
           <h2>{t('subscriptionList.overview.subscription')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={12} style={{textAlign: 'right'}}>
+        <FlexItem colspan={12}>
           <ExportSubscriptionsAsCsv filter={filter} />
           <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
             {NewSubscriptionButton({isLoading, t})}
           </PermissionControl>
-        </FlexboxGrid.Item>
+        </FlexItem>
       </FlexboxGrid>
 
       {/* Filter */}
@@ -181,16 +216,10 @@ function SubscriptionList() {
         />
       </FlexboxGrid>
 
-      <div
-        style={{
-          display: 'flex',
-          flexFlow: 'column',
-          marginTop: '20px'
-        }}>
+      <Wrapper>
         <Table
           minHeight={600}
           autoHeight
-          style={{flex: 1, cursor: 'pointer'}}
           loading={isLoading}
           data={subscriptions}
           sortColumn={sortField}
@@ -204,62 +233,61 @@ function SubscriptionList() {
           }}>
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('subscriptionList.overview.createdAt')}</HeaderCell>
-            <Cell dataKey="createdAt">
+            <RCell dataKey="createdAt">
               {({createdAt}: RowDataType<FullSubscriptionFragment>) =>
                 t('subscriptionList.overview.createdAtDate', {createdAtDate: new Date(createdAt)})
               }
-            </Cell>
+            </RCell>
           </Column>
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
-            <Cell dataKey="modifiedAt">
+            <RCell dataKey="modifiedAt">
               {({modifiedAt}: RowDataType<FullSubscriptionFragment>) =>
                 t('subscriptionList.overview.modifiedAtDate', {
                   modifiedAtDate: new Date(modifiedAt)
                 })
               }
-            </Cell>
+            </RCell>
           </Column>
           {/* subscription */}
           <Column width={200}>
             <HeaderCell>{t('subscriptionList.overview.memberPlan')}</HeaderCell>
-            <Cell dataKey={'subscription'}>
+            <RCell dataKey={'subscription'}>
               {(rowData: RowDataType<FullSubscriptionFragment>) => (
                 <Link to={`/subscription/edit/${rowData.id}`}>{rowData.memberPlan.name}</Link>
               )}
-            </Cell>
+            </RCell>
           </Column>
           {/* name */}
           <Column width={300} align="left" resizable sortable>
             <HeaderCell>{t('subscriptionList.overview.name')}</HeaderCell>
-            <Cell dataKey={'name'}>
+            <RCell dataKey={'name'}>
               {(rowData: RowDataType<FullSubscriptionFragment>) =>
                 userNameView(rowData as FullSubscriptionFragment)
               }
-            </Cell>
+            </RCell>
           </Column>
           {/* email */}
           <Column width={250}>
             <HeaderCell>{t('subscriptionList.overview.email')}</HeaderCell>
-            <Cell dataKey={'email'}>
+            <RCell dataKey={'email'}>
               {(rowData: RowDataType<FullSubscriptionFragment>) => (
                 <div>{rowData.user?.email || t('subscriptionList.overview.deleted')}</div>
               )}
-            </Cell>
+            </RCell>
           </Column>
           {/* action */}
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('action')}</HeaderCell>
-            <Cell style={{padding: '6px 0'}}>
+            <Cell>
               {(rowData: RowDataType<FullSubscriptionFragment>) => (
                 <IconButtonTooltip caption={t('delete')}>
-                  <IconButton
-                    icon={<MdDelete />}
+                  <IconButtonSmallMargin
                     circle
                     size="sm"
                     appearance="ghost"
                     color="red"
-                    style={{marginLeft: '5px'}}
+                    icon={<MdDelete />}
                     onClick={() => {
                       setCurrentSubscription(rowData as FullSubscriptionFragment)
                       setConfirmationDialogOpen(true)
@@ -287,7 +315,7 @@ function SubscriptionList() {
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </div>
+      </Wrapper>
 
       <Drawer
         open={isEditModalOpen}

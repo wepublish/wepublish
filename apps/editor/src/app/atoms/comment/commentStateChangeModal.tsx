@@ -1,4 +1,5 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdReplay} from 'react-icons/md'
 import {Button, Dropdown, Message, Modal, Panel, Timeline, toaster} from 'rsuite'
@@ -14,6 +15,22 @@ import {
 } from '../../api'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 import {DescriptionList, DescriptionListItem} from '../descriptionList'
+
+const ParentCommentPanel = styled(Panel)`
+  margin-right: 40px;
+  font-style: italic;
+  color: lightslategrey;
+`
+
+const IconWrapper = styled.div`
+  margin-top: 8px;
+  margin-left: 10px;
+`
+
+const RevisionPanel = styled(Panel)`
+  max-height: 300px;
+  overflow-y: scroll;
+`
 
 function mapModalTitle(commentState: CommentState): string {
   switch (commentState) {
@@ -178,9 +195,7 @@ export function CommentStateChangeModal({
 
           {comment?.parentComment && (
             <DescriptionListItem label={t('comments.panels.parent')}>
-              <Panel
-                bordered
-                style={{marginRight: 40, fontStyle: 'italic', color: 'lightslategrey'}}>
+              <ParentCommentPanel bordered>
                 <>
                   <div>
                     {t('comments.panels.parentDate', {
@@ -200,10 +215,10 @@ export function CommentStateChangeModal({
                     }
                   />
                 </>
-              </Panel>
-              <div style={{marginTop: 8, marginLeft: 10}}>
+              </ParentCommentPanel>
+              <IconWrapper>
                 <MdReplay rotate={180} />
-              </div>
+              </IconWrapper>
             </DescriptionListItem>
           )}
 
@@ -242,7 +257,7 @@ export function CommentStateChangeModal({
           ) : null}
 
           <DescriptionListItem label={t('comments.panels.revisions')} />
-          <Panel bordered style={{maxHeight: '300px', overflowY: 'scroll'}}>
+          <RevisionPanel bordered>
             <Timeline align="left">
               {sortedRevisions.length
                 ? sortedRevisions.map(({text, createdAt}, index) => (
@@ -266,17 +281,13 @@ export function CommentStateChangeModal({
                   ))
                 : null}
             </Timeline>
-          </Panel>
+          </RevisionPanel>
         </DescriptionList>
       </Modal.Body>
       <Modal.Footer>
         <Button
           disabled={isApproving || isRequestingChanges || isRejecting}
-          appearance={
-            newCommentState === CommentState.PendingUserChanges && !rejectionReason
-              ? 'subtle'
-              : 'primary'
-          }
+          appearance={'primary'}
           onClick={async () => await changeState()}>
           {t(mapCommentActionToBtnTitle(newCommentState))}
         </Button>

@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdChevronLeft} from 'react-icons/md'
@@ -9,15 +10,15 @@ import {
   Drawer,
   FlexboxGrid,
   Form,
-  Grid,
+  Grid as RGrid,
   Input,
-  Loader,
+  Loader as RLoader,
   Message,
-  Panel,
+  Panel as RPanel,
   Row,
   Schema,
   toaster,
-  Toggle
+  Toggle as RToggle
 } from 'rsuite'
 
 import {
@@ -38,6 +39,71 @@ import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {generateID} from '../utility'
+
+const Grid = styled(RGrid)`
+  padding-right: 0px;
+`
+
+const Toggle = styled(RToggle)`
+  max-width: 70px;
+  min-width: 70px;
+`
+
+const InputW60 = styled(Input)`
+  width: 60%;
+`
+
+const InputW40 = styled(Input)`
+  width: 40%;
+  margin-right: 10px;
+`
+
+const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const Panel = styled(RPanel)`
+  margin-top: 20px;
+`
+
+const ColTextAlign = styled(Col)`
+  text-align: end;
+`
+
+const UserFormGrid = styled(RGrid)`
+  width: 100%;
+  padding-left: 0px;
+  height: calc(100vh - 160px);
+  overflow-y: scroll;
+`
+
+const PaddedCol = styled(Col)`
+  padding-top: 3px;
+  margin-right: 1rem;
+`
+
+const FlexGrid = styled(FlexboxGrid)`
+  padding-right: 5px;
+  padding-bottom: 20px;
+`
+
+const ButtonMarginRight = styled(Button)`
+  margin-right: 10px;
+`
+
+const Loader = styled(RLoader)`
+  margin-right: 5px;
+`
+
+const FlexItemAlignRight = styled(FlexboxGrid.Item)`
+  text-align: right;
+`
+
+const FormGroup = styled(Form.Group)`
+  padding-top: 6px;
+  padding-left: 8px;
+`
 
 export interface UserProperty {
   readonly key: string
@@ -295,7 +361,7 @@ function UserEditView() {
     if (isDisabled) {
       return (
         <>
-          <Loader style={{marginRight: '5px'}} />
+          <Loader />
           {t('userCreateOrEditView.loadingUser')}
         </>
       )
@@ -312,14 +378,13 @@ function UserEditView() {
     return (
       <>
         {/* save button */}
-        <Button
+        <ButtonMarginRight
           appearance="ghost"
           loading={isDisabled}
           type="submit"
-          data-testid="saveButton"
-          style={{marginRight: '10px'}}>
+          data-testid="saveButton">
           {user ? t('save') : t('create')}
-        </Button>
+        </ButtonMarginRight>
         {/* save and close button */}
         <Button
           appearance="primary"
@@ -341,40 +406,32 @@ function UserEditView() {
         model={validationModel}
         formValue={{name, email, password}}>
         {/* heading */}
-        <FlexboxGrid align="middle" style={{paddingRight: '5px', paddingBottom: '20px'}}>
+        <FlexGrid align="middle">
           {/* title */}
           <FlexboxGrid.Item colspan={12}>
             <Row>
-              <Col xs={2} style={{paddingTop: '3px', marginRight: '1rem'}}>
+              <PaddedCol xs={2}>
                 <Link to="/users">
                   <h1>
                     <MdChevronLeft />
                   </h1>
                 </Link>
-              </Col>
+              </PaddedCol>
               <Col xs={16}>
                 <h2>{titleView()}</h2>
               </Col>
             </Row>
           </FlexboxGrid.Item>
           {/* actions */}
-          <FlexboxGrid.Item colspan={12} style={{textAlign: 'right'}}>
-            {actionsView()}
-          </FlexboxGrid.Item>
-        </FlexboxGrid>
+          <FlexItemAlignRight colspan={12}>{actionsView()}</FlexItemAlignRight>
+        </FlexGrid>
         {/* user form */}
-        <Grid
-          style={{
-            width: '100%',
-            paddingLeft: '0px',
-            height: 'calc(100vh - 160px)',
-            overflowY: 'scroll'
-          }}>
+        <UserFormGrid>
           <Row gutter={10}>
             <Col xs={12}>
-              <Grid fluid>
+              <RGrid fluid>
                 {/* general user data */}
-                <Panel bordered header={t('userCreateOrEditView.userDataTitle')}>
+                <RPanel bordered header={t('userCreateOrEditView.userDataTitle')}>
                   <Row>
                     {/* profile image */}
                     <Col xs={12}>
@@ -388,16 +445,16 @@ function UserEditView() {
                       />
                     </Col>
                     {/* active / inactive */}
-                    <Col xs={12} style={{textAlign: 'end'}}>
+                    <ColTextAlign xs={12}>
                       <Form.Group controlId="active">
                         <Form.ControlLabel>{t('userCreateOrEditView.active')}</Form.ControlLabel>
-                        <Toggle
+                        <RToggle
                           checked={active}
                           disabled={isDisabled}
                           onChange={value => setActive(value)}
                         />
                       </Form.Group>
-                    </Col>
+                    </ColTextAlign>
                   </Row>
 
                   <Row gutter={10}>
@@ -552,12 +609,9 @@ function UserEditView() {
                       </Form.Group>
                     </Col>
                   </Row>
-                </Panel>
+                </RPanel>
                 {/* roles */}
-                <Panel
-                  bordered
-                  header={t('userCreateOrEditView.userRoles')}
-                  style={{marginTop: '20px'}}>
+                <Panel bordered header={t('userCreateOrEditView.userRoles')}>
                   <Row gutter={10}>
                     <Col xs={24}>
                       <Form.Group controlId="userRoles">
@@ -580,10 +634,7 @@ function UserEditView() {
                   </Row>
                 </Panel>
                 {/* properties */}
-                <Panel
-                  bordered
-                  header={t('userCreateOrEditView.properties')}
-                  style={{marginTop: '20px'}}>
+                <Panel bordered header={t('userCreateOrEditView.properties')}>
                   <Row gutter={10}>
                     <Col xs={24}>
                       <Form.Group controlId="userProperties">
@@ -597,40 +648,30 @@ function UserEditView() {
                           }
                           defaultValue={{key: '', value: '', public: true}}>
                           {({value, onChange}) => (
-                            <div style={{display: 'flex', flexDirection: 'row'}}>
-                              <Input
+                            <FlexRow>
+                              <InputW40
                                 placeholder={t('articleEditor.panels.key')}
-                                style={{
-                                  width: '40%',
-                                  marginRight: '10px'
-                                }}
                                 value={value.key}
                                 onChange={propertyKey => onChange({...value, key: propertyKey})}
                                 data-testid="propertyKey"
                               />
-                              <Input
+                              <InputW60
                                 placeholder={t('articleEditor.panels.value')}
-                                style={{
-                                  width: '60%'
-                                }}
                                 value={value.value}
                                 onChange={propertyValue =>
                                   onChange({...value, value: propertyValue})
                                 }
                                 data-testid="propertyValue"
                               />
-                              <Form.Group
-                                style={{paddingTop: '6px', paddingLeft: '8px'}}
-                                controlId="articleProperty">
+                              <FormGroup controlId="articleProperty">
                                 <Toggle
-                                  style={{maxWidth: '70px', minWidth: '70px'}}
                                   checkedChildren={t('articleEditor.panels.public')}
                                   unCheckedChildren={t('articleEditor.panels.private')}
                                   checked={value.public}
                                   onChange={isPublic => onChange({...value, public: isPublic})}
                                 />
-                              </Form.Group>
-                            </div>
+                              </FormGroup>
+                            </FlexRow>
                           )}
                         </ListInput>
                       </Form.Group>
@@ -638,10 +679,7 @@ function UserEditView() {
                   </Row>
                 </Panel>
                 {/* password */}
-                <Panel
-                  bordered
-                  header={t('userCreateOrEditView.passwordHeader')}
-                  style={{marginTop: '20px'}}>
+                <Panel bordered header={t('userCreateOrEditView.passwordHeader')}>
                   <Row gutter={10}>
                     <Col xs={24}>
                       <EditUserPassword
@@ -653,18 +691,18 @@ function UserEditView() {
                     </Col>
                   </Row>
                 </Panel>
-              </Grid>
+              </RGrid>
             </Col>
             {/* subscriptions */}
             <Col xs={12}>
-              <Grid fluid style={{paddingRight: '0px'}}>
-                <Panel bordered header={t('userCreateOrEditView.subscriptionsHeader')}>
+              <Grid fluid>
+                <RPanel bordered header={t('userCreateOrEditView.subscriptionsHeader')}>
                   <UserSubscriptionsList subscriptions={user?.subscriptions} />
-                </Panel>
+                </RPanel>
               </Grid>
             </Col>
           </Row>
-        </Grid>
+        </UserFormGrid>
       </Form>
 
       {/* image selection panel */}

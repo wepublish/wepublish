@@ -1,6 +1,7 @@
-import React, {useEffect, useRef, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, Message, Panel, Schema, toaster} from 'rsuite'
+import {Button, Drawer, Form as RForm, Message as RMessage, Panel, Schema, toaster} from 'rsuite'
 import {FormInstance} from 'rsuite/esm/Form'
 
 import {
@@ -31,6 +32,27 @@ export interface ImageEditPanelProps {
   onClose?(): void
   onSave?(): void
 }
+
+const {Group, ControlLabel, Control} = RForm
+
+const Form = styled(RForm)`
+  height: 100%;
+`
+
+const HiddenFontControl = styled(Control)`
+  display: none;
+`
+
+const BoxWrapper = styled.div`
+  border: solid 1px #cad5e4;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 4px;
+`
+
+const Message = styled(RMessage)`
+  margin-top: 5px;
+`
 
 function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const isAuthorized = useAuthorisation('CAN_UPDATE_PEER_PROFILE')
@@ -83,9 +105,9 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     const error = fetchError?.message ?? saveError?.message
     if (error)
       toaster.push(
-        <Message type="error" showIcon closable duration={0}>
+        <RMessage type="error" showIcon closable duration={0}>
           {error}
-        </Message>
+        </RMessage>
       )
   }, [fetchError, saveError])
 
@@ -117,16 +139,6 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
 
   const validationModel = Schema.Model({
     name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
-    // Validation for richText - not needed for now
-    // callToActionText: ArrayType().of(
-    //   ObjectType().shape({
-    //     children: ArrayType().of(
-    //       ObjectType().shape({
-    //         text: StringType().isRequired(t('errorMessages.noCallToActionTextErrorMessage'))
-    //       })
-    //     )
-    //   })
-    // ),
     callToActionTextURL: StringType()
       .isURL(t('errorMessages.invalidUrlErrorMessage'))
       .isRequired(t('errorMessages.noUrlErrorMessage')),
@@ -144,7 +156,6 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       disabled={isDisabled}
       ref={form}
       model={validationModel}
-      style={{height: '100%'}}
       formValue={{
         name,
         callToActionText,
@@ -185,20 +196,18 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
             }}
             removeImage={() => setLogoImage(undefined)}
           />
-          <Form.Group
-          // style={{height: '45px'}}
-          >
-            <Form.Control style={{display: 'none'}} name="profileImg" value={logoImage?.id || ''} />
-          </Form.Group>
+          <Group>
+            <HiddenFontControl name="profileImg" value={logoImage?.id || ''} />
+          </Group>
         </Panel>
 
         <Panel header={t('peerList.panels.information')}>
-          <Form.Group controlId="peerListName">
-            <Form.ControlLabel>{toggleRequiredLabel(t('peerList.panels.name'))}</Form.ControlLabel>
-            <Form.Control name="name" value={name} onChange={(value: string) => setName(value)} />
-          </Form.Group>
-          <Form.Group controlId="peerListThemeColor">
-            <Form.ControlLabel>{t('peerList.panels.themeColor')}</Form.ControlLabel>
+          <Group controlId="peerListName">
+            <ControlLabel>{toggleRequiredLabel(t('peerList.panels.name'))}</ControlLabel>
+            <Control name="name" value={name} onChange={(value: string) => setName(value)} />
+          </Group>
+          <Group controlId="peerListThemeColor">
+            <ControlLabel>{t('peerList.panels.themeColor')}</ControlLabel>
             <ColorPicker
               disabled={isDisabled}
               setColor={color => {
@@ -206,9 +215,9 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
               }}
               currentColor={themeColor}
             />
-          </Form.Group>
-          <Form.Group controlId="peerListThemeFontColor">
-            <Form.ControlLabel>{t('peerList.panels.themeFontColor')}</Form.ControlLabel>
+          </Group>
+          <Group controlId="peerListThemeFontColor">
+            <ControlLabel>{t('peerList.panels.themeFontColor')}</ControlLabel>
             <ColorPicker
               disabled={isDisabled}
               setColor={color => {
@@ -216,50 +225,34 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
               }}
               currentColor={themeFontColor}
             />
-          </Form.Group>
+          </Group>
 
-          <Form.ControlLabel>{t('peerList.panels.callToActionText')}</Form.ControlLabel>
-          <div
-            style={{
-              border: 'solid 1px #cad5e4',
-              borderRadius: '8px',
-              padding: '12px',
-              marginTop: '4px'
-            }}>
-            <Form.Group controlId="peerListCallToAction">
-              <Form.ControlLabel>{t('peerList.panels.text')}</Form.ControlLabel>
-              <Form.Control
+          <ControlLabel>{t('peerList.panels.callToActionText')}</ControlLabel>
+          <BoxWrapper>
+            <Group controlId="peerListCallToAction">
+              <ControlLabel>{t('peerList.panels.text')}</ControlLabel>
+              <Control
                 name="callToActionText"
                 value={callToActionText}
                 onChange={setCallToActionText}
                 accepter={RichTextBlock}
                 disabled={isDisabled}
               />
-            </Form.Group>
-            <Form.Group>
-              <Form.Control
+            </Group>
+            <Group>
+              <Control
                 placeholder={t('peerList.panels.URL')}
                 name="callToActionTextURL"
                 value={callToActionTextURL}
                 onChange={setCallToActionTextURL}
               />
-            </Form.Group>
-          </div>
+            </Group>
+          </BoxWrapper>
           <br />
-          <Form.ControlLabel>
-            {toggleRequiredLabel(t('peerList.panels.callToActionImage'))}
-          </Form.ControlLabel>
-          <div
-            style={{
-              border: 'solid 1px #cad5e4',
-              borderRadius: '8px',
-              padding: '12px',
-              marginTop: '4px'
-            }}>
-            <Form.Group controlId="peerListImage">
-              <Form.ControlLabel>
-                {toggleRequiredLabel(t('peerList.panels.image'))}
-              </Form.ControlLabel>
+          <ControlLabel>{toggleRequiredLabel(t('peerList.panels.callToActionImage'))}</ControlLabel>
+          <BoxWrapper>
+            <Group controlId="peerListImage">
+              <ControlLabel>{toggleRequiredLabel(t('peerList.panels.image'))}</ControlLabel>
               <ChooseEditImage
                 image={callToActionImage}
                 header={''}
@@ -276,24 +269,20 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 }}
                 removeImage={() => setCallToActionImage(undefined)}
               />
-              <Form.Control
-                name="callToActionImage"
-                value={callToActionImage?.filename}
-                style={{display: 'none'}}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Control
+              <HiddenFontControl name="callToActionImage" value={callToActionImage?.filename} />
+            </Group>
+            <Group>
+              <Control
                 placeholder={t('peerList.panels.URL')}
                 name="callToActionImageURL"
                 value={callToActionImageURL}
                 onChange={setCallToActionImageURL}
               />
-              <Message style={{marginTop: '5px'}} showIcon type="info">
+              <Message showIcon type="info">
                 {t('peerList.panels.ctaImageInfo')}
               </Message>
-            </Form.Group>
-          </div>
+            </Group>
+          </BoxWrapper>
         </Panel>
       </Drawer.Body>
 

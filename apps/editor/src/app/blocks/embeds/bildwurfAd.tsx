@@ -1,6 +1,11 @@
-import React, {useEffect} from 'react'
+import styled from '@emotion/styled'
+import {useEffect} from 'react'
 
 import {useScript} from '../../utility'
+
+const Bildwurf = styled.div`
+  pointer-events: none;
+`
 
 declare global {
   interface Window {
@@ -31,8 +36,8 @@ export function BildwurfAdEmbed({zoneID}: BildwurfAdEmbedProps) {
   }, [])
 
   return (
-    <div id="bildwurf-injection-wrapper" style={{pointerEvents: 'none'}}>
+    <Bildwurf id="bildwurf-injection-wrapper">
       <ins className="aso-zone" data-zone={zoneID}></ins>
-    </div>
+    </Bildwurf>
   )
 }

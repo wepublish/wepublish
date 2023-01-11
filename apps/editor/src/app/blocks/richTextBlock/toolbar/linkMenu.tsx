@@ -1,13 +1,27 @@
-import React, {useContext, useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdLinkOff} from 'react-icons/md'
-import {Button, ButtonToolbar, Col, Form, IconButton, InputGroup, Row} from 'rsuite'
+import {Button, ButtonToolbar, Col as RCol, Form, IconButton, InputGroup, Row} from 'rsuite'
 import {Editor, Range, Transforms} from 'slate'
 import {useSlate} from 'slate-react'
 
 import {SubMenuContext} from '../../../atoms/toolbar'
 import {InlineFormat} from '../editor/formats'
 import {WepublishEditor} from '../editor/wepublishEditor'
+
+const {Group, Control, ControlLabel, HelpText} = Form
+
+const Select = styled.select`
+  background-color: white;
+  border: none;
+  box-shadow: none;
+`
+
+const Col = styled(RCol)`
+  text-align: right;
+  margin-top: 0px;
+`
 
 export function LinkMenu() {
   const editor = useSlate()
@@ -85,16 +99,15 @@ export function LinkMenu() {
   return (
     <>
       <Row>
-        <Col xs={24} style={{textAlign: 'right', marginTop: '0px'}}>
+        <Col xs={24}>
           <IconButton icon={<MdClose />} onClick={() => closeMenu()} />
         </Col>
       </Row>
       <Form fluid>
-        <Form.Group controlId="link">
-          <Form.ControlLabel>{t('blocks.richText.link')}</Form.ControlLabel>
+        <Group controlId="link">
+          <ControlLabel>{t('blocks.richText.link')}</ControlLabel>
           <InputGroup>
-            <select
-              style={{backgroundColor: 'white', border: 'none', boxShadow: 'none'}}
+            <Select
               value={prefix}
               onChange={e => {
                 setPrefix(e.target.value)
@@ -103,27 +116,27 @@ export function LinkMenu() {
               <option value={prefixType.https}>{prefixType.https}</option>
               <option value={prefixType.mailto}>{prefixType.mailto}</option>
               <option value={prefixType.other}>{prefixType.other}</option>
-            </select>
+            </Select>
 
-            <Form.Control name="url" value={url} onChange={(url: string) => setURL(url)} />
+            <Control name="url" value={url} onChange={(url: string) => setURL(url)} />
           </InputGroup>
           {prefix !== prefixType.mailto && url && !isValidURL ? (
-            <Form.HelpText> {t('blocks.richText.invalidLink')}</Form.HelpText>
+            <HelpText> {t('blocks.richText.invalidLink')}</HelpText>
           ) : undefined}
           {prefix === prefixType.mailto && url && !isValidMail ? (
-            <Form.HelpText> {t('blocks.richText.invalidMail')} </Form.HelpText>
+            <HelpText> {t('blocks.richText.invalidMail')} </HelpText>
           ) : undefined}
-        </Form.Group>
-        <Form.Group controlId="text">
-          <Form.ControlLabel>{t('blocks.richText.text')}</Form.ControlLabel>
-          <Form.Control
+        </Group>
+        <Group controlId="text">
+          <ControlLabel>{t('blocks.richText.text')}</ControlLabel>
+          <Control
             name="title"
             value={title}
             onChange={(title: string) => {
               setTitle(title)
             }}
           />
-        </Form.Group>
+        </Group>
         <ButtonToolbar>
           <Button
             disabled={isDisabled}

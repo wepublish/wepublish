@@ -1,6 +1,10 @@
-import React from 'react'
+import styled from '@emotion/styled'
 
 import {transformCssStringToObject} from '../../utility'
+
+const Iframe = styled.div`
+  width: 100%;
+`
 
 export interface IframeEmbedProps {
   url?: string
@@ -23,7 +27,7 @@ export function IframeEmbed({url, title, width, height, styleCustom, sandbox}: I
         }
 
   return (
-    <div style={{width: '100%'}}>
+    <Iframe>
       <div
         style={{
           position: 'relative',
@@ -45,6 +49,6 @@ export function IframeEmbed({url, title, width, height, styleCustom, sandbox}: I
           sandbox={sandbox}
         />
       </div>
-    </div>
+    </Iframe>
   )
 }

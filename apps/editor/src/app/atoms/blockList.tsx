@@ -1,7 +1,8 @@
+import styled from '@emotion/styled'
 import nanoid from 'nanoid'
 import React, {Fragment, memo, ReactNode, useCallback, useMemo, useState} from 'react'
 import {MdArrowDownward, MdArrowUpward, MdDelete} from 'react-icons/md'
-import {IconButton, Panel} from 'rsuite'
+import {IconButton, Panel as RPanel} from 'rsuite'
 
 import {
   isFunctionalUpdate,
@@ -10,6 +11,62 @@ import {
   ValueConstructor
 } from '../utility'
 import {AddBlockInput} from './addBlockInput'
+
+const IconWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  fill: gray;
+`
+
+const ChildrenWrapper = styled.div`
+  padding: 20px;
+`
+
+const Panel = styled(RPanel)`
+  width: 100%;
+`
+
+const PanelWrapper = styled.div`
+  display: flex;
+  width: 100%;
+`
+
+const DownwardButtonWrapper = styled.div`
+  margin-bottom: 10px;
+`
+
+const UpwardButtonWrapper = styled.div`
+  margin-top: 10px;
+  margin-bottom: 5px;
+`
+
+const FlexGrow = styled.div`
+  flex-grow: 1;
+`
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+`
+
+const ListItem = styled.div`
+  display: flex;
+  width: 100%;
+`
+
+const AddButton = styled.div`
+  width: 100%;
+`
+
+const AddBlockInputWrapper = styled.div`
+  padding-left: 30px;
+  padding-right: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+`
 
 export interface BlockProps<V = any> {
   itemId?: string | null
@@ -178,14 +235,7 @@ export function BlockList<V extends BlockListValue>({
 
   function addButtonForIndex(index: number) {
     return (
-      <div
-        style={{
-          paddingLeft: 30,
-          paddingRight: 30,
-          marginTop: 10,
-          marginBottom: 10,
-          textAlign: 'center'
-        }}>
+      <AddBlockInputWrapper>
         <AddBlockInput
           menuItems={Object.entries(blockMap).map(([type, {icon, label}]) => ({
             id: type,
@@ -196,7 +246,7 @@ export function BlockList<V extends BlockListValue>({
           subtle={index !== values.length || disabled}
           disabled={disabled}
         />
-      </div>
+      </AddBlockInputWrapper>
     )
   }
 
@@ -226,13 +276,10 @@ export function BlockList<V extends BlockListValue>({
   }
 
   return (
-    <div
-      style={{
-        width: '100%'
-      }}>
+    <AddButton>
       {addButtonForIndex(0)}
       {values.map((value: any, index: any) => listItemForIndex(value, index))}
-    </div>
+    </AddButton>
   )
 }
 
@@ -255,58 +302,37 @@ function ListItemWrapper({
   onMoveDown
 }: ListItemWrapperProps) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        width: '100%'
-      }}>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          marginRight: 10
-        }}>
+    <ListItem>
+      <Wrapper>
         <IconButton
           icon={<MdDelete />}
           onClick={onDelete}
           disabled={onDelete == null || disabled}
         />
-        <div style={{flexGrow: 1}} />
-        <div style={{marginTop: 10, marginBottom: 5}}>
+        <FlexGrow />
+        <UpwardButtonWrapper>
           <IconButton
             icon={<MdArrowUpward />}
             onClick={onMoveUp}
             disabled={onMoveUp == null || disabled}
           />
-        </div>
-        <div style={{marginBottom: 10}}>
+        </UpwardButtonWrapper>
+        <DownwardButtonWrapper>
           <IconButton
             title=""
             icon={<MdArrowDownward />}
             onClick={onMoveDown}
             disabled={onMoveDown == null || disabled}
           />
-        </div>
-        <div style={{flexGrow: 1}} />
-      </div>
-      <div
-        style={{
-          display: 'flex',
-          width: '100%'
-        }}>
-        <Panel style={{width: '100%'}} bordered>
-          <div style={{padding: 20}}>{children}</div>
+        </DownwardButtonWrapper>
+        <FlexGrow />
+      </Wrapper>
+      <PanelWrapper>
+        <Panel bordered>
+          <ChildrenWrapper>{children}</ChildrenWrapper>
         </Panel>
-      </div>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          marginLeft: 10,
-          fill: 'gray'
-        }}>
-        {icon}
-      </div>
-    </div>
+      </PanelWrapper>
+      <IconWrapper>{icon}</IconWrapper>
+    </ListItem>
   )
 }

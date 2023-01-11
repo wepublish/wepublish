@@ -1,10 +1,14 @@
-import React from 'react'
+import styled from '@emotion/styled'
 import {useTranslation} from 'react-i18next'
 import {MdUploadFile} from 'react-icons/md'
 import {Button, Drawer, Form, Notification, toaster} from 'rsuite'
 
 import {FileDropInput} from '../atoms/fileDropInput'
 import {getImgMinSizeToCompress} from '../utility'
+
+const InputWrapper = styled.div`
+  height: 100px;
+`
 
 export interface ImageUploadPanelProps {
   onClose(): void
@@ -45,13 +49,13 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <div style={{height: '100px'}}>
+        <InputWrapper>
           <FileDropInput
             icon={<MdUploadFile />}
             text={t('articleEditor.panels.dropImage')}
             onDrop={handleDrop}
           />
-        </div>
+        </InputWrapper>
         <Form.ControlLabel>
           <br />
           {t('images.panels.resizedImage', {sizeMB: getImgMinSizeToCompress()})}

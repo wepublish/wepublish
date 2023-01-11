@@ -1,9 +1,33 @@
-import React, {useState} from 'react'
+import styled from '@emotion/styled'
+import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdDone, MdMail} from 'react-icons/md'
-import {Button, FlexboxGrid, Message, Modal, Panel, toaster} from 'rsuite'
+import {Button as RButton, FlexboxGrid, Message, Modal, Panel, toaster} from 'rsuite'
 
 import {FullUserFragment, InvoiceFragment, InvoiceItem, useUpdateInvoiceMutation} from '../api'
+
+const Button = styled(RButton)`
+  margin-top: 20px;
+`
+
+const MailIcon = styled(MdMail)`
+  color: red;
+  font-size: 2em;
+`
+
+const CloseIcon = styled(MdClose)`
+  color: red;
+  font-size: 2em;
+`
+
+const DoneIcon = styled(MdDone)`
+  color: green;
+  font-size: 2em;
+`
+
+const FlexboxItem = styled(FlexboxGrid.Item)`
+  text-align: right;
+`
 
 export interface InvoiceProps {
   subscriptionId: string
@@ -92,7 +116,6 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
         <Button
           onClick={() => setModalOpen(true)}
           appearance="primary"
-          style={{marginTop: '20px'}}
           disabled={!me?.id || disabled}>
           {t('invoice.payManually')}
         </Button>
@@ -107,18 +130,18 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
           {`${t('invoice.invoiceNo')} ${invoice.id}`}{' '}
           {!invoice.paidAt && <span>({t('invoice.unpaid')})</span>}
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item style={{textAlign: 'right'}}>{invoiceIconView()}</FlexboxGrid.Item>
+        <FlexboxItem>{invoiceIconView()}</FlexboxItem>
       </FlexboxGrid>
     )
   }
 
   function invoiceIconView() {
     if (invoice.paidAt) {
-      return <MdDone style={{color: 'green', fontSize: '2em'}} />
+      return <DoneIcon />
     } else if (invoice.canceledAt) {
-      return <MdClose style={{color: 'red', fontSize: '2em'}} />
+      return <CloseIcon />
     } else {
-      return <MdMail style={{color: 'red', fontSize: '2em'}} />
+      return <MailIcon />
     }
   }
 
@@ -136,12 +159,12 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
         <Modal.Title>{t('invoice.areYouSure')}</Modal.Title>
         <Modal.Body>{t('invoice.manuallyPaidModalBody')}</Modal.Body>
         <Modal.Footer>
-          <Button appearance="primary" onClick={payManually}>
+          <RButton appearance="primary" onClick={payManually}>
             {t('confirm')}
-          </Button>
-          <Button appearance="subtle" onClick={() => setModalOpen(false)}>
+          </RButton>
+          <RButton appearance="subtle" onClick={() => setModalOpen(false)}>
             {t('cancel')}
-          </Button>
+          </RButton>
         </Modal.Footer>
       </Modal>
     </>

@@ -1,5 +1,5 @@
 import nanoid from 'nanoid'
-import React, {useState} from 'react'
+import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form} from 'rsuite'
 

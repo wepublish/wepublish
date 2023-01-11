@@ -1,5 +1,4 @@
-import './routes.less'
-
+import styled from '@emotion/styled'
 import React, {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -10,7 +9,16 @@ import {
   MdSave
 } from 'react-icons/md'
 import {Link, useNavigate, useParams} from 'react-router-dom'
-import {Badge, Drawer, IconButton, Message, Modal, Notification, Tag, toaster} from 'rsuite'
+import {
+  Badge,
+  Drawer,
+  IconButton as RIconButton,
+  Message,
+  Modal,
+  Notification,
+  Tag as RTag,
+  toaster
+} from 'rsuite'
 
 import {
   PageInput,
@@ -34,6 +42,36 @@ import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
 import {PublishPagePanel} from '../panel/publishPagePanel'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {StateColor} from '../utility'
+
+const IconButtonMargins = styled(RIconButton)`
+  margin-top: 4px;
+  margin-bottom: 20px;
+`
+
+const IconButtonMTop = styled(RIconButton)`
+  margin-top: 4px;
+`
+
+const IconButton = styled(RIconButton)`
+  margin-left: 10px;
+`
+
+const CenterChildren = styled.div`
+  margin-top: 4px;
+`
+
+const Legend = styled.legend`
+  width: auto;
+  margin: 0px auto;
+`
+
+const FieldSet = styled.fieldset<{stateColor: string}>`
+  border-color: ${({stateColor}) => stateColor};
+`
+
+const Tag = styled(RTag)<{stateColor: string}>`
+  background-color: ${({stateColor}) => stateColor};
+`
 
 function PageEditor() {
   const navigate = useNavigate()
@@ -307,45 +345,41 @@ function PageEditor() {
 
   return (
     <>
-      <fieldset style={{borderColor: stateColor}}>
-        <legend style={{width: 'auto', margin: '0px auto'}}>
-          <Tag style={{backgroundColor: stateColor}}>{tagTitle}</Tag>
-        </legend>
+      <FieldSet stateColor={stateColor}>
+        <Legend>
+          <Tag stateColor={stateColor}>{tagTitle}</Tag>
+        </Legend>
         <EditorTemplate
           navigationChildren={
             <NavigationBar
               leftChildren={
                 <Link to="/pages">
-                  <IconButton
+                  <IconButtonMargins
                     className="actionButton"
-                    style={{marginTop: '4px', marginBottom: '20px'}}
                     size="lg"
                     icon={<MdKeyboardBackspace />}
                     onClick={e => {
                       if (!unsavedChangesDialog()) e.preventDefault()
                     }}>
                     {t('Back')}
-                  </IconButton>
+                  </IconButtonMargins>
                 </Link>
               }
               centerChildren={
-                <div style={{marginTop: '4px'}}>
-                  <IconButton
+                <CenterChildren>
+                  <RIconButton
                     icon={<MdIntegrationInstructions />}
                     className="actionButton"
                     size="lg"
                     disabled={isDisabled}
                     onClick={() => setMetaDrawerOpen(true)}>
                     {t('pageEditor.overview.metadata')}
-                  </IconButton>
+                  </RIconButton>
 
                   {isNew && createData == null ? (
                     <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
                       <IconButton
                         className="actionButton"
-                        style={{
-                          marginLeft: '10px'
-                        }}
                         size="lg"
                         icon={<MdSave />}
                         disabled={isDisabled}
@@ -358,9 +392,6 @@ function PageEditor() {
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
                         <IconButton
                           className="actionButton"
-                          style={{
-                            marginLeft: '10px'
-                          }}
                           size="lg"
                           icon={<MdSave />}
                           disabled={isDisabled}
@@ -376,9 +407,6 @@ function PageEditor() {
                               : 'saved'
                           }>
                           <IconButton
-                            style={{
-                              marginLeft: '10px'
-                            }}
                             className="actionButton"
                             size="lg"
                             icon={<MdCloudUpload />}
@@ -392,15 +420,14 @@ function PageEditor() {
                       </PermissionControl>
                     </PermissionControl>
                   )}
-                </div>
+                </CenterChildren>
               }
               rightChildren={
                 <PermissionControl qualifyingPermissions={['CAN_GET_PAGE_PREVIEW_LINK']}>
                   <Link to="#">
-                    <IconButton
+                    <IconButtonMTop
                       className="actionButton"
                       disabled={hasChanged || !id || !canPreview}
-                      style={{marginTop: '4px'}}
                       size="lg"
                       icon={<MdRemoveRedEye />}
                       onClick={() => {
@@ -412,7 +439,7 @@ function PageEditor() {
                         })
                       }}>
                       {t('pageEditor.overview.preview')}
-                    </IconButton>
+                    </IconButtonMTop>
                   </Link>
                 </PermissionControl>
               }
@@ -422,7 +449,7 @@ function PageEditor() {
             {useBlockMap<BlockValue>(() => BlockMap, [])}
           </BlockList>
         </EditorTemplate>
-      </fieldset>
+      </FieldSet>
       <Drawer open={isMetaDrawerOpen} size="sm" onClose={() => setMetaDrawerOpen(false)}>
         <PageMetadataPanel
           value={metadata}

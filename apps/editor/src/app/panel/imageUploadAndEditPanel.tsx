@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 
 import {ImageMetaData, readImageMetaData} from '../atoms/imageMetaData'
 import {ImageEditPanel} from './imageEditPanel'

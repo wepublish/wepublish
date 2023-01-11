@@ -5,7 +5,7 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
 - First value
 + Second value
 
-@@ -35,13 +35,14 @@
+@@ -34,13 +34,14 @@
         </h4>
         <div
           class=\\"rs-drawer-actions\\"
@@ -22,7 +22,7 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
             create
             <span
               class=\\"rs-ripple-pond\\"
-@@ -95,11 +96,11 @@
+@@ -94,11 +95,11 @@
                   aria-labelledby=\\"name-control-label\\"
                   class=\\"rs-input\\"
                   id=\\"name\\"
@@ -35,7 +35,7 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
             </div>
             <div
               class=\\"rs-form-group\\"
-@@ -120,11 +121,11 @@
+@@ -119,11 +120,11 @@
                   aria-labelledby=\\"url-control-label\\"
                   class=\\"rs-input\\"
                   id=\\"url\\"
@@ -48,7 +48,7 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
             </div>
             <div
               class=\\"rs-form-group\\"
-@@ -145,11 +146,11 @@
+@@ -144,11 +145,11 @@
                   aria-labelledby=\\"token-control-label\\"
                   class=\\"rs-input\\"
                   id=\\"token\\"
@@ -66,8 +66,7 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
 exports[`Peer Edit Panel should render 1`] = `
 <DocumentFragment>
   <form
-    class="rs-form rs-form-vertical rs-form-fluid"
-    style="height: 100%;"
+    class="css-1c13mle-Form enhc90y2 rs-form rs-form-vertical rs-form-fluid"
   >
     <div
       class="rs-drawer-header"
@@ -241,8 +240,7 @@ exports[`Peer Edit Panel should render 1`] = `
 exports[`Peer Edit Panel should render with ID 1`] = `
 <DocumentFragment>
   <form
-    class="rs-form rs-form-vertical rs-form-fluid"
-    style="height: 100%;"
+    class="css-1c13mle-Form enhc90y2 rs-form rs-form-vertical rs-form-fluid"
   >
     <div
       class="rs-drawer-header"

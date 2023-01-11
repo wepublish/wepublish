@@ -1,4 +1,4 @@
-import React, {ReactNode} from 'react'
+import {ReactNode} from 'react'
 
 import {DescriptionListItem} from './descriptionList'
 import {InfoColor, InfoMessage} from './infoMessage'

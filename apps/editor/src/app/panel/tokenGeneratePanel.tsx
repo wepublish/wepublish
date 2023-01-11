@@ -1,10 +1,15 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Input, Message, Panel, toaster} from 'rsuite'
+import {Button, Drawer, Input, Message as RMessage, Panel, toaster} from 'rsuite'
 
 import {TokenListDocument, useCreateTokenMutation} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {getOperationNameFromDocument} from '../utility'
+
+const Message = styled(RMessage)`
+  margin-top: 5px;
+`
 
 export interface TokenGeneratePanelProps {
   onClose?(): void
@@ -26,9 +31,9 @@ function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
   useEffect(() => {
     if (createError?.message)
       toaster.push(
-        <Message type="error" showIcon closable duration={0}>
+        <RMessage type="error" showIcon closable duration={0}>
           {createError.message}
-        </Message>
+        </RMessage>
       )
   }, [createError])
 
@@ -57,7 +62,7 @@ function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
           <>
             <p>{t('tokenList.panels.creationSuccess')}</p>
             <Panel bordered>{token}</Panel>
-            <Message showIcon style={{marginTop: 5}} type="warning">
+            <Message showIcon type="warning">
               {t('tokenList.panels.tokenWarning')}
             </Message>
           </>

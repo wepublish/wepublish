@@ -1,5 +1,5 @@
 import {gql, useQuery} from '@apollo/client'
-import React, {createContext, Dispatch, ReactNode, useEffect, useReducer} from 'react'
+import {createContext, Dispatch, ReactNode, useEffect, useReducer} from 'react'
 import {usePageVisibility} from 'react-page-visibility'
 
 import {UserRole} from './api'

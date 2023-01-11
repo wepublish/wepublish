@@ -1,5 +1,5 @@
 import {ApolloError} from '@apollo/client'
-import React, {useEffect} from 'react'
+import {useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd} from 'react-icons/md'
 import {useNavigate} from 'react-router-dom'

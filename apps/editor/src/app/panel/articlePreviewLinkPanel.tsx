@@ -1,9 +1,23 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Form, Message, Modal, Slider, toaster} from 'rsuite'
+import {Button, Form, Message as RMessage, Modal, Slider, toaster} from 'rsuite'
 
 import {useArticlePreviewLinkQuery} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+
+const Message = styled(RMessage)`
+  margin-bottom: 20px;
+`
+
+const FormGroupTop = styled(Form.Group)`
+  padding-top: 20px;
+`
+
+const FormGroupHorizontal = styled(Form.Group)`
+  padding-left: 20px;
+  padding-right: 20px;
+`
 
 export interface ArticlePreviewProps {
   id: string
@@ -53,12 +67,10 @@ function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPanelProps)
       </Modal.Header>
 
       <Modal.Body>
-        <Message style={{marginBottom: '20px'}} type="warning">
-          {t('articleEditor.panels.articlePreviewLinkDesc')}
-        </Message>
+        <Message type="warning">{t('articleEditor.panels.articlePreviewLinkDesc')}</Message>
 
         <Form fluid>
-          <Form.Group style={{paddingLeft: '20px', paddingRight: '20px'}} controlId="hours">
+          <FormGroupHorizontal controlId="hours">
             <Form.ControlLabel>
               {t('articleEditor.panels.articlePreviewLinkHours')}
             </Form.ControlLabel>
@@ -74,8 +86,8 @@ function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPanelProps)
               }}
               onChange={value => setHours(value)}
             />
-          </Form.Group>
-          <Form.Group style={{paddingTop: '20px'}} controlId="field">
+          </FormGroupHorizontal>
+          <FormGroupTop controlId="field">
             <Form.ControlLabel>
               {t('articleEditor.panels.articlePreviewLinkField')}
             </Form.ControlLabel>
@@ -84,7 +96,7 @@ function ArticlePreviewLinkPanel({props, onClose}: ArticlePreviewLinkPanelProps)
               disabled={isLoading}
               value={data?.articlePreviewLink}
             />
-          </Form.Group>
+          </FormGroupTop>
         </Form>
       </Modal.Body>
 
