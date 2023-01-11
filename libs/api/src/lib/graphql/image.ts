@@ -144,7 +144,7 @@ export const GraphQLImage = new GraphQLObjectType<ImageWithTransformURL, Context
 
     url: {
       type: GraphQLString,
-      resolve: createProxyingResolver((image, {}, {mediaAdapter}) => {
+      resolve: createProxyingResolver((image, _, {mediaAdapter}) => {
         return mediaAdapter.getImageURL(image)
       })
     },

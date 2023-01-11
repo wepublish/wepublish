@@ -198,7 +198,7 @@ export const GraphQLPublicPage = new GraphQLObjectType<PublicPage, Context>({
 
     url: {
       type: GraphQLNonNull(GraphQLString),
-      resolve: createProxyingResolver((page, {}, {urlAdapter}) => {
+      resolve: createProxyingResolver((page, _, {urlAdapter}) => {
         return urlAdapter.getPublicPageURL(page)
       })
     },
