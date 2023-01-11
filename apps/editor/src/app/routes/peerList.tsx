@@ -57,7 +57,11 @@ function PeerList() {
     error: peerInfoError
   } = usePeerProfileQuery({fetchPolicy: 'network-only'})
 
-  const {data: peerListData, loading: isPeerListLoading, error: peerListError} = usePeerListQuery({
+  const {
+    data: peerListData,
+    loading: isPeerListLoading,
+    error: peerListError
+  } = usePeerListQuery({
     fetchPolicy: 'network-only',
     errorPolicy: 'ignore'
   })

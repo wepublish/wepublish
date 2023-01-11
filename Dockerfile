@@ -9,7 +9,7 @@ WORKDIR /home/node/wepublish
 COPY --chown=node:node . .
 
 RUN npm ci
-RUN npx nx build editor
+RUN npm run build
 
 ENV ADDRESS=0.0.0.0
 ENV PORT=8000

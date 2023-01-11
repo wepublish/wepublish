@@ -195,7 +195,9 @@ model Image {
 
   pageRevisionSocialMediaImages PageRevision[] @relation("pageRevisionSocialMediaImage")
   pageRevisionImages            PageRevision[] @relation("pageRevisionImage")
-  User                          User[]
+
+  users  User[]
+  events Event[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -206,8 +208,8 @@ model Image {
 
 enum CommentItemType {
   peerArticle @map("peerArticle")
-  article  @map("article")
-  page     @map("page")
+  article     @map("article")
+  page        @map("page")
 }
 
 enum CommentRejectionReason {
@@ -837,6 +839,7 @@ model Setting {
 
 enum TagType {
   Comment @map("comment")
+  Event   @map("event")
 }
 
 model Tag {
@@ -848,6 +851,7 @@ model Tag {
   tag  String?
 
   comments TaggedComments[]
+  events   TaggedEvents[]
 
   @@unique([type, tag])
   @@map("tags")
@@ -938,4 +942,44 @@ model PollExternalVote {
 
   @@unique([answerId, sourceId])
   @@map("polls.external-votes")
+}
+
+enum EventStatus {
+  Cancelled   @map("cancelled")
+  Rescheduled @map("rescheduled")
+  Postponed   @map("postponed")
+  Scheduled   @map("scheduled")
+}
+
+model Event {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name        String
+  description Json[]
+  status      EventStatus @default(Scheduled)
+
+  imageId String?
+  image   Image?  @relation(fields: [imageId], references: [id])
+
+  location String?
+  startsAt DateTime
+  endsAt   DateTime?
+
+  tags TaggedEvents[]
+
+  @@map("events")
+}
+
+model TaggedEvents {
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId    String   @db.Uuid
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId      String
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  @@id([eventId, tagId])
+  @@map("events.tagged-events")
 }

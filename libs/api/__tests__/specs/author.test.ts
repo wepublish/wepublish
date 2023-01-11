@@ -116,6 +116,58 @@ describe('Authors', () => {
       expect(res.data?.authors.nodes).not.toHaveLength(0)
     })
 
+    test('can be filtered by case insenstivie name', async () => {
+      const name = 'Foo'.toUpperCase()
+
+      const authorInput: AuthorInput = {
+        name,
+        slug: generateRandomString()
+      }
+
+      await testServerPrivate.executeOperation({
+        query: CreateAuthor,
+        variables: {
+          input: authorInput
+        }
+      })
+
+      const res = await testServerPrivate.executeOperation({
+        query: AuthorList,
+        variables: {
+          take: 1,
+          name: name.toLocaleLowerCase()
+        }
+      })
+
+      expect(res.data?.authors.nodes).toHaveLength(1)
+    })
+
+    test('can be filtered by partial name', async () => {
+      const name = 'Foo Bar'
+
+      const authorInput: AuthorInput = {
+        name,
+        slug: generateRandomString()
+      }
+
+      await testServerPrivate.executeOperation({
+        query: CreateAuthor,
+        variables: {
+          input: authorInput
+        }
+      })
+
+      const res = await testServerPrivate.executeOperation({
+        query: AuthorList,
+        variables: {
+          take: 1,
+          name: name.substring(0, name.length - 1)
+        }
+      })
+
+      expect(res.data?.authors.nodes).toHaveLength(1)
+    })
+
     test('can be read by id', async () => {
       const res = await testServerPrivate.executeOperation({
         query: Author,

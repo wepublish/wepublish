@@ -31,7 +31,8 @@ export enum BlockType {
   TeaserGridFlex = 'teaserGridFlex',
   HTML = 'html',
   Poll = 'poll',
-  Comment = 'comment'
+  Comment = 'comment',
+  Event = 'event'
 }
 
 export interface RichTextBlock {
@@ -131,6 +132,14 @@ export type PollAnswerWithVoteCount = PollAnswer & {
 export interface PollBlock {
   type: BlockType.Poll
   pollId: string
+}
+
+export interface EventBlock {
+  type: BlockType.Event
+  filter: Partial<{
+    tags: string[]
+    events: string[]
+  }>
 }
 
 export interface CommentBlock {
@@ -277,6 +286,7 @@ export type ArticleBlock =
   | HTMLBlock
   | CommentBlock
   | PollBlock
+  | EventBlock
   | FacebookPostBlock
   | InstagramPostBlock
   | TwitterTweetBlock

@@ -11,6 +11,7 @@ import {
   MdCreditCard,
   MdDashboard,
   MdDescription,
+  MdEvent,
   MdFileCopy,
   MdGroup,
   MdGroups,
@@ -165,6 +166,22 @@ export function Base({children}: BaseProps) {
                   </Nav.Item>
                 </PermissionControl>
 
+                <PermissionControl
+                  qualifyingPermissions={['CAN_GET_POLL', 'CAN_CREATE_POLL', 'CAN_DELETE_POLL']}>
+                  <Nav.Menu
+                    eventKey={'poll'}
+                    title={t('navbar.blocks.topMenu')}
+                    icon={<MdOutlineGridView />}>
+                    <Nav.Item
+                      as={NavLink}
+                      href="/polls"
+                      active={path === 'polls'}
+                      icon={<MdQueryStats />}>
+                      {t('navbar.blocks.polls')}
+                    </Nav.Item>
+                  </Nav.Menu>
+                </PermissionControl>
+
                 <Nav.Menu eventKey={'comments'} title={t('navbar.comments')} icon={<MdChat />}>
                   <PermissionControl
                     qualifyingPermissions={[
@@ -214,21 +231,38 @@ export function Base({children}: BaseProps) {
                   </PermissionControl>
                 </Nav.Menu>
 
-                <PermissionControl
-                  qualifyingPermissions={['CAN_GET_POLL', 'CAN_CREATE_POLL', 'CAN_DELETE_POLL']}>
-                  <Nav.Menu
-                    eventKey={'poll'}
-                    title={t('navbar.blocks.topMenu')}
-                    icon={<MdOutlineGridView />}>
+                <Nav.Menu eventKey={'events'} title={t('navbar.events')} icon={<MdEvent />}>
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      'CAN_GET_EVENT',
+                      'CAN_UPDATE_EVENT',
+                      'CAN_DELETE_EVENT'
+                    ]}>
                     <Nav.Item
                       as={NavLink}
-                      href="/polls"
-                      active={path === 'polls'}
-                      icon={<MdQueryStats />}>
-                      {t('navbar.blocks.polls')}
+                      href="/events"
+                      icon={<MdEvent />}
+                      active={path === 'events'}>
+                      {t('navbar.events')}
                     </Nav.Item>
-                  </Nav.Menu>
-                </PermissionControl>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      'CAN_GET_TAGS',
+                      'CAN_CREATE_TAG',
+                      'CAN_UPDATE_TAG',
+                      'CAN_DELETE_TAG'
+                    ]}>
+                    <Nav.Item
+                      as={NavLink}
+                      href="/events/tags"
+                      icon={<MdSell />}
+                      active={path === 'events/tags'}>
+                      {t('navbar.eventTags')}
+                    </Nav.Item>
+                  </PermissionControl>
+                </Nav.Menu>
 
                 <PermissionControl
                   qualifyingPermissions={[
@@ -427,7 +461,7 @@ export function Base({children}: BaseProps) {
               <Nav.Menu
                 placement="topStart"
                 trigger="click"
-                renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
+                renderToggle={(props: object, ref: React.Ref<HTMLButtonElement>) => (
                   <IconButton
                     {...props}
                     placement="left"
@@ -446,7 +480,7 @@ export function Base({children}: BaseProps) {
               <Nav.Menu
                 placement="topStart"
                 trigger="click"
-                renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
+                renderToggle={(props: object, ref: React.Ref<HTMLButtonElement>) => (
                   <IconButton
                     {...props}
                     placement="left"

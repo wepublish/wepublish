@@ -28,7 +28,10 @@ export const createAuthorOrder = (
 const createNameFilter = (filter: Partial<AuthorFilter>): Prisma.AuthorWhereInput => {
   if (filter?.name) {
     return {
-      name: filter.name
+      name: {
+        contains: filter.name,
+        mode: 'insensitive'
+      }
     }
   }
 

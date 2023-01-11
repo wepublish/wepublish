@@ -65,7 +65,10 @@ export function SelectTags({name, tagType, selectedTags, setSelectedTags}: Selec
       name={name}
       value={selectedTags}
       data={availableTags}
-      onChange={(value: string[]) => setSelectedTags(value)}
+      onChange={(value: string[]) => {
+        const tagValues = availableTags.map(({value}) => value)
+        setSelectedTags(value.filter(value => tagValues.includes(value)))
+      }}
       renderMenu={menu => {
         return (
           <>

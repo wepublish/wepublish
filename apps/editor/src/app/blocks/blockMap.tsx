@@ -1,9 +1,8 @@
 import nanoid from 'nanoid'
-import React from 'react'
 import {
-  MdChat,
   MdCode,
   MdCoffee,
+  MdEvent,
   MdFilter1,
   MdFilter6,
   MdFormatColorText,
@@ -14,12 +13,14 @@ import {
   MdQueryStats,
   MdTitle,
   MdViewList,
-  MdViewQuilt
+  MdViewQuilt,
+  MdComment
 } from 'react-icons/md'
 
 import {BlockMapForValue} from '../atoms/blockList'
 import {CommentBlock} from './commentBlock'
 import {EmbedBlock} from './embedBlock'
+import {EventBlock} from './eventBlock'
 import {HTMLBlock} from './htmlBlock'
 import {ImageBlock} from './imageBlock'
 import {ImageGalleryBlock} from './imageGalleryBlock'
@@ -180,6 +181,13 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     field: props => <CommentBlock {...props} />,
     defaultValue: {filter: {}, comments: []},
     label: 'blocks.comment.label',
-    icon: <MdChat />
+    icon: <MdComment />
+  },
+
+  [BlockType.EventBlock]: {
+    field: props => <EventBlock {...props} />,
+    defaultValue: {filter: {}, events: []},
+    label: 'blocks.event.label',
+    icon: <MdEvent />
   }
 }

@@ -70,7 +70,7 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
     const secret = decoded.split(';')
     const time = parseInt(secret[0])
     const hash = secret[1]
-    const counter = (secret[2] as unknown) as number
+    const counter = secret[2] as unknown as number
 
     // Protect against replay attacks
     if (!this.validHashes[hash]) {
