@@ -29,6 +29,25 @@ export type Scalars = {
   Upload: File;
 };
 
+export type ActivityEvent = {
+  __typename?: 'ActivityEvent';
+  id: Scalars['ID'];
+  date: Scalars['DateTime'];
+  eventType: ActivityEventType;
+  creator?: Maybe<Scalars['String']>;
+  summary?: Maybe<Scalars['String']>;
+};
+
+export enum ActivityEventType {
+  Article = 'ARTICLE',
+  Page = 'PAGE',
+  Comment = 'COMMENT',
+  Subscription = 'SUBSCRIPTION',
+  Author = 'AUTHOR',
+  Poll = 'POLL',
+  User = 'USER'
+}
+
 export type AllowedSettingVals = {
   __typename?: 'AllowedSettingVals';
   stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -1775,6 +1794,7 @@ export type Query = {
   tags?: Maybe<TagConnection>;
   polls?: Maybe<PollConnection>;
   poll?: Maybe<FullPoll>;
+  activityEvents?: Maybe<Array<Maybe<ActivityEvent>>>;
 };
 
 
@@ -2127,7 +2147,7 @@ export type SoundCloudTrackBlockInput = {
 export type SubscribersPerMonth = {
   __typename?: 'SubscribersPerMonth';
   month: Scalars['String'];
-  subscriberCount?: Maybe<Scalars['Int']>;
+  subscriberCount: Scalars['Int'];
 };
 
 export type Subscription = {
@@ -2531,6 +2551,22 @@ export type YouTubeVideoBlock = {
 export type YouTubeVideoBlockInput = {
   videoID: Scalars['String'];
 };
+
+export type FullActivityEventFragment = (
+  { __typename?: 'ActivityEvent' }
+  & Pick<ActivityEvent, 'id' | 'date' | 'eventType' | 'summary' | 'creator'>
+);
+
+export type RecentActivityQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RecentActivityQuery = (
+  { __typename?: 'Query' }
+  & { activityEvents?: Maybe<Array<Maybe<(
+    { __typename?: 'ActivityEvent' }
+    & FullActivityEventFragment
+  )>>> }
+);
 
 export type MutationArticleFragment = (
   { __typename?: 'Article' }
@@ -4997,6 +5033,15 @@ export type DeleteUserRoleMutation = (
   )> }
 );
 
+export const FullActivityEventFragmentDoc = gql`
+    fragment FullActivityEvent on ActivityEvent {
+  id
+  date
+  eventType
+  summary
+  creator
+}
+    `;
 export const MutationArticleFragmentDoc = gql`
     fragment MutationArticle on Article {
   id
@@ -5749,6 +5794,40 @@ export const TokenRefFragmentDoc = gql`
   name
 }
     `;
+export const RecentActivityDocument = gql`
+    query RecentActivity {
+  activityEvents {
+    ...FullActivityEvent
+  }
+}
+    ${FullActivityEventFragmentDoc}`;
+
+/**
+ * __useRecentActivityQuery__
+ *
+ * To run a query within a React component, call `useRecentActivityQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRecentActivityQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRecentActivityQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRecentActivityQuery(baseOptions?: Apollo.QueryHookOptions<RecentActivityQuery, RecentActivityQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RecentActivityQuery, RecentActivityQueryVariables>(RecentActivityDocument, options);
+      }
+export function useRecentActivityLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecentActivityQuery, RecentActivityQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RecentActivityQuery, RecentActivityQueryVariables>(RecentActivityDocument, options);
+        }
+export type RecentActivityQueryHookResult = ReturnType<typeof useRecentActivityQuery>;
+export type RecentActivityLazyQueryHookResult = ReturnType<typeof useRecentActivityLazyQuery>;
+export type RecentActivityQueryResult = Apollo.QueryResult<RecentActivityQuery, RecentActivityQueryVariables>;
 export const ArticleListDocument = gql`
     query ArticleList($filter: ArticleFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
   articles(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {

@@ -709,7 +709,8 @@
       "subscriptions": "Subscriptions",
       "userRoles": "User Roles",
       "users": "Users",
-      "usersAndMembers": "Users & Members"
+      "usersAndMembers": "Users & Members",
+      "dashboard": "Dashboard"
     },
     "navigation": {
       "overview": {
@@ -1268,6 +1269,23 @@
     "permissions": {
       "noAccess": "You have insufficient permission to access this content.",
       "contactAdmin": "Please contact your administrator to add any of the following permissions: {{permissions}}"
+    },
+    "dashboard": {
+      "dashboard": "Dashboard",
+      "greeting": "Hello, {{name}}!",
+      "yearlySubscribers": "New subscribers over past year",
+      "activity": "Latest Activity",
+      "event": "Event",
+      "summary": "Summary",
+      "noData": "No current subscriber data",
+      "newArticle": "New article created",
+      "newPage": "New page created",
+      "newComment": "New comment added",
+      "newPoll": "New poll opened",
+      "newSubscription": "New subscription",
+      "newAuthor": "New author added",
+      "newUser": "New user added",
+      "newSubscribers": "New subscribers over past year"
     }
   }
 }

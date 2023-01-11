@@ -72,7 +72,12 @@ export const getSubscriptionsAsCSV = async (
   return mapSubscriptionsAsCsv(subscriptions)
 }
 
-export const getNewSubscribersYear = async (subscription: PrismaClient['subscription']) => {
+export const getNewSubscribersYear = async (
+  authenticate: Context['authenticate'],
+  subscription: PrismaClient['subscription']
+) => {
+  const {roles} = authenticate()
+  authorise(CanGetSubscriptions, roles)
   return (
     await Promise.all([
       subscription.count({

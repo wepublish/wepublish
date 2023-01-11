@@ -1,0 +1,13 @@
+fragment FullActivityEvent on ActivityEvent {
+  id
+  date
+  eventType
+  summary
+  creator
+}
+
+query RecentActivity {
+    activityEvents {
+        ...FullActivityEvent
+    }
+}

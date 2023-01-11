@@ -140,6 +140,8 @@ import {
   GraphQLUserRoleSort
 } from './userRole'
 import {GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
+import {GraphQLActivityEvent} from './activityEvent'
+import {getActivities} from './activityEvent/activityEvent.private-queries'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -308,8 +310,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     newSubscribersPastYear: {
       type: GraphQLList(GraphQLSubscribersPerMonth),
-      resolve: async (root, {}, {prisma: {subscription}}) => {
-        return await getNewSubscribersYear(subscription)
+      resolve: async (root, {}, {authenticate, prisma: {subscription}}) => {
+        return await getNewSubscribersYear(authenticate, subscription)
       }
     },
 
@@ -726,6 +728,19 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLID}
       },
       resolve: (root, {id}, {prisma: {poll}}) => getPoll(id, poll)
+    },
+
+    // Activity Event
+    // =======
+    activityEvents: {
+      type: GraphQLList(GraphQLActivityEvent),
+      resolve: async (
+        root,
+        {},
+        {authenticate, prisma: {article, page, comment, subscription, author, poll, user}}
+      ) => {
+        return getActivities(authenticate, article, page, comment, subscription, author, poll, user)
+      }
     }
   }
 })
