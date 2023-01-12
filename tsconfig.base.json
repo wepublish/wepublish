@@ -8,6 +8,7 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "resolveJsonModule": true,
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
@@ -17,7 +18,8 @@
     "baseUrl": ".",
     "paths": {
       "@wepublish/api": ["libs/api/src/index.ts"],
-      "@wepublish/api/seed": ["libs/api/prisma/seed.ts"]
+      "@wepublish/api/seed": ["libs/api/prisma/seed.ts"],
+      "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

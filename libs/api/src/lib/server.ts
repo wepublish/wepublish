@@ -28,12 +28,10 @@ export interface WepublishServerOpts extends ContextOptions {
 }
 
 export class WepublishServer {
-  private app: Application | undefined
-
-  constructor(private readonly opts: WepublishServerOpts) {}
+  constructor(private readonly opts: WepublishServerOpts, private app?: Application | undefined) {}
 
   async listen(port?: number, hostname?: string): Promise<void> {
-    const app = express()
+    const app = this.app || express()
 
     this.setupPrismaMiddlewares()
 
@@ -91,14 +89,14 @@ export class WepublishServer {
 
     adminServer.applyMiddleware({
       app,
-      path: '/admin',
+      path: '/v1/admin',
       cors: corsOptions,
       bodyParserConfig: {limit: MAX_PAYLOAD_SIZE}
     })
 
     publicServer.applyMiddleware({
       app,
-      path: '/',
+      path: '/v1',
       cors: corsOptions
     })
 
@@ -113,8 +111,6 @@ export class WepublishServer {
     })
 
     this.app = app
-
-    this.app.listen(port ?? 4000, hostname ?? 'localhost')
   }
 
   async runJob(command: JobType, data: any): Promise<void> {

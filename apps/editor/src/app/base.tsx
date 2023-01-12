@@ -40,6 +40,7 @@ import {
 } from 'rsuite'
 
 import {PermissionControl} from './atoms/permissionControl'
+import Version from './atoms/version'
 
 export interface BaseProps {
   children?: ReactNode
@@ -487,6 +488,7 @@ export function Base({children}: BaseProps) {
                     {t('navbar.settings')}
                   </Nav.Item>
                 </PermissionControl>
+                <Version />
               </Navigation>
             </RSidenav.Body>
           </Sidenav>
