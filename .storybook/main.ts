@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   stories: [],
   addons: ['@storybook/addon-essentials']
   // uncomment the property below if you want to apply some webpack config globally
@@ -8,4 +8,4 @@ module.exports = {
   //   // Return the altered config
   //   return config;
   // },
-}
+} as any
