@@ -1,0 +1,1 @@
+{"version":3,"file":"setting.private-mutation.d.ts","sourceRoot":"","sources":["../../../src/graphql/setting/setting.private-mutation.ts"],"names":[],"mappings":"AAAA,OAAO,EAAS,YAAY,EAAC,MAAM,gBAAgB,CAAA;AACnD,OAAO,EAAC,OAAO,EAAC,MAAM,eAAe,CAAA;AACrC,OAAO,EAAqB,iBAAiB,EAAC,MAAM,kBAAkB,CAAA;AAKtE,eAAO,MAAM,cAAc,UAClB,iBAAiB,EAAE,gBACZ,OAAO,CAAC,cAAc,CAAC,UAC7B,YAAY,gDA+BrB,CAAA"}

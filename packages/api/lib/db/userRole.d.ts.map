@@ -1,0 +1,1 @@
+{"version":3,"file":"userRole.d.ts","sourceRoot":"","sources":["../../src/db/userRole.ts"],"names":[],"mappings":"AAAA,oBAAY,YAAY;IACtB,SAAS,eAAe;IACxB,UAAU,eAAe;CAC1B;AAED,MAAM,WAAW,cAAc;IAC7B,QAAQ,CAAC,IAAI,CAAC,EAAE,MAAM,CAAA;CACvB"}

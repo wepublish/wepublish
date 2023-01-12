@@ -1,0 +1,1 @@
+{"version":3,"file":"permission.private-queries.js","sourceRoot":"","sources":["../../../src/graphql/permission/permission.private-queries.ts"],"names":[],"mappings":";;;AACA,gDAA2E;AAEpE,MAAM,cAAc,GAAG,CAAC,YAAqC,EAAE,EAAE;IACtE,MAAM,EAAC,KAAK,EAAC,GAAG,YAAY,EAAE,CAAA;IAC9B,IAAA,uBAAS,EAAC,+BAAiB,EAAE,KAAK,CAAC,CAAA;IAEnC,OAAO,4BAAc,CAAA;AACvB,CAAC,CAAA;AALY,QAAA,cAAc,kBAK1B"}

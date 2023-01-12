@@ -13,23 +13,14 @@
       "PR: Revert :leftwards_arrow_with_hook:": ":leftwards_arrow_with_hook: Revert"
     }
   },
-  "npmClient": "yarn",
   "command": {
     "version": {
       "allowBranch": "master"
     },
     "publish": {
-      "ignoreChanges": [
-        "*.md",
-        "*.txt"
-      ],
+      "ignoreChanges": ["*.md", "*.txt"],
       "message": "chore(release): publish %s"
     }
   },
-  "packages": [
-    "packages/api",
-    "packages/api-media-karma",
-    "packages/editor",
-    "packages/oauth2"
-  ]
+  "packages": ["libs/api", "apps/editor"]
 }

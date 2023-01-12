@@ -1,5 +1,5 @@
-**/dist
-**/node_modules
-**/.env
-**/lib
-**/assets
+node_modules
+dist
+.media
+.changelog
+coverage
