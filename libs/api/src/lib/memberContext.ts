@@ -342,7 +342,7 @@ export class MemberContext implements MemberContext {
         data: {
           periods: {
             create: {
-              amount: amount,
+              amount,
               paymentPeriodicity: subscription.paymentPeriodicity,
               startsAt: startDate,
               endsAt: nextDate,
@@ -605,8 +605,8 @@ export class MemberContext implements MemberContext {
         const {nextReminder, deactivateSubscription} = getNextReminderAndDeactivationDate({
           sentReminderAt: invoice.sentReminderAt,
           createdAt: invoice.createdAt,
-          frequency: frequency,
-          maxAttempts: maxAttempts
+          frequency,
+          maxAttempts
         })
 
         if (nextReminder > today) {
@@ -831,8 +831,8 @@ export class MemberContext implements MemberContext {
         const {nextReminder, deactivateSubscription} = getNextReminderAndDeactivationDate({
           sentReminderAt: invoice.sentReminderAt,
           createdAt: invoice.createdAt,
-          frequency: frequency,
-          maxAttempts: maxAttempts
+          frequency,
+          maxAttempts
         })
 
         if (nextReminder > today) {
@@ -993,7 +993,7 @@ export class MemberContext implements MemberContext {
     // Cancel invoices when subscription is canceled
     const invoices = await this.prisma.invoice.findMany({
       where: {
-        subscriptionID: subscriptionID
+        subscriptionID
       }
     })
 

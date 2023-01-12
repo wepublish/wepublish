@@ -142,7 +142,7 @@ export function slugify(str: string) {
     .replace(/[ŹŻŽ]/gi, 'z')
     .replace(/[·/_,:;\\']/gi, '-')
     .replace(/\s+/g, '-')
-    .replace(/[^\w\-]+/g, '')
+    .replace(/[^\w-]+/g, '')
     .replace(/--+/g, '-')
     .replace(/^-+/, '')
     .replace(/-+$/, '')

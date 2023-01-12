@@ -7,7 +7,6 @@ import pinoStackdriver from 'pino-stackdriver'
 import * as process from 'process'
 import {URL} from 'url'
 import yargs from 'yargs'
-// @ts-ignore
 import {hideBin} from 'yargs/helpers'
 import {AlgebraicCaptchaChallenge} from './lib/challenges/algebraicCaptchaChallenge'
 import {WepublishServer} from './lib/server'

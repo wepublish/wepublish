@@ -40,7 +40,7 @@ describe('Users', () => {
       const res = await testServerPrivate.executeOperation({
         query: CreateUser,
         variables: {
-          input: input,
+          input,
           password: 'p@$$w0rd'
         }
       })
@@ -61,7 +61,7 @@ describe('Users', () => {
       const res = await testServerPrivate.executeOperation({
         query: CreateUser,
         variables: {
-          input: input,
+          input,
           password: 'pwd123'
         }
       })
@@ -147,7 +147,7 @@ describe('Users', () => {
       const createdUser = await testServerPrivate.executeOperation({
         query: CreateUser,
         variables: {
-          input: input,
+          input,
           password: 'p@$$w0rd'
         }
       })

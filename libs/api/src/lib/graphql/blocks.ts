@@ -93,7 +93,7 @@ export const GraphQLArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context
     style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
     image: {
       type: GraphQLImage,
-      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+      resolve: createProxyingResolver(({imageID}, _, {loaders}) =>
         imageID ? loaders.images.load(imageID) : null
       )
     },
@@ -119,7 +119,7 @@ export const GraphQLPeerArticleTeaser = new GraphQLObjectType<PeerArticleTeaser,
 
     image: {
       type: GraphQLImage,
-      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+      resolve: createProxyingResolver(({imageID}, _, {loaders}) =>
         imageID ? loaders.images.load(imageID) : null
       )
     },
@@ -157,7 +157,7 @@ export const GraphQLPageTeaser = new GraphQLObjectType<PageTeaser, Context>({
 
     image: {
       type: GraphQLImage,
-      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+      resolve: createProxyingResolver(({imageID}, _, {loaders}) =>
         imageID ? loaders.images.load(imageID) : null
       )
     },
@@ -184,7 +184,7 @@ export const GraphQLCustomTeaser = new GraphQLObjectType<CustomTeaser, Context>(
 
     image: {
       type: GraphQLImage,
-      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+      resolve: createProxyingResolver(({imageID}, _, {loaders}) =>
         imageID ? loaders.images.load(imageID) : null
       )
     },
@@ -264,7 +264,7 @@ export const GraphQLPublicArticleTeaser = new GraphQLObjectType<ArticleTeaser, C
 
     image: {
       type: GraphQLImage,
-      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+      resolve: createProxyingResolver(({imageID}, _, {loaders}) =>
         imageID ? loaders.images.load(imageID) : null
       )
     },
@@ -292,7 +292,7 @@ export const GraphQLPublicPeerArticleTeaser = new GraphQLObjectType<PeerArticleT
 
     image: {
       type: GraphQLImage,
-      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+      resolve: createProxyingResolver(({imageID}, _, {loaders}) =>
         imageID ? loaders.images.load(imageID) : null
       )
     },
@@ -332,7 +332,7 @@ export const GraphQLPublicPageTeaser = new GraphQLObjectType<PageTeaser, Context
 
     image: {
       type: GraphQLImage,
-      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+      resolve: createProxyingResolver(({imageID}, _, {loaders}) =>
         imageID ? loaders.images.load(imageID) : null
       )
     },
@@ -360,7 +360,7 @@ export const GraphQLPublicCustomTeaser = new GraphQLObjectType<CustomTeaser, Con
 
     image: {
       type: GraphQLImage,
-      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+      resolve: createProxyingResolver(({imageID}, _, {loaders}) =>
         imageID ? loaders.images.load(imageID) : null
       )
     },
