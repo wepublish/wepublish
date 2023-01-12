@@ -1,3 +1,4 @@
+import {ApolloClient, HttpLink, InMemoryCache} from '@apollo/client'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import nanoid from 'nanoid'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
@@ -220,6 +221,15 @@ export function getSettings(): ClientSettings {
   return settingsJson
     ? JSON.parse(document.getElementById(ElementID.Settings)!.textContent!)
     : defaultSettings
+}
+
+export function getApiClientV2() {
+  const {apiURL} = getSettings()
+  const link = new HttpLink({uri: `${apiURL}/v2`})
+  return new ApolloClient({
+    link,
+    cache: new InMemoryCache()
+  })
 }
 
 /**
