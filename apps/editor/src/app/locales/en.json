@@ -1305,7 +1305,8 @@
         "title": "Delete Event?",
         "body": "Do you really want to delete the event \"{{name}}\"?",
         "delete": "Yes, delete the event"
-      },
+      }
+    },
     "dashboard": {
       "dashboard": "Dashboard",
       "greeting": "Hello, {{name}}!",
