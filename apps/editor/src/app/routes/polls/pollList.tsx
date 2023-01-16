@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdDelete} from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {FlexboxGrid, IconButton, Message, Pagination, Table as RTable, toaster} from 'rsuite'
+import {IconButton, Message, Pagination, Table as RTable, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {Poll, usePollsQuery} from '../../api'
@@ -12,24 +12,17 @@ import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {CreatePollBtn} from '../../atoms/poll/createPollBtn'
 import {DeletePollModal} from '../../atoms/poll/deletePollModal'
 import {PollStateIndication} from '../../atoms/poll/pollStateIndication'
+import {
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  PaddedCell,
+  Table,
+  TableWrapper
+} from '../../ui/listView'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
-
-const Cell = styled(RCell)`
-  .rs-table-cell-content {
-    padding: 6px 0;
-  }
-`
-
-const FlexItem = styled(FlexboxGrid.Item)`
-  text-align: right;
-  align-self: center;
-`
-
-const FlexItemMarginTop = styled(FlexboxGrid.Item)`
-  margin-top: 20px;
-`
 
 export function PollOpensAtView({poll}: {poll: Poll}) {
   const now = new Date()
@@ -95,89 +88,89 @@ function PollList() {
 
   return (
     <>
-      <FlexboxGrid>
+      <ListViewContainer>
         {/* title */}
-        <FlexboxGrid.Item colspan={16}>
+        <ListViewHeader>
           <h2>{t('pollList.title')}</h2>
-        </FlexboxGrid.Item>
+        </ListViewHeader>
 
-        {/* create new poll */}
-        <FlexItem colspan={8}>
+        <ListViewActions>
+          {/* create new poll */}
           <CreatePollBtn />
-        </FlexItem>
+        </ListViewActions>
+      </ListViewContainer>
 
-        <FlexItemMarginTop colspan={24}>
-          <RTable minHeight={600} autoHeight loading={loading} data={data?.polls?.nodes || []}>
-            {/* state */}
-            <Column resizable>
-              <HeaderCell>{t('pollList.state')}</HeaderCell>
-              <RCell>
-                {(rowData: RowDataType<Poll>) => (
-                  <PollStateIndication closedAt={rowData.closedAt} opensAt={rowData.opensAt} />
-                )}
-              </RCell>
-            </Column>
-            {/* question */}
-            <Column width={200} resizable>
-              <HeaderCell>{t('pollList.question')}</HeaderCell>
-              <RCell>
-                {(rowData: RowDataType<Poll>) => (
-                  <Link to={`/polls/edit/${rowData.id}`}>
-                    {rowData.question || t('pollList.noQuestion')}
-                  </Link>
-                )}
-              </RCell>
-            </Column>
-            {/* opens at */}
-            <Column width={300} resizable>
-              <HeaderCell>{t('pollList.opensAt')}</HeaderCell>
-              <RCell>
-                {(rowData: RowDataType<Poll>) => <PollOpensAtView poll={rowData as Poll} />}
-              </RCell>
-            </Column>
-            {/* opens at */}
-            <Column width={300} resizable>
-              <HeaderCell>{t('pollList.closedAt')}</HeaderCell>
-              <RCell>
-                {(rowData: RowDataType<Poll>) => <PollClosedAtView poll={rowData as Poll} />}
-              </RCell>
-            </Column>
-            {/* delete */}
-            <Column resizable>
-              <HeaderCell align={'center'}>{t('pollList.delete')}</HeaderCell>
-              <Cell align={'center'}>
-                {(poll: RowDataType<Poll>) => (
-                  <IconButton
-                    icon={<MdDelete />}
-                    circle
-                    appearance="ghost"
-                    color="red"
-                    size="sm"
-                    onClick={() => setPollDelete(poll as Poll)}
-                  />
-                )}
-              </Cell>
-            </Column>
-          </RTable>
+      <TableWrapper>
+        <Table fillHeight loading={loading} data={data?.polls?.nodes || []}>
+          {/* state */}
+          <Column resizable>
+            <HeaderCell>{t('pollList.state')}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<Poll>) => (
+                <PollStateIndication closedAt={rowData.closedAt} opensAt={rowData.opensAt} />
+              )}
+            </RCell>
+          </Column>
+          {/* question */}
+          <Column width={200} resizable>
+            <HeaderCell>{t('pollList.question')}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<Poll>) => (
+                <Link to={`/polls/edit/${rowData.id}`}>
+                  {rowData.question || t('pollList.noQuestion')}
+                </Link>
+              )}
+            </RCell>
+          </Column>
+          {/* opens at */}
+          <Column width={300} resizable>
+            <HeaderCell>{t('pollList.opensAt')}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<Poll>) => <PollOpensAtView poll={rowData as Poll} />}
+            </RCell>
+          </Column>
+          {/* opens at */}
+          <Column width={300} resizable>
+            <HeaderCell>{t('pollList.closedAt')}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<Poll>) => <PollClosedAtView poll={rowData as Poll} />}
+            </RCell>
+          </Column>
+          {/* delete */}
+          <Column resizable>
+            <HeaderCell align={'center'}>{t('pollList.delete')}</HeaderCell>
+            <PaddedCell align={'center'}>
+              {(poll: RowDataType<Poll>) => (
+                <IconButton
+                  icon={<MdDelete />}
+                  circle
+                  appearance="ghost"
+                  color="red"
+                  size="sm"
+                  onClick={() => setPollDelete(poll as Poll)}
+                />
+              )}
+            </PaddedCell>
+          </Column>
+        </Table>
 
-          <Pagination
-            limit={limit}
-            limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-            maxButtons={DEFAULT_MAX_TABLE_PAGES}
-            first
-            last
-            prev
-            next
-            ellipsis
-            boundaryLinks
-            layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-            total={data?.polls?.totalCount ?? 0}
-            activePage={page}
-            onChangePage={page => setPage(page)}
-            onChangeLimit={limit => setLimit(limit)}
-          />
-        </FlexItemMarginTop>
-      </FlexboxGrid>
+        <Pagination
+          limit={limit}
+          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
+          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+          total={data?.polls?.totalCount ?? 0}
+          activePage={page}
+          onChangePage={page => setPage(page)}
+          onChangeLimit={limit => setLimit(limit)}
+        />
+      </TableWrapper>
 
       <DeletePollModal
         poll={pollDelete}

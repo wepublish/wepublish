@@ -1,11 +1,9 @@
-import styled from '@emotion/styled'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdPassword, MdSearch} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {
   Button,
-  FlexboxGrid,
   IconButton as RIconButton,
   Input,
   InputGroup,
@@ -21,40 +19,21 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {ResetUserPasswordForm} from '../atoms/user/resetUserPasswordForm'
 import {
+  ListViewActions,
+  ListViewContainer,
+  ListViewFilterArea,
+  ListViewHeader,
+  PaddedCell,
+  Table,
+  TableWrapper
+} from '../ui/listView'
+import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
-
-const Cell = styled(RCell)`
-  .rs-table-cell-content {
-    padding: 6px 0;
-  }
-`
-
-const IconButton = styled(RIconButton)`
-  margin-left: 5px;
-`
-
-const Table = styled(RTable)`
-  flex: 1;
-`
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-flow: column;
-  margin-top: 20px;
-`
-
-const FlexItemAlignRight = styled(FlexboxGrid.Item)`
-  text-align: right;
-`
-
-const FlexItemMarginTop = styled(FlexboxGrid.Item)`
-  margin-top: 20px;
-`
 
 function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
   switch (columnField) {
@@ -142,33 +121,32 @@ function UserList() {
 
   return (
     <>
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
+      <ListViewContainer>
+        <ListViewHeader>
           <h2>{t('userList.overview.users')}</h2>
-        </FlexboxGrid.Item>
+        </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_USER']}>
-          <FlexItemAlignRight colspan={8}>
+          <ListViewActions>
             <Link to="/users/create">
               <RIconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('userList.overview.newUser')}
               </RIconButton>
             </Link>
-          </FlexItemAlignRight>
+          </ListViewActions>
         </PermissionControl>
-        <FlexItemMarginTop colspan={24}>
+        <ListViewFilterArea>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
-        </FlexItemMarginTop>
-      </FlexboxGrid>
+        </ListViewFilterArea>
+      </ListViewContainer>
 
-      <Wrapper>
+      <TableWrapper>
         <Table
-          minHeight={600}
-          autoHeight
+          fillHeight
           loading={isLoading}
           data={users}
           sortColumn={sortField}
@@ -226,7 +204,7 @@ function UserList() {
           </Column>
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('action')}</HeaderCell>
-            <Cell>
+            <PaddedCell>
               {(rowData: RowDataType<FullUserFragment>) => (
                 <>
                   <PermissionControl qualifyingPermissions={['CAN_RESET_USER_PASSWORD']}>
@@ -259,7 +237,7 @@ function UserList() {
                   </PermissionControl>
                 </>
               )}
-            </Cell>
+            </PaddedCell>
           </Column>
         </Table>
 
@@ -279,7 +257,7 @@ function UserList() {
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </Wrapper>
+      </TableWrapper>
 
       {/* reset user password */}
       {currentUser?.id && (

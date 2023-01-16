@@ -1,18 +1,8 @@
-import styled from '@emotion/styled'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
-import {
-  Button,
-  Drawer,
-  FlexboxGrid,
-  IconButton as RIconButton,
-  Input,
-  InputGroup,
-  Modal,
-  Table as RTable
-} from 'rsuite'
+import {Button, Drawer, Input, InputGroup, Modal, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {FullUserRoleFragment, useDeleteUserRoleMutation, useUserRoleListQuery} from '../api'
@@ -20,30 +10,18 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
+import {
+  IconButton,
+  ListViewActions,
+  ListViewContainer,
+  ListViewFilterArea,
+  ListViewHeader,
+  PaddedCell,
+  Table,
+  TableWrapper
+} from '../ui/listView'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
-
-const Cell = styled(RCell)`
-  .rs-table-cell-content {
-    padding: 6px 0;
-  }
-`
-
-const IconButton = styled(RIconButton)`
-  margin-left: 5px;
-`
-
-const Table = styled(RTable)`
-  margin-top: 20px;
-`
-
-const FlexItemAlignRight = styled(FlexboxGrid.Item)`
-  text-align: right;
-`
-
-const FlexItemMarginTop = styled(FlexboxGrid.Item)`
-  margin-top: 20px;
-`
 
 function UserRoleList() {
   const {t} = useTranslation()
@@ -100,68 +78,70 @@ function UserRoleList() {
 
   return (
     <>
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
+      <ListViewContainer>
+        <ListViewHeader>
           <h2>{t('userRoles.overview.userRoles')}</h2>
-        </FlexboxGrid.Item>
+        </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_USER_ROLE']}>
-          <FlexItemAlignRight colspan={8}>
+          <ListViewActions>
             <Link to="/userroles/create">
               <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('userRoles.overview.newUserRole')}
               </IconButton>
             </Link>
-          </FlexItemAlignRight>
+          </ListViewActions>
         </PermissionControl>
-        <FlexItemMarginTop colspan={24}>
+        <ListViewFilterArea>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
-        </FlexItemMarginTop>
-      </FlexboxGrid>
+        </ListViewFilterArea>
+      </ListViewContainer>
 
-      <Table autoHeight loading={isLoading} data={userRoles}>
-        <Column width={200} align="left" resizable>
-          <HeaderCell>{t('userRoles.overview.name')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<FullUserRoleFragment>) => (
-              <Link to={`/userroles/edit/${rowData.id}`}>
-                {rowData.name || t('userRoles.overview.untitled')}
-              </Link>
-            )}
-          </RCell>
-        </Column>
-        <Column width={400} align="left" resizable>
-          <HeaderCell>{t('userRoles.overview.description')}</HeaderCell>
-          <RCell dataKey="description" />
-        </Column>
-        <Column width={100} align="center" fixed="right">
-          <HeaderCell>{t('userRoles.overview.action')}</HeaderCell>
-          <Cell>
-            {(rowData: RowDataType<FullUserRoleFragment>) => (
-              <PermissionControl qualifyingPermissions={['CAN_DELETE_USER_ROLE']}>
-                <IconButtonTooltip caption={t('delete')}>
-                  <IconButton
-                    disabled={rowData.systemRole}
-                    circle
-                    appearance="ghost"
-                    color="red"
-                    size="sm"
-                    icon={<MdDelete />}
-                    onClick={() => {
-                      setConfirmationDialogOpen(true)
-                      setCurrentUserRole(rowData as FullUserRoleFragment)
-                    }}
-                  />
-                </IconButtonTooltip>
-              </PermissionControl>
-            )}
-          </Cell>
-        </Column>
-      </Table>
+      <TableWrapper>
+        <Table fillHeight loading={isLoading} data={userRoles}>
+          <Column width={200} align="left" resizable>
+            <HeaderCell>{t('userRoles.overview.name')}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<FullUserRoleFragment>) => (
+                <Link to={`/userroles/edit/${rowData.id}`}>
+                  {rowData.name || t('userRoles.overview.untitled')}
+                </Link>
+              )}
+            </RCell>
+          </Column>
+          <Column width={400} align="left" resizable>
+            <HeaderCell>{t('userRoles.overview.description')}</HeaderCell>
+            <RCell dataKey="description" />
+          </Column>
+          <Column width={100} align="center" fixed="right">
+            <HeaderCell>{t('userRoles.overview.action')}</HeaderCell>
+            <PaddedCell>
+              {(rowData: RowDataType<FullUserRoleFragment>) => (
+                <PermissionControl qualifyingPermissions={['CAN_DELETE_USER_ROLE']}>
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButton
+                      disabled={rowData.systemRole}
+                      circle
+                      appearance="ghost"
+                      color="red"
+                      size="sm"
+                      icon={<MdDelete />}
+                      onClick={() => {
+                        setConfirmationDialogOpen(true)
+                        setCurrentUserRole(rowData as FullUserRoleFragment)
+                      }}
+                    />
+                  </IconButtonTooltip>
+                </PermissionControl>
+              )}
+            </PaddedCell>
+          </Column>
+        </Table>
+      </TableWrapper>
 
       <Drawer
         open={isEditModalOpen}

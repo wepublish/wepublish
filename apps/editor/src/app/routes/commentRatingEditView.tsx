@@ -26,9 +26,15 @@ import {
 } from '../api/index'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+import {ListViewActions, ListViewContainer, ListViewHeader, TableWrapper} from '../ui/listView'
+
+const Content = styled.div`
+  margin-top: 2rem;
+  height: 100%;
+`
 
 const IconButton = styled(RIconButton)`
-  margin-top: 12px;
+  margin-right: 12px;
 `
 
 const AnswerGrid = styled(FlexboxGrid)`
@@ -44,14 +50,6 @@ const P = styled.p`
   display: flex;
   align-items: center;
   gap: 8px;
-`
-
-const FlexGrid = styled(FlexboxGrid)`
-  margin-bottom: 40px;
-`
-
-const RatingSystem = styled(FlexboxGrid.Item)`
-  text-align: right;
 `
 
 const showErrors = (error: ApolloError): void => {
@@ -132,13 +130,27 @@ function CommentRatingEditView() {
 
   return (
     <>
-      <FlexGrid>
-        <FlexboxGrid.Item colspan={16}>
+      <ListViewContainer>
+        <ListViewHeader>
           <h2>{t('comments.ratingEdit.title')}</h2>
-        </FlexboxGrid.Item>
+        </ListViewHeader>
 
         {ratingSystem && (
-          <RatingSystem colspan={8}>
+          <ListViewActions>
+            <IconButton
+              appearance="primary"
+              onClick={() => {
+                addAnswer({
+                  variables: {
+                    type: RatingSystemType.Star,
+                    ratingSystemId: ratingSystem.id
+                  }
+                })
+              }}>
+              <MdAdd />
+              {t('comments.ratingEdit.newAnswer')}
+            </IconButton>
+
             <RIconButton
               type="button"
               appearance="primary"
@@ -161,27 +173,23 @@ function CommentRatingEditView() {
                 t('save')
               )}
             </RIconButton>
-          </RatingSystem>
+          </ListViewActions>
         )}
-      </FlexGrid>
+      </ListViewContainer>
 
-      <Form>
-        {ratingSystem && (
-          <RatingAnswers
-            answers={ratingSystem.answers}
-            onAddAnswer={() => {
-              addAnswer({
-                variables: {
-                  type: RatingSystemType.Star,
-                  ratingSystemId: ratingSystem.id
-                }
-              })
-            }}
-            onDeleteAnswer={setAnswerToDelete}
-            onUpdateAnswer={updateAnswerLocally}
-          />
-        )}
-      </Form>
+      <TableWrapper>
+        <Content>
+          <Form>
+            {ratingSystem && (
+              <RatingAnswers
+                answers={ratingSystem.answers}
+                onDeleteAnswer={setAnswerToDelete}
+                onUpdateAnswer={updateAnswerLocally}
+              />
+            )}
+          </Form>
+        </Content>
+      </TableWrapper>
 
       {isFetching && (
         <FlexboxGrid justify="center">
@@ -226,56 +234,41 @@ function CommentRatingEditView() {
 
 type PollAnswersProps = {
   answers: CommentRatingSystemAnswer[]
-  onAddAnswer(): void
   onDeleteAnswer(answerId: string): void
   onUpdateAnswer(answerId: string, name: string | null | undefined, type: RatingSystemType): void
 }
 
-export function RatingAnswers({
-  answers,
-  onDeleteAnswer,
-  onAddAnswer,
-  onUpdateAnswer
-}: PollAnswersProps) {
+export function RatingAnswers({answers, onDeleteAnswer, onUpdateAnswer}: PollAnswersProps) {
   const {t} = useTranslation()
 
-  return (
-    <>
-      {answers?.map(answer => (
-        <AnswerGrid key={answer.id}>
-          <Form.Control
-            name={`answer-${answer.id}`}
-            placeholder={t('comments.ratingEdit.placeholder')}
-            value={answer.answer || ''}
-            onChange={(value: string) => onUpdateAnswer(answer.id, value, answer.type)}
-          />
+  return answers?.map(answer => (
+    <AnswerGrid key={answer.id}>
+      <Form.Control
+        name={`answer-${answer.id}`}
+        placeholder={t('comments.ratingEdit.placeholder')}
+        value={answer.answer || ''}
+        onChange={(value: string) => onUpdateAnswer(answer.id, value, answer.type)}
+      />
 
-          <SelectPicker
-            cleanable={false}
-            value={answer.type}
-            onChange={(value: RatingSystemType) => onUpdateAnswer(answer.id, answer.answer, value)}
-            data={Object.entries(RatingSystemType).map(([label, value]) => ({label, value}))}
-          />
+      <SelectPicker
+        cleanable={false}
+        value={answer.type}
+        onChange={(value: RatingSystemType) => onUpdateAnswer(answer.id, answer.answer, value)}
+        data={Object.entries(RatingSystemType).map(([label, value]) => ({label, value}))}
+      />
 
-          <IconButtonTooltip caption={t('delete')}>
-            <RIconButton
-              icon={<MdDelete />}
-              circle
-              size="sm"
-              appearance="ghost"
-              color="red"
-              onClick={() => onDeleteAnswer(answer.id)}
-            />
-          </IconButtonTooltip>
-        </AnswerGrid>
-      ))}
-
-      <IconButton appearance="primary" onClick={() => onAddAnswer()}>
-        <MdAdd />
-        {t('comments.ratingEdit.newAnswer')}
-      </IconButton>
-    </>
-  )
+      <IconButtonTooltip caption={t('delete')}>
+        <RIconButton
+          icon={<MdDelete />}
+          circle
+          size="sm"
+          appearance="ghost"
+          color="red"
+          onClick={() => onDeleteAnswer(answer.id)}
+        />
+      </IconButtonTooltip>
+    </AnswerGrid>
+  ))
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([

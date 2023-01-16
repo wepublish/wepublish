@@ -1,18 +1,8 @@
-import styled from '@emotion/styled'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
-import {
-  Button,
-  Drawer,
-  FlexboxGrid,
-  IconButton as RIconButton,
-  Input,
-  InputGroup,
-  Modal,
-  Table as RTable
-} from 'rsuite'
+import {Button, Drawer, Input, InputGroup, Modal, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {FullNavigationFragment, useDeleteNavigationMutation, useNavigationListQuery} from '../api'
@@ -20,30 +10,18 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {NavigationEditPanel} from '../panel/navigationEditPanel'
+import {
+  IconButton,
+  ListViewActions,
+  ListViewContainer,
+  ListViewFilterArea,
+  ListViewHeader,
+  PaddedCell,
+  Table,
+  TableWrapper
+} from '../ui/listView'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
-
-const Cell = styled(RCell)`
-  .rs-table-cell-content {
-    padding: 6px 0;
-  }
-`
-
-const Table = styled(RTable)`
-  margin-top: 20px;
-`
-
-const GridItemAlignRight = styled(FlexboxGrid.Item)`
-  text-align: right;
-`
-
-const GridItemMarginTop = styled(FlexboxGrid.Item)`
-  margin-top: 20px;
-`
-
-const IconButton = styled(RIconButton)`
-  margin-left: 5px;
-`
 
 function NavigationList() {
   const {t} = useTranslation()
@@ -95,64 +73,66 @@ function NavigationList() {
 
   return (
     <>
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
+      <ListViewContainer>
+        <ListViewHeader>
           <h2>{t('navigation.overview.navigations')}</h2>
-        </FlexboxGrid.Item>
+        </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_NAVIGATION']}>
-          <GridItemAlignRight colspan={8}>
+          <ListViewActions>
             <Link to="/navigations/create">
               <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('navigation.overview.newNavigation')}
               </IconButton>
             </Link>
-          </GridItemAlignRight>
+          </ListViewActions>
         </PermissionControl>
 
-        <GridItemMarginTop colspan={24}>
+        <ListViewFilterArea>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
-        </GridItemMarginTop>
-      </FlexboxGrid>
+        </ListViewFilterArea>
+      </ListViewContainer>
 
-      <Table autoHeight loading={isLoading} data={navigations}>
-        <Column width={400} align="left" resizable>
-          <HeaderCell>{t('navigation.overview.name')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<FullNavigationFragment>) => (
-              <Link to={`/navigations/edit/${rowData.id}`}>
-                {rowData.name || t('navigation.overview.unknown')}
-              </Link>
-            )}
-          </RCell>
-        </Column>
-        <Column width={100} align="center" fixed="right">
-          <HeaderCell>{t('navigation.overview.action')}</HeaderCell>
-          <Cell>
-            {(rowData: RowDataType<FullNavigationFragment>) => (
-              <PermissionControl qualifyingPermissions={['CAN_DELETE_NAVIGATION']}>
-                <IconButtonTooltip caption={t('delete')}>
-                  <IconButton
-                    icon={<MdDelete />}
-                    circle
-                    size="sm"
-                    appearance="ghost"
-                    color="red"
-                    onClick={() => {
-                      setCurrentNavigation(rowData)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                </IconButtonTooltip>
-              </PermissionControl>
-            )}
-          </Cell>
-        </Column>
-      </Table>
+      <TableWrapper>
+        <Table fillHeight loading={isLoading} data={navigations}>
+          <Column width={400} align="left" resizable>
+            <HeaderCell>{t('navigation.overview.name')}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<FullNavigationFragment>) => (
+                <Link to={`/navigations/edit/${rowData.id}`}>
+                  {rowData.name || t('navigation.overview.unknown')}
+                </Link>
+              )}
+            </RCell>
+          </Column>
+          <Column width={100} align="center" fixed="right">
+            <HeaderCell>{t('navigation.overview.action')}</HeaderCell>
+            <PaddedCell>
+              {(rowData: RowDataType<FullNavigationFragment>) => (
+                <PermissionControl qualifyingPermissions={['CAN_DELETE_NAVIGATION']}>
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButton
+                      icon={<MdDelete />}
+                      circle
+                      size="sm"
+                      appearance="ghost"
+                      color="red"
+                      onClick={() => {
+                        setCurrentNavigation(rowData)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+                  </IconButtonTooltip>
+                </PermissionControl>
+              )}
+            </PaddedCell>
+          </Column>
+        </Table>
+      </TableWrapper>
 
       <Drawer
         open={isEditModalOpen}
