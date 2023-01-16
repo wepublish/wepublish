@@ -13,6 +13,8 @@ import {initI18N} from './app/i18n'
 import {getSettings, LocalStorageKey} from './app/utility'
 import {ElementID} from './shared/elementID'
 import {ClientSettings} from './shared/types'
+import {ThemeProvider, CssBaseline} from '@mui/material'
+import {theme} from '../../../libs/ui/src/lib/theme'
 
 // See: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces
 export async function fetchIntrospectionQueryResultData(url: string) {
@@ -109,7 +111,10 @@ const onDOMContentLoaded = async () => {
           <FacebookProvider sdkLanguage={'en_US'}>
             <InstagramProvider>
               <TwitterProvider>
-                <App />
+                <ThemeProvider theme={theme}>
+                  <CssBaseline />
+                  <App />
+                </ThemeProvider>
               </TwitterProvider>
             </InstagramProvider>
           </FacebookProvider>
