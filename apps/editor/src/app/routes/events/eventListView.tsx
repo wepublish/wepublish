@@ -4,6 +4,7 @@ import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Link} from 'react-router-dom'
 import {Button, FlexboxGrid, IconButton, Message, Pagination, Table, toaster} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
 import {Event, useEventListQuery} from '../../api'
 import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
@@ -80,7 +81,7 @@ function EventListView() {
             <Table.Column width={200} resizable>
               <Table.HeaderCell>{t('event.list.name')}</Table.HeaderCell>
               <Table.Cell>
-                {(rowData: Event) => (
+                {(rowData: RowDataType<Event>) => (
                   <>
                     <Link to={`/events/edit/${rowData.id}`}>{rowData.name}</Link>
                   </>
@@ -98,14 +99,14 @@ function EventListView() {
             <Table.Column width={250} resizable>
               <Table.HeaderCell>{t('event.list.endsAt')}</Table.HeaderCell>
               <Table.Cell>
-                {(rowData: Event) => <EventEndsAtView endsAt={rowData.endsAt} />}
+                {(rowData: RowDataType<Event>) => <EventEndsAtView endsAt={rowData.endsAt} />}
               </Table.Cell>
             </Table.Column>
 
             <Table.Column resizable>
               <Table.HeaderCell align={'center'}>{t('event.list.delete')}</Table.HeaderCell>
               <Table.Cell align={'center'} style={{padding: '5px 0'}}>
-                {(event: Event) => (
+                {(event: RowDataType<Event>) => (
                   <IconButton
                     icon={<TrashIcon />}
                     circle

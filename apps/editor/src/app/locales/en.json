@@ -236,6 +236,16 @@
         "select": "Select",
         "label": "Poll"
       },
+      "event": {
+        "title": "Edit Event Block",
+        "edit": "Edit event block",
+        "filterByTag": "Filter comments by tag",
+        "eventsFilterByTagInformation": "All events below will be displayed",
+        "cherryPick": "Select specific events",
+        "events": "{{count}} Event",
+        "events_plural": "{{count}} Events",
+        "label": "Events"
+      },
       "embeds": {
         "label": "Embed",
         "overview": {
@@ -620,10 +630,10 @@
       "createNew": "Create Poll",
       "question": "Question",
       "opensAt": "Opens at",
-      "openedAt": "Opened at {{openedAt}}",
-      "pollWillOpenAt": "Opens at {{opensAt}}",
+      "openedAt": "Opened at {{openedAt, ccc PP p}}",
+      "pollWillOpenAt": "Opens at {{opensAt, ccc PP p}}",
       "noQuestion": "No question captured",
-      "hasBeenClosedAt": "Closed at {{closedAt}}",
+      "hasBeenClosedAt": "Closed at {{closedAt, ccc PP p}}",
       "closedAt": "Closed at",
       "closedAtNone": "Not closed",
       "answersCount": "Possible answers",
@@ -634,8 +644,7 @@
     "deletePollModal": {
       "title": "Delete Poll?",
       "body": "Do you really want to delete the poll \"{{pollQuestion}}\"?",
-      "deleteBtn": "Yes, delete",
-      "cancelBtn": "Cancel"
+      "deleteBtn": "Yes, delete"
     },
     "pollEditView": {
       "loadingTitle": "Loading poll...",
@@ -677,9 +686,12 @@
     "pollStateIndication": {
       "closed": "Poll closed",
       "open": "Poll open",
-      "waiting": "Poll is waiting for the opening on {{date}}"
+      "waiting": "Poll is waiting for the opening on {{date, ccc PP p}}"
     },
     "navbar": {
+      "dashboard": "Dashboard",
+      "events": "Events",
+      "eventTags": "Tags",
       "articles": "Articles",
       "blocks": {
         "topMenu": "Content Blocks",
@@ -709,8 +721,7 @@
       "subscriptions": "Subscriptions",
       "userRoles": "User Roles",
       "users": "Users",
-      "usersAndMembers": "Users & Members",
-      "dashboard": "Dashboard"
+      "usersAndMembers": "Users & Members"
     },
     "navigation": {
       "overview": {
