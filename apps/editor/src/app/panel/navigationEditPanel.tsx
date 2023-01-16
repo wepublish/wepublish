@@ -1,6 +1,16 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, Input, Message, Panel, SelectPicker, toaster} from 'rsuite'
+import {
+  Button,
+  Drawer,
+  Form,
+  Input as RInput,
+  Message,
+  Panel,
+  SelectPicker as RSelectPicker,
+  toaster
+} from 'rsuite'
 
 import {
   ArticleRefFragment,
@@ -21,6 +31,14 @@ import {
   useAuthorisation
 } from '../atoms/permissionControl'
 import {generateID, getOperationNameFromDocument} from '../utility'
+
+const SelectPicker = styled(RSelectPicker)`
+  margin-bottom: 4px;
+`
+
+const Input = styled(RInput)`
+  margin-bottom: 8px;
+`
 
 export interface NavigationEditPanelProps {
   id?: string
@@ -268,7 +286,6 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
                 <Input
                   placeholder={t('navigation.panels.label')}
                   value={value.label}
-                  style={{marginBottom: 4}}
                   onChange={label => {
                     onChange({...value, label})
                   }}
@@ -277,15 +294,14 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
                   block
                   virtualized
                   value={value.type}
-                  style={{marginBottom: 4}}
                   data={linkTypes}
-                  onChange={(type: string) => {
+                  onChange={type => {
                     if (!type) return
                     onChange({...value, type})
                   }}
                 />
                 {value.type === 'PageNavigationLink' || value.type === 'ArticleNavigationLink' ? (
-                  <SelectPicker
+                  <RSelectPicker
                     block
                     virtualized
                     placeholder={
@@ -314,7 +330,6 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
                 ) : (
                   <Input
                     placeholder={t('navigation.panels.url')}
-                    style={{marginBottom: 8}}
                     value={value.url}
                     onChange={url =>
                       onChange({

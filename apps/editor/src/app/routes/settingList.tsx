@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
   Button,
@@ -8,7 +9,7 @@ import {
   InputGroup,
   InputNumber,
   Notification,
-  Panel,
+  Panel as RPanel,
   Row,
   Schema,
   toaster,
@@ -29,6 +30,10 @@ import {
   PermissionControl,
   useAuthorisation
 } from '../atoms/permissionControl'
+
+const Panel = styled(RPanel)`
+  margin-bottom: 10px;
+`
 
 function SettingList() {
   const {t} = useTranslation()
@@ -248,7 +253,7 @@ function SettingList() {
             <Row>
               {/* comments */}
               <Col xs={24}>
-                <Panel bordered header={t('settingList.comments')} style={{marginBottom: 10}}>
+                <Panel bordered header={t('settingList.comments')}>
                   <Form.Group controlId="guestCommenting">
                     <Form.ControlLabel>{t('settingList.guestCommenting')}</Form.ControlLabel>
                     <Toggle
@@ -282,7 +287,7 @@ function SettingList() {
               </Col>
               {/* polls */}
               <Col xs={24}>
-                <Panel bordered header={t('settingList.polls')} style={{marginBottom: 10}}>
+                <Panel bordered header={t('settingList.polls')}>
                   <Form.Group controlId="guestPollVote">
                     <Form.ControlLabel>{t('settingList.guestPollVote')}</Form.ControlLabel>
                     <Toggle
@@ -305,7 +310,7 @@ function SettingList() {
             <Row>
               {/* login */}
               <Col xs={24}>
-                <Panel bordered header={t('settingList.login')} style={{marginBottom: 10}}>
+                <Panel bordered header={t('settingList.login')}>
                   <Form.Group controlId="loginMinutes">
                     <Form.ControlLabel>{t('settingList.loginMinutes')}</Form.ControlLabel>
                     <InputGroup>
@@ -341,7 +346,7 @@ function SettingList() {
               </Col>
               {/* peering */}
               <Col xs={24}>
-                <Panel bordered header={t('settingList.peering')} style={{marginBottom: 10}}>
+                <Panel bordered header={t('settingList.peering')}>
                   <Form.Group controlId="peerToken">
                     <Form.ControlLabel>{t('settingList.peerToken')}</Form.ControlLabel>
                     <InputGroup>
@@ -363,37 +368,21 @@ function SettingList() {
               </Col>
               {/* payment */}
               <Col xs={24}>
-                <Panel bordered header={t('settingList.payment')} style={{marginBottom: 10}}>
+                <Panel bordered header={t('settingList.payment')}>
                   <Form.Group controlId="invoiceReminders">
                     <Form.ControlLabel>{t('settingList.invoiceReminders')}</Form.ControlLabel>
                     <Form.Control
-                      name="invoiceTries"
+                      name="invoiceFrequency"
                       accepter={InputNumber}
-                      value={invoiceReminderTries.value}
+                      value={invoiceReminderFreq.value}
                       onChange={(value: number) =>
-                        setInvoiceReminderTries({
-                          ...invoiceReminderTries,
+                        setInvoiceReminderFreq({
+                          ...invoiceReminderFreq,
                           value
                         })
                       }
                     />
-                  </Form.Group>
-                  <Form.Group controlId="invoiceFrequency">
-                    <Form.ControlLabel>{t('settingList.invoiceFrequency')}</Form.ControlLabel>
-                    <InputGroup>
-                      <Form.Control
-                        name="invoiceFrequency"
-                        accepter={InputNumber}
-                        value={invoiceReminderFreq.value}
-                        onChange={(value: number) =>
-                          setInvoiceReminderFreq({
-                            ...invoiceReminderFreq,
-                            value
-                          })
-                        }
-                      />
-                      <InputGroupAddon>{t('settingList.days')}</InputGroupAddon>
-                    </InputGroup>
+                    <InputGroupAddon>{t('settingList.days')}</InputGroupAddon>
                   </Form.Group>
                 </Panel>
               </Col>

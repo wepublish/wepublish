@@ -1,55 +1,45 @@
+import styled from '@emotion/styled'
 import React, {ReactNode} from 'react'
-
-const contentMaxWidth = 520
 
 export interface LoginTemplateProps {
   readonly children?: ReactNode
   readonly backgroundChildren?: ReactNode
 }
 
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+`
+
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 1;
+  width: 100%;
+  max-width: 560px;
+  padding: 40px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+`
+
+const Background = styled.div`
+  margin-bottom: 20px;
+  z-index: 0;
+`
+
 export function LoginTemplate({backgroundChildren, children}: LoginTemplateProps) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white',
-
-        width: '100%',
-        height: '100%',
-        minHeight: '100vh'
-      }}>
-      {backgroundChildren && (
-        <div
-          style={{
-            marginBottom: 20,
-            zIndex: 0
-          }}>
-          {backgroundChildren}
-        </div>
-      )}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          overflow: 'hidden',
-          zIndex: 1,
-
-          width: '100%',
-          maxWidth: contentMaxWidth + 40,
-
-          padding: 40,
-
-          backgroundColor: 'white',
-          borderRadius: 10,
-
-          boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.2)'
-        }}>
-        {children}
-      </div>
-    </div>
+    <Wrapper>
+      {backgroundChildren && <Background>{backgroundChildren}</Background>}
+      <Content>{children}</Content>
+    </Wrapper>
   )
 }

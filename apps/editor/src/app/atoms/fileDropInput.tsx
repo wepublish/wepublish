@@ -1,4 +1,37 @@
+import styled from '@emotion/styled'
 import React, {useRef, useState} from 'react'
+
+const Input = styled.input`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  opacity: 0;
+`
+
+const FileDropInputWrapper = styled.div<{dragging: boolean; disabled: boolean}>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 3px;
+  border-style: dashed;
+  border-width: 3px;
+  position: relative;
+  font-size: 16px;
+  text-align: center;
+  border-color: ${({dragging}) => (dragging ? '#3498ff' : '#004299')};
+  color: ${({dragging}) => (dragging ? '#3498ff' : '#004299')};
+  fill: ${({dragging}) => (dragging ? '#3498ff' : '#004299')};
+  cursor: ${({disabled}) => (disabled ? 'not-allowed' : 'pointer')};
+`
 
 export interface FileDropInputProps {
   disabled?: boolean
@@ -46,58 +79,22 @@ export function FileDropInput({disabled = false, onDrop, icon, text}: FileDropIn
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-
-        width: '100%',
-        height: '100%',
-
-        paddingTop: '20px',
-        paddingBottom: '20px',
-        paddingLeft: '20px',
-        paddingRight: '20px',
-
-        borderRadius: 3,
-
-        borderStyle: 'dashed',
-        borderWidth: '3px',
-        borderColor: dragging ? '#3498ff' : '#004299',
-
-        position: 'relative',
-        cursor: disabled ? 'not-allowed' : 'pointer',
-        fontSize: '16px',
-        textAlign: 'center',
-
-        opacity: disabled ? 0.5 : 1,
-
-        color: dragging ? '#3498ff' : '#004299',
-        fill: dragging ? '#3498ff' : '#004299'
-      }}
+    <FileDropInputWrapper
+      dragging={dragging}
+      disabled={disabled}
       onDrop={!disabled ? handleDrop : undefined}
       onDragOver={!disabled ? handleDragIn : undefined}
       onDragLeave={!disabled ? handleDragOut : undefined}
       onClick={() => inputRef.current!.click()}>
       {icon && icon}
       <div>{text}</div>
-      <input
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: 0,
-          height: 0,
-          opacity: 0
-        }}
+      <Input
         ref={inputRef}
         type="file"
         value={''}
         onChange={handleInputChange}
         disabled={disabled}
       />
-    </div>
+    </FileDropInputWrapper>
   )
 }

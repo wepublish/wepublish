@@ -1,51 +1,39 @@
-import React, {ReactNode} from 'react'
+import styled from '@emotion/styled'
+import {ReactNode} from 'react'
 
-export interface DescriptionItemProps {
-  children?: ReactNode
-}
-
-export function DescriptionList({children}: DescriptionListItemProps) {
-  return (
-    <dl
-      style={{
-        fontSize: 12,
-        marginTop: 0,
-        marginBottom: 0
-      }}>
-      {children}
-    </dl>
-  )
-}
-
-export interface DescriptionListItemProps {
+export interface DescriptionListProps {
   label?: ReactNode
   children?: ReactNode
 }
 
-export function DescriptionListItem({label, children}: DescriptionListItemProps) {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        marginBottom: 10
+const List = styled.dl`
+  font-size: 12px;
+  margin: 0 auto;
+`
 
-        /* ':last-child': {
-        marginBottom: 0
-      } */
-      }}>
-      <dt
-        style={{
-          color: 'gray',
-          flexGrow: 1
-        }}>
-        {label}
-      </dt>
-      <dd
-        style={{
-          marginLeft: 20
-        }}>
-        {children}
-      </dd>
-    </div>
+const ListItem = styled.div`
+  display: flex;
+  margin-bottom: 10px;
+`
+
+const Label = styled.dt`
+  color: gray;
+  flex-grow: 1;
+`
+
+const ChildrenWrapper = styled.dd`
+  margin-left: 20px;
+`
+
+export function DescriptionList({children}: DescriptionListProps) {
+  return <List>{children}</List>
+}
+
+export function DescriptionListItem({label, children}: DescriptionListProps) {
+  return (
+    <ListItem>
+      <Label>{label}</Label>
+      <ChildrenWrapper>{children}</ChildrenWrapper>
+    </ListItem>
   )
 }

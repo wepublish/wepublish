@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
@@ -7,12 +8,12 @@ import {
   Button,
   Drawer,
   FlexboxGrid,
-  IconButton,
+  IconButton as RIconButton,
   Input,
   InputGroup,
   Modal,
   Pagination,
-  Table
+  Table as RTable
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
@@ -27,7 +28,41 @@ import {
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
 
-const {Column, HeaderCell, Cell} = Table
+const {Column, HeaderCell, Cell} = RTable
+
+const IconButton = styled(RIconButton)`
+  margin-left: 5px;
+`
+
+const CellWithPadding = styled(Cell)`
+  .rs-table-cell-content {
+    padding: 6px 0;
+  }
+`
+
+const CellSmallPadding = styled(Cell)`
+  .rs-table-cell-content {
+    padding: 2px;
+  }
+`
+
+const Table = styled(RTable)`
+  flex: 1;
+`
+
+const FlexColumn = styled.div`
+  display: flex;
+  flex-flow: column;
+  margin-top: 20px;
+`
+
+const FlexItemTextAlign = styled(FlexboxGrid.Item)`
+  text-align: right;
+`
+
+const FlexItemMarginTop = styled(FlexboxGrid.Item)`
+  margin-top: 20px;
+`
 
 function mapColumFieldToGraphQLField(columnField: string): AuthorSort | null {
   switch (columnField) {
@@ -114,33 +149,27 @@ function AuthorList() {
           <h2>{t('authors.overview.authors')}</h2>
         </FlexboxGrid.Item>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_AUTHOR']}>
-          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <FlexItemTextAlign colspan={8}>
             <Link to="/authors/create">
-              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
+              <RIconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('authors.overview.newAuthor')}
-              </IconButton>
+              </RIconButton>
             </Link>
-          </FlexboxGrid.Item>
+          </FlexItemTextAlign>
         </PermissionControl>
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
+        <FlexItemMarginTop colspan={24}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
-        </FlexboxGrid.Item>
+        </FlexItemMarginTop>
       </FlexboxGrid>
-      <div
-        style={{
-          display: 'flex',
-          flexFlow: 'column',
-          marginTop: '20px'
-        }}>
+      <FlexColumn>
         <Table
           minHeight={600}
           autoHeight
-          style={{flex: 1}}
           loading={isLoading}
           data={authors}
           sortColumn={sortField}
@@ -151,11 +180,11 @@ function AuthorList() {
           }}>
           <Column width={100} align="left" resizable>
             <HeaderCell>{}</HeaderCell>
-            <Cell style={{padding: 2}}>
+            <CellSmallPadding>
               {(rowData: RowDataType<FullAuthorFragment>) => (
                 <Avatar circle src={rowData.image?.squareURL || undefined} />
               )}
-            </Cell>
+            </CellSmallPadding>
           </Column>
           <Column width={300} align="left" resizable sortable>
             <HeaderCell>{t('authors.overview.name')}</HeaderCell>
@@ -179,7 +208,7 @@ function AuthorList() {
           </Column>
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('authors.overview.action')}</HeaderCell>
-            <Cell style={{padding: '6px 0'}}>
+            <CellWithPadding>
               {(rowData: RowDataType<FullAuthorFragment>) => (
                 <PermissionControl qualifyingPermissions={['CAN_DELETE_AUTHOR']}>
                   <IconButtonTooltip caption={t('delete')}>
@@ -187,7 +216,6 @@ function AuthorList() {
                       icon={<MdDelete />}
                       circle
                       size="sm"
-                      style={{marginLeft: '5px'}}
                       onClick={() => {
                         setConfirmationDialogOpen(true)
                         setCurrentAuthor(rowData as FullAuthorFragment)
@@ -196,7 +224,7 @@ function AuthorList() {
                   </IconButtonTooltip>
                 </PermissionControl>
               )}
-            </Cell>
+            </CellWithPadding>
           </Column>
         </Table>
 
@@ -216,7 +244,7 @@ function AuthorList() {
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </div>
+      </FlexColumn>
 
       <Drawer
         open={isEditModalOpen}

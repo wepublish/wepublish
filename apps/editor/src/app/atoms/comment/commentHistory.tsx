@@ -1,5 +1,5 @@
 import PlusIcon from '@rsuite/icons/legacy/Plus'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid} from 'rsuite'
 

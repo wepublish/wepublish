@@ -1,10 +1,9 @@
-import './tableMenu.less'
-import '../../../atoms/emojiPicker.less'
-
-import React, {useContext, useEffect, useState} from 'react'
+import {css, Global} from '@emotion/react'
+import styled from '@emotion/styled'
+import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdDisabledByDefault} from 'react-icons/md'
-import {Button, Col, IconButton, InputGroup, InputNumber, Row} from 'rsuite'
+import {Button, Col as RCol, IconButton, InputGroup as RInputGroup, InputNumber, Row} from 'rsuite'
 import {Transforms} from 'slate'
 import {useSlate} from 'slate-react'
 
@@ -13,6 +12,33 @@ import {ControlsContainer, SubMenuContext} from '../../../atoms/toolbar'
 import {DEFAULT_BORDER_COLOR, emptyCellsTable} from '../editor/elements'
 import {BlockFormat} from '../editor/formats'
 import {WepublishEditor} from '../editor/wepublishEditor'
+
+const ControlsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 10em;
+  width: 15em;
+`
+
+const Col = styled(RCol)`
+  text-align: right;
+  margin-top: 0px;
+  margin-bottom: 20px;
+`
+
+const RedIcon = styled(MdDisabledByDefault)`
+  color: #ff0000;
+`
+
+const InputGroup = styled(RInputGroup)`
+  width: 150px;
+`
+
+const InputAddon = styled(RInputGroup.Addon)`
+  width: 80px;
+`
 
 export function TableMenu() {
   const editor = useSlate()
@@ -70,11 +96,8 @@ export function TableMenu() {
           setNumber: setNcols
         }
       ].map(({label, num, setNumber}, i) => (
-        <InputGroup
-          style={{width: '150px'}}
-          disabled={WepublishEditor.isFormatActive(editor, BlockFormat.Table)}
-          key={i}>
-          <InputGroup.Addon style={{width: '80px'}}>{label}</InputGroup.Addon>
+        <InputGroup disabled={WepublishEditor.isFormatActive(editor, BlockFormat.Table)} key={i}>
+          <InputAddon>{label}</InputAddon>
           <InputNumber value={num} onChange={val => setNumber(val as number)} min={1} max={100} />
         </InputGroup>
       ))}
@@ -107,8 +130,8 @@ export function TableMenu() {
                 currentColor={borderColor}
                 label={t('blocks.richTextTable.border')}
               />
-              <button className="icon-button" onClick={() => setBorderColor('#00000000')}>
-                <MdDisabledByDefault style={{color: '#FF0000'}} />
+              <button className="icon-button" onClick={() => setBorderColor('#0000000')}>
+                <RedIcon />
               </button>
             </ControlsContainer>
           ) : (
@@ -142,24 +165,31 @@ export function TableMenu() {
 
   return (
     <>
+      <Global
+        styles={css`
+          table {
+            white-space: pre-wrap;
+            width: 100%;
+            margin: 10px;
+            table-layout: fixed;
+          }
+
+          td {
+            border: 1px solid;
+            padding: 8px;
+          }
+        `}
+      />
       <Row>
-        <Col xs={24} style={{textAlign: 'right', marginTop: '0px', marginBottom: '20px'}}>
+        <Col xs={24}>
           <IconButton icon={<MdClose />} onClick={() => closeMenu()} />
         </Col>
       </Row>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-around',
-          alignItems: 'center',
-          height: '10em',
-          width: '15em'
-        }}>
+      <ControlsWrapper>
         {WepublishEditor.isFormatActive(editor, BlockFormat.Table)
           ? tableModifyControls
           : tableInsertControls}
-      </div>
+      </ControlsWrapper>
     </>
   )
 }

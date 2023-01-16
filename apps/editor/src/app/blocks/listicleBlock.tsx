@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useCallback, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Drawer} from 'rsuite'
@@ -11,6 +12,24 @@ import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {isFunctionalUpdate} from '../utility'
 import {createDefaultValue, RichTextBlock} from './richTextBlock/richTextBlock'
 import {ListicleBlockValue, ListicleItem, RichTextBlockValue} from './types'
+
+const ListicleWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const ImageWrapper = styled.div`
+  display: grid;
+  overflow: hidden;
+  width: 200px;
+  height: 150px;
+  margin-right: 10px;
+  flex-shrink: 0;
+`
+
+const TextAreaWrapper = styled.div`
+  flex-grow: 1;
+`
 
 export function ListicleBlock({value, onChange, disabled}: BlockProps<ListicleBlockValue>) {
   return (
@@ -47,20 +66,8 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
 
   return (
     <>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row'
-        }}>
-        <div
-          style={{
-            overflow: 'hidden',
-            width: 200,
-            height: 150,
-            marginRight: 10,
-            flexShrink: 0,
-            display: 'grid'
-          }}>
+      <ListicleWrapper>
+        <ImageWrapper>
           <ChooseEditImage
             header={''}
             image={image}
@@ -69,8 +76,8 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
             openEditModalOpen={() => setEditModalOpen(true)}
             removeImage={() => onChange?.({...value, image: null})}
           />
-        </div>
-        <div style={{flexGrow: 1}}>
+        </ImageWrapper>
+        <TextAreaWrapper>
           <TypographicTextArea
             variant="h1"
             placeholder={t('blocks.listicle.title')}
@@ -82,8 +89,8 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
           />
 
           <RichTextBlock value={richText} onChange={handleRichTextChange} />
-        </div>
-      </div>
+        </TextAreaWrapper>
+      </ListicleWrapper>
 
       <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel

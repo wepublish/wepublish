@@ -1,5 +1,5 @@
+import styled from '@emotion/styled'
 import nanoid from 'nanoid'
-import React from 'react'
 
 interface ColorPickerProps {
   setColor: (color: string) => void
@@ -8,12 +8,16 @@ interface ColorPickerProps {
   disabled?: boolean
 }
 
+const Input = styled.input`
+  cursor: pointer;
+`
+
 export function ColorPicker({setColor, currentColor, label, disabled}: ColorPickerProps) {
   const id = nanoid()
   return (
     <>
       {label && <label htmlFor={id}>{label}</label>}
-      <input
+      <Input
         disabled={disabled}
         id={id}
         type="color"
@@ -21,7 +25,6 @@ export function ColorPicker({setColor, currentColor, label, disabled}: ColorPick
         onChange={e => {
           setColor(e.target.value)
         }}
-        style={{cursor: 'pointer'}}
       />
     </>
   )

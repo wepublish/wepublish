@@ -1,6 +1,37 @@
-import React, {ReactNode} from 'react'
+import styled from '@emotion/styled'
+import {ReactNode} from 'react'
 
-const contentMaxWidth = 880
+const Children = styled.div`
+  display: flex;
+  width: 100%;
+  max-width: 920px;
+`
+
+const ChildrenWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-top: 40px;
+  padding-bottom: 60px;
+  padding-left: 40px;
+  padding-right: 40px;
+`
+
+const NavigationChildren = styled.div`
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+`
+
+const EditorTemplateWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+`
 
 export interface EditorTemplateProps {
   navigationChildren?: ReactNode
@@ -9,44 +40,11 @@ export interface EditorTemplateProps {
 
 export function EditorTemplate({children, navigationChildren}: EditorTemplateProps) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-
-        width: '100%',
-        minHeight: '100%'
-      }}>
-      <div
-        style={{
-          display: 'flex',
-          position: 'sticky',
-          top: 0,
-          zIndex: 10,
-          width: '100%'
-        }}>
-        {navigationChildren}
-      </div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: '100%',
-          paddingTop: 40,
-          paddingBottom: 60,
-          paddingLeft: 40,
-          paddingRight: 40
-        }}>
-        <div
-          style={{
-            display: 'flex',
-            width: '100%',
-            maxWidth: contentMaxWidth + 40
-          }}>
-          {children}
-        </div>
-      </div>
-    </div>
+    <EditorTemplateWrapper>
+      <NavigationChildren>{navigationChildren}</NavigationChildren>
+      <ChildrenWrapper>
+        <Children>{children}</Children>
+      </ChildrenWrapper>
+    </EditorTemplateWrapper>
   )
 }

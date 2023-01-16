@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useRef} from 'react'
 import {OverlayTriggerInstance} from 'rsuite/esm/Picker'
 import {useSlate} from 'slate-react'
@@ -12,6 +13,11 @@ import {
 } from '../../../atoms/toolbar'
 import {Format} from '../editor/formats'
 import {WepublishEditor} from '../editor/wepublishEditor'
+
+const SubMenu = styled(SubMenuButton)`
+  height: 20px;
+  width: 20px;
+`
 
 interface FormatBlockIconButtonProps extends ToolbarIconButtonProps {
   readonly icon: React.ReactElement
@@ -68,8 +74,8 @@ export function EditorSubMenuButton({
   }, [editorHasFocus])
 
   return (
-    <SubMenuButton {...props} ref={triggerRef}>
+    <SubMenu {...props} ref={triggerRef}>
       {children}
-    </SubMenuButton>
+    </SubMenu>
   )
 }

@@ -151,7 +151,7 @@ describe('Pages', () => {
       const res = await testServerPrivate.executeOperation({
         query: CreatePage,
         variables: {
-          input: input
+          input
         }
       })
 
@@ -167,13 +167,13 @@ describe('Pages', () => {
           {key: 'private', value: 'private', public: false},
           {key: 'public', value: 'public', public: true}
         ],
-        blocks: blocks
+        blocks
       }
 
       const res = await testServerPrivate.executeOperation({
         query: CreatePage,
         variables: {
-          input: input
+          input
         }
       })
 
@@ -293,7 +293,7 @@ describe('Pages', () => {
       const newPage = await testServerPrivate.executeOperation({
         query: CreatePage,
         variables: {
-          input: input
+          input
         }
       })
 
@@ -310,7 +310,7 @@ describe('Pages', () => {
       const newPage2 = await testServerPrivate.executeOperation({
         query: CreatePage,
         variables: {
-          input: input
+          input
         }
       })
 

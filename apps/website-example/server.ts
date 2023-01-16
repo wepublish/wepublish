@@ -58,9 +58,9 @@ export async function runServerInstance() {
 
   const allowedHosts = (process.env.ALLOWED_HOSTS || '').split(',')
 
-  const apiURL = process.env.API_URL
+  if (!process.env.API_URL) throw new Error('No API_URL defined in the environment.')
 
-  if (!apiURL) throw new Error('No API_URL defined in the environment.')
+  const apiURL = process.env.API_URL + '/v1'
 
   const app = express()
   app.use(cors())

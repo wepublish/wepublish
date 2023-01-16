@@ -5,6 +5,15 @@ import {ActivityFeed} from '../atoms/dashboard/activityFeed'
 import {SubscriberChart} from '../atoms/dashboard/subscriberChart'
 import {FlexboxGrid} from 'rsuite'
 import {PermissionControl} from '../atoms/permissionControl'
+import styled from '@emotion/styled'
+
+const FlexboxGridStyled = styled(FlexboxGrid)`
+  margin-top: 1rem;
+`
+
+const GridItemCenterText = styled.h4`
+  text-align: center;
+`
 
 export function Dashboard() {
   const {t} = useTranslation()
@@ -19,18 +28,18 @@ export function Dashboard() {
     <>
       <h2>{t('dashboard.dashboard')}</h2>
       <h4>{t('dashboard.greeting', {name})}</h4>
-      <FlexboxGrid style={{marginTop: 12}}>
+      <FlexboxGridStyled>
         <FlexboxGrid.Item colspan={12}>
-          <h4 style={{textAlign: 'center'}}>{t('dashboard.activity')}</h4>
+          <GridItemCenterText>{t('dashboard.activity')}</GridItemCenterText>
           <ActivityFeed />
         </FlexboxGrid.Item>
         <PermissionControl qualifyingPermissions={['CAN_GET_SUBSCRIPTIONS']}>
           <FlexboxGrid.Item colspan={12}>
-            <h4 style={{textAlign: 'center'}}>{t('dashboard.newSubscribers')}</h4>
+            <GridItemCenterText>{t('dashboard.newSubscribers')}</GridItemCenterText>
             <SubscriberChart />
           </FlexboxGrid.Item>
         </PermissionControl>
-      </FlexboxGrid>
+      </FlexboxGridStyled>
     </>
   )
 }

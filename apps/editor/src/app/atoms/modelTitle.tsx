@@ -1,7 +1,29 @@
-import React, {ReactChild} from 'react'
+import styled from '@emotion/styled'
+import {ReactChild} from 'react'
 import {MdChevronLeft} from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {Button, Col, FlexboxGrid, Loader, Row} from 'rsuite'
+import {Button, Col as RCol, FlexboxGrid, Loader as RLoader, Row} from 'rsuite'
+
+const ChevronLeft = styled(MdChevronLeft)`
+  fontsize: 48px;
+`
+
+const FlexGrid = styled(FlexboxGrid)`
+  padding-right: 5px;
+  padding-bottom: 20px;
+`
+
+const FlexboxItem = styled(FlexboxGrid.Item)`
+  margin-left: 40px;
+`
+
+const Loader = styled(RLoader)`
+  margin-right: 5px;
+`
+
+const SaveButton = styled(Button)`
+  margin-right: 10px;
+`
 
 interface modelTitleProps {
   title?: string
@@ -31,7 +53,7 @@ export function ModelTitle({
     if (loading) {
       return (
         <>
-          <Loader style={{marginRight: '5px'}} />
+          <Loader />
           {loadingTitle}
         </>
       )
@@ -43,14 +65,9 @@ export function ModelTitle({
     return (
       <>
         {/* save button */}
-        <Button
-          appearance="ghost"
-          loading={loading}
-          type="submit"
-          data-testid="saveButton"
-          style={{marginRight: '10px'}}>
+        <SaveButton appearance="ghost" loading={loading} type="submit" data-testid="saveButton">
           {saveBtnTitle}
-        </Button>
+        </SaveButton>
         {/* save and close button */}
         <Button
           appearance="primary"
@@ -65,12 +82,12 @@ export function ModelTitle({
   }
 
   return (
-    <FlexboxGrid align="middle" style={{paddingRight: '5px', paddingBottom: '20px'}}>
+    <FlexGrid align="middle">
       {/* title */}
       <FlexboxGrid.Item colspan={12}>
         <FlexboxGrid align="middle">
           <Link to={closePath}>
-            <MdChevronLeft style={{fontSize: '48px'}} />
+            <ChevronLeft />
           </Link>
 
           <h1>{titleView()}</h1>
@@ -84,9 +101,9 @@ export function ModelTitle({
           <FlexboxGrid.Item>{additionalMenu}</FlexboxGrid.Item>
 
           {/* save btns */}
-          <FlexboxGrid.Item style={{marginLeft: '40px'}}>{actionsView()}</FlexboxGrid.Item>
+          <FlexboxItem>{actionsView()}</FlexboxItem>
         </FlexboxGrid>
       </FlexboxGrid.Item>
-    </FlexboxGrid>
+    </FlexGrid>
   )
 }

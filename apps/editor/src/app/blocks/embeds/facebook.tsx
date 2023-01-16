@@ -1,14 +1,14 @@
-import React, {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react'
+import styled from '@emotion/styled'
+import {createContext, ReactNode, useContext, useEffect, useMemo, useRef, useState} from 'react'
 
 import {useScript} from '../../utility'
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  min-height: 300px;
+  padding: 20px;
+`
 
 // Define some globals set by Facebook SDK.
 declare global {
@@ -106,21 +106,14 @@ export function FacebookPostEmbed({userID, postID}: FacebookPostEmbedProps) {
   const encodedPostID = encodeURIComponent(postID)
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        minHeight: 300,
-        padding: 20
-      }}
-      ref={wrapperRef}>
+    <Wrapper ref={wrapperRef}>
       <div
         className="fb-post"
         data-href={`https://www.facebook.com/${encodedUserID}/posts/${encodedPostID}/`}
         data-show-text="true"
         data-width="200"
       />
-    </div>
+    </Wrapper>
   )
 }
 
@@ -153,19 +146,12 @@ export function FacebookVideoEmbed({userID, videoID}: FacebookVideoEmbedProps) {
   const encodedVideoID = encodeURIComponent(videoID)
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        minHeight: 300,
-        padding: 20
-      }}
-      ref={wrapperRef}>
+    <Wrapper ref={wrapperRef}>
       <div
         className="fb-video"
         data-href={`https://www.facebook.com/${encodedUserID}/videos/${encodedVideoID}/`}
         data-show-text="true"
       />
-    </div>
+    </Wrapper>
   )
 }

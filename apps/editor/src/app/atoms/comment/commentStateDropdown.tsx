@@ -1,11 +1,32 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdArrowDropDown} from 'react-icons/md'
-import {Dropdown, IconButton, Popover, Whisper} from 'rsuite'
+import {
+  Badge,
+  Button,
+  ButtonGroup,
+  Dropdown,
+  IconButton as RIconButton,
+  Popover as RPopover,
+  Whisper
+} from 'rsuite'
 import {TypeAttributes} from 'rsuite/cjs/@types/common'
 
 import {CommentRejectionReason, CommentState, FullCommentFragment} from '../../api'
 import {CommentStateChangeModal, mapCommentActionToBtnTitle} from './commentStateChangeModal'
+
+const BadgeWrapper = styled.div`
+  margin-bottom: 5px;
+`
+
+const Popover = styled(RPopover)<{left: number; top: number}>`
+  left: ${({left}) => left};
+  top: ${({top}) => top};
+`
+const IconButton = styled(RIconButton)`
+  padding: 2px;
+`
 
 export function mapCommentStateToColor(commentState: CommentState) {
   switch (commentState) {
@@ -46,6 +67,9 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
     setNewCommentState(comment.state)
   }, [comment])
 
+  const showBadge =
+    comment.state === CommentState.Rejected || comment.state === CommentState.PendingUserChanges
+
   const renderMenu = ({onClose, className}: {className: any; onClose: () => void}, ref: any) => {
     const handleSelect = (eventKey: string | undefined) => {
       onClose()
@@ -55,7 +79,7 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
     }
 
     return (
-      <Popover ref={ref} className={className} full>
+      <RPopover ref={ref} className={className} full>
         <Dropdown.Menu onSelect={handleSelect}>
           {Object.keys(CommentState)
             .filter(tmpState => tmpState !== CommentState.PendingApproval)
@@ -69,23 +93,36 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
               </Dropdown.Item>
             ))}
         </Dropdown.Menu>
-      </Popover>
+      </RPopover>
     )
   }
 
   return (
     <>
+      {showBadge && (
+        <BadgeWrapper>
+          <Badge content={comment.rejectionReason} color={mapCommentStateToColor(comment.state)} />
+        </BadgeWrapper>
+      )}
       <div>
-        <Whisper placement="bottomStart" trigger="click" speaker={renderMenu}>
-          <IconButton
+        <ButtonGroup>
+          <Button
             appearance="ghost"
             icon={<MdArrowDropDown />}
             placement="left"
             color={mapCommentStateToColor(comment.state)}
-            size={size}>
+            size={size || 'md'}>
             {t(humanReadableCommentState(comment.state))}
-          </IconButton>
-        </Whisper>
+          </Button>
+          <Whisper placement="bottomEnd" trigger="click" speaker={renderMenu}>
+            <IconButton
+              size={size || 'md'}
+              appearance="primary"
+              color={mapCommentStateToColor(comment.state)}
+              icon={<MdArrowDropDown />}
+            />
+          </Whisper>
+        </ButtonGroup>
       </div>
 
       {/* modal */}

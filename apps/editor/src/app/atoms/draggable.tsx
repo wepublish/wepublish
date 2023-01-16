@@ -1,12 +1,5 @@
-import React, {
-  createContext,
-  ReactNode,
-  RefObject,
-  useContext,
-  useEffect,
-  useRef,
-  useState
-} from 'react'
+import styled from '@emotion/styled'
+import {createContext, ReactNode, RefObject, useContext, useEffect, useRef, useState} from 'react'
 
 export interface Point {
   readonly x: number
@@ -19,21 +12,30 @@ export interface DraggableContainerProps {
   readonly children?: ReactNode
 }
 
+const Container = styled.div`
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+`
+
+const DraggableWrapper = styled.div<{layouted: boolean}>`
+  cursor: move;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+  user-select: none;
+  display: ${({layouted}) => (layouted ? 'block' : 'none')};
+`
+
 export function DraggableContainer({children}: DraggableContainerProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        overflow: 'hidden',
-        width: '100%',
-        height: '100%',
-        userSelect: 'none'
-      }}
-      ref={ref}>
+    <Container ref={ref}>
       <DraggableContext.Provider value={ref}>{children}</DraggableContext.Provider>
-    </div>
+    </Container>
   )
 }
 
@@ -139,17 +141,8 @@ export function Draggable({children, point, disabled, onChange}: DraggableProps)
   }, [containerRef, draggableRef, point, disabled])
 
   return (
-    <div
-      ref={draggableRef}
-      style={{
-        display: layouted ? 'block' : 'none',
-        cursor: 'move',
-        position: 'absolute',
-        transform: 'translate(-50%, -50%)',
-        transformOrigin: 'center',
-        userSelect: 'none'
-      }}>
+    <DraggableWrapper layouted={layouted} ref={draggableRef}>
       {children}
-    </div>
+    </DraggableWrapper>
   )
 }

@@ -1,5 +1,4 @@
-import './routes.less'
-
+import styled from '@emotion/styled'
 import React, {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -10,9 +9,17 @@ import {
   MdSave
 } from 'react-icons/md'
 import {Link, useNavigate, useParams} from 'react-router-dom'
-import {Badge, Drawer, IconButton, Message, Modal, Notification, Tag, toaster} from 'rsuite'
+import {
+  Badge,
+  Drawer,
+  IconButton as RIconButton,
+  Message,
+  Modal,
+  Notification,
+  Tag as RTag,
+  toaster
+} from 'rsuite'
 
-import {ElementID} from '../../shared/elementID'
 import {ClientSettings} from '../../shared/types'
 import {
   ArticleInput,
@@ -47,6 +54,32 @@ import {ArticleMetadata, ArticleMetadataPanel, InfoData} from '../panel/articleM
 import {PublishArticlePanel} from '../panel/publishArticlePanel'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {getSettings, StateColor} from '../utility'
+
+const IconButtonMarginTop = styled(RIconButton)`
+  margin-top: 4px;
+`
+
+const IconButton = styled(RIconButton)`
+  margin-left: 10px;
+`
+
+const CenterChildren = styled.div`
+  margin-top: 4px;
+  margin-bottom: 20px;
+`
+
+const Legend = styled.legend`
+  width: auto;
+  margin: 0px auto;
+`
+
+const FieldSet = styled.fieldset<{stateColor: string}>`
+  border-color: ${({stateColor}) => stateColor};
+`
+
+const Tag = styled(RTag)<{stateColor: string}>`
+  background-color: ${({stateColor}) => stateColor};
+`
 
 const InitialArticleBlocks: BlockValue[] = [
   {key: '0', type: BlockType.Title, value: {title: '', lead: ''}},
@@ -463,16 +496,16 @@ function ArticleEditor() {
 
   return (
     <>
-      <fieldset style={{borderColor: stateColor}}>
-        <legend style={{width: 'auto', margin: '0px auto'}}>
-          <Tag style={{backgroundColor: stateColor}}>{tagTitle}</Tag>
-        </legend>
+      <FieldSet stateColor={stateColor}>
+        <Legend>
+          <Tag stateColor={stateColor}>{tagTitle}</Tag>
+        </Legend>
         <EditorTemplate
           navigationChildren={
             <NavigationBar
               leftChildren={
                 <Link to="/articles">
-                  <IconButton
+                  <RIconButton
                     size="lg"
                     className="actionButton"
                     icon={<MdKeyboardBackspace />}
@@ -480,12 +513,12 @@ function ArticleEditor() {
                       if (!unsavedChangesDialog()) e.preventDefault()
                     }}>
                     {t('articleEditor.overview.back')}
-                  </IconButton>
+                  </RIconButton>
                 </Link>
               }
               centerChildren={
-                <div style={{marginTop: '4px', marginBottom: '20px'}}>
-                  <IconButton
+                <CenterChildren>
+                  <RIconButton
                     icon={<MdIntegrationInstructions />}
                     size="lg"
                     disabled={isDisabled}
@@ -495,15 +528,12 @@ function ArticleEditor() {
                       setMetaDrawerOpen(true)
                     }}>
                     {t('articleEditor.overview.metadata')}
-                  </IconButton>
+                  </RIconButton>
 
                   {isNew && createData == null ? (
                     <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
                       <IconButton
                         className="actionButton"
-                        style={{
-                          marginLeft: '10px'
-                        }}
                         size="lg"
                         icon={<MdSave />}
                         disabled={isDisabled}
@@ -515,9 +545,6 @@ function ArticleEditor() {
                     <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
                         <IconButton
-                          style={{
-                            marginLeft: '10px'
-                          }}
                           className="actionButton"
                           size="lg"
                           icon={<MdSave />}
@@ -534,9 +561,6 @@ function ArticleEditor() {
                               : 'saved'
                           }>
                           <IconButton
-                            style={{
-                              marginLeft: '10px'
-                            }}
                             className="actionButton"
                             size="lg"
                             icon={<MdCloudUpload />}
@@ -550,7 +574,7 @@ function ArticleEditor() {
                       </PermissionControl>
                     </PermissionControl>
                   )}
-                </div>
+                </CenterChildren>
               }
               rightChildren={
                 <PermissionControl qualifyingPermissions={['CAN_GET_ARTICLE_PREVIEW_LINK']}>
@@ -565,13 +589,12 @@ function ArticleEditor() {
                         }
                       })
                     }}>
-                    <IconButton
+                    <IconButtonMarginTop
                       disabled={hasChanged || !id || !canPreview}
-                      style={{marginTop: '4px'}}
                       size="lg"
                       icon={<MdRemoveRedEye />}>
                       {t('articleEditor.overview.preview')}
-                    </IconButton>
+                    </IconButtonMarginTop>
                   </Link>
                 </PermissionControl>
               }
@@ -585,8 +608,8 @@ function ArticleEditor() {
             {useBlockMap<BlockValue>(() => BlockMap, [])}
           </BlockList>
         </EditorTemplate>
-      </fieldset>
-      <Drawer open={isMetaDrawerOpen} size={'md'} onClose={() => setMetaDrawerOpen(false)}>
+      </FieldSet>
+      <Drawer open={isMetaDrawerOpen} size="sm" onClose={() => setMetaDrawerOpen(false)}>
         <ArticleMetadataPanel
           articleID={articleID}
           value={metadata}

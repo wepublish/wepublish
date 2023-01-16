@@ -15,6 +15,7 @@ import {
 import {formatDistanceToNow} from 'date-fns'
 import {fr, de, enUS} from 'date-fns/locale'
 import {useRecentActionsQuery, Action, ActionType, FullAuthorFragment} from '../../api'
+import styled from '@emotion/styled'
 
 export interface Event {
   date: string
@@ -23,6 +24,16 @@ export interface Event {
   creator?: string
   summary?: string
 }
+
+const ActivityFeedSummaryText = styled.p`
+  font-style: italic;
+  margin-top: 1rem;
+`
+
+const ActivityFeedIcon = styled(Avatar)`
+  margin-right: 1rem;
+  background-color: #3498ff;
+`
 
 export function ActivityFeed() {
   const {t, i18n} = useTranslation()
@@ -88,15 +99,13 @@ export function ActivityFeed() {
             }
             return (
               <>
-                <Avatar style={{marginRight: 12, backgroundColor: '#3498FF'}} circle>
-                  {icon}
-                </Avatar>
+                <ActivityFeedIcon circle>{icon}</ActivityFeedIcon>
                 <Link to={path}> {type} </Link>
                 {formatDistanceToNow(new Date(rowData.date), {
                   locale: i18n.language === 'de' ? de : i18n.language === 'fr' ? fr : enUS,
                   addSuffix: true
                 })}
-                {rowData.creator && ` by ${rowData.creator}`}
+                {rowData.creator && t('dashboard.createdBy', {creator: rowData.creator})}
               </>
             )
           }}
@@ -106,7 +115,7 @@ export function ActivityFeed() {
         <HeaderCell dataKey="summary">{t('dashboard.summary')}</HeaderCell>
         <Cell dataKey="summary">
           {(rowData: RowDataType<Action>) => {
-            return <p style={{fontStyle: 'italic'}}>{rowData?.summary} </p>
+            return <ActivityFeedSummaryText>{rowData?.summary} </ActivityFeedSummaryText>
           }}
         </Cell>
       </Column>

@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -30,9 +31,17 @@ import {
   MdPieChartOutline
 } from 'react-icons/md'
 import {Link, useLocation} from 'react-router-dom'
-import {Container, IconButton, Nav, Navbar, Sidebar, Sidenav} from 'rsuite'
+import {
+  Container,
+  IconButton as RIconButton,
+  Nav,
+  Navbar,
+  Sidebar as RSidebar,
+  Sidenav as RSidenav
+} from 'rsuite'
 
 import {PermissionControl} from './atoms/permissionControl'
+import Version from './atoms/version'
 
 export interface BaseProps {
   children?: ReactNode
@@ -50,13 +59,6 @@ const AVAILABLE_LANG = [
   {id: 'de', lang: 'de_CH', name: 'Deutsch'}
 ]
 
-const iconStyles = {
-  width: 56,
-  height: 56,
-  lineHeight: '56px',
-  textAlign: 'center' as const
-}
-
 function useStickyState(defaultValue: string, key: string) {
   const [value, setValue] = useState(() => {
     const stickyValue = window.localStorage.getItem(key)
@@ -69,6 +71,59 @@ function useStickyState(defaultValue: string, key: string) {
 
   return [value, setValue]
 }
+
+const Wrapper = styled.div`
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+`
+
+const Sidebar = styled(RSidebar)`
+  display: flex;
+  flex-direction: column;
+`
+
+const Sidenav = styled(RSidenav)`
+  flex: 1 1 auto;
+`
+
+const IconButton = styled(RIconButton)`
+  width: 56px;
+  height: 56px;
+  line-height: 56px;
+  text-align: center;
+
+  svg {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+  }
+`
+
+const FloatingButton = styled(RIconButton)`
+  display: block;
+  opacity: 0;
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  top: 5vh;
+  transition: transform 0.2s ease-in, opacity 0.15s ease-in-out;
+  z-index: 100;
+  transform: translateX(${props => (props.isExpanded ? '243px' : '38px')});
+
+  .rs-sidebar:hover & {
+    opacity: 1;
+  }
+`
+
+const Navigation = styled(Nav)`
+  margin-top: 1rem;
+`
+
+const ChildrenContainer = styled(Container)`
+  padding: 60px 40px;
+  overflow-y: scroll;
+`
 
 export function Base({children}: BaseProps) {
   const {pathname} = useLocation()
@@ -85,41 +140,21 @@ export function Base({children}: BaseProps) {
   }, [uiLanguage])
 
   return (
-    <div style={{display: 'flex', height: '100vh', width: '100vw'}}>
+    <Wrapper>
       <Container>
-        <Sidebar
-          style={{display: 'flex', flexDirection: 'column'}}
-          width={isExpanded ? 260 : 56}
-          collapsible>
-          <Sidenav
-            expanded={isExpanded}
-            defaultOpenKeys={['1']}
-            appearance="default"
-            style={{flex: '1 1 auto'}}>
-            <Sidenav.Body>
-              <IconButton
-                style={{
-                  position: 'absolute',
-                  top: '5vh',
-                  transform: `translateX(${isExpanded ? '243px' : '38px'})`,
-                  transition: 'transform 0.2s ease-in',
-                  zIndex: 100
-                }}
-                className="collapse-nav-btn"
+        <Sidebar isExpanded={isExpanded} collapsible width={isExpanded ? 260 : 56}>
+          <Sidenav expanded={isExpanded} defaultOpenKeys={['1']} appearance="default">
+            <RSidenav.Body>
+              <FloatingButton
+                isExpanded={isExpanded}
                 appearance="primary"
                 circle
                 size="xs"
                 onClick={() => setIsExpanded(!isExpanded)}
-                icon={
-                  isExpanded ? (
-                    <MdChevronLeft style={{fontSize: '1.3333em'}} />
-                  ) : (
-                    <MdChevronRight style={{fontSize: '1.3333em'}} />
-                  )
-                }
+                icon={isExpanded ? <MdChevronLeft /> : <MdChevronRight />}
               />
 
-              <Nav style={{marginTop: '1rem'}}>
+              <Navigation>
                 <Nav.Item
                   as={NavLink}
                   href="/dashboard"
@@ -462,23 +497,17 @@ export function Base({children}: BaseProps) {
                     {t('navbar.settings')}
                   </Nav.Item>
                 </PermissionControl>
-              </Nav>
-            </Sidenav.Body>
+                <Version />
+              </Navigation>
+            </RSidenav.Body>
           </Sidenav>
-          <Navbar appearance="default" className="nav-toggle">
+          <Navbar appearance="default">
             <Nav>
               <Nav.Menu
                 placement="topStart"
                 trigger="click"
                 renderToggle={(props: object, ref: React.Ref<HTMLButtonElement>) => (
-                  <IconButton
-                    {...props}
-                    placement="left"
-                    ref={ref}
-                    style={iconStyles}
-                    className="icon-selector"
-                    icon={<MdLogout />}
-                  />
+                  <IconButton {...props} placement="left" ref={ref} icon={<MdLogout />} />
                 )}>
                 <Nav.Item as={NavLink} href="/logout">
                   {t('navbar.logout')}
@@ -490,14 +519,7 @@ export function Base({children}: BaseProps) {
                 placement="topStart"
                 trigger="click"
                 renderToggle={(props: object, ref: React.Ref<HTMLButtonElement>) => (
-                  <IconButton
-                    {...props}
-                    placement="left"
-                    ref={ref}
-                    style={iconStyles}
-                    className="icon-selector"
-                    icon={<MdTranslate />}
-                  />
+                  <IconButton {...props} placement="left" ref={ref} icon={<MdTranslate />} />
                 )}>
                 {AVAILABLE_LANG.map(lang => (
                   <Nav.Item
@@ -511,17 +533,8 @@ export function Base({children}: BaseProps) {
             </Nav>
           </Navbar>
         </Sidebar>
-        <Container
-          style={{
-            paddingTop: '60px',
-            paddingBottom: '60px',
-            paddingLeft: '40px',
-            paddingRight: '40px',
-            overflowY: 'scroll'
-          }}>
-          {children}
-        </Container>
+        <ChildrenContainer>{children}</ChildrenContainer>
       </Container>
-    </div>
+    </Wrapper>
   )
 }

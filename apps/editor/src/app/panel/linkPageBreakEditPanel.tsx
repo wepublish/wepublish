@@ -1,4 +1,3 @@
-import React from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, Radio, RadioGroup, SelectPicker, Toggle} from 'rsuite'
 

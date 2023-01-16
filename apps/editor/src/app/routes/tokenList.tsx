@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdDelete, MdGeneratingTokens} from 'react-icons/md'
 import {Link, useLocation, useNavigate} from 'react-router-dom'
@@ -7,7 +8,7 @@ import {
   Drawer,
   FlexboxGrid,
   IconButton,
-  List,
+  List as RList,
   Loader,
   Message,
   Modal,
@@ -24,6 +25,22 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
 import {getOperationNameFromDocument} from '../utility'
+
+const List = styled(RList)`
+  margin-top: 40px;
+`
+
+const FlexItemAlignRight = styled(FlexboxGrid.Item)`
+  text-align: right;
+`
+
+const FlexItemPLeft = styled(FlexboxGrid.Item)`
+  padding-left: 10px;
+`
+
+const FlexItemPRight = styled(FlexboxGrid.Item)`
+  padding-right: 10px;
+`
 
 function TokenList() {
   const location = useLocation()
@@ -72,7 +89,7 @@ function TokenList() {
           <h2>{t('tokenList.overview.tokens')}</h2>
         </FlexboxGrid.Item>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_TOKEN']}>
-          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <FlexItemAlignRight colspan={8}>
             <Link to="/tokens/generate">
               <IconButton
                 appearance="primary"
@@ -81,20 +98,18 @@ function TokenList() {
                 {t('tokenList.overview.generateToken')}
               </IconButton>
             </Link>
-          </FlexboxGrid.Item>
+          </FlexItemAlignRight>
         </PermissionControl>
       </FlexboxGrid>
       {isTokenListLoading ? (
         <Loader backdrop content={t('tokenList.overview.loading')} vertical />
       ) : (
-        <List bordered style={{marginTop: '40px'}}>
+        <List bordered>
           {tokenListData?.tokens.map((token, index) => (
-            <List.Item key={token.name} index={index}>
+            <RList.Item key={token.name} index={index}>
               <FlexboxGrid>
-                <FlexboxGrid.Item colspan={23} style={{paddingLeft: '10px'}}>
-                  {token.name}
-                </FlexboxGrid.Item>
-                <FlexboxGrid.Item colspan={1} style={{paddingRight: '10px'}}>
+                <FlexItemPLeft colspan={23}>{token.name}</FlexItemPLeft>
+                <FlexItemPRight colspan={1}>
                   <PermissionControl qualifyingPermissions={['CAN_DELETE_TOKEN']}>
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
@@ -110,9 +125,9 @@ function TokenList() {
                       />
                     </IconButtonTooltip>
                   </PermissionControl>
-                </FlexboxGrid.Item>
+                </FlexItemPRight>
               </FlexboxGrid>
-            </List.Item>
+            </RList.Item>
           ))}
         </List>
       )}

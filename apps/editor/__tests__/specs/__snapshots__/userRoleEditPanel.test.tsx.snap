@@ -5,7 +5,7 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
 - First value
 + Second value
 
-@@ -35,13 +35,14 @@
+@@ -34,13 +34,14 @@
         </h4>
         <div
           class=\\"rs-drawer-actions\\"
@@ -22,7 +22,7 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
             create
             <span
               class=\\"rs-ripple-pond\\"
-@@ -85,14 +86,15 @@
+@@ -84,14 +85,15 @@
           >
             <input
               aria-describedby=\\"name-help-text\\"
@@ -39,7 +39,7 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
         </div>
         <div
           class=\\"rs-form-group\\"
-@@ -110,14 +112,15 @@
+@@ -109,14 +111,15 @@
           >
             <input
               aria-describedby=\\"description-help-text\\"
@@ -56,7 +56,7 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
         </div>
         <div
           class=\\"rs-form-group\\"
-@@ -129,23 +132,24 @@
+@@ -128,23 +131,24 @@
             id=\\"permissions-control-label\\"
           >
             userRoles.panels.permissions
@@ -90,8 +90,7 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
 exports[`User Role Edit Panel should have Toggle sliders disabled with System Role 1`] = `
 <DocumentFragment>
   <form
-    class="rs-form rs-form-vertical rs-form-fluid"
-    style="height: 100%;"
+    class="css-1c13mle-Form eixcl8u0 rs-form rs-form-vertical rs-form-fluid"
   >
     <div
       class="rs-drawer-header"
@@ -301,8 +300,7 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
 exports[`User Role Edit Panel should render 1`] = `
 <DocumentFragment>
   <form
-    class="rs-form rs-form-vertical rs-form-fluid"
-    style="height: 100%;"
+    class="css-1c13mle-Form eixcl8u0 rs-form rs-form-vertical rs-form-fluid"
   >
     <div
       class="rs-drawer-header"
@@ -481,8 +479,7 @@ exports[`User Role Edit Panel should render 1`] = `
 exports[`User Role Edit Panel should render with role 1`] = `
 <DocumentFragment>
   <form
-    class="rs-form rs-form-vertical rs-form-fluid"
-    style="height: 100%;"
+    class="css-1c13mle-Form eixcl8u0 rs-form rs-form-vertical rs-form-fluid"
   >
     <div
       class="rs-drawer-header"

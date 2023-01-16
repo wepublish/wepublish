@@ -101,7 +101,7 @@ export class MailContext implements MailContext {
       data: {
         state: MailLogState.submitted,
         subject: mailView?.subject ?? mailTemplate.subject ?? 'N/A',
-        recipient: recipient,
+        recipient,
         mailProviderID: this.mailProvider?.id ?? 'N/A',
         modifiedAt: new Date()
       }
@@ -110,7 +110,7 @@ export class MailContext implements MailContext {
     if (this.mailProvider) {
       await this.mailProvider.sendMail({
         mailLogID: mailLog.id,
-        recipient: recipient,
+        recipient,
         replyToAddress:
           mailTemplate.replyToAddress ?? this.defaultReplyToAddress ?? this.defaultFromAddress,
         subject: mailView?.subject ?? mailTemplate.subject ?? '',

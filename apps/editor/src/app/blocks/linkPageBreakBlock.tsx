@@ -1,7 +1,8 @@
+import styled from '@emotion/styled'
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
-import {Drawer, IconButton, Input} from 'rsuite'
+import {Drawer, IconButton, Input as RInput} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
@@ -11,6 +12,40 @@ import {LinkPageBreakEditPanel} from '../panel/linkPageBreakEditPanel'
 import {isFunctionalUpdate} from '../utility'
 import {createDefaultValue, RichTextBlock} from './richTextBlock/richTextBlock'
 import {LinkPageBreakBlockValue, RichTextBlockValue} from './types'
+
+const Input = styled(RInput)`
+  font-size: 24px;
+  margin-bottom: 20px;
+`
+
+const InputWrapper = styled.div`
+  flex: 1 0 70%;
+`
+
+const ChooseImageWrapper = styled.div`
+  flex: 1 0 25%;
+  align-self: flex-start;
+  margin-bottom: 10px;
+`
+
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  margin-top: 50px;
+  gap: 24px;
+`
+
+const IconWrapper = styled.div`
+  position: absolute;
+  z-index: 1;
+  height: 100%;
+  right: 0;
+`
+
+const LinkPage = styled.div`
+  position: relative;
+  width: 100%;
+`
 
 export type LinkPageBreakBlockProps = BlockProps<LinkPageBreakBlockValue>
 
@@ -45,13 +80,13 @@ export function LinkPageBreakBlock({
 
   return (
     <>
-      <div style={{position: 'relative', width: '100%'}}>
-        <div style={{position: 'absolute', zIndex: 1, height: '100%', right: 0}}>
+      <LinkPage>
+        <IconWrapper>
           <IconButton size="lg" icon={<MdEdit />} onClick={() => setEditPanelOpen(true)} />
-        </div>
-      </div>
-      <div style={{display: 'flex', flexFlow: 'row wrap', marginTop: 50, gap: '24px'}}>
-        <div style={{flex: '1 0 25%', alignSelf: 'flex-start', marginBottom: '10px'}}>
+        </IconWrapper>
+      </LinkPage>
+      <ContentWrapper>
+        <ChooseImageWrapper>
           <ChooseEditImage
             header={''}
             image={image}
@@ -61,20 +96,19 @@ export function LinkPageBreakBlock({
             removeImage={() => onChange(value => ({...value, image: undefined}))}
             minHeight={150}
           />
-        </div>
-        <div style={{flex: '1 0 70%'}}>
+        </ChooseImageWrapper>
+        <InputWrapper>
           <Input
             ref={focusInputRef}
             placeholder={t('blocks.linkPageBreak.title')}
-            style={{fontSize: '24px', marginBottom: 20}}
             value={text}
             disabled={disabled}
             onChange={text => onChange({...value, text})}
           />
 
           <RichTextBlock value={richText || createDefaultValue()} onChange={handleRichTextChange} />
-        </div>
-      </div>
+        </InputWrapper>
+      </ContentWrapper>
       <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}

@@ -1,18 +1,18 @@
-import React, {forwardRef} from 'react'
+import styled from '@emotion/styled'
+import {forwardRef} from 'react'
+
+const Image = styled.svg`
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  fill: inherit;
+  stroke: gray;
+`
 
 export const PlaceholderImage = forwardRef<SVGSVGElement>(function PlaceholderImage(props, ref) {
   return (
-    <svg
-      ref={ref}
-      style={{
-        width: '100%',
-        height: '100%',
-        overflow: 'hidden',
-        fill: 'inherit',
-        stroke: 'gray'
-      }}
-      viewBox="0 0 64 64"
-      preserveAspectRatio="none">
+    /* eslint-disable-next-line i18next/no-literal-string */
+    <Image ref={ref} viewBox={'0 0 64 64'} preserveAspectRatio="none">
       <line
         x1="0"
         y1="0"
@@ -31,6 +31,6 @@ export const PlaceholderImage = forwardRef<SVGSVGElement>(function PlaceholderIm
         strokeWidth="1"
         vectorEffect="non-scaling-stroke"
       />
-    </svg>
+    </Image>
   )
 })

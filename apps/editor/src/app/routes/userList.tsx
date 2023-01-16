@@ -1,8 +1,18 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdPassword, MdSearch} from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {Button, FlexboxGrid, IconButton, Input, InputGroup, Modal, Pagination, Table} from 'rsuite'
+import {
+  Button,
+  FlexboxGrid,
+  IconButton as RIconButton,
+  Input,
+  InputGroup,
+  Modal,
+  Pagination,
+  Table as RTable
+} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
@@ -16,7 +26,35 @@ import {
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
 
-const {Column, HeaderCell, Cell} = Table
+const {Column, HeaderCell, Cell: RCell} = RTable
+
+const Cell = styled(RCell)`
+  .rs-table-cell-content {
+    padding: 6px 0;
+  }
+`
+
+const IconButton = styled(RIconButton)`
+  margin-left: 5px;
+`
+
+const Table = styled(RTable)`
+  flex: 1;
+`
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-flow: column;
+  margin-top: 20px;
+`
+
+const FlexItemAlignRight = styled(FlexboxGrid.Item)`
+  text-align: right;
+`
+
+const FlexItemMarginTop = styled(FlexboxGrid.Item)`
+  margin-top: 20px;
+`
 
 function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
   switch (columnField) {
@@ -109,34 +147,28 @@ function UserList() {
           <h2>{t('userList.overview.users')}</h2>
         </FlexboxGrid.Item>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_USER']}>
-          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <FlexItemAlignRight colspan={8}>
             <Link to="/users/create">
-              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
+              <RIconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('userList.overview.newUser')}
-              </IconButton>
+              </RIconButton>
             </Link>
-          </FlexboxGrid.Item>
+          </FlexItemAlignRight>
         </PermissionControl>
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
+        <FlexItemMarginTop colspan={24}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
-        </FlexboxGrid.Item>
+        </FlexItemMarginTop>
       </FlexboxGrid>
 
-      <div
-        style={{
-          display: 'flex',
-          flexFlow: 'column',
-          marginTop: '20px'
-        }}>
+      <Wrapper>
         <Table
           minHeight={600}
           autoHeight
-          style={{flex: 1}}
           loading={isLoading}
           data={users}
           sortColumn={sortField}
@@ -147,63 +179,62 @@ function UserList() {
           }}>
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.createdAt')}</HeaderCell>
-            <Cell dataKey="createdAt">
+            <RCell dataKey="createdAt">
               {({createdAt}: RowDataType<FullUserFragment>) =>
                 t('userList.overview.createdAtDate', {createdAtDate: new Date(createdAt)})
               }
-            </Cell>
+            </RCell>
           </Column>
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
-            <Cell dataKey="modifiedAt">
+            <RCell dataKey="modifiedAt">
               {({modifiedAt}: RowDataType<FullUserFragment>) =>
                 t('userList.overview.modifiedAtDate', {modifiedAtDate: new Date(modifiedAt)})
               }
-            </Cell>
+            </RCell>
           </Column>
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.firstName')}</HeaderCell>
-            <Cell dataKey={'firstName'}>
+            <RCell dataKey={'firstName'}>
               {(rowData: RowDataType<FullUserFragment>) => (
                 <Link to={`/users/edit/${rowData.id}`}>{rowData.firstName || ''}</Link>
               )}
-            </Cell>
+            </RCell>
           </Column>
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.name')}</HeaderCell>
-            <Cell dataKey={'name'}>
+            <RCell dataKey={'name'}>
               {(rowData: RowDataType<FullUserFragment>) => (
                 <Link to={`/users/edit/${rowData.id}`}>
                   {rowData.name || t('userList.overview.unknown')}
                 </Link>
               )}
-            </Cell>
+            </RCell>
           </Column>
           <Column width={400} align="left" resizable>
             <HeaderCell>{t('email')}</HeaderCell>
-            <Cell dataKey="email" />
+            <RCell dataKey="email" />
           </Column>
           {/* subscription */}
           <Column width={400} align="left" resizable>
             <HeaderCell>{t('userList.overview.subscriptions')}</HeaderCell>
-            <Cell>
+            <RCell>
               {(rowData: RowDataType<FullUserFragment>) => (
                 <div>{getSubscriptionCellView(rowData as FullUserFragment)}</div>
               )}
-            </Cell>
+            </RCell>
           </Column>
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('action')}</HeaderCell>
-            <Cell style={{padding: '6px 0'}}>
+            <Cell>
               {(rowData: RowDataType<FullUserFragment>) => (
                 <>
                   <PermissionControl qualifyingPermissions={['CAN_RESET_USER_PASSWORD']}>
                     <IconButtonTooltip caption={t('userList.overview.resetPassword')}>
                       <IconButton
-                        icon={<MdPassword />}
                         circle
                         size="sm"
-                        style={{marginLeft: '5px'}}
+                        icon={<MdPassword />}
                         onClick={e => {
                           setCurrentUser(rowData as FullUserFragment)
                           setIsResetUserPasswordOpen(true)
@@ -214,12 +245,11 @@ function UserList() {
                   <PermissionControl qualifyingPermissions={['CAN_DELETE_USER']}>
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
-                        icon={<MdDelete />}
                         circle
                         size="sm"
                         appearance="ghost"
                         color="red"
-                        style={{marginLeft: '5px'}}
+                        icon={<MdDelete />}
                         onClick={() => {
                           setConfirmationDialogOpen(true)
                           setCurrentUser(rowData as FullUserFragment)
@@ -249,7 +279,7 @@ function UserList() {
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </div>
+      </Wrapper>
 
       {/* reset user password */}
       {currentUser?.id && (

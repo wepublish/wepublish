@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
   MdDashboard,
@@ -14,15 +15,15 @@ import {
   FlexboxGrid,
   Form,
   Input,
-  InputGroup,
-  List,
-  Nav,
+  InputGroup as RInputGroup,
+  List as RList,
+  Nav as RNav,
   Notification,
   Panel,
   Radio,
   RadioGroup,
   toaster,
-  Toggle
+  Toggle as RToggle
 } from 'rsuite'
 
 import {
@@ -42,6 +43,61 @@ import {generateID} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {previewForTeaser, TeaserMetadataProperty} from './teaserEditPanel'
+
+const List = styled(RList)`
+  box-shadow: none;
+`
+
+const InputGroup = styled(RInputGroup)`
+  margin-bottom: 20px;
+`
+
+const Nav = styled(RNav)`
+  margin-bottom: 20px;
+`
+
+const Toggle = styled(RToggle)`
+  max-width: 70px;
+  min-width: 70px;
+`
+
+const ButtonWithMargin = styled(Button)`
+  margin-left: 20px;
+`
+
+const InlineDivWithMargin = styled.div`
+  display: inline;
+  font-size: 12px;
+  margin-left: 8px;
+`
+
+const InlineDiv = styled.div`
+  display: inline;
+  font-size: 12px;
+`
+
+const InputW60 = styled(Input)`
+  width: 60%;
+`
+
+const InputW40 = styled(Input)`
+  width: 40%;
+  margin-right: 10px;
+`
+
+const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const H3 = styled.h3`
+  cursor: pointer;
+`
+
+const FormGroup = styled(Form.Group)`
+  padding-top: 6px;
+  padding-left: 8px;
+`
 
 export interface TeaserSelectPanelProps {
   onClose(): void
@@ -205,28 +261,24 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
               if (article.published) states.push(t('articleEditor.panels.published'))
 
               return (
-                <List.Item key={article.id}>
-                  <h3
-                    style={{cursor: 'pointer'}}
-                    onClick={() => onSelect({type: TeaserType.Article, article})}>
+                <RList.Item key={article.id}>
+                  <H3 onClick={() => onSelect({type: TeaserType.Article, article})}>
                     {article.latest.title || t('articleEditor.panels.untitled')}
-                  </h3>
+                  </H3>
                   <div>
-                    <div style={{display: 'inline', fontSize: 12}}>
+                    <InlineDiv>
                       {t('articleEditor.panels.createdAt', {
                         createdAt: new Date(article.createdAt)
                       })}
-                    </div>
-                    <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
+                    </InlineDiv>
+                    <InlineDivWithMargin>
                       {t('articleEditor.panels.modifiedAt', {
                         modifiedAt: new Date(article.modifiedAt)
                       })}
-                    </div>
-                    <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
-                      {states.join(' / ')}
-                    </div>
+                    </InlineDivWithMargin>
+                    <InlineDivWithMargin>{states.join(' / ')}</InlineDivWithMargin>
                   </div>
-                </List.Item>
+                </RList.Item>
               )
             })}
             {articleListData?.articles.pageInfo.hasNextPage && (
@@ -246,36 +298,33 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
               if (article.published) states.push(t('articleEditor.panels.published'))
 
               return (
-                <List.Item key={`${peer.id}.${article.id}`}>
-                  <h3
-                    style={{cursor: 'pointer'}}
+                <RList.Item key={`${peer.id}.${article.id}`}>
+                  <H3
                     onClick={() =>
                       onSelect({type: TeaserType.PeerArticle, peer, articleID: article.id, article})
                     }>
                     {peer.profile?.name ?? peer.name} -{' '}
                     {article.latest.title || t('articleEditor.panels.untitled')}
-                  </h3>
+                  </H3>
                   <div>
-                    <div style={{display: 'inline', fontSize: 12}}>
+                    <InlineDiv>
                       {t('articleEditor.panels.createdAt', {
                         createdAt: new Date(article.createdAt)
                       })}
-                    </div>
-                    <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
+                    </InlineDiv>
+                    <InlineDivWithMargin>
                       {t('articleEditor.panels.modifiedAt', {
                         modifiedAt: new Date(article.modifiedAt)
                       })}
-                    </div>
-                    <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
-                      {states.join(' / ')}
-                    </div>
-                    <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
+                    </InlineDivWithMargin>
+                    <InlineDivWithMargin>{states.join(' / ')}</InlineDivWithMargin>
+                    <InlineDivWithMargin>
                       <a href={peeredArticleURL} target="_blank" rel="noreferrer">
                         {t('articleEditor.panels.peeredArticlePreview')} <MdPreview />
                       </a>
-                    </div>
+                    </InlineDivWithMargin>
                   </div>
-                </List.Item>
+                </RList.Item>
               )
             })}
             {peerArticleListData?.peerArticles.pageInfo.hasNextPage && (
@@ -295,24 +344,20 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
               if (page.published) states.push(t('articleEditor.panels.published'))
 
               return (
-                <List.Item key={page.id}>
-                  <h3
-                    style={{cursor: 'pointer'}}
-                    onClick={() => onSelect({type: TeaserType.Page, page})}>
+                <RList.Item key={page.id}>
+                  <H3 onClick={() => onSelect({type: TeaserType.Page, page})}>
                     {page.latest.title || t('articleEditor.panels.untitled')}
-                  </h3>
+                  </H3>
                   <div>
-                    <div style={{display: 'inline', fontSize: 12}}>
+                    <InlineDiv>
                       {t('pageEditor.panels.createdAt', {createdAt: new Date(page.createdAt)})}
-                    </div>
-                    <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
+                    </InlineDiv>
+                    <InlineDivWithMargin>
                       {t('pageEditor.panels.modifiedAt', {modifiedAt: new Date(page.modifiedAt)})}
-                    </div>
-                    <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
-                      {states.join(' / ')}
-                    </div>
+                    </InlineDivWithMargin>
+                    <InlineDivWithMargin>{states.join(' / ')}</InlineDivWithMargin>
                   </div>
-                </List.Item>
+                </RList.Item>
               )
             })}
             {pageListData?.pages.pageInfo.hasNextPage && (
@@ -345,12 +390,9 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
                 }}>
                 {t('articleEditor.panels.confirm')}
               </Button>
-              <Button
-                appearance={'subtle'}
-                onClick={() => onClose?.()}
-                style={{marginLeft: '20px'}}>
+              <ButtonWithMargin appearance={'subtle'} onClick={() => onClose?.()}>
                 {t('navigation.overview.cancel')}
-              </Button>
+              </ButtonWithMargin>
             </FlexboxGrid>
 
             {previewForTeaser(initialTeaser, t)}
@@ -407,36 +449,26 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
                     onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
                     defaultValue={{key: '', value: '', public: true}}>
                     {({value, onChange}) => (
-                      <div style={{display: 'flex', flexDirection: 'row'}}>
-                        <Input
+                      <FlexRow>
+                        <InputW40
                           placeholder={t('articleEditor.panels.key')}
-                          style={{
-                            width: '40%',
-                            marginRight: '10px'
-                          }}
                           value={value.key}
                           onChange={propertyKey => onChange({...value, key: propertyKey})}
                         />
-                        <Input
+                        <InputW60
                           placeholder={t('articleEditor.panels.value')}
-                          style={{
-                            width: '60%'
-                          }}
                           value={value.value}
                           onChange={propertyValue => onChange({...value, value: propertyValue})}
                         />
-                        <Form.Group
-                          style={{paddingTop: '6px', paddingLeft: '8px'}}
-                          controlId="articleProperty">
+                        <FormGroup controlId="articleProperty">
                           <Toggle
-                            style={{maxWidth: '70px', minWidth: '70px'}}
                             checkedChildren={t('articleEditor.panels.public')}
                             unCheckedChildren={t('articleEditor.panels.private')}
                             checked={value.public}
                             onChange={isPublic => onChange({...value, public: isPublic})}
                           />
-                        </Form.Group>
-                      </div>
+                        </FormGroup>
+                      </FlexRow>
                     )}
                   </ListInput>
                 </Form.Group>
@@ -484,35 +516,31 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <Nav
-          appearance="tabs"
-          activeKey={type}
-          onSelect={type => setType(type)}
-          style={{marginBottom: 20}}>
-          <Nav.Item eventKey={TeaserType.Article} icon={<MdDescription />}>
+        <Nav appearance="tabs" activeKey={type} onSelect={type => setType(type)}>
+          <RNav.Item eventKey={TeaserType.Article} icon={<MdDescription />}>
             {t('articleEditor.panels.article')}
-          </Nav.Item>
-          <Nav.Item eventKey={TeaserType.PeerArticle} icon={<MdFileCopy />}>
+          </RNav.Item>
+          <RNav.Item eventKey={TeaserType.PeerArticle} icon={<MdFileCopy />}>
             {t('articleEditor.panels.peerArticle')}
-          </Nav.Item>
-          <Nav.Item eventKey={TeaserType.Page} icon={<MdDashboard />}>
+          </RNav.Item>
+          <RNav.Item eventKey={TeaserType.Page} icon={<MdDashboard />}>
             {t('articleEditor.panels.page')}
-          </Nav.Item>
-          <Nav.Item eventKey={TeaserType.Custom} icon={<MdSettings />}>
+          </RNav.Item>
+          <RNav.Item eventKey={TeaserType.Custom} icon={<MdSettings />}>
             {t('articleEditor.panels.custom')}
-          </Nav.Item>
+          </RNav.Item>
         </Nav>
 
         {type !== TeaserType.Custom && (
-          <InputGroup style={{marginBottom: 20}}>
+          <InputGroup>
             <Input value={filter.title || ''} onChange={updateFilter} />
-            <InputGroup.Addon>
+            <RInputGroup.Addon>
               <MdSearch />
-            </InputGroup.Addon>
+            </RInputGroup.Addon>
           </InputGroup>
         )}
 
-        <List style={{boxShadow: 'none'}}>{currentContent()}</List>
+        <List>{currentContent()}</List>
       </Drawer.Body>
     </>
   )

@@ -1,4 +1,4 @@
-import React, {ComponentType, PropsWithChildren, useContext, useMemo} from 'react'
+import {ComponentType, PropsWithChildren, useContext, useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Message} from 'rsuite'
 

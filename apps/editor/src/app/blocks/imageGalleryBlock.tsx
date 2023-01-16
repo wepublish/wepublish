@@ -1,7 +1,8 @@
+import styled from '@emotion/styled'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAddCircle, MdArrowLeft, MdArrowRight, MdBuild, MdEdit, MdPhoto} from 'react-icons/md'
-import {Drawer, Dropdown, IconButton, Panel} from 'rsuite'
+import {Drawer, Dropdown, IconButton} from 'rsuite'
 
 import {ImageRefFragment} from '../api'
 import {BlockProps} from '../atoms/blockList'
@@ -10,7 +11,48 @@ import {TypographicTextArea} from '../atoms/typographicTextArea'
 import {GalleryListEditPanel} from '../panel/galleryListEditPanel'
 import {ImageEditPanel} from '../panel/imageEditPanel'
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
+import {ImagePanel, Panel} from './imageBlock'
 import {ImageGalleryBlockValue} from './types'
+
+const Block = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+`
+
+const EditIconWrapper = styled.div`
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+`
+
+const IsNewWrapper = styled.div`
+  display: flex;
+  flex-basis: 0;
+  justify-content: center;
+  flex-grow: 1;
+  flex-shrink: 1;
+`
+
+const LeftArrowWrapper = styled.div`
+  display: flex;
+  flex-basis: 0;
+  justify-content: flex-end;
+  flex-grow: 1;
+  flex-shrink: 1;
+`
+
+const IsNew = styled.p`
+  color: grey;
+`
+
+const LeftArrow = styled(IconButton)`
+  margin-right: 5px;
+`
+
+const RightArrow = styled(IconButton)`
+  margin-right: 10px;
+`
 
 export function ImageGalleryBlock({
   value,
@@ -69,91 +111,43 @@ export function ImageGalleryBlock({
 
   return (
     <>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          marginBottom: 10
-        }}>
-        <div
-          style={{
-            flexBasis: 0,
-            flexGrow: 1,
-            flexShrink: 1
-          }}>
+      <Block>
+        <EditIconWrapper>
           <IconButton
             icon={<MdEdit />}
             onClick={() => setGalleryListEditModalOpen(true)}
             disabled={disabled}
           />
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            flexBasis: 0,
-            justifyContent: 'center',
-            flexGrow: 1,
-            flexShrink: 1
-          }}>
-          <p style={{color: 'gray'}} color="gray">
+        </EditIconWrapper>
+        <IsNewWrapper>
+          <IsNew>
             {index + 1} / {Math.max(index + 1, value.images.length)} {isNewIndex ? '(New)' : ''}
-          </p>
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            flexBasis: 0,
-            justifyContent: 'flex-end',
-            flexGrow: 1,
-            flexShrink: 1
-          }}>
-          <IconButton
+          </IsNew>
+        </IsNewWrapper>
+        <LeftArrowWrapper>
+          <LeftArrow
             icon={<MdArrowLeft />}
             onClick={() => setIndex(index => index - 1)}
             disabled={disabled || !hasPrevious}
-            style={{
-              marginRight: 5
-            }}
           />
-          <IconButton
+          <RightArrow
             icon={<MdArrowRight />}
             onClick={() => setIndex(index => index + 1)}
             disabled={disabled || !hasNext}
-            style={{
-              marginRight: 10
-            }}
           />
           <IconButton
             icon={<MdAddCircle />}
             onClick={() => setIndex(value.images.length)}
             disabled={disabled || isNewIndex}
           />
-        </div>
-      </div>
-      <Panel
-        bordered
-        bodyFill
-        style={{
-          height: 300,
-          overflow: 'hidden',
-          marginBottom: 10,
-          display: 'grid'
-        }}>
+        </LeftArrowWrapper>
+      </Block>
+      <Panel bordered bodyFill>
         <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
           {image && (
-            <div
-              style={{
-                padding: 0,
-                position: 'relative',
-                height: '100%',
-                backgroundSize: `${image?.height > 300 ? 'contain' : 'auto'}`,
-                backgroundPositionX: 'center',
-                backgroundPositionY: 'center',
-                backgroundRepeat: 'no-repeat',
-                backgroundImage: `url(${image?.largeURL ?? 'https://via.placeholder.com/240x240'})`
-              }}>
+            <ImagePanel image={image}>
               <Dropdown
-                renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
+                renderToggle={(props: object, ref: React.Ref<HTMLButtonElement>) => (
                   <IconButton {...props} ref={ref} icon={<MdBuild />} circle appearance="subtle" />
                 )}>
                 <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
@@ -164,7 +158,7 @@ export function ImageGalleryBlock({
                 </Dropdown.Item>
                 {/* TODO: Meta sync */}
               </Dropdown>
-            </div>
+            </ImagePanel>
           )}
         </PlaceholderInput>
       </Panel>

@@ -2,7 +2,7 @@ import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdComment, MdContentCopy, MdDelete, MdPreview, MdUnpublished} from 'react-icons/md'
 import {Link, useNavigate} from 'react-router-dom'
-import {Button, FlexboxGrid, IconButton, Message, Modal, Pagination, Table} from 'rsuite'
+import {Button, IconButton, Message, Modal, Pagination, Table} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {
@@ -21,16 +21,28 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
-import {ListViewFilters} from '../atoms/searchAndFilter/listViewFilters'
 import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
+import {
+  IconButtonCell,
+  ListFilters,
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  StatusBadge,
+  TableWrapper
+} from '../ui/listView'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
-  mapTableSortTypeToGraphQLSortOrder,
-  StateColor
+  mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
 
 const {Column, HeaderCell, Cell} = Table
+
+interface State {
+  state: string
+  text: string
+}
 
 enum ConfirmAction {
   Delete = 'delete',
@@ -110,21 +122,21 @@ function ArticleList() {
 
   return (
     <>
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
+      <ListViewContainer>
+        <ListViewHeader>
           <h2>{t('articles.overview.articles')}</h2>
-        </FlexboxGrid.Item>
+        </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
-          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <ListViewActions>
             <Link to="/articles/create">
               <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('articles.overview.newArticle')}
               </IconButton>
             </Link>
-          </FlexboxGrid.Item>
+          </ListViewActions>
         </PermissionControl>
 
-        <ListViewFilters
+        <ListFilters
           fields={[
             'title',
             'preTitle',
@@ -139,18 +151,12 @@ function ArticleList() {
           isLoading={isLoading}
           onSetFilter={filter => setFilter(filter)}
         />
-      </FlexboxGrid>
+      </ListViewContainer>
 
-      <div
-        style={{
-          display: 'flex',
-          flexFlow: 'column',
-          marginTop: '20px'
-        }}>
+      <TableWrapper>
         <Table
           minHeight={600}
           autoHeight
-          style={{flex: 1}}
           loading={isLoading}
           data={articles}
           sortColumn={sortField}
@@ -215,32 +221,23 @@ function ArticleList() {
               {(rowData: RowDataType<ArticleRefFragment>) => {
                 const states = []
 
-                if (rowData.draft) states.push(t('articles.overview.draft'))
-                if (rowData.pending) states.push(t('articles.overview.pending'))
-                if (rowData.published) states.push(t('articles.overview.published'))
+                if (rowData.draft) states.push({state: 'draft', text: t('articles.overview.draft')})
+                if (rowData.pending)
+                  states.push({state: 'pending', text: t('articles.overview.pending')})
+                if (rowData.published)
+                  states.push({state: 'published', text: t('articles.overview.published')})
 
                 return (
-                  <div
-                    style={{
-                      textAlign: 'center',
-                      borderRadius: '15px',
-                      backgroundColor: rowData.pending
-                        ? StateColor.pending
-                        : rowData.published
-                        ? StateColor.published
-                        : rowData.draft
-                        ? StateColor.draft
-                        : StateColor.none
-                    }}>
-                    {states.join(' / ')}
-                  </div>
+                  <StatusBadge states={states.map(st => st.state)}>
+                    {states.map(st => st.text).join(' / ')}
+                  </StatusBadge>
                 )
               }}
             </Cell>
           </Column>
           <Column width={200} align="center" fixed="right">
             <HeaderCell>{t('articles.overview.action')}</HeaderCell>
-            <Cell style={{padding: '6px 0'}}>
+            <IconButtonCell>
               {(rowData: RowDataType<ArticleRefFragment>) => (
                 <>
                   <PermissionControl qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}>
@@ -265,7 +262,6 @@ function ArticleList() {
                         icon={<MdContentCopy />}
                         circle
                         size="sm"
-                        style={{marginLeft: '5px'}}
                         onClick={() => {
                           setCurrentArticle(rowData as ArticleRefFragment)
                           setConfirmAction(ConfirmAction.Duplicate)
@@ -282,7 +278,6 @@ function ArticleList() {
                         circle
                         disabled={!rowData.draft}
                         size="sm"
-                        style={{marginLeft: '5px'}}
                         onClick={() => {
                           setCurrentArticle(rowData as ArticleRefFragment)
                           setArticlePreviewLinkOpen(true)
@@ -297,7 +292,6 @@ function ArticleList() {
                         icon={<MdComment />}
                         circle
                         size="sm"
-                        style={{marginLeft: '5px'}}
                         onClick={() => {
                           createComment({
                             variables: {
@@ -321,7 +315,6 @@ function ArticleList() {
                         size="sm"
                         appearance="ghost"
                         color="red"
-                        style={{marginLeft: '5px'}}
                         onClick={() => {
                           setCurrentArticle(rowData as ArticleRefFragment)
                           setConfirmAction(ConfirmAction.Delete)
@@ -332,7 +325,7 @@ function ArticleList() {
                   </PermissionControl>
                 </>
               )}
-            </Cell>
+            </IconButtonCell>
           </Column>
         </Table>
 
@@ -352,7 +345,7 @@ function ArticleList() {
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </div>
+      </TableWrapper>
 
       <Modal
         open={isArticlePreviewLinkOpen}

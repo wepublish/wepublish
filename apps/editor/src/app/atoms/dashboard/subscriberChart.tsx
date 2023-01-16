@@ -2,6 +2,14 @@ import React, {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {BarChart, Bar, XAxis, YAxis, ResponsiveContainer} from 'recharts'
 import {useNewSubscribersPastYearQuery} from '../../api'
+import styled from '@emotion/styled'
+
+const BarChartErrorText = styled.p`
+  font-size: 1rem;
+  font-style: italic;
+  text-align: center;
+  margin-top: 2rem;
+`
 
 export function SubscriberChart() {
   const {t} = useTranslation()
@@ -18,30 +26,23 @@ export function SubscriberChart() {
 
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <BarChart
-        height={300}
-        data={pastYearSubscriptions}
-        margin={{
-          top: 5,
-          right: 20,
-          left: 20,
-          bottom: 5
-        }}>
-        {!hasSubscriptions ||
-          (loading && (
-            <text
-              x="50%"
-              y="50%"
-              style={{fontSize: 16, fontWeight: 'bold', fill: '#777'}}
-              width={200}
-              textAnchor="middle">
-              {t('dashboard.noData')}
-            </text>
-          ))}
-        <XAxis dataKey="month" />
-        <YAxis allowDecimals={false} />
-        <Bar radius={[5, 5, 0, 0]} dataKey="subscriberCount" fill="#3498FF" />
-      </BarChart>
+      {hasSubscriptions && !loading ? (
+        <BarChart
+          height={300}
+          data={pastYearSubscriptions}
+          margin={{
+            top: 5,
+            right: 20,
+            left: 20,
+            bottom: 5
+          }}>
+          <XAxis dataKey="month" />
+          <YAxis allowDecimals={false} />
+          <Bar radius={[5, 5, 0, 0]} dataKey="subscriberCount" fill="#3498FF" />
+        </BarChart>
+      ) : (
+        <BarChartErrorText>{t('dashboard.noData')}</BarChartErrorText>
+      )}
     </ResponsiveContainer>
   )
 }

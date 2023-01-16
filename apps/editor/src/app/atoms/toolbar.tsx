@@ -1,5 +1,4 @@
-import './toolbar.less'
-
+import styled from '@emotion/styled'
 import React, {
   createContext,
   forwardRef,
@@ -17,6 +16,82 @@ import {useSlate} from 'slate-react'
 import {Format} from '../blocks/richTextBlock/editor/formats'
 import {WepublishEditor} from '../blocks/richTextBlock/editor/wepublishEditor'
 
+const ToolbarDividerElement = styled(Divider)`
+  height: 1.5em;
+`
+
+const ControlsChildrenWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+`
+
+const Controls = styled.div`
+  width: 100%;
+`
+
+const IconWrapper = styled.div`
+  width: 18px;
+  height: 18px;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+`
+
+const CloseIcon = styled(MdClose)`
+  min-width: 15px;
+`
+
+const ToolbarButtonElement = styled.button<{active: boolean}>`
+  border: 1px solid rgba(0, 0, 0, 0);
+  background-color: white;
+  border-radius: 3px;
+  font-size: 18px;
+  cursor: pointer;
+  border-color: ${({active}) => (active ? 'blue' : 'white')};
+  height: 24px;
+  width: 24px;
+  margin: 0 1px;
+  padding: 2px;
+  position: relative;
+
+  svg {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+  }
+`
+
+const ChildrenWrapper = styled.div<{fadeOut: boolean}>`
+  display: flex;
+  transition-property: opacity;
+  transition-duration: 100ms;
+  opacity: ${({fadeOut}) => (fadeOut ? 0.5 : 1)};
+`
+
+const ToolbarInner = styled.div`
+  pointer-events: auto;
+  padding: 5px;
+  background-color: white;
+  border-radius: 6px;
+  transition-property: opacity;
+  transition-duration: 100ms;
+`
+
+const ToolbarWrapper = styled.div`
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+  z-index: 1;
+  margin-bottom: 30px;
+`
+
 export interface ToolbarProps {
   readonly onMouseDown?: ReactEventHandler
   readonly fadeOut?: boolean
@@ -25,39 +100,11 @@ export interface ToolbarProps {
 
 export function Toolbar({onMouseDown, fadeOut = false, children}: ToolbarProps) {
   return (
-    <div
-      onMouseDown={onMouseDown}
-      style={{
-        pointerEvents: 'none',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-
-        position: 'sticky',
-        zIndex: 1,
-        marginBottom: 30
-      }}>
-      <div
-        style={{
-          pointerEvents: 'auto',
-          padding: 5,
-          backgroundColor: 'white',
-          borderRadius: 6,
-
-          transitionProperty: 'opacity',
-          transitionDuration: '100ms'
-        }}>
-        <div
-          style={{
-            display: 'flex',
-            opacity: fadeOut ? 0.5 : 1,
-            transitionProperty: 'opacity',
-            transitionDuration: '100ms'
-          }}>
-          {children}
-        </div>
-      </div>
-    </div>
+    <ToolbarWrapper onMouseDown={onMouseDown}>
+      <ToolbarInner>
+        <ChildrenWrapper fadeOut={fadeOut}>{children}</ChildrenWrapper>
+      </ToolbarInner>
+    </ToolbarWrapper>
   )
 }
 
@@ -72,16 +119,9 @@ export interface ToolbarButtonProps extends BaseToolbarButtonProps {
 export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   ({active, children, ...props}, ref) => {
     return (
-      <button
-        type="button"
-        className="icon-button"
-        style={{
-          border: `${active ? 'blue' : '#00000000'} 1px solid`
-        }}
-        ref={ref}
-        {...props}>
+      <ToolbarButtonElement type="button" active={!!active} ref={ref} {...props}>
         {children}
-      </button>
+      </ToolbarButtonElement>
     )
   }
 )
@@ -154,20 +194,7 @@ export const SubMenuButton = forwardRef<OverlayTriggerInstance, SubMenuButtonPro
               e.preventDefault()
               isMenuOpen ? closeMenu() : openMenu()
             }}>
-            {isMenuOpen ? (
-              <MdClose
-                style={{
-                  minWidth: '15px' // width of close icon (14px) so that element does not change size as long as the provided icon is < 15px.
-                }}
-              />
-            ) : (
-              <div
-                style={{
-                  minWidth: '15px' // width of close icon (14px) so that element does not change size as long as the provided icon is < 15px.
-                }}>
-                {icon}
-              </div>
-            )}
+            {isMenuOpen ? <CloseIcon /> : <IconWrapper>{icon}</IconWrapper>}
           </ToolbarButton>
         </Whisper>
       </SubMenuContext.Provider>
@@ -176,7 +203,7 @@ export const SubMenuButton = forwardRef<OverlayTriggerInstance, SubMenuButtonPro
 )
 
 export function ToolbarDivider() {
-  return <Divider style={{height: '1.5em'}} vertical />
+  return <ToolbarDividerElement vertical />
 }
 
 interface ControlsContainerProps {
@@ -188,19 +215,11 @@ interface ControlsContainerProps {
 export function ControlsContainer({children, dividerTop, dividerBottom}: ControlsContainerProps) {
   // TODO find rsuite component
   return (
-    <div style={{width: '100%'}}>
+    <Controls>
       {dividerTop && <Divider />}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          width: '100%'
-        }}>
-        {children}
-      </div>
+      <ControlsChildrenWrapper>{children}</ControlsChildrenWrapper>
       {dividerBottom && <Divider />}
-    </div>
+    </Controls>
   )
 }
 

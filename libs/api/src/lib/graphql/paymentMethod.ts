@@ -34,7 +34,7 @@ export const GraphQLPaymentMethod = new GraphQLObjectType<PaymentMethod, Context
     description: {type: GraphQLNonNull(GraphQLString)},
     paymentProvider: {
       type: GraphQLNonNull(GraphQLPaymentProvider),
-      resolve: createProxyingResolver(({paymentProviderID}, {}, {paymentProviders}) => {
+      resolve: createProxyingResolver(({paymentProviderID}, _, {paymentProviders}) => {
         return paymentProviders.find(paymentProvider => paymentProvider.id === paymentProviderID)
       })
     },

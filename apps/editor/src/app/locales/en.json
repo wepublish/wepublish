@@ -1285,7 +1285,8 @@
       "newSubscription": "New subscription",
       "newAuthor": "New author added",
       "newUser": "New user added",
-      "newSubscribers": "New subscribers over past year"
+      "newSubscribers": "New subscribers over past year",
+      "createdBy": " by {{creator}}"
     }
   }
 }

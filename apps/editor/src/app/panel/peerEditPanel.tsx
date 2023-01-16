@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, Message, Panel, Schema, toaster} from 'rsuite'
+import {Button, Drawer, Form as RForm, Message, Panel, Schema, toaster} from 'rsuite'
 
 import {
   FullPeerProfileFragment,
@@ -28,6 +29,26 @@ export interface PeerEditPanelProps {
   onClose?(): void
   onSave?(): void
 }
+
+const {Group, ControlLabel, Control} = RForm
+
+const Form = styled(RForm)`
+  height: 100%;
+`
+
+const ThemeColor = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const ThemeColorBox = styled.div<{themeColor: string}>`
+  width: 30px;
+  height: 20px;
+  padding: 5px;
+  margin-left: 5px;
+  border: 1px solid #575757;
+  background-color: ${({themeColor}) => themeColor};
+`
 
 function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
   const isAuthorized = useAuthorisation('CAN_CREATE_PEER')
@@ -147,8 +168,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
       disabled={!isAuthorized}
       onSubmit={validationPassed => validationPassed && handleSave()}
       model={validationModel}
-      formValue={{name, url: urlString, token}}
-      style={{height: '100%'}}>
+      formValue={{name, url: urlString, token}}>
       <Drawer.Header>
         <Drawer.Title>
           {id ? t('peerList.panels.editPeer') : t('peerList.panels.createPeer')}
@@ -185,12 +205,10 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
           }
           showRejectionMessage>
           <Panel>
-            <Form.Group controlId="name">
-              <Form.ControlLabel>
-                {toggleRequiredLabel(t('peerList.panels.name'))}
-              </Form.ControlLabel>
+            <Group controlId="name">
+              <ControlLabel>{toggleRequiredLabel(t('peerList.panels.name'))}</ControlLabel>
 
-              <Form.Control
+              <Control
                 value={name}
                 name="name"
                 onChange={(value: string) => {
@@ -198,23 +216,21 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
                   setSlug(slugify(value))
                 }}
               />
-            </Form.Group>
-            <Form.Group controlId="url">
-              <Form.ControlLabel>{toggleRequiredLabel(t('peerList.panels.URL'))}</Form.ControlLabel>
-              <Form.Control
+            </Group>
+            <Group controlId="url">
+              <ControlLabel>{toggleRequiredLabel(t('peerList.panels.URL'))}</ControlLabel>
+              <Control
                 value={urlString}
                 name="url"
                 onChange={(value: string) => {
                   setURLString(value)
                 }}
               />
-            </Form.Group>
-            <Form.Group controlId="token">
-              <Form.ControlLabel>
-                {toggleRequiredLabel(t('peerList.panels.token'), !id)}
-              </Form.ControlLabel>
+            </Group>
+            <Group controlId="token">
+              <ControlLabel>{toggleRequiredLabel(t('peerList.panels.token'), !id)}</ControlLabel>
 
-              <Form.Control
+              <Control
                 value={token}
                 name="token"
                 placeholder={id ? t('peerList.panels.leaveEmpty') : undefined}
@@ -222,7 +238,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
                   setToken(value)
                 }}
               />
-            </Form.Group>
+            </Group>
             <Button
               disabled={!isAuthorized}
               className="fetchButton"
@@ -239,34 +255,16 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
                   {profile?.name}
                 </DescriptionListItem>
                 <DescriptionListItem label={t('peerList.panels.themeColor')}>
-                  <div style={{display: 'flex', flexDirection: 'row'}}>
+                  <ThemeColor>
                     <p>{profile?.themeColor}</p>
-                    <div
-                      style={{
-                        backgroundColor: profile?.themeColor,
-                        width: '30px',
-                        height: '20px',
-                        padding: '5px',
-                        marginLeft: '5px',
-                        border: '1px solid #575757'
-                      }}
-                    />
-                  </div>
+                    <ThemeColorBox themeColor={profile.themeColor} />
+                  </ThemeColor>
                 </DescriptionListItem>
                 <DescriptionListItem label={t('peerList.panels.themeFontColor')}>
-                  <div style={{display: 'flex', flexDirection: 'row'}}>
+                  <ThemeColor>
                     <p>{profile?.themeFontColor}</p>
-                    <div
-                      style={{
-                        backgroundColor: profile?.themeFontColor,
-                        width: '30px',
-                        height: '20px',
-                        padding: '5px',
-                        marginLeft: '5px',
-                        border: '1px solid #575757'
-                      }}
-                    />
-                  </div>
+                    <ThemeColorBox themeColor={profile?.themeFontColor} />
+                  </ThemeColor>
                 </DescriptionListItem>
                 <DescriptionListItem label={t('peerList.panels.callToActionText')}>
                   {!!profile?.callToActionText && (

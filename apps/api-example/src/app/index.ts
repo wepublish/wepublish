@@ -23,8 +23,9 @@ import yargs from 'yargs'
 import {hideBin} from 'yargs/helpers'
 import {SlackMailProvider} from './slack-mail-provider'
 import {ExampleURLAdapter} from './url-adapter'
+import {Application} from 'express'
 
-export async function runServer() {
+export async function runServer(app?: Application | undefined) {
   if (!process.env.DATABASE_URL) throw new Error('No DATABASE_URL defined in environment.')
   if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
 
@@ -218,76 +219,79 @@ export async function runServer() {
     targetSymbol: '?'
   })
 
-  const server = new WepublishServer({
-    hostURL,
-    websiteURL,
-    mediaAdapter,
-    prisma,
-    oauth2Providers,
-    mailProvider,
-    mailContextOptions: {
-      defaultFromAddress: process.env.DEFAULT_FROM_ADDRESS ?? 'dev@wepublish.ch',
-      defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch',
-      mailTemplateMaps: [
-        {
-          type: SendMailType.LoginLink,
-          localTemplate: 'loginLink',
-          local: true,
-          subject: 'Welcome new Member' // only needed if remoteTemplate
-        },
-        {
-          type: SendMailType.TestMail,
-          localTemplate: 'testMail',
-          local: true
-        },
-        {
-          type: SendMailType.PasswordReset,
-          localTemplate: 'passwordReset',
-          local: true
-        },
-        {
-          type: SendMailType.NewMemberSubscription,
-          localTemplate: 'newMemberSubscription',
-          local: true
-        },
-        {
-          type: SendMailType.RenewedMemberSubscription,
-          localTemplate: 'renewedMemberSubscription',
-          local: true
-        },
-        {
-          type: SendMailType.MemberSubscriptionOffSessionBefore,
-          localTemplate: 'memberSubscriptionPayment/offSessionPaymentOneWeekBefore',
-          local: true
-        },
-        {
-          type: SendMailType.MemberSubscriptionOnSessionBefore,
-          localTemplate: 'memberSubscriptionPayment/onSessionBefore',
-          local: true
-        },
-        {
-          type: SendMailType.MemberSubscriptionOnSessionAfter,
-          localTemplate: 'memberSubscriptionPayment/onSessionAfter',
-          local: true
-        },
-        {
-          type: SendMailType.MemberSubscriptionOffSessionFailed,
-          localTemplate: 'memberSubscriptionPayment/offSessionPaymentFailed',
-          local: true
-        }
-      ],
-      mailTemplatesPath:
-        process.env.NODE_ENV === 'production'
-          ? path.resolve('apps', 'api-example', 'templates', 'emails')
-          : path.resolve('templates', 'emails')
+  const server = new WepublishServer(
+    {
+      hostURL,
+      websiteURL,
+      mediaAdapter,
+      prisma,
+      oauth2Providers,
+      mailProvider,
+      mailContextOptions: {
+        defaultFromAddress: process.env.DEFAULT_FROM_ADDRESS ?? 'dev@wepublish.ch',
+        defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch',
+        mailTemplateMaps: [
+          {
+            type: SendMailType.LoginLink,
+            localTemplate: 'loginLink',
+            local: true,
+            subject: 'Welcome new Member' // only needed if remoteTemplate
+          },
+          {
+            type: SendMailType.TestMail,
+            localTemplate: 'testMail',
+            local: true
+          },
+          {
+            type: SendMailType.PasswordReset,
+            localTemplate: 'passwordReset',
+            local: true
+          },
+          {
+            type: SendMailType.NewMemberSubscription,
+            localTemplate: 'newMemberSubscription',
+            local: true
+          },
+          {
+            type: SendMailType.RenewedMemberSubscription,
+            localTemplate: 'renewedMemberSubscription',
+            local: true
+          },
+          {
+            type: SendMailType.MemberSubscriptionOffSessionBefore,
+            localTemplate: 'memberSubscriptionPayment/offSessionPaymentOneWeekBefore',
+            local: true
+          },
+          {
+            type: SendMailType.MemberSubscriptionOnSessionBefore,
+            localTemplate: 'memberSubscriptionPayment/onSessionBefore',
+            local: true
+          },
+          {
+            type: SendMailType.MemberSubscriptionOnSessionAfter,
+            localTemplate: 'memberSubscriptionPayment/onSessionAfter',
+            local: true
+          },
+          {
+            type: SendMailType.MemberSubscriptionOffSessionFailed,
+            localTemplate: 'memberSubscriptionPayment/offSessionPaymentFailed',
+            local: true
+          }
+        ],
+        mailTemplatesPath:
+          process.env.NODE_ENV === 'production'
+            ? path.resolve('apps', 'api-example', 'templates', 'emails')
+            : path.resolve('templates', 'emails')
+      },
+      paymentProviders,
+      urlAdapter: new ExampleURLAdapter({websiteURL}),
+      playground: true,
+      introspection: true,
+      logger,
+      challenge
     },
-    paymentProviders,
-    urlAdapter: new ExampleURLAdapter({websiteURL}),
-    playground: true,
-    introspection: true,
-    logger,
-    challenge
-  })
+    app
+  )
 
   // eslint-disable-next-line no-unused-expressions
   yargs(hideBin(process.argv))

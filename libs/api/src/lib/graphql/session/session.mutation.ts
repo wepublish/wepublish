@@ -45,7 +45,7 @@ export const createUserSession = async (
 
   const {id, createdAt} = await sessionClient.create({
     data: {
-      token: token,
+      token,
       userID: user.id,
       expiresAt
     }
