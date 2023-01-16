@@ -125,12 +125,14 @@ import {
   GraphQLSubscription,
   GraphQLSubscriptionConnection,
   GraphQLSubscriptionFilter,
-  GraphQLSubscriptionSort
+  GraphQLSubscriptionSort,
+  GraphQLSubscribersPerMonth
 } from './subscription'
 import {
   getAdminSubscriptions,
   getSubscriptionById,
-  getSubscriptionsAsCSV
+  getSubscriptionsAsCSV,
+  getNewSubscribersYear
 } from './subscription/subscription.private-queries'
 import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
 import {getTags, TagSort} from './tag/tag.private-query'
@@ -146,6 +148,8 @@ import {
   GraphQLUserRoleFilter,
   GraphQLUserRoleSort
 } from './userRole'
+import {GraphQLAction} from './action'
+import {getActions} from './action/action.private-queries'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -748,6 +752,27 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLID}
       },
       resolve: (root, {id}, {prisma: {event}}) => getEvent(id, event)
+    },
+
+    // Stats
+    newSubscribersPastYear: {
+      type: GraphQLList(GraphQLSubscribersPerMonth),
+      resolve: async (root, {}, {authenticate, prisma: {subscription}}) => {
+        return await getNewSubscribersYear(authenticate, subscription)
+      }
+    },
+
+    // Actions
+    // =======
+    actions: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAction))),
+      resolve: async (
+        root,
+        {},
+        {authenticate, prisma: {article, page, comment, subscription, author, poll, user}}
+      ) => {
+        return getActions(authenticate, article, page, comment, subscription, author, poll, user)
+      }
     }
   }
 })

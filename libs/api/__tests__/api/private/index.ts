@@ -23,6 +23,25 @@ export type Scalars = {
   VoteValue: number;
 };
 
+export type Action = {
+  __typename?: 'Action';
+  actionType: ActionType;
+  creator?: Maybe<Scalars['String']>;
+  date: Scalars['DateTime'];
+  id: Scalars['ID'];
+  summary?: Maybe<Scalars['String']>;
+};
+
+export enum ActionType {
+  Article = 'ARTICLE',
+  Author = 'AUTHOR',
+  Comment = 'COMMENT',
+  Page = 'PAGE',
+  Poll = 'POLL',
+  Subscription = 'SUBSCRIPTION',
+  User = 'USER'
+}
+
 export type AllowedSettingVals = {
   __typename?: 'AllowedSettingVals';
   boolChoice?: Maybe<Scalars['Boolean']>;
@@ -1804,6 +1823,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
+  actions: Array<Action>;
   article?: Maybe<Article>;
   articlePreviewLink?: Maybe<Scalars['String']>;
   articles: ArticleConnection;
@@ -1824,6 +1844,7 @@ export type Query = {
   memberPlans: MemberPlanConnection;
   navigation?: Maybe<Navigation>;
   navigations: Array<Navigation>;
+  newSubscribersPastYear?: Maybe<Array<Maybe<SubscribersPerMonth>>>;
   page?: Maybe<Page>;
   pagePreviewLink?: Maybe<Scalars['String']>;
   pages: PageConnection;
@@ -2214,6 +2235,12 @@ export type SoundCloudTrackBlock = {
 
 export type SoundCloudTrackBlockInput = {
   trackID: Scalars['String'];
+};
+
+export type SubscribersPerMonth = {
+  __typename?: 'SubscribersPerMonth';
+  month: Scalars['String'];
+  subscriberCount: Scalars['Int'];
 };
 
 export type Subscription = {

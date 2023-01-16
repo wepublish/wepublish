@@ -689,6 +689,7 @@
       "waiting": "Poll is waiting for the opening on {{date, ccc PP p}}"
     },
     "navbar": {
+      "dashboard": "Dashboard",
       "events": "Events",
       "eventTags": "Tags",
       "articles": "Articles",
@@ -1316,6 +1317,24 @@
         "body": "Do you really want to delete the event \"{{name}}\"?",
         "delete": "Yes, delete the event"
       }
+    },
+    "dashboard": {
+      "dashboard": "Dashboard",
+      "greeting": "Hello, {{name}}!",
+      "yearlySubscribers": "New subscribers over past year",
+      "activity": "Latest Activity",
+      "event": "Event",
+      "summary": "Summary",
+      "noData": "No current subscriber data",
+      "newArticle": "New article created",
+      "newPage": "New page created",
+      "newComment": "New comment added",
+      "newPoll": "New poll opened",
+      "newSubscription": "New subscription",
+      "newAuthor": "New author added",
+      "newUser": "New user added",
+      "newSubscribers": "New subscribers over past year",
+      "createdBy": " by {{creator}}"
     }
   }
 }

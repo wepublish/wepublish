@@ -88,3 +88,10 @@ mutation DeleteSubscription($id: ID!) {
     ...FullSubscription
   }
 }
+
+query NewSubscribersPastYear {
+    newSubscribersPastYear {
+        month
+        subscriberCount
+    }
+}

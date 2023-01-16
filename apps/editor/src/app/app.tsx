@@ -40,6 +40,7 @@ import {TokenList} from './routes/tokenList'
 import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
+import {Dashboard} from './routes/dashboard'
 import {LocalStorageKey} from './utility'
 
 const LogoutMutation = gql`
@@ -201,6 +202,23 @@ export function App() {
         <BrowserRouter>
           <Routes>
             <Route path="login" element={<Login />} />
+            {/* Dashboard Routes */}
+            <Route
+              path="dashboard"
+              element={
+                <Base>
+                  <Dashboard />
+                </Base>
+              }
+            />
+            <Route
+              path="/"
+              element={
+                <Base>
+                  <Dashboard />
+                </Base>
+              }
+            />
             {/* Articles Routes */}
             <Route
               path="/"

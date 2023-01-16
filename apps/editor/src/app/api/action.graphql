@@ -1,0 +1,13 @@
+fragment FullAction on Action {
+  id
+  date
+  actionType
+  summary
+  creator
+}
+
+query RecentActions {
+    actions {
+        ...FullAction
+    }
+}

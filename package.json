@@ -226,6 +226,7 @@
     "react-page-visibility": "^6.4.0",
     "react-router-dom": "^6.3.0",
     "react-sortable-hoc": "^1.11.0",
+    "recharts": "^2.3.2",
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "0.13.7",
     "rsuite": "^5.10.0",
