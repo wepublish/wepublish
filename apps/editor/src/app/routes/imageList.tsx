@@ -1,4 +1,12 @@
 import styled from '@emotion/styled'
+import {
+  FullImageFragment,
+  ImageListDocument,
+  ImageListQuery,
+  ImageRefFragment,
+  useDeleteImageMutation,
+  useImageListQuery
+} from '@wepublish/editor/api'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdDelete, MdEdit, MdOutlineAddPhotoAlternate, MdSearch} from 'react-icons/md'
@@ -16,14 +24,6 @@ import {
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {
-  FullImageFragment,
-  ImageListDocument,
-  ImageListQuery,
-  ImageRefFragment,
-  useDeleteImageMutation,
-  useImageListQuery
-} from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {ImageEditPanel} from '../panel/imageEditPanel'

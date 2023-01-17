@@ -1,9 +1,13 @@
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import {fireEvent, render} from '@testing-library/react'
+import {
+  CreateUserRoleDocument,
+  PermissionListDocument,
+  UserRoleDocument
+} from '@wepublish/editor/api'
 import React from 'react'
 import snapshotDiff from 'snapshot-diff'
 
-import {CreateUserRoleDocument, PermissionListDocument, UserRoleDocument} from '../../src/app/api'
 import {AuthContext} from '../../src/app/authContext'
 import {UserRoleEditPanel} from '../../src/app/panel/userRoleEditPanel'
 import {actWait, sessionWithPermissions} from '../utils'

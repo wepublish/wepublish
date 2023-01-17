@@ -1,11 +1,11 @@
 import {ApolloError} from '@apollo/client'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
+import {Event, useEventListQuery} from '@wepublish/editor/api'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Link} from 'react-router-dom'
 import {Button, FlexboxGrid, IconButton, Message, Pagination, Table, toaster} from 'rsuite'
 
-import {Event, useEventListQuery} from '../../api'
 import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
 import {DeleteEventModal} from './deleteEventModal'
@@ -80,11 +80,7 @@ function EventListView() {
             <Table.Column width={200} resizable>
               <Table.HeaderCell>{t('event.list.name')}</Table.HeaderCell>
               <Table.Cell>
-                {(rowData: Event) => (
-                  <>
-                    <Link to={`/events/edit/${rowData.id}`}>{rowData.name}</Link>
-                  </>
-                )}
+                {(rowData: Event) => <Link to={`/events/edit/${rowData.id}`}>{rowData.name}</Link>}
               </Table.Cell>
             </Table.Column>
 

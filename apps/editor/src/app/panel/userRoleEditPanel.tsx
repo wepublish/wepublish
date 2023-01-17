@@ -1,8 +1,4 @@
 import styled from '@emotion/styled'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, CheckPicker, Drawer, Form as RForm, Message, Schema, toaster} from 'rsuite'
-
 import {
   FullUserRoleFragment,
   Permission,
@@ -10,7 +6,11 @@ import {
   usePermissionListQuery,
   useUpdateUserRoleMutation,
   useUserRoleQuery
-} from '../api'
+} from '@wepublish/editor/api'
+import {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, CheckPicker, Drawer, Form as RForm, Message, Schema, toaster} from 'rsuite'
+
 import {
   createCheckedPermissionComponent,
   PermissionControl,

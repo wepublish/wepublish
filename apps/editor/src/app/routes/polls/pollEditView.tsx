@@ -1,17 +1,17 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {useNavigate, useParams} from 'react-router-dom'
-import {Col, DatePicker, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
-
 import {
   FullPoll,
   PollExternalVote,
   PollExternalVoteSource,
   usePollQuery,
   useUpdatePollMutation
-} from '../../api'
+} from '@wepublish/editor/api'
+import {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {useNavigate, useParams} from 'react-router-dom'
+import {Col, DatePicker, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
+
 import {ModelTitle} from '../../atoms/modelTitle'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {PollAnswers} from '../../atoms/poll/pollAnswers'

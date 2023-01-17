@@ -1,7 +1,3 @@
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, Message, Panel, Schema, SelectPicker, toaster, Toggle} from 'rsuite'
-
 import {
   FullPaymentMethodFragment,
   FullPaymentProviderFragment,
@@ -9,7 +5,11 @@ import {
   usePaymentMethodQuery,
   usePaymentProviderListQuery,
   useUpdatePaymentMethodMutation
-} from '../api'
+} from '@wepublish/editor/api'
+import {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, Drawer, Form, Message, Panel, Schema, SelectPicker, toaster, Toggle} from 'rsuite'
+
 import {
   createCheckedPermissionComponent,
   PermissionControl,

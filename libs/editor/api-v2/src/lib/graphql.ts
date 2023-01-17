@@ -36,10 +36,8 @@ export type VersionInformationQuery = {
 
 export const VersionInformationDocument = gql`
   query VersionInformation {
-    ... {
-      versionInformation {
-        version
-      }
+    versionInformation {
+      version
     }
   }
 `

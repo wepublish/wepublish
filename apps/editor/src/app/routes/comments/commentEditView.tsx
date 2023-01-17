@@ -1,6 +1,15 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
 import {Visible} from '@rsuite/icons'
+import {
+  CommentRevisionUpdateInput,
+  FullCommentFragment,
+  stripTypename,
+  TagType,
+  useCommentQuery,
+  useRatingSystemQuery,
+  useUpdateCommentMutation
+} from '@wepublish/editor/api'
 import {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
@@ -18,17 +27,7 @@ import {
   toaster
 } from 'rsuite'
 
-import {
-  CommentRevisionUpdateInput,
-  FullCommentFragment,
-  TagType,
-  useCommentQuery,
-  useRatingSystemQuery,
-  useUpdateCommentMutation
-} from '../../api'
-import {stripTypename} from '../../api/strip-typename'
 import {CommentDeleteBtn} from '../../atoms/comment/commentDeleteBtn'
-import {CommentHistory} from '../../atoms/comment/commentHistory'
 import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {CommentUser} from '../../atoms/comment/commentUser'
 import {ModelTitle} from '../../atoms/modelTitle'

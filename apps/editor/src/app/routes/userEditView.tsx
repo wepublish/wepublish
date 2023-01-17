@@ -1,4 +1,14 @@
 import styled from '@emotion/styled'
+import {
+  FullUserFragment,
+  FullUserRoleFragment,
+  ImageRefFragment,
+  useCreateUserMutation,
+  UserAddress,
+  useUpdateUserMutation,
+  useUserQuery,
+  useUserRoleListQuery
+} from '@wepublish/editor/api'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdChevronLeft} from 'react-icons/md'
@@ -21,16 +31,6 @@ import {
   Toggle as RToggle
 } from 'rsuite'
 
-import {
-  FullUserFragment,
-  FullUserRoleFragment,
-  ImageRefFragment,
-  useCreateUserMutation,
-  UserAddress,
-  useUpdateUserMutation,
-  useUserQuery,
-  useUserRoleListQuery
-} from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
 import {createCheckedPermissionComponent, useAuthorisation} from '../atoms/permissionControl'

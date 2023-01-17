@@ -1,5 +1,12 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
+import {
+  FullPoll,
+  PollAnswerWithVoteCount,
+  PollExternalVote,
+  useCreatePollAnswerMutation,
+  useDeletePollAnswerMutation
+} from '@wepublish/editor/api'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdContentCopy, MdDelete} from 'react-icons/md'
@@ -16,14 +23,6 @@ import {
   Tooltip,
   Whisper
 } from 'rsuite'
-
-import {
-  FullPoll,
-  PollAnswerWithVoteCount,
-  PollExternalVote,
-  useCreatePollAnswerMutation,
-  useDeletePollAnswerMutation
-} from '../../api'
 
 const IconButton = styled(RIconButton)`
   margin-right: 10px;

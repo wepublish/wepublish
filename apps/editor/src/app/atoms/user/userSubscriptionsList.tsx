@@ -2,6 +2,11 @@
 
 import {css} from '@emotion/react'
 import styled from '@emotion/styled'
+import {
+  PaymentPeriodicity,
+  SubscriptionDeactivationReason,
+  UserSubscriptionFragment
+} from '@wepublish/editor/api'
 import {useTranslation} from 'react-i18next'
 import {
   MdCreditCard,
@@ -17,11 +22,6 @@ import {
 import {Link} from 'react-router-dom'
 import {Button, Divider, FlexboxGrid, Panel as RPanel} from 'rsuite'
 
-import {
-  PaymentPeriodicity,
-  SubscriptionDeactivationReason,
-  UserSubscriptionFragment
-} from '../../api'
 import {NewSubscriptionButton} from '../../routes/subscriptionList'
 import {createCheckedPermissionComponent} from '../permissionControl'
 

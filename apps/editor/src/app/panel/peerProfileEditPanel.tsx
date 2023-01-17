@@ -1,9 +1,4 @@
 import styled from '@emotion/styled'
-import {useEffect, useRef, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form as RForm, Message as RMessage, Panel, Schema, toaster} from 'rsuite'
-import {FormInstance} from 'rsuite/esm/Form'
-
 import {
   ImageRefFragment,
   Maybe,
@@ -11,7 +6,12 @@ import {
   PeerProfileQuery,
   usePeerProfileQuery,
   useUpdatePeerProfileMutation
-} from '../api'
+} from '@wepublish/editor/api'
+import {useEffect, useRef, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, Drawer, Form as RForm, Message as RMessage, Panel, Schema, toaster} from 'rsuite'
+import {FormInstance} from 'rsuite/esm/Form'
+
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ColorPicker} from '../atoms/colorPicker'
 import {

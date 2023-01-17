@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {TeaserStyle} from '@wepublish/editor/api'
 import {useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
 import {
@@ -12,7 +13,6 @@ import {
   Toggle as RToggle
 } from 'rsuite'
 
-import {TeaserStyle} from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {ListInput, ListValue} from '../atoms/listInput'

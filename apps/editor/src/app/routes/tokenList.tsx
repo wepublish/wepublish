@@ -1,4 +1,10 @@
 import styled from '@emotion/styled'
+import {
+  TokenListDocument,
+  TokenRefFragment,
+  useDeleteTokenMutation,
+  useTokenListQuery
+} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdDelete, MdGeneratingTokens} from 'react-icons/md'
@@ -15,12 +21,6 @@ import {
   toaster
 } from 'rsuite'
 
-import {
-  TokenListDocument,
-  TokenRefFragment,
-  useDeleteTokenMutation,
-  useTokenListQuery
-} from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
