@@ -1,5 +1,6 @@
 import {ApolloError} from '@apollo/client'
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Col, DatePicker, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
@@ -15,6 +16,15 @@ import {ModelTitle} from '../../atoms/modelTitle'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {PollAnswers} from '../../atoms/poll/pollAnswers'
 import {PollExternalVotes} from '../../atoms/poll/pollExternalVotes'
+
+const OpensAtLabel = styled(Form.ControlLabel)`
+  margin-right: 5px;
+`
+
+const ClosesAtLabel = styled(Form.ControlLabel)`
+  margin-left: 20px;
+  margin-right: 5px;
+`
 
 function PollEditView() {
   const params = useParams()
@@ -181,9 +191,7 @@ function PollEditView() {
             <Col xs={24}>
               <Panel header={t('pollEditView.settingsPanelHeader')} bordered>
                 {/* opens at */}
-                <Form.ControlLabel style={{marginRight: '5px'}}>
-                  {t('pollEditView.opensAtLabel')}
-                </Form.ControlLabel>
+                <OpensAtLabel>{t('pollEditView.opensAtLabel')}</OpensAtLabel>
                 <DatePicker
                   value={poll?.opensAt ? new Date(poll.opensAt) : undefined}
                   format="yyyy-MM-dd HH:mm"
@@ -199,9 +207,7 @@ function PollEditView() {
                 />
 
                 {/* closes at */}
-                <Form.ControlLabel style={{marginLeft: '20px', marginRight: '5px'}}>
-                  {t('pollEditView.closesAtLabel')}
-                </Form.ControlLabel>
+                <ClosesAtLabel>{t('pollEditView.closesAtLabel')}</ClosesAtLabel>
                 <DatePicker
                   value={poll?.closedAt ? new Date(poll.closedAt) : undefined}
                   format="yyyy-MM-dd HH:mm"

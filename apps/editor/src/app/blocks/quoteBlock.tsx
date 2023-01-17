@@ -1,9 +1,20 @@
-import React, {useEffect, useRef} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useRef} from 'react'
 import {useTranslation} from 'react-i18next'
 
 import {BlockProps} from '../atoms/blockList'
 import {TypographicTextArea} from '../atoms/typographicTextArea'
 import {QuoteBlockValue} from './types'
+
+const Dash = styled.div`
+  margin-right: 5px;
+`
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`
 
 export type QuoteBlockProps = BlockProps<QuoteBlockValue>
 
@@ -26,18 +37,8 @@ export function QuoteBlock({value, onChange, autofocus, disabled}: QuoteBlockPro
         disabled={disabled}
         onChange={e => onChange({...value, quote: e.target.value})}
       />
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center'
-        }}>
-        <div
-          style={{
-            marginRight: 5
-          }}>
-          —
-        </div>
+      <Wrapper>
+        <Dash>—</Dash>
         <TypographicTextArea
           variant="body1"
           placeholder={t('blocks.quote.author')}
@@ -45,7 +46,7 @@ export function QuoteBlock({value, onChange, autofocus, disabled}: QuoteBlockPro
           disabled={disabled}
           onChange={e => onChange({...value, author: e.target.value})}
         />
-      </div>
+      </Wrapper>
     </>
   )
 }

@@ -1,6 +1,6 @@
 import {Attachment} from '@rsuite/icons'
 import TagIcon from '@rsuite/icons/Tag'
-import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
+import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit, MdExpandLess, MdExpandMore} from 'react-icons/md'
 import {Link} from 'react-router-dom'
@@ -96,11 +96,10 @@ export function CommentPreview({
   const revisions = comment.revisions
   const lastRevision = revisions?.length ? revisions[revisions.length - 1] : undefined
   const expanded = useMemo(() => comment.id === originComment?.id, [comment.id, originComment?.id])
-  const displayComment = useMemo(() => (expanded ? originComment || comment : comment), [
-    originComment,
-    comment,
-    expanded
-  ])
+  const displayComment = useMemo(
+    () => (expanded ? originComment || comment : comment),
+    [originComment, comment, expanded]
+  )
   const [panelExpanded, setPanelExpanded] = useState<boolean>(!!expanded)
 
   useEffect(() => {

@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React, {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -29,6 +30,18 @@ import {WepublishEditor} from './editor/wepublishEditor'
 import {EditorSubMenuButton, FormatButton, FormatIconButton} from './toolbar/buttons'
 import {LinkMenu} from './toolbar/linkMenu'
 import {TableMenu} from './toolbar/tableMenu'
+
+const CharCount = styled.p`
+  text-align: right;
+`
+
+const AltPlaceholder = styled.div`
+  color: #cad5e4;
+`
+
+const Divider = styled(ToolbarDivider)`
+  height: 1.8em;
+`
 
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
   displayOnly?: boolean
@@ -112,7 +125,6 @@ export const RichTextBlock = memo(function RichTextBlock({
           <Toolbar
             fadeOut={!hasFocus}
             onMouseDown={() => {
-              // e.preventDefault()
               if (!hasFocus && location) focusAtPreviousLocation(location)
             }}>
             <FormatButton format={BlockFormat.H1}>
@@ -125,18 +137,18 @@ export const RichTextBlock = memo(function RichTextBlock({
               <H3Icon />
             </FormatButton>
 
-            <ToolbarDivider />
+            <Divider />
 
             <FormatIconButton icon={<MdFormatListBulleted />} format={BlockFormat.UnorderedList} />
             <FormatIconButton icon={<MdFormatListNumbered />} format={BlockFormat.OrderedList} />
 
-            <ToolbarDivider />
+            <Divider />
 
             <EditorSubMenuButton icon={<MdTableChart />} editorHasFocus={hasFocus}>
               <TableMenu />
             </EditorSubMenuButton>
 
-            <ToolbarDivider />
+            <Divider />
 
             <FormatIconButton icon={<MdFormatBold />} format={TextFormat.Bold} />
             <FormatIconButton icon={<MdFormatItalic />} format={TextFormat.Italic} />
@@ -145,13 +157,13 @@ export const RichTextBlock = memo(function RichTextBlock({
             <FormatIconButton icon={<MdSuperscript />} format={TextFormat.Superscript} />
             <FormatIconButton icon={<MdSubscript />} format={TextFormat.Subscript} />
 
-            <ToolbarDivider />
+            <Divider />
 
             <SubMenuButton icon={<MdLink />} format={InlineFormat.Link}>
               <LinkMenu />
             </SubMenuButton>
 
-            <ToolbarDivider />
+            <Divider />
 
             <SubMenuButton icon={<MdMood />}>
               <EmojiPicker
@@ -162,9 +174,9 @@ export const RichTextBlock = memo(function RichTextBlock({
             </SubMenuButton>
           </Toolbar>
           {WepublishEditor.isEmpty(editor) && ( // Alternative placeholder
-            <div onClick={() => ReactEditor.focus(editor)} style={{color: '#cad5e4'}}>
+            <AltPlaceholder onClick={() => ReactEditor.focus(editor)}>
               {t('blocks.richText.startWriting')}
-            </div>
+            </AltPlaceholder>
           )}
         </>
       )}
@@ -179,7 +191,6 @@ export const RichTextBlock = memo(function RichTextBlock({
             : undefined
         }
         readOnly={disabled || displayOnly}
-        // placeholder={t('blocks.richText.startWriting')}  # causes focusing problems on firefox !
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         onBlur={() => {
@@ -189,9 +200,7 @@ export const RichTextBlock = memo(function RichTextBlock({
           if (e.ctrlKey || e.metaKey) activateHotkey(e)
         }}
       />
-      {showCharCount && (
-        <p style={{textAlign: 'right'}}>{t('blocks.richText.charCount', {charCount})}</p>
-      )}
+      {showCharCount && <CharCount>{t('blocks.richText.charCount', {charCount})}</CharCount>}
     </Slate>
   )
 })

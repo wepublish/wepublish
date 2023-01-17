@@ -1,4 +1,5 @@
 import {ApolloError} from '@apollo/client'
+import styled from '@emotion/styled'
 import React, {useEffect, useMemo, useReducer, useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
@@ -9,7 +10,7 @@ import {
   Drawer,
   Form,
   IconButton,
-  Message,
+  Message as RMessage,
   Pagination,
   Table,
   toaster,
@@ -26,12 +27,45 @@ import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {CommentBlockValue} from '../blocks/types'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
 
+const CheckboxWrapper = styled.div`
+  height: 46px;
+  display: flex;
+  align-items: center;
+`
+
+const ToggleWrapper = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  margin-top: 48px;
+`
+
+const Message = styled(RMessage)`
+  margin-top: 12px;
+`
+
+const FormGroupWrapper = styled.div`
+  width: 250px;
+`
+
+const DrawerBody = styled(Drawer.Body)`
+  padding: 24px;
+`
+
+const TableCellNoPadding = styled(Table.Cell)`
+  padding: 0;
+`
+
+const PermissionControlWrapper = styled(Table.Cell)`
+  padding: 6px 0;
+`
+
 const onErrorToast = (error: ApolloError) => {
   if (error?.message) {
     toaster.push(
-      <Message type="error" showIcon closable duration={3000}>
+      <RMessage type="error" showIcon closable duration={3000}>
         {error?.message}
-      </Message>
+      </RMessage>
     )
   }
 }
@@ -65,13 +99,10 @@ export function SelectCommentPanel({
   const {t} = useTranslation()
   const [fetchComments, {data, loading}] = useCommentListLazyQuery({
     onError: onErrorToast,
-    variables: {
-      filter: {
-        item: itemId
-      }
-    },
     fetchPolicy: 'cache-and-network'
   })
+
+  console.log(itemId)
 
   const getUsername = useMemo(() => commentUsernameGenerator(t), [t])
 
@@ -90,17 +121,18 @@ export function SelectCommentPanel({
   }
 
   useEffect(() => {
-    fetchComments({
-      variables: {
-        take: limit,
-        skip: (page - 1) * limit,
-        filter: {
-          item: itemId,
-          tags: tagFilter
+    itemId &&
+      fetchComments({
+        variables: {
+          take: limit,
+          skip: (page - 1) * limit,
+          filter: {
+            item: itemId,
+            tags: tagFilter
+          }
         }
-      }
-    })
-  }, [page, limit, tagFilter])
+      })
+  }, [page, limit, tagFilter, fetchComments, itemId])
 
   return (
     <>
@@ -118,8 +150,8 @@ export function SelectCommentPanel({
         </Drawer.Actions>
       </Drawer.Header>
 
-      <Drawer.Body style={{padding: '24px'}}>
-        <div style={{width: '250px'}}>
+      <DrawerBody>
+        <FormGroupWrapper>
           <Form.Group controlId="tags">
             <Form.ControlLabel>{t('blocks.comment.filterByTag')}</Form.ControlLabel>
 
@@ -130,18 +162,18 @@ export function SelectCommentPanel({
               selectedTags={tagFilter}
             />
           </Form.Group>
-        </div>
+        </FormGroupWrapper>
 
         {!allowCherryPicking && !!tagFilter?.length && (
-          <Message showIcon type="info" style={{marginTop: '12px'}}>
+          <Message showIcon type="info">
             {t('blocks.comment.commentsFilterByTagInformation')}
           </Message>
         )}
 
-        <div style={{display: 'flex', gap: '12px', marginBottom: '12px', marginTop: '48px'}}>
+        <ToggleWrapper>
           <Toggle defaultChecked={allowCherryPicking} onChange={toggleCherryPicking} />
           {t('blocks.comment.cherryPick')}
-        </div>
+        </ToggleWrapper>
 
         <Table
           minHeight={600}
@@ -152,14 +184,9 @@ export function SelectCommentPanel({
           {allowCherryPicking && (
             <Table.Column width={36}>
               <Table.HeaderCell>{}</Table.HeaderCell>
-              <Table.Cell style={{padding: 0}}>
-                {(rowData: RowDataType<FullCommentFragment>) => (
-                  <div
-                    style={{
-                      height: '46px',
-                      display: 'flex',
-                      alignItems: 'center'
-                    }}>
+              <TableCellNoPadding>
+                {(rowData: FullCommentFragment) => (
+                  <CheckboxWrapper>
                     <Checkbox
                       defaultChecked={commentFilter?.includes(rowData.id) ?? false}
                       checked={commentFilter?.includes(rowData.id) ?? false}
@@ -172,9 +199,9 @@ export function SelectCommentPanel({
                         )
                       }
                     />
-                  </div>
+                  </CheckboxWrapper>
                 )}
-              </Table.Cell>
+              </TableCellNoPadding>
             </Table.Column>
           )}
 
@@ -209,8 +236,8 @@ export function SelectCommentPanel({
 
           <Table.Column width={150} align="center" fixed="right">
             <Table.HeaderCell>{t('comments.overview.edit')}</Table.HeaderCell>
-            <Table.Cell style={{padding: '6px 0'}}>
-              {(rowData: RowDataType<FullCommentFragment>) => (
+            <PermissionControlWrapper>
+              {(rowData: FullCommentFragment) => (
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
                   <IconButtonTooltip caption={t('comments.overview.edit')}>
                     <Link target="_blank" to={`/comments/edit/${rowData.id}`}>
@@ -219,7 +246,7 @@ export function SelectCommentPanel({
                   </IconButtonTooltip>
                 </PermissionControl>
               )}
-            </Table.Cell>
+            </PermissionControlWrapper>
           </Table.Column>
         </Table>
 
@@ -239,7 +266,7 @@ export function SelectCommentPanel({
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </Drawer.Body>
+      </DrawerBody>
     </>
   )
 }

@@ -10,7 +10,6 @@ Currently we operate based on a few main branches.
 - `b/<bugfix-name>` for bugfixes to release
 - `h/<hotfix-name>` for hotfixes to production
 
-
 ## Features
 
 1. Create new branch based on `master`, use `f/<feature-name>` as template for name (you can use Jira ticket name inside)
@@ -27,8 +26,7 @@ Currently we operate based on a few main branches.
 4. Create pull-request into the `<breaking-changes>`
 5. Squash and merge pull-request`
 6. `<breaking-changes>` is updated with `master` on daily basis
-6. Every X months `<breaking-changes>` branch is merged back to `master` and `major` release is done
-
+7. Every X months `<breaking-changes>` branch is merged back to `master` and `major` release is done
 
 ## Bugfixes
 
@@ -60,20 +58,21 @@ We assume all components are used with the same version.
 At this moment we use `git-flow` command for release process. This makes it easy to have a proper state of dev `master` and stable `production` branches.
 
 ### In steps
+
 1. Starts right after sprint ends (or whatever time we pick)
 2. Identify type of release (`major` | `minor` | `patch`) by reviewing changelog
-   - `yarn run lerna-changelog`
+   - `npx lerna-changelog`
 3. Create release branch `r/<release-name>` of dev `master`
-    - `git flow release start <version>`
+   - `git flow release start <version>`
 4. Create alpha-prerelease, create tag in github and publish new `next` npm
-    - `yarn run lerna version --no-changelog --allow-branch "r/*" --force-git-tag <version>-alpha.X --yes`
-    - Create pull-request with changelog as description
+   - `npx lerna version --no-changelog --allow-branch "r/*" --force-git-tag <version>-alpha.X --yes`
+   - Create pull-request with changelog as description
 5. Apply bugfixes if needed
-    - Again create new pre-release
-    - Again add changelog into PR description
+   - Again create new pre-release
+   - Again add changelog into PR description
 6. Once release tested and verified tag and publish final-release
-    - Put generated PR changelog into the `CHANGELOG.md`
-    - `git commit -m "c/release <version>"`
-    - `yarn run lerna version --amend --no-changelog --allow-branch "r/*" --force-git-tag <version> --yes`
+   - Put generated PR changelog into the `CHANGELOG.md`
+   - `git commit -m "c/release <version>"`
+   - `npx lerna version --amend --no-changelog --allow-branch "r/*" --force-git-tag <version> --yes`
 7. Merge release branch back into dev `master` and stable `production`
    - `git flow release finish <version>`

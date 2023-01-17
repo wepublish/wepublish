@@ -1,6 +1,5 @@
-**/dist
-**/node_modules
-**/.env
-**/lib
-packages/**/assets
-examples/**/assets
+node_modules
+dist
+.media
+.changelog
+coverage

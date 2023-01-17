@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {FlexboxGrid, IconButton, Pagination, Table, Toggle} from 'rsuite'
+import {IconButton, Pagination, Table, Toggle} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {
@@ -17,6 +18,7 @@ import {CreateCommentBtn} from '../../atoms/comment/createCommentBtn'
 import {IconButtonTooltip} from '../../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
+import {ListViewContainer} from '../../ui/listView'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
@@ -24,6 +26,22 @@ import {
 } from '../../utility'
 
 const {Column, HeaderCell, Cell} = Table
+
+const TableWrapper = styled.div`
+  display: flex;
+  flex-flow: column;
+  margin-top: 20px;
+  gap: 20px;
+`
+
+const ListView = styled.div`
+  gap: 8px;
+  display: flex;
+`
+
+const EditIcon = styled.span`
+  margin-right: 5px;
+`
 
 function mapColumFieldToGraphQLField(columnField: string): CommentSort | null {
   switch (columnField) {
@@ -92,12 +110,12 @@ function CommentList() {
 
   return (
     <>
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
+      <ListViewContainer>
+        <div>
           <h2>{t('comments.overview.comments')}</h2>
-        </FlexboxGrid.Item>
+        </div>
 
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px', gap: '8px', display: 'flex'}}>
+        <ListView>
           <Toggle
             defaultChecked={filter.states?.includes?.(CommentState.Approved)}
             onChange={enabled =>
@@ -169,16 +187,10 @@ function CommentList() {
             checkedChildren={t('comments.state.rejected')}
             unCheckedChildren={t('comments.state.rejected')}
           />
-        </FlexboxGrid.Item>
-      </FlexboxGrid>
+        </ListView>
+      </ListViewContainer>
 
-      <div
-        style={{
-          display: 'flex',
-          flexFlow: 'column',
-          marginTop: '20px',
-          gap: '20px'
-        }}>
+      <TableWrapper>
         <Table
           autoHeight
           rowHeight={60}
@@ -247,7 +259,7 @@ function CommentList() {
           {/* eslint-disable-next-line i18next/no-literal-string */}
           <Column width={200} align="right" verticalAlign="middle" fixed="right">
             <HeaderCell>{t('comments.overview.editState')}</HeaderCell>
-            <Cell style={{padding: '6px 0'}}>
+            <Cell>
               {(rowData: RowDataType<FullCommentFragment>) => (
                 <PermissionControl qualifyingPermissions={['CAN_TAKE_COMMENT_ACTION']}>
                   <CommentStateDropdown
@@ -265,17 +277,17 @@ function CommentList() {
           {/* eslint-disable-next-line i18next/no-literal-string */}
           <Column width={150} align="center" verticalAlign="middle" fixed="right">
             <HeaderCell>{t('comments.overview.action')}</HeaderCell>
-            <Cell style={{padding: '6px 0'}}>
+            <Cell>
               {(rowData: RowDataType<FullCommentFragment>) => (
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
                   {/* edit comment */}
-                  <span style={{marginRight: '5px'}}>
+                  <EditIcon>
                     <IconButtonTooltip caption={t('comments.overview.edit')}>
                       <Link to={`edit/${rowData.id}`}>
                         <IconButton icon={<MdEdit />} circle size="sm" />
                       </Link>
                     </IconButtonTooltip>
-                  </span>
+                  </EditIcon>
 
                   {/* reply to comment */}
                   <CreateCommentBtn
@@ -307,7 +319,7 @@ function CommentList() {
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </div>
+      </TableWrapper>
     </>
   )
 }

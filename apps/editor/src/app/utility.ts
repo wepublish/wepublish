@@ -1,3 +1,4 @@
+import {ApolloClient, HttpLink, InMemoryCache} from '@apollo/client'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import nanoid from 'nanoid'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
@@ -84,22 +85,6 @@ export function slugify(str: string) {
     .replace(/--+/g, '-')
     .replace(/^-+/, '')
     .replace(/-+$/, '')
-}
-
-// https://gist.github.com/WebReflection/6076a40777b65c397b2b9b97247520f0
-export function dateTimeLocalString(date: Date) {
-  function prefix(i: number) {
-    return (i < 10 ? '0' : '') + i
-  }
-
-  const year = date.getFullYear()
-  const month = prefix(date.getMonth() + 1)
-  const day = prefix(date.getDate())
-  const hours = prefix(date.getHours())
-  const minutes = prefix(date.getMinutes())
-  const seconds = prefix(date.getSeconds())
-
-  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
 }
 
 export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin = false) {
@@ -236,6 +221,15 @@ export function getSettings(): ClientSettings {
   return settingsJson
     ? JSON.parse(document.getElementById(ElementID.Settings)!.textContent!)
     : defaultSettings
+}
+
+export function getApiClientV2() {
+  const {apiURL} = getSettings()
+  const link = new HttpLink({uri: `${apiURL}/v2`})
+  return new ApolloClient({
+    link,
+    cache: new InMemoryCache()
+  })
 }
 
 /**

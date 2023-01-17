@@ -13,7 +13,6 @@
       "PR: Revert :leftwards_arrow_with_hook:": ":leftwards_arrow_with_hook: Revert"
     }
   },
-  "npmClient": "yarn",
   "command": {
     "version": {
       "allowBranch": "master"
@@ -23,5 +22,5 @@
       "message": "chore(release): publish %s"
     }
   },
-  "packages": ["packages/api", "apps/editor"]
+  "packages": ["libs/api", "apps/editor"]
 }

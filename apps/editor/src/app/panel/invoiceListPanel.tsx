@@ -1,10 +1,14 @@
-import React from 'react'
+import styled from '@emotion/styled'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Message} from 'rsuite'
 
 import {InvoiceFragment, useMeQuery} from '../api'
 import {Invoice} from '../atoms/invoice'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+
+const InvoiceWrapper = styled.div`
+  margin-bottom: 10px;
+`
 
 export interface InvoiceListPanelProps {
   subscriptionId?: string
@@ -49,7 +53,7 @@ function InvoiceListPanel({
     return (
       <Drawer.Body>
         {invoices?.map((invoice, invoiceId) => (
-          <div key={invoiceId} style={{marginBottom: '10px'}}>
+          <InvoiceWrapper key={invoiceId}>
             <Invoice
               subscriptionId={subscriptionId}
               invoice={invoice}
@@ -57,7 +61,7 @@ function InvoiceListPanel({
               disabled={disabled}
               onInvoicePaid={() => onInvoicePaid()}
             />
-          </div>
+          </InvoiceWrapper>
         ))}
       </Drawer.Body>
     )

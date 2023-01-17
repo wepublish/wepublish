@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {Form, Message, SelectPicker, toaster} from 'rsuite'
 
 import {FullUserFragment, useUserListQuery} from '../../api'

@@ -30,7 +30,7 @@ exports[`Token Generate Panel should be able to generate a new token 1`] = `
         >
           tokenList.panels.close
           <span
-@@ -61,14 +47,59 @@
+@@ -61,14 +47,58 @@
         </button>
       </div>
     </div>
@@ -42,7 +42,12 @@ exports[`Token Generate Panel should be able to generate a new token 1`] = `
 +     </p>
 +     <div
 +       class=\\"rs-panel rs-panel-bordered\\"
-+     >
+      >
+-     <input
+-       class=\\"rs-input\\"
+-       placeholder=\\"tokenList.panels.name\\"
+-       type=\\"text\\"
+-       value=\\"\\"
 +       <div
 +         class=\\"rs-panel-body\\"
 +         role=\\"region\\"
@@ -51,15 +56,9 @@ exports[`Token Generate Panel should be able to generate a new token 1`] = `
 +       </div>
 +     </div>
 +     <div
-+       class=\\"rs-message rs-message-warning rs-message-show rs-message-has-icon\\"
++       class=\\"css-wsps2-Message euh87sf0 rs-message rs-message-warning rs-message-show rs-message-has-icon\\"
 +       role=\\"alert\\"
-+       style=\\"margin-top: 5px;\\"
-      >
--     <input
--       class=\\"rs-input\\"
--       placeholder=\\"tokenList.panels.name\\"
--       type=\\"text\\"
--       value=\\"\\"
++     >
 +       <div
 +         class=\\"rs-message-container\\"
 +       >

@@ -1,10 +1,19 @@
 import {ApolloError} from '@apollo/client'
-import React, {useMemo, useState} from 'react'
+import styled from '@emotion/styled'
+import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Divider, Message, Pagination, TagPicker, toaster} from 'rsuite'
+import {Divider as RDivider, Message, Pagination as RPagination, TagPicker, toaster} from 'rsuite'
 
 import {SortOrder, TagSort, TagType, useTagListQuery} from '../../api'
 import {DEFAULT_MAX_TABLE_PAGES} from '../../utility'
+
+const Divider = styled(RDivider)`
+  margin: '12px 0';
+`
+
+const Pagination = styled(RPagination)`
+  margin: '0 12px 12px';
+`
 
 interface SelectTagsProps {
   name?: string
@@ -65,18 +74,18 @@ export function SelectTags({name, tagType, selectedTags, setSelectedTags}: Selec
       name={name}
       value={selectedTags}
       data={availableTags}
-      onChange={(value: string[]) => setSelectedTags(value)}
+      onChange={(value: string[]) => {
+        const tagValues = availableTags.map(({value}) => value)
+        setSelectedTags(value.filter(value => tagValues.includes(value)))
+      }}
       renderMenu={menu => {
         return (
           <>
             {menu}
 
-            <Divider style={{margin: '12px 0'}} />
+            <Divider />
 
             <Pagination
-              style={{
-                padding: '0 12px 12px'
-              }}
               limit={50}
               maxButtons={DEFAULT_MAX_TABLE_PAGES}
               first

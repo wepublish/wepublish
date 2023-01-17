@@ -1,8 +1,18 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
-import {Button, Drawer, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table} from 'rsuite'
+import {
+  Button,
+  Drawer,
+  FlexboxGrid,
+  IconButton as RIconButton,
+  Input,
+  InputGroup,
+  Modal,
+  Table as RTable
+} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {
@@ -17,7 +27,29 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {MemberPlanEditPanel} from '../panel/memberPlanEditPanel'
 
-const {Column, HeaderCell, Cell} = Table
+const {Column, HeaderCell, Cell: RCell} = RTable
+
+const Cell = styled(RCell)`
+  .rs-table-cell-content {
+    padding: 6px 0;
+  }
+`
+
+const Table = styled(RTable)`
+  margin-top: 20px;
+`
+
+const GridItemAlignRight = styled(FlexboxGrid.Item)`
+  text-align: right;
+`
+
+const GridItemMarginTop = styled(FlexboxGrid.Item)`
+  margin-top: 20px;
+`
+
+const IconButton = styled(RIconButton)`
+  margin-left: 5px;
+`
 
 function MemberPlanList() {
   const {t} = useTranslation()
@@ -75,36 +107,36 @@ function MemberPlanList() {
           <h2>{t('memberPlanList.title')}</h2>
         </FlexboxGrid.Item>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_MEMBER_PLAN']}>
-          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <GridItemAlignRight colspan={8}>
             <Link to="/memberplans/create">
-              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
+              <RIconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('memberPlanList.createNew')}
-              </IconButton>
+              </RIconButton>
             </Link>
-          </FlexboxGrid.Item>
+          </GridItemAlignRight>
         </PermissionControl>
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
+        <GridItemMarginTop colspan={24}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
-        </FlexboxGrid.Item>
+        </GridItemMarginTop>
       </FlexboxGrid>
 
-      <Table autoHeight style={{marginTop: '20px'}} loading={isLoading} data={memberPlans}>
+      <Table autoHeight loading={isLoading} data={memberPlans}>
         <Column width={200} align="left" resizable>
           <HeaderCell>{t('memberPlanList.name')}</HeaderCell>
-          <Cell>
+          <RCell>
             {(rowData: RowDataType<FullMemberPlanFragment>) => (
               <Link to={`/memberplans/edit/${rowData.id}`}>{rowData.name || t('untitled')}</Link>
             )}
-          </Cell>
+          </RCell>
         </Column>
         <Column width={100} align="center" fixed="right">
           <HeaderCell>{t('memberPlanList.action')}</HeaderCell>
-          <Cell style={{padding: '6px 0'}}>
+          <Cell>
             {(rowData: RowDataType<FullMemberPlanFragment>) => (
               <PermissionControl qualifyingPermissions={['CAN_DELETE_MEMBER_PLAN']}>
                 <IconButtonTooltip caption={t('delete')}>
@@ -114,7 +146,6 @@ function MemberPlanList() {
                     size="sm"
                     appearance="ghost"
                     color="red"
-                    style={{marginLeft: '5px'}}
                     onClick={() => {
                       setConfirmationDialogOpen(true)
                       setCurrentMemberPlan(rowData as FullMemberPlanFragment)

@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
-import {Drawer, IconButton, Panel} from 'rsuite'
+import {Drawer, IconButton, Panel as RPanel} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
@@ -18,6 +19,26 @@ import {VimeoVideoEmbed} from './embeds/vimeo'
 import {YouTubeVideoEmbed} from './embeds/youTube'
 import {EmbedBlockValue, EmbedType} from './types'
 
+const Panel = styled(RPanel)<{isEmpty: boolean}>`
+  display: grid;
+  height: ${({isEmpty}) => (isEmpty ? '300px' : undefined)};
+  padding: 0;
+  overflow: hidden;
+  background-color: #f7f9fa;
+`
+
+const Wrapper = styled.div`
+  position: relative;
+  width: 100%;
+`
+
+const IconWrapper = styled.div`
+  position: absolute;
+  z-index: 100;
+  height: 100%;
+  right: 0;
+`
+
 // TODO: Handle disabled prop
 export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockValue>) {
   const [isEmbedDialogOpen, setEmbedDialogOpen] = useState(false)
@@ -32,36 +53,17 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
 
   return (
     <>
-      <Panel
-        bodyFill
-        bordered
-        style={{
-          height: isEmpty ? 300 : undefined,
-          padding: 0,
-          overflow: 'hidden',
-          backgroundColor: '#f7f9fa',
-          display: 'grid'
-        }}>
+      <Panel bodyFill bordered isEmpty={isEmpty}>
         <PlaceholderInput onAddClick={() => setEmbedDialogOpen(true)}>
           {!isEmpty && (
-            <div
-              style={{
-                position: 'relative',
-                width: '100%'
-              }}>
-              <div
-                style={{
-                  position: 'absolute',
-                  zIndex: 100,
-                  height: '100%',
-                  right: 0
-                }}>
+            <Wrapper>
+              <IconWrapper>
                 <IconButton size="lg" icon={<MdEdit />} onClick={() => setEmbedDialogOpen(true)}>
                   {t('blocks.embeds.overview.editEmbed')}
                 </IconButton>
-              </div>
+              </IconWrapper>
               <EmbedPreview value={value} />
-            </div>
+            </Wrapper>
           )}
         </PlaceholderInput>
       </Panel>

@@ -1,6 +1,14 @@
-import React, {createContext, ReactNode, useContext, useEffect, useRef} from 'react'
+import styled from '@emotion/styled'
+import {createContext, ReactNode, useContext, useEffect, useRef} from 'react'
 
 import {useScript} from '../../utility'
+
+const TwitterEmbed = styled.div`
+  display: flex;
+  justify-content: center;
+  min-height: 300px;
+  padding: 20px;
+`
 
 // Define some globals set by the Twitter SDK.
 declare global {
@@ -55,14 +63,7 @@ export function TwitterTweetEmbed({userID, tweetID}: TwitterTweetEmbedProps) {
   }, [isLoaded, isLoading])
 
   return (
-    <div
-      ref={wrapperRef}
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        minHeight: 300,
-        padding: 20
-      }}>
+    <TwitterEmbed ref={wrapperRef}>
       <blockquote className="twitter-tweet">
         <a
           href={`https://twitter.com/${encodeURIComponent(userID)}/status/${encodeURIComponent(
@@ -70,6 +71,6 @@ export function TwitterTweetEmbed({userID, tweetID}: TwitterTweetEmbedProps) {
           )}`}
         />
       </blockquote>
-    </div>
+    </TwitterEmbed>
   )
 }

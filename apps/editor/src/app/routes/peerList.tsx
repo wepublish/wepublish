@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSettings, MdVisibility, MdVisibilityOff} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
-  Avatar,
+  Avatar as RAvatar,
   Button,
   Divider,
   Drawer,
@@ -32,6 +33,35 @@ import {PeerEditPanel} from '../panel/peerEditPanel'
 import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
 import {addOrUpdateOneInArray} from '../utility'
 
+const MarginTop = styled.div`
+  margin-top: 20px;
+`
+
+const Avatar = styled(RAvatar)`
+  border: solid 2px #3498ff;
+`
+
+const AvatarWrapper = styled.div`
+  text-align: center;
+`
+
+const Wrapper = styled.div`
+  border: solid 2px #3498ff;
+  padding: 10px;
+  border-radius: 5px;
+`
+const ListItem = styled(List.Item)<{isDisabled?: boolean | null}>`
+  cursor: ${({isDisabled}) => (isDisabled ? 'default' : 'pointer')};
+`
+
+const FlexItem = styled(FlexboxGrid.Item)`
+  text-align: center;
+`
+
+const FlexItemAlignRight = styled(FlexboxGrid.Item)`
+  text-align: right;
+`
+
 type Peer = NonNullable<PeerListQuery['peers']>[number]
 
 function PeerList() {
@@ -57,7 +87,11 @@ function PeerList() {
     error: peerInfoError
   } = usePeerProfileQuery({fetchPolicy: 'network-only'})
 
-  const {data: peerListData, loading: isPeerListLoading, error: peerListError} = usePeerListQuery({
+  const {
+    data: peerListData,
+    loading: isPeerListLoading,
+    error: peerListError
+  } = usePeerListQuery({
     fetchPolicy: 'network-only',
     errorPolicy: 'ignore'
   })
@@ -97,20 +131,16 @@ function PeerList() {
     const {id, name, profile, hostURL, isDisabled} = peer
     return (
       <Link to={isDisabled ? '#' : `/peering/edit/${id}`} key={name}>
-        <List.Item style={{cursor: isDisabled ? 'default' : 'pointer'}}>
+        <ListItem isDisabled={isDisabled}>
           <FlexboxGrid>
-            <FlexboxGrid.Item
-              colspan={2}
-              style={{
-                textAlign: 'center'
-              }}>
+            <FlexItem colspan={2}>
               <Avatar
                 circle
                 src={profile?.logo?.squareURL || undefined}
                 alt={profile?.name?.substr(0, 2)}
               />
-            </FlexboxGrid.Item>
-            <FlexboxGrid.Item colspan={18}>
+            </FlexItem>
+            <FlexboxGrid.Item colspan={17}>
               <h5>{name}</h5>
               <p>
                 {profile && `${profile.name} - `}
@@ -150,7 +180,7 @@ function PeerList() {
                 </IconButton>
               </PermissionControl>
             </FlexboxGrid.Item>
-            <FlexboxGrid.Item colspan={1} style={{textAlign: 'center'}}>
+            <FlexItem colspan={2}>
               <PermissionControl qualifyingPermissions={['CAN_DELETE_PEER']}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
@@ -168,9 +198,9 @@ function PeerList() {
                   />
                 </IconButtonTooltip>
               </PermissionControl>
-            </FlexboxGrid.Item>
+            </FlexItem>
           </FlexboxGrid>
-        </List.Item>
+        </ListItem>
       </Link>
     )
   })
@@ -179,14 +209,13 @@ function PeerList() {
     <>
       <PermissionControl qualifyingPermissions={['CAN_GET_PEER_PROFILE']}>
         <h5>{t('peerList.overview.myPeerProfile')}</h5>
-        <div style={{border: 'solid 2px #3498ff', padding: '10px', borderRadius: '5px'}}>
+        <Wrapper>
           <NavigationBar
             centerChildren={
-              <div style={{textAlign: 'center'}}>
+              <AvatarWrapper>
                 <Avatar
                   size="lg"
                   circle
-                  style={{border: 'solid 2px #3498ff'}}
                   src={peerInfoData?.peerProfile?.logo?.squareURL || undefined}
                   alt={peerInfoData?.peerProfile?.name?.substr(0, 2)}
                 />
@@ -202,7 +231,7 @@ function PeerList() {
                     />
                   </Trans>
                 </Form.HelpText>
-              </div>
+              </AvatarWrapper>
             }
             rightChildren={
               <PermissionControl qualifyingPermissions={['CAN_UPDATE_PEER_PROFILE']}>
@@ -214,7 +243,7 @@ function PeerList() {
               </PermissionControl>
             }
           />
-        </div>
+        </Wrapper>
       </PermissionControl>
 
       <FlexboxGrid>
@@ -224,7 +253,7 @@ function PeerList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('peerList.overview.peers')}</h2>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+        <FlexItemAlignRight colspan={8}>
           <Link to="/peering/create">
             <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
               <IconButton appearance="primary" disabled={isPeerListLoading} icon={<MdAdd />}>
@@ -232,15 +261,15 @@ function PeerList() {
               </IconButton>
             </PermissionControl>
           </Link>
-        </FlexboxGrid.Item>
+        </FlexItemAlignRight>
       </FlexboxGrid>
-      <div style={{marginTop: '20px'}}>
+      <MarginTop>
         {peerListData?.peers?.length ? (
           <List>{peers}</List>
         ) : !isPeerListLoading ? (
           <p>{t('peerList.overview.noPeersFound')}</p>
         ) : null}
-      </div>
+      </MarginTop>
 
       <Drawer
         open={isPeerProfileEditModalOpen}

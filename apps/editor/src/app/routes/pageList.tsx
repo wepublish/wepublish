@@ -1,8 +1,8 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdComment, MdContentCopy, MdDelete, MdPreview, MdUnpublished} from 'react-icons/md'
 import {Link, useNavigate} from 'react-router-dom'
-import {Button, FlexboxGrid, IconButton, Message, Modal, Pagination, Table} from 'rsuite'
+import {Button, IconButton, Message, Modal, Pagination, Table} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {
@@ -21,14 +21,26 @@ import {
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
-import {ListViewFilters} from '../atoms/searchAndFilter/listViewFilters'
 import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
+import {
+  IconButtonCell,
+  ListFilters,
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  StatusBadge,
+  TableWrapper
+} from '../ui/listView'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
-  mapTableSortTypeToGraphQLSortOrder,
-  StateColor
+  mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
+
+interface State {
+  state: string
+  text: string
+}
 
 const {Column, HeaderCell, Cell} = Table
 
@@ -109,38 +121,32 @@ function PageList() {
 
   return (
     <>
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
+      <ListViewContainer>
+        <ListViewHeader>
           <h2>{t('pages.overview.pages')}</h2>
-        </FlexboxGrid.Item>
+        </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
-          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <ListViewActions>
             <Link to="/pages/create">
               <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('pages.overview.newPage')}
               </IconButton>
             </Link>
-          </FlexboxGrid.Item>
+          </ListViewActions>
         </PermissionControl>
 
-        <ListViewFilters
+        <ListFilters
           fields={['title', 'description', 'draft', 'pending', 'published', 'publicationDate']}
           filter={filter}
           isLoading={isLoading}
           onSetFilter={filter => setFilter(filter)}
         />
-      </FlexboxGrid>
+      </ListViewContainer>
 
-      <div
-        style={{
-          display: 'flex',
-          flexFlow: 'column',
-          marginTop: '20px'
-        }}>
+      <TableWrapper>
         <Table
           minHeight={600}
           autoHeight
-          style={{flex: 1}}
           loading={isLoading}
           data={pages}
           sortColumn={sortField}
@@ -186,38 +192,29 @@ function PageList() {
               )}
             </Cell>
           </Column>
-          <Column width={100} align="left" resizable>
+          <Column width={150} align="left" resizable>
             <HeaderCell>{t('pages.overview.states')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<PageRefFragment>) => {
-                const states = []
+                const states: State[] = []
 
-                if (rowData.draft) states.push(t('pages.overview.draft'))
-                if (rowData.pending) states.push(t('pages.overview.pending'))
-                if (rowData.published) states.push(t('pages.overview.published'))
+                if (rowData.draft) states.push({state: 'draft', text: t('pages.overview.draft')})
+                if (rowData.pending)
+                  states.push({state: 'pending', text: t('pages.overview.pending')})
+                if (rowData.published)
+                  states.push({state: 'published', text: t('pages.overview.published')})
 
                 return (
-                  <div
-                    style={{
-                      textAlign: 'center',
-                      borderRadius: '15px',
-                      backgroundColor: rowData.pending
-                        ? StateColor.pending
-                        : rowData.published
-                        ? StateColor.published
-                        : rowData.draft
-                        ? StateColor.draft
-                        : StateColor.none
-                    }}>
-                    {states.join(' / ')}
-                  </div>
+                  <StatusBadge states={states.map(st => st.state)}>
+                    {states.map(st => st.text).join(' / ')}
+                  </StatusBadge>
                 )
               }}
             </Cell>
           </Column>
           <Column width={200} align="center" fixed="right">
             <HeaderCell>{t('pages.overview.action')}</HeaderCell>
-            <Cell style={{padding: '6px 0'}}>
+            <IconButtonCell>
               {(rowData: RowDataType<PageRefFragment>) => (
                 <>
                   <PermissionControl qualifyingPermissions={['CAN_PUBLISH_PAGE']}>
@@ -242,7 +239,6 @@ function PageList() {
                         icon={<MdContentCopy />}
                         circle
                         size="sm"
-                        style={{marginLeft: '5px'}}
                         onClick={() => {
                           setCurrentPage(rowData)
                           setConfirmAction(ConfirmAction.Duplicate)
@@ -259,7 +255,6 @@ function PageList() {
                         disabled={!rowData.draft}
                         circle
                         size="sm"
-                        style={{marginLeft: '5px'}}
                         onClick={() => {
                           setCurrentPage(rowData)
                           setPagePreviewLinkOpen(true)
@@ -274,7 +269,6 @@ function PageList() {
                         icon={<MdComment />}
                         circle
                         size="sm"
-                        style={{marginLeft: '5px'}}
                         onClick={() => {
                           createComment({
                             variables: {
@@ -298,7 +292,6 @@ function PageList() {
                         size="sm"
                         appearance="ghost"
                         color="red"
-                        style={{marginLeft: '5px'}}
                         onClick={() => {
                           setCurrentPage(rowData)
                           setConfirmAction(ConfirmAction.Delete)
@@ -309,7 +302,7 @@ function PageList() {
                   </PermissionControl>
                 </>
               )}
-            </Cell>
+            </IconButtonCell>
           </Column>
         </Table>
 
@@ -329,7 +322,7 @@ function PageList() {
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </div>
+      </TableWrapper>
 
       <Modal open={isPagePreviewLinkOpen} size="sm" onClose={() => setPagePreviewLinkOpen(false)}>
         {currentPage && (

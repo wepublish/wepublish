@@ -1,8 +1,18 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
-import {Button, Drawer, FlexboxGrid, IconButton, Input, InputGroup, Modal, Table} from 'rsuite'
+import {
+  Button,
+  Drawer,
+  FlexboxGrid,
+  IconButton as RIconButton,
+  Input,
+  InputGroup,
+  Modal,
+  Table as RTable
+} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {FullNavigationFragment, useDeleteNavigationMutation, useNavigationListQuery} from '../api'
@@ -11,7 +21,29 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {NavigationEditPanel} from '../panel/navigationEditPanel'
 
-const {Column, HeaderCell, Cell} = Table
+const {Column, HeaderCell, Cell: RCell} = RTable
+
+const Cell = styled(RCell)`
+  .rs-table-cell-content {
+    padding: 6px 0;
+  }
+`
+
+const Table = styled(RTable)`
+  margin-top: 20px;
+`
+
+const GridItemAlignRight = styled(FlexboxGrid.Item)`
+  text-align: right;
+`
+
+const GridItemMarginTop = styled(FlexboxGrid.Item)`
+  margin-top: 20px;
+`
+
+const IconButton = styled(RIconButton)`
+  margin-left: 5px;
+`
 
 function NavigationList() {
   const {t} = useTranslation()
@@ -68,39 +100,39 @@ function NavigationList() {
           <h2>{t('navigation.overview.navigations')}</h2>
         </FlexboxGrid.Item>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_NAVIGATION']}>
-          <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <GridItemAlignRight colspan={8}>
             <Link to="/navigations/create">
               <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('navigation.overview.newNavigation')}
               </IconButton>
             </Link>
-          </FlexboxGrid.Item>
+          </GridItemAlignRight>
         </PermissionControl>
 
-        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
+        <GridItemMarginTop colspan={24}>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
-        </FlexboxGrid.Item>
+        </GridItemMarginTop>
       </FlexboxGrid>
 
-      <Table autoHeight style={{marginTop: '20px'}} loading={isLoading} data={navigations}>
+      <Table autoHeight loading={isLoading} data={navigations}>
         <Column width={400} align="left" resizable>
           <HeaderCell>{t('navigation.overview.name')}</HeaderCell>
-          <Cell>
+          <RCell>
             {(rowData: RowDataType<FullNavigationFragment>) => (
               <Link to={`/navigations/edit/${rowData.id}`}>
                 {rowData.name || t('navigation.overview.unknown')}
               </Link>
             )}
-          </Cell>
+          </RCell>
         </Column>
         <Column width={100} align="center" fixed="right">
           <HeaderCell>{t('navigation.overview.action')}</HeaderCell>
-          <Cell style={{padding: '6px 0'}}>
+          <Cell>
             {(rowData: RowDataType<FullNavigationFragment>) => (
               <PermissionControl qualifyingPermissions={['CAN_DELETE_NAVIGATION']}>
                 <IconButtonTooltip caption={t('delete')}>
@@ -110,7 +142,6 @@ function NavigationList() {
                     size="sm"
                     appearance="ghost"
                     color="red"
-                    style={{marginLeft: '5px'}}
                     onClick={() => {
                       setCurrentNavigation(rowData)
                       setConfirmationDialogOpen(true)

@@ -1,5 +1,5 @@
 import {ApolloError} from '@apollo/client'
-import React, {useState} from 'react'
+import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdDelete} from 'react-icons/md'
 import {Button, IconButton, Message, Modal, toaster} from 'rsuite'

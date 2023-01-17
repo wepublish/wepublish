@@ -10,7 +10,7 @@ import {FacebookProvider} from './app/blocks/embeds/facebook'
 import {InstagramProvider} from './app/blocks/embeds/instagram'
 import {TwitterProvider} from './app/blocks/embeds/twitter'
 import {initI18N} from './app/i18n'
-import {LocalStorageKey, getSettings} from './app/utility'
+import {getSettings, LocalStorageKey} from './app/utility'
 import {ElementID} from './shared/elementID'
 import {ClientSettings} from './shared/types'
 
@@ -53,7 +53,7 @@ export async function fetchIntrospectionQueryResultData(url: string) {
 const onDOMContentLoaded = async () => {
   const {apiURL} = getSettings()
 
-  const adminAPIURL = `${apiURL}/admin`
+  const adminAPIURL = `${apiURL}/v1/admin`
 
   const authLink = new ApolloLink((operation, forward) => {
     const token = localStorage.getItem(LocalStorageKey.SessionToken)

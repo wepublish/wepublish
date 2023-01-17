@@ -1,9 +1,23 @@
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Form, Message, Modal, Slider, toaster} from 'rsuite'
+import {Button, Form, Message as RMessage, Modal, Slider, toaster} from 'rsuite'
 
 import {usePagePreviewLinkQuery} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+
+const Message = styled(RMessage)`
+  margin-bottom: 20px;
+`
+
+const FormGroupPaddingHorizontal = styled(Form.Group)`
+  padding-left: 20px;
+  padding-right: 20px;
+`
+
+const FormGroupPaddingTop = styled(Form.Group)`
+  padding-top: 20px;
+`
 
 export interface PagePreviewProps {
   id: string
@@ -39,9 +53,9 @@ function PagePreviewLinkPanel({props, onClose}: PagePreviewLinkPanelProps) {
   useEffect(() => {
     if (loadError?.message) {
       toaster.push(
-        <Message type="error" showIcon closable duration={0}>
+        <RMessage type="error" showIcon closable duration={0}>
           {loadError.message}
-        </Message>
+        </RMessage>
       )
     }
   }, [loadError])
@@ -53,14 +67,10 @@ function PagePreviewLinkPanel({props, onClose}: PagePreviewLinkPanelProps) {
       </Modal.Header>
 
       <Modal.Body>
-        <Message style={{marginBottom: '20px'}} type="warning">
-          {t('articleEditor.panels.articlePreviewLinkDesc')}
-        </Message>
+        <Message type="warning">{t('articleEditor.panels.articlePreviewLinkDesc')}</Message>
 
         <Form fluid>
-          <Form.Group
-            style={{paddingLeft: '20px', paddingRight: '20px'}}
-            controlId="articlePreviewLinkHours">
+          <FormGroupPaddingHorizontal controlId="articlePreviewLinkHours">
             <Form.ControlLabel>
               {t('articleEditor.panels.articlePreviewLinkHours')}
             </Form.ControlLabel>
@@ -76,8 +86,8 @@ function PagePreviewLinkPanel({props, onClose}: PagePreviewLinkPanelProps) {
               }}
               onChange={value => setHours(value)}
             />
-          </Form.Group>
-          <Form.Group style={{paddingTop: '20px'}} controlId="articlePreviewLinkField">
+          </FormGroupPaddingHorizontal>
+          <FormGroupPaddingTop controlId="articlePreviewLinkField">
             <Form.ControlLabel>
               {t('articleEditor.panels.articlePreviewLinkField')}
             </Form.ControlLabel>
@@ -86,7 +96,7 @@ function PagePreviewLinkPanel({props, onClose}: PagePreviewLinkPanelProps) {
               disabled={isLoading}
               value={data?.pagePreviewLink}
             />
-          </Form.Group>
+          </FormGroupPaddingTop>
         </Form>
       </Modal.Body>
 

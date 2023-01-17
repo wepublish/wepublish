@@ -1,13 +1,38 @@
+import styled from '@emotion/styled'
 import InnerHTML from 'dangerously-set-html-content'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
-import {Drawer, IconButton, Panel} from 'rsuite'
+import {Drawer, IconButton, Panel as RPanel} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {HtmlEditPanel} from '../panel/htmlEditPanel'
 import {HTMLBlockValue} from './types'
+
+const Panel = styled(RPanel)<{isEmpty: boolean}>`
+  display: grid;
+  height: ${({isEmpty}) => (isEmpty ? '200px' : undefined)};
+  padding: 0;
+  overflow: hidden;
+  background-color: #f7f9fa;
+`
+
+const Wrapper = styled.div`
+  position: relative;
+  width: 100%;
+`
+
+const IconWrapper = styled.div`
+  position: absolute;
+  z-index: 100;
+  height: 100%;
+  right: 0;
+`
+
+const InnerHtmlWrapper = styled.div`
+  margin-top: 30px;
+`
 
 export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValue>) => {
   const [isHtmlDialogOpen, setHtmlDialogOpen] = useState(false)
@@ -22,38 +47,19 @@ export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValu
 
   return (
     <>
-      <Panel
-        bodyFill
-        bordered
-        style={{
-          height: isEmpty ? 200 : undefined,
-          padding: 0,
-          overflow: 'hidden',
-          backgroundColor: '#f7f9fa',
-          display: 'grid'
-        }}>
+      <Panel isEmpty={isEmpty} bodyFill bordered>
         <PlaceholderInput onAddClick={() => setHtmlDialogOpen(true)}>
           {!isEmpty && (
-            <div
-              style={{
-                position: 'relative',
-                width: '100%'
-              }}>
-              <div
-                style={{
-                  position: 'absolute',
-                  zIndex: 100,
-                  height: '100%',
-                  right: 0
-                }}>
+            <Wrapper>
+              <IconWrapper>
                 <IconButton size="lg" icon={<MdEdit />} onClick={() => setHtmlDialogOpen(true)}>
                   {t('blocks.html.edit')}
                 </IconButton>
-              </div>
-              <div style={{marginTop: '30px'}}>
+              </IconWrapper>
+              <InnerHtmlWrapper>
                 <InnerHTML html={value.html} />
-              </div>
-            </div>
+              </InnerHtmlWrapper>
+            </Wrapper>
           )}
         </PlaceholderInput>
       </Panel>

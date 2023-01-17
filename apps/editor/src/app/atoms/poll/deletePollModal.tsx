@@ -1,37 +1,37 @@
 import {ApolloError, ApolloQueryResult} from '@apollo/client'
-import React from 'react'
-import {useTranslation} from 'react-i18next'
+import {TFunction, useTranslation} from 'react-i18next'
 import {Button, Message, Modal, toaster} from 'rsuite'
 
 import {Poll, PollsQuery, useDeletePollMutation} from '../../api'
 
-interface deletePollProps {
+interface DeletePollProps {
   poll?: Poll
-  setPoll(poll: Poll | undefined): void
-  afterDelete(): Promise<ApolloQueryResult<PollsQuery>>
+  onClose(): void
+  onDelete(): Promise<ApolloQueryResult<PollsQuery>>
 }
 
-export function DeletePollModal({poll, setPoll, afterDelete}: deletePollProps) {
+/**
+ * Error handling
+ */
+const onErrorToast = (error: ApolloError) => {
+  toaster.push(
+    <Message type="error" showIcon closable duration={3000}>
+      {error.message}
+    </Message>
+  )
+}
+
+const onCompletedToast = (t: TFunction) => () => {
+  toaster.push(
+    <Message type="success" showIcon closable duration={3000}>
+      {t('pollList.pollDeleted')}
+    </Message>
+  )
+}
+
+export function DeletePollModal({poll, onClose, onDelete}: DeletePollProps) {
   const {t} = useTranslation()
   const [deletePollMutation] = useDeletePollMutation()
-
-  /**
-   * Error handling
-   */
-  const onErrorToast = (error: ApolloError) => {
-    toaster.push(
-      <Message type="error" showIcon closable duration={3000}>
-        {error.message}
-      </Message>
-    )
-  }
-  const onCompletedToast = () => {
-    toaster.push(
-      <Message type="success" showIcon closable duration={3000}>
-        {t('pollList.pollDeleted')}
-      </Message>
-    )
-  }
 
   /**
    * FUNCTIONS
@@ -47,16 +47,15 @@ export function DeletePollModal({poll, setPoll, afterDelete}: deletePollProps) {
         deletePollId: poll.id
       },
       onError: onErrorToast,
-      onCompleted: onCompletedToast
+      onCompleted: onCompletedToast(t)
     })
 
-    // close modal
-    setPoll(undefined)
-    await afterDelete()
+    onClose()
+    onDelete()
   }
 
   return (
-    <Modal open={!!poll} onClose={() => setPoll(undefined)}>
+    <Modal open={!!poll} onClose={onClose}>
       <Modal.Header>
         <Modal.Title>{t('deletePollModal.title')}</Modal.Title>
       </Modal.Header>
@@ -66,12 +65,12 @@ export function DeletePollModal({poll, setPoll, afterDelete}: deletePollProps) {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button onClick={deletePoll} appearance="primary">
+        <Button onClick={deletePoll} appearance="primary" color="red">
           {t('deletePollModal.deleteBtn')}
         </Button>
 
-        <Button onClick={() => setPoll(undefined)} appearance="subtle">
-          {t('deletePollModal.cancelBtn')}
+        <Button onClick={onClose} appearance="subtle">
+          {t('cancel')}
         </Button>
       </Modal.Footer>
     </Modal>

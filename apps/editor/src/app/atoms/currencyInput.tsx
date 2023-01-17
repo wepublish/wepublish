@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Form, InputGroup} from 'rsuite'
 
 export interface CurrencyInputProps {

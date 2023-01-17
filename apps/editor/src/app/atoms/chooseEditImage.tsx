@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import React from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdEdit, MdPhoto} from 'react-icons/md'
@@ -17,6 +18,28 @@ export interface ChooseEditImageProps {
   maxHeight?: number
   minHeight?: number
 }
+
+const ImageWrapper = styled.div<{maxHeight: number}>`
+  display: flex;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-height: ${({maxHeight}) => `${maxHeight}px`};
+`
+
+const Image = styled.img`
+  object-fit: contain;
+  object-position: top left;
+  width: 100%;
+  height: 100%;
+`
+
+const DropdownWrapper = styled.div<{top: number; left: number}>`
+  position: absolute;
+  top: ${({top}) => top};
+  left: ${({left}) => left};
+`
 
 export function ChooseEditImage({
   image,
@@ -40,27 +63,10 @@ export function ChooseEditImage({
         maxHeight={maxHeight}
         minHeight={minHeight}>
         {image && (
-          <div
-            style={{
-              maxHeight,
-              display: 'flex',
-              justifyContent: 'center',
-              position: 'relative',
-              width: '100%',
-              height: '100%'
-            }}>
-            <img
-              src={image?.largeURL ?? '/static/placeholder-240x240.png'}
-              style={{
-                objectFit: 'contain',
-                objectPosition: 'top left',
-                width: '100%',
-                height: '100%',
-                maxHeight
-              }}
-            />
+          <ImageWrapper maxHeight={maxHeight}>
+            <Image src={image?.largeURL ?? '/static/placeholder-240x240.png'} />
             {(openChooseModalOpen || openEditModalOpen || removeImage) && (
-              <div style={{position: 'absolute', top, left}}>
+              <DropdownWrapper top={top} left={left}>
                 <Dropdown
                   renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
                     <IconButton
@@ -88,9 +94,9 @@ export function ChooseEditImage({
                     </Dropdown.Item>
                   )}
                 </Dropdown>
-              </div>
+              </DropdownWrapper>
             )}
-          </div>
+          </ImageWrapper>
         )}
       </PlaceholderInput>
     </Panel>

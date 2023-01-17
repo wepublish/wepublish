@@ -1,8 +1,19 @@
 import {ApolloError} from '@apollo/client'
-import React, {useEffect, useState} from 'react'
+import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
-import {Button, Col, IconButton, InputNumber, Message, Modal, Row, Table, toaster} from 'rsuite'
+import {
+  Button,
+  Col,
+  IconButton,
+  InputNumber,
+  Message,
+  Modal,
+  Row as RRow,
+  Table,
+  toaster
+} from 'rsuite'
 import FormControl from 'rsuite/FormControl'
 
 import {
@@ -13,6 +24,10 @@ import {
   useCreatePollExternalVoteSourceMutation,
   useDeletePollExternalVoteSourceMutation
 } from '../../api'
+
+const Row = styled(RRow)`
+  margin-top: 20px;
+`
 
 /**
  *  COMPONENT HELPERS
@@ -164,7 +179,7 @@ export function AddSource({poll, setLoading, onPollChange}: addSourceProps) {
     setNewSource(undefined)
   }
   return (
-    <Row style={{marginTop: '20px'}}>
+    <Row>
       <Col xs={12}>
         <FormControl
           name="addNewSource"
