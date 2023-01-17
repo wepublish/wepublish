@@ -465,6 +465,8 @@ model MemberPlan {
 
   Subscription Subscription[]
 
+  SubscriptionMailOverrides  SubscriptionMailOverrideOnMemberPlan[]
+
   @@index([name])
   @@map("member.plans")
 }
@@ -569,6 +571,7 @@ model PaymentMethod {
 
   Subscription Subscription[]
   Payment      Payment[]
+  SubscriptionMailOverrides  SubscriptionMailOverrideOnPaymentMethod[]
 
   @@map("payment.methods")
 }
@@ -983,30 +986,107 @@ model TaggedEvents {
   @@map("events.tagged-events")
 }
 
-model SubscriptionTimeline {
-	id                  String @id @default(cuid())
-	creation            SubscriptionInterval
-	renewal             SubscriptionInterval
-	ending              SubscriptionInterval
-	deactivation        SubscriptionInterval
-	reactivation        SubscriptionInterval
-	additionalIntervals SubscriptionInterval[]
+model UserCommunicationFlow {
+	id                    Int @id @default(autoincrement())
+	createdAt             DateTime @default(now())
+	modifiedAt            DateTime @updatedAt
+
+	accountCreation       MailTemplate? @relation(name: "AccountCreationToMailTemplate", fields: [accountCreationId], references: [id], onDelete: Restrict, onUpdate: Cascade) // user creates a new account
+	accountCreationId     Int?
+
+	passwordReset         MailTemplate? @relation(name: "PasswordResetToMailTemplate", fields: [passwordResetId], references: [id], onDelete: Restrict, onUpdate: Cascade) // inform user, password was reset
+	passwordResetId       Int?
+
+	loginLink             MailTemplate @relation(name: "LoginLinkToMailTemplate", fields: [loginLinkId], references: [id], onDelete: Restrict, onUpdate: Cascade)  // user receives login link
+	loginLinkId           Int?
+
+	subscribe             SubscriptionMail? @relation(name: "SubscribeToSubscriptionMail", fields: [subscribeId], references: [id], onDelete: Restrict, onUpdate: Cascade) // initial subscription creation
+	subscribeId           Int?
+
+	invoiceCreation       SubscriptionInterval? @relation(name: "PasswordResetToSubscriptionInterval", fields: [invoiceCreationId], references: [id], onDelete: Restrict, onUpdate: Cascade) // creating new subscription period and invoice
+	invoiceCreationId     Int?
+
+	renewalSuccess        SubscriptionMail? @relation(name: "enewalSuccessToSubscriptionMail", fields: [renewalSuccessId], references: [id], onDelete: Restrict, onUpdate: Cascade) // in case paid until is extended
+	renewalSuccessId      Int?
+
+	renewalFailed         SubscriptionMail? @relation(name: "RenewalFailedToSubscriptionMail",fields: [renewalFailedId], references: [id], onDelete: Restrict, onUpdate: Cascade) // in case off session payment failed
+	renewalFailedId       Int?
+
+	deactivationUnpaid    SubscriptionInterval? @relation(name: "DeactivationUnpaidToSubscriptionInterval", fields: [deactivationUnpaidId], references: [id], onDelete: Restrict, onUpdate: Cascade) // subscription is deactivated because user did not pay
+	deactivationUnpaidId  Int?
+
+	deactivationByUser    SubscriptionMail? @relation(name: "DeactivationByUserToSubscriptionMail", fields: [deactivationByUserId], references: [id], onDelete: Restrict, onUpdate: Cascade) // subscription is deactivated because user or admin did so
+	deactivationByUserId  Int?
+
+	reactivation          SubscriptionMail? @relation(name: "ReactivationToSubscriptionMail", fields: [reactivationId], references: [id], onDelete: Restrict, onUpdate: Cascade)// subscription is re-activated by user
+	reactivationId        Int?
+
+	additionalIntervals   SubscriptionIntervalOnUserCommunicationFlow[] // send some more e-mails such as reminders
 }
 
+
 model SubscriptionInterval {
-	id                    String @id @default(cuid())
-	daysAwayFromEnding    Int @db.SmallInt
-	defaultMail           SubscriptionMail
-	overrideMails         SubscriptionMail[]
+	id                      Int @id @default(autoincrement())
+	createdAt               DateTime @default(now())
+    modifiedAt              DateTime @updatedAt
+	daysAwayFromEnding      Int @db.SmallInt
+	defaultMail             MailTemplate
+	overrideMails           SubscriptionMailOverride[]
+	userCommunicationFlow   SubscriptionIntervalOnUserCommunicationFlow[]
+}
+
+model SubscriptionIntervalOnUserCommunicationFlow {
+    assignedAt                  DateTime @default(now())
+	userCommunicationFlow       UserCommunicationFlow @relation(fields: [userCommunicationFlowId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+	userCommunicationFlowId     Int
+	subscriptionInterval        SubscriptionInterval @relation(fields: [subscriptionIntervalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+	subscriptionIntervalId      Int
 }
 
 model SubscriptionMail {
-	id                String @id @default(cuid())
-	mailTemplate      Mailtemplate
-	memberPlans       MemberPlan[]
-	paymentProviders  PaymentProvider[]
-  periodicities     PaymentPeriodicity[]
-  autoRenewal       AutoRenewal[]
+    id                    Int @id @default(autoincrement())
+    createdAt             DateTime @default(now())
+    modifiedAt            DateTime @updatedAt
+    defaultMail           MailTemplate
+    overrideMails         SubscriptionMailOnSubscriptionMailOverride[]
+}
+
+model SubscriptionMailOnSubscriptionMailOverride {
+    assignedAt                     DateTime @default(now())
+    subscriptionMail               SubscriptionMail @relation(fields: [subscriptionMailId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    subscriptionMailId             Int
+	subscriptionMailOverride       SubscriptionMailOverride @relation(fields: [subscriptionMailOverrideId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+	subscriptionMailOverrideId     Int
+}
+
+
+model SubscriptionMailOverride {
+	id                Int @id @default(autoincrement())
+	createdAt         DateTime @default(now())
+    modifiedAt        DateTime @updatedAt
+	mailTemplate      MailTemplate @relation(name: "MailTemplateToSubcriptionMailOverride", fields: [mailTemplateId], references: [id])
+	mailTemplateId    Int
+	memberPlans       SubscriptionMailOverrideOnMemberPlan[]
+	paymentMethods    SubscriptionMailOverrideOnPaymentMethod[]
+    periodicities     PaymentPeriodicity[]
+    autoRenewal       AutoRenewal[]
+    subscriptionMails SubscriptionMailOnSubscriptionMailOverride[]
+}
+
+model SubscriptionMailOverrideOnMemberPlan {
+    assignedAt                     DateTime @default(now())
+	subscriptionMailOverride       SubscriptionMailOverride @relation(fields: [subscriptionMailOverrideId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+	subscriptionMailOverrideId     Int
+	memberPlan                     MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+	memberPlanId                   String
+}
+
+model SubscriptionMailOverrideOnPaymentMethod {
+    assignedAt                     DateTime @default(now())
+	subscriptionMailOverride       SubscriptionMailOverride @relation(fields: [subscriptionMailOverrideId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+	subscriptionMailOverrideId     Int
+	paymentMethod                  PaymentMethod @relation(fields: [paymentMethodId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+	paymentMethodId                String
 }
 
 enum AutoRenewal {
@@ -1015,26 +1095,10 @@ enum AutoRenewal {
 }
 
 model MailTemplate {
-	id                String @id @default(cuid())
-	mailProvider      MailProvider
-	mailTemplates     MailTemplate[]
-}
-
-model MailTemplate {
-	id                    String @id @default(cuid())
-	name                  String
-	description           String?
-	externalMailTemplate  String
-}
-
-model MailProvider {
-	id      String @id @default(cuid())
-	name    String
-	type    MailProviderType
-	apiKey  String
-}
-
-enum MailProviderType {
-	Mailchimp
-	Mailgun
+	id                          Int @id @default(autoincrement())
+	createdAt                   DateTime @default(now())
+  modifiedAt                  DateTime @updatedAt
+	name                        String
+	description                 String?
+	externalMailTemplateId      String
 }
