@@ -27,7 +27,6 @@ export interface Event {
 
 const ActivityFeedSummaryText = styled.p`
   font-style: italic;
-  margin-top: 1rem;
 `
 
 const ActivityFeedIcon = styled(Avatar)`
@@ -49,10 +48,10 @@ export function ActivityFeed() {
   }, [data?.actions])
 
   return (
-    <Table autoHeight rowHeight={60} data={actions} loading={isLoading}>
-      <Column flexGrow={3}>
+    <Table wordWrap autoHeight rowHeight={60} data={actions} loading={isLoading}>
+      <Column flexGrow={2}>
         <HeaderCell dataKey="event">{t('dashboard.event')}</HeaderCell>
-        <Cell dataKey="event" width={300}>
+        <Cell dataKey="event">
           {(rowData: RowDataType<Action>) => {
             let icon = <></>
             let path = '/'

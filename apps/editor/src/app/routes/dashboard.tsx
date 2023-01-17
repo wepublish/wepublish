@@ -29,13 +29,13 @@ export function Dashboard() {
       <h2>{t('dashboard.dashboard')}</h2>
       <h4>{t('dashboard.greeting', {name})}</h4>
       <FlexboxGridStyled>
-        <FlexboxGrid.Item colspan={12}>
+        <FlexboxGrid.Item colspan={14}>
           <GridItemCenterText>{t('dashboard.activity')}</GridItemCenterText>
           <ActivityFeed />
         </FlexboxGrid.Item>
         <PermissionControl qualifyingPermissions={['CAN_GET_SUBSCRIPTIONS']}>
-          <FlexboxGrid.Item colspan={12}>
-            <GridItemCenterText>{t('dashboard.newSubscribers')}</GridItemCenterText>
+          <FlexboxGrid.Item colspan={10}>
+            <GridItemCenterText>{t('dashboard.yearlySubscribers')}</GridItemCenterText>
             <SubscriberChart />
           </FlexboxGrid.Item>
         </PermissionControl>

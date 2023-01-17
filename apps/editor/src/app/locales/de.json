@@ -689,6 +689,7 @@
       "waiting": "Umfrage wartet auf Öffnung am {{date, ccc PP p}}"
     },
     "navbar": {
+      "dashboard": "Dashboard",
       "events": "Events",
       "eventTags": "Etiketten",
       "articles": "Artikel",
@@ -1317,6 +1318,23 @@
         "body": "Willst Du das Event \"{{name}}\" wirklich löschen?",
         "delete": "Ja, lösche das Event"
       }
+    },
+    "dashboard": {
+      "dashboard": "Dashboard",
+      "greeting": "Hallo, {{name}}!",
+      "yearlySubscribers": "Neue Abonnent:innen im letzten Jahr",
+      "activity": "Letzte Aktivitäten",
+      "event": "Event",
+      "summary": "Zusammenfassung",
+      "noData": "Keine aktuellen Abo-Daten",
+      "newArticle": "Neuer Artikel erstellt",
+      "newPage": "Neue Seite erstellt",
+      "newComment": "Neuer Kommentar",
+      "newPoll": "Neue Umfrage",
+      "newSubscription": "Neues Abo",
+      "newAuthor": "Neuer Author erstellt",
+      "newUser": "Neuer User erstellt",
+      "createdBy": " von {{creator}}"
     }
   }
 }

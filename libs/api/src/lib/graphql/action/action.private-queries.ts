@@ -104,7 +104,7 @@ export const getActions = async (
           date: value.createdAt,
           actionType: ActionType.User,
           id: value.id,
-          summary: value.name
+          summary: `${value.firstName ? value.firstName + ' ' : ''}${value.name}`
         }
       })
     : []

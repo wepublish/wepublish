@@ -1036,6 +1036,7 @@
       "waiting": "Sondage en attente d'ouverture le {{date, ccc PP p}}"
     },
     "navbar": {
+      "dashboard": "Dashboard",
       "events": "Events",
       "eventTags": "Tags",
       "languageSwitch": {
@@ -1312,6 +1313,23 @@
         "body": "Do you really want to delete the event \"{{name}}\"?",
         "delete": "Yes, delete the event"
       }
+    },
+    "dashboard": {
+      "dashboard": "Dashboard",
+      "greeting": "Salut, {{name}}!",
+      "yearlySubscribers": "Nouveaux abonné:es au cours de l'année écoulée",
+      "activity": "Dernière activité",
+      "event": "Événement",
+      "summary": "Résumé",
+      "noData": "Pas de données actuelles sur les abonnés",
+      "newArticle": "Nouvel article créé",
+      "newPage": "Nouvelle page créée",
+      "newComment": "Nouveau commentaire ajouté",
+      "newPoll": "Nouveau sondage créé",
+      "newSubscription": "Nouvel abonnement",
+      "newAuthor": "Nouvel auteur ajouté",
+      "newUser": "Nouvel utilisateur ajouté",
+      "createdBy": " de {{creator}}"
     }
   }
 }
