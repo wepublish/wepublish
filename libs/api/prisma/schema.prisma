@@ -1001,18 +1001,18 @@ model SubscriptionInterval {
 }
 
 model SubscriptionMail {
-	id            String @id @default(cuid())
-	mailTemplate  Mailtemplate
-	memberPlan    MemberPlan
+	id                String @id @default(cuid())
+	mailTemplate      Mailtemplate
+	memberPlan        MemberPlan
+	paymentProviders  PaymentProvider[]
+  periodicities     PaymentPeriodicity[]
+  autoRenewal       boolean?
 }
 
 model MailTemplate {
 	id                String @id @default(cuid())
 	mailProvider      MailProvider
 	mailTemplates     MailTemplate[]
-	paymentProviders  PaymentProvider[]
-	periodicities     PaymentPeriodicity[]
-	autoRenewal       boolean?
 }
 
 model MailTemplate {
