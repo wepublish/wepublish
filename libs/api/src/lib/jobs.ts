@@ -54,7 +54,7 @@ async function sendTestMail(context: Context, data: any): Promise<void> {
 
   await context.mailContext.sendMail({
     type: SendMailType.TestMail,
-    recipient: recipient,
+    recipient,
     data: {
       message
     }

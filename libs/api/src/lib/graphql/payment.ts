@@ -41,7 +41,7 @@ export const GraphQLPublicPayment = new GraphQLObjectType<Payment, Context>({
 
     paymentMethod: {
       type: GraphQLNonNull(GraphQLPublicPaymentMethod),
-      resolve: createProxyingResolver(({paymentMethodID}, {}, {loaders}) => {
+      resolve: createProxyingResolver(({paymentMethodID}, _, {loaders}) => {
         return loaders.paymentMethodsByID.load(paymentMethodID)
       })
     }
@@ -61,14 +61,14 @@ export const GraphQLPayment = new GraphQLObjectType<Payment, Context>({
     state: {type: GraphQLNonNull(GraphQLPaymentState)},
     invoice: {
       type: GraphQLNonNull(GraphQLInvoice),
-      resolve: createProxyingResolver(({invoiceID}, {}, {loaders}) => {
+      resolve: createProxyingResolver(({invoiceID}, _, {loaders}) => {
         return loaders.invoicesByID.load(invoiceID)
       })
     },
     intentData: {type: GraphQLString},
     paymentMethod: {
       type: GraphQLNonNull(GraphQLPaymentMethod),
-      resolve: createProxyingResolver(({paymentMethodID}, {}, {loaders}) => {
+      resolve: createProxyingResolver(({paymentMethodID}, _, {loaders}) => {
         return loaders.paymentMethodsByID.load(paymentMethodID)
       })
     },

@@ -24,7 +24,7 @@ export async function createOutgoingPeerRequestToken(
       query: print(CreateIncomingPeerRequestMutation),
       variables: {
         input: {
-          hostURL: hostURL
+          hostURL
         }
       }
     })

@@ -671,7 +671,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     settings: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSetting))),
-      resolve: (root, {}, {authenticate, prisma: {setting}}) => getSettings(authenticate, setting)
+      resolve: (root, _, {authenticate, prisma: {setting}}) => getSettings(authenticate, setting)
     },
 
     // Rating System

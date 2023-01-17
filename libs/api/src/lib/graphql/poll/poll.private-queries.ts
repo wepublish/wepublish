@@ -81,14 +81,14 @@ export const getPolls = async (
 
   const [totalCount, polls] = await Promise.all([
     poll.count({
-      where: where,
-      orderBy: orderBy
+      where,
+      orderBy
     }),
     poll.findMany({
-      where: where,
-      skip: skip,
+      where,
+      skip,
       take: Math.min(take, MaxResultsPerPage) + 1,
-      orderBy: orderBy,
+      orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {
         answers: true

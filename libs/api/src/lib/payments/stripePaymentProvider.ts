@@ -154,7 +154,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
         // description: props.invoice.description, TODO: convert to text
         ...(saveCustomer ? {setup_future_usage: 'off_session'} : {}),
         metadata: {
-          paymentID: paymentID,
+          paymentID,
           mail: invoice.mail
         }
       })

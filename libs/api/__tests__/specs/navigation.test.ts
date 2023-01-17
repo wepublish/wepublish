@@ -85,7 +85,7 @@ describe('Navigations', () => {
       const res = await testServerPrivate.executeOperation({
         query: CreateNavigation,
         variables: {
-          input: input
+          input
         }
       })
 
@@ -96,18 +96,18 @@ describe('Navigations', () => {
       const key = generateRandomString()
       const input: NavigationInput = {
         name: 'Create Navigation Name',
-        key: key,
+        key,
         links: [
           {external: {label: 'External Label', url: 'linkurl.ch/'}},
-          {article: {label: 'Article Label', articleID: articleID}},
-          {page: {label: 'Page Label', pageID: pageID}}
+          {article: {label: 'Article Label', articleID}},
+          {page: {label: 'Page Label', pageID}}
         ]
       }
 
       const res = await testServerPrivate.executeOperation({
         query: CreateNavigation,
         variables: {
-          input: input
+          input
         }
       })
 

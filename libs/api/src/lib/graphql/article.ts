@@ -153,7 +153,7 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
 
     image: {
       type: GraphQLImage,
-      resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
+      resolve: createProxyingResolver(({imageID}, args, {loaders}) => {
         return imageID ? loaders.images.load(imageID) : null
       })
     },
@@ -177,7 +177,7 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     },
     socialMediaImage: {
       type: GraphQLImage,
-      resolve: createProxyingResolver(({socialMediaImageID}, args, {loaders}, info) => {
+      resolve: createProxyingResolver(({socialMediaImageID}, args, {loaders}) => {
         return socialMediaImageID ? loaders.images.load(socialMediaImageID) : null
       })
     },
@@ -201,12 +201,10 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
 
     latest: {
       type: GraphQLNonNull(GraphQLArticleRevision),
-      resolve: createProxyingResolver(({draft, pending, published}, {}, {}, info) => {
+      resolve: createProxyingResolver(({draft, pending, published}) => {
         return draft ?? pending ?? published
       })
     }
-    // TODO: Implement article history
-    // history: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleRevision)))}
   }
 })
 
@@ -224,11 +222,11 @@ export const GraphQLPeerArticle = new GraphQLObjectType<PeerArticle, Context>({
   fields: {
     peer: {
       type: GraphQLNonNull(GraphQLPeer),
-      resolve: createProxyingResolver(({peerID}, {}, {loaders}) => loaders.peer.load(peerID))
+      resolve: createProxyingResolver(({peerID}, _, {loaders}) => loaders.peer.load(peerID))
     },
     peeredArticleURL: {
       type: GraphQLNonNull(GraphQLString),
-      resolve: createProxyingResolver(async ({peerID, article}, {}, {loaders, urlAdapter}) => {
+      resolve: createProxyingResolver(async ({peerID, article}, _, {loaders, urlAdapter}) => {
         const peer = await loaders.peer.load(peerID)
         if (!peer || !article) return ''
         return urlAdapter.getPeeredArticleURL(peer, article)
@@ -260,7 +258,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
 
       url: {
         type: GraphQLNonNull(GraphQLString),
-        resolve: createProxyingResolver((article, {}, {urlAdapter}) => {
+        resolve: createProxyingResolver((article, _, {urlAdapter}) => {
           return urlAdapter.getPublicArticleURL(article)
         })
       },
@@ -284,7 +282,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
 
       image: {
         type: GraphQLImage,
-        resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
+        resolve: createProxyingResolver(({imageID}, args, {loaders}) => {
           return imageID ? loaders.images.load(imageID) : null
         })
       },
@@ -316,7 +314,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
       },
       socialMediaImage: {
         type: GraphQLImage,
-        resolve: createProxyingResolver(({socialMediaImageID}, args, {loaders}, info) => {
+        resolve: createProxyingResolver(({socialMediaImageID}, args, {loaders}) => {
           return socialMediaImageID ? loaders.images.load(socialMediaImageID) : null
         })
       },
