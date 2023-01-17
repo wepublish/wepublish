@@ -1,12 +1,12 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
+import {Poll, usePollsLazyQuery} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAddCircle} from 'react-icons/md'
 import {Button, Drawer, IconButton, Message, Pagination, Table, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {Poll, usePollsLazyQuery} from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {PollStateIndication} from '../atoms/poll/pollStateIndication'
 import {PollBlockValue} from '../blocks/types'

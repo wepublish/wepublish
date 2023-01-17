@@ -1,5 +1,6 @@
 import {ApolloError} from '@apollo/client'
 import EditIcon from '@rsuite/icons/legacy/Edit'
+import {EventRefFragment, TagType, useEventListLazyQuery} from '@wepublish/editor/api'
 import React, {useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Link} from 'react-router-dom'
@@ -16,8 +17,6 @@ import {
   Toggle
 } from 'rsuite'
 
-import {EventRefFragment, TagType} from '../api'
-import {useEventListLazyQuery} from '../api/index'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {PermissionControl} from '../atoms/permissionControl'
 import {SelectTags} from '../atoms/tag/selectTags'

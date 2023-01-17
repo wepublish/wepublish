@@ -1,17 +1,17 @@
 import styled from '@emotion/styled'
-import React, {FormEvent, useContext, useEffect, useMemo, useRef, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {IoIosRocket, IoLogoFacebook, IoLogoGoogle, IoLogoTwitter} from 'react-icons/io'
-import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
-import {Button, Divider, Form as RForm, IconButton as RIconButton, Message, toaster} from 'rsuite'
-
 import {
   FullUserRoleFragment,
   useCreateSessionMutation,
   useCreateSessionWithJwtMutation,
   useCreateSessionWithOAuth2CodeMutation,
   useGetAuthProvidersQuery
-} from './api'
+} from '@wepublish/editor/api'
+import React, {FormEvent, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {IoIosRocket, IoLogoFacebook, IoLogoGoogle, IoLogoTwitter} from 'react-icons/io'
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
+import {Button, Divider, Form as RForm, IconButton as RIconButton, Message, toaster} from 'rsuite'
+
 import {LoginTemplate} from './atoms/loginTemplate'
 import {AuthDispatchActionType, AuthDispatchContext} from './authContext'
 import {Background} from './ui/loginBackground'

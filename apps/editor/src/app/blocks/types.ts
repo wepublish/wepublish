@@ -1,6 +1,3 @@
-import nanoid from 'nanoid'
-import {Node} from 'slate'
-
 import {
   ArticleRefFragment,
   BlockInput,
@@ -12,7 +9,10 @@ import {
   PageRefFragment,
   PeerRefFragment,
   TeaserStyle
-} from '../api'
+} from '@wepublish/editor/api'
+import nanoid from 'nanoid'
+import {Node} from 'slate'
+
 import {BlockListValue} from '../atoms/blockList'
 import {ListValue} from '../atoms/listInput'
 import {TeaserMetadataProperty} from '../panel/teaserEditPanel'

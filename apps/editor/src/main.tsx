@@ -12,7 +12,6 @@ import {TwitterProvider} from './app/blocks/embeds/twitter'
 import {initI18N} from './app/i18n'
 import {getSettings, LocalStorageKey} from './app/utility'
 import {ElementID} from './shared/elementID'
-import {ClientSettings} from './shared/types'
 import {ThemeProvider, CssBaseline} from '@mui/material'
 import {theme} from '../../../libs/ui/src/lib/theme'
 

@@ -2,6 +2,7 @@ import nanoid from 'nanoid'
 import {
   MdCode,
   MdCoffee,
+  MdComment,
   MdEvent,
   MdFilter1,
   MdFilter6,
@@ -13,8 +14,7 @@ import {
   MdQueryStats,
   MdTitle,
   MdViewList,
-  MdViewQuilt,
-  MdComment
+  MdViewQuilt
 } from 'react-icons/md'
 
 import {BlockMapForValue} from '../atoms/blockList'

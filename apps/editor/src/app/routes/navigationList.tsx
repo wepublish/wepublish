@@ -1,4 +1,9 @@
 import styled from '@emotion/styled'
+import {
+  FullNavigationFragment,
+  useDeleteNavigationMutation,
+  useNavigationListQuery
+} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
@@ -15,7 +20,6 @@ import {
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {FullNavigationFragment, useDeleteNavigationMutation, useNavigationListQuery} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'

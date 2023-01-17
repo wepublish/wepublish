@@ -1,4 +1,10 @@
 import styled from '@emotion/styled'
+import {
+  FullUserFragment,
+  useDeleteUserMutation,
+  UserSort,
+  useUserListQuery
+} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdPassword, MdSearch} from 'react-icons/md'
@@ -15,7 +21,6 @@ import {
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'

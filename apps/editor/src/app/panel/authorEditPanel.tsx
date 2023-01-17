@@ -1,4 +1,14 @@
 import styled from '@emotion/styled'
+import {
+  AuthorLink,
+  AuthorListDocument,
+  FullAuthorFragment,
+  ImageRefFragment,
+  Maybe,
+  useAuthorQuery,
+  useCreateAuthorMutation,
+  useUpdateAuthorMutation
+} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdLink} from 'react-icons/md'
@@ -15,16 +25,6 @@ import {
   toaster
 } from 'rsuite'
 
-import {
-  AuthorLink,
-  AuthorListDocument,
-  FullAuthorFragment,
-  ImageRefFragment,
-  Maybe,
-  useAuthorQuery,
-  useCreateAuthorMutation,
-  useUpdateAuthorMutation
-} from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
 import {

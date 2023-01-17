@@ -1,4 +1,12 @@
 import styled from '@emotion/styled'
+import {
+  PeerListDocument,
+  PeerListQuery,
+  useDeletePeerMutation,
+  usePeerListQuery,
+  usePeerProfileQuery,
+  useUpdatePeerMutation
+} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSettings, MdVisibility, MdVisibilityOff} from 'react-icons/md'
@@ -17,14 +25,6 @@ import {
   toaster
 } from 'rsuite'
 
-import {
-  PeerListDocument,
-  PeerListQuery,
-  useDeletePeerMutation,
-  usePeerListQuery,
-  usePeerProfileQuery,
-  useUpdatePeerMutation
-} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {NavigationBar} from '../atoms/navigationBar'

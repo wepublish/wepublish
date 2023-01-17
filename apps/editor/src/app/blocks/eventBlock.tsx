@@ -1,9 +1,9 @@
 import PencilIcon from '@rsuite/icons/legacy/Pencil'
+import {EventRefFragment} from '@wepublish/editor/api'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Drawer, IconButton, Panel} from 'rsuite'
 
-import {EventRefFragment} from '../api'
 import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {SelectEventPanel} from '../panel/selectEventsPanel'

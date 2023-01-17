@@ -1,8 +1,7 @@
+import {SubscriptionFilter, useSubscriptionsAsCsvLazyQuery} from '@wepublish/editor/api'
 import {useTranslation} from 'react-i18next'
 import {MdFileDownload} from 'react-icons/md'
 import {IconButton} from 'rsuite'
-
-import {SubscriptionFilter, useSubscriptionsAsCsvLazyQuery} from '../api'
 
 export interface ExportSubscriptionAsCsvProps {
   filter?: SubscriptionFilter

@@ -1,4 +1,16 @@
 import styled from '@emotion/styled'
+import {
+  ArticleRefFragment,
+  FullNavigationFragment,
+  NavigationLinkInput,
+  NavigationListDocument,
+  PageRefFragment,
+  useArticleListQuery,
+  useCreateNavigationMutation,
+  useNavigationQuery,
+  usePageListQuery,
+  useUpdateNavigationMutation
+} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -12,18 +24,6 @@ import {
   toaster
 } from 'rsuite'
 
-import {
-  ArticleRefFragment,
-  FullNavigationFragment,
-  NavigationLinkInput,
-  NavigationListDocument,
-  PageRefFragment,
-  useArticleListQuery,
-  useCreateNavigationMutation,
-  useNavigationQuery,
-  usePageListQuery,
-  useUpdateNavigationMutation
-} from '../api'
 import {ListInput, ListValue} from '../atoms/listInput'
 import {
   createCheckedPermissionComponent,

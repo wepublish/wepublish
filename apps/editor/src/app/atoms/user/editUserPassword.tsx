@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
+import {FullUserFragment, useSendWebsiteLoginMutation} from '@wepublish/editor/api'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdReplay, MdSend} from 'react-icons/md'
 import {Button as RButton, Form, Message, Modal, toaster} from 'rsuite'
 
-import {FullUserFragment, useSendWebsiteLoginMutation} from '../../api'
 import {toggleRequiredLabel} from '../../toggleRequiredLabel'
 import {ResetUserPasswordForm} from './resetUserPasswordForm'
 

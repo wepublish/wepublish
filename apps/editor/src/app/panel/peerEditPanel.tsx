@@ -1,8 +1,4 @@
 import styled from '@emotion/styled'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form as RForm, Message, Panel, Schema, toaster} from 'rsuite'
-
 import {
   FullPeerProfileFragment,
   PeerListDocument,
@@ -10,7 +6,11 @@ import {
   usePeerQuery,
   useRemotePeerProfileQuery,
   useUpdatePeerMutation
-} from '../api'
+} from '@wepublish/editor/api'
+import {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, Drawer, Form as RForm, Message, Panel, Schema, toaster} from 'rsuite'
+
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {

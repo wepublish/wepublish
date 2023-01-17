@@ -1,9 +1,4 @@
 import styled from '@emotion/styled'
-import {useEffect, useMemo, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdReplay} from 'react-icons/md'
-import {Button, Dropdown, Message, Modal, Panel, Timeline, toaster} from 'rsuite'
-
 import {
   CommentRejectionReason,
   CommentRevision,
@@ -12,7 +7,12 @@ import {
   useApproveCommentMutation,
   useRejectCommentMutation,
   useRequestChangesOnCommentMutation
-} from '../../api'
+} from '@wepublish/editor/api'
+import {useEffect, useMemo, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {MdReplay} from 'react-icons/md'
+import {Button, Dropdown, Message, Modal, Panel, Timeline, toaster} from 'rsuite'
+
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 import {DescriptionList, DescriptionListItem} from '../descriptionList'
 

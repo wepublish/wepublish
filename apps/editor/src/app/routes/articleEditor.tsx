@@ -1,4 +1,13 @@
 import styled from '@emotion/styled'
+import {
+  ArticleInput,
+  AuthorRefFragment,
+  useArticlePreviewLinkLazyQuery,
+  useArticleQuery,
+  useCreateArticleMutation,
+  usePublishArticleMutation,
+  useUpdateArticleMutation
+} from '@wepublish/editor/api'
 import React, {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -21,15 +30,6 @@ import {
 } from 'rsuite'
 
 import {ClientSettings} from '../../shared/types'
-import {
-  ArticleInput,
-  AuthorRefFragment,
-  useArticlePreviewLinkLazyQuery,
-  useArticleQuery,
-  useCreateArticleMutation,
-  usePublishArticleMutation,
-  useUpdateArticleMutation
-} from '../api'
 import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
 import {NavigationBar} from '../atoms/navigationBar'

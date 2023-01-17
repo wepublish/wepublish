@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
+import {ImageRefFragment} from '@wepublish/editor/api'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdBuild, MdEdit, MdPhoto} from 'react-icons/md'
 import {Drawer, Dropdown, IconButton, Panel as RPanel} from 'rsuite'
 
-import {ImageRefFragment} from '../api'
 import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {TypographicTextArea} from '../atoms/typographicTextArea'

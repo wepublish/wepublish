@@ -1,5 +1,10 @@
 import {Attachment} from '@rsuite/icons'
 import TagIcon from '@rsuite/icons/Tag'
+import {
+  CommentRevision,
+  CommentRevisionUpdateInput,
+  FullCommentFragment
+} from '@wepublish/editor/api'
 import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit, MdExpandLess, MdExpandMore} from 'react-icons/md'
@@ -7,7 +12,6 @@ import {Link} from 'react-router-dom'
 import {Col, FlexboxGrid, Form, Grid, IconButton, Panel, Row} from 'rsuite'
 import FlexboxGridItem from 'rsuite/esm/FlexboxGrid/FlexboxGridItem'
 
-import {CommentRevision, CommentRevisionUpdateInput, FullCommentFragment} from '../../api'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../../blocks/types'
 import {humanReadableCommentState} from './commentStateDropdown'

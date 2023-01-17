@@ -88,7 +88,7 @@
     "@types/mandrill-api": "^1.0.30",
     "@types/ms": "^0.7.31",
     "@types/nanoid": "^2.0.0",
-    "@types/node": "16.11.7",
+    "@types/node": "18.11.9",
     "@types/node-fetch": "^2.6.2",
     "@types/pino": "^6.3.5",
     "@types/pino-http": "^5.0.6",

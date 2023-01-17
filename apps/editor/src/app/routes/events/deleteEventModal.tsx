@@ -1,9 +1,8 @@
 import {ApolloError, ApolloQueryResult} from '@apollo/client'
+import {Event, EventListQuery, useDeleteEventMutation} from '@wepublish/editor/api'
 import React from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
 import {Button, Message, Modal, toaster} from 'rsuite'
-
-import {Event, EventListQuery, useDeleteEventMutation} from '../../api'
 
 type DeleteEventProps = {
   event: Event | undefined
@@ -49,28 +48,26 @@ export function DeleteEventModal({event, onClose, onDelete}: DeleteEventProps) {
   }
 
   return (
-    <>
-      <Modal open={!!event} onClose={onClose}>
-        <Modal.Header>
-          <Modal.Title>{t('event.delete.title')}</Modal.Title>
-        </Modal.Header>
+    <Modal open={!!event} onClose={onClose}>
+      <Modal.Header>
+        <Modal.Title>{t('event.delete.title')}</Modal.Title>
+      </Modal.Header>
 
-        <Modal.Body>
-          {t('event.delete.body', {
-            name: event?.name
-          })}
-        </Modal.Body>
+      <Modal.Body>
+        {t('event.delete.body', {
+          name: event?.name
+        })}
+      </Modal.Body>
 
-        <Modal.Footer>
-          <Button onClick={deleteEvent} appearance="primary" color="red">
-            {t('event.delete.delete')}
-          </Button>
+      <Modal.Footer>
+        <Button onClick={deleteEvent} appearance="primary" color="red">
+          {t('event.delete.delete')}
+        </Button>
 
-          <Button onClick={onClose} appearance="subtle">
-            {t('cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+        <Button onClick={onClose} appearance="subtle">
+          {t('cancel')}
+        </Button>
+      </Modal.Footer>
+    </Modal>
   )
 }

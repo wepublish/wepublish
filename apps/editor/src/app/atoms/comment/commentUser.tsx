@@ -1,8 +1,8 @@
+import {FullCommentFragment, FullUserFragment, ImageRefFragment} from '@wepublish/editor/api'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Col, Drawer, Form, Row} from 'rsuite'
 
-import {FullCommentFragment, FullUserFragment, ImageRefFragment} from '../../api'
 import {ImageSelectPanel} from '../../panel/imageSelectPanel'
 import {ChooseEditImage} from '../chooseEditImage'
 import {UserSearch} from '../searchAndFilter/userSearch'

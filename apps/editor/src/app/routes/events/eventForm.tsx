@@ -1,14 +1,14 @@
-import React, {useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Drawer, Form, Panel, SelectPicker} from 'rsuite'
-
 import {
   EventStatus,
   ImageRefFragment,
   MutationCreateEventArgs,
   MutationUpdateEventArgs,
   TagType
-} from '../../api'
+} from '@wepublish/editor/api'
+import React, {useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Drawer, Form, Panel, SelectPicker} from 'rsuite'
+
 import {ChooseEditImage} from '../../atoms/chooseEditImage'
 import {DateTimePicker} from '../../atoms/dateTimePicker'
 import {SelectTags} from '../../atoms/tag/selectTags'

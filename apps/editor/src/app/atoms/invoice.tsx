@@ -1,10 +1,14 @@
 import styled from '@emotion/styled'
+import {
+  FullUserFragment,
+  InvoiceFragment,
+  InvoiceItem,
+  useUpdateInvoiceMutation
+} from '@wepublish/editor/api'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdDone, MdMail} from 'react-icons/md'
 import {Button as RButton, FlexboxGrid, Message, Modal, Panel, toaster} from 'rsuite'
-
-import {FullUserFragment, InvoiceFragment, InvoiceItem, useUpdateInvoiceMutation} from '../api'
 
 const Button = styled(RButton)`
   margin-top: 20px;

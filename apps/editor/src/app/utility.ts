@@ -1,11 +1,11 @@
 import {ApolloClient, HttpLink, InMemoryCache} from '@apollo/client'
+import {PaymentPeriodicity, SortOrder} from '@wepublish/editor/api'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import nanoid from 'nanoid'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 
 import {ElementID} from '../shared/elementID'
 import {ClientSettings} from '../shared/types'
-import {PaymentPeriodicity, SortOrder} from './api'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
