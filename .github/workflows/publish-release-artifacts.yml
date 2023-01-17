@@ -21,7 +21,6 @@ jobs:
     needs: release_version
     uses: ./.github/workflows/publish-docker-image.yml
     with:
-      target: production
       tags: |
         ghcr.io/wepublish/wepublish:${{ needs.release_version.outputs.version }}
     secrets: inherit
@@ -32,7 +31,6 @@ jobs:
     needs: release_version
     uses: ./.github/workflows/publish-docker-image.yml
     with:
-      target: production
       tags: |
         ghcr.io/wepublish/wepublish:${{ needs.release_version.outputs.version }}
         ghcr.io/wepublish/wepublish:latest

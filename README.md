@@ -93,11 +93,8 @@ TBD
 
 ## Packages
 
-- [@wepublish/api](./packages/api)
-  - Media Adapter:
-    - [@wepublish/api-media-karma](./packages/api-media-karma)
-- [@wepublish/editor](./packages/editor)
-- [@wepublish/oauth2](./packages/oauth2)
+- [@wepublish/api](./libs/api)
+- [@wepublish/editor](./apps/editor)
 
 <!-- GETTING STARTED -->
 
@@ -107,8 +104,7 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-- [Node v12.x.x][node-download-url]
-- [Yarn v1.17.x][yarn-download-url]
+- [Node v16.x.x][node-download-url]
 - [Docker v19.x.x][docker-download-url]
 
 ### Installation
@@ -123,31 +119,31 @@ cd wepublish
 2. Install NPM packages
 
 ```sh
-yarn
+npm i
 ```
 
-3. Setup and build project. The setup command will create the necessary `.env` files.
+3. Build project.
 
 ```sh
-yarn setup && yarn build
+npm run build
 ```
 
 4. Run the project (starts a postgresql with Docker)
 
 ```sh
-yarn dev
+npm run dev
 ```
 
 If you rather wish to run docker-compose separately you can just watch the packages via:
 
 ```sh
-yarn watch
+npm run watch
 ```
 
 Or if you want to watch only certain packages:
 
 ```
-yarn run-p watch:api watch:api-example watch:editor
+npx run-p watch:api watch:api-example watch:editor
 ```
 
 <!-- USAGE EXAMPLES -->
@@ -228,7 +224,6 @@ Website: [https://www.wepublish.ch/](https://www.wepublish.ch/)
 [linkedin-url]: https://linkedin.com/company/we-publish
 [product-screenshot]: images/screenshot.png
 [node-download-url]: https://nodejs.org/en/download/current/
-[yarn-download-url]: https://yarnpkg.com/en/docs/install
 [docker-download-url]: https://www.docker.com/get-started
 [vscode-download-url]: https://code.visualstudio.com/Download
 [vscode-prettier-download-url]: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode

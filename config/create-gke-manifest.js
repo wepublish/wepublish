@@ -29,10 +29,8 @@ const domainSan = envSwitch(ENVIRONMENT_NAME, `www.${domain}`, `www.${devDomain}
 const domainMedia = envSwitch(ENVIRONMENT_NAME, `media.${domain}`, `media.${devDomain}`)
 const domainAPI = envSwitch(ENVIRONMENT_NAME, `api.${domain}`, `api.${devDomain}`)
 const domainEditor = envSwitch(ENVIRONMENT_NAME, `editor.${domain}`, `editor.${devDomain}`)
-const domainOauth = envSwitch(ENVIRONMENT_NAME, `login.${domain}`, `login.${devDomain}`)
 
 const databaseURL = `postgresql://postgres@${GITHUB_REF_SHORT}-postgres-${ENVIRONMENT_NAME}:5432/wepublish?schema=public`
-const oauthDatabaseURL = `mongodb://${GITHUB_REF_SHORT}-mongo-${ENVIRONMENT_NAME}:27017/wepublish-oauth2`
 
 const image = `${WEPUBLISH_IMAGE}`
 
@@ -54,8 +52,6 @@ async function main() {
   await applyMediaServer()
   await applyApiServer()
   await applyEditor()
-  await applyOAuth2()
-  await applyMongo()
   await applyPostgres()
 }
 
@@ -238,7 +234,7 @@ async function applyWebsite() {
             {
               name: appName,
               image,
-              command: ['npx', '@wepublish/website-example'],
+              command: ['node', 'dist/apps/website-example/main.js'],
               env: [
                 {
                   name: 'NODE_ENV',
@@ -589,7 +585,7 @@ async function applyApiServer() {
               name: appName,
               image,
               command: ['/bin/sh'],
-              args: ['-c', 'yarn migrate && npx @wepublish/api-example'],
+              args: ['-c', 'npm run migrate && node dist/apps/api-example/main.js'],
               volumeMounts: [
                 {
                   name: 'google-cloud-key',
@@ -638,11 +634,6 @@ async function applyApiServer() {
                   value: databaseURL
                 },
                 {
-                  name: 'MONGO_LOCALE',
-                  value: 'de'
-                },
-
-                {
                   name: 'HOST_URL',
                   value: `https://${domainAPI}`
                 },
@@ -656,68 +647,6 @@ async function applyApiServer() {
                     secretKeyRef: {
                       name: 'wepublish-secrets',
                       key: 'media_server_token'
-                    }
-                  }
-                },
-                {
-                  name: 'OAUTH_GOOGLE_DISCOVERY_URL',
-                  value: 'https://accounts.google.com'
-                },
-                {
-                  name: 'OAUTH_GOOGLE_CLIENT_ID',
-                  valueFrom: {
-                    secretKeyRef: {
-                      name: 'wepublish-secrets',
-                      key: 'oauth_google_client_id'
-                    }
-                  }
-                },
-                {
-                  name: 'OAUTH_GOOGLE_CLIENT_KEY',
-                  valueFrom: {
-                    secretKeyRef: {
-                      name: 'wepublish-secrets',
-                      key: 'oauth_google_client_key'
-                    }
-                  }
-                },
-                {
-                  name: 'OAUTH_GOOGLE_REDIRECT_URL',
-                  valueFrom: {
-                    secretKeyRef: {
-                      name: 'wepublish-secrets',
-                      key: 'oauth_google_redirect_url'
-                    }
-                  }
-                },
-                {
-                  name: 'OAUTH_WEPUBLISH_DISCOVERY_URL',
-                  value: `https://${domainOauth}/.well-known/openid-configuration`
-                },
-                {
-                  name: 'OAUTH_WEPUBLISH_CLIENT_ID',
-                  valueFrom: {
-                    secretKeyRef: {
-                      name: 'wepublish-secrets',
-                      key: 'oauth_wepublish_client_id'
-                    }
-                  }
-                },
-                {
-                  name: 'OAUTH_WEPUBLISH_CLIENT_KEY',
-                  valueFrom: {
-                    secretKeyRef: {
-                      name: 'wepublish-secrets',
-                      key: 'oauth_wepublish_client_key'
-                    }
-                  }
-                },
-                {
-                  name: 'OAUTH_WEPUBLISH_REDIRECT_URL',
-                  valueFrom: {
-                    secretKeyRef: {
-                      name: 'wepublish-secrets',
-                      key: 'oauth_wepublish_redirect_url'
                     }
                   }
                 },
@@ -996,7 +925,7 @@ async function applyEditor() {
             {
               name: appName,
               image,
-              command: ['npx', '@wepublish/editor'],
+              command: ['node', 'dist/apps/editor/main.js'],
               env: [
                 {
                   name: 'NODE_ENV',
@@ -1129,235 +1058,6 @@ async function applyEditor() {
   await applyConfig(`ingress-${app}`, ingress)
 }
 
-async function applyOAuth2() {
-  const app = 'oauth2'
-  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
-  const appPort = 8000
-
-  const deployment = {
-    apiVersion: 'apps/v1',
-    kind: 'Deployment',
-    metadata: {
-      name: appName,
-      namespace: NAMESPACE,
-      labels: {
-        app,
-        slug: GITHUB_REF_SHORT,
-        release: ENVIRONMENT_NAME
-      }
-    },
-    spec: {
-      replicas: 1,
-      selector: {
-        matchLabels: {
-          app,
-          slug: GITHUB_REF_SHORT,
-          release: ENVIRONMENT_NAME
-        }
-      },
-      strategy: {
-        rollingUpdate: {
-          maxSurge: 1,
-          maxUnavailable: 0
-        },
-        type: 'RollingUpdate'
-      },
-      template: {
-        metadata: {
-          name: appName,
-          labels: {
-            app,
-            slug: GITHUB_REF_SHORT,
-            release: ENVIRONMENT_NAME
-          }
-        },
-        spec: {
-          containers: [
-            {
-              name: appName,
-              image,
-              command: ['node', './examples/oauth2/dist/index.js'],
-              env: [
-                {
-                  name: 'NODE_ENV',
-                  value: `production`
-                },
-                {
-                  name: 'DATABASE_URL',
-                  value: databaseURL
-                },
-                {
-                  name: 'OAUTH_DATABASE_URI',
-                  value: oauthDatabaseURL
-                },
-                {
-                  name: 'OAUTH_CLIENT_ID',
-                  valueFrom: {
-                    secretKeyRef: {
-                      name: 'wepublish-oauth-secrets',
-                      key: 'oauth_client_id'
-                    }
-                  }
-                },
-                {
-                  name: 'OAUTH_CLIENT_SECRET',
-                  valueFrom: {
-                    secretKeyRef: {
-                      name: 'wepublish-oauth-secrets',
-                      key: 'oauth_client_secret'
-                    }
-                  }
-                },
-                {
-                  name: 'OAUTH_GRANT_TYPES',
-                  valueFrom: {
-                    secretKeyRef: {
-                      name: 'wepublish-oauth-secrets',
-                      key: 'oauth_grant_types'
-                    }
-                  }
-                },
-                {
-                  name: 'OAUTH_REDIRECT_URIS',
-                  valueFrom: {
-                    secretKeyRef: {
-                      name: 'wepublish-oauth-secrets',
-                      key: 'oauth_redirect_uris'
-                    }
-                  }
-                },
-                {
-                  name: 'OAUTH_COOKIE_KEYS',
-                  valueFrom: {
-                    secretKeyRef: {
-                      name: 'wepublish-oauth-secrets',
-                      key: 'oauth_cookie_keys'
-                    }
-                  }
-                },
-                {
-                  name: 'JWKS_KEYS',
-                  valueFrom: {
-                    secretKeyRef: {
-                      name: 'wepublish-oauth-secrets',
-                      key: 'jwks_keys'
-                    }
-                  }
-                }
-              ],
-              ports: [
-                {
-                  containerPort: appPort,
-                  protocol: 'TCP'
-                }
-              ],
-              imagePullPolicy: 'IfNotPresent',
-              resources: {
-                requests: {
-                  cpu: '0m',
-                  memory: '128Mi'
-                }
-              },
-              terminationMessagePath: '/dev/termination-log',
-              terminationMessagePolicy: 'File'
-            }
-          ],
-          dnsPolicy: 'ClusterFirst',
-          restartPolicy: 'Always',
-          schedulerName: 'default-scheduler',
-          terminationGracePeriodSeconds: 30
-        }
-      }
-    }
-  }
-  await applyConfig(`deployment-${app}`, deployment)
-
-  const service = {
-    apiVersion: 'v1',
-    kind: 'Service',
-    metadata: {
-      name: appName,
-      namespace: NAMESPACE
-    },
-    spec: {
-      ports: [
-        {
-          name: 'http',
-          port: appPort,
-          protocol: 'TCP',
-          targetPort: appPort
-        }
-      ],
-      selector: {
-        app,
-        slug: GITHUB_REF_SHORT,
-        release: ENVIRONMENT_NAME
-      },
-      type: 'ClusterIP'
-    }
-  }
-  await applyConfig(`service-${app}`, service)
-
-  const ingress = {
-    apiVersion: 'networking.k8s.io/v1',
-    kind: 'Ingress',
-    metadata: {
-      name: appName,
-      namespace: NAMESPACE,
-      labels: {
-        app,
-        release: ENVIRONMENT_NAME
-      },
-      annotations: {
-        'kubernetes.io/ingress.class': 'nginx',
-        'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
-        'nginx.ingress.kubernetes.io/proxy-body-size': '20m',
-        'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        ...envSwitch(
-          ENVIRONMENT_NAME,
-          {
-            'cert-manager.io/cluster-issuer': 'letsencrypt-production'
-          },
-          {
-            'cert-manager.io/acme-challenge-type': 'dns01',
-            'cert-manager.io/acme-dns01-provider': 'cloudDNS'
-          }
-        )
-      }
-    },
-    spec: {
-      rules: [
-        {
-          host: domainOauth,
-          http: {
-            paths: [
-              {
-                backend: {
-                  service: {
-                    name: appName,
-                    port: {
-                      number: appPort
-                    }
-                  }
-                },
-                pathType: 'Prefix',
-                path: '/'
-              }
-            ]
-          }
-        }
-      ],
-      tls: [
-        {
-          hosts: [domainOauth],
-          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecretName)
-        }
-      ]
-    }
-  }
-  await applyConfig(`ingress-${app}`, ingress)
-}
-
 async function applyPostgres() {
   const app = 'postgres'
   const port = 5432
@@ -1475,137 +1175,6 @@ async function applyPostgres() {
               name: 'postgres-volume',
               persistentVolumeClaim: {
                 claimName: `${GITHUB_REF_SHORT}-postgres-data`
-              }
-            }
-          ]
-        }
-      }
-    }
-  }
-  await applyConfig(`deployment-${app}`, deployment)
-
-  const service = {
-    apiVersion: 'v1',
-    kind: 'Service',
-    metadata: {
-      name: appName,
-      namespace: NAMESPACE
-    },
-    spec: {
-      ports: [
-        {
-          name: 'http',
-          port,
-          protocol: 'TCP',
-          targetPort: port
-        }
-      ],
-      selector: {
-        app,
-        slug: GITHUB_REF_SHORT,
-        release: ENVIRONMENT_NAME
-      },
-      type: 'ClusterIP'
-    }
-  }
-  await applyConfig(`service-${app}`, service)
-}
-
-async function applyMongo() {
-  const app = 'mongo'
-  const port = 27017
-  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
-
-  const pvc = {
-    apiVersion: 'v1',
-    kind: 'PersistentVolumeClaim',
-    metadata: {
-      name: `${GITHUB_REF_SHORT}-mongo-data`,
-      namespace: NAMESPACE
-    },
-    spec: {
-      accessModes: ['ReadWriteOnce'],
-      resources: {
-        requests: {
-          storage: envSwitch(ENVIRONMENT_NAME, '30Gi', '1Gi')
-        }
-      }
-    }
-  }
-
-  await applyConfig(`pvc-${app}`, pvc)
-
-  const deployment = {
-    apiVersion: 'apps/v1',
-    kind: 'Deployment',
-    metadata: {
-      name: appName,
-      namespace: NAMESPACE,
-      labels: {
-        app,
-        slug: GITHUB_REF_SHORT,
-        release: ENVIRONMENT_NAME
-      }
-    },
-    spec: {
-      replicas: 1,
-      selector: {
-        matchLabels: {
-          app,
-          slug: GITHUB_REF_SHORT,
-          release: ENVIRONMENT_NAME
-        }
-      },
-      strategy: {
-        type: 'Recreate'
-      },
-      template: {
-        metadata: {
-          name: appName,
-          labels: {
-            app,
-            slug: GITHUB_REF_SHORT,
-            release: ENVIRONMENT_NAME
-          }
-        },
-        spec: {
-          containers: [
-            {
-              name: appName,
-              image: 'mongo:4.2.3-bionic',
-              env: [],
-              ports: [
-                {
-                  containerPort: port,
-                  protocol: 'TCP'
-                }
-              ],
-              imagePullPolicy: 'IfNotPresent',
-              resources: {
-                requests: {
-                  cpu: '0m',
-                  memory: '128Mi'
-                }
-              },
-              terminationMessagePath: '/dev/termination-log',
-              terminationMessagePolicy: 'File',
-              volumeMounts: [
-                {
-                  name: 'mongo-volume',
-                  mountPath: '/data/db'
-                }
-              ]
-            }
-          ],
-          dnsPolicy: 'ClusterFirst',
-          restartPolicy: 'Always',
-          schedulerName: 'default-scheduler',
-          terminationGracePeriodSeconds: 30,
-          volumes: [
-            {
-              name: 'mongo-volume',
-              persistentVolumeClaim: {
-                claimName: `${GITHUB_REF_SHORT}-mongo-data`
               }
             }
           ]
