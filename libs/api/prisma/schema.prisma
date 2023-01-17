@@ -1006,7 +1006,12 @@ model SubscriptionMail {
 	memberPlans       MemberPlan[]
 	paymentProviders  PaymentProvider[]
   periodicities     PaymentPeriodicity[]
-  autoRenewal       boolean?
+  autoRenewal       autoRenewal[]
+}
+
+enum autoRenewal {
+	YES
+	NO
 }
 
 model MailTemplate {
