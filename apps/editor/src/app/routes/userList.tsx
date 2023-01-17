@@ -19,6 +19,7 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {ResetUserPasswordForm} from '../atoms/user/resetUserPasswordForm'
 import {
+  IconButton,
   ListViewActions,
   ListViewContainer,
   ListViewFilterArea,
