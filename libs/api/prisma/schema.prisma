@@ -982,3 +982,54 @@ model TaggedEvents {
   @@id([eventId, tagId])
   @@map("events.tagged-events")
 }
+
+model SubscriptionTimeline {
+	id                  String @id @default(cuid())
+	creation            SubscriptionInterval
+	renewal             SubscriptionInterval
+	ending              SubscriptionInterval
+	deactivation        SubscriptionInterval
+	reactivation        SubscriptionInterval
+	additionalIntervals SubscriptionInterval[]
+}
+
+model SubscriptionInterval {
+	id                    String @id @default(cuid())
+	daysAwayFromEnding    Int @db.SmallInt
+	defaultMail           SubscriptionMail
+	overrideMails         SubscriptionMail[]
+}
+
+model SubscriptionMail {
+	id            String @id @default(cuid())
+	mailTemplate  Mailtemplate
+	memberPlan    MemberPlan
+}
+
+model MailTemplate {
+	id                String @id @default(cuid())
+	mailProvider      MailProvider
+	mailTemplates     MailTemplate[]
+	paymentProviders  PaymentProvider[]
+	periodicities     PaymentPeriodicity[]
+	autoRenewal       boolean?
+}
+
+model MailTemplate {
+	id                    String @id @default(cuid())
+	name                  String
+	description           String?
+	externalMailTemplate  String
+}
+
+model MailProvider {
+	id      String @id @default(cuid())
+	name    String
+	type    MailProviderType
+	apiKey  String
+}
+
+enum MailProviderType {
+	Mailchimp
+	Mailgun
+}
