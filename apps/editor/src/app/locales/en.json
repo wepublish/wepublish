@@ -1334,7 +1334,10 @@
       "newAuthor": "New author added",
       "newUser": "New user added",
       "newSubscribers": "New subscribers over past year",
-      "createdBy": " by {{creator}}"
+      "createdBy": " by {{creator}}",
+      "subscriberChart": {
+        "fillColor": "#3498ff"
+      }
     }
   }
 }

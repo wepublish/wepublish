@@ -14,8 +14,6 @@ const BarChartErrorText = styled.p`
 export function SubscriberChart() {
   const {t} = useTranslation()
   const {data, loading} = useNewSubscribersPastYearQuery()
-  // @ts-ignore
-  const fillColor = '#3498ff'
 
   const pastYearSubscriptions = useMemo(() => data?.newSubscribersPastYear ?? [], [data])
   const hasSubscriptions = useMemo(
@@ -40,7 +38,11 @@ export function SubscriberChart() {
           }}>
           <XAxis dataKey="month" />
           <YAxis allowDecimals={false} />
-          <Bar radius={[5, 5, 0, 0]} dataKey="subscriberCount" fill={fillColor} />
+          <Bar
+            radius={[5, 5, 0, 0]}
+            dataKey="subscriberCount"
+            fill={t('dashboard.subscriberChart.fillColor')}
+          />
         </BarChart>
       ) : (
         <BarChartErrorText>{t('dashboard.noData')}</BarChartErrorText>
