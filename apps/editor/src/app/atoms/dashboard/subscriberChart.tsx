@@ -38,11 +38,7 @@ export function SubscriberChart() {
           }}>
           <XAxis dataKey="month" />
           <YAxis allowDecimals={false} />
-          <Bar
-            radius={[5, 5, 0, 0]}
-            dataKey="subscriberCount"
-            fill={t('dashboard.subscriberChart.fillColor')}
-          />
+          <Bar radius={[5, 5, 0, 0]} dataKey="subscriberCount" fill="#3498ff" />
         </BarChart>
       ) : (
         <BarChartErrorText>{t('dashboard.noData')}</BarChartErrorText>
