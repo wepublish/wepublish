@@ -1003,7 +1003,7 @@ model SubscriptionInterval {
 model SubscriptionMail {
 	id                String @id @default(cuid())
 	mailTemplate      Mailtemplate
-	memberPlan        MemberPlan
+	memberPlans       MemberPlan[]
 	paymentProviders  PaymentProvider[]
   periodicities     PaymentPeriodicity[]
   autoRenewal       boolean?
