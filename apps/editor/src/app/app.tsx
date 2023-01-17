@@ -221,14 +221,6 @@ export function App() {
             />
             {/* Articles Routes */}
             <Route
-              path="/"
-              element={
-                <Base>
-                  <ArticleList />
-                </Base>
-              }
-            />
-            <Route
               path="articles"
               element={
                 <Base>

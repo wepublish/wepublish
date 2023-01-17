@@ -49,8 +49,8 @@ export function ActivityFeed() {
   }, [data?.actions])
 
   return (
-    <Table autoHeight rowHeight={60} width={600} data={actions} loading={isLoading}>
-      <Column width={500}>
+    <Table autoHeight rowHeight={60} data={actions} loading={isLoading}>
+      <Column flexGrow={3}>
         <HeaderCell dataKey="event">{t('dashboard.event')}</HeaderCell>
         <Cell dataKey="event" width={300}>
           {(rowData: RowDataType<Action>) => {
@@ -111,7 +111,7 @@ export function ActivityFeed() {
           }}
         </Cell>
       </Column>
-      <Column width={100}>
+      <Column flexGrow={1}>
         <HeaderCell dataKey="summary">{t('dashboard.summary')}</HeaderCell>
         <Cell dataKey="summary">
           {(rowData: RowDataType<Action>) => {
