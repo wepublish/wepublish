@@ -1,0 +1,25 @@
+query Phrase($query: String!) {
+  phrase(query: $query) {
+    articles {
+      id
+      slug
+      title
+      blocks {
+        ... on RichTextBlock {
+          richText
+        }
+      }
+    }
+
+    pages {
+      id
+      slug
+      title
+      blocks {
+        ... on RichTextBlock {
+          richText
+        }
+      }
+    }
+  }
+}
