@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {ImageRefFragment, PeerWithProfileFragment, TeaserStyle} from '@wepublish/editor/api'
 import arrayMove from 'array-move'
 import nanoid from 'nanoid'
 import {ReactNode, useState} from 'react'
@@ -7,7 +8,6 @@ import {MdArticle, MdDelete, MdEdit} from 'react-icons/md'
 import {SortableContainer, SortableElement, SortEnd} from 'react-sortable-hoc'
 import {Avatar, Drawer, IconButton as RIconButton, Panel as RPanel} from 'rsuite'
 
-import {ImageRefFragment, PeerWithProfileFragment, TeaserStyle} from '../api'
 import {BlockProps} from '../atoms/blockList'
 import {Overlay} from '../atoms/overlay'
 import {PlaceholderImage} from '../atoms/placeholderImage'

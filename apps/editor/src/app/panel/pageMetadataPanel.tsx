@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {ImageRefFragment} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdListAlt, MdSettings, MdShare} from 'react-icons/md'
@@ -14,7 +15,6 @@ import {
   Toggle as RToggle
 } from 'rsuite'
 
-import {ImageRefFragment} from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
 import {

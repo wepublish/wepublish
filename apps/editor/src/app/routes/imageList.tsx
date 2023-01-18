@@ -1,21 +1,4 @@
 import styled from '@emotion/styled'
-import React, {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdDelete, MdEdit, MdOutlineAddPhotoAlternate, MdSearch} from 'react-icons/md'
-import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
-import {
-  Button,
-  Drawer,
-  FlexboxGrid,
-  IconButton as RIconButton,
-  Input,
-  InputGroup,
-  Modal,
-  Pagination,
-  Table
-} from 'rsuite'
-import {RowDataType} from 'rsuite-table'
-
 import {
   FullImageFragment,
   ImageListDocument,
@@ -23,38 +6,46 @@ import {
   ImageRefFragment,
   useDeleteImageMutation,
   useImageListQuery
-} from '../api'
+} from '@wepublish/editor/api'
+import React, {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {MdDelete, MdEdit, MdOutlineAddPhotoAlternate, MdSearch} from 'react-icons/md'
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
+import {
+  Button,
+  Drawer,
+  IconButton as RIconButton,
+  Input,
+  InputGroup,
+  Modal,
+  Pagination,
+  Table as RTable
+} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
+
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {ImageEditPanel} from '../panel/imageEditPanel'
 import {ImageUploadAndEditPanel} from '../panel/imageUploadAndEditPanel'
+import {
+  IconButton,
+  ListViewActions,
+  ListViewContainer,
+  ListViewFilterArea,
+  ListViewHeader,
+  PaddedCell,
+  Table,
+  TableWrapper
+} from '../ui/listView'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_IMAGE_PAGE_SIZES} from '../utility'
 
-const {Column, HeaderCell, Cell: RCell} = Table
-
-const Cell = styled(RCell)`
-  .rs-table-cell-content {
-    padding: 6px 0;
-  }
-`
+const {Column, HeaderCell, Cell: RCell} = RTable
 
 const Img = styled.img`
   height: 70px;
   width: auto;
   display: block;
   margin: 0 auto;
-`
-
-const IconButton = styled(RIconButton)`
-  margin-left: 5px;
-`
-
-const GridItemAlignRight = styled(FlexboxGrid.Item)`
-  text-align: right;
-`
-
-const GridItemMarginTop = styled(FlexboxGrid.Item)`
-  margin-top: 20px;
 `
 
 function ImageList() {
@@ -123,12 +114,12 @@ function ImageList() {
 
   return (
     <>
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
+      <ListViewContainer>
+        <ListViewHeader>
           <h2>{t('images.overview.imageLibrary')}</h2>
-        </FlexboxGrid.Item>
+        </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
-          <GridItemAlignRight colspan={8}>
+          <ListViewActions>
             <Link to="/images/upload" state={{modalLocation: location}}>
               <RIconButton
                 appearance="primary"
@@ -137,23 +128,24 @@ function ImageList() {
                 {t('images.overview.uploadImage')}
               </RIconButton>
             </Link>
-          </GridItemAlignRight>
+          </ListViewActions>
         </PermissionControl>
-        <GridItemMarginTop colspan={24}>
+
+        <ListViewFilterArea>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
-        </GridItemMarginTop>
-      </FlexboxGrid>
-      <div>
+        </ListViewFilterArea>
+      </ListViewContainer>
+
+      <TableWrapper>
         <Table
-          minHeight={600}
+          fillHeight
           data={images}
           rowHeight={100}
-          autoHeight
           loading={isLoading}
           wordWrap
           className={'displayThreeLinesOnly'}>
@@ -201,7 +193,7 @@ function ImageList() {
 
           <Column width={160} align="center" resizable>
             <HeaderCell>{t('images.overview.actions')}</HeaderCell>
-            <Cell>
+            <PaddedCell>
               {(rowData: RowDataType<ImageRefFragment>) => (
                 <>
                   <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
@@ -231,7 +223,7 @@ function ImageList() {
                   </PermissionControl>
                 </>
               )}
-            </Cell>
+            </PaddedCell>
           </Column>
         </Table>
 
@@ -251,7 +243,7 @@ function ImageList() {
           onChangePage={page => setActivePage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </div>
+      </TableWrapper>
 
       <Drawer
         open={isUploadModalOpen}

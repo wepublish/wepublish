@@ -1,8 +1,8 @@
 import React, {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {BarChart, Bar, XAxis, YAxis, ResponsiveContainer} from 'recharts'
-import {useNewSubscribersPerMonthQuery} from '../../api'
 import styled from '@emotion/styled'
+import {useNewSubscribersPerMonthQuery} from '@wepublish/editor/api'
 
 const BarChartErrorText = styled.p`
   font-size: 1rem;

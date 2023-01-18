@@ -1,11 +1,11 @@
 import React, {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
-import {useMeQuery} from '../api'
 import {ActivityFeed} from '../atoms/dashboard/activityFeed'
 import {SubscriberChart} from '../atoms/dashboard/subscriberChart'
 import {FlexboxGrid} from 'rsuite'
 import {PermissionControl} from '../atoms/permissionControl'
 import styled from '@emotion/styled'
+import {useMeQuery} from '@wepublish/editor/api'
 
 const FlexboxGridStyled = styled(FlexboxGrid)`
   margin-top: 1rem;

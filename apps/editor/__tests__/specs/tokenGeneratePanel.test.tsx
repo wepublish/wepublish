@@ -1,9 +1,9 @@
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import {fireEvent, render} from '@testing-library/react'
+import {CreateTokenDocument} from '@wepublish/editor/api'
 import React from 'react'
 import snapshotDiff from 'snapshot-diff'
 
-import {CreateTokenDocument} from '../../src/app/api'
 import {AuthContext} from '../../src/app/authContext'
 import {TokenGeneratePanel} from '../../src/app/panel/tokenGeneratePanel'
 import {actWait, sessionWithPermissions} from '../utils'

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {ImageRefFragment, useImageListQuery} from '@wepublish/editor/api'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdFileUpload, MdSearch} from 'react-icons/md'
@@ -16,7 +17,6 @@ import {
   toaster
 } from 'rsuite'
 
-import {ImageRefFragment, useImageListQuery} from '../api'
 import {FileDropInput} from '../atoms/fileDropInput'
 import {ImageMetaData, readImageMetaData} from '../atoms/imageMetaData'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'

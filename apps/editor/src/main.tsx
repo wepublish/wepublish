@@ -12,7 +12,6 @@ import {TwitterProvider} from './app/blocks/embeds/twitter'
 import {initI18N} from './app/i18n'
 import {getSettings, LocalStorageKey} from './app/utility'
 import {ElementID} from './shared/elementID'
-import {ClientSettings} from './shared/types'
 
 // See: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces
 export async function fetchIntrospectionQueryResultData(url: string) {

@@ -1,14 +1,25 @@
 import {ApolloError} from '@apollo/client'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
-import React, {useEffect, useState} from 'react'
+import {Event, useEventListQuery} from '@wepublish/editor/api'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdAdd} from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {Button, FlexboxGrid, IconButton, Message, Pagination, Table, toaster} from 'rsuite'
+import {IconButton, Message, Pagination, Table as RTable, toaster} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
-import {Event, useEventListQuery} from '../../api'
 import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
+import {
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  Table,
+  TableWrapper
+} from '../../ui/listView'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
 import {DeleteEventModal} from './deleteEventModal'
+
+const {Column, HeaderCell, Cell} = RTable
 
 export function EventStartsAtView({startsAt}: {startsAt: string}) {
   const startsAtDate = new Date(startsAt)
@@ -24,7 +35,6 @@ export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
   if (endsAt) {
     return <>{t('event.list.endsAt', {endsAt: endsAtDate})}</>
   }
-
   return <>{t('event.list.endsAtNone')}</>
 }
 
@@ -62,79 +72,79 @@ function EventListView() {
 
   return (
     <>
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
+      <ListViewContainer>
+        <ListViewHeader>
           <h2>{t('event.list.title')}</h2>
-        </FlexboxGrid.Item>
+        </ListViewHeader>
 
-        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right', alignSelf: 'center'}}>
-          <PermissionControl qualifyingPermissions={['CAN_CREATE_EVENT']}>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_EVENT']}>
+          <ListViewActions>
             <Link to="create">
-              <Button appearance="primary">{t('event.list.create')}</Button>
+              <IconButton appearance="primary" icon={<MdAdd />}>
+                {t('event.list.create')}
+              </IconButton>
             </Link>
-          </PermissionControl>
-        </FlexboxGrid.Item>
+          </ListViewActions>
+        </PermissionControl>
+      </ListViewContainer>
 
-        <FlexboxGrid.Item style={{marginTop: '20px'}} colspan={24}>
-          <Table minHeight={600} autoHeight loading={loading} data={data?.events?.nodes || []}>
-            <Table.Column width={200} resizable>
-              <Table.HeaderCell>{t('event.list.name')}</Table.HeaderCell>
-              <Table.Cell>
-                {(rowData: Event) => (
-                  <>
-                    <Link to={`/events/edit/${rowData.id}`}>{rowData.name}</Link>
-                  </>
-                )}
-              </Table.Cell>
-            </Table.Column>
+      <TableWrapper>
+        <Table fillHeight loading={loading} data={data?.events?.nodes || []}>
+          <Column width={200} resizable>
+            <HeaderCell>{t('event.list.name')}</HeaderCell>
+            <Cell>
+              {(rowData: RowDataType<Event>) => (
+                <Link to={`/events/edit/${rowData.id}`}>{rowData.name}</Link>
+              )}
+            </Cell>
+          </Column>
 
-            <Table.Column width={250} resizable>
-              <Table.HeaderCell>{t('event.list.startsAt')}</Table.HeaderCell>
-              <Table.Cell>
-                {(rowData: Event) => <EventStartsAtView startsAt={rowData.startsAt} />}
-              </Table.Cell>
-            </Table.Column>
+          <Column width={250} resizable>
+            <HeaderCell>{t('event.list.startsAt')}</HeaderCell>
+            <Cell>
+              {(rowData: RowDataType<Event>) => <EventStartsAtView startsAt={rowData.startsAt} />}
+            </Cell>
+          </Column>
 
-            <Table.Column width={250} resizable>
-              <Table.HeaderCell>{t('event.list.endsAt')}</Table.HeaderCell>
-              <Table.Cell>
-                {(rowData: Event) => <EventEndsAtView endsAt={rowData.endsAt} />}
-              </Table.Cell>
-            </Table.Column>
+          <Column width={250} resizable>
+            <HeaderCell>{t('event.list.endsAt')}</HeaderCell>
+            <Cell>
+              {(rowData: RowDataType<Event>) => <EventEndsAtView endsAt={rowData.endsAt} />}
+            </Cell>
+          </Column>
 
-            <Table.Column resizable>
-              <Table.HeaderCell align={'center'}>{t('event.list.delete')}</Table.HeaderCell>
-              <Table.Cell align={'center'} style={{padding: '5px 0'}}>
-                {(event: Event) => (
-                  <IconButton
-                    icon={<TrashIcon />}
-                    circle
-                    size="sm"
-                    onClick={() => setEventDelete(event)}
-                  />
-                )}
-              </Table.Cell>
-            </Table.Column>
-          </Table>
+          <Column resizable>
+            <HeaderCell align={'center'}>{t('event.list.delete')}</HeaderCell>
+            <Cell align={'center'} style={{padding: '5px 0'}}>
+              {(event: RowDataType<Event>) => (
+                <IconButton
+                  icon={<TrashIcon />}
+                  circle
+                  size="sm"
+                  onClick={() => setEventDelete(event as Event)}
+                />
+              )}
+            </Cell>
+          </Column>
+        </Table>
 
-          <Pagination
-            limit={limit}
-            limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-            maxButtons={DEFAULT_MAX_TABLE_PAGES}
-            first
-            last
-            prev
-            next
-            ellipsis
-            boundaryLinks
-            layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-            total={data?.events?.totalCount ?? 0}
-            activePage={page}
-            onChangePage={page => setPage(page)}
-            onChangeLimit={limit => setLimit(limit)}
-          />
-        </FlexboxGrid.Item>
-      </FlexboxGrid>
+        <Pagination
+          limit={limit}
+          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
+          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+          total={data?.events?.totalCount ?? 0}
+          activePage={page}
+          onChangePage={page => setPage(page)}
+          onChangeLimit={limit => setLimit(limit)}
+        />
+      </TableWrapper>
 
       <DeleteEventModal
         event={eventDelete}

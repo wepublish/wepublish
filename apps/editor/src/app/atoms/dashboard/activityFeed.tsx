@@ -14,8 +14,8 @@ import {
 } from 'react-icons/md'
 import {formatDistanceToNow} from 'date-fns'
 import {fr, de, enUS} from 'date-fns/locale'
-import {useRecentActionsQuery, Action, ActionType} from '../../api'
 import styled from '@emotion/styled'
+import {useRecentActionsQuery, Action, ActionType} from '@wepublish/editor/api'
 
 export interface Event {
   date: string

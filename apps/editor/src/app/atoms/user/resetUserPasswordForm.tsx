@@ -1,8 +1,7 @@
+import {useResetUserPasswordMutation} from '@wepublish/editor/api'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Form, Notification, Schema, toaster} from 'rsuite'
-
-import {useResetUserPasswordMutation} from '../../api'
 
 export interface ResetUserPasswordPanelProps {
   userID?: string

@@ -1,4 +1,10 @@
-import styled from '@emotion/styled'
+import {
+  FullMemberPlanFragment,
+  MemberPlanListDocument,
+  MemberPlanListQuery,
+  useDeleteMemberPlanMutation,
+  useMemberPlanListQuery
+} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
@@ -6,7 +12,6 @@ import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Button,
   Drawer,
-  FlexboxGrid,
   IconButton as RIconButton,
   Input,
   InputGroup,
@@ -15,41 +20,22 @@ import {
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {
-  FullMemberPlanFragment,
-  MemberPlanListDocument,
-  MemberPlanListQuery,
-  useDeleteMemberPlanMutation,
-  useMemberPlanListQuery
-} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {MemberPlanEditPanel} from '../panel/memberPlanEditPanel'
+import {
+  IconButton,
+  ListViewActions,
+  ListViewContainer,
+  ListViewFilterArea,
+  ListViewHeader,
+  PaddedCell,
+  Table,
+  TableWrapper
+} from '../ui/listView'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
-
-const Cell = styled(RCell)`
-  .rs-table-cell-content {
-    padding: 6px 0;
-  }
-`
-
-const Table = styled(RTable)`
-  margin-top: 20px;
-`
-
-const GridItemAlignRight = styled(FlexboxGrid.Item)`
-  text-align: right;
-`
-
-const GridItemMarginTop = styled(FlexboxGrid.Item)`
-  margin-top: 20px;
-`
-
-const IconButton = styled(RIconButton)`
-  margin-left: 5px;
-`
 
 function MemberPlanList() {
   const {t} = useTranslation()
@@ -102,62 +88,63 @@ function MemberPlanList() {
 
   return (
     <>
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
+      <ListViewContainer>
+        <ListViewHeader>
           <h2>{t('memberPlanList.title')}</h2>
-        </FlexboxGrid.Item>
+        </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_MEMBER_PLAN']}>
-          <GridItemAlignRight colspan={8}>
+          <ListViewActions>
             <Link to="/memberplans/create">
               <RIconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('memberPlanList.createNew')}
               </RIconButton>
             </Link>
-          </GridItemAlignRight>
+          </ListViewActions>
         </PermissionControl>
-        <GridItemMarginTop colspan={24}>
+        <ListViewFilterArea>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
-        </GridItemMarginTop>
-      </FlexboxGrid>
+        </ListViewFilterArea>
+      </ListViewContainer>
 
-      <Table autoHeight loading={isLoading} data={memberPlans}>
-        <Column width={200} align="left" resizable>
-          <HeaderCell>{t('memberPlanList.name')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<FullMemberPlanFragment>) => (
-              <Link to={`/memberplans/edit/${rowData.id}`}>{rowData.name || t('untitled')}</Link>
-            )}
-          </RCell>
-        </Column>
-        <Column width={100} align="center" fixed="right">
-          <HeaderCell>{t('memberPlanList.action')}</HeaderCell>
-          <Cell>
-            {(rowData: RowDataType<FullMemberPlanFragment>) => (
-              <PermissionControl qualifyingPermissions={['CAN_DELETE_MEMBER_PLAN']}>
-                <IconButtonTooltip caption={t('delete')}>
-                  <IconButton
-                    icon={<MdDelete />}
-                    circle
-                    size="sm"
-                    appearance="ghost"
-                    color="red"
-                    onClick={() => {
-                      setConfirmationDialogOpen(true)
-                      setCurrentMemberPlan(rowData as FullMemberPlanFragment)
-                    }}
-                  />
-                </IconButtonTooltip>
-              </PermissionControl>
-            )}
-          </Cell>
-        </Column>
-      </Table>
-
+      <TableWrapper>
+        <Table fillHeight loading={isLoading} data={memberPlans}>
+          <Column width={200} align="left" resizable>
+            <HeaderCell>{t('memberPlanList.name')}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<FullMemberPlanFragment>) => (
+                <Link to={`/memberplans/edit/${rowData.id}`}>{rowData.name || t('untitled')}</Link>
+              )}
+            </RCell>
+          </Column>
+          <Column width={100} align="center" fixed="right">
+            <HeaderCell>{t('memberPlanList.action')}</HeaderCell>
+            <PaddedCell>
+              {(rowData: RowDataType<FullMemberPlanFragment>) => (
+                <PermissionControl qualifyingPermissions={['CAN_DELETE_MEMBER_PLAN']}>
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButton
+                      icon={<MdDelete />}
+                      circle
+                      size="sm"
+                      appearance="ghost"
+                      color="red"
+                      onClick={() => {
+                        setConfirmationDialogOpen(true)
+                        setCurrentMemberPlan(rowData as FullMemberPlanFragment)
+                      }}
+                    />
+                  </IconButtonTooltip>
+                </PermissionControl>
+              )}
+            </PaddedCell>
+          </Column>
+        </Table>
+      </TableWrapper>
       <Drawer
         open={isEditModalOpen}
         size="sm"

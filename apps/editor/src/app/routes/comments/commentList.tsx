@@ -1,43 +1,37 @@
 import styled from '@emotion/styled'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdEdit} from 'react-icons/md'
-import {Link} from 'react-router-dom'
-import {IconButton, Pagination, Table, Toggle} from 'rsuite'
-import {RowDataType} from 'rsuite-table'
-
 import {
   CommentFilter,
   CommentSort,
   CommentState,
   FullCommentFragment,
   useCommentListQuery
-} from '../../api'
+} from '@wepublish/editor/api'
+import {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {MdEdit} from 'react-icons/md'
+import {Link} from 'react-router-dom'
+import {IconButton, Pagination, Table as RTable, Toggle} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
+
 import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {CreateCommentBtn} from '../../atoms/comment/createCommentBtn'
 import {IconButtonTooltip} from '../../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
-import {ListViewContainer} from '../../ui/listView'
+import {
+  ListViewContainer,
+  ListViewHeader,
+  Table,
+  TableWrapper,
+  ListViewFilterArea
+} from '../../ui/listView'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../../utility'
 
-const {Column, HeaderCell, Cell} = Table
-
-const TableWrapper = styled.div`
-  display: flex;
-  flex-flow: column;
-  margin-top: 20px;
-  gap: 20px;
-`
-
-const ListView = styled.div`
-  gap: 8px;
-  display: flex;
-`
+const {Column, HeaderCell, Cell} = RTable
 
 const EditIcon = styled.span`
   margin-right: 5px;
@@ -111,11 +105,14 @@ function CommentList() {
   return (
     <>
       <ListViewContainer>
-        <div>
+        <ListViewHeader>
           <h2>{t('comments.overview.comments')}</h2>
-        </div>
+        </ListViewHeader>
 
-        <ListView>
+        {/* to fill the grid */}
+        <div />
+
+        <ListViewFilterArea>
           <Toggle
             defaultChecked={filter.states?.includes?.(CommentState.Approved)}
             onChange={enabled =>
@@ -187,12 +184,12 @@ function CommentList() {
             checkedChildren={t('comments.state.rejected')}
             unCheckedChildren={t('comments.state.rejected')}
           />
-        </ListView>
+        </ListViewFilterArea>
       </ListViewContainer>
 
       <TableWrapper>
         <Table
-          autoHeight
+          fillHeight
           rowHeight={60}
           rowClassName={rowData => {
             switch (rowData?.state) {
