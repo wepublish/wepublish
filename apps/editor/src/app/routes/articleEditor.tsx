@@ -609,7 +609,7 @@ function ArticleEditor() {
           </BlockList>
         </EditorTemplate>
       </FieldSet>
-      <Drawer open={isMetaDrawerOpen} size="sm" onClose={() => setMetaDrawerOpen(false)}>
+      <Drawer open={isMetaDrawerOpen} size="md" onClose={() => setMetaDrawerOpen(false)}>
         <ArticleMetadataPanel
           articleID={articleID}
           value={metadata}
