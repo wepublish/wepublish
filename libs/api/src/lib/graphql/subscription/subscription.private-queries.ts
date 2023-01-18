@@ -72,162 +72,41 @@ export const getSubscriptionsAsCSV = async (
   return mapSubscriptionsAsCsv(subscriptions)
 }
 
-export const getNewSubscribersYear = async (
+export const getNewSubscribersPerMonth = async (
   authenticate: Context['authenticate'],
-  subscription: PrismaClient['subscription']
+  subscription: PrismaClient['subscription'],
+  monthsBack: number
 ) => {
   const {roles} = authenticate()
   authorise(CanGetSubscriptions, roles)
-  return (
-    await Promise.all([
-      subscription.count({
-        where: {
-          startsAt: {
-            gte: startOfMonth(subMonths(new Date(), 11))
-          },
-          AND: {
-            startsAt: {
-              lte: lastDayOfMonth(subMonths(new Date(), 11))
-            }
-          }
+  const subscriptionCount = await subscription.findMany({
+    where: {
+      startsAt: {
+        gte: startOfMonth(subMonths(new Date(), monthsBack - 1))
+      },
+      AND: {
+        startsAt: {
+          lte: lastDayOfMonth(new Date())
         }
-      }),
-      subscription.count({
-        where: {
-          startsAt: {
-            gte: startOfMonth(subMonths(new Date(), 10))
-          },
-          AND: {
-            startsAt: {
-              lte: lastDayOfMonth(subMonths(new Date(), 10))
-            }
-          }
-        }
-      }),
-      subscription.count({
-        where: {
-          startsAt: {
-            gte: startOfMonth(subMonths(new Date(), 9))
-          },
-          AND: {
-            startsAt: {
-              lte: lastDayOfMonth(subMonths(new Date(), 9))
-            }
-          }
-        }
-      }),
-      subscription.count({
-        where: {
-          startsAt: {
-            gte: startOfMonth(subMonths(new Date(), 8))
-          },
-          AND: {
-            startsAt: {
-              lte: lastDayOfMonth(subMonths(new Date(), 8))
-            }
-          }
-        }
-      }),
-      subscription.count({
-        where: {
-          startsAt: {
-            gte: startOfMonth(subMonths(new Date(), 7))
-          },
-          AND: {
-            startsAt: {
-              lte: lastDayOfMonth(subMonths(new Date(), 7))
-            }
-          }
-        }
-      }),
-      subscription.count({
-        where: {
-          startsAt: {
-            gte: startOfMonth(subMonths(new Date(), 6))
-          },
-          AND: {
-            startsAt: {
-              lte: lastDayOfMonth(subMonths(new Date(), 6))
-            }
-          }
-        }
-      }),
-      subscription.count({
-        where: {
-          startsAt: {
-            gte: startOfMonth(subMonths(new Date(), 5))
-          },
-          AND: {
-            startsAt: {
-              lte: lastDayOfMonth(subMonths(new Date(), 5))
-            }
-          }
-        }
-      }),
-      subscription.count({
-        where: {
-          startsAt: {
-            gte: startOfMonth(subMonths(new Date(), 4))
-          },
-          AND: {
-            startsAt: {
-              lte: lastDayOfMonth(subMonths(new Date(), 4))
-            }
-          }
-        }
-      }),
-      subscription.count({
-        where: {
-          startsAt: {
-            gte: startOfMonth(subMonths(new Date(), 3))
-          },
-          AND: {
-            startsAt: {
-              lte: lastDayOfMonth(subMonths(new Date(), 3))
-            }
-          }
-        }
-      }),
-      subscription.count({
-        where: {
-          startsAt: {
-            gte: startOfMonth(subMonths(new Date(), 2))
-          },
-          AND: {
-            startsAt: {
-              lte: lastDayOfMonth(subMonths(new Date(), 2))
-            }
-          }
-        }
-      }),
-      subscription.count({
-        where: {
-          startsAt: {
-            gte: startOfMonth(subMonths(new Date(), 1))
-          },
-          AND: {
-            startsAt: {
-              lte: lastDayOfMonth(subMonths(new Date(), 1))
-            }
-          }
-        }
-      }),
-      subscription.count({
-        where: {
-          startsAt: {
-            gte: startOfMonth(new Date())
-          },
-          AND: {
-            startsAt: {
-              lte: lastDayOfMonth(new Date())
-            }
-          }
-        }
-      })
-    ])
-  ).map((total: number, index) => {
-    const month = new Date()
-    month.setMonth(month.getMonth() + index + 1)
-    return {month: format(month, 'MMM'), subscriberCount: total}
+      }
+    }
   })
+
+  return getSubscriberCount(subscriptionCount, monthsBack)
+}
+
+const getSubscriberCount = (subscribers, monthsBack) => {
+  const res = []
+  for (let i = 0; i < monthsBack; i++) {
+    const count = subscribers.filter(subsc => {
+      return (
+        subsc.startsAt > startOfMonth(subMonths(new Date(), i)) &&
+        subsc.startsAt < lastDayOfMonth(subMonths(new Date(), i))
+      )
+    }).length
+    const month = new Date()
+    month.setMonth(month.getMonth() - i)
+    res.push({month: format(month, 'MMM-yy'), subscriberCount: count})
+  }
+  return res.reverse()
 }

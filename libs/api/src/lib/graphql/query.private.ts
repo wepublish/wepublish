@@ -132,7 +132,7 @@ import {
   getAdminSubscriptions,
   getSubscriptionById,
   getSubscriptionsAsCSV,
-  getNewSubscribersYear
+  getNewSubscribersPerMonth
 } from './subscription/subscription.private-queries'
 import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
 import {getTags, TagSort} from './tag/tag.private-query'
@@ -755,10 +755,11 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     // Stats
-    newSubscribersPastYear: {
+    newSubscribersPerMonth: {
       type: GraphQLList(GraphQLSubscribersPerMonth),
-      resolve: async (root, _, {authenticate, prisma: {subscription}}) => {
-        return await getNewSubscribersYear(authenticate, subscription)
+      args: {monthsBack: {type: GraphQLInt}},
+      resolve: async (root, {monthsBack}, {authenticate, prisma: {subscription}}) => {
+        return await getNewSubscribersPerMonth(authenticate, subscription, monthsBack)
       }
     },
 

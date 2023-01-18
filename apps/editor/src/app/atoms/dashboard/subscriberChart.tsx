@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {BarChart, Bar, XAxis, YAxis, ResponsiveContainer} from 'recharts'
-import {useNewSubscribersPastYearQuery} from '../../api'
+import {useNewSubscribersPerMonthQuery} from '../../api'
 import styled from '@emotion/styled'
 
 const BarChartErrorText = styled.p`
@@ -13,15 +13,15 @@ const BarChartErrorText = styled.p`
 
 export function SubscriberChart() {
   const {t} = useTranslation()
-  const {data, loading} = useNewSubscribersPastYearQuery()
+  const {data, loading} = useNewSubscribersPerMonthQuery({variables: {months: 12}})
 
-  const pastYearSubscriptions = useMemo(() => data?.newSubscribersPastYear ?? [], [data])
+  const pastYearSubscriptions = useMemo(() => data?.newSubscribersPerMonth ?? [], [data])
   const hasSubscriptions = useMemo(
     () =>
-      data?.newSubscribersPastYear?.some(sub => {
+      data?.newSubscribersPerMonth?.some(sub => {
         return sub?.subscriberCount ? sub?.subscriberCount > 0 : null
       }) ?? false,
-    [data?.newSubscribersPastYear]
+    [data?.newSubscribersPerMonth]
   )
 
   return (
@@ -36,7 +36,7 @@ export function SubscriberChart() {
             left: 20,
             bottom: 5
           }}>
-          <XAxis dataKey="month" />
+          <XAxis fontSize={10} width={12} dataKey="month" />
           <YAxis allowDecimals={false} />
           <Bar radius={[5, 5, 0, 0]} dataKey="subscriberCount" fill="#3498ff" />
         </BarChart>

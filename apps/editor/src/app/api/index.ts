@@ -1846,7 +1846,7 @@ export type Query = {
   memberPlans: MemberPlanConnection;
   navigation?: Maybe<Navigation>;
   navigations: Array<Navigation>;
-  newSubscribersPastYear?: Maybe<Array<Maybe<SubscribersPerMonth>>>;
+  newSubscribersPerMonth?: Maybe<Array<Maybe<SubscribersPerMonth>>>;
   page?: Maybe<Page>;
   pagePreviewLink?: Maybe<Scalars['String']>;
   pages: PageConnection;
@@ -2007,6 +2007,11 @@ export type QueryMemberPlansArgs = {
 export type QueryNavigationArgs = {
   id?: InputMaybe<Scalars['ID']>;
   key?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryNewSubscribersPerMonthArgs = {
+  monthsBack?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -3523,10 +3528,12 @@ export type DeleteSubscriptionMutationVariables = Exact<{
 
 export type DeleteSubscriptionMutation = { __typename?: 'Mutation', deleteSubscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
 
-export type NewSubscribersPastYearQueryVariables = Exact<{ [key: string]: never; }>;
+export type NewSubscribersPerMonthQueryVariables = Exact<{
+  months: Scalars['Int'];
+}>;
 
 
-export type NewSubscribersPastYearQuery = { __typename?: 'Query', newSubscribersPastYear?: Array<{ __typename?: 'SubscribersPerMonth', month: string, subscriberCount: number } | null> | null };
+export type NewSubscribersPerMonthQuery = { __typename?: 'Query', newSubscribersPerMonth?: Array<{ __typename?: 'SubscribersPerMonth', month: string, subscriberCount: number } | null> | null };
 
 export type TagListQueryVariables = Exact<{
   filter?: InputMaybe<TagFilter>;
@@ -8156,9 +8163,9 @@ export function useDeleteSubscriptionMutation(baseOptions?: Apollo.MutationHookO
 export type DeleteSubscriptionMutationHookResult = ReturnType<typeof useDeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationResult = Apollo.MutationResult<DeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>;
-export const NewSubscribersPastYearDocument = gql`
-    query NewSubscribersPastYear {
-  newSubscribersPastYear {
+export const NewSubscribersPerMonthDocument = gql`
+    query NewSubscribersPerMonth($months: Int!) {
+  newSubscribersPerMonth(monthsBack: $months) {
     month
     subscriberCount
   }
@@ -8166,31 +8173,32 @@ export const NewSubscribersPastYearDocument = gql`
     `;
 
 /**
- * __useNewSubscribersPastYearQuery__
+ * __useNewSubscribersPerMonthQuery__
  *
- * To run a query within a React component, call `useNewSubscribersPastYearQuery` and pass it any options that fit your needs.
- * When your component renders, `useNewSubscribersPastYearQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useNewSubscribersPerMonthQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNewSubscribersPerMonthQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useNewSubscribersPastYearQuery({
+ * const { data, loading, error } = useNewSubscribersPerMonthQuery({
  *   variables: {
+ *      months: // value for 'months'
  *   },
  * });
  */
-export function useNewSubscribersPastYearQuery(baseOptions?: Apollo.QueryHookOptions<NewSubscribersPastYearQuery, NewSubscribersPastYearQueryVariables>) {
+export function useNewSubscribersPerMonthQuery(baseOptions: Apollo.QueryHookOptions<NewSubscribersPerMonthQuery, NewSubscribersPerMonthQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<NewSubscribersPastYearQuery, NewSubscribersPastYearQueryVariables>(NewSubscribersPastYearDocument, options);
+        return Apollo.useQuery<NewSubscribersPerMonthQuery, NewSubscribersPerMonthQueryVariables>(NewSubscribersPerMonthDocument, options);
       }
-export function useNewSubscribersPastYearLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NewSubscribersPastYearQuery, NewSubscribersPastYearQueryVariables>) {
+export function useNewSubscribersPerMonthLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NewSubscribersPerMonthQuery, NewSubscribersPerMonthQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<NewSubscribersPastYearQuery, NewSubscribersPastYearQueryVariables>(NewSubscribersPastYearDocument, options);
+          return Apollo.useLazyQuery<NewSubscribersPerMonthQuery, NewSubscribersPerMonthQueryVariables>(NewSubscribersPerMonthDocument, options);
         }
-export type NewSubscribersPastYearQueryHookResult = ReturnType<typeof useNewSubscribersPastYearQuery>;
-export type NewSubscribersPastYearLazyQueryHookResult = ReturnType<typeof useNewSubscribersPastYearLazyQuery>;
-export type NewSubscribersPastYearQueryResult = Apollo.QueryResult<NewSubscribersPastYearQuery, NewSubscribersPastYearQueryVariables>;
+export type NewSubscribersPerMonthQueryHookResult = ReturnType<typeof useNewSubscribersPerMonthQuery>;
+export type NewSubscribersPerMonthLazyQueryHookResult = ReturnType<typeof useNewSubscribersPerMonthLazyQuery>;
+export type NewSubscribersPerMonthQueryResult = Apollo.QueryResult<NewSubscribersPerMonthQuery, NewSubscribersPerMonthQueryVariables>;
 export const TagListDocument = gql`
     query TagList($filter: TagFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
   tags(

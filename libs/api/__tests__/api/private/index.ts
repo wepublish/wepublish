@@ -1844,7 +1844,7 @@ export type Query = {
   memberPlans: MemberPlanConnection;
   navigation?: Maybe<Navigation>;
   navigations: Array<Navigation>;
-  newSubscribersPastYear?: Maybe<Array<Maybe<SubscribersPerMonth>>>;
+  newSubscribersPerMonth?: Maybe<Array<Maybe<SubscribersPerMonth>>>;
   page?: Maybe<Page>;
   pagePreviewLink?: Maybe<Scalars['String']>;
   pages: PageConnection;
@@ -2005,6 +2005,11 @@ export type QueryMemberPlansArgs = {
 export type QueryNavigationArgs = {
   id?: InputMaybe<Scalars['ID']>;
   key?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryNewSubscribersPerMonthArgs = {
+  monthsBack?: InputMaybe<Scalars['Int']>;
 };
 
 
