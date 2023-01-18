@@ -11,38 +11,12 @@ import {
   useDuplicateArticleMutation,
   useUnpublishArticleMutation
 } from '@wepublish/editor/api'
-import {useEffect, useEffect, useMemo, useMemo, useState, useState} from 'react'
-import {useTranslation, useTranslation} from 'react-i18next'
-import {
-  MdAdd,
-  MdAdd,
-  MdComment,
-  MdComment,
-  MdContentCopy,
-  MdContentCopy,
-  MdDelete,
-  MdDelete,
-  MdPreview,
-  MdPreview,
-  MdUnpublished,
-  MdUnpublished
-} from 'react-icons/md'
-import {Link, Link, useNavigate, useNavigate} from 'react-router-dom'
-import {
-  Button,
-  Button,
-  IconButton,
-  IconButton,
-  Message,
-  Message,
-  Modal,
-  Modal,
-  Pagination,
-  Pagination,
-  Table as RTable,
-  Table
-} from 'rsuite'
-import {RowDataType, RowDataType} from 'rsuite-table'
+import {useEffect, useMemo, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {MdAdd, MdComment, MdContentCopy, MdDelete, MdPreview, MdUnpublished} from 'react-icons/md'
+import {Link, useNavigate} from 'react-router-dom'
+import {Button, IconButton, Message, Modal, Pagination, Table as RTable, Table} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
@@ -55,7 +29,6 @@ import {
   ListViewContainer,
   ListViewHeader,
   StatusBadge,
-  Table,
   TableWrapper
 } from '../ui/listView'
 import {
