@@ -6,7 +6,6 @@ import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Avatar as RAvatar,
   Button,
-  Divider,
   Drawer,
   FlexboxGrid,
   Form,
@@ -31,6 +30,7 @@ import {NavigationBar} from '../atoms/navigationBar'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {PeerEditPanel} from '../panel/peerEditPanel'
 import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
+import {ListViewActions, ListViewContainer, ListViewHeader} from '../ui/listView'
 import {addOrUpdateOneInArray} from '../utility'
 
 const MarginTop = styled.div`
@@ -49,17 +49,15 @@ const Wrapper = styled.div`
   border: solid 2px #3498ff;
   padding: 10px;
   border-radius: 5px;
+  margin: 1rem 0 2rem 0;
 `
+
 const ListItem = styled(List.Item)<{isDisabled?: boolean | null}>`
   cursor: ${({isDisabled}) => (isDisabled ? 'default' : 'pointer')};
 `
 
 const FlexItem = styled(FlexboxGrid.Item)`
   text-align: center;
-`
-
-const FlexItemAlignRight = styled(FlexboxGrid.Item)`
-  text-align: right;
 `
 
 type Peer = NonNullable<PeerListQuery['peers']>[number]
@@ -208,7 +206,7 @@ function PeerList() {
   return (
     <>
       <PermissionControl qualifyingPermissions={['CAN_GET_PEER_PROFILE']}>
-        <h5>{t('peerList.overview.myPeerProfile')}</h5>
+        <h3>{t('peerList.overview.myPeerProfile')}</h3>
         <Wrapper>
           <NavigationBar
             centerChildren={
@@ -246,23 +244,20 @@ function PeerList() {
         </Wrapper>
       </PermissionControl>
 
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={24}>
-          <Divider />
-        </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={16}>
+      <ListViewContainer>
+        <ListViewHeader>
           <h2>{t('peerList.overview.peers')}</h2>
-        </FlexboxGrid.Item>
-        <FlexItemAlignRight colspan={8}>
-          <Link to="/peering/create">
-            <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
+        </ListViewHeader>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
+          <ListViewActions>
+            <Link to="/peering/create">
               <IconButton appearance="primary" disabled={isPeerListLoading} icon={<MdAdd />}>
                 {t('peerList.overview.newPeer')}
               </IconButton>
-            </PermissionControl>
-          </Link>
-        </FlexItemAlignRight>
-      </FlexboxGrid>
+            </Link>
+          </ListViewActions>
+        </PermissionControl>
+      </ListViewContainer>
       <MarginTop>
         {peerListData?.peers?.length ? (
           <List>{peers}</List>
