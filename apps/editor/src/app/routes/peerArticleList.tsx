@@ -1,4 +1,10 @@
 import styled from '@emotion/styled'
+import {
+  ArticleFilter,
+  ArticleSort,
+  PeerArticle,
+  usePeerArticleListQuery
+} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -12,7 +18,6 @@ import {
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {ArticleFilter, ArticleSort, PeerArticle, usePeerArticleListQuery} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {ListFilters, ListViewContainer, ListViewHeader, Table, TableWrapper} from '../ui/listView'
 import {

@@ -1,14 +1,14 @@
 import styled from '@emotion/styled'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, CheckPicker} from 'rsuite'
-
 import {
   AuthorListDocument,
   AuthorRefFragment,
   useAuthorListQuery,
   useCreateAuthorMutation
-} from '../api'
+} from '@wepublish/editor/api'
+import {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, CheckPicker} from 'rsuite'
+
 import {getOperationNameFromDocument, slugify} from '../utility'
 
 const ButtonWrapper = styled.div`

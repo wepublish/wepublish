@@ -1,5 +1,14 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
+import {
+  CommentRatingSystemAnswer,
+  FullCommentRatingSystem,
+  RatingSystemType,
+  useCreateRatingSystemAnswerMutation,
+  useDeleteRatingSystemAnswerMutation,
+  useRatingSystemLazyQuery,
+  useUpdateRatingSystemMutation
+} from '@wepublish/editor/api'
 import {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdOutlineSave, MdReplay} from 'react-icons/md'
@@ -15,15 +24,6 @@ import {
   toaster
 } from 'rsuite'
 
-import {
-  CommentRatingSystemAnswer,
-  FullCommentRatingSystem,
-  RatingSystemType,
-  useCreateRatingSystemAnswerMutation,
-  useDeleteRatingSystemAnswerMutation,
-  useRatingSystemLazyQuery,
-  useUpdateRatingSystemMutation
-} from '../api/index'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {ListViewActions, ListViewContainer, ListViewHeader, TableWrapper} from '../ui/listView'

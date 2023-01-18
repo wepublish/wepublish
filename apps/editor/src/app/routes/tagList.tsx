@@ -1,5 +1,13 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
+import {
+  Tag,
+  TagType,
+  useCreateTagMutation,
+  useDeleteTagMutation,
+  useTagListLazyQuery,
+  useUpdateTagMutation
+} from '@wepublish/editor/api'
 import {memo, useCallback, useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSave} from 'react-icons/md'
@@ -15,14 +23,6 @@ import {
   toaster
 } from 'rsuite'
 
-import {
-  Tag,
-  TagType,
-  useCreateTagMutation,
-  useDeleteTagMutation,
-  useTagListLazyQuery,
-  useUpdateTagMutation
-} from '../api'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {ListViewActions, ListViewContainer, ListViewHeader, TableWrapper} from '../ui/listView'

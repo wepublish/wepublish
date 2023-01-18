@@ -1,4 +1,12 @@
 import styled from '@emotion/styled'
+import {
+  PageInput,
+  useCreatePageMutation,
+  usePagePreviewLinkLazyQuery,
+  usePageQuery,
+  usePublishPageMutation,
+  useUpdatePageMutation
+} from '@wepublish/editor/api'
 import React, {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -20,14 +28,6 @@ import {
   toaster
 } from 'rsuite'
 
-import {
-  PageInput,
-  useCreatePageMutation,
-  usePagePreviewLinkLazyQuery,
-  usePageQuery,
-  usePublishPageMutation,
-  useUpdatePageMutation
-} from '../api'
 import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
 import {NavigationBar} from '../atoms/navigationBar'

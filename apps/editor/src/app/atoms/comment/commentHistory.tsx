@@ -1,15 +1,15 @@
 import PlusIcon from '@rsuite/icons/legacy/Plus'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {FlexboxGrid} from 'rsuite'
-
 import {
   CommentItemType,
   CommentSort,
   CommentState,
   FullCommentFragment,
   useCommentListLazyQuery
-} from '../../api'
+} from '@wepublish/editor/api'
+import {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {FlexboxGrid} from 'rsuite'
+
 import {CommentPreview, RevisionProps} from './commentPreview'
 import {CreateCommentBtn} from './createCommentBtn'
 

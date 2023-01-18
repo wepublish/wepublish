@@ -1,10 +1,3 @@
-import {useEffect, useMemo, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdAdd, MdComment, MdContentCopy, MdDelete, MdPreview, MdUnpublished} from 'react-icons/md'
-import {Link, useNavigate} from 'react-router-dom'
-import {Button, IconButton, Message, Modal, Pagination, Table as RTable} from 'rsuite'
-import {RowDataType} from 'rsuite-table'
-
 import {
   CommentItemType,
   PageFilter,
@@ -17,7 +10,14 @@ import {
   useDuplicatePageMutation,
   usePageListQuery,
   useUnpublishPageMutation
-} from '../api'
+} from '@wepublish/editor/api'
+import {useEffect, useMemo, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {MdAdd, MdComment, MdContentCopy, MdDelete, MdPreview, MdUnpublished} from 'react-icons/md'
+import {Link, useNavigate} from 'react-router-dom'
+import {Button, IconButton, Message, Modal, Pagination, Table as RTable, Table} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
+
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
@@ -29,7 +29,6 @@ import {
   ListViewContainer,
   ListViewHeader,
   StatusBadge,
-  Table,
   TableWrapper
 } from '../ui/listView'
 import {

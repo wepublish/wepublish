@@ -1,10 +1,10 @@
 import {ApolloError} from '@apollo/client'
+import {FullCommentFragment, useDeleteCommentMutation} from '@wepublish/editor/api'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdDelete} from 'react-icons/md'
 import {Button, IconButton, Message, Modal, toaster} from 'rsuite'
 
-import {FullCommentFragment, useDeleteCommentMutation} from '../../api'
 import {PermissionControl} from '../permissionControl'
 
 const onErrorToast = (error: ApolloError) => {

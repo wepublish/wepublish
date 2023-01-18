@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
+import {TokenListDocument, useCreateTokenMutation} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Input, Message as RMessage, Panel, toaster} from 'rsuite'
 
-import {TokenListDocument, useCreateTokenMutation} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {getOperationNameFromDocument} from '../utility'
 

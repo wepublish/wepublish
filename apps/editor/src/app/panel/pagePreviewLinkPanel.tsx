@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
+import {usePagePreviewLinkQuery} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Form, Message as RMessage, Modal, Slider, toaster} from 'rsuite'
 
-import {usePagePreviewLinkQuery} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 const Message = styled(RMessage)`

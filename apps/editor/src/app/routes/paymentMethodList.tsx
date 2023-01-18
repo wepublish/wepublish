@@ -1,3 +1,8 @@
+import {
+  FullPaymentMethodFragment,
+  useDeletePaymentMethodMutation,
+  usePaymentMethodListQuery
+} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
@@ -5,11 +10,6 @@ import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, Modal, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {
-  FullPaymentMethodFragment,
-  useDeletePaymentMethodMutation,
-  usePaymentMethodListQuery
-} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
@@ -116,7 +116,7 @@ function PaymentMethodList() {
                       size="sm"
                       onClick={() => {
                         setConfirmationDialogOpen(true)
-                        setCurrentPaymentMethod(rowData)
+                        setCurrentPaymentMethod(rowData as FullPaymentMethodFragment)
                       }}
                     />
                   </IconButtonTooltip>

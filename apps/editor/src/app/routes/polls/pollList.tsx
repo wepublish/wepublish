@@ -1,4 +1,5 @@
 import {ApolloError} from '@apollo/client'
+import {Poll, usePollsQuery} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdDelete} from 'react-icons/md'
@@ -6,7 +7,6 @@ import {Link} from 'react-router-dom'
 import {IconButton, Message, Pagination, Table as RTable, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {Poll, usePollsQuery} from '../../api'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {CreatePollBtn} from '../../atoms/poll/createPollBtn'
 import {DeletePollModal} from '../../atoms/poll/deletePollModal'

@@ -1,10 +1,10 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
+import {SortOrder, TagSort, TagType, useTagListQuery} from '@wepublish/editor/api'
 import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Divider as RDivider, Message, Pagination as RPagination, TagPicker, toaster} from 'rsuite'
 
-import {SortOrder, TagSort, TagType, useTagListQuery} from '../../api'
 import {DEFAULT_MAX_TABLE_PAGES} from '../../utility'
 
 const Divider = styled(RDivider)`

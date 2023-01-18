@@ -1,4 +1,11 @@
 import styled from '@emotion/styled'
+import {
+  Setting,
+  SettingName,
+  UpdateSettingArgs,
+  useSettingListQuery,
+  useUpdateSettingListMutation
+} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -18,13 +25,6 @@ import {
 import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon'
 import FormControl from 'rsuite/FormControl'
 
-import {
-  Setting,
-  SettingName,
-  UpdateSettingArgs,
-  useSettingListQuery,
-  useUpdateSettingListMutation
-} from '../api'
 import {
   createCheckedPermissionComponent,
   PermissionControl,

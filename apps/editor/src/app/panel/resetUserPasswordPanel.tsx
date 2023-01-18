@@ -1,8 +1,8 @@
+import {useResetUserPasswordMutation} from '@wepublish/editor/api'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Form, Notification, Panel, Schema, toaster} from 'rsuite'
 
-import {useResetUserPasswordMutation} from '../api'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 export interface ResetUserPasswordPanelProps {

@@ -1,4 +1,11 @@
 import styled from '@emotion/styled'
+import {
+  ArticleFilter,
+  AuthorRefFragment,
+  DateFilterComparison,
+  PageFilter,
+  usePeerListLazyQuery
+} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose} from 'react-icons/md'
@@ -11,13 +18,6 @@ import {
   Toggle as RToggle
 } from 'rsuite'
 
-import {
-  ArticleFilter,
-  AuthorRefFragment,
-  DateFilterComparison,
-  PageFilter,
-  usePeerListLazyQuery
-} from '../../api'
 import {AuthorCheckPicker} from '../../panel/authorCheckPicker'
 
 const {Group} = RForm

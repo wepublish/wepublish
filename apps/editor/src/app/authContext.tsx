@@ -1,8 +1,8 @@
 import {gql, useQuery} from '@apollo/client'
+import {UserRole} from '@wepublish/editor/api'
 import {createContext, Dispatch, ReactNode, useEffect, useReducer} from 'react'
 import {usePageVisibility} from 'react-page-visibility'
 
-import {UserRole} from './api'
 import {LocalStorageKey} from './utility'
 
 export interface AuthContextState {

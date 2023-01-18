@@ -1,4 +1,11 @@
 import styled from '@emotion/styled'
+import {
+  ImageListDocument,
+  ImageRefFragment,
+  useImageQuery,
+  useUpdateImageMutation,
+  useUploadImageMutation
+} from '@wepublish/editor/api'
 import imageCompression from 'browser-image-compression'
 import prettyBytes from 'pretty-bytes'
 import {useEffect, useState} from 'react'
@@ -14,13 +21,6 @@ import {
   toaster
 } from 'rsuite'
 
-import {
-  ImageListDocument,
-  ImageRefFragment,
-  useImageQuery,
-  useUpdateImageMutation,
-  useUploadImageMutation
-} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {Point} from '../atoms/draggable'
 import {FocalPointInput} from '../atoms/focalPointInput'

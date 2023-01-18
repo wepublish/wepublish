@@ -1,4 +1,14 @@
 import styled from '@emotion/styled'
+import {
+  ArticleFilter,
+  ArticleSort,
+  PageFilter,
+  SortOrder,
+  TeaserStyle,
+  useArticleListQuery,
+  usePageListQuery,
+  usePeerArticleListQuery
+} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -26,16 +36,6 @@ import {
   Toggle as RToggle
 } from 'rsuite'
 
-import {
-  ArticleFilter,
-  ArticleSort,
-  PageFilter,
-  SortOrder,
-  TeaserStyle,
-  useArticleListQuery,
-  usePageListQuery,
-  usePeerArticleListQuery
-} from '../api'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
 import {Teaser, TeaserLink, TeaserType} from '../blocks/types'

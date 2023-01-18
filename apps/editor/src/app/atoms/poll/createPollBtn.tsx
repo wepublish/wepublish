@@ -1,11 +1,10 @@
 import {ApolloError} from '@apollo/client'
+import {useCreatePollMutation} from '@wepublish/editor/api'
 import {useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd} from 'react-icons/md'
 import {useNavigate} from 'react-router-dom'
 import {IconButton, Message, toaster} from 'rsuite'
-
-import {useCreatePollMutation} from '../../api'
 
 export function CreatePollBtn() {
   const [createPollMutation, {data: newPoll, loading}] = useCreatePollMutation()

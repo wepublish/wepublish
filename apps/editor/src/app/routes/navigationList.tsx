@@ -1,3 +1,8 @@
+import {
+  FullNavigationFragment,
+  useDeleteNavigationMutation,
+  useNavigationListQuery
+} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
@@ -5,7 +10,6 @@ import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, Input, InputGroup, Modal, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {FullNavigationFragment, useDeleteNavigationMutation, useNavigationListQuery} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'

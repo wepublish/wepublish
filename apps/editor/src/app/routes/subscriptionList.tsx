@@ -1,4 +1,11 @@
 import styled from '@emotion/styled'
+import {
+  FullSubscriptionFragment,
+  SubscriptionFilter,
+  SubscriptionSort,
+  useDeleteSubscriptionMutation,
+  useSubscriptionListQuery
+} from '@wepublish/editor/api'
 import React, {useEffect, useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
@@ -6,13 +13,6 @@ import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, IconButton as RIconButton, Modal, Pagination, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {
-  FullSubscriptionFragment,
-  SubscriptionFilter,
-  SubscriptionSort,
-  useDeleteSubscriptionMutation,
-  useSubscriptionListQuery
-} from '../api'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {CommentRejectionReason, CommentState, FullCommentFragment} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdArrowDropDown} from 'react-icons/md'
@@ -13,7 +14,6 @@ import {
 } from 'rsuite'
 import {TypeAttributes} from 'rsuite/cjs/@types/common'
 
-import {CommentRejectionReason, CommentState, FullCommentFragment} from '../../api'
 import {CommentStateChangeModal, mapCommentActionToBtnTitle} from './commentStateChangeModal'
 
 const BadgeWrapper = styled.div`

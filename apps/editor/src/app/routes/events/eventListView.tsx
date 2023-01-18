@@ -1,12 +1,13 @@
 import {ApolloError} from '@apollo/client'
 import TrashIcon from '@rsuite/icons/legacy/Trash'
-import React, {useEffect, useState} from 'react'
+import {Event, useEventListQuery} from '@wepublish/editor/api'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {IconButton, Message, Pagination, Table as RTable, toaster} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
-import {Event, useEventListQuery} from '../../api'
 import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
 import {
   ListViewActions,
@@ -92,29 +93,35 @@ function EventListView() {
           <Column width={200} resizable>
             <HeaderCell>{t('event.list.name')}</HeaderCell>
             <Cell>
-              {(rowData: Event) => <Link to={`/events/edit/${rowData.id}`}>{rowData.name}</Link>}
+              {(rowData: RowDataType<Event>) => (
+                <Link to={`/events/edit/${rowData.id}`}>{rowData.name}</Link>
+              )}
             </Cell>
           </Column>
 
           <Column width={250} resizable>
             <HeaderCell>{t('event.list.startsAt')}</HeaderCell>
-            <Cell>{(rowData: Event) => <EventStartsAtView startsAt={rowData.startsAt} />}</Cell>
+            <Cell>
+              {(rowData: RowDataType<Event>) => <EventStartsAtView startsAt={rowData.startsAt} />}
+            </Cell>
           </Column>
 
           <Column width={250} resizable>
             <HeaderCell>{t('event.list.endsAt')}</HeaderCell>
-            <Cell>{(rowData: Event) => <EventEndsAtView endsAt={rowData.endsAt} />}</Cell>
+            <Cell>
+              {(rowData: RowDataType<Event>) => <EventEndsAtView endsAt={rowData.endsAt} />}
+            </Cell>
           </Column>
 
           <Column resizable>
             <HeaderCell align={'center'}>{t('event.list.delete')}</HeaderCell>
             <Cell align={'center'} style={{padding: '5px 0'}}>
-              {(event: Event) => (
+              {(event: RowDataType<Event>) => (
                 <IconButton
                   icon={<TrashIcon />}
                   circle
                   size="sm"
-                  onClick={() => setEventDelete(event)}
+                  onClick={() => setEventDelete(event as Event)}
                 />
               )}
             </Cell>

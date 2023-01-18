@@ -1,4 +1,11 @@
 import styled from '@emotion/styled'
+import {
+  CommentFilter,
+  CommentSort,
+  CommentState,
+  FullCommentFragment,
+  useCommentListQuery
+} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
@@ -6,13 +13,6 @@ import {Link} from 'react-router-dom'
 import {IconButton, Pagination, Table as RTable, Toggle} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {
-  CommentFilter,
-  CommentSort,
-  CommentState,
-  FullCommentFragment,
-  useCommentListQuery
-} from '../../api'
 import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {CreateCommentBtn} from '../../atoms/comment/createCommentBtn'
 import {IconButtonTooltip} from '../../atoms/iconButtonTooltip'

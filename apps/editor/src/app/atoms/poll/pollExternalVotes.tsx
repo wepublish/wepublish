@@ -1,5 +1,13 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
+import {
+  FullPoll,
+  PollAnswerWithVoteCount,
+  PollExternalVote,
+  PollExternalVoteSource,
+  useCreatePollExternalVoteSourceMutation,
+  useDeletePollExternalVoteSourceMutation
+} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
@@ -15,15 +23,6 @@ import {
   toaster
 } from 'rsuite'
 import FormControl from 'rsuite/FormControl'
-
-import {
-  FullPoll,
-  PollAnswerWithVoteCount,
-  PollExternalVote,
-  PollExternalVoteSource,
-  useCreatePollExternalVoteSourceMutation,
-  useDeletePollExternalVoteSourceMutation
-} from '../../api'
 
 const Row = styled(RRow)`
   margin-top: 20px;

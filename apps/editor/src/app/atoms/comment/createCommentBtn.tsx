@@ -1,4 +1,5 @@
 import {ApolloError} from '@apollo/client'
+import {CommentItemType, useCreateCommentMutation} from '@wepublish/editor/api'
 import React from 'react'
 import {useTranslation} from 'react-i18next'
 import {IconType} from 'react-icons'
@@ -7,7 +8,6 @@ import {useNavigate} from 'react-router-dom'
 import {IconButton, Message, toaster} from 'rsuite'
 import {TypeAttributes} from 'rsuite/cjs/@types/common'
 
-import {CommentItemType, useCreateCommentMutation} from '../../api'
 import {IconButtonTooltip} from '../iconButtonTooltip'
 
 interface ReplyCommentBtnProps {

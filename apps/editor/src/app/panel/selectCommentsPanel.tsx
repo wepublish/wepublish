@@ -1,5 +1,6 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
+import {FullCommentFragment, TagType, useCommentListLazyQuery} from '@wepublish/editor/api'
 import React, {useEffect, useMemo, useReducer, useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
@@ -18,8 +19,6 @@ import {
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {FullCommentFragment, TagType} from '../api'
-import {useCommentListLazyQuery} from '../api/index'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {PermissionControl} from '../atoms/permissionControl'
 import {SelectTags} from '../atoms/tag/selectTags'
