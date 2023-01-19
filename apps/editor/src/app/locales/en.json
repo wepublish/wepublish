@@ -143,7 +143,8 @@
         "canonicalUrl": "Canonical Url",
         "canonicalUrLHelpBlock": "A canonical link element is an HTML element that helps webmasters prevent duplicate content issues in search engine optimization by specifying the 'canonical' or 'preferred' version of a web page. <2>Canonical Url Guide</2>",
         "peerDisabled": "Currently this peer is disabled",
-        "comments": "Comments"
+        "comments": "Comments",
+        "loadingPeerArticles": "Loading articles from peers..."
       }
     },
     "articles": {
