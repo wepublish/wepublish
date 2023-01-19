@@ -7,7 +7,7 @@ import {
   TeaserStyle,
   useArticleListQuery,
   usePageListQuery,
-  usePeerArticleListQuery
+  usePeerArticleListLazyQuery
 } from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -121,6 +121,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const [contentUrl, setContentUrl] = useState('')
   const [title, setTitle] = useState(initialTeaser.title)
   const [lead, setLead] = useState(initialTeaser.lead)
+  const [peerArticlesLoaded, setPeerArticlesLoaded] = useState<boolean>(false)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -152,11 +153,15 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     fetchPolicy: 'network-only'
   })
 
-  const {
-    data: peerArticleListData,
-    fetchMore: fetchMorePeerArticles,
-    error: peerArticleListError
-  } = usePeerArticleListQuery({
+  const [
+    getPeerArticles,
+    {
+      loading: loadingPeerArticles,
+      error: peerArticleListError,
+      data: peerArticleListData,
+      fetchMore: fetchMorePeerArticles
+    }
+  ] = usePeerArticleListLazyQuery({
     variables: peerListVariables,
     fetchPolicy: 'network-only'
   })
@@ -516,7 +521,16 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <Nav appearance="tabs" activeKey={type} onSelect={type => setType(type)}>
+        <Nav
+          appearance="tabs"
+          activeKey={type}
+          onSelect={async type => {
+            setType(type)
+            if (type === TeaserType.PeerArticle && !peerArticlesLoaded) {
+              setPeerArticlesLoaded(true)
+              await getPeerArticles()
+            }
+          }}>
           <RNav.Item eventKey={TeaserType.Article} icon={<MdDescription />}>
             {t('articleEditor.panels.article')}
           </RNav.Item>

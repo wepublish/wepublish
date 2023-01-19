@@ -57,20 +57,11 @@ import {getEvent} from './graphql/event/event.queries'
 /**
  * Peered article cache configuration and setup
  */
-const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000
 const fetcherCache = new NodeCache({
   stdTTL: 1800,
   checkperiod: 60,
-  deleteOnExpire: false,
-  useClones: false
-})
-fetcherCache.on('expired', async function (key: string, value: PeerCacheValue) {
-  // Refresh cache only if last use of cached entry is less than 24h ago
-  if (value.queryParams.lastQueried > new Date().getTime() - ONE_DAY_IN_MS) {
-    await loadFreshData(value.queryParams)
-  } else {
-    fetcherCache.del(key)
-  }
+  deleteOnExpire: true,
+  useClones: true
 })
 
 export interface DataLoaderContext {
@@ -163,7 +154,6 @@ export interface Oauth2Provider {
 
 interface PeerQueryParams {
   cacheKey: string
-  lastQueried: number
   readonly hostURL: string
   readonly variables: {[p: string]: any} | undefined
   readonly query: string
@@ -673,7 +663,7 @@ export async function contextFromRequest(
                 })
               )?.value as number) ||
               parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
-              3000
+              10 * 1000 // 10 Seconds timeout in  ms
             const fetcher = createFetcher(peer.hostURL, peer.token, peerTimeout)
 
             return makeRemoteExecutableSchema({
@@ -707,7 +697,7 @@ export async function contextFromRequest(
                 })
               )?.value as number) ||
               parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
-              3000
+              10 * 1000 // 10 Seconds timeout in  ms
             const fetcher = createFetcher(
               url.resolve(peer.hostURL, 'admin'),
               peer.token,
@@ -1074,10 +1064,10 @@ async function loadFreshData(params: PeerQueryParams) {
   try {
     const abortController = new AbortController()
 
-    const peerTimeOUT = params.timeout ? params.timeout : 3000
+    const peerTimeOut = params.timeout ? params.timeout : 10 * 1000 // 10 Seconds timeout in  ms
 
     // Since we use auto refresh cache we can safely set the timeout to 3sec
-    setTimeout(() => abortController.abort(), peerTimeOUT)
+    setTimeout(() => abortController.abort(), peerTimeOut)
 
     const fetchResult = await fetch(params.hostURL, {
       method: 'POST',
@@ -1095,7 +1085,6 @@ async function loadFreshData(params: PeerQueryParams) {
         errors: [new GraphQLError(`Peer responded with invalid status: ${fetchResult?.status}`)]
       }
     }
-    params.lastQueried = params.lastQueried ? params.lastQueried : new Date().getTime()
     const cacheValue: PeerCacheValue = {
       data: res,
       queryParams: params
@@ -1126,7 +1115,6 @@ export function createFetcher(hostURL: string, token: string, peerTimeOut: numbe
       operationName,
       token,
       cacheKey: '',
-      lastQueried: 0,
       timeout: peerTimeOut
     }
 
@@ -1135,7 +1123,6 @@ export function createFetcher(hostURL: string, token: string, peerTimeOut: numbe
 
     if (cachedData) {
       // Serve cached entries direct
-      cachedData.queryParams.lastQueried = new Date().getTime()
       return cachedData.data
     }
 
