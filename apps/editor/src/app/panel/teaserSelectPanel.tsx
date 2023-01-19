@@ -156,7 +156,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const [
     getPeerArticles,
     {
-      loading: loadingPeerArticles,
+      // loading: loadingPeerArticles,
       error: peerArticleListError,
       data: peerArticleListData,
       fetchMore: fetchMorePeerArticles
