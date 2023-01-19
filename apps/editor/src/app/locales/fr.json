@@ -1328,6 +1328,8 @@
       "newPoll": "Nouveau sondage créé",
       "newSubscription": "Nouvel abonnement",
       "newAuthor": "Nouvel auteur ajouté",
+      "newEvent": "Nouvel event ajouté",
+      "newAction": "Nouvel action",
       "newUser": "Nouvel utilisateur ajouté",
       "createdBy": " de {{creator}}"
     }

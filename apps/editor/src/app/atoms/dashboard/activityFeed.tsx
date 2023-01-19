@@ -10,7 +10,9 @@ import {
   MdAccountCircle,
   MdGroup,
   MdOutlineGridView,
-  MdDashboard
+  MdDashboard,
+  MdEvent,
+  MdFeed
 } from 'react-icons/md'
 import {formatDistanceToNow} from 'date-fns'
 import {fr, de, enUS} from 'date-fns/locale'
@@ -47,59 +49,76 @@ export function ActivityFeed() {
     }
   }, [data?.actions])
 
+  const mapDetailsToActionType = (rowData: RowDataType<Action>) => {
+    switch (rowData.actionType) {
+      case ActionType.Article:
+        return {
+          icon: <MdDescription />,
+          path: `/articles/edit/${rowData.id}`,
+          type: t('dashboard.newArticle')
+        }
+      case ActionType.Page:
+        return {
+          icon: <MdDashboard />,
+          path: `/pages/edit/${rowData.id}`,
+          type: t('dashboard.newPage')
+        }
+      case ActionType.Comment:
+        return {
+          icon: <MdChat />,
+          path: `/comments/edit/${rowData.id}`,
+          type: t('dashboard.newComment')
+        }
+      case ActionType.Subscription:
+        return {
+          icon: <MdAutorenew />,
+          path: `/subscriptions/edit/${rowData.id}`,
+          type: t('dashboard.newSubscription')
+        }
+      case ActionType.User:
+        return {
+          icon: <MdAccountCircle />,
+          path: `/users/edit/${rowData.id}`,
+          type: t('dashboard.newUser')
+        }
+      case ActionType.Author:
+        return {
+          icon: <MdGroup />,
+          path: `/authors/edit/${rowData.id}`,
+          type: t('dashboard.newAuthor')
+        }
+      case ActionType.Poll:
+        return {
+          icon: <MdOutlineGridView />,
+          path: `/polls/edit/${rowData.id}`,
+          type: t('dashboard.newPoll')
+        }
+      case ActionType.Event:
+        return {
+          icon: <MdEvent />,
+          path: `/events/edit/${rowData.id}`,
+          type: t('dashboard.newEvent')
+        }
+      default:
+        return {
+          icon: <MdFeed />,
+          path: `/`,
+          type: t('dashboard.newAction')
+        }
+    }
+  }
+
   return (
     <Table wordWrap autoHeight rowHeight={60} data={actions} loading={isLoading}>
       <Column flexGrow={2}>
         <HeaderCell dataKey="event">{t('dashboard.event')}</HeaderCell>
         <Cell dataKey="event">
           {(rowData: RowDataType<Action>) => {
-            let icon = <></>
-            let path = '/'
-            let type = ''
-
-            switch (rowData.actionType) {
-              case ActionType.Article:
-                icon = <MdDescription />
-                path = `/articles/edit/${rowData.id}`
-                type = t('dashboard.newArticle')
-                break
-              case ActionType.Page:
-                icon = <MdDashboard />
-                path = `/pages/edit/${rowData.id}`
-                type = t('dashboard.newPage')
-                break
-              case ActionType.Comment:
-                icon = <MdChat />
-                path = `/comments/edit/${rowData.id}`
-                type = t('dashboard.newComment')
-                break
-              case ActionType.Subscription:
-                icon = <MdAutorenew />
-                path = `/subscriptions/edit/${rowData.id}`
-                type = t('dashboard.newSubscription')
-                break
-              case ActionType.User:
-                icon = <MdAccountCircle />
-                path = `/users/edit/${rowData.id}`
-                type = t('dashboard.newUser')
-                break
-              case ActionType.Author:
-                icon = <MdGroup />
-                path = `/authors/edit/${rowData.id}`
-                type = t('dashboard.newAuthor')
-                break
-              case ActionType.Poll:
-                icon = <MdOutlineGridView />
-                path = `/polls/edit/${rowData.id}`
-                type = t('dashboard.newPoll')
-                break
-              default:
-                icon = <></>
-            }
+            const action = mapDetailsToActionType(rowData)
             return (
               <>
-                <ActivityFeedIcon circle>{icon}</ActivityFeedIcon>
-                <Link to={path}> {type} </Link>
+                <ActivityFeedIcon circle>{action.icon}</ActivityFeedIcon>
+                <Link to={action.path}> {action.type} </Link>
                 {formatDistanceToNow(new Date(rowData.date), {
                   locale: i18n.language === 'de' ? de : i18n.language === 'fr' ? fr : enUS,
                   addSuffix: true

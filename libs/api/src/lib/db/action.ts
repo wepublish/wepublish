@@ -5,7 +5,8 @@ export enum ActionType {
   Subscription = 'subscription',
   Author = 'author',
   Poll = 'poll',
-  User = 'user'
+  User = 'user',
+  Event = 'event'
 }
 
 export interface Action {

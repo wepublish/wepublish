@@ -1334,6 +1334,8 @@
       "newSubscription": "Neues Abo",
       "newAuthor": "Neuer Author erstellt",
       "newUser": "Neuer User erstellt",
+      "newEvent": "Neues event",
+      "newAction": "Neues action",
       "createdBy": " von {{creator}}"
     }
   }

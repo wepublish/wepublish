@@ -770,9 +770,19 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       resolve: async (
         root,
         _,
-        {authenticate, prisma: {article, page, comment, subscription, author, poll, user}}
+        {authenticate, prisma: {article, page, comment, subscription, author, poll, user, event}}
       ) => {
-        return getActions(authenticate, article, page, comment, subscription, author, poll, user)
+        return getActions(
+          authenticate,
+          article,
+          page,
+          comment,
+          subscription,
+          author,
+          poll,
+          user,
+          event
+        )
       }
     }
   }

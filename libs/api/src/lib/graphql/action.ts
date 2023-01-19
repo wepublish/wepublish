@@ -11,7 +11,8 @@ export const GraphQLActionType = new GraphQLEnumType({
     SUBSCRIPTION: {value: ActionType.Subscription},
     AUTHOR: {value: ActionType.Author},
     POLL: {value: ActionType.Poll},
-    USER: {value: ActionType.User}
+    USER: {value: ActionType.User},
+    EVENT: {value: ActionType.Event}
   }
 })
 

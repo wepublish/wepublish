@@ -1333,6 +1333,8 @@
       "newSubscription": "New subscription",
       "newAuthor": "New author added",
       "newUser": "New user added",
+      "newEvent": "New event added",
+      "newAction": "New action",
       "createdBy": " by {{creator}}"
     }
   }

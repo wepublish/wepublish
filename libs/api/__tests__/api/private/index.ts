@@ -36,6 +36,7 @@ export enum ActionType {
   Article = 'ARTICLE',
   Author = 'AUTHOR',
   Comment = 'COMMENT',
+  Event = 'EVENT',
   Page = 'PAGE',
   Poll = 'POLL',
   Subscription = 'SUBSCRIPTION',

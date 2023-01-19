@@ -5,6 +5,7 @@ import {
   CanGetArticles,
   CanGetAuthors,
   CanGetComments,
+  CanGetEvent,
   CanGetPages,
   CanGetPoll,
   CanGetSubscriptions,
@@ -20,7 +21,8 @@ export const getActions = async (
   subscription: PrismaClient['subscription'],
   author: PrismaClient['author'],
   poll: PrismaClient['poll'],
-  user: PrismaClient['user']
+  user: PrismaClient['user'],
+  event: PrismaClient['event']
 ) => {
   const {roles} = authenticate()
 
@@ -108,6 +110,16 @@ export const getActions = async (
         }
       })
     : []
+  const events = isAuthorised(CanGetEvent, roles)
+    ? (await event.findMany({take: 5})).map((value: any) => {
+        return {
+          date: value.createdAt,
+          actionType: ActionType.Event,
+          id: value.id,
+          summary: value.name
+        }
+      })
+    : []
   const actions = [
     ...articles,
     ...pages,
@@ -115,7 +127,8 @@ export const getActions = async (
     ...authors,
     ...subscriptions,
     ...polls,
-    ...users
+    ...users,
+    ...events
   ]
   return actions.sort((v1, v2) => v2.date - v1.date)
 }
