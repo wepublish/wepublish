@@ -28,6 +28,7 @@ import {
   InputGroup as RInputGroup,
   List as RList,
   Nav as RNav,
+  Loader,
   Notification,
   Panel,
   Radio,
@@ -137,12 +138,12 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
   const peerListVariables = {
     filter: filter || undefined,
-    first: 20,
+    first: 50,
     order: SortOrder.Descending,
     sort: ArticleSort.PublishedAt
   }
-  const listVariables = {filter: filter || undefined, take: 20}
-  const pageListVariables = {filter: filter as PageFilter, take: 20}
+  const listVariables = {filter: filter || undefined, take: 50}
+  const pageListVariables = {filter: filter as PageFilter, take: 50}
 
   const {
     data: articleListData,
@@ -295,7 +296,17 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
       case TeaserType.PeerArticle:
         return (
           <>
-            <h4>{loadingPeerArticles && t('articleEditor.panels.loadingPeerArticles')}</h4>
+            {loadingPeerArticles && (
+              <div>
+                <hr />
+                <hr />
+                <Loader
+                  backdrop
+                  size="md"
+                  content={t('articleEditor.panels.loadingPeerArticles')}
+                />
+              </div>
+            )}
             {peerArticles.map(({peer, article, peeredArticleURL}) => {
               const states = []
 

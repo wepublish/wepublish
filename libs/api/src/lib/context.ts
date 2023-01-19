@@ -57,9 +57,11 @@ import {getEvent} from './graphql/event/event.queries'
 /**
  * Peered article cache configuration and setup
  */
+const ONE_HOUR_IN_SEC = 60 * 60
+const ONE_MIN_IN_SEC = 60
 const fetcherCache = new NodeCache({
-  stdTTL: 1800,
-  checkperiod: 60,
+  stdTTL: ONE_HOUR_IN_SEC,
+  checkperiod: ONE_MIN_IN_SEC,
   deleteOnExpire: true,
   useClones: true
 })
