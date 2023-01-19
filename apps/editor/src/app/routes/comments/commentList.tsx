@@ -20,10 +20,10 @@ import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/p
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 import {
   ListViewContainer,
+  ListViewFilterArea,
   ListViewHeader,
   Table,
-  TableWrapper,
-  ListViewFilterArea
+  TableWrapper
 } from '../../ui/listView'
 import {
   DEFAULT_MAX_TABLE_PAGES,
