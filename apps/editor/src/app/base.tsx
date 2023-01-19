@@ -42,6 +42,7 @@ import {
 
 import {PermissionControl} from './atoms/permissionControl'
 import Version from './atoms/version'
+import {fr, de, enUS} from 'date-fns/locale'
 
 export interface BaseProps {
   children?: ReactNode
@@ -53,10 +54,10 @@ const NavLink = React.forwardRef<HTMLAnchorElement, any>(({href, children, ...re
   </Link>
 ))
 
-const AVAILABLE_LANG = [
-  {id: 'en', lang: 'en_US', name: 'English'},
-  {id: 'fr', lang: 'fr_FR', name: 'Français'},
-  {id: 'de', lang: 'de_CH', name: 'Deutsch'}
+export const AVAILABLE_LANG = [
+  {id: 'en', lang: 'en_US', name: 'English', locale: enUS},
+  {id: 'fr', lang: 'fr_FR', name: 'Français', locale: fr},
+  {id: 'de', lang: 'de_CH', name: 'Deutsch', locale: de}
 ]
 
 function useStickyState(defaultValue: string, key: string) {

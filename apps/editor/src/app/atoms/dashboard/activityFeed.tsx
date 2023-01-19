@@ -15,9 +15,9 @@ import {
   MdFeed
 } from 'react-icons/md'
 import {formatDistanceToNow} from 'date-fns'
-import {fr, de, enUS} from 'date-fns/locale'
 import styled from '@emotion/styled'
 import {useRecentActionsQuery, Action, ActionType} from '@wepublish/editor/api'
+import {AVAILABLE_LANG} from '../../base'
 
 export interface Event {
   date: string
@@ -120,7 +120,7 @@ export function ActivityFeed() {
                 <ActivityFeedIcon circle>{action.icon}</ActivityFeedIcon>
                 <Link to={action.path}> {action.type} </Link>
                 {formatDistanceToNow(new Date(rowData.date), {
-                  locale: i18n.language === 'de' ? de : i18n.language === 'fr' ? fr : enUS,
+                  locale: AVAILABLE_LANG.find(lang => lang.id === i18n.language)?.locale,
                   addSuffix: true
                 })}
                 {rowData.creator && t('dashboard.createdBy', {creator: rowData.creator})}
