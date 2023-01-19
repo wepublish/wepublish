@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import {AuthorRefFragment, CommentItemType, ImageRefFragment} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
-import {MdAutoFixHigh, MdListAlt, MdSettings, MdShare, MdComment} from 'react-icons/md'
+import {MdAutoFixHigh, MdComment, MdListAlt, MdSettings, MdShare} from 'react-icons/md'
 import {
   Button,
   Drawer,

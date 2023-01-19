@@ -115,6 +115,7 @@
     "eslint-plugin-react-hooks": "4.6.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-standard": "^4.0.1",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "execa": "^5.1.1",
     "https-browserify": "^1.0.0",
     "husky": "^3.0.0",

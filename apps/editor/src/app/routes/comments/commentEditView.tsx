@@ -34,8 +34,6 @@ import {CommentUser} from '../../atoms/comment/commentUser'
 import {ModelTitle} from '../../atoms/modelTitle'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {SelectTags} from '../../atoms/tag/selectTags'
-import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../../blocks/types'
 
 const ColNoMargin = styled(RCol)`
   margin-top: 0px;
