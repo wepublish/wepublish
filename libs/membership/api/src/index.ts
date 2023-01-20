@@ -1,1 +1,1 @@
-export * from './lib/membership-api.module'
+export * from './lib/dashboard/dashboard.module'

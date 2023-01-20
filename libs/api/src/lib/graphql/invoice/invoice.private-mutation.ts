@@ -19,7 +19,7 @@ export const deleteInvoiceById = async (
 }
 
 type CreateInvoiceInput = Omit<Prisma.InvoiceUncheckedCreateInput, 'items' | 'modifiedAt'> & {
-  items: Prisma.InvoiceItemUncheckedCreateWithoutInvoiceInput[]
+  items: Prisma.InvoiceItemUncheckedCreateWithoutInvoicesInput[]
 }
 
 export const createInvoice = (
@@ -47,7 +47,7 @@ type UpdateInvoiceInput = Omit<
   Prisma.InvoiceUncheckedUpdateInput,
   'items' | 'modifiedAt' | 'createdAt'
 > & {
-  items: Prisma.InvoiceItemUncheckedCreateWithoutInvoiceInput[]
+  items: Prisma.InvoiceItemUncheckedCreateWithoutInvoicesInput[]
 }
 
 export const updateInvoice = async (

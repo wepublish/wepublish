@@ -2,8 +2,89 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type DashboardInvoice {
+  amount: Int!
+  dueAt: DateTime!
+  memberPlan: String
+  paidAt: DateTime
+}
+
+type DashboardSubscription {
+  endsAt: DateTime
+  memberPlan: String!
+  monthlyAmount: Int!
+  paymentPeriodicity: PaymentPeriodicity!
+  reasonForDeactivation: SubscriptionDeactivationReason
+  renewsAt: DateTime
+  startsAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum PaymentPeriodicity {
+  biannual
+  monthly
+  quarterly
+  yearly
+}
+
 type Query {
+  """
+  
+        Returns all active subscribers.
+        Includes subscribers with a cancelled but not run out subscription.
+      
+  """
+  activeSubscribers: [DashboardSubscription!]!
+
+  """
+  
+        Returns the expected revenue for the time period given.
+        Excludes cancelled or manually set as paid invoices.
+      
+  """
+  expectedRevenue(end: DateTime! = "2023-01-20T14:14:55.205Z", start: DateTime!): [DashboardInvoice!]!
+
+  """
+  
+        Returns all new deactivations in a given timeframe.
+        This considers the time the deactivation was made, not when the subscription runs out.
+      
+  """
+  newDeactivations(end: DateTime! = "2023-01-20T14:14:55.206Z", start: DateTime!): [DashboardSubscription!]!
+
+  """
+  
+        Returns all new subscribers in a given timeframe.
+        Includes already deactivated ones.
+      
+  """
+  newSubscribers(end: DateTime! = "2023-01-20T14:14:55.205Z", start: DateTime!): [DashboardSubscription!]!
+
+  """
+  
+        Returns all renewing subscribers in a given timeframe.
+      
+  """
+  renewingSubscribers(end: DateTime! = "2023-01-20T14:14:55.206Z", start: DateTime!): [DashboardSubscription!]!
+
+  """
+  
+        Returns the revenue generated for the time period given.
+        Only includes paid invoices that have not been manually paid.
+      
+  """
+  revenue(end: DateTime! = "2023-01-20T14:14:55.205Z", start: DateTime!): [DashboardInvoice!]!
   versionInformation: VersionInformation!
+}
+
+enum SubscriptionDeactivationReason {
+  invoiceNotPaid
+  none
+  userSelfDeactivated
 }
 
 type VersionInformation {

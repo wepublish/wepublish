@@ -1,7 +1,6 @@
 import {PrismaClient} from '@prisma/client'
 import {
   AlgebraicCaptchaChallenge,
-  JobType,
   KarmaMediaAdapter,
   MailgunMailProvider,
   Oauth2Provider,
@@ -19,8 +18,6 @@ import {createWriteStream} from 'pino-sentry'
 import pinoStackdriver from 'pino-stackdriver'
 import * as process from 'process'
 import {URL} from 'url'
-import yargs from 'yargs'
-import {hideBin} from 'yargs/helpers'
 import {SlackMailProvider} from './slack-mail-provider'
 import {ExampleURLAdapter} from './url-adapter'
 import {Application} from 'express'
@@ -292,85 +289,4 @@ export async function runServer(app?: Application | undefined) {
     },
     app
   )
-
-  // eslint-disable-next-line no-unused-expressions
-  yargs(hideBin(process.argv))
-    .command(
-      ['listen', '$0'],
-      'start the server',
-      () => {
-        /* do nothing */
-      },
-      async argv => {
-        await server.listen(port, address)
-      }
-    )
-    .command(
-      'sendTestMail [recipient]',
-      'send a test mail',
-      yargs => {
-        yargs.positional('recipient', {
-          type: 'string',
-          default: 'dev@wepublish.ch',
-          describe: 'recipient of the test mail'
-        })
-      },
-      async argv => {
-        await server.runJob(JobType.SendTestMail, {
-          recipient: argv.recipient,
-          message: 'Hello from the other side'
-        })
-        process.exit(0)
-      }
-    )
-    .command(
-      'dmr',
-      'Renew Memberships',
-      () => {
-        /* do nothing */
-      },
-      async argv => {
-        await server.runJob(JobType.DailyMembershipRenewal, {
-          startDate: new Date()
-        })
-        process.exit(0)
-      }
-    )
-    .command(
-      'dir',
-      'Remind open invoices',
-      () => {
-        /* do nothing */
-      },
-      async () => {
-        await server.runJob(JobType.DailyInvoiceReminder, {
-          userPaymentURL: `${websiteURL}/user/invocies`,
-          replyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch',
-          sendEveryDays: 3
-        })
-        process.exit(0)
-      }
-    )
-    .command(
-      'dic',
-      'charge open invoices',
-      () => {
-        /* do nothing */
-      },
-      async () => {
-        await server.runJob(JobType.DailyInvoiceCharger, {})
-        process.exit(0)
-      }
-    )
-    .command(
-      'checkdic',
-      'check open invoices',
-      () => {
-        /* do nothing */
-      },
-      async () => {
-        await server.runJob(JobType.DailyInvoiceChecker, {})
-        process.exit(0)
-      }
-    ).argv
 }

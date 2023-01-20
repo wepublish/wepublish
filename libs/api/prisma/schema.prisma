@@ -207,8 +207,8 @@ model Image {
 
 enum CommentItemType {
   peerArticle @map("peerArticle")
-  article  @map("article")
-  page     @map("page")
+  article     @map("article")
+  page        @map("page")
 }
 
 enum CommentRejectionReason {
@@ -369,7 +369,7 @@ model InvoiceItem {
   quantity    Int
   amount      Int
 
-  Invoice   Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+  invoices  Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
   invoiceId String?
 
   @@map("invoices.items")
@@ -395,7 +395,7 @@ model Invoice {
   userID String?
   user   User?   @relation(fields: [userID], references: [id])
 
-  SubscriptionPeriod SubscriptionPeriod[]
+  subscriptionPeriods SubscriptionPeriod[]
 
   @@index([mail])
   @@map("invoices")
@@ -671,7 +671,7 @@ model SubscriptionPeriod {
   amount             Float
 
   invoiceID String
-  Invoice   Invoice @relation(fields: [invoiceID], references: [id])
+  invoice   Invoice @relation(fields: [invoiceID], references: [id])
 
   subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
   subscriptionId String?
@@ -721,7 +721,7 @@ model Subscription {
   userID String
   user   User   @relation(fields: [userID], references: [id])
 
-  Invoice Invoice[]
+  invoices Invoice[]
 
   @@map("subscriptions")
 }

@@ -103,6 +103,7 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/react-test-renderer": "^17.0.1",
     "@types/resize-observer-browser": "^0.1.6",
+    "@types/supertest": "^2.0.12",
     "@types/webpack": "^4.35.3",
     "@types/webpack-dev-server": "^2.9.4",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
@@ -150,6 +151,7 @@
     "react-test-renderer": "18.2.0",
     "snapshot-diff": "^0.9.0",
     "stream-http": "^3.2.0",
+    "supertest": "^6.3.3",
     "testcafe": "1.10.0",
     "ts-jest": "28.0.5",
     "ts-node": "10.9.1",
@@ -252,7 +254,6 @@
     "slate-hyperscript": "^0.58.1",
     "slate-react": "^0.58.1",
     "stripe": "^8.126.0",
-    "tslib": "^2.3.0",
-    "yargs": "^17.5.1"
+    "tslib": "^2.3.0"
   }
 }

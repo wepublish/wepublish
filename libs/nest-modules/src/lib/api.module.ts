@@ -1,5 +1,5 @@
 import {Module} from '@nestjs/common'
-import {MaintenanceModule} from '../maintenance/maintenance.module'
+import {MaintenanceModule} from './maintenance/maintenance.module'
 
 @Module({
   imports: [MaintenanceModule]
