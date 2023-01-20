@@ -465,7 +465,7 @@ model MemberPlan {
 
   Subscription Subscription[]
 
-  SubscriptionMailOverrides  SubscriptionMailOverride[]
+  subscriptionCommunicationFlows  SubscriptionCommunicationFlow[]
 
   @@index([name])
   @@map("member.plans")
@@ -571,7 +571,7 @@ model PaymentMethod {
 
   Subscription Subscription[]
   Payment      Payment[]
-  SubscriptionMailOverrides  SubscriptionMailOverride[]
+  subscriptionCommunicationFlows  SubscriptionCommunicationFlow[]
 
   @@map("payment.methods")
 }
@@ -987,18 +987,33 @@ model TaggedEvents {
 }
 
 model UserCommunicationFlow {
+  id                    Int @id @default(autoincrement())
+	createdAt             DateTime @default(now())
+	modifiedAt            DateTime @updatedAt
+
+  accountCreationMailTemplate       MailTemplate? @relation("accountCreationMailTemplate", fields: [accountCreationMailTemplateId], references: [id]) // user creates a new account
+	accountCreationMailTemplateId     Int? @unique
+
+  passwordResetMailTemplate         MailTemplate? @relation("passwordResetMailTemplate", fields: [passwordResetMailTemplateId], references: [id]) // inform user, password was reset
+	passwordResetMailTemplateId       Int? @unique
+
+  loginLinkMailTemplate             MailTemplate? @relation("loginLinkMailTemplate", fields: [loginLinkMailTemplateId], references: [id])  // user receives login link
+	loginLinkMailTemplateId           Int? @unique
+
+  @@map("user_communication_flows")
+}
+
+model SubscriptionCommunicationFlow {
 	id                    Int @id @default(autoincrement())
 	createdAt             DateTime @default(now())
 	modifiedAt            DateTime @updatedAt
 
-	accountCreation       MailTemplate? @relation("accountCreationMailTemplate", fields: [accountCreationId], references: [id]) // user creates a new account
-	accountCreationId     Int?
+  memberPlan            MemberPlan? @relation(fields: [memberPlanId], references: [id])
+  memberPlanId          String?
 
-	passwordReset         MailTemplate? @relation("passwordResetMailTemplate", fields: [passwordResetId], references: [id]) // inform user, password was reset
-	passwordResetId       Int?
-
-	loginLink             MailTemplate? @relation("loginLinkMailTemplate", fields: [loginLinkId], references: [id])  // user receives login link
-	loginLinkId           Int?
+	paymentMethods        PaymentMethod[]
+  periodicities         PaymentPeriodicity[]
+  autoRenewal           AutoRenewal[]
 
 	subscribe             SubscriptionMail? @relation("subscribeSubscriptionMail", fields: [subscribeId], references: [id]) // initial subscription creation
 	subscribeId           Int?
@@ -1022,20 +1037,23 @@ model UserCommunicationFlow {
 	reactivationId        Int?
 
 	additionalIntervals   SubscriptionInterval[] // send some more e-mails such as reminders
-}
 
+  @@map("subscription_communication_flows")
+}
 
 model SubscriptionInterval {
 	id                      Int @id @default(autoincrement())
 	createdAt               DateTime @default(now())
-    modifiedAt              DateTime @updatedAt
+  modifiedAt              DateTime @updatedAt
 	daysAwayFromEnding      Int @db.SmallInt
 	defaultMail             MailTemplate @relation(fields: [defaultMailId], references: [id])
 	defaultMailId           Int
-	overrideMails           SubscriptionMailOverride[]
-	userCommunicationFlow   UserCommunicationFlow[]
-	invoiceCreations        UserCommunicationFlow? @relation("invoiceCreationSubscriptionInterval", map: "SubscriptionInterval_UserCommunicationFlow_invoiceCreations_fk")
-	deactivationUnpaids     UserCommunicationFlow? @relation("deactivationUnpaidSubscriptionInterval", map: "SubscriptionInterval_UserCommunicationFlow_deactivation_fk")
+
+	subscriptionCommunicationFlow   SubscriptionCommunicationFlow[]
+	invoiceCreations        SubscriptionCommunicationFlow[] @relation("invoiceCreationSubscriptionInterval")
+	deactivationUnpaids     SubscriptionCommunicationFlow[] @relation("deactivationUnpaidSubscriptionInterval")
+
+  @@map("subscriptions.intervals")
 }
 
 
@@ -1045,27 +1063,14 @@ model SubscriptionMail {
     modifiedAt            DateTime @updatedAt
     defaultMail           MailTemplate @relation(fields: [defaultMailId], references: [id])
     defaultMailId         Int
-    overrideMails         SubscriptionMailOverride[]
-    subscribes            UserCommunicationFlow? @relation("subscribeSubscriptionMail",  map: "MailTemplate_UserCommunicationFlow_subscribes_fk")
-    renewalSuccesses      UserCommunicationFlow? @relation("renewalSuccessSubscriptionMail",  map: "SubscriptionMail_UserCommunicationFlow_renewalSuccesses_fk")
-    renewalFaileds        UserCommunicationFlow? @relation("renewalFailedSubscriptionMail",  map: "SubscriptionMail_UserCommunicationFlow_renewalFaileds_fk")
-    deactivationByUsers   UserCommunicationFlow? @relation("deactivationByUserSubscriptionMail", map: "SubscriptionMail_UserCommunicationFlow_deactivationByUsers_fk")
-    reactivations         UserCommunicationFlow? @relation("reactivationSubscriptionMail", map: "SubscriptionMail_UserCommunicationFlow_reactivations_fk")
-}
 
+    subscribes            SubscriptionCommunicationFlow[] @relation("subscribeSubscriptionMail")
+    renewalSuccesses      SubscriptionCommunicationFlow[] @relation("renewalSuccessSubscriptionMail")
+    renewalFaileds        SubscriptionCommunicationFlow[] @relation("renewalFailedSubscriptionMail")
+    deactivationByUsers   SubscriptionCommunicationFlow[] @relation("deactivationByUserSubscriptionMail")
+    reactivations         SubscriptionCommunicationFlow[] @relation("reactivationSubscriptionMail")
 
-model SubscriptionMailOverride {
-	id                Int @id @default(autoincrement())
-	createdAt         DateTime @default(now())
-    modifiedAt        DateTime @updatedAt
-	mailTemplate      MailTemplate @relation(fields: [mailTemplateId], references: [id])
-	mailTemplateId    Int
-	memberPlans       MemberPlan[]
-	paymentMethods    PaymentMethod[]
-    periodicities     PaymentPeriodicity[]
-    autoRenewal       AutoRenewal[]
-    subscriptionMails SubscriptionMail[]
-    subscriptionIntervals SubscriptionInterval[]
+    @@map("subscriptions.mails")
 }
 
 enum AutoRenewal {
@@ -1081,9 +1086,10 @@ model MailTemplate {
 	description                 String?
 	externalMailTemplateId      String
 	subscriptionMails           SubscriptionMail[]
-	subscriptionMailOverrides   SubscriptionMailOverride[]
 	subscriptionIntervals       SubscriptionInterval[]
-	accountCreations            UserCommunicationFlow? @relation("accountCreationMailTemplate",  map: "MailTemplate_UserCommunicationFlow_accountCreations_fk")
-	passwordResets              UserCommunicationFlow? @relation("passwordResetMailTemplate", map: "MailTemplate_UserCommunicationFlow_passwordResets_fk")
-	loginLinks                  UserCommunicationFlow? @relation("loginLinkMailTemplate", map: "MailTemplate_UserCommunicationFlow_loginLinks_fk")
+	accountCreations            UserCommunicationFlow? @relation("accountCreationMailTemplate")
+	passwordResets              UserCommunicationFlow? @relation("passwordResetMailTemplate")
+	loginLinks                  UserCommunicationFlow? @relation("loginLinkMailTemplate")
+
+  @@map("mail_templates")
 }
