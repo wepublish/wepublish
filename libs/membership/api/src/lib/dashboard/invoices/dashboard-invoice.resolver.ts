@@ -13,8 +13,11 @@ export class DashboardInvoiceResolver {
       Excludes cancelled or manually set as paid invoices.
     `
   })
-  expectedRevenue(@Args('start') start: Date, @Args('end', {defaultValue: new Date()}) end: Date) {
-    return this.subscriptions.expectedRevenue(start, end)
+  expectedRevenue(
+    @Args('start') start: Date,
+    @Args('end', {nullable: true, type: () => Date}) end: Date | null
+  ) {
+    return this.subscriptions.expectedRevenue(start, end ?? new Date())
   }
 
   @Query(returns => [DashboardInvoice], {
@@ -24,7 +27,10 @@ export class DashboardInvoiceResolver {
       Only includes paid invoices that have not been manually paid.
     `
   })
-  revenue(@Args('start') start: Date, @Args('end', {defaultValue: new Date()}) end: Date) {
-    return this.subscriptions.revenue(start, end)
+  revenue(
+    @Args('start') start: Date,
+    @Args('end', {nullable: true, type: () => Date}) end: Date | null
+  ) {
+    return this.subscriptions.revenue(start, end ?? new Date())
   }
 }

@@ -13,8 +13,11 @@ export class DashboardSubscriptionResolver {
       Includes already deactivated ones.
     `
   })
-  newSubscribers(@Args('start') start: Date, @Args('end', {defaultValue: new Date()}) end: Date) {
-    return this.subscriptions.newSubscribers(start, end)
+  newSubscribers(
+    @Args('start') start: Date,
+    @Args('end', {nullable: true, type: () => Date}) end: Date | null
+  ) {
+    return this.subscriptions.newSubscribers(start, end ?? new Date())
   }
 
   @Query(returns => [DashboardSubscription], {
@@ -36,9 +39,9 @@ export class DashboardSubscriptionResolver {
   })
   renewingSubscribers(
     @Args('start') start: Date,
-    @Args('end', {defaultValue: new Date()}) end: Date
+    @Args('end', {nullable: true, type: () => Date}) end: Date | null
   ) {
-    return this.subscriptions.renewingSubscribers(start, end)
+    return this.subscriptions.renewingSubscribers(start, end ?? new Date())
   }
 
   @Query(returns => [DashboardSubscription], {
@@ -48,7 +51,10 @@ export class DashboardSubscriptionResolver {
       This considers the time the deactivation was made, not when the subscription runs out.
     `
   })
-  newDeactivations(@Args('start') start: Date, @Args('end', {defaultValue: new Date()}) end: Date) {
-    return this.subscriptions.newDeactivations(start, end)
+  newDeactivations(
+    @Args('start') start: Date,
+    @Args('end', {nullable: true, type: () => Date}) end: Date | null
+  ) {
+    return this.subscriptions.newDeactivations(start, end ?? new Date())
   }
 }

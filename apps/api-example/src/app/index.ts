@@ -289,4 +289,6 @@ export async function runServer(app?: Application | undefined) {
     },
     app
   )
+
+  await server.listen(port, address)
 }

@@ -46,7 +46,7 @@ type Query {
         Excludes cancelled or manually set as paid invoices.
       
   """
-  expectedRevenue(end: DateTime! = "2023-01-20T14:14:55.205Z", start: DateTime!): [DashboardInvoice!]!
+  expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
   """
   
@@ -54,7 +54,7 @@ type Query {
         This considers the time the deactivation was made, not when the subscription runs out.
       
   """
-  newDeactivations(end: DateTime! = "2023-01-20T14:14:55.206Z", start: DateTime!): [DashboardSubscription!]!
+  newDeactivations(end: DateTime, start: DateTime!): [DashboardSubscription!]!
 
   """
   
@@ -62,14 +62,14 @@ type Query {
         Includes already deactivated ones.
       
   """
-  newSubscribers(end: DateTime! = "2023-01-20T14:14:55.205Z", start: DateTime!): [DashboardSubscription!]!
+  newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
 
   """
   
         Returns all renewing subscribers in a given timeframe.
       
   """
-  renewingSubscribers(end: DateTime! = "2023-01-20T14:14:55.206Z", start: DateTime!): [DashboardSubscription!]!
+  renewingSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
 
   """
   
@@ -77,7 +77,7 @@ type Query {
         Only includes paid invoices that have not been manually paid.
       
   """
-  revenue(end: DateTime! = "2023-01-20T14:14:55.205Z", start: DateTime!): [DashboardInvoice!]!
+  revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
   versionInformation: VersionInformation!
 }
 
