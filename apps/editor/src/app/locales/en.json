@@ -720,7 +720,8 @@
       "subscriptions": "Subscriptions",
       "userRoles": "User Roles",
       "users": "Users",
-      "usersAndMembers": "Users & Members"
+      "usersAndMembers": "Users & Members",
+      "subscriptionSettings": "Settings"
     },
     "navigation": {
       "overview": {

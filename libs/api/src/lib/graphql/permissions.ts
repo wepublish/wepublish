@@ -591,6 +591,21 @@ export const CanDeleteEvent: Permission = {
   deprecated: false
 }
 
+/**
+ * Subscription Settings
+ */
+export const CanGetSubscriptionSettings: Permission = {
+  id: 'CAN_GET_SUBSCRIPTION_SETTINGS',
+  description: 'Allows to get subscription renewal settings.',
+  deprecated: false
+}
+
+export const CanUpdateSubscriptionSettings: Permission = {
+  id: 'CAN_UPDATE_SUBSCRIPTION_SETTINGS',
+  description: 'Allows to update subscription settings.',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanTakeActionOnComment,
   CanCreateNavigation,
@@ -682,7 +697,9 @@ export const AllPermissions: Permission[] = [
   CanGetEvent,
   CanUpdateEvent,
   CanDeleteEvent,
-  CanCreateEvent
+  CanCreateEvent,
+  CanGetSubscriptionSettings,
+  CanUpdateSubscriptionSettings
 ]
 
 export const EditorPermissions: Permission[] = [

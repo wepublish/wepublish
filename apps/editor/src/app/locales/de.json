@@ -720,7 +720,8 @@
       "myPeerInfo": "Meine Peer Infos",
       "peers": "Peers",
       "subscriptions": "Abonnements",
-      "peerArticles": "Peerbare Artikel"
+      "peerArticles": "Peerbare Artikel",
+      "subscriptionSettings": "Einstellungen"
     },
     "navigation": {
       "overview": {

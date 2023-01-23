@@ -1063,7 +1063,8 @@
       "peers": "Peers",
       "settings": "Paramètres",
       "peerArticles": "Articles pairables",
-      "subscriptions": "Abonnements"
+      "subscriptions": "Abonnements",
+      "subscriptionSettings": "Réglages"
     },
     "navigation": {
       "overview": {

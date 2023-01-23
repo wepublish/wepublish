@@ -27,6 +27,7 @@ import {
   MdSettingsInputAntenna,
   MdStar,
   MdTranslate,
+  MdTune,
   MdVpnKey
 } from 'react-icons/md'
 import {Link, useLocation} from 'react-router-dom'
@@ -442,6 +443,20 @@ export function Base({children}: BaseProps) {
                         active={path === 'paymentmethods'}
                         icon={<MdCreditCard />}>
                         {t('navbar.paymentMethods')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_SUBSCRIPTION_SETTINGS',
+                        'CAN_UPDATE_SUBSCRIPTION_SETTINGS'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/subscriptionSettings"
+                        active={path === 'subscriptionSettings'}
+                        icon={<MdTune />}>
+                        {t('navbar.subscriptionSettings')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>
