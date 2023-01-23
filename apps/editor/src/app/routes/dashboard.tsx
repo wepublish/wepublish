@@ -4,14 +4,8 @@ import {ActivityFeed} from '../atoms/dashboard/activityFeed'
 import {SubscriberChart} from '../atoms/dashboard/subscriberChart'
 import {FlexboxGrid, Panel} from 'rsuite'
 import {PermissionControl} from '../atoms/permissionControl'
-import styled from '@emotion/styled'
 import {useMeQuery} from '@wepublish/editor/api'
-import {
-  ListViewActions,
-  ListViewContainer,
-  ListViewFilterArea,
-  ListViewHeader
-} from '../ui/listView'
+import {ListViewContainer, ListViewHeader} from '../ui/listView'
 
 export function Dashboard() {
   const {t} = useTranslation()
