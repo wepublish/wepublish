@@ -57,7 +57,8 @@
               "to",
               "trigger",
               "value",
-              "variant"
+              "variant",
+              "verticalAlign"
             ],
             "ignoreComponent": ["code"],
             "ignore": ["—", "&"]
