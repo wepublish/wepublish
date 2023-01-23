@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Table, Avatar} from 'rsuite'
+import {Table as RTable, Avatar} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 import {Link} from 'react-router-dom'
 import {
@@ -18,6 +18,7 @@ import {formatDistanceToNow} from 'date-fns'
 import styled from '@emotion/styled'
 import {useRecentActionsQuery, Action, ActionType} from '@wepublish/editor/api'
 import {AVAILABLE_LANG} from '../../base'
+import {TableWrapper, Table} from '../../ui/listView'
 
 export interface Event {
   date: string
@@ -32,13 +33,17 @@ const ActivityFeedSummaryText = styled.p`
 `
 
 const ActivityFeedIcon = styled(Avatar)`
-  margin-right: 1rem;
   background-color: #3498ff;
+  margin-right: 4px;
+`
+
+const TableCellWithWordBreak = styled(RTable.Cell)`
+  word-break: 'break-word';
 `
 
 export function ActivityFeed() {
   const {t, i18n} = useTranslation()
-  const {Column, HeaderCell, Cell} = Table
+  const {Column, HeaderCell, Cell} = RTable
 
   const {data, loading: isLoading} = useRecentActionsQuery()
   const [actions, setActions] = useState<Action[]>([])
@@ -109,34 +114,47 @@ export function ActivityFeed() {
   }
 
   return (
-    <Table wordWrap autoHeight rowHeight={60} data={actions} loading={isLoading}>
-      <Column flexGrow={2}>
-        <HeaderCell dataKey="event">{t('dashboard.event')}</HeaderCell>
-        <Cell dataKey="event">
-          {(rowData: RowDataType<Action>) => {
-            const action = mapDetailsToActionType(rowData)
-            return (
-              <>
-                <ActivityFeedIcon circle>{action.icon}</ActivityFeedIcon>
-                <Link to={action.path}> {action.type} </Link>
-                {formatDistanceToNow(new Date(rowData.date), {
-                  locale: AVAILABLE_LANG.find(lang => lang.id === i18n.language)?.locale,
-                  addSuffix: true
-                })}
-                {rowData.creator && t('dashboard.createdBy', {creator: rowData.creator})}
-              </>
-            )
-          }}
-        </Cell>
-      </Column>
-      <Column flexGrow={1}>
-        <HeaderCell dataKey="summary">{t('dashboard.summary')}</HeaderCell>
-        <Cell dataKey="summary">
-          {(rowData: RowDataType<Action>) => {
-            return <ActivityFeedSummaryText>{rowData?.summary} </ActivityFeedSummaryText>
-          }}
-        </Cell>
-      </Column>
-    </Table>
+    <TableWrapper>
+      <Table
+        height={800}
+        wordWrap
+        style={{wordBreak: 'break-word'}}
+        data={actions}
+        loading={isLoading}>
+        <Column verticalAlign="bottom" flexGrow={2}>
+          <HeaderCell dataKey="event">{t('dashboard.event')}</HeaderCell>
+          <Cell dataKey="event">
+            {(rowData: RowDataType<Action>) => {
+              const action = mapDetailsToActionType(rowData)
+              return (
+                <>
+                  <ActivityFeedIcon size="sm" circle>
+                    {action.icon}
+                  </ActivityFeedIcon>
+                  <Link to={action.path}> {action.type} </Link>
+                  {formatDistanceToNow(new Date(rowData.date), {
+                    locale: AVAILABLE_LANG.find(lang => lang.id === i18n.language)?.locale,
+                    addSuffix: true
+                  })}
+                  {rowData.creator && t('dashboard.createdBy', {creator: rowData.creator})}
+                </>
+              )
+            }}
+          </Cell>
+        </Column>
+        <Column verticalAlign="bottom" flexGrow={1}>
+          <HeaderCell dataKey="summary">{t('dashboard.summary')}</HeaderCell>
+          <TableCellWithWordBreak style={{wordBreak: 'break-word'}} dataKey="summary">
+            {(rowData: RowDataType<Action>) => {
+              return (
+                <>
+                  <ActivityFeedSummaryText>{rowData?.summary} </ActivityFeedSummaryText>
+                </>
+              )
+            }}
+          </TableCellWithWordBreak>
+        </Column>
+      </Table>
+    </TableWrapper>
   )
 }

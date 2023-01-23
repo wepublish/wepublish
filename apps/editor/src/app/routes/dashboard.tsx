@@ -2,18 +2,16 @@ import React, {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {ActivityFeed} from '../atoms/dashboard/activityFeed'
 import {SubscriberChart} from '../atoms/dashboard/subscriberChart'
-import {FlexboxGrid} from 'rsuite'
+import {FlexboxGrid, Panel} from 'rsuite'
 import {PermissionControl} from '../atoms/permissionControl'
 import styled from '@emotion/styled'
 import {useMeQuery} from '@wepublish/editor/api'
-
-const FlexboxGridStyled = styled(FlexboxGrid)`
-  margin-top: 1rem;
-`
-
-const GridItemCenterText = styled.h4`
-  text-align: center;
-`
+import {
+  ListViewActions,
+  ListViewContainer,
+  ListViewFilterArea,
+  ListViewHeader
+} from '../ui/listView'
 
 export function Dashboard() {
   const {t} = useTranslation()
@@ -26,20 +24,26 @@ export function Dashboard() {
 
   return (
     <>
-      <h2>{t('dashboard.dashboard')}</h2>
+      <ListViewContainer>
+        <ListViewHeader>
+          <h2>{t('dashboard.dashboard')}</h2>
+        </ListViewHeader>
+      </ListViewContainer>
       <h4>{t('dashboard.greeting', {name})}</h4>
-      <FlexboxGridStyled>
-        <FlexboxGrid.Item colspan={12}>
-          <GridItemCenterText>{t('dashboard.activity')}</GridItemCenterText>
-          <ActivityFeed />
+      <FlexboxGrid justify="space-around">
+        <FlexboxGrid.Item colspan={14}>
+          <Panel bodyFill header={t('dashboard.activity')} bordered shaded>
+            <ActivityFeed />
+          </Panel>
         </FlexboxGrid.Item>
-        <PermissionControl qualifyingPermissions={['CAN_GET_SUBSCRIPTIONS']}>
-          <FlexboxGrid.Item colspan={12}>
-            <GridItemCenterText>{t('dashboard.yearlySubscribers')}</GridItemCenterText>
-            <SubscriberChart />
-          </FlexboxGrid.Item>
-        </PermissionControl>
-      </FlexboxGridStyled>
+        <FlexboxGrid.Item colspan={9}>
+          <PermissionControl qualifyingPermissions={['CAN_GET_SUBSCRIPTIONS']}>
+            <Panel shaded header={t('dashboard.yearlySubscribers')} bordered>
+              <SubscriberChart />
+            </Panel>
+          </PermissionControl>
+        </FlexboxGrid.Item>
+      </FlexboxGrid>
     </>
   )
 }
