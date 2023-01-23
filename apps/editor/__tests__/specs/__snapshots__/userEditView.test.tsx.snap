@@ -1412,7 +1412,7 @@ exports[`User edit view should render 1`] = `
                   >
                     <button
                       aria-disabled="false"
-                      class="css-cpekt0-IconButton e175y86s1 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-with-text rs-btn rs-btn-primary"
+                      class="css-cpekt0-IconButton e175y86s0 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-with-text rs-btn rs-btn-primary"
                       type="button"
                     >
                       <svg
@@ -2213,7 +2213,7 @@ exports[`User edit view should render with ID 1`] = `
                   >
                     <button
                       aria-disabled="false"
-                      class="css-cpekt0-IconButton e175y86s1 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-with-text rs-btn rs-btn-primary"
+                      class="css-cpekt0-IconButton e175y86s0 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-with-text rs-btn rs-btn-primary"
                       type="button"
                     >
                       <svg

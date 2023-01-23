@@ -9,7 +9,6 @@ import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
   Avatar as RAvatar,
-  FlexboxGrid,
   Message,
   Pagination,
   Popover,
@@ -20,12 +19,14 @@ import {
 import {RowDataType} from 'rsuite-table'
 
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
-import {ListViewFilters} from '../atoms/searchAndFilter/listViewFilters'
+import {ListFilters, ListViewContainer, ListViewHeader, Table, TableWrapper} from '../ui/listView'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
+
+const {Column, HeaderCell, Cell: RCell} = RTable
 
 const Img = styled.img`
   height: 25px;
@@ -37,8 +38,6 @@ const PopoverImg = styled.img`
   width: auto;
 `
 
-const {Column, HeaderCell, Cell: RCell} = RTable
-
 const Avatar = styled(RAvatar)`
   margin-right: 5px;
   min-width: 20px;
@@ -48,16 +47,6 @@ const FlexCell = styled(RCell)`
   .rs-table-cell-content {
     display: flex;
   }
-`
-
-const Table = styled(RTable)`
-  flex: 1;
-`
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-flow: column;
-  margin-top: 20px;
 `
 
 function PeerArticleList() {
@@ -126,28 +115,27 @@ function PeerArticleList() {
 
   return (
     <>
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
+      <ListViewContainer>
+        <ListViewHeader>
           <h2>{t('peerArticles.peerArticles')}</h2>
-        </FlexboxGrid.Item>
-      </FlexboxGrid>
+        </ListViewHeader>
 
-      <ListViewFilters
-        fields={['title', 'preTitle', 'lead', 'peer', 'publicationDate']}
-        filter={filter}
-        isLoading={isLoading}
-        onSetFilter={filter => setFilter(filter)}
-        setPeerFilter={setPeerFilter}
-      />
+        <ListFilters
+          fields={['title', 'preTitle', 'lead', 'peer', 'publicationDate']}
+          filter={filter}
+          isLoading={isLoading}
+          onSetFilter={filter => setFilter(filter)}
+          setPeerFilter={setPeerFilter}
+        />
+      </ListViewContainer>
 
-      <Wrapper>
+      <TableWrapper>
         <Table
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType ?? 'asc')
             setSortField(sortColumn)
           }}
-          minHeight={600}
-          autoHeight
+          fillHeight
           loading={isLoading}
           data={peerArticles as any[]}
           sortColumn={sortField}
@@ -270,7 +258,7 @@ function PeerArticleList() {
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </Wrapper>
+      </TableWrapper>
     </>
   )
 }

@@ -29,12 +29,16 @@ import fetch from 'node-fetch'
 import {Client, Issuer} from 'openid-client'
 import url from 'url'
 import {ChallengeProvider} from './challenges/challengeProvider'
-import {ArticleWithRevisions, PublicArticle} from './db/article'
+import {
+  ArticleWithRevisions,
+  articleWithRevisionsToPublicArticle,
+  PublicArticle
+} from './db/article'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
 import {InvoiceWithItems} from './db/invoice'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {NavigationWithLinks} from './db/navigation'
-import {PageWithRevisions, PublicPage} from './db/page'
+import {PageWithRevisions, pageWithRevisionsToPublicPage, PublicPage} from './db/page'
 import {Session, SessionType, TokenSession, UserSession} from './db/session'
 import {SettingName} from './db/setting'
 import {unselectPassword} from './db/user'
@@ -488,7 +492,7 @@ export async function contextFromRequest(
               }
             }
           })
-        ).map(({id, shared, published, pending}) => ({shared, ...(published || pending!), id})),
+        ).map(articleWithRevisionsToPublicArticle),
         'id'
       )
     ),
@@ -558,7 +562,7 @@ export async function contextFromRequest(
               }
             }
           })
-        ).map(({id, published, pending}) => ({...(published || pending!), id})),
+        ).map(pageWithRevisionsToPublicPage),
         'id'
       )
     ),
@@ -602,7 +606,7 @@ export async function contextFromRequest(
               }
             }
           })
-        ).map(({id, published, pending}) => ({...(published || pending!), id})),
+        ).map(pageWithRevisionsToPublicPage),
         'slug'
       )
     ),
