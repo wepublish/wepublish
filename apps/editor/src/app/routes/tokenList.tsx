@@ -24,14 +24,11 @@ import {
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
+import {ListViewActions, ListViewContainer, ListViewHeader, TableWrapper} from '../ui/listView'
 import {getOperationNameFromDocument} from '../utility'
 
 const List = styled(RList)`
   margin-top: 40px;
-`
-
-const FlexItemAlignRight = styled(FlexboxGrid.Item)`
-  text-align: right;
 `
 
 const FlexItemPLeft = styled(FlexboxGrid.Item)`
@@ -84,12 +81,12 @@ function TokenList() {
 
   return (
     <>
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
+      <ListViewContainer>
+        <ListViewHeader>
           <h2>{t('tokenList.overview.tokens')}</h2>
-        </FlexboxGrid.Item>
+        </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_TOKEN']}>
-          <FlexItemAlignRight colspan={8}>
+          <ListViewActions>
             <Link to="/tokens/generate">
               <IconButton
                 appearance="primary"
@@ -98,38 +95,41 @@ function TokenList() {
                 {t('tokenList.overview.generateToken')}
               </IconButton>
             </Link>
-          </FlexItemAlignRight>
+          </ListViewActions>
         </PermissionControl>
-      </FlexboxGrid>
+      </ListViewContainer>
+
       {isTokenListLoading ? (
         <Loader backdrop content={t('tokenList.overview.loading')} vertical />
       ) : (
-        <List bordered>
-          {tokenListData?.tokens.map((token, index) => (
-            <RList.Item key={token.name} index={index}>
-              <FlexboxGrid>
-                <FlexItemPLeft colspan={23}>{token.name}</FlexItemPLeft>
-                <FlexItemPRight colspan={1}>
-                  <PermissionControl qualifyingPermissions={['CAN_DELETE_TOKEN']}>
-                    <IconButtonTooltip caption={t('delete')}>
-                      <IconButton
-                        icon={<MdDelete />}
-                        circle
-                        size="sm"
-                        appearance="ghost"
-                        color="red"
-                        onClick={() => {
-                          setConfirmationDialogOpen(true)
-                          setCurrentToken(token)
-                        }}
-                      />
-                    </IconButtonTooltip>
-                  </PermissionControl>
-                </FlexItemPRight>
-              </FlexboxGrid>
-            </RList.Item>
-          ))}
-        </List>
+        <TableWrapper>
+          <List bordered>
+            {tokenListData?.tokens.map((token, index) => (
+              <RList.Item key={token.name} index={index}>
+                <FlexboxGrid>
+                  <FlexItemPLeft colspan={23}>{token.name}</FlexItemPLeft>
+                  <FlexItemPRight colspan={1}>
+                    <PermissionControl qualifyingPermissions={['CAN_DELETE_TOKEN']}>
+                      <IconButtonTooltip caption={t('delete')}>
+                        <IconButton
+                          icon={<MdDelete />}
+                          circle
+                          size="sm"
+                          appearance="ghost"
+                          color="red"
+                          onClick={() => {
+                            setConfirmationDialogOpen(true)
+                            setCurrentToken(token)
+                          }}
+                        />
+                      </IconButtonTooltip>
+                    </PermissionControl>
+                  </FlexItemPRight>
+                </FlexboxGrid>
+              </RList.Item>
+            ))}
+          </List>
+        </TableWrapper>
       )}
 
       <Drawer

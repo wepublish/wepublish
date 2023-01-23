@@ -15,7 +15,7 @@ import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdComment, MdContentCopy, MdDelete, MdPreview, MdUnpublished} from 'react-icons/md'
 import {Link, useNavigate} from 'react-router-dom'
-import {Button, IconButton, Message, Modal, Pagination, Table} from 'rsuite'
+import {Button, IconButton, Message, Modal, Pagination, Table as RTable, Table} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -42,7 +42,7 @@ interface State {
   text: string
 }
 
-const {Column, HeaderCell, Cell} = Table
+const {Column, HeaderCell, Cell} = RTable
 
 enum ConfirmAction {
   Delete = 'delete',
@@ -145,8 +145,7 @@ function PageList() {
 
       <TableWrapper>
         <Table
-          minHeight={600}
-          autoHeight
+          fillHeight
           loading={isLoading}
           data={pages}
           sortColumn={sortField}

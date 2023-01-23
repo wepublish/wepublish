@@ -337,18 +337,14 @@ export class MemberContext implements MemberContext {
         }
       })
 
-      await this.prisma.subscription.update({
-        where: {id: subscription.id},
+      await this.prisma.subscriptionPeriod.create({
         data: {
-          periods: {
-            create: {
-              amount,
-              paymentPeriodicity: subscription.paymentPeriodicity,
-              startsAt: startDate,
-              endsAt: nextDate,
-              invoiceID: newInvoice.id
-            }
-          }
+          subscriptionId: subscription.id,
+          startsAt: startDate,
+          endsAt: nextDate,
+          paymentPeriodicity: subscription.paymentPeriodicity,
+          amount,
+          invoiceID: newInvoice.id
         }
       })
 
