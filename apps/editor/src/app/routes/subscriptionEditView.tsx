@@ -478,7 +478,11 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                   </Message>
                 )}
 
-                <RPanel bordered header="Subscription data">
+                <RPanel
+                  bordered
+                  header={
+                    id ? t('userSubscriptionEdit.editTitle') : t('userSubscriptionEdit.createTitle')
+                  }>
                   <Group controlId="memberPlan">
                     <ControlLabel>
                       {toggleRequiredLabel(t('userSubscriptionEdit.selectMemberPlan'))}
