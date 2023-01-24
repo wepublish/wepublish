@@ -190,7 +190,6 @@ export function ListViewFilters({
             <AuthorCheckPicker
               list={authorsData as AuthorRefFragment[]}
               onChange={value => {
-                console.log('value123', value)
                 return updateFilter({authors: value ? value.map(author => author.id) : []})
               }}
             />

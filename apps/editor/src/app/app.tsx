@@ -41,6 +41,7 @@ import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
 import {LocalStorageKey} from './utility'
+import {SubscriptionEditView} from './routes/subscriptionEditView'
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -470,7 +471,7 @@ export function App() {
               path="subscriptions/create"
               element={
                 <Base>
-                  <SubscriptionList />
+                  <SubscriptionEditView />
                 </Base>
               }
             />
@@ -478,7 +479,7 @@ export function App() {
               path="subscriptions/edit/:id"
               element={
                 <Base>
-                  <SubscriptionList />
+                  <SubscriptionEditView />
                 </Base>
               }
             />

@@ -8,7 +8,7 @@ import {
 } from '@wepublish/editor/api'
 import React, {useEffect, useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete} from 'react-icons/md'
+import {MdAdd, MdDelete, MdInfo} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, IconButton as RIconButton, Modal, Pagination, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
@@ -22,7 +22,7 @@ import {
 } from '../atoms/permissionControl'
 import {SubscriptionListFilter} from '../atoms/searchAndFilter/subscriptionListFilter'
 import {ExportSubscriptionsAsCsv} from '../panel/ExportSubscriptionsAsCsv'
-import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
+import {SubscriptionEditView} from './subscriptionEditView'
 import {
   ListViewActions,
   ListViewContainer,
@@ -48,6 +48,17 @@ const IconButton = styled(RIconButton)`
   margin-left: 20px;
 `
 
+const Info = styled.div`
+  position: relative;
+`
+
+const DeactivationIcon = styled(MdInfo)<{deactivated: boolean}>`
+  margin-left: 10px;
+  font-size: 16px;
+  visibility: ${({deactivated}) => (deactivated ? 'visible' : 'hidden')};
+  color: #3498ff;
+`
+
 function mapColumFieldToGraphQLField(columnField: string): SubscriptionSort | null {
   switch (columnField) {
     case 'createdAt':
@@ -61,14 +72,17 @@ function mapColumFieldToGraphQLField(columnField: string): SubscriptionSort | nu
 
 export const NewSubscriptionButton = ({
   isLoading,
-  t
+  t,
+  userId
 }: {
   isLoading?: boolean
   t: TFunction<'translation'>
+  userId?: string
 }) => {
   const canCreate = useAuthorisation('CAN_CREATE_SUBSCRIPTION')
+  const urlToRedirect = `/subscriptions/create${userId ? `${`?userId=${userId}`}` : ''}`
   return (
-    <Link to="/subscriptions/create">
+    <Link to={urlToRedirect}>
       <IconButton appearance="primary" disabled={isLoading || !canCreate}>
         <MdAdd />
         {t('subscriptionList.overview.newSubscription')}
@@ -258,19 +272,27 @@ function SubscriptionList() {
             <HeaderCell>{t('action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<FullSubscriptionFragment>) => (
-                <IconButtonTooltip caption={t('delete')}>
-                  <IconButtonSmallMargin
-                    circle
-                    size="sm"
-                    appearance="ghost"
-                    color="red"
-                    icon={<MdDelete />}
-                    onClick={() => {
-                      setCurrentSubscription(rowData as FullSubscriptionFragment)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                </IconButtonTooltip>
+                <>
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButtonSmallMargin
+                      circle
+                      size="sm"
+                      appearance="ghost"
+                      color="red"
+                      icon={<MdDelete />}
+                      onClick={() => {
+                        setCurrentSubscription(rowData as FullSubscriptionFragment)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+                  </IconButtonTooltip>
+
+                  <IconButtonTooltip caption={t('deactivated')}>
+                    <Info>
+                      <DeactivationIcon deactivated={rowData.deactivation} />
+                    </Info>
+                  </IconButtonTooltip>
+                </>
               )}
             </PaddedCell>
           </Column>
@@ -301,7 +323,7 @@ function SubscriptionList() {
           setEditModalOpen(false)
           navigate('/subscriptions')
         }}>
-        <SubscriptionEditPanel
+        <SubscriptionEditView
           id={editID!}
           onClose={() => {
             setEditModalOpen(false)

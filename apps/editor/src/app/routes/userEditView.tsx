@@ -697,7 +697,7 @@ function UserEditView() {
             <Col xs={12}>
               <Grid fluid>
                 <RPanel bordered header={t('userCreateOrEditView.subscriptionsHeader')}>
-                  <UserSubscriptionsList subscriptions={user?.subscriptions} />
+                  <UserSubscriptionsList subscriptions={user?.subscriptions} userId={user?.id} />
                 </RPanel>
               </Grid>
             </Col>

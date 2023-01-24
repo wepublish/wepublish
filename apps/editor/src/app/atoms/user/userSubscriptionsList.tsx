@@ -75,9 +75,10 @@ const FlexItemMLeft = styled(FlexboxGrid.Item)`
 
 interface UserSubscriptionsProps {
   subscriptions?: UserSubscriptionFragment[] | null
+  userId?: string
 }
 
-function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
+function UserSubscriptionsList({subscriptions, userId}: UserSubscriptionsProps) {
   const {t} = useTranslation()
 
   /**
@@ -169,6 +170,8 @@ function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
       </div>
     )
   }
+
+  console.log('subscriptions', subscriptions)
 
   return (
     <>
@@ -294,7 +297,9 @@ function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
         </div>
       ))}
 
-      <NewSubscriptionButtonWrapper>{NewSubscriptionButton({t})}</NewSubscriptionButtonWrapper>
+      <NewSubscriptionButtonWrapper>
+        {NewSubscriptionButton({t, userId})}
+      </NewSubscriptionButtonWrapper>
     </>
   )
 }
