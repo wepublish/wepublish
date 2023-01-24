@@ -12,7 +12,7 @@ import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Form, Message, Schema, toaster} from 'rsuite'
 
-import {ModelTitle} from '../../atoms/modelTitle'
+import {SingleViewTitle} from '../../../../../../libs/ui/src/lib/singleView/singleViewTitle'
 import {EventForm} from './eventForm'
 
 const onErrorToast = (error: ApolloError) => {
@@ -91,7 +91,7 @@ export const EventEditView = () => {
       model={validationModel}
       disabled={loading}
       onSubmit={validationPassed => validationPassed && onSubmit()}>
-      <ModelTitle
+      <SingleViewTitle
         loading={loading}
         title={t('event.edit.title')}
         loadingTitle={t('event.edit.title')}

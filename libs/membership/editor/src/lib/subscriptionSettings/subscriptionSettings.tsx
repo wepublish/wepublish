@@ -7,9 +7,9 @@ import {
   TableHead,
   TableBody,
   TableCell,
-  TableRow,
-  Paper
+  TableRow
 } from '@mui/material'
+import {MdTune} from 'react-icons/all'
 
 export default function () {
   // todo: continue with fetching SubscriptionCommunicationFlow
@@ -18,7 +18,9 @@ export default function () {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <Typography variant="h2">Abo-Einstellungen</Typography>
+          <h2>
+            <MdTune /> Abo-Einstellungen
+          </h2>
           <Typography variant="subtitle1">
             Du kannst diese Einstellungen für jeden Memberplan überschreiben.
           </Typography>

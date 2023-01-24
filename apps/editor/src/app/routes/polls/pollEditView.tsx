@@ -12,7 +12,7 @@ import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Col, DatePicker, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
 
-import {ModelTitle} from '../../atoms/modelTitle'
+import {SingleViewTitle} from '../../../../../../libs/ui/src/lib/singleView/singleViewTitle'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {PollAnswers} from '../../atoms/poll/pollAnswers'
 import {PollExternalVotes} from '../../atoms/poll/pollExternalVotes'
@@ -144,7 +144,7 @@ function PollEditView() {
       <FlexboxGrid>
         {/* model title */}
         <FlexboxGrid.Item colspan={24}>
-          <ModelTitle
+          <SingleViewTitle
             loading={loading}
             title={poll?.question || t('pollList.noQuestion')}
             loadingTitle={t('pollEditView.loadingTitle')}

@@ -1,12 +1,8 @@
 import styled from '@emotion/styled'
-import {ReactChild} from 'react'
+import {ReactNode} from 'react'
 import {MdChevronLeft} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Button, FlexboxGrid, Loader as RLoader} from 'rsuite'
-
-const ChevronLeft = styled(MdChevronLeft)`
-  fontsize: 48px;
-`
 
 const FlexGrid = styled(FlexboxGrid)`
   padding-right: 5px;
@@ -32,11 +28,11 @@ interface modelTitleProps {
   saveBtnTitle: string
   saveAndCloseBtnTitle: string
   closePath: string
-  additionalMenu?: ReactChild
+  additionalMenu?: ReactNode
   setCloseFn(close: boolean): void
 }
 
-export function ModelTitle({
+export function SingleViewTitle({
   title,
   loading,
   loadingTitle,
@@ -87,7 +83,9 @@ export function ModelTitle({
       <FlexboxGrid.Item colspan={12}>
         <FlexboxGrid align="middle">
           <Link to={closePath}>
-            <ChevronLeft />
+            <h1>
+              <MdChevronLeft />
+            </h1>
           </Link>
 
           <h1>{titleView()}</h1>

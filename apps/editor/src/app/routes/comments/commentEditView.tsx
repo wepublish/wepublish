@@ -30,9 +30,10 @@ import {
 import {CommentDeleteBtn} from '../../atoms/comment/commentDeleteBtn'
 import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {CommentUser} from '../../atoms/comment/commentUser'
-import {ModelTitle} from '../../atoms/modelTitle'
+import {SingleViewTitle} from '../../../../../../libs/ui/src/lib/singleView/singleViewTitle'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {SelectTags} from '../../atoms/tag/selectTags'
+import {CommentHistory} from '../../atoms/comment/commentHistory'
 
 const ColNoMargin = styled(RCol)`
   margin-top: 0px;
@@ -210,7 +211,7 @@ const CommentEditView = memo(() => {
       fluid
       disabled={loading}
       style={{maxHeight: 'calc(100vh - 135px)', maxWidth: 'calc(100vw - 260px - 80px)'}}>
-      <ModelTitle
+      <SingleViewTitle
         loading={loading}
         title={t('comments.edit.title')}
         loadingTitle={t('comments.edit.title')}
