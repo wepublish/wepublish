@@ -41,6 +41,10 @@ const TableCellWithWordBreak = styled(RTable.Cell)`
   word-break: 'break-word';
 `
 
+const TableWordBreak = styled(Table)`
+  word-break: 'break-word';
+`
+
 export function ActivityFeed() {
   const {t, i18n} = useTranslation()
   const {Column, HeaderCell, Cell} = RTable
@@ -115,12 +119,7 @@ export function ActivityFeed() {
 
   return (
     <TableWrapper>
-      <Table
-        height={800}
-        wordWrap
-        style={{wordBreak: 'break-word'}}
-        data={actions}
-        loading={isLoading}>
+      <TableWordBreak wordWrap data={actions} loading={isLoading}>
         <Column verticalAlign="bottom" flexGrow={2}>
           <HeaderCell dataKey="event">{t('dashboard.event')}</HeaderCell>
           <Cell dataKey="event">
@@ -144,7 +143,7 @@ export function ActivityFeed() {
         </Column>
         <Column verticalAlign="bottom" flexGrow={1}>
           <HeaderCell dataKey="summary">{t('dashboard.summary')}</HeaderCell>
-          <TableCellWithWordBreak style={{wordBreak: 'break-word'}} dataKey="summary">
+          <TableCellWithWordBreak dataKey="summary">
             {(rowData: RowDataType<Action>) => {
               return (
                 <>
@@ -154,7 +153,7 @@ export function ActivityFeed() {
             }}
           </TableCellWithWordBreak>
         </Column>
-      </Table>
+      </TableWordBreak>
     </TableWrapper>
   )
 }
