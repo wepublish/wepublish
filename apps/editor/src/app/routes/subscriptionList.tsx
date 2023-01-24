@@ -22,7 +22,6 @@ import {
 } from '../atoms/permissionControl'
 import {SubscriptionListFilter} from '../atoms/searchAndFilter/subscriptionListFilter'
 import {ExportSubscriptionsAsCsv} from '../panel/ExportSubscriptionsAsCsv'
-import {SubscriptionEditView} from './subscriptionEditView'
 import {
   ListViewActions,
   ListViewContainer,
@@ -37,6 +36,7 @@ import {
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
+import {SubscriptionEditView} from './subscriptionEditView'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 

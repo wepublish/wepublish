@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {InvoiceFragment, useMeQuery} from '@wepublish/editor/api'
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Message} from 'rsuite'
+import {Drawer, Message} from 'rsuite'
 
 import {Invoice} from '../atoms/invoice'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'

@@ -34,6 +34,7 @@ import {PeerList} from './routes/peerList'
 import {PollEditView} from './routes/polls/pollEditView'
 import {PollList} from './routes/polls/pollList'
 import {SettingList} from './routes/settingList'
+import {SubscriptionEditView} from './routes/subscriptionEditView'
 import {SubscriptionList} from './routes/subscriptionList'
 import {TagList} from './routes/tagList'
 import {TokenList} from './routes/tokenList'
@@ -41,7 +42,6 @@ import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
 import {LocalStorageKey} from './utility'
-import {SubscriptionEditView} from './routes/subscriptionEditView'
 
 const LogoutMutation = gql`
   mutation Logout {

@@ -47,11 +47,11 @@ import {
   useAuthorisation
 } from '../atoms/permissionControl'
 import {UserSearch} from '../atoms/searchAndFilter/userSearch'
+import {InvoiceListPanel} from '../panel/invoiceListPanel'
+import {UserSubscriptionDeactivatePanel} from '../panel/userSubscriptionDeactivatePanel'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {ListViewActions, ListViewContainer, ListViewHeader, TableWrapper} from '../ui/listView'
 import {ALL_PAYMENT_PERIODICITIES} from '../utility'
-import {InvoiceListPanel} from '../panel/invoiceListPanel'
-import {UserSubscriptionDeactivatePanel} from '../panel/userSubscriptionDeactivatePanel'
 
 const {Group, ControlLabel, Control, HelpText} = RForm
 
@@ -372,7 +372,9 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
   const validationModel = Schema.Model({
     memberPlan: StringType().isRequired(t('errorMessages.noMemberPlanErrorMessage')),
     user: StringType().isRequired(t('errorMessages.noUserErrorMessage')),
-    currency: NumberType().isRequired(t('errorMessages.noAmountErrorMessage')),
+    currency: NumberType()
+      .isRequired(t('errorMessages.noAmountErrorMessage'))
+      .min(memberPlan?.amountPerMonthMin || 0),
     paymentPeriodicity: StringType().isRequired(
       t('errorMessages.noPaymentPeriodicityErrorMessage')
     ),
@@ -465,7 +467,6 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
           <Row gutter={10}>
             <Col xs={12}>
               <RGrid fluid>
-                {/* <Drawer.Body> */}
                 {deactivation && (
                   <Message showIcon type="info">
                     {t(

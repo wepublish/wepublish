@@ -171,8 +171,6 @@ function UserSubscriptionsList({subscriptions, userId}: UserSubscriptionsProps) 
     )
   }
 
-  console.log('subscriptions', subscriptions)
-
   return (
     <>
       {subscriptions?.map(subscription => (
