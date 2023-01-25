@@ -1,13 +1,13 @@
 import React, {ReactNode} from 'react'
-import {Grid} from '@mui/material'
+import {FlexboxGrid} from 'rsuite'
 
 interface SingleViewContentProps {
   children: ReactNode
 }
 export function SingleViewContent({children}: SingleViewContentProps) {
   return (
-    <Grid container>
-      <Grid xs={12}>{children}</Grid>
-    </Grid>
+    <FlexboxGrid>
+      <FlexboxGrid.Item colspan={24}>{children}</FlexboxGrid.Item>
+    </FlexboxGrid>
   )
 }
