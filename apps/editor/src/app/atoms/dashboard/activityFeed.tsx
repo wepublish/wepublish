@@ -37,6 +37,9 @@ const ActivityFeedIcon = styled(Avatar)`
   background-color: #3498ff;
   margin-right: 4px;
 `
+const TableOverflow = styled(Table)`
+  overflow: scroll;
+`
 
 export function ActivityFeed() {
   const {t, i18n} = useTranslation()
@@ -111,7 +114,7 @@ export function ActivityFeed() {
   }
 
   return (
-    <Table autoHeight wordWrap data={actions} loading={isLoading}>
+    <TableOverflow autoHeight wordWrap data={actions} loading={isLoading}>
       <Column verticalAlign="bottom" flexGrow={2}>
         <HeaderCell dataKey="event">{t('dashboard.event')}</HeaderCell>
         <Cell dataKey="event">
@@ -147,6 +150,6 @@ export function ActivityFeed() {
           }}
         </Cell>
       </Column>
-    </Table>
+    </TableOverflow>
   )
 }
