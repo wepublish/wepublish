@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -44,7 +45,7 @@ model ArticleRevision {
   imageID                String?
   authors                ArticleRevisionAuthor[]
   breaking               Boolean
-  blocks                 Json[]
+  blocks                 Json
   hideAuthor             Boolean
   socialMediaTitle       String?
   socialMediaDescription String?
@@ -142,7 +143,7 @@ model Author {
   slug       String         @unique
   jobTitle   String?
   links      AuthorsLinks[]
-  bio        Json[]
+  bio        Json
 
   imageID                     String?
   image                       Image?                             @relation(fields: [imageID], references: [id])
@@ -455,7 +456,7 @@ model MemberPlan {
   name                    String
   slug                    String                   @unique
   tags                    String[]
-  description             Json[]
+  description             Json
   active                  Boolean
   amountPerMonthMin       Float
   availablePaymentMethods AvailablePaymentMethod[]
@@ -524,7 +525,7 @@ model PageRevision {
   socialMediaDescription String?
   socialMediaImageID     String?
   socialMediaImage       Image?             @relation("pageRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
-  blocks                 Json[]
+  blocks                 Json
   PublishedPage          Page[]             @relation("publishedPageRevision")
   PendingPage            Page[]             @relation("pendingPageRevision")
   DraftPage              Page[]             @relation("draftPageRevision")
@@ -533,7 +534,7 @@ model PageRevision {
   @@index([publishedAt])
   @@index([updatedAt])
   @@index([tags])
-  @@map("pages.revision")
+  @@map("pages.revisions")
 }
 
 model Page {
@@ -607,7 +608,7 @@ model PeerProfile {
   themeColor           String
   themeFontColor       String
   callToActionURL      String
-  callToActionText     Json[]
+  callToActionText     Json
   callToActionImageURL String?
   callToActionImageID  String?
 

@@ -1,8 +1,10 @@
 import styled from '@emotion/styled'
-import {Table} from 'rsuite'
+import {IconButton as RIconButton, Table as RTable} from 'rsuite'
 
 import {ListViewFilters} from '../atoms/searchAndFilter/listViewFilters'
 import {StateColor} from '../utility'
+
+const {Cell} = RTable
 
 const ListViewContainer = styled.div`
   display: grid;
@@ -25,10 +27,24 @@ const ListFilters = styled(ListViewFilters)`
   grid-column: 1/3;
 `
 
+const ListViewFilterArea = styled.div`
+  gap: 8px;
+  display: flex;
+  margin-top: 1rem;
+`
+
 const TableWrapper = styled.div`
-  display: 'flex';
-  flex-flow: 'column';
-  margin-top: '20px';
+  display: flex;
+  flex-flow: column;
+  margin-top: 20px;
+  flex-grow: 1;
+  height: 100%;
+`
+
+const PaddedCell = styled(Cell)`
+  .rs-table-cell-content {
+    padding: 6px 0;
+  }
 `
 
 interface StatusBadgeProps {
@@ -51,7 +67,7 @@ const StatusBadge = styled.div<StatusBadgeProps>`
   }};
 `
 
-const IconButtonCell = styled(Table.Cell)`
+const IconButtonCell = styled(RTable.Cell)`
   padding: 6px 0;
   & > div {
     padding: 0;
@@ -61,13 +77,25 @@ const IconButtonCell = styled(Table.Cell)`
   }
 `
 
+const IconButton = styled(RIconButton)`
+  margin-left: 5px;
+`
+
+const Table = styled(RTable)`
+  height: 100% !important;
+`
+
 export {
+  IconButton,
   IconButtonCell,
   ListFilters,
   ListViewActions,
   ListViewContainer,
+  ListViewFilterArea,
   ListViewHeader,
+  PaddedCell,
   StatusBadge,
   StatusBadgeProps,
+  Table,
   TableWrapper
 }

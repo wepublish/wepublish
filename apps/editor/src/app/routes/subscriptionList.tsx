@@ -10,17 +10,8 @@ import React, {useEffect, useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
-import {
-  Button,
-  Drawer,
-  FlexboxGrid,
-  IconButton as RIconButton,
-  Modal,
-  Pagination,
-  Table as RTable
-} from 'rsuite'
+import {Button, Drawer, IconButton as RIconButton, Modal, Pagination, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
-
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {
@@ -32,6 +23,15 @@ import {SubscriptionListFilter} from '../atoms/searchAndFilter/subscriptionListF
 import {ExportSubscriptionsAsCsv} from '../panel/ExportSubscriptionsAsCsv'
 import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
 import {
+  ListViewActions,
+  ListViewContainer,
+  ListViewFilterArea,
+  ListViewHeader,
+  PaddedCell,
+  Table,
+  TableWrapper
+} from '../ui/listView'
+import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
@@ -39,33 +39,12 @@ import {
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 
-const Cell = styled(RCell)`
-  .rs-table-cell-content {
-    padding: 6px 0;
-  }
-`
-
 const IconButtonSmallMargin = styled(RIconButton)`
   margin-left: 5px;
 `
 
-const Table = styled(RTable)`
-  flex: 1;
-  cursor: pointer;
-`
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-flow: column;
-  margin-top: 20px;
-`
-
 const IconButton = styled(RIconButton)`
   margin-left: 20px;
-`
-
-const FlexItem = styled(FlexboxGrid.Item)`
-  text-align: right;
 `
 
 function mapColumFieldToGraphQLField(columnField: string): SubscriptionSort | null {
@@ -195,31 +174,28 @@ function SubscriptionList() {
 
   return (
     <>
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={12}>
+      <ListViewContainer>
+        <ListViewHeader>
           <h2>{t('subscriptionList.overview.subscription')}</h2>
-        </FlexboxGrid.Item>
-        <FlexItem colspan={12}>
-          <ExportSubscriptionsAsCsv filter={filter} />
-          <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
+        </ListViewHeader>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
+          <ListViewActions>
+            <ExportSubscriptionsAsCsv filter={filter} />
             {NewSubscriptionButton({isLoading, t})}
-          </PermissionControl>
-        </FlexItem>
-      </FlexboxGrid>
+          </ListViewActions>
+        </PermissionControl>
+        <ListViewFilterArea>
+          <SubscriptionListFilter
+            filter={filter}
+            isLoading={isLoading}
+            onSetFilter={filter => setFilter(filter)}
+          />
+        </ListViewFilterArea>
+      </ListViewContainer>
 
-      {/* Filter */}
-      <FlexboxGrid>
-        <SubscriptionListFilter
-          filter={filter}
-          isLoading={isLoading}
-          onSetFilter={filter => setFilter(filter)}
-        />
-      </FlexboxGrid>
-
-      <Wrapper>
+      <TableWrapper>
         <Table
-          minHeight={600}
-          autoHeight
+          fillHeight
           loading={isLoading}
           data={subscriptions}
           sortColumn={sortField}
@@ -279,7 +255,7 @@ function SubscriptionList() {
           {/* action */}
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('action')}</HeaderCell>
-            <Cell>
+            <PaddedCell>
               {(rowData: RowDataType<FullSubscriptionFragment>) => (
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButtonSmallMargin
@@ -295,7 +271,7 @@ function SubscriptionList() {
                   />
                 </IconButtonTooltip>
               )}
-            </Cell>
+            </PaddedCell>
           </Column>
         </Table>
 
@@ -315,7 +291,7 @@ function SubscriptionList() {
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </Wrapper>
+      </TableWrapper>
 
       <Drawer
         open={isEditModalOpen}
