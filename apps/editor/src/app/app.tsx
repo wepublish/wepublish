@@ -42,7 +42,7 @@ import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
 import {LocalStorageKey} from './utility'
 import SubscriptionSettings from '../../../../libs/membership/editor/src/lib/subscriptionSettings/subscriptionSettings'
-import MemberPlanEdit from '../../../../libs/membership/editor/src/lib/memberPlan/memberPlanEdit'
+import {MemberPlanEdit} from '../../../../libs/membership/editor/src/lib/memberPlan/memberPlanEdit'
 
 const LogoutMutation = gql`
   mutation Logout {
