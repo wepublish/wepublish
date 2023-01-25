@@ -18,7 +18,7 @@ import {formatDistanceToNow} from 'date-fns'
 import styled from '@emotion/styled'
 import {useRecentActionsQuery, Action, ActionType} from '@wepublish/editor/api'
 import {AVAILABLE_LANG} from '../../base'
-import {TableWrapper, Table} from '../../ui/listView'
+import {Table} from '../../ui/listView'
 
 export interface Event {
   date: string
@@ -30,19 +30,12 @@ export interface Event {
 
 const ActivityFeedSummaryText = styled.p`
   font-style: italic;
+  word-break: 'break-word';
 `
 
 const ActivityFeedIcon = styled(Avatar)`
   background-color: #3498ff;
   margin-right: 4px;
-`
-
-const TableCellWithWordBreak = styled(RTable.Cell)`
-  word-break: 'break-word';
-`
-
-const TableWordBreak = styled(Table)`
-  word-break: 'break-word';
 `
 
 export function ActivityFeed() {
@@ -118,42 +111,42 @@ export function ActivityFeed() {
   }
 
   return (
-    <TableWrapper>
-      <TableWordBreak wordWrap data={actions} loading={isLoading}>
-        <Column verticalAlign="bottom" flexGrow={2}>
-          <HeaderCell dataKey="event">{t('dashboard.event')}</HeaderCell>
-          <Cell dataKey="event">
-            {(rowData: RowDataType<Action>) => {
-              const action = mapDetailsToActionType(rowData)
-              return (
-                <>
-                  <ActivityFeedIcon size="sm" circle>
-                    {action.icon}
-                  </ActivityFeedIcon>
-                  <Link to={action.path}> {action.type} </Link>
-                  {formatDistanceToNow(new Date(rowData.date), {
-                    locale: AVAILABLE_LANG.find(lang => lang.id === i18n.language)?.locale,
-                    addSuffix: true
-                  })}
-                  {rowData.creator && t('dashboard.createdBy', {creator: rowData.creator})}
-                </>
-              )
-            }}
-          </Cell>
-        </Column>
-        <Column verticalAlign="bottom" flexGrow={1}>
-          <HeaderCell dataKey="summary">{t('dashboard.summary')}</HeaderCell>
-          <TableCellWithWordBreak dataKey="summary">
-            {(rowData: RowDataType<Action>) => {
-              return (
-                <>
-                  <ActivityFeedSummaryText>{rowData?.summary} </ActivityFeedSummaryText>
-                </>
-              )
-            }}
-          </TableCellWithWordBreak>
-        </Column>
-      </TableWordBreak>
-    </TableWrapper>
+    <Table autoHeight wordWrap data={actions} loading={isLoading}>
+      <Column verticalAlign="bottom" flexGrow={2}>
+        <HeaderCell dataKey="event">{t('dashboard.event')}</HeaderCell>
+        <Cell dataKey="event">
+          {(rowData: RowDataType<Action>) => {
+            const action = mapDetailsToActionType(rowData)
+            return (
+              <>
+                <ActivityFeedIcon size="sm" circle>
+                  {action.icon}
+                </ActivityFeedIcon>
+                <Link to={action.path}> {action.type} </Link>
+                {formatDistanceToNow(new Date(rowData.date), {
+                  locale: AVAILABLE_LANG.find(lang => lang.id === i18n.language)?.locale,
+                  addSuffix: true
+                })}
+                {rowData.creator && t('dashboard.createdBy', {creator: rowData.creator})}
+              </>
+            )
+          }}
+        </Cell>
+      </Column>
+      <Column verticalAlign="bottom" flexGrow={1}>
+        <HeaderCell dataKey="summary">{t('dashboard.summary')}</HeaderCell>
+        <Cell dataKey="summary">
+          {(rowData: RowDataType<Action>) => {
+            return (
+              <>
+                <ActivityFeedSummaryText style={{wordBreak: 'break-word'}}>
+                  {rowData?.summary}{' '}
+                </ActivityFeedSummaryText>
+              </>
+            )
+          }}
+        </Cell>
+      </Column>
+    </Table>
   )
 }
