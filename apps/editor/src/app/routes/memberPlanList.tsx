@@ -8,22 +8,13 @@ import {
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
-import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
-import {
-  Button,
-  Drawer,
-  IconButton as RIconButton,
-  Input,
-  InputGroup,
-  Modal,
-  Table as RTable
-} from 'rsuite'
+import {Link} from 'react-router-dom'
+import {Button, IconButton as RIconButton, Input, InputGroup, Modal, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
-import {MemberPlanEditPanel} from '../panel/memberPlanEditPanel'
 import {
   IconButton,
   ListViewActions,
@@ -39,22 +30,8 @@ const {Column, HeaderCell, Cell: RCell} = RTable
 
 function MemberPlanList() {
   const {t} = useTranslation()
-  const location = useLocation()
-  const params = useParams()
-  const navigate = useNavigate()
-  const {id} = params
-
-  const isCreateRoute = location.pathname.includes('create')
-  const isEditRoute = location.pathname.includes('edit')
-
-  const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute || isCreateRoute)
-
-  const [editID, setEditID] = useState<string | undefined>(isEditRoute ? id : undefined)
-
   const [filter, setFilter] = useState('')
-
   const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
-
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentMemberPlan, setCurrentMemberPlan] = useState<FullMemberPlanFragment>()
 
@@ -67,18 +44,6 @@ function MemberPlanList() {
   })
 
   const [deleteMemberPlan, {loading: isDeleting}] = useDeleteMemberPlanMutation()
-
-  useEffect(() => {
-    if (isCreateRoute) {
-      setEditID(undefined)
-      setEditModalOpen(true)
-    }
-
-    if (isEditRoute) {
-      setEditID(id)
-      setEditModalOpen(true)
-    }
-  }, [location])
 
   useEffect(() => {
     if (data?.memberPlans?.nodes) {
@@ -145,25 +110,6 @@ function MemberPlanList() {
           </Column>
         </Table>
       </TableWrapper>
-      <Drawer
-        open={isEditModalOpen}
-        size="sm"
-        onClose={() => {
-          setEditModalOpen(false)
-          navigate('/memberplans')
-        }}>
-        <MemberPlanEditPanel
-          id={editID}
-          onClose={() => {
-            setEditModalOpen(false)
-            navigate('/memberplans')
-          }}
-          onSave={() => {
-            setEditModalOpen(false)
-            navigate('/memberplans')
-          }}
-        />
-      </Drawer>
 
       <Modal open={isConfirmationDialogOpen} size="sm">
         <Modal.Header>

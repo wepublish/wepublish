@@ -497,7 +497,7 @@ export function App() {
               path="memberplans/create"
               element={
                 <Base>
-                  <MemberPlanList />
+                  <MemberPlanEdit />
                 </Base>
               }
             />
