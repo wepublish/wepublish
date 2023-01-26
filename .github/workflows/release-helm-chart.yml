@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - 'helm/charts/**/Chart.yml'
+      - 'helm/charts/**/Chart.yaml'
 
 jobs:
   push-wepublish-chart-to-gitlab:
