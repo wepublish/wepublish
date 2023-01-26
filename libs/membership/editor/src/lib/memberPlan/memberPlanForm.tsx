@@ -7,7 +7,7 @@ import {
   PaymentMethod
 } from '@wepublish/editor/api'
 import {ListInput, ListValue} from '../../../../../../apps/editor/src/app/atoms/listInput'
-import {CheckPicker, Col, Drawer, FlexboxGrid, Form, Panel, Row, TagPicker, Toggle} from 'rsuite'
+import {CheckPicker, Col, Drawer, Form, Panel, Row, TagPicker, Toggle} from 'rsuite'
 import {ChooseEditImage} from '../../../../../../apps/editor/src/app/atoms/chooseEditImage'
 import {RichTextBlock} from '../../../../../../apps/editor/src/app/blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../../../../../../apps/editor/src/app/blocks/types'
@@ -18,6 +18,7 @@ import {ImageSelectPanel} from '../../../../../../apps/editor/src/app/panel/imag
 import {ImageEditPanel} from '../../../../../../apps/editor/src/app/panel/imageEditPanel'
 
 interface MemberPlanFormProps {
+  memberPlanId?: string
   memberPlan?: FullMemberPlanFragment | null
   availablePaymentMethods: ListValue<AvailablePaymentMethod>[]
   paymentMethods: FullPaymentMethodFragment[]
@@ -28,6 +29,7 @@ interface MemberPlanFormProps {
   >
 }
 export default function MemberPlanForm({
+  memberPlanId,
   memberPlan,
   availablePaymentMethods,
   paymentMethods,
@@ -45,6 +47,22 @@ export default function MemberPlanForm({
    */
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
+
+  /**
+   * Functions
+   */
+  function updateName(name: string | undefined) {
+    if (!memberPlan) {
+      return
+    }
+    setMemberPlan({...memberPlan, name: name || ''})
+
+    // auto generate slug, in case we create a new member plan (thus, not updating existing member plan)
+    if (!memberPlanId) {
+      // const slug = slugify(name || '')
+      // setMemberPlan({...memberPlan, slug})
+    }
+  }
 
   return (
     <Row>
@@ -89,12 +107,7 @@ export default function MemberPlanForm({
               <Form.Control
                 name="name"
                 value={memberPlan?.name || ''}
-                onChange={(newName: string | undefined) => {
-                  if (!memberPlan) {
-                    return
-                  }
-                  setMemberPlan({...memberPlan, name: newName || ''})
-                }}
+                onChange={(newName: string | undefined) => updateName(newName)}
               />
             </Col>
 

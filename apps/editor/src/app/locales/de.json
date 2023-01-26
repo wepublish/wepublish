@@ -625,6 +625,9 @@
       "slug": "Slug",
       "errorMessage": "Gib eine Nummer ein"
     },
+    "memberPlanEdit": {
+      "nameRequired": "Name erforderlich"
+    },
     "pollList": {
       "title": "Umfragen",
       "createNew": "Umfrage erstellen",

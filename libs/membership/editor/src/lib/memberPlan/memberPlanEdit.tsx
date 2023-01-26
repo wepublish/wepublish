@@ -103,7 +103,11 @@ function MemberPlanEdit() {
    * Schema validation
    */
   const validationModel = Schema.Model({
-    name: Schema.Types.StringType().isRequired(t('memberPlanEdit.nameRequired'))
+    name: Schema.Types.StringType().isRequired(t('memberPlanEdit.nameRequired')),
+    slug: Schema.Types.StringType().isRequired(t('memberPlanEdit.SlugRequired')),
+    amountPerMonthMin: Schema.Types.NumberType()
+      .isRequired(t('memberPlanEdit.amountPerMonthMinRequired'))
+      .min(0, t('memberPlanEdit.amountPerMonthMinZero'))
   })
 
   /**
@@ -161,7 +165,11 @@ function MemberPlanEdit() {
         model={validationModel}
         fluid
         disabled={loading}
-        formValue={{name: memberPlan?.name}}>
+        formValue={{
+          name: memberPlan?.name,
+          slug: memberPlan?.slug,
+          amountPerMonthMin: memberPlan?.amountPerMonthMin
+        }}>
         <SingleViewTitle
           loading={loading}
           loadingTitle={t('memberPlanEdit.loadingTitle')}
@@ -173,6 +181,7 @@ function MemberPlanEdit() {
         />
         <SingleViewContent>
           <MemberPlanForm
+            memberPlanId={memberPlanId}
             memberPlan={memberPlan}
             availablePaymentMethods={availablePaymentMethods}
             paymentMethods={paymentMethods}
