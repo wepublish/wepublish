@@ -1335,7 +1335,8 @@
       "newUser": "New user added",
       "newEvent": "New event added",
       "newAction": "New action",
-      "createdBy": " by {{creator}}"
+      "createdBy": " by {{creator}}",
+      "user": "User"
     }
   }
 }

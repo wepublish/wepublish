@@ -1336,7 +1336,8 @@
       "newUser": "Neuer User erstellt",
       "newEvent": "Neues event",
       "newAction": "Neues action",
-      "createdBy": " von {{creator}}"
+      "createdBy": " von {{creator}}",
+      "user": "Benutzer"
     }
   }
 }

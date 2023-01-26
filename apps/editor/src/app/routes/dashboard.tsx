@@ -27,7 +27,7 @@ export function Dashboard() {
 
   const {data: me} = useMeQuery()
   const name = useMemo(
-    () => me?.me?.preferredName ?? me?.me?.firstName ?? me?.me?.name ?? 'User',
+    () => me?.me?.preferredName ?? me?.me?.firstName ?? me?.me?.name ?? t('dashboard.user'),
     [me]
   )
 
