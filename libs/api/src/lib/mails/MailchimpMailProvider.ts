@@ -1,15 +1,18 @@
-import {Mandrill} from 'mandrill-api'
 import crypto from 'crypto'
 
+import mailchimp from '@mailchimp/mailchimp_transactional'
+import {AxiosError} from 'axios'
+
+import {MailLogState} from '@prisma/client'
 import {
   BaseMailProvider,
   MailLogStatus,
+  MailProviderError,
   MailProviderProps,
+  MailProviderTemplate,
   SendMailProps,
   WebhookForSendMailProps
 } from './mailProvider'
-import {logger} from '../server'
-import {MailLogState} from '@prisma/client'
 
 export interface MailchimpMailProviderProps extends MailProviderProps {
   readonly apiKey: string
@@ -61,13 +64,13 @@ function flattenObj(ob: any) {
 }
 
 export class MailchimpMailProvider extends BaseMailProvider {
-  readonly mandrill: Mandrill
   readonly webhookEndpointSecret: string
+  readonly mailchimpClient: mailchimp.ApiClient
 
   constructor(props: MailchimpMailProviderProps) {
     super(props)
-    this.mandrill = new Mandrill(props.apiKey)
     this.webhookEndpointSecret = props.webhookEndpointSecret
+    this.mailchimpClient = mailchimp(props.apiKey)
   }
 
   verifyWebhookSignature({signature, url, params}: VerifyWebhookSignatureProps): boolean {
@@ -111,78 +114,79 @@ export class MailchimpMailProvider extends BaseMailProvider {
     return Promise.resolve(mailLogStatuses)
   }
 
-  async sendMail(props: SendMailProps): Promise<void> {
+  async sendMail(props: SendMailProps): Promise<void | MailProviderError> {
     if (props.template) {
-      try {
-        const templateContent: any = []
-        const flattenedObject = flattenObj(props.templateData)
-        for (const [key, value] of Object.entries(flattenedObject || {})) {
-          templateContent.push({
-            name: key,
-            content: value
-          })
-        }
-        await new Promise((resolve, reject) => {
-          this.mandrill.messages.sendTemplate(
-            {
-              template_name: props.template,
-              template_content: [],
-              message: {
-                text: props.message,
-                subject: props.subject,
-                from_email: this.fromAddress,
-                to: [
-                  {
-                    email: props.recipient,
-                    type: 'to'
-                  }
-                ],
-                merge_vars: [
-                  {
-                    rcpt: props.recipient,
-                    vars: templateContent
-                  }
-                ],
-                metadata: {
-                  mail_log_id: props.mailLogID
-                }
-              }
-            },
-            resolve,
-            reject
-          )
+      const templateContent: any = []
+      const flattenedObject = flattenObj(props.templateData)
+      for (const [key, value] of Object.entries(flattenedObject || {})) {
+        templateContent.push({
+          name: key,
+          content: value
         })
-      } catch (error) {
-        logger('mailchimpMailProvider').error(error as Error, `sendTemplate returned NOK`)
+      }
+      const response = await this.mailchimpClient.messages.sendTemplate({
+        template_name: props.template,
+        template_content: [],
+        message: {
+          text: props.message,
+          subject: props.subject,
+          from_email: this.fromAddress,
+          to: [
+            {
+              email: props.recipient,
+              type: 'to'
+            }
+          ],
+          merge_vars: [
+            {
+              rcpt: props.recipient,
+              vars: templateContent
+            }
+          ]
+        }
+      })
+      if (this.responseIsError(response)) {
+        return new MailProviderError(response.response.data.message)
       }
     } else {
-      try {
-        await new Promise((resolve, reject) => {
-          this.mandrill.messages.send(
+      const response = await this.mailchimpClient.messages.send({
+        message: {
+          html: props.messageHtml,
+          text: props.message,
+          subject: props.subject,
+          from_email: this.fromAddress,
+          to: [
             {
-              message: {
-                html: props.messageHtml,
-                text: props.message,
-                subject: props.subject,
-                from_email: this.fromAddress,
-                to: [
-                  {
-                    email: props.recipient,
-                    type: 'to'
-                  }
-                ],
-                metadata: {
-                  mail_log_id: props.mailLogID
-                }
-              }
-            },
-            resolve,
-            reject
-          )
-        })
-      } catch (error) {
-        logger('mailchimpMailProvider').error(error as Error, `send returned NOK`)
+              email: props.recipient,
+              type: 'to'
+            }
+          ]
+        }
+      })
+      if (this.responseIsError(response)) {
+        return new MailProviderError(response.response.data.message)
       }
     }
+  }
+
+  // beware: Mailchimp templates are still created and stored in Mandrill: https://mandrillapp.com/templates
+  async getTemplates(): Promise<MailProviderTemplate[] | MailProviderError> {
+    const response = await this.mailchimpClient.templates.list()
+    if (this.responseIsError(response)) {
+      return new MailProviderError(response.response.data.message)
+    }
+    const templates: MailProviderTemplate[] = response.map(mailTemplateResponse => {
+      return {
+        name: mailTemplateResponse.name,
+        slug: mailTemplateResponse.slug,
+        createdAt: new Date(mailTemplateResponse.created_at),
+        updatedAt: new Date(mailTemplateResponse.updated_at)
+      }
+    })
+    return templates
+  }
+
+  private responseIsError<T>(response: T | AxiosError): response is AxiosError {
+    return 'isAxiosError' in (response as object)
   }
 }

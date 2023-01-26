@@ -1,4 +1,5 @@
-import {MailgunMailProvider} from '../../src'
+import nock from 'nock'
+import {MailgunMailProvider, MailProviderError, MailProviderTemplate} from '../../src'
 
 let mockSubmit = jest.fn()
 const mockAppend = jest.fn()
@@ -15,6 +16,28 @@ jest.mock('form-data', () => {
 let mailgunMailProvider: MailgunMailProvider
 
 describe('Mailgun Mail Provider', () => {
+  beforeAll(() => {
+    nock('https://api.mailgun.net')
+      .persist()
+      .get('/v3/sandbox8a2185cfb29c48d4941d51c261fc3e03.mailgun.org/templates')
+      .basicAuth({user: 'api', pass: 'mg-12345678'})
+      .replyWithFile(
+        200,
+        __dirname + '/__fixtures__/mailgun-templates-list-success-response.json',
+        {
+          'Content-Type': 'application/json'
+        }
+      )
+
+    nock('https://api.mailgun.net')
+      .persist()
+      .get('/v3/sandbox8a2185cfb29c48d4941d51c261fc3e03.mailgun.org/templates')
+      .basicAuth({user: 'api', pass: 'blah blah'})
+      .replyWithFile(401, __dirname + '/__fixtures__/mailgun-templates-list-error-response.json', {
+        'Content-Type': 'application/json'
+      })
+  })
+
   test('can be created', () => {
     mailgunMailProvider = new MailgunMailProvider({
       id: 'mailgun',
@@ -50,5 +73,41 @@ describe('Mailgun Mail Provider', () => {
     expect(mockAppend).toHaveBeenLastCalledWith('v:mail_log_id', 'mailLogID')
 
     await expect(mailgunMailProvider.sendMail(mailInfo)).rejects.toEqual({statusCode: 404})
+  })
+
+  test('loads templates', async () => {
+    mailgunMailProvider = new MailgunMailProvider({
+      id: 'mailgun',
+      name: 'Mailgun',
+      apiKey: 'mg-12345678',
+      baseDomain: 'https://mailgun.com',
+      mailDomain: 'sandbox8a2185cfb29c48d4941d51c261fc3e03.mailgun.org',
+      webhookEndpointSecret: 'fakeSecret',
+      fromAddress: 'dev@wepublish.ch'
+    })
+
+    const response = await mailgunMailProvider.getTemplates()
+    const templates = response as MailProviderTemplate[]
+    expect(templates.length).toEqual(2)
+    expect(templates.map(t => t.name).sort()).toEqual(
+      ['subscription_creation', 'subscription_expiration'].sort()
+    )
+  })
+
+  test('returns error when using invalid key', async () => {
+    mailgunMailProvider = new MailgunMailProvider({
+      id: 'mailgun',
+      name: 'Mailgun',
+      apiKey: 'blah blah',
+      baseDomain: 'https://mailgun.com',
+      mailDomain: 'sandbox8a2185cfb29c48d4941d51c261fc3e03.mailgun.org',
+      webhookEndpointSecret: 'fakeSecret',
+      fromAddress: 'dev@wepublish.ch'
+    })
+
+    const response = await mailgunMailProvider.getTemplates()
+    expect(response).toBeInstanceOf(MailProviderError)
+    const error = response as MailProviderError
+    expect(error.message).toEqual('Invalid private key')
   })
 })
