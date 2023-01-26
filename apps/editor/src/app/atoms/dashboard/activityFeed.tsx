@@ -118,7 +118,7 @@ export function ActivityFeed() {
           {(rowData: RowDataType<Action>) => {
             const action = mapDetailsToActionType(rowData)
             return (
-              <>
+              <div style={{wordBreak: 'break-word'}}>
                 <ActivityFeedIcon size="sm" circle>
                   {action.icon}
                 </ActivityFeedIcon>
@@ -128,7 +128,7 @@ export function ActivityFeed() {
                   addSuffix: true
                 })}
                 {rowData.creator && t('dashboard.createdBy', {creator: rowData.creator})}
-              </>
+              </div>
             )
           }}
         </Cell>
