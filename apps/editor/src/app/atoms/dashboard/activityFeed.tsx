@@ -1,24 +1,24 @@
-import React, {useState, useEffect} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Table as RTable, Avatar} from 'rsuite'
-import {RowDataType} from 'rsuite-table'
-import {Link} from 'react-router-dom'
-import {
-  MdDescription,
-  MdChat,
-  MdAutorenew,
-  MdAccountCircle,
-  MdGroup,
-  MdOutlineGridView,
-  MdDashboard,
-  MdEvent,
-  MdFeed
-} from 'react-icons/md'
-import {formatDistanceToNow} from 'date-fns'
 import styled from '@emotion/styled'
-import {useRecentActionsQuery, Action, ActionType} from '@wepublish/editor/api'
+import {Action, ActionType, useRecentActionsQuery} from '@wepublish/editor/api'
+import {formatDistanceToNow} from 'date-fns'
+import {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {
+  MdAccountCircle,
+  MdAutorenew,
+  MdChat,
+  MdDashboard,
+  MdDescription,
+  MdEvent,
+  MdFeed,
+  MdGroup,
+  MdOutlineGridView
+} from 'react-icons/md'
+import {Link} from 'react-router-dom'
+import {Avatar, Table as RTable} from 'rsuite'
+import {RowDataType} from 'rsuite-table'
+
 import {AVAILABLE_LANG} from '../../base'
-import {Table} from '../../ui/listView'
 
 export interface Event {
   date: string
@@ -36,9 +36,6 @@ const ActivityFeedSummaryText = styled.p`
 const ActivityFeedIcon = styled(Avatar)`
   background-color: #3498ff;
   margin-right: 4px;
-`
-const TableOverflow = styled(Table)`
-  overflow: scroll;
 `
 
 export function ActivityFeed() {
@@ -114,7 +111,7 @@ export function ActivityFeed() {
   }
 
   return (
-    <TableOverflow autoHeight wordWrap data={actions} loading={isLoading}>
+    <RTable autoHeight wordWrap data={actions} loading={isLoading}>
       <Column verticalAlign="bottom" flexGrow={2}>
         <HeaderCell dataKey="event">{t('dashboard.event')}</HeaderCell>
         <Cell dataKey="event">
@@ -141,15 +138,13 @@ export function ActivityFeed() {
         <Cell dataKey="summary">
           {(rowData: RowDataType<Action>) => {
             return (
-              <>
-                <ActivityFeedSummaryText style={{wordBreak: 'break-word'}}>
-                  {rowData?.summary}{' '}
-                </ActivityFeedSummaryText>
-              </>
+              <ActivityFeedSummaryText style={{wordBreak: 'break-word'}}>
+                {rowData?.summary}{' '}
+              </ActivityFeedSummaryText>
             )
           }}
         </Cell>
       </Column>
-    </TableOverflow>
+    </RTable>
   )
 }
