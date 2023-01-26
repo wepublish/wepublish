@@ -42,7 +42,7 @@ export function ActivityFeed() {
   const {t, i18n} = useTranslation()
   const {Column, HeaderCell, Cell} = RTable
 
-  const {data, loading: isLoading} = useRecentActionsQuery()
+  const {data, loading: isLoading} = useRecentActionsQuery({fetchPolicy: 'no-cache'})
   const [actions, setActions] = useState<Action[]>([])
 
   useEffect(() => {
