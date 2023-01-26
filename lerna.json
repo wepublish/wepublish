@@ -27,6 +27,7 @@
   },
   "packages": [
     "libs/api",
+    "libs/nest-modules",
     "apps/editor"
   ]
 }
