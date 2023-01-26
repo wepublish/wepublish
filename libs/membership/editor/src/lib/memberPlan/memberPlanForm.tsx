@@ -7,7 +7,7 @@ import {
   PaymentMethod
 } from '@wepublish/editor/api'
 import {ListInput, ListValue} from '../../../../../../apps/editor/src/app/atoms/listInput'
-import {CheckPicker, Drawer, FlexboxGrid, Form, Panel, TagPicker, Toggle} from 'rsuite'
+import {CheckPicker, Col, Drawer, FlexboxGrid, Form, Panel, Row, TagPicker, Toggle} from 'rsuite'
 import {ChooseEditImage} from '../../../../../../apps/editor/src/app/atoms/chooseEditImage'
 import {RichTextBlock} from '../../../../../../apps/editor/src/app/blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../../../../../../apps/editor/src/app/blocks/types'
@@ -47,12 +47,12 @@ export default function MemberPlanForm({
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
   return (
-    <FlexboxGrid>
-      <FlexboxGrid.Item colspan={12}>
+    <Row>
+      <Col xs={12}>
         <Panel bordered>
-          <FlexboxGrid>
+          <Row>
             {/* image */}
-            <FlexboxGrid.Item colspan={12}>
+            <Col xs={12}>
               <ChooseEditImage
                 image={memberPlan?.image}
                 disabled={loading}
@@ -65,10 +65,10 @@ export default function MemberPlanForm({
                   setMemberPlan({...memberPlan, image: undefined})
                 }}
               />
-            </FlexboxGrid.Item>
+            </Col>
 
             {/* active / inactive */}
-            <FlexboxGrid.Item colspan={12}>
+            <Col xs={12}>
               <Form.ControlLabel>{t('memberPlanEdit.active')}</Form.ControlLabel>
               <Toggle
                 checked={!!memberPlan?.active}
@@ -81,10 +81,10 @@ export default function MemberPlanForm({
                 }}
               />
               <Form.HelpText>{t('memberPlanList.activeDescription')}</Form.HelpText>
-            </FlexboxGrid.Item>
+            </Col>
 
             {/* name */}
-            <FlexboxGrid.Item colspan={12}>
+            <Col xs={12}>
               <Form.ControlLabel>{t('memberPlanEdit.name')}</Form.ControlLabel>
               <Form.Control
                 name="name"
@@ -96,10 +96,10 @@ export default function MemberPlanForm({
                   setMemberPlan({...memberPlan, name: newName || ''})
                 }}
               />
-            </FlexboxGrid.Item>
+            </Col>
 
             {/* slug */}
-            <FlexboxGrid.Item colspan={12}>
+            <Col xs={12}>
               <Form.ControlLabel>{t('memberPlanEdit.slug')}</Form.ControlLabel>
               <Form.Control
                 name="slug"
@@ -111,10 +111,10 @@ export default function MemberPlanForm({
                   setMemberPlan({...memberPlan, slug: newSlug || ''})
                 }}
               />
-            </FlexboxGrid.Item>
+            </Col>
 
             {/* description */}
-            <FlexboxGrid.Item colspan={24}>
+            <Col xs={24}>
               <Form.ControlLabel>{t('memberPlanList.description')}</Form.ControlLabel>
               <div className="richTextFrame">
                 <RichTextBlock
@@ -131,15 +131,15 @@ export default function MemberPlanForm({
                   }}
                 />
               </div>
-            </FlexboxGrid.Item>
-          </FlexboxGrid>
+            </Col>
+          </Row>
         </Panel>
-      </FlexboxGrid.Item>
-      <FlexboxGrid.Item colspan={12}>
+      </Col>
+      <Col xs={12}>
         <Panel bordered>
-          <FlexboxGrid>
+          <Row>
             {/* tags */}
-            <FlexboxGrid.Item colspan={24}>
+            <Col xs={24}>
               <Form.ControlLabel>{t('memberPlanEdit.tags')}</Form.ControlLabel>
               <TagPicker
                 disabled={loading}
@@ -157,10 +157,10 @@ export default function MemberPlanForm({
                   setMemberPlan({...memberPlan, tags: tagsValue})
                 }}
               />
-            </FlexboxGrid.Item>
+            </Col>
 
             {/* minimal monthly amount */}
-            <FlexboxGrid.Item colspan={24}>
+            <Col xs={24}>
               <Form.ControlLabel>{t('memberPlanEdit.amountPerMonthMin')}</Form.ControlLabel>
               <CurrencyInput
                 name="currency"
@@ -174,9 +174,9 @@ export default function MemberPlanForm({
                   setMemberPlan({...memberPlan, amountPerMonthMin: centAmount})
                 }}
               />
-            </FlexboxGrid.Item>
+            </Col>
 
-            <FlexboxGrid.Item colspan={24}>
+            <Col xs={24}>
               {/* payment method settings */}
               <ListInput
                 value={availablePaymentMethods}
@@ -188,9 +188,9 @@ export default function MemberPlanForm({
                   paymentMethods: []
                 }}>
                 {({value, onChange}) => (
-                  <FlexboxGrid>
+                  <Row>
                     {/* force auto-renew */}
-                    <FlexboxGrid.Item colspan={24}>
+                    <Col xs={24}>
                       <Form.ControlLabel>{t('memberPlanList.autoRenewal')}</Form.ControlLabel>
                       <Toggle
                         checked={value.forceAutoRenewal}
@@ -198,10 +198,10 @@ export default function MemberPlanForm({
                         onChange={forceAutoRenewal => onChange({...value, forceAutoRenewal})}
                       />
                       <Form.HelpText>{t('memberPlanList.autoRenewalDescription')}</Form.HelpText>
-                    </FlexboxGrid.Item>
+                    </Col>
 
                     {/* payment periodicity */}
-                    <FlexboxGrid.Item colspan={24}>
+                    <Col xs={24}>
                       <Form.ControlLabel>
                         {t('memberPlanList.paymentPeriodicities')}
                       </Form.ControlLabel>
@@ -218,10 +218,10 @@ export default function MemberPlanForm({
                         block
                         placement="auto"
                       />
-                    </FlexboxGrid.Item>
+                    </Col>
 
                     {/* payment method selection */}
-                    <FlexboxGrid.Item colspan={24}>
+                    <Col xs={24}>
                       <Form.ControlLabel>{t('memberPlanList.paymentMethods')}</Form.ControlLabel>
                       <CheckPicker
                         virtualized
@@ -239,14 +239,14 @@ export default function MemberPlanForm({
                         block
                         placement="auto"
                       />
-                    </FlexboxGrid.Item>
-                  </FlexboxGrid>
+                    </Col>
+                  </Row>
                 )}
               </ListInput>
-            </FlexboxGrid.Item>
-          </FlexboxGrid>
+            </Col>
+          </Row>
         </Panel>
-      </FlexboxGrid.Item>
+      </Col>
 
       {/* image upload and selection */}
       <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
@@ -270,6 +270,6 @@ export default function MemberPlanForm({
           />
         </Drawer>
       )}
-    </FlexboxGrid>
+    </Row>
   )
 }
