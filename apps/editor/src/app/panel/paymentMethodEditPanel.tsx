@@ -16,7 +16,7 @@ import {
   useAuthorisation
 } from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {slugify} from '../utility'
+import {slugify} from '@wepublish/utils'
 
 export interface PaymentMethodEditPanelProps {
   id?: string

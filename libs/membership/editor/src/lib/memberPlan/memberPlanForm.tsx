@@ -16,6 +16,7 @@ import {ALL_PAYMENT_PERIODICITIES} from '../../../../../../apps/editor/src/app/u
 import {useTranslation} from 'react-i18next'
 import {ImageSelectPanel} from '../../../../../../apps/editor/src/app/panel/imageSelectPanel'
 import {ImageEditPanel} from '../../../../../../apps/editor/src/app/panel/imageEditPanel'
+import {slugify} from '@wepublish/utils'
 
 interface MemberPlanFormProps {
   memberPlanId?: string
@@ -55,13 +56,15 @@ export default function MemberPlanForm({
     if (!memberPlan) {
       return
     }
-    setMemberPlan({...memberPlan, name: name || ''})
+    name = name || ''
+    let {slug} = memberPlan
 
     // auto generate slug, in case we create a new member plan (thus, not updating existing member plan)
     if (!memberPlanId) {
-      // const slug = slugify(name || '')
-      // setMemberPlan({...memberPlan, slug})
+      slug = slugify(name)
     }
+
+    setMemberPlan({...memberPlan, name, slug})
   }
 
   return (
@@ -121,7 +124,7 @@ export default function MemberPlanForm({
                   if (!memberPlan) {
                     return
                   }
-                  setMemberPlan({...memberPlan, slug: newSlug || ''})
+                  setMemberPlan({...memberPlan, slug: slugify(newSlug || '')})
                 }}
               />
             </Col>

@@ -30,10 +30,11 @@ import {
 } from '../atoms/permissionControl'
 import {Textarea} from '../atoms/textarea'
 import {MetaDataType} from '../blocks/types'
-import {generateID, slugify} from '../utility'
+import {generateID} from '../utility'
 import {AuthorCheckPicker} from './authorCheckPicker'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
+import {slugify} from '@wepublish/utils'
 
 const {Item} = RNav
 

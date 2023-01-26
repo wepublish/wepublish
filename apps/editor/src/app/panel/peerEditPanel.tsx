@@ -20,7 +20,8 @@ import {
 } from '../atoms/permissionControl'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {getOperationNameFromDocument, slugify} from '../utility'
+import {getOperationNameFromDocument} from '../utility'
+import {slugify} from '@wepublish/utils'
 
 export interface PeerEditPanelProps {
   id?: string

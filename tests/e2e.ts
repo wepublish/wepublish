@@ -1,6 +1,6 @@
 import {ClientFunction, Role, Selector} from 'testcafe'
-import {slugify} from '../config/utilities'
 import * as process from 'process'
+import {slugify} from '../libs/utils/src'
 
 const loginName = Selector('.username').child('input')
 const loginPassword = Selector('.password').child('input')
