@@ -35,9 +35,10 @@ import {
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {generateID, getOperationNameFromDocument, slugify} from '../utility'
+import {generateID, getOperationNameFromDocument} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
+import {slugify} from '@wepublish/utils'
 
 const {ControlLabel, Group, Control} = RForm
 

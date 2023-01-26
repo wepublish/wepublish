@@ -9,7 +9,8 @@ import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, CheckPicker} from 'rsuite'
 
-import {getOperationNameFromDocument, slugify} from '../utility'
+import {getOperationNameFromDocument} from '../utility'
+import {slugify} from '@wepublish/utils'
 
 const ButtonWrapper = styled.div`
   margin: 10px;
