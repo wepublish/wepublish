@@ -1,25 +1,22 @@
 import styled from '@emotion/styled'
+import {useMeQuery} from '@wepublish/editor/api'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
+import {FlexboxGrid, Panel as RPanel} from 'rsuite'
+
 import {ActivityFeed} from '../atoms/dashboard/activityFeed'
 import {SubscriberChart} from '../atoms/dashboard/subscriberChart'
-import {FlexboxGrid, Panel as RPanel} from 'rsuite'
 import {PermissionControl} from '../atoms/permissionControl'
-import {useMeQuery} from '@wepublish/editor/api'
 import {ListViewContainer, ListViewHeader} from '../ui/listView'
 
 const Wrapper = styled(FlexboxGrid)`
-  height: 100%;
   margin-top: 20px;
-  overflow-y: scroll;
+  height: calc(100vh - 220px);
 `
 
 const Item = styled(FlexboxGrid.Item)`
-  height: 100%;
-`
-
-const Panel = styled(RPanel)`
-  min-height: 100%;
+  max-height: 100%;
+  overflow-y: scroll;
 `
 
 export function Dashboard() {
@@ -41,9 +38,9 @@ export function Dashboard() {
       </ListViewContainer>
       <Wrapper justify="space-around">
         <Item colspan={14}>
-          <Panel bodyFill header={t('dashboard.activity')} bordered shaded>
+          <RPanel header={t('dashboard.activity')} bordered shaded>
             <ActivityFeed />
-          </Panel>
+          </RPanel>
         </Item>
         <FlexboxGrid.Item colspan={9}>
           <PermissionControl qualifyingPermissions={['CAN_GET_SUBSCRIPTIONS']}>
