@@ -21,11 +21,3 @@ jobs:
       tags: |
         ghcr.io/wepublish/wepublish:master-${{ needs.date_sha_tag.outputs.tag }}
     secrets: inherit
-
-  publish_demo_docker:
-    needs: date_sha_tag
-    uses: ./.github/workflows/publish-docker-image.yml
-    with:
-      tags: |
-        ghcr.io/wepublish/wepublish:demo-${{ needs.date_sha_tag.outputs.tag }}
-    secrets: inherit
