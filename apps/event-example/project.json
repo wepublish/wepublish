@@ -32,6 +32,7 @@
           "dev": true
         },
         "production": {
+          "port": 4000,
           "buildTarget": "event-example:build:production",
           "dev": false
         }
