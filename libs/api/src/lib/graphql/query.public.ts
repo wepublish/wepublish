@@ -72,9 +72,8 @@ import {
   GraphQLEventFilter,
   GraphQLEventSort
 } from './event/event'
-import {getTags} from './tag/tag.query'
+import {getTags, TagSort} from './tag/tag.query'
 import {GraphQLTagFilter, GraphQLTagConnection, GraphQLTagSort} from './tag/tag'
-import {TagSort} from '@wepublish/editor/api'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
