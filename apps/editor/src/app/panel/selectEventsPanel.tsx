@@ -1,5 +1,4 @@
 import {ApolloError} from '@apollo/client'
-import EditIcon from '@rsuite/icons/legacy/Edit'
 import {EventRefFragment, TagType, useEventListLazyQuery} from '@wepublish/editor/api'
 import React, {useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -22,6 +21,7 @@ import {PermissionControl} from '../atoms/permissionControl'
 import {SelectTags} from '../atoms/tag/selectTags'
 import {EventBlockValue} from '../blocks/types'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
+import {MdEdit} from 'react-icons/md'
 
 const onErrorToast = (error: ApolloError) => {
   if (error?.message) {
@@ -167,7 +167,7 @@ export function SelectEventPanel({selectedFilter, onClose, onSelect}: SelectEven
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_EVENT']}>
                   <IconButtonTooltip caption={t('event.list.edit')}>
                     <Link target="_blank" to={`/events/edit/${rowData.id}`}>
-                      <IconButton icon={<EditIcon />} circle size="sm" />
+                      <IconButton icon={<MdEdit />} circle size="sm" />
                     </Link>
                   </IconButtonTooltip>
                 </PermissionControl>

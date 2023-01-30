@@ -1,4 +1,3 @@
-import PencilIcon from '@rsuite/icons/legacy/Pencil'
 import {EventRefFragment} from '@wepublish/editor/api'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -9,6 +8,7 @@ import {PlaceholderInput} from '../atoms/placeholderInput'
 import {SelectEventPanel} from '../panel/selectEventsPanel'
 import {EventEndsAtView, EventStartsAtView} from '../routes/events/eventListView'
 import {EventBlockValue} from './types'
+import {MdEdit} from 'react-icons/md'
 
 const EventPreview = ({event}: {event: EventRefFragment}) => (
   <Panel
@@ -94,7 +94,7 @@ export const EventBlock = ({
                   height: '100%',
                   right: 0
                 }}>
-                <IconButton size={'lg'} icon={<PencilIcon />} onClick={() => setIsDialogOpen(true)}>
+                <IconButton size={'lg'} icon={<MdEdit />} onClick={() => setIsDialogOpen(true)}>
                   {t('blocks.event.edit')}
                 </IconButton>
               </div>

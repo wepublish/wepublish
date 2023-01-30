@@ -3,6 +3,7 @@ fragment EventRef on Event {
   name
   description
   status
+  location
   image {
     ...ImageRef
   }
@@ -96,21 +97,6 @@ mutation DeleteEvent($id: ID!) {
   deleteEvent(id: $id) {
     ...EventRef
   }
-}
-fragment EventRef on Event {
-  id
-  name
-  description
-  status
-  image {
-    ...ImageRef
-  }
-  tags {
-    id
-    tag
-  }
-  startsAt
-  endsAt
 }
 
 query EventList(

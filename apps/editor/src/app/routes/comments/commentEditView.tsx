@@ -1,6 +1,5 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
-import {Visible} from '@rsuite/icons'
 import {
   CommentRevisionUpdateInput,
   FullCommentFragment,
@@ -34,6 +33,7 @@ import {CommentUser} from '../../atoms/comment/commentUser'
 import {ModelTitle} from '../../atoms/modelTitle'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {SelectTags} from '../../atoms/tag/selectTags'
+import {MdVisibility} from 'react-icons/md'
 
 const ColNoMargin = styled(RCol)`
   margin-top: 0px;
@@ -251,7 +251,7 @@ const CommentEditView = memo(() => {
                       <IconButton
                         appearance="ghost"
                         color="violet"
-                        icon={<Visible />}
+                        icon={<MdVisibility />}
                         onClick={() => {
                           navigate(`/articles/edit/${comment?.itemID}`)
                         }}>

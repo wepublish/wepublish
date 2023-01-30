@@ -16,7 +16,7 @@ import {createProxyingResolver} from '../../utility'
 import {GraphQLPageInfo} from '../common'
 import {GraphQLImage} from '../image'
 import {GraphQLTag} from '../tag/tag'
-import {EventSort} from './event.queries'
+import {EventSort} from './event.query'
 import {GraphQLRichText} from '../richText'
 import {GraphQLDateTime} from 'graphql-scalars'
 
@@ -81,6 +81,8 @@ export const GraphQLEventFilter = new GraphQLInputObjectType({
   name: 'EventFilter',
   fields: {
     upcomingOnly: {type: GraphQLBoolean},
+    from: {type: GraphQLDateTime},
+    to: {type: GraphQLDateTime},
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
   }
 })

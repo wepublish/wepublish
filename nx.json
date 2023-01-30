@@ -51,6 +51,12 @@
         "style": "@emotion/styled",
         "linter": "eslint"
       }
+    },
+    "@nrwl/next": {
+      "application": {
+        "style": "@emotion/styled",
+        "linter": "eslint"
+      }
     }
   },
   "defaultProject": "api"
