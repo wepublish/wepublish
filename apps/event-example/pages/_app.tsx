@@ -3,12 +3,13 @@ import Head from 'next/head'
 import './styles.css'
 import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client'
 import {createUploadLink} from 'apollo-upload-client'
-import {Container, CssBaseline, ThemeProvider} from '@mui/material'
+import {Container, CssBaseline, GlobalStyles, ThemeProvider} from '@mui/material'
 import {Header} from '../src/header'
 import {theme} from '../src/theme'
 import {Footer} from '../src/footer'
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import {LocalizationProvider} from '@mui/x-date-pickers'
+import {css} from '@emotion/react'
 
 const aPIURL = `http://localhost:4000/v1`
 
@@ -26,22 +27,33 @@ function CustomApp({Component, pageProps}: AppProps) {
         <ApolloProvider client={client}>
           <CssBaseline />
 
+          <GlobalStyles
+            styles={css`
+              body {
+                font-family: Arial, sans-serif;
+              }
+
+              a {
+                color: rgb(169, 119, 163);
+              }
+            `}
+          />
+
           <Head>
             <title>Welcome to event-example!</title>
           </Head>
 
-          <Container maxWidth="lg">
-            <Header
-              title="Newsportal"
-              sections={[
-                {url: '/', title: 'Lokales'},
-                {url: '/', title: 'Politik'},
-                {url: '/', title: 'Wetter'},
-                {url: '/', title: 'Kultur'},
-                {url: '/events', title: 'Kultur Kalender'}
-              ]}
-            />
+          <Header
+            sections={[
+              {url: '/', title: 'Lokales'},
+              {url: '/', title: 'Politik'},
+              {url: '/', title: 'Wetter'},
+              {url: '/', title: 'Kultur'},
+              {url: '/events', title: 'Kultur Kalender'}
+            ]}
+          />
 
+          <Container maxWidth="lg">
             <main className="app">
               <Component {...pageProps} />
             </main>

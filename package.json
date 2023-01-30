@@ -29,7 +29,7 @@
     "build:api-example": "nx build api-example",
     "watch:api-example": "nx serve api-example",
     "lint:api-example": "nx lint api-example",
-    "build:website-example": "nx build website-example",
+    "build:website-example": "nx build event-example",
     "clean:media": "docker-compose exec media rm -rf ./.media",
     "prettier": "prettier --write \"{packages,services}/**/*.{js,ts,tsx,json}\"",
     "e2e:chromium": "node -r dotenv/config node_modules/.bin/testcafe chrome ./tests/e2e.ts -s takeOnFails=true --compiler-options typescript.customCompilerModulePath=../typescript --assertion-timeout 10000",
