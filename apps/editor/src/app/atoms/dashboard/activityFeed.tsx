@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import {Action, ActionType, useRecentActionsQuery} from '@wepublish/editor/api'
 import {formatDistanceToNow} from 'date-fns'
 import {useEffect, useState} from 'react'
-import {useTranslation, Trans} from 'react-i18next'
+import {useTranslation} from 'react-i18next'
 import {
   MdAccountCircle,
   MdAutorenew,
