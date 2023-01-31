@@ -63,7 +63,7 @@ export const getActions = async (
           date: value.createdAt,
           actionType: ActionType.Comment,
           id: value.id,
-          creator: value.user.name ?? value.guestUsername
+          creator: value.user?.name ?? value.guestUsername
         }
       })
     : []
