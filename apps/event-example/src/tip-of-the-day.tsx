@@ -55,7 +55,7 @@ export const TipOfTheDay = ({event}: TipOfTheDayProps) => {
               pr: {md: 0}
             }}>
             <Typography variant="h6" color="inherit" gutterBottom>
-              Tip des Tages
+              Tipp des Tages
             </Typography>
 
             <Typography component="h1" variant="h3" color="inherit" gutterBottom>
