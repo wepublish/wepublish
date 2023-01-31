@@ -35,7 +35,7 @@ export function Dashboard() {
           <h4>{t('dashboard.greeting', {name})}</h4>
         </ListViewHeader>
       </ListViewContainer>
-      <Wrapper justify="space-around">
+      <Wrapper justify="space-between">
         <Item colspan={14}>
           <RPanel header={t('dashboard.activity')} bordered>
             <ActivityFeed />
