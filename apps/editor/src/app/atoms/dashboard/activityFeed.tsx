@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import {Action, ActionType, useRecentActionsQuery} from '@wepublish/editor/api'
 import {formatDistanceToNow} from 'date-fns'
 import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
+import {useTranslation, Trans} from 'react-i18next'
 import {
   MdAccountCircle,
   MdAutorenew,
@@ -12,11 +12,11 @@ import {
   MdEvent,
   MdFeed,
   MdGroup,
-  MdOutlineGridView
+  MdOutlineGridView,
+  MdEdit
 } from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {Avatar, Table as RTable} from 'rsuite'
-import {RowDataType} from 'rsuite-table'
+import {Avatar, Timeline as RTimeline} from 'rsuite'
 
 import {AVAILABLE_LANG} from '../../base'
 
@@ -28,19 +28,37 @@ export interface Event {
   summary?: string
 }
 
-const ActivityFeedSummaryText = styled.p`
+const SummaryText = styled.p`
   font-style: italic;
-  word-break: 'break-word';
 `
 
-const ActivityFeedIcon = styled(Avatar)`
-  background-color: #3498ff;
-  margin-right: 4px;
+const Timeline = styled(RTimeline)`
+  margin-left: 10px;
+`
+
+const TimelineItem = styled(RTimeline.Item)`
+  margin-left: '20px';
+`
+
+const TimelineDiv = styled.div`
+  margin-left: 10px;
+  margin-bottom: 10px;
+`
+
+const TimelineIcon = styled(Avatar)`
+  background: #fff;
+  top: 0;
+  left: -2px;
+  border: 2px solid #3498ff;
+  border-radius: 50%;
+  color: #3498ff;
+  margin-left: -8px;
+  margin-top: -8px;
+  padding: 4px;
 `
 
 export function ActivityFeed() {
   const {t, i18n} = useTranslation()
-  const {Column, HeaderCell, Cell} = RTable
 
   const {data, loading: isLoading} = useRecentActionsQuery({fetchPolicy: 'no-cache'})
   const [actions, setActions] = useState<Action[]>([])
@@ -51,54 +69,54 @@ export function ActivityFeed() {
     }
   }, [data?.actions])
 
-  const mapDetailsToActionType = (rowData: RowDataType<Action>) => {
-    switch (rowData.actionType) {
+  const mapDetailsToAction = (action: Action) => {
+    switch (action.actionType) {
       case ActionType.Article:
         return {
           icon: <MdDescription />,
-          path: `/articles/edit/${rowData.id}`,
+          path: `/articles/edit/${action.id}`,
           type: t('dashboard.newArticle')
         }
       case ActionType.Page:
         return {
           icon: <MdDashboard />,
-          path: `/pages/edit/${rowData.id}`,
+          path: `/pages/edit/${action.id}`,
           type: t('dashboard.newPage')
         }
       case ActionType.Comment:
         return {
           icon: <MdChat />,
-          path: `/comments/edit/${rowData.id}`,
+          path: `/comments/edit/${action.id}`,
           type: t('dashboard.newComment')
         }
       case ActionType.Subscription:
         return {
           icon: <MdAutorenew />,
-          path: `/subscriptions/edit/${rowData.id}`,
+          path: `/subscriptions/edit/${action.id}`,
           type: t('dashboard.newSubscription')
         }
       case ActionType.User:
         return {
           icon: <MdAccountCircle />,
-          path: `/users/edit/${rowData.id}`,
+          path: `/users/edit/${action.id}`,
           type: t('dashboard.newUser')
         }
       case ActionType.Author:
         return {
           icon: <MdGroup />,
-          path: `/authors/edit/${rowData.id}`,
+          path: `/authors/edit/${action.id}`,
           type: t('dashboard.newAuthor')
         }
       case ActionType.Poll:
         return {
           icon: <MdOutlineGridView />,
-          path: `/polls/edit/${rowData.id}`,
+          path: `/polls/edit/${action.id}`,
           type: t('dashboard.newPoll')
         }
       case ActionType.Event:
         return {
           icon: <MdEvent />,
-          path: `/events/edit/${rowData.id}`,
+          path: `/events/edit/${action.id}`,
           type: t('dashboard.newEvent')
         }
       default:
@@ -111,40 +129,36 @@ export function ActivityFeed() {
   }
 
   return (
-    <RTable autoHeight wordWrap data={actions} loading={isLoading}>
-      <Column verticalAlign="bottom" flexGrow={2}>
-        <HeaderCell dataKey="event">{t('dashboard.event')}</HeaderCell>
-        <Cell dataKey="event">
-          {(rowData: RowDataType<Action>) => {
-            const action = mapDetailsToActionType(rowData)
-            return (
-              <div style={{wordBreak: 'break-word'}}>
-                <ActivityFeedIcon size="sm" circle>
+    <>
+      <Timeline>
+        {actions.map(value => {
+          const action = mapDetailsToAction(value)
+          return (
+            <TimelineItem
+              dot={
+                <TimelineIcon size="sm" circle>
                   {action.icon}
-                </ActivityFeedIcon>
-                <Link to={action.path}> {action.type} </Link>
-                {formatDistanceToNow(new Date(rowData.date), {
-                  locale: AVAILABLE_LANG.find(lang => lang.id === i18n.language)?.locale,
-                  addSuffix: true
-                })}
-                {rowData.creator && t('dashboard.createdBy', {creator: rowData.creator})}
-              </div>
-            )
-          }}
-        </Cell>
-      </Column>
-      <Column verticalAlign="bottom" flexGrow={1}>
-        <HeaderCell dataKey="summary">{t('dashboard.summary')}</HeaderCell>
-        <Cell dataKey="summary">
-          {(rowData: RowDataType<Action>) => {
-            return (
-              <ActivityFeedSummaryText style={{wordBreak: 'break-word'}}>
-                {rowData?.summary}{' '}
-              </ActivityFeedSummaryText>
-            )
-          }}
-        </Cell>
-      </Column>
-    </RTable>
+                </TimelineIcon>
+              }>
+              <TimelineDiv>
+                <p>
+                  {action.type +
+                    ' ' +
+                    formatDistanceToNow(new Date(value.date), {
+                      locale: AVAILABLE_LANG.find(lang => lang.id === i18n.language)?.locale,
+                      addSuffix: true
+                    })}{' '}
+                  <Link to={action.path}>
+                    <MdEdit />
+                  </Link>
+                </p>
+                {value.creator && <p>{t('dashboard.createdBy', {creator: value.creator})}</p>}
+                {value.summary && <SummaryText>{value.summary}</SummaryText>}
+              </TimelineDiv>
+            </TimelineItem>
+          )
+        })}
+      </Timeline>
+    </>
   )
 }

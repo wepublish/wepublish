@@ -16,7 +16,6 @@ const Wrapper = styled(FlexboxGrid)`
 
 const Item = styled(FlexboxGrid.Item)`
   max-height: 100%;
-  overflow-y: scroll;
 `
 
 export function Dashboard() {
@@ -38,13 +37,13 @@ export function Dashboard() {
       </ListViewContainer>
       <Wrapper justify="space-around">
         <Item colspan={14}>
-          <RPanel header={t('dashboard.activity')} bordered shaded>
+          <RPanel header={t('dashboard.activity')} bordered>
             <ActivityFeed />
           </RPanel>
         </Item>
         <FlexboxGrid.Item colspan={9}>
           <PermissionControl qualifyingPermissions={['CAN_GET_SUBSCRIPTIONS']}>
-            <RPanel shaded header={t('dashboard.yearlySubscribers')} bordered>
+            <RPanel header={t('dashboard.yearlySubscribers')} bordered>
               <SubscriberChart />
             </RPanel>
           </PermissionControl>
