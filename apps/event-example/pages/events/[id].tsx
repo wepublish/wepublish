@@ -92,11 +92,11 @@ export function Index() {
               <MdDateRange />
               {format(new Date(event.startsAt), 'dd.MM.yyyy hh:mm')}
             </EventStart>
-            &ndash; {format(new Date(event.endsAt), 'dd.MM.yyyy hh:mm')}
+            <span>&ndash;</span> {format(new Date(event.endsAt), 'dd.MM.yyyy hh:mm')}
           </MetaWrapper>
 
           <MetaWrapper>
-            <MdLocationCity /> {event.location}
+            <MdLocationCity /> {event.location ?? 'Veranstaltungsort noch nicht bekannt'}
           </MetaWrapper>
         </EventMeta>
 

@@ -62,20 +62,17 @@ const RichText = styled.div`
 
 export function Index() {
   const [fetch, {data, loading}] = useEventListLazyQuery({
-    fetchPolicy: 'no-cache',
-    variables: {
-      take: 4
-    }
+    fetchPolicy: 'no-cache'
   })
 
   useEffect(() => {
-    fetch({})
+    fetch()
   }, [fetch])
 
   const tipOfTheDay = data?.events.nodes.find(event => event.tags.some(tag => tag.tag === 'Tipp'))
-  const events = (data?.events.nodes || []).filter(event =>
-    event.tags.every(tag => tag.tag !== 'Tipp')
-  )
+  const events = (data?.events.nodes || [])
+    .filter(event => event.tags.every(tag => tag.tag !== 'Tipp'))
+    .slice(0, 3)
 
   return (
     <>

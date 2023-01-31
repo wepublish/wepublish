@@ -11,7 +11,12 @@ import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import {LocalizationProvider} from '@mui/x-date-pickers'
 import {css} from '@emotion/react'
 
-const aPIURL = `http://localhost:4000/v1`
+console.log(process.env.NODE_ENV)
+
+const aPIURL =
+  process.env.NODE_ENV === 'development'
+    ? `http://localhost:4000/v1`
+    : `https://api.eventdemo.wepublish.dev/v1`
 
 const mainLink = createUploadLink({uri: aPIURL})
 

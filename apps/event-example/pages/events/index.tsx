@@ -21,6 +21,7 @@ const Event = styled.div`
   display: grid;
   row-gap: 8px;
   column-gap: 24px;
+  align-items: flex-start;
   grid-template-columns: 1fr;
   grid-template-areas:
     'title'
@@ -30,6 +31,7 @@ const Event = styled.div`
 
   ${theme.breakpoints.up('sm')} {
     grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto;
     grid-template-areas:
       'image date date'
       'image title title'
