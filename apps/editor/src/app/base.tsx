@@ -478,8 +478,7 @@ export function Base({children}: BaseProps) {
                     </PermissionControl>
                   </Nav.Menu>
                 </PermissionControl>
-                <PermissionControl
-                  qualifyingPermissions={['CAN_GET_SETTINGS', 'CAN_UPDATE_SETTINGS']}>
+                <PermissionControl qualifyingPermissions={['CAN_UPDATE_SETTINGS']}>
                   <Nav.Item
                     as={NavLink}
                     href="/settings"

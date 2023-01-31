@@ -1248,7 +1248,17 @@
       "days": "Tage",
       "allowGuestCommentRating": "Erlaube Gast-Bewertungen von Kommentaren",
       "polls": "Umfragen",
-      "guestPollVote": "Erlaube Gast-Abstimmungen bei Umfragen"
+      "guestPollVote": "Erlaube Gast-Abstimmungen bei Umfragen",
+      "warnings": {
+        "guestCommenting": "Erlaube Gastbesuchern (nicht eingeloggt), Kommentare zu schreiben und zu veröffentlichen.",
+        "guestCommentRating": "Erlaube (nicht eingeloggten) Gastbesuchern, die Kommentare anderer Personen zu bewerten.",
+        "guestPollVote": "Erlaube Gastbesuchern (nicht eingeloggt), an Umfragen teilzunehmen.",
+        "loginMinutes": "Wie lange (in Minuten) ist der per E-Mail gesendete Link zum Erstellen eines Kontos gültig. Die Standardeinstellung ist eine Woche (10080 / 60 / 24).",
+        "passwordToken": "Wie lange (in Minuten) der per E-Mail gesendete Link zum Zurücksetzen des Passworts gültig ist. Die Standardeinstellung ist ein Tag (1440 / 60 / 24).",
+        "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden.",
+        "invoiceReminders": "Wie oft wird der Benutzer daran erinnert, das Abonnement zu bezahlen (einmal pro Tag).",
+        "askOperators": ""
+      }
     },
     "createOrUpdateUserPassword": {
       "unexpectedErrorNoUserFound": "Unerwartetet Fehler: kein User gefunden"

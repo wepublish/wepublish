@@ -1243,7 +1243,17 @@
       "days": "jours",
       "allowGuestCommentRating": "Autoriser les évaluations anonymes des commentaires",
       "polls": "Sondages",
-      "guestPollVote": "Autoriser les votes anonymes dans les sondages"
+      "guestPollVote": "Autoriser les votes anonymes dans les sondages",
+      "warnings": {
+        "guestCommenting": "",
+        "guestCommentRating": "",
+        "guestPollVote": "",
+        "loginMinutes": "",
+        "passwordToken": "",
+        "peerToken": "",
+        "invoiceReminders": "",
+        "askOperators": ""
+      }
     },
     "createOrUpdateUserPassword": {
       "unexpectedErrorNoUserFound": "Erreur inattendue : aucun·e utilisateur·trice trouvé·e"
