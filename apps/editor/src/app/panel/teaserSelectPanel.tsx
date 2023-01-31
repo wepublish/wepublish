@@ -167,12 +167,12 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
         skip: skipPeer * take
       },
       updateQuery: (prev, {fetchMoreResult}) => {
-        if (!fetchMoreResult) return {peerArticles: undefined}
+        if (!fetchMoreResult?.peerArticles?.nodes) return {peerArticles: undefined}
 
         return {
           peerArticles: {
             ...fetchMoreResult.peerArticles,
-            nodes: [...fetchMoreResult?.peerArticles?.nodes]
+            nodes: [...fetchMoreResult.peerArticles.nodes]
           }
         }
       }
