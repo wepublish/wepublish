@@ -21,6 +21,10 @@ export const getAdminPeerArticles = async (
   const {authenticate, loaders, prisma} = context
   const {roles} = authenticate()
 
+  console.log('take:' + take)
+  console.log('skip:' + skip)
+  console.log('first:' + first)
+
   authorise(CanGetPeerArticles, roles)
 
   const cursors: Record<string, string> | null = stringifiedCursors

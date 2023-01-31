@@ -3,6 +3,10 @@ import {
   ArticleFilter,
   ArticleSort,
   PageFilter,
+  PeerArticle,
+  PeerArticleConnection,
+  PeerArticleListQuery,
+  PeerArticleListQueryResult,
   SortOrder,
   TeaserStyle,
   useArticleListQuery,
@@ -104,7 +108,8 @@ export interface TeaserSelectPanelProps {
   onClose(): void
   onSelect(teaserLink: TeaserLink): void
 }
-
+const PAGE_SIZE = 2
+let peerListSkip = 0
 export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const initialTeaser = {
     style: TeaserStyle.Default,
@@ -127,6 +132,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   const [filter, setFilter] = useState<ArticleFilter>({title: '', published: true})
+  const [peerArticles, setPeerArticles] = useState<PeerArticleConnection | undefined>(undefined)
   const [metaDataProperties, setMetadataProperties] = useState<ListValue<TeaserMetadataProperty>[]>(
     initialTeaser.type === TeaserType.Custom && initialTeaser.properties
       ? initialTeaser.properties.map(metaDataProperty => ({
@@ -138,12 +144,13 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
   const peerListVariables = {
     filter: filter || undefined,
-    first: 50,
+    take: PAGE_SIZE,
+    skip: peerListSkip,
     order: SortOrder.Descending,
     sort: ArticleSort.PublishedAt
   }
-  const listVariables = {filter: filter || undefined, take: 50}
-  const pageListVariables = {filter: filter as PageFilter, take: 50}
+  const listVariables = {filter: filter || undefined, take: PAGE_SIZE}
+  const pageListVariables = {filter: filter as PageFilter, take: PAGE_SIZE}
 
   const {
     data: articleListData,
@@ -177,9 +184,9 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   })
 
   const articles = articleListData?.articles.nodes ?? []
-  const peerArticles = peerArticleListData?.peerArticles.nodes ?? []
+  // const peerArticles = peerArticleListData?.peerArticles.nodes ?? []
+  setPeerArticles(peerArticleListData?.peerArticles)
   const pages = pageListData?.pages.nodes ?? []
-
   const {t} = useTranslation()
 
   useEffect(() => {
@@ -214,6 +221,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   }
 
   function loadMorePeerArticles() {
+    peerListSkip = peerListSkip + PAGE_SIZE
     fetchMorePeerArticles({
       variables: {
         ...peerListVariables,
