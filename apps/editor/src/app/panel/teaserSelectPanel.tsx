@@ -3,15 +3,11 @@ import {
   ArticleFilter,
   ArticleSort,
   PageFilter,
-  PeerArticle,
-  PeerArticleConnection,
-  PeerArticleListQuery,
-  PeerArticleListQueryResult,
   SortOrder,
   TeaserStyle,
   useArticleListQuery,
   usePageListQuery,
-  usePeerArticleListLazyQuery
+  usePeerArticleListQuery
 } from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -32,7 +28,6 @@ import {
   InputGroup as RInputGroup,
   List as RList,
   Nav as RNav,
-  Loader,
   Notification,
   Panel,
   Radio,
@@ -48,6 +43,7 @@ import {generateID} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {previewForTeaser, TeaserMetadataProperty} from './teaserEditPanel'
+import {PeerArticle} from '@wepublish/api'
 
 const List = styled(RList)`
   box-shadow: none;
@@ -108,8 +104,7 @@ export interface TeaserSelectPanelProps {
   onClose(): void
   onSelect(teaserLink: TeaserLink): void
 }
-const PAGE_SIZE = 2
-let peerListSkip = 0
+
 export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const initialTeaser = {
     style: TeaserStyle.Default,
@@ -127,12 +122,10 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const [contentUrl, setContentUrl] = useState('')
   const [title, setTitle] = useState(initialTeaser.title)
   const [lead, setLead] = useState(initialTeaser.lead)
-  const [peerArticlesLoaded, setPeerArticlesLoaded] = useState<boolean>(false)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   const [filter, setFilter] = useState<ArticleFilter>({title: '', published: true})
-  const [peerArticles, setPeerArticles] = useState<PeerArticleConnection | undefined>(undefined)
   const [metaDataProperties, setMetadataProperties] = useState<ListValue<TeaserMetadataProperty>[]>(
     initialTeaser.type === TeaserType.Custom && initialTeaser.properties
       ? initialTeaser.properties.map(metaDataProperty => ({
@@ -142,15 +135,59 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
       : []
   )
 
+  /**
+   * PEER ARTICLES
+   */
+  const take = 20
+  const [skipPeer, setSkipPeer] = useState<number>(0)
+  const [peerArticles, setPeerArticles] = useState<PeerArticle[]>([])
+
   const peerListVariables = {
-    filter: filter || undefined,
-    take: PAGE_SIZE,
-    skip: peerListSkip,
+    filter: {},
+    take,
+    skip: skipPeer * take,
     order: SortOrder.Descending,
     sort: ArticleSort.PublishedAt
   }
-  const listVariables = {filter: filter || undefined, take: PAGE_SIZE}
-  const pageListVariables = {filter: filter as PageFilter, take: PAGE_SIZE}
+  const {
+    data: peerArticleListData,
+    fetchMore: fetchMorePeerArticles,
+    error: peerArticleListError
+  } = usePeerArticleListQuery({
+    variables: peerListVariables,
+    fetchPolicy: 'network-only'
+  })
+
+  async function loadMorePeerArticles() {
+    setSkipPeer(skipPeer + 1)
+
+    await fetchMorePeerArticles({
+      variables: {
+        ...peerListVariables,
+        skip: skipPeer * take
+      },
+      updateQuery: (prev, {fetchMoreResult}) => {
+        if (!fetchMoreResult) return {peerArticles: undefined}
+
+        return {
+          peerArticles: {
+            ...fetchMoreResult.peerArticles,
+            nodes: [...fetchMoreResult?.peerArticles?.nodes]
+          }
+        }
+      }
+    })
+  }
+
+  useEffect(() => {
+    setPeerArticles([...peerArticles, ...(peerArticleListData?.peerArticles?.nodes || [])])
+  }, [peerArticleListData?.peerArticles])
+
+  /**
+   * PAGES & ARTICLES
+   */
+  const listVariables = {filter: filter || undefined, take: 20}
+  const pageListVariables = {filter: filter as PageFilter, take: 20}
 
   const {
     data: articleListData,
@@ -158,19 +195,6 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     error: articleListError
   } = useArticleListQuery({
     variables: listVariables,
-    fetchPolicy: 'network-only'
-  })
-
-  const [
-    getPeerArticles,
-    {
-      loading: loadingPeerArticles,
-      error: peerArticleListError,
-      data: peerArticleListData,
-      fetchMore: fetchMorePeerArticles
-    }
-  ] = usePeerArticleListLazyQuery({
-    variables: peerListVariables,
     fetchPolicy: 'network-only'
   })
 
@@ -184,9 +208,8 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   })
 
   const articles = articleListData?.articles.nodes ?? []
-  // const peerArticles = peerArticleListData?.peerArticles.nodes ?? []
-  setPeerArticles(peerArticleListData?.peerArticles)
   const pages = pageListData?.pages.nodes ?? []
+
   const {t} = useTranslation()
 
   useEffect(() => {
@@ -214,26 +237,6 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
           articles: {
             ...fetchMoreResult.articles,
             nodes: [...prev.articles.nodes, ...fetchMoreResult.articles.nodes]
-          }
-        }
-      }
-    })
-  }
-
-  function loadMorePeerArticles() {
-    peerListSkip = peerListSkip + PAGE_SIZE
-    fetchMorePeerArticles({
-      variables: {
-        ...peerListVariables,
-        cursor: peerArticleListData?.peerArticles.pageInfo.endCursor
-      },
-      updateQuery: (prev, {fetchMoreResult}) => {
-        if (!fetchMoreResult) return prev
-
-        return {
-          peerArticles: {
-            ...fetchMoreResult.peerArticles,
-            nodes: [...prev.peerArticles.nodes, ...fetchMoreResult.peerArticles.nodes]
           }
         }
       }
@@ -304,17 +307,6 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
       case TeaserType.PeerArticle:
         return (
           <>
-            {loadingPeerArticles && (
-              <div>
-                <hr />
-                <hr />
-                <Loader
-                  backdrop
-                  size="md"
-                  content={t('articleEditor.panels.loadingPeerArticles')}
-                />
-              </div>
-            )}
             {peerArticles.map(({peer, article, peeredArticleURL}) => {
               const states = []
 
@@ -541,16 +533,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <Nav
-          appearance="tabs"
-          activeKey={type}
-          onSelect={async type => {
-            setType(type)
-            if (type === TeaserType.PeerArticle && !peerArticlesLoaded) {
-              setPeerArticlesLoaded(true)
-              await getPeerArticles()
-            }
-          }}>
+        <Nav appearance="tabs" activeKey={type} onSelect={type => setType(type)}>
           <RNav.Item eventKey={TeaserType.Article} icon={<MdDescription />}>
             {t('articleEditor.panels.article')}
           </RNav.Item>
@@ -565,9 +548,9 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
           </RNav.Item>
         </Nav>
 
-        {type !== TeaserType.Custom && (
+        {type !== TeaserType.Custom && type !== TeaserType.PeerArticle && (
           <InputGroup>
-            <Input value={filter.title || ''} onChange={updateFilter} />
+            <Input value={filter.title || ''} onChange={value => updateFilter(value as string)} />
             <RInputGroup.Addon>
               <MdSearch />
             </RInputGroup.Addon>
