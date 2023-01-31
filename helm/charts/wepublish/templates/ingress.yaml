@@ -1,4 +1,3 @@
-{{- if .Values.ingress.enabled -}}
 {{- $fullName := include "helm.fullname" . -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -12,16 +11,13 @@ metadata:
     {{- with .Values.labels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with .Values.ingress.annotations }}
-  annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
 spec:
   rules:
-    - host: {{ .Values.ingress.api.host | quote }}
+    {{- $apiUrl := urlParse .Values.deployment.env.API_URL }}
+    - host: {{ $apiUrl.host }}
       http:
         paths:
-          - path: {{ .Values.ingress.api.path | quote }}
+          - path: {{ $apiUrl.path | default "/" }}
             pathType: ImplementationSpecific
             backend:
               service:
@@ -29,14 +25,29 @@ spec:
                 port:
                   name: http
 
-    - host: {{ .Values.ingress.editor.host | quote }}
+
+    {{- $editorUrl := urlParse .Values.deployment.env.EDITOR_URL }}
+    - host: {{ $editorUrl.host }}
       http:
         paths:
-          - path: {{ .Values.ingress.editor.path | quote }}
+          - path: {{ $editorUrl.path | default "/" }}
             pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ $fullName }}-editor
+                port:
+                  name: http
+
+{{- if .Values.website.enabled -}}
+    {{- $websiteUrl := urlParse .Values.deployment.env.WEBSITE_URL }}
+    - host: {{ $websiteUrl.host }}
+      http:
+        paths:
+          - path: {{ $websiteUrl.path | default "/" }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ $fullName }}-website
                 port:
                   name: http
 {{- end }}
