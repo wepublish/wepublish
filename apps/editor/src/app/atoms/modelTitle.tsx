@@ -43,6 +43,11 @@ const FlexLink = styled(Link)`
   display: flex;
 `
 
+const Heading = styled.h1`
+  font-size: 36px;
+  line-height: 50px;
+`
+
 interface modelTitleProps {
   title?: string
   loading: boolean
@@ -109,7 +114,7 @@ export function ModelTitle({
               <FlexLink to={closePath}>
                 <ChevronLeft />
               </FlexLink>
-              <h2>{titleView()}</h2>
+              <Heading>{titleView()}</Heading>
             </PaddedCol>
           </FlexRow>
         </FlexboxGrid>

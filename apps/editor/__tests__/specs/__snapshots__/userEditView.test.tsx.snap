@@ -5,7 +5,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
 - First value
 + Second value
 
-@@ -189,18 +189,19 @@
+@@ -191,18 +191,19 @@
                           id=\\"active-control-label\\"
                         >
                           userCreateOrEditView.active
@@ -27,7 +27,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                           />
                           <span
                             class=\\"rs-toggle-presentation\\"
-@@ -239,10 +240,11 @@
+@@ -241,10 +242,11 @@
                         >
                           <input
                             aria-describedby=\\"firstName-help-text\\"
@@ -39,7 +39,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -270,14 +272,15 @@
+@@ -272,14 +274,15 @@
                         >
                           <input
                             aria-describedby=\\"name-help-text\\"
@@ -56,7 +56,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                       </div>
                     </div>
                     <div
-@@ -301,10 +304,11 @@
+@@ -303,10 +306,11 @@
                         >
                           <input
                             aria-describedby=\\"preferredName-help-text\\"
@@ -68,7 +68,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -332,14 +336,15 @@
+@@ -334,14 +338,15 @@
                         >
                           <input
                             aria-describedby=\\"email-help-text\\"
@@ -85,7 +85,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                       </div>
                     </div>
                     <div
-@@ -363,10 +368,11 @@
+@@ -365,10 +370,11 @@
                         >
                           <input
                             aria-describedby=\\"company-help-text\\"
@@ -97,7 +97,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -394,10 +400,11 @@
+@@ -396,10 +402,11 @@
                         >
                           <input
                             aria-describedby=\\"streetAddress-help-text\\"
@@ -109,7 +109,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -425,10 +432,11 @@
+@@ -427,10 +434,11 @@
                         >
                           <input
                             aria-describedby=\\"streetAddress2-help-text\\"
@@ -121,7 +121,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -456,10 +464,11 @@
+@@ -458,10 +466,11 @@
                         >
                           <input
                             aria-describedby=\\"zipCode-help-text\\"
@@ -133,7 +133,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -487,10 +496,11 @@
+@@ -489,10 +498,11 @@
                         >
                           <input
                             aria-describedby=\\"city-help-text\\"
@@ -145,7 +145,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -518,10 +528,11 @@
+@@ -520,10 +530,11 @@
                         >
                           <input
                             aria-describedby=\\"country-help-text\\"
@@ -157,7 +157,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -722,14 +733,15 @@
+@@ -724,14 +735,15 @@
                         >
                           <input
                             aria-describedby=\\"password-help-text\\"
@@ -181,7 +181,7 @@ exports[`User edit view should allow user properties to be added 1`] = `
 - First value
 + Second value
 
-@@ -268,17 +268,38 @@
+@@ -270,17 +270,38 @@
                         <div
                           class=\\"rs-form-control rs-form-control-wrapper\\"
                         >
@@ -220,7 +220,7 @@ exports[`User edit view should allow user properties to be added 1`] = `
                     </div>
                     <div
                       class=\\"rs-col rs-col-xs-12\\"
-@@ -330,17 +351,38 @@
+@@ -332,17 +353,38 @@
                         <div
                           class=\\"rs-form-control rs-form-control-wrapper\\"
                         >
@@ -259,7 +259,7 @@ exports[`User edit view should allow user properties to be added 1`] = `
                     </div>
                     <div
                       class=\\"rs-col rs-col-xs-24\\"
-@@ -644,12 +686,141 @@
+@@ -646,12 +688,141 @@
                         >
                           articleEditor.panels.properties
                         </label>
@@ -401,7 +401,7 @@ exports[`User edit view should allow user properties to be added 1`] = `
                             >
                               <svg
                                 fill=\\"currentColor\\"
-@@ -720,17 +891,38 @@
+@@ -722,17 +893,38 @@
                         <div
                           class=\\"rs-form-control rs-form-control-wrapper\\"
                         >
@@ -447,7 +447,7 @@ exports[`User edit view should allow user role to be added 1`] = `
 - First value
 + Second value
 
-@@ -564,11 +564,11 @@
+@@ -566,11 +566,11 @@
                           id=\\"userRoles-control-label\\"
                         >
                           userCreateOrEditView.userRoles
@@ -460,7 +460,7 @@ exports[`User edit view should allow user role to be added 1`] = `
                             aria-expanded=\\"false\\"
                             aria-haspopup=\\"listbox\\"
                             class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -578,17 +578,54 @@
+@@ -580,17 +580,54 @@
                             <input
                               aria-hidden=\\"true\\"
                               class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -526,7 +526,7 @@ exports[`User edit view should allow user role to be removed 1`] = `
 - First value
 + Second value
 
-@@ -564,11 +564,11 @@
+@@ -566,11 +566,11 @@
                           id=\\"userRoles-control-label\\"
                         >
                           userCreateOrEditView.userRoles
@@ -539,7 +539,7 @@ exports[`User edit view should allow user role to be removed 1`] = `
                             aria-expanded=\\"false\\"
                             aria-haspopup=\\"listbox\\"
                             class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -578,17 +578,54 @@
+@@ -580,17 +580,54 @@
                             <input
                               aria-hidden=\\"true\\"
                               class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -606,7 +606,7 @@ exports[`User edit view should render 1`] = `
     class="rs-form rs-form-vertical rs-form-fluid"
   >
     <div
-      class="css-11639om-FlexGrid e1j9na1z6 rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
+      class="css-11639om-FlexGrid e1j9na1z7 rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
     >
       <div
         class="rs-flex-box-grid-item rs-flex-box-grid-item-12"
@@ -615,19 +615,19 @@ exports[`User edit view should render 1`] = `
           class="rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
         >
           <div
-            class="css-1jfkkb5-FlexRow e1j9na1z1 rs-row"
+            class="css-1jfkkb5-FlexRow e1j9na1z2 rs-row"
             role="row"
           >
             <div
-              class="css-1b4ksfg-PaddedCol e1j9na1z2 rs-col rs-col-xs-29"
+              class="css-1b4ksfg-PaddedCol e1j9na1z3 rs-col rs-col-xs-29"
               role="gridcell"
             >
               <a
-                class="css-7k4eh7-FlexLink e1j9na1z0"
+                class="css-7k4eh7-FlexLink e1j9na1z1"
                 href="/users"
               >
                 <svg
-                  class="css-1rhrlcg-ChevronLeft e1j9na1z7"
+                  class="css-1rhrlcg-ChevronLeft e1j9na1z8"
                   fill="currentColor"
                   height="1em"
                   stroke="currentColor"
@@ -645,9 +645,11 @@ exports[`User edit view should render 1`] = `
                   />
                 </svg>
               </a>
-              <h2>
+              <h1
+                class="css-1tkx6fb-Heading e1j9na1z0"
+              >
                 userCreateOrEditView.createNewUser
-              </h2>
+              </h1>
             </div>
           </div>
         </div>
@@ -662,10 +664,10 @@ exports[`User edit view should render 1`] = `
             class="rs-flex-box-grid-item rs-flex-box-grid-item-0"
           />
           <div
-            class="css-89u6l2-FlexboxItem e1j9na1z5 rs-flex-box-grid-item rs-flex-box-grid-item-0"
+            class="css-89u6l2-FlexboxItem e1j9na1z6 rs-flex-box-grid-item rs-flex-box-grid-item-0"
           >
             <button
-              class="css-1gxmgc9-SaveButton e1j9na1z3 rs-btn rs-btn-ghost"
+              class="css-1gxmgc9-SaveButton e1j9na1z4 rs-btn rs-btn-ghost"
               data-testid="saveButton"
               type="submit"
             >
@@ -1417,7 +1419,7 @@ exports[`User edit view should render with ID 1`] = `
     class="rs-form rs-form-vertical rs-form-fluid"
   >
     <div
-      class="css-11639om-FlexGrid e1j9na1z6 rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
+      class="css-11639om-FlexGrid e1j9na1z7 rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
     >
       <div
         class="rs-flex-box-grid-item rs-flex-box-grid-item-12"
@@ -1426,19 +1428,19 @@ exports[`User edit view should render with ID 1`] = `
           class="rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
         >
           <div
-            class="css-1jfkkb5-FlexRow e1j9na1z1 rs-row"
+            class="css-1jfkkb5-FlexRow e1j9na1z2 rs-row"
             role="row"
           >
             <div
-              class="css-1b4ksfg-PaddedCol e1j9na1z2 rs-col rs-col-xs-29"
+              class="css-1b4ksfg-PaddedCol e1j9na1z3 rs-col rs-col-xs-29"
               role="gridcell"
             >
               <a
-                class="css-7k4eh7-FlexLink e1j9na1z0"
+                class="css-7k4eh7-FlexLink e1j9na1z1"
                 href="/users"
               >
                 <svg
-                  class="css-1rhrlcg-ChevronLeft e1j9na1z7"
+                  class="css-1rhrlcg-ChevronLeft e1j9na1z8"
                   fill="currentColor"
                   height="1em"
                   stroke="currentColor"
@@ -1456,9 +1458,11 @@ exports[`User edit view should render with ID 1`] = `
                   />
                 </svg>
               </a>
-              <h2>
+              <h1
+                class="css-1tkx6fb-Heading e1j9na1z0"
+              >
                 userCreateOrEditView.createNewUser
-              </h2>
+              </h1>
             </div>
           </div>
         </div>
@@ -1473,10 +1477,10 @@ exports[`User edit view should render with ID 1`] = `
             class="rs-flex-box-grid-item rs-flex-box-grid-item-0"
           />
           <div
-            class="css-89u6l2-FlexboxItem e1j9na1z5 rs-flex-box-grid-item rs-flex-box-grid-item-0"
+            class="css-89u6l2-FlexboxItem e1j9na1z6 rs-flex-box-grid-item rs-flex-box-grid-item-0"
           >
             <button
-              class="css-1gxmgc9-SaveButton e1j9na1z3 rs-btn rs-btn-ghost"
+              class="css-1gxmgc9-SaveButton e1j9na1z4 rs-btn rs-btn-ghost"
               data-testid="saveButton"
               type="submit"
             >
