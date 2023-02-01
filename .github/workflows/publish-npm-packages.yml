@@ -17,13 +17,9 @@ jobs:
       - name: "Use NodeJS 16"
         uses: actions/setup-node@v3
         with:
+          registry-url: 'https://registry.npmjs.org'
           node-version: '16'
           cache: npm
-
-      - name: "Setup npm"
-        run: |
-          npm config set registry 'https://registry.npmjs.org'
-          npm set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_AUTH_TOKEN }}'
 
       - name: "npm install"
         run: npm ci
@@ -34,9 +30,13 @@ jobs:
       - if: |
           contains(github.ref, 'tags/') && contains(github.ref, 'alpha')
         name: "Publish next npms"
-        run: npm run publish:next --yes
+        run: npm run publish:next -- --yes
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - if: |
           contains(github.ref, 'tags/') && !contains(github.ref, 'alpha')
         name: "Publish latest npms"
-        run: npm run publish --yes
+        run: npm run publish -- --yes
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

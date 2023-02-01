@@ -1,5 +1,25 @@
 {
   "name": "@wepublish/nest-modules",
-  "version": "8.1.1",
-  "type": "commonjs"
+  "version": "9.0.0-alpha.5",
+  "description": "Nestjs API modules for we.publish.",
+  "keywords": [
+    "nestjs",
+    "publishing",
+    "media",
+    "newspaper"
+  ],
+  "homepage": "https://github.com/wepublish/wepublish",
+  "bugs": {
+    "url": "https://github.com/wepublish/wepublish/issues",
+    "email": "development@wepublish.ch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wepublish/wepublish.git",
+    "directory": "libs/nest-modules"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "directory": "../../dist/libs/nest-modules"
+  }
 }
