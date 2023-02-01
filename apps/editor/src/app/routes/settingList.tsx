@@ -14,7 +14,6 @@ import {
   Col,
   Form,
   Grid,
-  IconButton,
   InputGroup,
   InputNumber,
   Modal,
@@ -28,6 +27,7 @@ import {
   Whisper
 } from 'rsuite'
 import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon'
+import {TypeAttributes} from 'rsuite/esm/@types/common'
 import FormControl from 'rsuite/FormControl'
 
 import {
@@ -40,8 +40,12 @@ const Panel = styled(RPanel)`
   margin-bottom: 10px;
 `
 
-const Info = styled(IconButton)`
+const Info = styled.div`
   margin-left: 10px;
+  position: relative;
+  display: inline-block;
+  font-size: 22px;
+  color: #3498ff;
 `
 
 const WarningIcon = styled(MdWarning)`
@@ -55,9 +59,14 @@ type SettingInfoProps = {
   placement?: string
 }
 
-const SettingInfo = ({text, placement}: SettingInfoProps) => (
-  <Whisper trigger="hover" speaker={<Tooltip>{text}</Tooltip>} placement={placement || 'right'}>
-    <Info appearance="primary" icon={<MdInfo />} circle />
+const SettingInfo = ({text, placement = 'right'}: SettingInfoProps) => (
+  <Whisper
+    trigger="hover"
+    speaker={<Tooltip>{text}</Tooltip>}
+    placement={placement as TypeAttributes.Placement}>
+    <Info>
+      <MdInfo />
+    </Info>
   </Whisper>
 )
 

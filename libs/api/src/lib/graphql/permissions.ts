@@ -708,7 +708,6 @@ export const EditorPermissions: Permission[] = [
   CanGetPeers,
   CanGetPeerProfile,
   CanLoginEditor,
-  CanGetSettings,
   CanGetComments,
   CanUpdateComments,
   CanDeleteComments,
