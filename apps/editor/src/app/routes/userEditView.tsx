@@ -11,18 +11,14 @@ import {
 } from '@wepublish/editor/api'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdChevronLeft} from 'react-icons/md'
-import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
+import {useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
-  Button,
   CheckPicker,
   Col,
   Drawer,
-  FlexboxGrid,
   Form,
   Grid as RGrid,
   Input,
-  Loader as RLoader,
   Message,
   Panel as RPanel,
   Row,
@@ -33,6 +29,7 @@ import {
 
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
+import {ModelTitle} from '../atoms/modelTitle'
 import {createCheckedPermissionComponent, useAuthorisation} from '../atoms/permissionControl'
 import {EditUserPassword} from '../atoms/user/editUserPassword'
 import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
@@ -78,28 +75,6 @@ const UserFormGrid = styled(RGrid)`
   overflow-y: scroll;
 `
 
-const PaddedCol = styled(Col)`
-  padding-top: 3px;
-  margin-right: 1rem;
-`
-
-const FlexGrid = styled(FlexboxGrid)`
-  padding-right: 5px;
-  padding-bottom: 20px;
-`
-
-const ButtonMarginRight = styled(Button)`
-  margin-right: 10px;
-`
-
-const Loader = styled(RLoader)`
-  margin-right: 5px;
-`
-
-const FlexItemAlignRight = styled(FlexboxGrid.Item)`
-  text-align: right;
-`
-
 const FormGroup = styled(Form.Group)`
   padding-top: 6px;
   padding-left: 8px;
@@ -117,8 +92,8 @@ function UserEditView() {
   const params = useParams()
   const navigate = useNavigate()
   const {id: userId} = params
+  const closePath = '/users'
 
-  // const isCreateRoute = location.pathname.includes('create')
   const isEditRoute = location.pathname.includes('edit')
   const [closeAfterSave, setCloseAfterSave] = useState<boolean>(false)
 
@@ -358,44 +333,12 @@ function UserEditView() {
    * UI helpers
    */
   function titleView() {
-    if (isDisabled) {
-      return (
-        <>
-          <Loader />
-          {t('userCreateOrEditView.loadingUser')}
-        </>
-      )
-    }
     if (!user) {
       return t('userCreateOrEditView.createNewUser')
     }
     const firstName = user?.firstName
     const lastName = user?.name
     return firstName ? `${firstName} ${lastName}` : lastName
-  }
-
-  function actionsView() {
-    return (
-      <>
-        {/* save button */}
-        <ButtonMarginRight
-          appearance="ghost"
-          loading={isDisabled}
-          type="submit"
-          data-testid="saveButton">
-          {user ? t('save') : t('create')}
-        </ButtonMarginRight>
-        {/* save and close button */}
-        <Button
-          appearance="primary"
-          loading={isDisabled}
-          type="submit"
-          data-testid="saveAndCloseButton"
-          onClick={() => setCloseAfterSave(true)}>
-          {user ? t('saveAndClose') : t('createAndClose')}
-        </Button>
-      </>
-    )
   }
 
   return (
@@ -405,27 +348,15 @@ function UserEditView() {
         fluid
         model={validationModel}
         formValue={{name, email, password}}>
-        {/* heading */}
-        <FlexGrid align="middle">
-          {/* title */}
-          <FlexboxGrid.Item colspan={12}>
-            <Row>
-              <PaddedCol xs={2}>
-                <Link to="/users">
-                  <h1>
-                    <MdChevronLeft />
-                  </h1>
-                </Link>
-              </PaddedCol>
-              <Col xs={16}>
-                <h2>{titleView()}</h2>
-              </Col>
-            </Row>
-          </FlexboxGrid.Item>
-          {/* actions */}
-          <FlexItemAlignRight colspan={12}>{actionsView()}</FlexItemAlignRight>
-        </FlexGrid>
-        {/* user form */}
+        <ModelTitle
+          loading={false}
+          title={titleView()}
+          loadingTitle={t('comments.edit.title')}
+          saveBtnTitle={t('save')}
+          saveAndCloseBtnTitle={t('saveAndClose')}
+          closePath={closePath}
+          setCloseFn={setCloseAfterSave}
+        />
         <UserFormGrid>
           <Row gutter={10}>
             <Col xs={12}>
