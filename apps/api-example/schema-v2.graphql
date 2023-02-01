@@ -37,12 +37,12 @@ enum PaymentPeriodicity {
 }
 
 type Query {
-  SubscriptionFlows: [SubscriptionFlow!]!
+  SubscriptionFlows: [SubscriptionFlowModel!]!
   mailTemplates: [MailTemplate!]!
   versionInformation: VersionInformation!
 }
 
-type SubscriptionFlow {
+type SubscriptionFlowModel {
   additionalIntervals: [SubscriptionInterval!]!
   autoRenewal: [Boolean!]!
   deactivationByUser: MailTemplateRef

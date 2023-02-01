@@ -1,15 +1,15 @@
 import {Query, Resolver} from '@nestjs/graphql'
-import {SubscriptionFlow} from '../models/subscription-flow'
+import {SubscriptionFlowModel} from '../models/subscription-flow.model'
 import {PaymentPeriodicity} from '@wepublish/editor/api'
 import {PrismaService} from '@wepublish/api'
 
-@Resolver(of => [SubscriptionFlows])
-export class SubscriptionFlows {
+@Resolver(of => [SubscriptionFlowProvider])
+export class SubscriptionFlowProvider {
   constructor(private readonly prismaService: PrismaService) {}
 
-  @Query(returns => [SubscriptionFlow], {name: 'SubscriptionFlows'})
+  @Query(returns => [SubscriptionFlowModel], {name: 'SubscriptionFlows'})
   async subscriptionFlowSettings() {
-    let subscriptionFlow: SubscriptionFlow[] = []
+    let subscriptionFlow: SubscriptionFlowModel[] = []
 
     const data = await this.prismaService['subscriptionFlow'].findMany({
       include: {

@@ -38,7 +38,7 @@ class SubscriptionInterval {
 }
 
 @ObjectType()
-export class SubscriptionFlow {
+export class SubscriptionFlowModel {
   @Field()
   id: number
   @Field()
