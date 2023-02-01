@@ -54,7 +54,7 @@ describe('Subscriptions', () => {
         }
       })
 
-      const flow = await prisma.subscriptionCommunicationFlow.create({
+      const flow = await prisma.subscriptionFlow.create({
         data: {
           subscribeMailTemplate: {connect: {id: template.id}},
           invoiceCreationMailTemplate: {connect: {id: mail2.id}}
@@ -89,14 +89,14 @@ describe('Subscriptions', () => {
         }
       })
 
-      const flowDefault = await prisma.subscriptionCommunicationFlow.create({
+      const flowDefault = await prisma.subscriptionFlow.create({
         data: {
           subscribeMailTemplate: {connect: {id: templateDefault.id}}
         }
       })
       expect(flowDefault.subscribeMailTemplateId).toBe(templateDefault.id)
 
-      const flowOverride = await prisma.subscriptionCommunicationFlow.create({
+      const flowOverride = await prisma.subscriptionFlow.create({
         data: {
           memberPlan: {connect: {id: plan.id}},
           subscribeMailTemplate: {connect: {id: templateOverride.id}}

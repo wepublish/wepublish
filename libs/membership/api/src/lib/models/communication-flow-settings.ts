@@ -6,36 +6,53 @@ registerEnumType(PaymentPeriodicity, {
 })
 
 @ObjectType()
-class IdField {
+class MailTemplateRef {
   @Field()
   id: number
   @Field()
   name: string
 }
+
+@ObjectType()
+class MemberPlanRef {
+  @Field()
+  id: number
+  @Field()
+  name: string
+}
+
+@ObjectType()
+class PaymentMethodRef {
+  @Field()
+  id: number
+  @Field()
+  name: string
+}
+
 @ObjectType()
 class SubscriptionInterval {
   @Field()
   daysAwayFromEnding: number
-  @Field(type => IdField)
-  mailTemplate: IdField
+  @Field(type => MailTemplateRef)
+  mailTemplate: MailTemplateRef
 }
 
 @ObjectType()
-class SubscriptionCommunicationFlow {
+class SubscriptionFlow {
   @Field()
   id: number
   @Field()
   default: boolean
-  @Field(type => IdField, {nullable: true})
-  memberPlan: IdField
-  @Field(type => [IdField])
-  paymentMethods: IdField[]
+  @Field(type => MemberPlanRef, {nullable: true})
+  memberPlan: MemberPlanRef
+  @Field(type => [PaymentMethodRef])
+  paymentMethods: PaymentMethodRef[]
   @Field(type => [PaymentPeriodicity])
   periodicities: [PaymentPeriodicity]
   @Field(type => [Boolean])
   autoRenewal: boolean[]
-  @Field(type => IdField, {nullable: true})
-  subscribe: IdField
+  @Field(type => MailTemplateRef, {nullable: true})
+  subscribe: MailTemplateRef
   @Field(type => SubscriptionInterval, {nullable: true})
   invoiceCreation: SubscriptionInterval
   @Field(type => SubscriptionInterval, {nullable: true})
@@ -53,7 +70,7 @@ class SubscriptionCommunicationFlow {
 }
 
 @ObjectType()
-export class SubscriptionCommunicationFlows {
-  @Field(type => [SubscriptionCommunicationFlow])
-  subscriptionCommunicationFlows: SubscriptionCommunicationFlow[]
+export class SubscriptionFlows {
+  @Field(type => [SubscriptionFlow])
+  subscriptionFlows: SubscriptionFlow[]
 }

@@ -2,7 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type IdField {
+type MailTemplateRef {
+  id: Float!
+  name: String!
+}
+
+type MemberPlanRef {
+  id: Float!
+  name: String!
+}
+
+type PaymentMethodRef {
   id: Float!
   name: String!
 }
@@ -15,11 +25,11 @@ enum PaymentPeriodicity {
 }
 
 type Query {
-  SubscriptionCommunicationFlows: SubscriptionCommunicationFlows!
+  SubscriptionFlows: SubscriptionFlows!
   versionInformation: VersionInformation!
 }
 
-type SubscriptionCommunicationFlow {
+type SubscriptionFlow {
   additionalIntervals: [SubscriptionInterval!]!
   autoRenewal: [Boolean!]!
   deactivationByUser: SubscriptionInterval
@@ -27,22 +37,22 @@ type SubscriptionCommunicationFlow {
   default: Boolean!
   id: Float!
   invoiceCreation: SubscriptionInterval
-  memberPlan: IdField
-  paymentMethods: [IdField!]!
+  memberPlan: MemberPlanRef
+  paymentMethods: [PaymentMethodRef!]!
   periodicities: [PaymentPeriodicity!]!
   reactivation: SubscriptionInterval
   renewalFailed: SubscriptionInterval
   renewalSuccess: SubscriptionInterval
-  subscribe: IdField
+  subscribe: MailTemplateRef
 }
 
-type SubscriptionCommunicationFlows {
-  subscriptionCommunicationFlows: [SubscriptionCommunicationFlow!]!
+type SubscriptionFlows {
+  subscriptionFlows: [SubscriptionFlow!]!
 }
 
 type SubscriptionInterval {
   daysAwayFromEnding: Float!
-  mailTemplate: IdField!
+  mailTemplate: MailTemplateRef!
 }
 
 type VersionInformation {

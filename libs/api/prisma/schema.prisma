@@ -466,7 +466,7 @@ model MemberPlan {
 
   Subscription Subscription[]
 
-  subscriptionCommunicationFlows  SubscriptionCommunicationFlow[]
+  subscriptionFlows  SubscriptionFlow[]
 
   @@index([name])
   @@map("member.plans")
@@ -572,7 +572,7 @@ model PaymentMethod {
 
   Subscription Subscription[]
   Payment      Payment[]
-  subscriptionCommunicationFlows  SubscriptionCommunicationFlow[]
+  subscriptionFlows  SubscriptionFlow[]
 
   @@map("payment.methods")
 }
@@ -987,7 +987,7 @@ model TaggedEvents {
   @@map("events.tagged-events")
 }
 
-model UserCommunicationFlow {
+model UserFlow {
   id                    Int @id @default(autoincrement())
 	createdAt             DateTime @default(now())
 	modifiedAt            DateTime @updatedAt
@@ -1004,7 +1004,7 @@ model UserCommunicationFlow {
   @@map("user_communication_flows")
 }
 
-model SubscriptionCommunicationFlow {
+model SubscriptionFlow {
 	id                    Int @id @default(autoincrement())
 	createdAt             DateTime @default(now())
 	modifiedAt            DateTime @updatedAt
@@ -1052,9 +1052,9 @@ model SubscriptionInterval {
 	mailTemplate            MailTemplate @relation(fields: [mailTemplateId], references: [id])
 	mailTemplateId          Int
 
-	subscriptionCommunicationFlow   SubscriptionCommunicationFlow[]
-	invoiceCreations        SubscriptionCommunicationFlow[] @relation("invoiceCreationSubscriptionInterval")
-	deactivationUnpaids     SubscriptionCommunicationFlow[] @relation("deactivationUnpaidSubscriptionInterval")
+	subscriptionFlow   SubscriptionFlow[]
+	invoiceCreations        SubscriptionFlow[] @relation("invoiceCreationSubscriptionInterval")
+	deactivationUnpaids     SubscriptionFlow[] @relation("deactivationUnpaidSubscriptionInterval")
 
   @@map("subscriptions.intervals")
 }
@@ -1068,15 +1068,15 @@ model MailTemplate {
 	externalMailTemplateId      String
 	subscriptionIntervals       SubscriptionInterval[]
 
-	accountCreations            UserCommunicationFlow? @relation("accountCreationMailTemplate")
-	passwordResets              UserCommunicationFlow? @relation("passwordResetMailTemplate")
-	loginLinks                  UserCommunicationFlow? @relation("loginLinkMailTemplate")
+	accountCreations            UserFlow? @relation("accountCreationMailTemplate")
+	passwordResets              UserFlow? @relation("passwordResetMailTemplate")
+	loginLinks                  UserFlow? @relation("loginLinkMailTemplate")
 
-  subscriptions               SubscriptionCommunicationFlow[] @relation("subscriptionMailTemplate")
-  renewalSuccesses            SubscriptionCommunicationFlow[] @relation("renewalSuccessSubscriptionMailTemplate")
-  renewalFaileds              SubscriptionCommunicationFlow[] @relation("renewalFailedSubscriptionMailTemplate")
-  deactivationByUsers         SubscriptionCommunicationFlow[] @relation("deactivationByUserSubscriptionMailTemplate")
-  reactivations               SubscriptionCommunicationFlow[] @relation("reactivationSubscriptionMailTemplate")
+  subscriptions               SubscriptionFlow[] @relation("subscriptionMailTemplate")
+  renewalSuccesses            SubscriptionFlow[] @relation("renewalSuccessSubscriptionMailTemplate")
+  renewalFaileds              SubscriptionFlow[] @relation("renewalFailedSubscriptionMailTemplate")
+  deactivationByUsers         SubscriptionFlow[] @relation("deactivationByUserSubscriptionMailTemplate")
+  reactivations               SubscriptionFlow[] @relation("reactivationSubscriptionMailTemplate")
 
   @@map("mail_templates")
 }

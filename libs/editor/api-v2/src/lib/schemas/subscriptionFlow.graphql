@@ -1,0 +1,55 @@
+query SubscriptionFlows {
+  SubscriptionFlows {
+    subscriptionFlows {
+      id
+      default
+      additionalIntervals {
+        ...SubscriptionInterval
+      }
+      autoRenewal
+      deactivationByUser {
+        ...SubscriptionInterval
+      }
+      deactivationUnpaid {
+        ...SubscriptionInterval
+      }
+      invoiceCreation {
+        ...SubscriptionInterval
+      }
+      memberPlan {
+        ...MailTemplateRef
+      }
+      paymentMethods {
+        ...MailTemplateRef
+      }
+      periodicities
+      reactivation {
+        ...SubscriptionInterval
+      }
+      renewalFailed {
+        ...SubscriptionInterval
+      }
+      renewalSuccess {
+        ...SubscriptionInterval
+      }
+      subscribe {
+        ...MailTemplateRef
+      }
+    }
+  }
+}
+
+
+fragment SubscriptionInterval on SubscriptionInterval {
+  daysAwayFromEnding
+  mailTemplate {
+    ...MailTemplateRef
+  }
+}
+
+fragment MailTemplateRef on MailTemplateRef {
+  id
+  name
+}
+
+

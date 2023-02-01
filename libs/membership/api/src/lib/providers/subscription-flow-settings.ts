@@ -1,12 +1,12 @@
 import {Query, Resolver} from '@nestjs/graphql'
-import {SubscriptionCommunicationFlows} from '../models/communication-flow-settings'
+import {SubscriptionFlows} from '../models/communication-flow-settings'
 import {PaymentPeriodicity} from '@wepublish/editor/api'
-@Resolver(of => SubscriptionCommunicationFlows)
-export class CommunicationFlowSettings {
-  @Query(returns => SubscriptionCommunicationFlows, {name: 'SubscriptionCommunicationFlows'})
-  async communicationFlowSettings() {
+@Resolver(of => SubscriptionFlows)
+export class SubscriptionFlowSettings {
+  @Query(returns => SubscriptionFlows, {name: 'SubscriptionFlows'})
+  async subscriptionFlowSettings() {
     return {
-      subscriptionCommunicationFlows: [
+      subscriptionFlows: [
         {
           // FILTER
           id: 1,
