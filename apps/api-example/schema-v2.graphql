@@ -20,6 +20,10 @@ type MemberPlanRef {
   name: String!
 }
 
+type Mutation {
+  syncTemplates: [MailTemplate!]!
+}
+
 type PaymentMethodRef {
   id: Float!
   name: String!
