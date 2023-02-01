@@ -403,7 +403,7 @@ describe('Events', () => {
       test('can query a list of events within a timeframe', async () => {
         await prisma.event.deleteMany({})
 
-        const today = new Date()
+        const today = new Date('2023-02-01')
         const future = new Date(today)
         future.setDate(future.getDate() + 5000)
         const future2 = new Date(future)
@@ -596,6 +596,76 @@ describe('Events', () => {
         })
 
         expect(res.data.events.totalCount).toBeGreaterThan(1)
+      })
+
+      test('can query a list of events within a timeframe', async () => {
+        await prisma.event.deleteMany({})
+
+        const today = new Date('2023-02-01')
+        const future = new Date(today)
+        future.setDate(future.getDate() + 5000)
+        const future2 = new Date(future)
+        future2.setDate(future2.getDate() + 5000)
+        const future3 = new Date(future2)
+        future3.setDate(future3.getDate() + 5000)
+
+        const past = new Date(today)
+        past.setDate(past.getDate() - 5000)
+        const past2 = new Date(past)
+        past2.setDate(past2.getDate() - 5000)
+        const past3 = new Date(past2)
+        past3.setDate(past3.getDate() - 5000)
+
+        await Promise.all([
+          testClientPrivate.executeOperation({
+            query: CreateEvent,
+            variables: {
+              name: 'Test Event',
+              startsAt: future.toISOString(),
+              endsAt: future2.toISOString()
+            }
+          }),
+          testClientPrivate.executeOperation({
+            query: CreateEvent,
+            variables: {
+              name: 'Test Event',
+              startsAt: future2.toISOString()
+            }
+          }),
+          testClientPrivate.executeOperation({
+            query: CreateEvent,
+            variables: {
+              name: 'Test Event',
+              startsAt: past.toISOString(),
+              endsAt: future.toISOString()
+            }
+          }),
+          testClientPrivate.executeOperation({
+            query: CreateEvent,
+            variables: {
+              name: 'Test Event',
+              startsAt: past3.toISOString(),
+              endsAt: past2.toISOString()
+            }
+          })
+        ])
+
+        const resQuery = await testClientPublic.executeOperation({
+          query: EventList,
+          variables: {
+            filter: {
+              from: past.toISOString(),
+              to: future2.toISOString()
+            }
+          }
+        })
+
+        const res = resQuery.data.events.nodes.map(({startsAt, endsAt}: Event) => ({
+          startsAt,
+          endsAt
+        }))
+
+        expect(res).toMatchSnapshot()
       })
     })
   })
