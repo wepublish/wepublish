@@ -9,7 +9,7 @@ export class SubscriptionFlowSettings {
 
   @Query(returns => [SubscriptionFlow], {name: 'SubscriptionFlows'})
   async subscriptionFlowSettings() {
-    let subscriptionFlow = []
+    let subscriptionFlow: SubscriptionFlow[] = []
 
     console.log(
       await this.prismaService['subscriptionFlow'].findMany({
@@ -61,25 +61,16 @@ export class SubscriptionFlowSettings {
           name: 'Test'
         },
         invoiceCreation: {
-          daysAwayFromEnding: 2,
-          mailTemplate: {
-            id: 1,
-            name: 'Test'
-          }
+          id: 1,
+          name: 'Test'
         },
         renewalSuccess: {
-          daysAwayFromEnding: 2,
-          mailTemplate: {
-            id: 1,
-            name: 'Test'
-          }
+          id: 1,
+          name: 'Test'
         },
         renewalFailed: {
-          daysAwayFromEnding: 2,
-          mailTemplate: {
-            id: 1,
-            name: 'Test'
-          }
+          id: 1,
+          name: 'Test'
         },
         deactivationUnpaid: {
           daysAwayFromEnding: 2,
@@ -89,11 +80,8 @@ export class SubscriptionFlowSettings {
           }
         },
         deactivationByUser: {
-          daysAwayFromEnding: 2,
-          mailTemplate: {
-            id: 1,
-            name: 'Test'
-          }
+          id: 1,
+          name: 'Test'
         },
         reactivation: {
           daysAwayFromEnding: 2,
