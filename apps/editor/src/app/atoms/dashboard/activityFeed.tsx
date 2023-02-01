@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import {Action, ActionType, useRecentActionsQuery} from '@wepublish/editor/api'
 import {formatDistanceToNow} from 'date-fns'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
+import {useEffect, useState, ReactNode} from 'react'
+import {useTranslation, Trans} from 'react-i18next'
 import {
   MdAccountCircle,
   MdAutorenew,
@@ -58,7 +58,7 @@ const TimelineIcon = styled(Avatar)`
 `
 
 export function ActivityFeed() {
-  const {t, i18n} = useTranslation()
+  const {t} = useTranslation()
 
   const {data, loading: isLoading} = useRecentActionsQuery({fetchPolicy: 'no-cache'})
   const [actions, setActions] = useState<Action[]>([])
@@ -69,91 +69,20 @@ export function ActivityFeed() {
     }
   }, [data?.actions])
 
-  const mapDetailsToAction = (action: Action) => {
-    switch (action.actionType) {
-      case ActionType.Article:
-        return {
-          icon: <MdDescription />,
-          path: `/articles/edit/${action.id}`,
-          type: t('dashboard.newArticle')
-        }
-      case ActionType.Page:
-        return {
-          icon: <MdDashboard />,
-          path: `/pages/edit/${action.id}`,
-          type: t('dashboard.newPage')
-        }
-      case ActionType.Comment:
-        return {
-          icon: <MdChat />,
-          path: `/comments/edit/${action.id}`,
-          type: t('dashboard.newComment')
-        }
-      case ActionType.Subscription:
-        return {
-          icon: <MdAutorenew />,
-          path: `/subscriptions/edit/${action.id}`,
-          type: t('dashboard.newSubscription')
-        }
-      case ActionType.User:
-        return {
-          icon: <MdAccountCircle />,
-          path: `/users/edit/${action.id}`,
-          type: t('dashboard.newUser')
-        }
-      case ActionType.Author:
-        return {
-          icon: <MdGroup />,
-          path: `/authors/edit/${action.id}`,
-          type: t('dashboard.newAuthor')
-        }
-      case ActionType.Poll:
-        return {
-          icon: <MdOutlineGridView />,
-          path: `/polls/edit/${action.id}`,
-          type: t('dashboard.newPoll')
-        }
-      case ActionType.Event:
-        return {
-          icon: <MdEvent />,
-          path: `/events/edit/${action.id}`,
-          type: t('dashboard.newEvent')
-        }
-      default:
-        return {
-          icon: <MdFeed />,
-          path: `/`,
-          type: t('dashboard.newAction')
-        }
-    }
-  }
-
   return (
     <>
       <Timeline>
-        {actions.map(value => {
-          const action = mapDetailsToAction(value)
+        {actions.map((value, i) => {
           return (
             <TimelineItem
+              key={i}
               dot={
                 <TimelineIcon size="sm" circle>
-                  {action.icon}
+                  {mapActionTypeToIcon(value.actionType)}
                 </TimelineIcon>
               }>
               <TimelineDiv>
-                <p>
-                  {action.type +
-                    ' ' +
-                    formatDistanceToNow(new Date(value.date), {
-                      locale: AVAILABLE_LANG.find(lang => lang.id === i18n.language)?.locale,
-                      addSuffix: true
-                    })}{' '}
-                  <Link to={action.path}>
-                    <MdEdit />
-                  </Link>
-                </p>
-                {value.creator && <p>{t('dashboard.createdBy', {creator: value.creator})}</p>}
-                {value.summary && <SummaryText>{value.summary}</SummaryText>}
+                <TimelineText action={value} />
               </TimelineDiv>
             </TimelineItem>
           )
@@ -161,4 +90,147 @@ export function ActivityFeed() {
       </Timeline>
     </>
   )
+}
+
+const TimelineText = ({action}: Action) => {
+  const {i18n} = useTranslation()
+  return (
+    <>
+      {mapDetailsToAction(action)}
+      <p>
+        {formatDistanceToNow(new Date(action.date), {
+          locale: AVAILABLE_LANG.find(lang => lang.id === i18n.language)?.locale,
+          addSuffix: true
+        })}
+      </p>
+    </>
+  )
+}
+
+function TranslatedCreateTitleWithLink({title, to}, key) {
+  return (
+    <Trans i18nKey={key} values={{title}}>
+      New <Link to={to}>{`${title}`}</Link> has been created
+    </Trans>
+  )
+}
+
+export const mapDetailsToAction = (action: Action) => {
+  const {t} = useTranslation()
+  switch (action.actionType) {
+    case ActionType.Article:
+      return (
+        <>
+          <TranslatedCreateTitleWithLink
+            key="dashboard.itemCreated"
+            title={t('dashboard.newArticle')}
+            to={`/articles/edit/${action.id}`}
+          />
+        </>
+      )
+    case ActionType.Page:
+      return (
+        <>
+          <TranslatedCreateTitleWithLink
+            key="dashboard.itemCreated"
+            title={t('dashboard.newPage')}
+            to={`/pages/edit/${action.id}`}
+          />
+        </>
+      )
+    case ActionType.Comment:
+      return (
+        <>
+          <TranslatedCreateTitleWithLink
+            key="dashboard.itemCreated"
+            title={t('dashboard.newComment')}
+            to={`/comments/edit/${action.id}`}
+          />
+          {action.creator && ' ' + t('dashboard.createdBy', {creator: action.creator})}
+        </>
+      )
+    case ActionType.Subscription:
+      return (
+        <>
+          <TranslatedCreateTitleWithLink
+            title={t('dashboard.newSubscription')}
+            key="dashboard.itemCreated"
+            to={`/subscriptions/edit/${action.id}`}
+          />
+          {action.creator && ' ' + t('dashboard.createdBy', {creator: action.creator})}
+          {action.summary && ' ' + t('dashboard.memberPlan', {plan: action.summary})}
+        </>
+      )
+    case ActionType.User:
+      return (
+        <>
+          <TranslatedCreateTitleWithLink
+            key="dashboard.itemCreated"
+            title={t('dashboard.newUser')}
+            to={`/users/edit/${action.id}`}
+          />
+        </>
+      )
+    case ActionType.Author:
+      return (
+        <>
+          <TranslatedCreateTitleWithLink
+            key="dashboard.itemCreated"
+            title={t('dashboard.newAuthor')}
+            to={`/authors/edit/${action.id}`}
+          />
+        </>
+      )
+    case ActionType.Poll:
+      return (
+        <>
+          <TranslatedCreateTitleWithLink
+            key="dashboard.itemCreated"
+            title={t('dashboard.newPoll')}
+            to={`/polls/edit/${action.id}`}
+          />
+        </>
+      )
+    case ActionType.Event:
+      return (
+        <>
+          <TranslatedCreateTitleWithLink
+            key="dashboard.itemCreated"
+            title={t('dashboard.newEvent')}
+            to={`/events/edit/${action.id}`}
+          />
+        </>
+      )
+    default:
+      return (
+        <TranslatedCreateTitleWithLink
+          key="dashboard.itemCreated"
+          title={t('dashboard.newAction')}
+          to={'/'}
+        />
+      )
+  }
+}
+
+const mapActionTypeToIcon = (actionType: ActionType) => {
+  switch (actionType) {
+    case ActionType.Article:
+      return <MdDescription />
+    case ActionType.Page:
+      return <MdDashboard />
+    case ActionType.Comment:
+      return <MdChat />
+    case ActionType.Subscription:
+      return <MdAutorenew />
+    case ActionType.User:
+      return <MdAccountCircle />
+    case ActionType.Author:
+      return <MdGroup />
+    case ActionType.Poll:
+      return <MdOutlineGridView />
+    case ActionType.Event:
+      return <MdEvent />
+    default:
+      return <MdDescription />
+  }
 }

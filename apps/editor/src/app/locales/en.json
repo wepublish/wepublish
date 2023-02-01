@@ -1326,17 +1326,19 @@
       "event": "Event",
       "summary": "Summary",
       "noData": "No current subscriber data",
-      "newArticle": "New article created",
-      "newPage": "New page created",
-      "newComment": "New comment added",
-      "newPoll": "New poll opened",
-      "newSubscription": "New subscription",
-      "newAuthor": "New author added",
-      "newUser": "New user added",
-      "newEvent": "New event added",
-      "newAction": "New action",
+      "newArticle": "article",
+      "newPage": "page",
+      "newComment": "comment",
+      "newPoll": "poll",
+      "newSubscription": "subscription",
+      "newAuthor": "author",
+      "newUser": "user",
+      "newEvent": "event",
+      "newAction": "action",
       "createdBy": "by {{creator}}",
-      "user": "User"
+      "user": "User",
+      "itemCreated": "New <1>{{title}}</1> has been created {{creator}}",
+      "memberPlan": "Member Plan: {{plan}}"
     }
   }
 }
