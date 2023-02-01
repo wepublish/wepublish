@@ -1009,12 +1009,14 @@ model SubscriptionCommunicationFlow {
 	createdAt             DateTime @default(now())
 	modifiedAt            DateTime @updatedAt
 
+  default               Boolean @default(false)
+
   memberPlan            MemberPlan? @relation(fields: [memberPlanId], references: [id])
   memberPlanId          String?
 
 	paymentMethods        PaymentMethod[]
   periodicities         PaymentPeriodicity[]
-  autoRenewal           AutoRenewal[]
+  autoRenewal           Boolean[]
 
 	subscribe             SubscriptionMail? @relation("subscribeSubscriptionMail", fields: [subscribeId], references: [id]) // initial subscription creation
 	subscribeId           Int?
@@ -1047,8 +1049,8 @@ model SubscriptionInterval {
 	createdAt               DateTime @default(now())
   modifiedAt              DateTime @updatedAt
 	daysAwayFromEnding      Int @db.SmallInt
-	defaultMail             MailTemplate @relation(fields: [defaultMailId], references: [id])
-	defaultMailId           Int
+	mailTemplate            MailTemplate @relation(fields: [mailTemplateId], references: [id])
+	mailTemplateId          Int
 
 	subscriptionCommunicationFlow   SubscriptionCommunicationFlow[]
 	invoiceCreations        SubscriptionCommunicationFlow[] @relation("invoiceCreationSubscriptionInterval")
@@ -1062,8 +1064,8 @@ model SubscriptionMail {
     id                    Int @id @default(autoincrement())
     createdAt             DateTime @default(now())
     modifiedAt            DateTime @updatedAt
-    defaultMail           MailTemplate @relation(fields: [defaultMailId], references: [id])
-    defaultMailId         Int
+    mailTemplate          MailTemplate @relation(fields: [mailTemplateId], references: [id])
+    mailTemplateId        Int
 
     subscribes            SubscriptionCommunicationFlow[] @relation("subscribeSubscriptionMail")
     renewalSuccesses      SubscriptionCommunicationFlow[] @relation("renewalSuccessSubscriptionMail")
@@ -1072,11 +1074,6 @@ model SubscriptionMail {
     reactivations         SubscriptionCommunicationFlow[] @relation("reactivationSubscriptionMail")
 
     @@map("subscriptions.mails")
-}
-
-enum AutoRenewal {
-	YES
-	NO
 }
 
 model MailTemplate {
