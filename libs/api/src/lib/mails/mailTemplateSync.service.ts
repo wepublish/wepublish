@@ -23,7 +23,7 @@ export class MailTemplateSyncService {
       )
       if (localMatch) {
         // template exists locally, update properties
-        this.prismaService.mailTemplate.update({
+        await this.prismaService.mailTemplate.update({
           where: {externalMailTemplateId: localMatch.externalMailTemplateId},
           data: {
             name: remoteTemplate.name,
@@ -32,7 +32,7 @@ export class MailTemplateSyncService {
         })
       } else {
         // template is new
-        this.prismaService.mailTemplate.create({
+        await this.prismaService.mailTemplate.create({
           data: {
             name: remoteTemplate.name,
             externalMailTemplateId: remoteTemplate.uniqueIdentifier
@@ -47,7 +47,7 @@ export class MailTemplateSyncService {
         remoteTemplate => remoteTemplate.uniqueIdentifier === localTemplate.externalMailTemplateId
       )
       if (!remoteMatch) {
-        this.prismaService.mailTemplate.update({
+        await this.prismaService.mailTemplate.update({
           where: {externalMailTemplateId: localTemplate.externalMailTemplateId},
           data: {
             remoteMissing: true
