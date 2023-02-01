@@ -1,7 +1,9 @@
 import {
   BaseMailProvider,
   MailLogStatus,
+  MailProviderError,
   MailProviderProps,
+  MailProviderTemplate,
   SendMailProps,
   WebhookForSendMailProps
 } from '@wepublish/api'
@@ -43,5 +45,16 @@ export class SlackMailProvider extends BaseMailProvider {
       },
       body: JSON.stringify(message)
     })
+  }
+
+  async getTemplates(): Promise<MailProviderTemplate[] | MailProviderError> {
+    return [
+      {
+        name: 'SlackEmptyTemplate',
+        slug: 'slack-empty',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ]
   }
 }

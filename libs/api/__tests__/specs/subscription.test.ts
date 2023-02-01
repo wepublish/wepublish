@@ -1,4 +1,4 @@
-import {PrismaClient} from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 
 /**
  * Subscription data model
@@ -83,7 +83,7 @@ describe('Subscriptions', () => {
         data: {
           name: 'Testplan',
           slug: 'testplan',
-          description: '{}',
+          description: {},
           active: true,
           amountPerMonthMin: 0
         }

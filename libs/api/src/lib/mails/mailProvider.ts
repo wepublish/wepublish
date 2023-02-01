@@ -1,9 +1,9 @@
-import {logger, WepublishServerOpts} from '../server'
+import {MailLogState} from '@prisma/client'
+import bodyParser from 'body-parser'
+import {NextHandleFunction} from 'connect'
 import express, {Router} from 'express'
 import {contextFromRequest} from '../context'
-import {NextHandleFunction} from 'connect'
-import bodyParser from 'body-parser'
-import {MailLogState} from '@prisma/client'
+import {logger, WepublishServerOpts} from '../server'
 
 export const MAIL_WEBHOOK_PATH_PREFIX = 'mail-webhooks'
 
@@ -28,6 +28,19 @@ export interface MailLogStatus {
   mailData?: string
 }
 
+export interface MailProviderTemplate {
+  name: string
+  slug: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export class MailProviderError extends Error {
+  constructor(public message: string) {
+    super(message)
+  }
+}
+
 export interface MailProvider {
   id: string
   name: string
@@ -36,7 +49,9 @@ export interface MailProvider {
 
   webhookForSendMail(props: WebhookForSendMailProps): Promise<MailLogStatus[]>
 
-  sendMail(props: SendMailProps): Promise<void>
+  sendMail(props: SendMailProps): Promise<void | MailProviderError>
+
+  getTemplates(): Promise<MailProviderTemplate[] | MailProviderError>
 }
 
 export interface MailProviderProps {
@@ -62,7 +77,9 @@ export abstract class BaseMailProvider implements MailProvider {
 
   abstract webhookForSendMail(props: WebhookForSendMailProps): Promise<MailLogStatus[]>
 
-  abstract sendMail(props: SendMailProps): Promise<void>
+  abstract sendMail(props: SendMailProps): Promise<void | MailProviderError>
+
+  abstract getTemplates(): Promise<MailProviderTemplate[] | MailProviderError>
 }
 
 export function setupMailProvider(opts: WepublishServerOpts): Router {

@@ -1,11 +1,15 @@
 import {MailLogState} from '@prisma/client'
 import crypto from 'crypto'
 import FormData from 'form-data'
+import Mailgun from 'mailgun.js'
+import Client from 'mailgun.js/client'
 
 import {
   BaseMailProvider,
   MailLogStatus,
+  MailProviderError,
   MailProviderProps,
+  MailProviderTemplate,
   SendMailProps,
   WebhookForSendMailProps
 } from './mailProvider'
@@ -44,6 +48,7 @@ export class MailgunMailProvider extends BaseMailProvider {
   readonly baseDomain: string
   readonly mailDomain: string
   readonly webhookEndpointSecret: string
+  readonly mailgunClient: Client
 
   constructor(props: MailgunMailProviderProps) {
     super(props)
@@ -51,6 +56,7 @@ export class MailgunMailProvider extends BaseMailProvider {
     this.baseDomain = props.baseDomain
     this.mailDomain = props.mailDomain
     this.webhookEndpointSecret = props.webhookEndpointSecret
+    this.mailgunClient = new Mailgun(FormData).client({username: 'api', key: props.apiKey})
   }
 
   verifyWebhookSignature(props: VerifyWebhookSignatureProps): boolean {
@@ -126,5 +132,22 @@ export class MailgunMailProvider extends BaseMailProvider {
         }
       )
     })
+  }
+
+  async getTemplates(): Promise<MailProviderTemplate[] | MailProviderError> {
+    try {
+      const response = await this.mailgunClient.domains.domainTemplates.list(this.mailDomain)
+      const templates: MailProviderTemplate[] = response.items.map(mailTemplateResponse => {
+        return {
+          name: mailTemplateResponse.name,
+          slug: mailTemplateResponse.name,
+          createdAt: new Date(mailTemplateResponse.createdAt),
+          updatedAt: new Date(mailTemplateResponse.createdAt)
+        }
+      })
+      return templates
+    } catch (e) {
+      return new MailProviderError(e.details)
+    }
   }
 }
