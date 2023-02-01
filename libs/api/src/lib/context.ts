@@ -52,7 +52,7 @@ import {MemberContext} from './memberContext'
 import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
 import {URLAdapter} from './urlAdapter'
-import {getEvent} from './graphql/event/event.queries'
+import {getEvent} from './graphql/event/event.query'
 
 /**
  * Peered article cache configuration and setup

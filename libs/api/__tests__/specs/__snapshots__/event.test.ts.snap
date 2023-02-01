@@ -25,6 +25,8 @@ Object {
       "endsAt": 2020-11-25T22:00:00.000Z,
       "id": Any<String>,
       "image": null,
+      "location": "Foobar Street 5
+  8015 Barfoo City",
       "name": "Test Event",
       "startsAt": 2020-11-25T20:00:00.000Z,
       "status": "SCHEDULED",
@@ -54,6 +56,7 @@ Object {
       "endsAt": null,
       "id": Any<String>,
       "image": null,
+      "location": null,
       "name": "Test Event",
       "startsAt": 2020-11-25T20:00:00.000Z,
       "status": "SCHEDULED",
@@ -85,6 +88,23 @@ Object {
     },
   },
 }
+`;
+
+exports[`Events query private can query a list of events within a timeframe 1`] = `
+Array [
+  Object {
+    "endsAt": null,
+    "startsAt": 2050-06-19T09:07:20.261Z,
+  },
+  Object {
+    "endsAt": 2050-06-19T09:07:20.261Z,
+    "startsAt": 2036-10-10T09:07:20.261Z,
+  },
+  Object {
+    "endsAt": 2036-10-10T09:07:20.261Z,
+    "startsAt": 2009-05-25T09:07:20.261Z,
+  },
+]
 `;
 
 exports[`Events update can not be updated with endsAt before startsAt 1`] = `

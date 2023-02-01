@@ -1,4 +1,3 @@
-import PlusIcon from '@rsuite/icons/legacy/Plus'
 import {
   CommentItemType,
   CommentSort,
@@ -8,6 +7,7 @@ import {
 } from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdAdd} from 'react-icons/md'
 import {FlexboxGrid} from 'rsuite'
 
 import {CommentPreview, RevisionProps} from './commentPreview'
@@ -107,7 +107,7 @@ export function CommentHistory({
             text={t('commentHistory.addComment')}
             color="green"
             appearance="ghost"
-            icon={<PlusIcon />}
+            icon={<MdAdd />}
             onCommentCreated={async () => {
               await fetchCommentList()
             }}
