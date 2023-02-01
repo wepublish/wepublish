@@ -47,27 +47,21 @@ describe('Subscriptions', () => {
         }
       })
 
-      const mail1 = await prisma.subscriptionMail.create({
-        data: {
-          defaultMail: {connect: {id: template.id}}
-        }
-      })
-
       const mail2 = await prisma.subscriptionInterval.create({
         data: {
           daysAwayFromEnding: 3,
-          defaultMail: {connect: {id: template.id}}
+          mailTemplate: {connect: {id: template.id}}
         }
       })
 
       const flow = await prisma.subscriptionCommunicationFlow.create({
         data: {
-          subscribe: {connect: {id: mail1.id}},
-          invoiceCreation: {connect: {id: mail2.id}}
+          subscribeMailTemplate: {connect: {id: template.id}},
+          invoiceCreationMailTemplate: {connect: {id: mail2.id}}
         }
       })
-      expect(flow.subscribeId).toBe(mail1.id)
-      expect(flow.invoiceCreationId).toBe(mail2.id)
+      expect(flow.subscribeMailTemplateId).toBe(template.id)
+      expect(flow.invoiceCreationMailTemplateId).toBe(mail2.id)
     })
 
     test('can create SCF override', async () => {
@@ -78,12 +72,6 @@ describe('Subscriptions', () => {
         }
       })
 
-      const mailDefault = await prisma.subscriptionMail.create({
-        data: {
-          defaultMailId: templateDefault.id
-        }
-      })
-
       const templateOverride = await prisma.mailTemplate.create({
         data: {
           name: 'Test template override',
@@ -91,16 +79,11 @@ describe('Subscriptions', () => {
         }
       })
 
-      const mailOverride = await prisma.subscriptionMail.create({
-        data: {
-          defaultMailId: templateOverride.id
-        }
-      })
-
       const plan = await prisma.memberPlan.create({
         data: {
           name: 'Testplan',
           slug: 'testplan',
+          description: '{}',
           active: true,
           amountPerMonthMin: 0
         }
@@ -108,18 +91,18 @@ describe('Subscriptions', () => {
 
       const flowDefault = await prisma.subscriptionCommunicationFlow.create({
         data: {
-          subscribe: {connect: {id: mailDefault.id}}
+          subscribeMailTemplate: {connect: {id: templateDefault.id}}
         }
       })
-      expect(flowDefault.subscribeId).toBe(mailDefault.id)
+      expect(flowDefault.subscribeMailTemplateId).toBe(templateDefault.id)
 
       const flowOverride = await prisma.subscriptionCommunicationFlow.create({
         data: {
           memberPlan: {connect: {id: plan.id}},
-          subscribe: {connect: {id: mailOverride.id}}
+          subscribeMailTemplate: {connect: {id: templateOverride.id}}
         }
       })
-      expect(flowOverride.subscribeId).toBe(mailOverride.id)
+      expect(flowOverride.subscribeMailTemplateId).toBe(templateOverride.id)
     })
   })
 })
