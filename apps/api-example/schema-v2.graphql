@@ -33,30 +33,26 @@ enum PaymentPeriodicity {
 }
 
 type Query {
-  SubscriptionFlows: SubscriptionFlows!
   mailTemplates: [MailTemplate!]!
+  SubscriptionFlows: [SubscriptionFlow!]!
   versionInformation: VersionInformation!
 }
 
 type SubscriptionFlow {
   additionalIntervals: [SubscriptionInterval!]!
   autoRenewal: [Boolean!]!
-  deactivationByUser: SubscriptionInterval
+  deactivationByUser: MailTemplateRef
   deactivationUnpaid: SubscriptionInterval
   default: Boolean!
   id: Float!
-  invoiceCreation: SubscriptionInterval
+  invoiceCreation: MailTemplateRef
   memberPlan: MemberPlanRef
   paymentMethods: [PaymentMethodRef!]!
   periodicities: [PaymentPeriodicity!]!
   reactivation: SubscriptionInterval
-  renewalFailed: SubscriptionInterval
-  renewalSuccess: SubscriptionInterval
+  renewalFailed: MailTemplateRef
+  renewalSuccess: MailTemplateRef
   subscribe: MailTemplateRef
-}
-
-type SubscriptionFlows {
-  subscriptionFlows: [SubscriptionFlow!]!
 }
 
 type SubscriptionInterval {

@@ -51,7 +51,7 @@ export class SlackMailProvider extends BaseMailProvider {
     return [
       {
         name: 'SlackEmptyTemplate',
-        slug: 'slack-empty',
+        uniqueIdentifier: 'slack-empty',
         createdAt: new Date(),
         updatedAt: new Date()
       }

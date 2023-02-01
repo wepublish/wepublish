@@ -38,7 +38,7 @@ class SubscriptionInterval {
 }
 
 @ObjectType()
-class SubscriptionFlow {
+export class SubscriptionFlow {
   @Field()
   id: number
   @Field()
@@ -53,24 +53,18 @@ class SubscriptionFlow {
   autoRenewal: boolean[]
   @Field(type => MailTemplateRef, {nullable: true})
   subscribe: MailTemplateRef
-  @Field(type => SubscriptionInterval, {nullable: true})
-  invoiceCreation: SubscriptionInterval
-  @Field(type => SubscriptionInterval, {nullable: true})
-  renewalSuccess: SubscriptionInterval
-  @Field(type => SubscriptionInterval, {nullable: true})
-  renewalFailed: SubscriptionInterval
+  @Field(type => MailTemplateRef, {nullable: true})
+  invoiceCreation: MailTemplateRef
+  @Field(type => MailTemplateRef, {nullable: true})
+  renewalSuccess: MailTemplateRef
+  @Field(type => MailTemplateRef, {nullable: true})
+  renewalFailed: MailTemplateRef
   @Field(type => SubscriptionInterval, {nullable: true})
   deactivationUnpaid: SubscriptionInterval
-  @Field(type => SubscriptionInterval, {nullable: true})
-  deactivationByUser: SubscriptionInterval
+  @Field(type => MailTemplateRef, {nullable: true})
+  deactivationByUser: MailTemplateRef
   @Field(type => SubscriptionInterval, {nullable: true})
   reactivation: SubscriptionInterval
   @Field(type => [SubscriptionInterval])
   additionalIntervals: SubscriptionInterval[]
-}
-
-@ObjectType()
-export class SubscriptionFlows {
-  @Field(type => [SubscriptionFlow])
-  subscriptionFlows: SubscriptionFlow[]
 }
