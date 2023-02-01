@@ -1,8 +1,9 @@
 import {Module} from '@nestjs/common'
+import {CommunicationFlowSettings} from './providers/communication-flow-settings'
 
 @Module({
   controllers: [],
-  providers: [],
+  providers: [CommunicationFlowSettings],
   exports: []
 })
 export class MembershipApiModule {}

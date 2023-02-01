@@ -2,8 +2,47 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type IdField {
+  id: Float!
+  name: String!
+}
+
+enum PaymentPeriodicity {
+  Biannual
+  Monthly
+  Quarterly
+  Yearly
+}
+
 type Query {
+  SubscriptionCommunicationFlows: SubscriptionCommunicationFlows!
   versionInformation: VersionInformation!
+}
+
+type SubscriptionCommunicationFlow {
+  additionalIntervals: [SubscriptionInterval!]!
+  autoRenewal: [Boolean!]!
+  deactivationByUser: SubscriptionInterval
+  deactivationUnpaid: SubscriptionInterval
+  default: Boolean!
+  id: Float!
+  invoiceCreation: SubscriptionInterval
+  memberPlan: IdField
+  paymentMethods: [IdField!]!
+  periodicities: [PaymentPeriodicity!]!
+  reactivation: SubscriptionInterval
+  renewalFailed: SubscriptionInterval
+  renewalSuccess: SubscriptionInterval
+  subscribe: IdField
+}
+
+type SubscriptionCommunicationFlows {
+  subscriptionCommunicationFlows: [SubscriptionCommunicationFlow!]!
+}
+
+type SubscriptionInterval {
+  daysAwayFromEnding: Float!
+  mailTemplate: IdField!
 }
 
 type VersionInformation {
