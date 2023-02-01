@@ -178,7 +178,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
     const templates: MailProviderTemplate[] = response.map(mailTemplateResponse => {
       return {
         name: mailTemplateResponse.name,
-        slug: mailTemplateResponse.slug,
+        uniqueIdentifier: mailTemplateResponse.slug,
         createdAt: new Date(mailTemplateResponse.created_at),
         updatedAt: new Date(mailTemplateResponse.updated_at)
       }
