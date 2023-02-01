@@ -38,7 +38,7 @@ class SubscriptionInterval {
 }
 
 @ObjectType()
-class SubscriptionFlow {
+export class SubscriptionFlow {
   @Field()
   id: number
   @Field()
@@ -67,10 +67,4 @@ class SubscriptionFlow {
   reactivation: SubscriptionInterval
   @Field(type => [SubscriptionInterval])
   additionalIntervals: SubscriptionInterval[]
-}
-
-@ObjectType()
-export class SubscriptionFlows {
-  @Field(type => [SubscriptionFlow])
-  subscriptionFlows: SubscriptionFlow[]
 }

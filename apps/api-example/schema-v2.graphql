@@ -25,7 +25,7 @@ enum PaymentPeriodicity {
 }
 
 type Query {
-  SubscriptionFlows: SubscriptionFlows!
+  SubscriptionFlows: [SubscriptionFlow!]!
   versionInformation: VersionInformation!
 }
 
@@ -44,10 +44,6 @@ type SubscriptionFlow {
   renewalFailed: SubscriptionInterval
   renewalSuccess: SubscriptionInterval
   subscribe: MailTemplateRef
-}
-
-type SubscriptionFlows {
-  subscriptionFlows: [SubscriptionFlow!]!
 }
 
 type SubscriptionInterval {

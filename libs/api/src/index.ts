@@ -59,6 +59,6 @@ export * from './lib/challenges/challengeProvider'
 export * from './lib/challenges/algebraicCaptchaChallenge'
 export * from './lib/payments/payrexxSubscriptionPaymentProvider'
 
-export {PrismaService} from './lib/prisma.service'
+export {PrismaService} from '../prisma/prisma.service'
 
 export {getUserForCredentials} from './lib/graphql/user/user.queries'
