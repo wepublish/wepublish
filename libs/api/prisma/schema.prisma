@@ -1063,9 +1063,13 @@ model MailTemplate {
 	id                          Int @id @default(autoincrement())
 	createdAt                   DateTime @default(now())
   modifiedAt                  DateTime @updatedAt
+
 	name                        String
 	description                 String?
-	externalMailTemplateId      String
+	externalMailTemplateId      String @unique
+  remoteMissing               Boolean @default(false)
+  providerName                String
+
 	subscriptionIntervals       SubscriptionInterval[]
 
 	accountCreations            UserCommunicationFlow? @relation("accountCreationMailTemplate")
