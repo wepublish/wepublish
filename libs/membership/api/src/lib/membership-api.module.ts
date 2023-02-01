@@ -1,12 +1,12 @@
 import {Module} from '@nestjs/common'
 import {MailProviderService, MailTemplateSyncService, PrismaService} from '@wepublish/api'
-import {SubscriptionFlowSettings} from './providers/subscription-flow-settings'
+import {SubscriptionFlows} from './providers/subscription-flows'
 import {MailTemplatesResolver} from './resolvers/mail-template.resolver'
 
 @Module({
   controllers: [],
   providers: [
-    SubscriptionFlowSettings,
+    SubscriptionFlows,
     PrismaService,
     MailProviderService,
     MailTemplatesResolver,

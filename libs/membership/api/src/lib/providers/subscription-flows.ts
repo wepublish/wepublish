@@ -1,48 +1,50 @@
 import {Query, Resolver} from '@nestjs/graphql'
-import {SubscriptionFlow} from '../models/subscription-flow-settings'
+import {SubscriptionFlow} from '../models/subscription-flow'
 import {PaymentPeriodicity} from '@wepublish/editor/api'
 import {PrismaService} from '@wepublish/api'
 
-@Resolver(of => [SubscriptionFlow])
-export class SubscriptionFlowSettings {
+@Resolver(of => [SubscriptionFlows])
+export class SubscriptionFlows {
   constructor(private readonly prismaService: PrismaService) {}
 
   @Query(returns => [SubscriptionFlow], {name: 'SubscriptionFlows'})
   async subscriptionFlowSettings() {
     let subscriptionFlow: SubscriptionFlow[] = []
 
-    console.log(
-      await this.prismaService['subscriptionFlow'].findMany({
-        include: {
-          memberPlan: true,
-          subscribeMailTemplate: true,
-          invoiceCreationMailTemplate: {
-            include: {
-              mailTemplate: true
-            }
-          },
-          renewalSuccessMailTemplate: true,
-          renewalFailedMailTemplate: true,
-          deactivationUnpaidMailTemplate: {
-            include: {
-              mailTemplate: true
-            }
-          },
-          deactivationByUserMailTemplate: true,
-          reactivationMailTemplate: true,
-          additionalIntervals: {
-            include: {
-              mailTemplate: true
-            }
+    const data = await this.prismaService['subscriptionFlow'].findMany({
+      include: {
+        memberPlan: true,
+        subscribeMailTemplate: true,
+        invoiceCreationMailTemplate: {
+          include: {
+            mailTemplate: true
+          }
+        },
+        renewalSuccessMailTemplate: true,
+        renewalFailedMailTemplate: true,
+        deactivationUnpaidMailTemplate: {
+          include: {
+            mailTemplate: true
+          }
+        },
+        deactivationByUserMailTemplate: true,
+        reactivationMailTemplate: true,
+        additionalIntervals: {
+          include: {
+            mailTemplate: true
           }
         }
-      })
-    )
+      }
+    })
+
+    data.forEach
+
+    console.log(data)
 
     subscriptionFlow = [
       {
         // FILTER
-        id: 1,
+        id: data[0].id,
         default: false,
         memberPlan: {
           id: 1,
