@@ -94,15 +94,15 @@ exports[`Events query private can query a list of events within a timeframe 1`] 
 Array [
   Object {
     "endsAt": null,
-    "startsAt": 2050-06-18T23:00:00.000Z,
+    "startsAt": 2050-06-19T00:00:00.000Z,
   },
   Object {
-    "endsAt": 2050-06-18T23:00:00.000Z,
-    "startsAt": 2036-10-09T23:00:00.000Z,
+    "endsAt": 2050-06-19T00:00:00.000Z,
+    "startsAt": 2036-10-10T00:00:00.000Z,
   },
   Object {
-    "endsAt": 2036-10-09T23:00:00.000Z,
-    "startsAt": 2009-05-24T23:00:00.000Z,
+    "endsAt": 2036-10-10T00:00:00.000Z,
+    "startsAt": 2009-05-25T00:00:00.000Z,
   },
 ]
 `;
@@ -111,15 +111,15 @@ exports[`Events query public can query a list of events within a timeframe 1`] =
 Array [
   Object {
     "endsAt": null,
-    "startsAt": 2050-06-18T23:00:00.000Z,
+    "startsAt": 2050-06-19T00:00:00.000Z,
   },
   Object {
-    "endsAt": 2050-06-18T23:00:00.000Z,
-    "startsAt": 2036-10-09T23:00:00.000Z,
+    "endsAt": 2050-06-19T00:00:00.000Z,
+    "startsAt": 2036-10-10T00:00:00.000Z,
   },
   Object {
-    "endsAt": 2036-10-09T23:00:00.000Z,
-    "startsAt": 2009-05-24T23:00:00.000Z,
+    "endsAt": 2036-10-10T00:00:00.000Z,
+    "startsAt": 2009-05-25T00:00:00.000Z,
   },
 ]
 `;
