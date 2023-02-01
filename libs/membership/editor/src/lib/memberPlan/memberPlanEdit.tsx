@@ -15,10 +15,19 @@ import {
   usePaymentMethodListQuery,
   useUpdateMemberPlanMutation
 } from '@wepublish/editor/api'
-import {Form, Schema} from 'rsuite'
+import {Col, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
 import {generateID} from '../../../../../../apps/editor/src/app/utility'
 import {ListValue} from '../../../../../../apps/editor/src/app/atoms/listInput'
 import MemberPlanForm from './memberPlanForm'
+import {ApolloError} from '@apollo/client'
+
+const showErrors = (error: ApolloError): void => {
+  toaster.push(
+    <Message type="error" showIcon closable duration={3000}>
+      {error.message}
+    </Message>
+  )
+}
 
 function MemberPlanEdit() {
   /**
@@ -42,13 +51,21 @@ function MemberPlanEdit() {
    * Services
    */
   const [fetchMemberPlan, {loading: memberPlanLoading, data: memberPlanData}] =
-    useMemberPlanLazyQuery({fetchPolicy: 'network-only'})
+    useMemberPlanLazyQuery({
+      fetchPolicy: 'network-only',
+      onError: showErrors
+    })
   const {data: paymentMethodData, loading: paymentMethodLoading} = usePaymentMethodListQuery({
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'network-only',
+    onError: showErrors
   })
-  const [updateMemberPlanMutation, {loading: memberPlanUpdating}] = useUpdateMemberPlanMutation()
+  const [updateMemberPlanMutation, {loading: memberPlanUpdating}] = useUpdateMemberPlanMutation({
+    fetchPolicy: 'network-only',
+    onError: showErrors
+  })
   const [createMemberPlanMutation, {loading: memberPlanCreating}] = useCreateMemberPlanMutation({
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'network-only',
+    onError: showErrors
   })
 
   /**
@@ -99,12 +116,19 @@ function MemberPlanEdit() {
     return paymentMethodData?.paymentMethods || []
   }, [paymentMethodData])
 
+  const header: string = useMemo(() => {
+    if (!memberPlanId) {
+      return memberPlan?.name || t('memberPlanEdit.createMemberPlanHeader')
+    }
+    return memberPlan?.name || t('memberPlanEdit.noMemberPlanName')
+  }, [memberPlanId, memberPlan?.name])
+
   /**
    * Schema validation
    */
   const validationModel = Schema.Model({
     name: Schema.Types.StringType().isRequired(t('memberPlanEdit.nameRequired')),
-    slug: Schema.Types.StringType().isRequired(t('memberPlanEdit.SlugRequired')),
+    slug: Schema.Types.StringType().isRequired(t('memberPlanEdit.slugRequired')),
     amountPerMonthMin: Schema.Types.NumberType()
       .isRequired(t('memberPlanEdit.amountPerMonthMinRequired'))
       .min(0, t('memberPlanEdit.amountPerMonthMinZero'))
@@ -173,7 +197,7 @@ function MemberPlanEdit() {
         <SingleViewTitle
           loading={loading}
           loadingTitle={t('memberPlanEdit.loadingTitle')}
-          title={t('memberPlanEdit.title')}
+          title={header}
           saveBtnTitle={t('memberPlanEdit.saveBtnTitle')}
           saveAndCloseBtnTitle={t('memberPlanEdit.saveAndCloseBtnTitle')}
           closePath={closePath}
@@ -189,6 +213,14 @@ function MemberPlanEdit() {
             setMemberPlan={setMemberPlan}
             setAvailablePaymentMethods={setAvailablePaymentMethods}
           />
+
+          <Row>
+            <Col xs={24}>
+              <Panel bordered header="User-Flow Einstellungen">
+                To be programmed
+              </Panel>
+            </Col>
+          </Row>
         </SingleViewContent>
       </Form>
     </SingleView>

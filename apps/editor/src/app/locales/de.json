@@ -599,10 +599,7 @@
     "memberPlanList": {
       "action": "Aktionen",
       "active": "Aktiv",
-      "activeDescription": "Plan verfügbar machen",
       "adapter": "Zahlungsadapter",
-      "autoRenewal": "Automatische Erneuerung erzwingen",
-      "autoRenewalDescription": "Erzwingt automatische Erneuerung des Abonnements",
       "createNew": "Neuer Memberplan",
       "createTitle": "Memberplan erstellen",
       "deleteModalTitle": "Memberplan löschen",
@@ -626,7 +623,26 @@
       "errorMessage": "Gib eine Nummer ein"
     },
     "memberPlanEdit": {
-      "nameRequired": "Name erforderlich"
+      "nameRequired": "Name erforderlich",
+      "slugRequired": "Slug erforderlich",
+      "amountPerMonthMinRequired": "Minimaler Betrag erforderlich",
+      "amountPerMonthMinZero": "Minimaler Betrag muss mindestens 0 betragen",
+      "loadingTitle": "Lade",
+      "createMemberPlanHeader": "Erstelle Memberplan",
+      "noMemberPlanName": "Memberplan ohne Namen",
+      "saveBtnTitle": "Speichern",
+      "saveAndCloseBtnTitle": "Speichern & Schliessen",
+      "active": "Aktiv",
+      "activeDescription": "Plan verfügbar machen",
+      "name": "Name",
+      "slug": "Slug",
+      "description": "Beschreibung",
+      "tags": "Tags",
+      "amountPerMonthMin": "Minimaler Betrag / Monat",
+      "forceAutoRenewal": "Automatische Erneuerung erzwingen",
+      "autoRenewalDescription": "Erzwingt automatische Erneuerung des Abonnements",
+      "paymentConfigs": "Zahlungseinstellungen",
+      "editPaymentSetting": "Zahlungseinstellung bearbeiten"
     },
     "pollList": {
       "title": "Umfragen",

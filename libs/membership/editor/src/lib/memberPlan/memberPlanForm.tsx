@@ -7,7 +7,7 @@ import {
   PaymentMethod
 } from '@wepublish/editor/api'
 import {ListInput, ListValue} from '../../../../../../apps/editor/src/app/atoms/listInput'
-import {CheckPicker, Col, Drawer, Form, Panel, Row, TagPicker, Toggle} from 'rsuite'
+import {CheckPicker, Col, Divider, Drawer, Form, Panel, Row, TagPicker, Toggle} from 'rsuite'
 import {ChooseEditImage} from '../../../../../../apps/editor/src/app/atoms/chooseEditImage'
 import {RichTextBlock} from '../../../../../../apps/editor/src/app/blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../../../../../../apps/editor/src/app/blocks/types'
@@ -17,6 +17,17 @@ import {useTranslation} from 'react-i18next'
 import {ImageSelectPanel} from '../../../../../../apps/editor/src/app/panel/imageSelectPanel'
 import {ImageEditPanel} from '../../../../../../apps/editor/src/app/panel/imageEditPanel'
 import {slugify} from '@wepublish/utils'
+import styled from '@emotion/styled'
+
+const ColTextAlignEnd = styled(Col)`
+  text-align: end;
+`
+const FormControlLabelMarginRight = styled(Form.ControlLabel)`
+  margin-right: 10px;
+`
+const PanelWidth100 = styled(Panel)`
+  width: 100%;
+`
 
 interface MemberPlanFormProps {
   memberPlanId?: string
@@ -57,20 +68,19 @@ export default function MemberPlanForm({
       return
     }
     name = name || ''
-    let {slug} = memberPlan
+    let slug = memberPlan.slug
 
-    // auto generate slug, in case we create a new member plan (thus, not updating existing member plan)
+    // only update slug, if we create a new member plan
     if (!memberPlanId) {
       slug = slugify(name)
     }
-
     setMemberPlan({...memberPlan, name, slug})
   }
 
   return (
     <Row>
       <Col xs={12}>
-        <Panel bordered>
+        <PanelWidth100 bordered>
           <Row>
             {/* image */}
             <Col xs={12}>
@@ -89,8 +99,10 @@ export default function MemberPlanForm({
             </Col>
 
             {/* active / inactive */}
-            <Col xs={12}>
-              <Form.ControlLabel>{t('memberPlanEdit.active')}</Form.ControlLabel>
+            <ColTextAlignEnd xs={12}>
+              <FormControlLabelMarginRight>
+                {t('memberPlanEdit.active')}
+              </FormControlLabelMarginRight>
               <Toggle
                 checked={!!memberPlan?.active}
                 disabled={loading}
@@ -101,37 +113,41 @@ export default function MemberPlanForm({
                   setMemberPlan({...memberPlan, active})
                 }}
               />
-              <Form.HelpText>{t('memberPlanList.activeDescription')}</Form.HelpText>
-            </Col>
+              <Form.HelpText>{t('memberPlanEdit.activeDescription')}</Form.HelpText>
+            </ColTextAlignEnd>
 
-            {/* name */}
-            <Col xs={12}>
-              <Form.ControlLabel>{t('memberPlanEdit.name')}</Form.ControlLabel>
-              <Form.Control
-                name="name"
-                value={memberPlan?.name || ''}
-                onChange={(newName: string | undefined) => updateName(newName)}
-              />
-            </Col>
+            <Col xs={24}>
+              <Row>
+                {/* name */}
+                <Col xs={12}>
+                  <Form.ControlLabel>{t('memberPlanEdit.name')}</Form.ControlLabel>
+                  <Form.Control
+                    name="name"
+                    value={memberPlan?.name || ''}
+                    onChange={(newName: string | undefined) => updateName(newName)}
+                  />
+                </Col>
 
-            {/* slug */}
-            <Col xs={12}>
-              <Form.ControlLabel>{t('memberPlanEdit.slug')}</Form.ControlLabel>
-              <Form.Control
-                name="slug"
-                value={memberPlan?.slug || ''}
-                onChange={(newSlug: string | undefined) => {
-                  if (!memberPlan) {
-                    return
-                  }
-                  setMemberPlan({...memberPlan, slug: slugify(newSlug || '')})
-                }}
-              />
+                {/* slug */}
+                <Col xs={12}>
+                  <Form.ControlLabel>{t('memberPlanEdit.slug')}</Form.ControlLabel>
+                  <Form.Control
+                    name="slug"
+                    value={memberPlan?.slug || ''}
+                    onChange={(newSlug: string | undefined) => {
+                      if (!memberPlan) {
+                        return
+                      }
+                      setMemberPlan({...memberPlan, slug: slugify(newSlug || '')})
+                    }}
+                  />
+                </Col>
+              </Row>
             </Col>
 
             {/* description */}
             <Col xs={24}>
-              <Form.ControlLabel>{t('memberPlanList.description')}</Form.ControlLabel>
+              <Form.ControlLabel>{t('memberPlanEdit.description')}</Form.ControlLabel>
               <div className="richTextFrame">
                 <RichTextBlock
                   value={memberPlan?.description || []}
@@ -149,13 +165,13 @@ export default function MemberPlanForm({
               </div>
             </Col>
           </Row>
-        </Panel>
+        </PanelWidth100>
       </Col>
       <Col xs={12}>
         <Panel bordered>
           <Row>
             {/* tags */}
-            <Col xs={24}>
+            <Col xs={12}>
               <Form.ControlLabel>{t('memberPlanEdit.tags')}</Form.ControlLabel>
               <TagPicker
                 disabled={loading}
@@ -176,7 +192,7 @@ export default function MemberPlanForm({
             </Col>
 
             {/* minimal monthly amount */}
-            <Col xs={24}>
+            <Col xs={12}>
               <Form.ControlLabel>{t('memberPlanEdit.amountPerMonthMin')}</Form.ControlLabel>
               <CurrencyInput
                 name="currency"
@@ -191,9 +207,15 @@ export default function MemberPlanForm({
                 }}
               />
             </Col>
+          </Row>
+        </Panel>
+      </Col>
 
+      {/* payment method settings */}
+      <Col xs={12}>
+        <Panel header={t('memberPlanEdit.paymentConfigs')} bordered>
+          <Row>
             <Col xs={24}>
-              {/* payment method settings */}
               <ListInput
                 value={availablePaymentMethods}
                 disabled={loading}
@@ -204,59 +226,73 @@ export default function MemberPlanForm({
                   paymentMethods: []
                 }}>
                 {({value, onChange}) => (
-                  <Row>
-                    {/* force auto-renew */}
-                    <Col xs={24}>
-                      <Form.ControlLabel>{t('memberPlanList.autoRenewal')}</Form.ControlLabel>
-                      <Toggle
-                        checked={value.forceAutoRenewal}
-                        disabled={loading}
-                        onChange={forceAutoRenewal => onChange({...value, forceAutoRenewal})}
-                      />
-                      <Form.HelpText>{t('memberPlanList.autoRenewalDescription')}</Form.HelpText>
-                    </Col>
+                  <Panel
+                    collapsible
+                    bordered
+                    header={t('memberPlanEdit.editPaymentSetting')}
+                    style={{width: '100%'}}>
+                    <Row>
+                      {/* force auto-renew */}
+                      <Col xs={24}>
+                        <FormControlLabelMarginRight>
+                          {t('memberPlanEdit.forceAutoRenewal')}
+                        </FormControlLabelMarginRight>
+                        <Toggle
+                          checked={value.forceAutoRenewal}
+                          disabled={loading}
+                          onChange={forceAutoRenewal => onChange({...value, forceAutoRenewal})}
+                        />
+                        <Form.HelpText>{t('memberPlanEdit.autoRenewalDescription')}</Form.HelpText>
+                      </Col>
 
-                    {/* payment periodicity */}
-                    <Col xs={24}>
-                      <Form.ControlLabel>
-                        {t('memberPlanList.paymentPeriodicities')}
-                      </Form.ControlLabel>
-                      <CheckPicker
-                        virtualized
-                        value={value.paymentPeriodicities}
-                        data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
-                          value: pp,
-                          label: t(`memberPlanList.paymentPeriodicity.${pp}`)
-                        }))}
-                        onChange={paymentPeriodicities =>
-                          onChange({...value, paymentPeriodicities})
-                        }
-                        block
-                        placement="auto"
-                      />
-                    </Col>
+                      {/* payment periodicity */}
+                      <Col xs={24}>
+                        <Form.ControlLabel>
+                          {t('memberPlanList.paymentPeriodicities')}
+                        </Form.ControlLabel>
+                        <CheckPicker
+                          virtualized
+                          value={value.paymentPeriodicities}
+                          data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
+                            value: pp,
+                            label: t(`memberPlanList.paymentPeriodicity.${pp}`)
+                          }))}
+                          onChange={paymentPeriodicities =>
+                            onChange({...value, paymentPeriodicities})
+                          }
+                          block
+                          placement="auto"
+                        />
+                      </Col>
 
-                    {/* payment method selection */}
-                    <Col xs={24}>
-                      <Form.ControlLabel>{t('memberPlanList.paymentMethods')}</Form.ControlLabel>
-                      <CheckPicker
-                        virtualized
-                        value={value.paymentMethods.map(pm => pm.id)}
-                        data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
-                        onChange={paymentMethodIDs => {
-                          onChange({
-                            ...value,
-                            paymentMethods: paymentMethodIDs
-                              .map(pmID => paymentMethods.find(pm => pm.id === pmID))
-                              .filter(pm => pm !== undefined)
-                              .map(pm => pm as PaymentMethod)
-                          })
-                        }}
-                        block
-                        placement="auto"
-                      />
-                    </Col>
-                  </Row>
+                      {/* payment method selection */}
+                      <Col xs={24}>
+                        <Form.ControlLabel>{t('memberPlanList.paymentMethods')}</Form.ControlLabel>
+                        <CheckPicker
+                          virtualized
+                          value={value.paymentMethods.map(pm => pm.id)}
+                          data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
+                          onChange={paymentMethodIDs => {
+                            onChange({
+                              ...value,
+                              paymentMethods: paymentMethodIDs
+                                .map(pmID => paymentMethods.find(pm => pm.id === pmID))
+                                .filter(pm => pm !== undefined)
+                                .map(pm => pm as PaymentMethod)
+                            })
+                          }}
+                          block
+                          placement="auto"
+                        />
+                      </Col>
+
+                      {availablePaymentMethods.length > 1 && (
+                        <Col xs={24}>
+                          <Divider />
+                        </Col>
+                      )}
+                    </Row>
+                  </Panel>
                 )}
               </ListInput>
             </Col>

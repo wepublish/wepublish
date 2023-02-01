@@ -809,14 +809,11 @@
       "username": "Nom d'utilisateur·trice"
     },
     "memberPlanList": {
-      "autoRenewal": "Forcer le renouvellement automatique",
       "editTitle": "Modifier le plan membre",
       "paymentPeriodicities": "Périodicités de paiement",
       "action": "Actions",
       "active": "Actif",
-      "activeDescription": "Rendre le plan disponible",
       "adapter": "Solution de paiement",
-      "autoRenewalDescription": "Force le renouvellement automatique de l'abonnement",
       "createNew": "Nouveau plan membre",
       "createTitle": "Création d'un plan membre",
       "deleteModalTitle": "Supprimer le plan membre",
