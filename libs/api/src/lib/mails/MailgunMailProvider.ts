@@ -140,7 +140,7 @@ export class MailgunMailProvider extends BaseMailProvider {
       const templates: MailProviderTemplate[] = response.items.map(mailTemplateResponse => {
         return {
           name: mailTemplateResponse.name,
-          slug: mailTemplateResponse.name,
+          uniqueIdentifier: mailTemplateResponse.name,
           createdAt: new Date(mailTemplateResponse.createdAt),
           updatedAt: new Date(mailTemplateResponse.createdAt)
         }

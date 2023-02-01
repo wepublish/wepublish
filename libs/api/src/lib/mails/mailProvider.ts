@@ -30,7 +30,7 @@ export interface MailLogStatus {
 
 export interface MailProviderTemplate {
   name: string
-  slug: string
+  uniqueIdentifier: string
   createdAt: Date
   updatedAt: Date
 }
