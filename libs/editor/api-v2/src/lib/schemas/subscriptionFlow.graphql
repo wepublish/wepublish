@@ -17,10 +17,10 @@ query SubscriptionFlows {
         ...SubscriptionInterval
       }
       memberPlan {
-        ...MailTemplateRef
+        ...MemberPlanRef
       }
       paymentMethods {
-        ...MailTemplateRef
+        ...PaymentMethodRef
       }
       periodicities
       reactivation {
@@ -48,6 +48,16 @@ fragment SubscriptionInterval on SubscriptionInterval {
 }
 
 fragment MailTemplateRef on MailTemplateRef {
+  id
+  name
+}
+
+fragment MemberPlanRef on MemberPlanRef {
+  id
+  name
+}
+
+fragment PaymentMethodRef on PaymentMethodRef {
   id
   name
 }

@@ -41,7 +41,7 @@ import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
 import {LocalStorageKey} from './utility'
-import SubscriptionSettings from '../../../../libs/membership/editor/src/lib/subscriptionSettings/subscriptionSettings'
+import SubscriptionSettings from '../../../../libs/membership/editor/src/lib/subscriptionFlow/defaultSubscriptionFlow'
 import {MemberPlanEdit} from '../../../../libs/membership/editor/src/lib/memberPlan/memberPlanEdit'
 
 const LogoutMutation = gql`
