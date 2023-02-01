@@ -1009,33 +1009,35 @@ model SubscriptionCommunicationFlow {
 	createdAt             DateTime @default(now())
 	modifiedAt            DateTime @updatedAt
 
+  default               Boolean @default(false)
+
   memberPlan            MemberPlan? @relation(fields: [memberPlanId], references: [id])
   memberPlanId          String?
 
 	paymentMethods        PaymentMethod[]
   periodicities         PaymentPeriodicity[]
-  autoRenewal           AutoRenewal[]
+  autoRenewal           Boolean[]
 
-	subscribe             SubscriptionMail? @relation("subscribeSubscriptionMail", fields: [subscribeId], references: [id]) // initial subscription creation
-	subscribeId           Int?
+  subscribeMailTemplate             MailTemplate? @relation("subscriptionMailTemplate", fields: [subscribeMailTemplateId], references: [id]) // initial subscription creation
+	subscribeMailTemplateId           Int?
 
-	invoiceCreation       SubscriptionInterval? @relation("invoiceCreationSubscriptionInterval",fields: [invoiceCreationId], references: [id], onDelete: Restrict, onUpdate: Cascade) // creating new subscription period and invoice
-	invoiceCreationId     Int?
+	invoiceCreationMailTemplate       SubscriptionInterval? @relation("invoiceCreationSubscriptionInterval",fields: [invoiceCreationMailTemplateId], references: [id], onDelete: Restrict, onUpdate: Cascade) // creating new subscription period and invoice
+	invoiceCreationMailTemplateId     Int?
 
-	renewalSuccess        SubscriptionMail? @relation("renewalSuccessSubscriptionMail", fields: [renewalSuccessId], references: [id]) // in case paid until is extended
-	renewalSuccessId      Int?
+	renewalSuccessMailTemplate        MailTemplate? @relation("renewalSuccessSubscriptionMailTemplate", fields: [renewalSuccessMailTemplateId], references: [id]) // in case paid until is extended
+	renewalSuccessMailTemplateId      Int?
 
-	renewalFailed         SubscriptionMail? @relation("renewalFailedSubscriptionMail", fields: [renewalFailedId], references: [id]) // in case off session payment failed
-	renewalFailedId       Int?
+	renewalFailedMailTemplate         MailTemplate? @relation("renewalFailedSubscriptionMailTemplate", fields: [renewalFailedMailTemplateId], references: [id]) // in case off session payment failed
+	renewalFailedMailTemplateId       Int?
 
-	deactivationUnpaid    SubscriptionInterval? @relation("deactivationUnpaidSubscriptionInterval", fields: [deactivationUnpaidId], references: [id]) // subscription is deactivated because user did not pay
-	deactivationUnpaidId  Int?
+	deactivationUnpaidMailTemplate    SubscriptionInterval? @relation("deactivationUnpaidSubscriptionInterval", fields: [deactivationUnpaidMailTemplateId], references: [id]) // subscription is deactivated because user did not pay
+	deactivationUnpaidMailTemplateId  Int?
 
-	deactivationByUser    SubscriptionMail? @relation("deactivationByUserSubscriptionMail",fields: [deactivationByUserId], references: [id]) // subscription is deactivated because user or admin did so
-	deactivationByUserId  Int?
+	deactivationByUserMailTemplate    MailTemplate? @relation("deactivationByUserSubscriptionMailTemplate",fields: [deactivationByUserMailTemplateId], references: [id]) // subscription is deactivated because user or admin did so
+	deactivationByUserMailTemplateId  Int?
 
-	reactivation          SubscriptionMail? @relation("reactivationSubscriptionMail", fields: [reactivationId], references: [id])// subscription is re-activated by user
-	reactivationId        Int?
+	reactivationMailTemplate          MailTemplate? @relation("reactivationSubscriptionMailTemplate", fields: [reactivationMailTemplateId], references: [id])// subscription is re-activated by user
+	reactivationMailTemplateId        Int?
 
 	additionalIntervals   SubscriptionInterval[] // send some more e-mails such as reminders
 
@@ -1047,36 +1049,14 @@ model SubscriptionInterval {
 	createdAt               DateTime @default(now())
   modifiedAt              DateTime @updatedAt
 	daysAwayFromEnding      Int @db.SmallInt
-	defaultMail             MailTemplate @relation(fields: [defaultMailId], references: [id])
-	defaultMailId           Int
+	mailTemplate            MailTemplate @relation(fields: [mailTemplateId], references: [id])
+	mailTemplateId          Int
 
 	subscriptionCommunicationFlow   SubscriptionCommunicationFlow[]
 	invoiceCreations        SubscriptionCommunicationFlow[] @relation("invoiceCreationSubscriptionInterval")
 	deactivationUnpaids     SubscriptionCommunicationFlow[] @relation("deactivationUnpaidSubscriptionInterval")
 
   @@map("subscriptions.intervals")
-}
-
-
-model SubscriptionMail {
-    id                    Int @id @default(autoincrement())
-    createdAt             DateTime @default(now())
-    modifiedAt            DateTime @updatedAt
-    defaultMail           MailTemplate @relation(fields: [defaultMailId], references: [id])
-    defaultMailId         Int
-
-    subscribes            SubscriptionCommunicationFlow[] @relation("subscribeSubscriptionMail")
-    renewalSuccesses      SubscriptionCommunicationFlow[] @relation("renewalSuccessSubscriptionMail")
-    renewalFaileds        SubscriptionCommunicationFlow[] @relation("renewalFailedSubscriptionMail")
-    deactivationByUsers   SubscriptionCommunicationFlow[] @relation("deactivationByUserSubscriptionMail")
-    reactivations         SubscriptionCommunicationFlow[] @relation("reactivationSubscriptionMail")
-
-    @@map("subscriptions.mails")
-}
-
-enum AutoRenewal {
-	YES
-	NO
 }
 
 model MailTemplate {
@@ -1086,11 +1066,17 @@ model MailTemplate {
 	name                        String
 	description                 String?
 	externalMailTemplateId      String
-	subscriptionMails           SubscriptionMail[]
 	subscriptionIntervals       SubscriptionInterval[]
+
 	accountCreations            UserCommunicationFlow? @relation("accountCreationMailTemplate")
 	passwordResets              UserCommunicationFlow? @relation("passwordResetMailTemplate")
 	loginLinks                  UserCommunicationFlow? @relation("loginLinkMailTemplate")
+
+  subscriptions               SubscriptionCommunicationFlow[] @relation("subscriptionMailTemplate")
+  renewalSuccesses            SubscriptionCommunicationFlow[] @relation("renewalSuccessSubscriptionMailTemplate")
+  renewalFaileds              SubscriptionCommunicationFlow[] @relation("renewalFailedSubscriptionMailTemplate")
+  deactivationByUsers         SubscriptionCommunicationFlow[] @relation("deactivationByUserSubscriptionMailTemplate")
+  reactivations               SubscriptionCommunicationFlow[] @relation("reactivationSubscriptionMailTemplate")
 
   @@map("mail_templates")
 }
