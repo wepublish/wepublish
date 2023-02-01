@@ -1,4 +1,4 @@
-import {Query, Resolver} from '@nestjs/graphql'
+import {Mutation, Query, Resolver} from '@nestjs/graphql'
 import {MailTemplateSyncService, PrismaService} from '@wepublish/api'
 import {MailTemplate} from '../models/mail-template.model'
 
@@ -11,7 +11,9 @@ export class MailTemplatesResolver {
     return this.prismaService.mailTemplate.findMany()
   }
 
+  @Mutation(returns => [MailTemplate])
   async syncTemplates() {
-    return this.syncService.synchronizeTemplates()
+    await this.syncService.synchronizeTemplates()
+    return this.prismaService.mailTemplate.findMany()
   }
 }
