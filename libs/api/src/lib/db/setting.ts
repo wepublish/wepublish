@@ -13,7 +13,8 @@ export enum SettingName {
   RESET_PASSWORD_JWT_EXPIRES_MIN = 'resetPasswordJwtExpiresMin',
   PEERING_TIMEOUT_MS = 'peeringTimeoutInMs',
   INVOICE_REMINDER_FREQ = 'invoiceFreqReminder',
-  INVOICE_REMINDER_MAX_TRIES = 'invoiceReminderMaxTries'
+  INVOICE_REMINDER_MAX_TRIES = 'invoiceReminderMaxTries',
+  MAIL_PROVIDER_NAME = 'mailProviderName'
 }
 
 export type SettingInput<T = unknown> = Pick<Setting<T>, 'value'>

@@ -2,6 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type MailTemplate {
+  description: String
+  externalMailTemplateId: String!
+  id: Int!
+  name: String!
+  remoteMissing: Boolean!
+}
+
 type MailTemplateRef {
   id: Float!
   name: String!
@@ -26,6 +34,7 @@ enum PaymentPeriodicity {
 
 type Query {
   SubscriptionFlows: SubscriptionFlows!
+  mailTemplates: [MailTemplate!]!
   versionInformation: VersionInformation!
 }
 

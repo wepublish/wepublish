@@ -1068,7 +1068,6 @@ model MailTemplate {
 	description                 String?
 	externalMailTemplateId      String @unique
   remoteMissing               Boolean @default(false)
-  providerName                String
 
 	subscriptionIntervals       SubscriptionInterval[]
 
