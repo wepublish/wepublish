@@ -1,5 +1,5 @@
 import {Query, Resolver} from '@nestjs/graphql'
-import {SubscriptionFlows} from '../models/communication-flow-settings'
+import {SubscriptionFlows} from '../models/subscription-flow-settings'
 import {PaymentPeriodicity} from '@wepublish/editor/api'
 import {PrismaService} from '@wepublish/api'
 
