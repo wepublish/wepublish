@@ -15,9 +15,12 @@ jest.mock('form-data', () => {
 
 let mailgunMailProvider: MailgunMailProvider
 
+let listTemplates: nock.Scope
+let listTemplatesInvalidKey: nock.Scope
+
 describe('Mailgun Mail Provider', () => {
   beforeAll(() => {
-    nock('https://api.mailgun.net')
+    listTemplates = nock('https://api.mailgun.net')
       .persist()
       .get('/v3/sandbox8a2185cfb29c48d4941d51c261fc3e03.mailgun.org/templates')
       .basicAuth({user: 'api', pass: 'mg-12345678'})
@@ -29,10 +32,10 @@ describe('Mailgun Mail Provider', () => {
         }
       )
 
-    nock('https://api.mailgun.net')
+    listTemplatesInvalidKey = nock('https://api.mailgun.net')
       .persist()
       .get('/v3/sandbox8a2185cfb29c48d4941d51c261fc3e03.mailgun.org/templates')
-      .basicAuth({user: 'api', pass: 'blah blah'})
+      .basicAuth({user: 'api', pass: 'invalid-key'})
       .replyWithFile(401, __dirname + '/__fixtures__/mailgun-templates-list-error-response.json', {
         'Content-Type': 'application/json'
       })
@@ -92,13 +95,14 @@ describe('Mailgun Mail Provider', () => {
     expect(templates.map(t => t.name).sort()).toEqual(
       ['subscription_creation', 'subscription_expiration'].sort()
     )
+    expect(listTemplates.isDone()).toEqual(true)
   })
 
   test('returns error when using invalid key', async () => {
     mailgunMailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
-      apiKey: 'blah blah',
+      apiKey: 'invalid-key',
       baseDomain: 'https://mailgun.com',
       mailDomain: 'sandbox8a2185cfb29c48d4941d51c261fc3e03.mailgun.org',
       webhookEndpointSecret: 'fakeSecret',
@@ -109,5 +113,6 @@ describe('Mailgun Mail Provider', () => {
     expect(response).toBeInstanceOf(MailProviderError)
     const error = response as MailProviderError
     expect(error.message).toEqual('Invalid private key')
+    expect(listTemplatesInvalidKey.isDone()).toEqual(true)
   })
 })

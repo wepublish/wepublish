@@ -3,9 +3,14 @@ import {MailchimpMailProvider, MailProviderError, MailProviderTemplate} from '..
 
 let mailChimpMailProvider: MailchimpMailProvider
 
+let listTemplates: nock.Scope
+let listTemplatesInvalidKey: nock.Scope
+let sendMail: nock.Scope
+let sendTemplate: nock.Scope
+
 describe('Mailchimp Mail Provider', () => {
   beforeAll(() => {
-    nock('https://mandrillapp.com')
+    listTemplates = nock('https://mandrillapp.com')
       .persist()
       .post('/api/1.0/templates/list', {key: 'md-12345678'})
       .replyWithFile(
@@ -16,9 +21,9 @@ describe('Mailchimp Mail Provider', () => {
         }
       )
 
-    nock('https://mandrillapp.com')
+    listTemplatesInvalidKey = nock('https://mandrillapp.com')
       .persist()
-      .post('/api/1.0/templates/list', {key: 'blah blah'})
+      .post('/api/1.0/templates/list', {key: 'invalid-key'})
       .replyWithFile(
         500,
         __dirname + '/__fixtures__/mailchimp-templates-list-error-response.json',
@@ -27,7 +32,7 @@ describe('Mailchimp Mail Provider', () => {
         }
       )
 
-    nock('https://mandrillapp.com')
+    sendMail = nock('https://mandrillapp.com')
       .persist()
       .post('/api/1.0/messages/send')
       .replyWithFile(
@@ -38,7 +43,7 @@ describe('Mailchimp Mail Provider', () => {
         }
       )
 
-    nock('https://mandrillapp.com')
+    sendTemplate = nock('https://mandrillapp.com')
       .persist()
       .post('/api/1.0/messages/send-template')
       .replyWithFile(
@@ -64,28 +69,28 @@ describe('Mailchimp Mail Provider', () => {
   })
 
   test('sendMail should call mandrill send', async () => {
-    const response = await mailChimpMailProvider.sendMail({
+    await mailChimpMailProvider.sendMail({
       message: 'hello Test',
       subject: 'test subject',
-      recipient: 'test@test.com',
-      replyToAddress: 'dev@test.com',
+      recipient: 'test@wepublish.ch',
+      replyToAddress: 'dev@wepublish.ch',
       mailLogID: 'fakeMailLogID'
     })
 
-    expect(response).toEqual(undefined)
+    expect(sendMail.isDone()).toEqual(true)
   })
 
   test('sendMail with template should call mandrill sendTemplate', async () => {
-    const response = await mailChimpMailProvider.sendMail({
+    await mailChimpMailProvider.sendMail({
       subject: 'test subject',
-      recipient: 'test@test.com',
-      replyToAddress: 'dev@test.com',
+      recipient: 'test@wepublish.ch',
+      replyToAddress: 'dev@wepublish.ch',
       mailLogID: 'fakeMailLogID',
       template: 'test-mail',
       templateData: {message: 'hello Test'}
     })
 
-    expect(response).toEqual(undefined)
+    expect(sendTemplate.isDone()).toEqual(true)
   })
 
   test('loads templates', async () => {
@@ -104,12 +109,13 @@ describe('Mailchimp Mail Provider', () => {
     expect(templates.map(t => t.name).sort()).toEqual(
       ['Subscription Creation', 'Subscription Expiration'].sort()
     )
+    expect(listTemplates.isDone()).toEqual(true)
   })
 
   test('returns error when using invalid key', async () => {
     mailChimpMailProvider = new MailchimpMailProvider({
       baseURL: 'https://mailchimp.com',
-      apiKey: 'blah blah',
+      apiKey: 'invalid-key',
       webhookEndpointSecret: 'fakeSecret',
       fromAddress: 'dev@wepublish.ch',
       id: 'mailchimp',
@@ -120,5 +126,6 @@ describe('Mailchimp Mail Provider', () => {
     expect(response).toBeInstanceOf(MailProviderError)
     const error = response as MailProviderError
     expect(error.message).toEqual('Invalid API key')
+    expect(listTemplatesInvalidKey.isDone()).toEqual(true)
   })
 })
