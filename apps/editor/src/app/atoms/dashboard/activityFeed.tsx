@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {Action, ActionType, useRecentActionsQuery} from '@wepublish/editor/api'
 import {formatDistanceToNow} from 'date-fns'
-import {useEffect, useState, ReactNode} from 'react'
+import {useEffect, useState} from 'react'
 import {useTranslation, Trans} from 'react-i18next'
 import {
   MdAccountCircle,
@@ -10,10 +10,8 @@ import {
   MdDashboard,
   MdDescription,
   MdEvent,
-  MdFeed,
   MdGroup,
-  MdOutlineGridView,
-  MdEdit
+  MdOutlineGridView
 } from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Avatar, Timeline as RTimeline} from 'rsuite'
@@ -78,7 +76,7 @@ export function ActivityFeed() {
               key={i}
               dot={
                 <TimelineIcon size="sm" circle>
-                  {mapActionTypeToIcon(value.actionType)}
+                  {MapActionTypeToIcon(value.actionType)}
                 </TimelineIcon>
               }>
               <TimelineDiv>
@@ -96,7 +94,7 @@ const TimelineText = ({action}: Action) => {
   const {i18n} = useTranslation()
   return (
     <>
-      {mapDetailsToAction(action)}
+      {MapDetailsToAction(action)}
       <p>
         {formatDistanceToNow(new Date(action.date), {
           locale: AVAILABLE_LANG.find(lang => lang.id === i18n.language)?.locale,
@@ -107,7 +105,8 @@ const TimelineText = ({action}: Action) => {
   )
 }
 
-function TranslatedCreateTitleWithLink({title, to}, key) {
+function TranslatedCreateTitleWithLink(props: {title: string; to: string}, key: string) {
+  const {title, to} = props
   return (
     <Trans i18nKey={key} values={{title}}>
       New <Link to={to}>{`${title}`}</Link> has been created
@@ -115,7 +114,7 @@ function TranslatedCreateTitleWithLink({title, to}, key) {
   )
 }
 
-export const mapDetailsToAction = (action: Action) => {
+export const MapDetailsToAction = (action: Action) => {
   const {t} = useTranslation()
   switch (action.actionType) {
     case ActionType.Article:
@@ -212,7 +211,7 @@ export const mapDetailsToAction = (action: Action) => {
   }
 }
 
-const mapActionTypeToIcon = (actionType: ActionType) => {
+const MapActionTypeToIcon = (actionType: ActionType) => {
   switch (actionType) {
     case ActionType.Article:
       return <MdDescription />
