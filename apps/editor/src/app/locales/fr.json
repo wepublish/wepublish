@@ -1252,7 +1252,7 @@
         "passwordToken": "Durée de validité du token pour la réinitialisation du mot de passe par email — minutes.",
         "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes",
         "invoiceReminders": "Nombre de rappels de paiement par facture Délai entre les rappels de paiement — jours",
-        "askOperators": "Attention : la modification d'un ou de plusieurs des paramètres peut entraîner la rupture de la page ou avoir d'autres conséquences imprévisibles. En cas de doute, il est conseillé de consulter les opérateurs."
+        "askOperators": "Attention : la modification d'un ou de plusieurs des paramètres peut entraîner la rupture de la page ou avoir d'autres conséquences imprévisibles. En cas de doute, il est conseillé de consulter les opérateurs. Dans le cas contraire, vous pouvez continuer."
       }
     },
     "createOrUpdateUserPassword": {
