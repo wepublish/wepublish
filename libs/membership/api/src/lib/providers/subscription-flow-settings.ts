@@ -1,10 +1,14 @@
 import {Query, Resolver} from '@nestjs/graphql'
 import {SubscriptionFlows} from '../models/communication-flow-settings'
 import {PaymentPeriodicity} from '@wepublish/editor/api'
+import {PrismaService} from '@wepublish/api'
+
 @Resolver(of => SubscriptionFlows)
 export class SubscriptionFlowSettings {
+  constructor(private readonly prismaService: PrismaService) {}
   @Query(returns => SubscriptionFlows, {name: 'SubscriptionFlows'})
   async subscriptionFlowSettings() {
+    console.log(await this.prismaService.subscriptionPeriod.findMany({}))
     return {
       subscriptionFlows: [
         {
