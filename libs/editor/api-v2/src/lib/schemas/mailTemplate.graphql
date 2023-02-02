@@ -1,0 +1,19 @@
+query MailTemplate {
+  mailTemplates {
+    ...fullTemplate
+  }
+}
+
+mutation SynchronizeMailTemplates {
+  syncTemplates {
+    ...fullTemplate
+  }
+}
+
+fragment fullTemplate on MailTemplate {
+  description
+  externalMailTemplateId
+  id
+  name
+  remoteMissing
+}

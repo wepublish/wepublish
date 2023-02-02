@@ -740,7 +740,8 @@
       "peers": "Peers",
       "subscriptions": "Abonnements",
       "peerArticles": "Peerbare Artikel",
-      "subscriptionSettings": "Einstellungen"
+      "subscriptionSettings": "Einstellungen",
+      "mailTemplates": "E-Mail-Vorlagen"
     },
     "navigation": {
       "overview": {

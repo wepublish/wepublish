@@ -1,0 +1,26 @@
+.iconSpin {
+  -webkit-animation: iconSpin 2s infinite linear;
+          animation: iconSpin 2s infinite linear;
+}
+
+@-webkit-keyframes iconSpin {
+  0% {
+    -webkit-transform: rotate(359deg);
+            transform: rotate(359deg);
+  }
+  100% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+}
+
+@keyframes iconSpin {
+  0% {
+    -webkit-transform: rotate(359deg);
+            transform: rotate(359deg);
+  }
+  100% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+}

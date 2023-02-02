@@ -740,7 +740,8 @@
       "userRoles": "User Roles",
       "users": "Users",
       "usersAndMembers": "Users & Members",
-      "subscriptionSettings": "Settings"
+      "subscriptionSettings": "Settings",
+      "mailTemplates": "E-Mail Templates"
     },
     "navigation": {
       "overview": {

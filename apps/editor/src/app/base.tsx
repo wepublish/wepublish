@@ -18,6 +18,7 @@ import {
   MdGroups,
   MdLocationPin,
   MdLogout,
+  MdMail,
   MdOutlineGridView,
   MdPersonAddAlt1,
   MdPhoto,
@@ -457,6 +458,13 @@ export function Base({children}: BaseProps) {
                         active={path === 'subscriptionSettings'}
                         icon={<MdTune />}>
                         {t('navbar.subscriptionSettings')}
+                      </Nav.Item>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/mailTemplates"
+                        active={path === 'mailTemplates'}
+                        icon={<MdMail />}>
+                        {t('navbar.mailTemplates')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>

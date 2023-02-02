@@ -1061,7 +1061,8 @@
       "settings": "Paramètres",
       "peerArticles": "Articles pairables",
       "subscriptions": "Abonnements",
-      "subscriptionSettings": "Réglages"
+      "subscriptionSettings": "Réglages",
+      "mailTemplates": "Modèles de courriels"
     },
     "navigation": {
       "overview": {

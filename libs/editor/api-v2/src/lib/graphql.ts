@@ -181,6 +181,18 @@ export type VersionInformation = {
   version: Scalars['String'];
 };
 
+export type MailTemplateQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ __typename?: 'MailTemplate', description?: string | null, externalMailTemplateId: string, id: number, name: string, remoteMissing: boolean }> };
+
+export type SynchronizeMailTemplatesMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SynchronizeMailTemplatesMutation = { __typename?: 'Mutation', syncTemplates: Array<{ __typename?: 'MailTemplate', description?: string | null, externalMailTemplateId: string, id: number, name: string, remoteMissing: boolean }> };
+
+export type FullTemplateFragment = { __typename?: 'MailTemplate', description?: string | null, externalMailTemplateId: string, id: number, name: string, remoteMissing: boolean };
+
 export type SubscriptionFlowsQueryVariables = Exact<{
   defaultFlowOnly: Scalars['Boolean'];
 }>;
@@ -203,6 +215,15 @@ export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type VersionInformationQuery = { __typename?: 'Query', versionInformation: { __typename?: 'VersionInformation', version: string } };
 
+export const FullTemplateFragmentDoc = gql`
+    fragment fullTemplate on MailTemplate {
+  description
+  externalMailTemplateId
+  id
+  name
+  remoteMissing
+}
+    `;
 export const MailTemplateRefFragmentDoc = gql`
     fragment MailTemplateRef on MailTemplateRef {
   id
@@ -270,6 +291,72 @@ export const SubscriptionFlowFragmentDoc = gql`
 ${MailTemplateRefFragmentDoc}
 ${MemberPlanRefFragmentDoc}
 ${PaymentMethodRefFragmentDoc}`;
+export const MailTemplateDocument = gql`
+    query MailTemplate {
+  mailTemplates {
+    ...fullTemplate
+  }
+}
+    ${FullTemplateFragmentDoc}`;
+
+/**
+ * __useMailTemplateQuery__
+ *
+ * To run a query within a React component, call `useMailTemplateQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMailTemplateQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMailTemplateQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMailTemplateQuery(baseOptions?: Apollo.QueryHookOptions<MailTemplateQuery, MailTemplateQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MailTemplateQuery, MailTemplateQueryVariables>(MailTemplateDocument, options);
+      }
+export function useMailTemplateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailTemplateQuery, MailTemplateQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MailTemplateQuery, MailTemplateQueryVariables>(MailTemplateDocument, options);
+        }
+export type MailTemplateQueryHookResult = ReturnType<typeof useMailTemplateQuery>;
+export type MailTemplateLazyQueryHookResult = ReturnType<typeof useMailTemplateLazyQuery>;
+export type MailTemplateQueryResult = Apollo.QueryResult<MailTemplateQuery, MailTemplateQueryVariables>;
+export const SynchronizeMailTemplatesDocument = gql`
+    mutation SynchronizeMailTemplates {
+  syncTemplates {
+    ...fullTemplate
+  }
+}
+    ${FullTemplateFragmentDoc}`;
+export type SynchronizeMailTemplatesMutationFn = Apollo.MutationFunction<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>;
+
+/**
+ * __useSynchronizeMailTemplatesMutation__
+ *
+ * To run a mutation, you first call `useSynchronizeMailTemplatesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSynchronizeMailTemplatesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [synchronizeMailTemplatesMutation, { data, loading, error }] = useSynchronizeMailTemplatesMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSynchronizeMailTemplatesMutation(baseOptions?: Apollo.MutationHookOptions<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>(SynchronizeMailTemplatesDocument, options);
+      }
+export type SynchronizeMailTemplatesMutationHookResult = ReturnType<typeof useSynchronizeMailTemplatesMutation>;
+export type SynchronizeMailTemplatesMutationResult = Apollo.MutationResult<SynchronizeMailTemplatesMutation>;
+export type SynchronizeMailTemplatesMutationOptions = Apollo.BaseMutationOptions<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>;
 export const SubscriptionFlowsDocument = gql`
     query SubscriptionFlows($defaultFlowOnly: Boolean!) {
   SubscriptionFlows(defaultFlowOnly: $defaultFlowOnly) {
