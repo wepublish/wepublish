@@ -43,6 +43,23 @@ async function seed() {
     }
   })
 
+  await prisma.mailTemplate.create({
+    data: {
+      name: 'sample-template-existing',
+      description: 'sample-template-description',
+      externalMailTemplateId: 'sample-slug-1'
+    }
+  })
+
+  await prisma.mailTemplate.create({
+    data: {
+      name: 'sample-template-deleted',
+      description: 'sample-template-description',
+      externalMailTemplateId: 'sample-slug-2',
+      remoteMissing: true
+    }
+  })
+
   await prisma.$disconnect()
 }
 
