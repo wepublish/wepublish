@@ -63,6 +63,7 @@
 - [Usage](#usage)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
+- [Docs](#docs)
 - [Code of Conduct](#code-of-conduct)
 - [License](#license)
 - [Contact](#contact)
