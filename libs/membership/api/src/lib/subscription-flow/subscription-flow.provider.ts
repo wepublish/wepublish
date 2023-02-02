@@ -58,28 +58,6 @@ export class SubscriptionFlowProvider {
         })
       }
 
-      // Convert  Prisma enum to gql enum
-      const periodicities = subscriptionFlow.periodicities as unknown as PaymentPeriodicity[]
-
-      console.log(periodicities)
-      console.log([PaymentPeriodicity.yearly])
-
-      const subscribe = null
-
-      const invoiceCreation = null
-
-      const renewalSuccess = null
-
-      const renewalFailed = null
-
-      const deactivationUnpaid = null
-
-      const deactivationByUser = null
-
-      const reactivation = null
-
-      const additionalIntervals = []
-
       // Construct Main Subscription Flow
 
       decoratedObject.push({
@@ -87,16 +65,16 @@ export class SubscriptionFlowProvider {
         default: subscriptionFlow.default,
         memberPlan: decoratedMemberplan,
         paymentMethods: decoratedPaymentMethode,
-        periodicities: periodicities,
+        periodicities: subscriptionFlow.periodicities,
         autoRenewal: subscriptionFlow.autoRenewal,
         subscribe: subscriptionFlow.subscribeMailTemplate,
-        invoiceCreation: invoiceCreation,
-        renewalSuccess: renewalSuccess,
-        renewalFailed: renewalFailed,
-        deactivationUnpaid: deactivationUnpaid,
-        deactivationByUser: deactivationByUser,
-        reactivation: reactivation,
-        additionalIntervals: additionalIntervals
+        invoiceCreation: subscriptionFlow.invoiceCreationMailTemplate,
+        renewalSuccess: subscriptionFlow.renewalSuccessMailTemplate,
+        renewalFailed: subscriptionFlow.renewalFailedMailTemplate,
+        deactivationUnpaid: subscriptionFlow.deactivationUnpaidMailTemplate,
+        deactivationByUser: subscriptionFlow.deactivationByUserMailTemplate,
+        reactivation: subscriptionFlow.reactivationMailTemplate,
+        additionalIntervals: subscriptionFlow.additionalIntervals
       })
     }
 
@@ -122,8 +100,11 @@ export class SubscriptionFlowProvider {
           name: 'Test'
         },
         invoiceCreation: {
-          id: 1,
-          name: 'Test'
+          daysAwayFromEnding: 2,
+          mailTemplate: {
+            id: 1,
+            name: 'Test'
+          }
         },
         renewalSuccess: {
           id: 1,
@@ -145,11 +126,8 @@ export class SubscriptionFlowProvider {
           name: 'Test'
         },
         reactivation: {
-          daysAwayFromEnding: 2,
-          mailTemplate: {
-            id: 1,
-            name: 'Test'
-          }
+          id: 1,
+          name: 'Test'
         },
         additionalIntervals: [
           {

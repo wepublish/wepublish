@@ -124,11 +124,11 @@ type SubscriptionFlowModel {
   deactivationUnpaid: SubscriptionInterval
   default: Boolean!
   id: Float!
-  invoiceCreation: MailTemplateRef
+  invoiceCreation: SubscriptionInterval
   memberPlan: MemberPlanRef
   paymentMethods: [PaymentMethodRef!]!
   periodicities: [PaymentPeriodicity!]!
-  reactivation: SubscriptionInterval
+  reactivation: MailTemplateRef
   renewalFailed: MailTemplateRef
   renewalSuccess: MailTemplateRef
   subscribe: MailTemplateRef

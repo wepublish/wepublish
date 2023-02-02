@@ -53,8 +53,8 @@ export class SubscriptionFlowModel {
   autoRenewal: boolean[]
   @Field(type => MailTemplateRef, {nullable: true})
   subscribe: MailTemplateRef
-  @Field(type => MailTemplateRef, {nullable: true})
-  invoiceCreation: MailTemplateRef
+  @Field(type => SubscriptionInterval, {nullable: true})
+  invoiceCreation: SubscriptionInterval
   @Field(type => MailTemplateRef, {nullable: true})
   renewalSuccess: MailTemplateRef
   @Field(type => MailTemplateRef, {nullable: true})
@@ -63,8 +63,8 @@ export class SubscriptionFlowModel {
   deactivationUnpaid: SubscriptionInterval
   @Field(type => MailTemplateRef, {nullable: true})
   deactivationByUser: MailTemplateRef
-  @Field(type => SubscriptionInterval, {nullable: true})
-  reactivation: SubscriptionInterval
+  @Field(type => MailTemplateRef, {nullable: true})
+  reactivation: MailTemplateRef
   @Field(type => [SubscriptionInterval])
   additionalIntervals: SubscriptionInterval[]
 }
