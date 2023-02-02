@@ -60,7 +60,5 @@ export * from './lib/challenges/algebraicCaptchaChallenge'
 export * from './lib/payments/payrexxSubscriptionPaymentProvider'
 
 export {PrismaService} from './lib/prisma.service'
-export {MailProviderService} from './lib/mails/mailProvider.service'
-export {MailTemplateSyncService} from './lib/mails/mailTemplateSync.service'
 
 export {getUserForCredentials} from './lib/graphql/user/user.queries'

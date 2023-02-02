@@ -1,7 +1,13 @@
 import {Injectable} from '@nestjs/common'
-import {PrismaService} from '../prisma.service'
-import {MailProviderTemplate} from './mailProvider'
-import {MailProviderService} from './mailProvider.service'
+import {MailTemplate} from '@prisma/client'
+import {MailProviderTemplate, PrismaService} from '@wepublish/api'
+import {MailProviderService} from './mail-provider.service'
+
+export interface MailTemplateSyncDiff {
+  remoteNew: MailProviderTemplate[]
+  remoteExisting: MailProviderTemplate[]
+  localOutdated: MailTemplate[]
+}
 
 @Injectable()
 export class MailTemplateSyncService {
@@ -10,11 +16,17 @@ export class MailTemplateSyncService {
     private mailProviderService: MailProviderService
   ) {}
 
-  async synchronizeTemplates(): Promise<void> {
+  async synchronizeTemplates(): Promise<MailTemplateSyncDiff> {
     const localTemplates = await this.prismaService.mailTemplate.findMany()
 
     const mailProvider = await this.mailProviderService.getProvider()
     const remoteTemplates = (await mailProvider.getTemplates()) as MailProviderTemplate[]
+
+    const diff: MailTemplateSyncDiff = {
+      remoteNew: [],
+      remoteExisting: [],
+      localOutdated: []
+    }
 
     // find new and updated remote templates
     for (const remoteTemplate of remoteTemplates) {
@@ -22,22 +34,9 @@ export class MailTemplateSyncService {
         localTemplate => localTemplate.externalMailTemplateId === remoteTemplate.uniqueIdentifier
       )
       if (localMatch) {
-        // template exists locally, update properties
-        await this.prismaService.mailTemplate.update({
-          where: {externalMailTemplateId: localMatch.externalMailTemplateId},
-          data: {
-            name: remoteTemplate.name,
-            remoteMissing: false
-          }
-        })
+        diff.remoteExisting.push(remoteTemplate)
       } else {
-        // template is new
-        await this.prismaService.mailTemplate.create({
-          data: {
-            name: remoteTemplate.name,
-            externalMailTemplateId: remoteTemplate.uniqueIdentifier
-          }
-        })
+        diff.remoteNew.push(remoteTemplate)
       }
     }
 
@@ -47,13 +46,10 @@ export class MailTemplateSyncService {
         remoteTemplate => remoteTemplate.uniqueIdentifier === localTemplate.externalMailTemplateId
       )
       if (!remoteMatch) {
-        await this.prismaService.mailTemplate.update({
-          where: {externalMailTemplateId: localTemplate.externalMailTemplateId},
-          data: {
-            remoteMissing: true
-          }
-        })
+        diff.localOutdated.push(localTemplate)
       }
     }
+
+    return diff
   }
 }

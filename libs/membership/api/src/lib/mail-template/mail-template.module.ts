@@ -1,6 +1,8 @@
 import {Module} from '@nestjs/common'
+import {PrismaService} from '@wepublish/api'
 import {PrismaModule} from '@wepublish/nest-modules'
-import {MailProviderService, MailTemplateSyncService, PrismaService} from '@wepublish/api'
+import {MailProviderService} from './mail-provider.service'
+import {MailTemplateSyncService} from './mail-template-sync.service'
 import {MailTemplatesResolver} from './mail-template.resolver'
 
 @Module({
