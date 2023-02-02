@@ -112,6 +112,11 @@ export type Query = {
 };
 
 
+export type QuerySubscriptionFlowsArgs = {
+  defaultFlowOnly: Scalars['Boolean'];
+};
+
+
 export type QueryExpectedRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
@@ -176,7 +181,9 @@ export type VersionInformation = {
   version: Scalars['String'];
 };
 
-export type SubscriptionFlowsQueryVariables = Exact<{ [key: string]: never; }>;
+export type SubscriptionFlowsQueryVariables = Exact<{
+  defaultFlowOnly: Scalars['Boolean'];
+}>;
 
 
 export type SubscriptionFlowsQuery = { __typename?: 'Query', SubscriptionFlows: Array<{ __typename?: 'SubscriptionFlowModel', id: number, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, additionalIntervals: Array<{ __typename?: 'SubscriptionInterval', daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } }>, deactivationByUserMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, deactivationUnpaidMailTemplate?: { __typename?: 'SubscriptionInterval', daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } } | null, invoiceCreationMailTemplate?: { __typename?: 'SubscriptionInterval', daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } } | null, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, reactivationMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, renewalFailedMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, renewalSuccessMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, subscribeMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null }> };
@@ -264,8 +271,8 @@ ${MailTemplateRefFragmentDoc}
 ${MemberPlanRefFragmentDoc}
 ${PaymentMethodRefFragmentDoc}`;
 export const SubscriptionFlowsDocument = gql`
-    query SubscriptionFlows {
-  SubscriptionFlows {
+    query SubscriptionFlows($defaultFlowOnly: Boolean!) {
+  SubscriptionFlows(defaultFlowOnly: $defaultFlowOnly) {
     ...SubscriptionFlow
   }
 }
@@ -283,10 +290,11 @@ export const SubscriptionFlowsDocument = gql`
  * @example
  * const { data, loading, error } = useSubscriptionFlowsQuery({
  *   variables: {
+ *      defaultFlowOnly: // value for 'defaultFlowOnly'
  *   },
  * });
  */
-export function useSubscriptionFlowsQuery(baseOptions?: Apollo.QueryHookOptions<SubscriptionFlowsQuery, SubscriptionFlowsQueryVariables>) {
+export function useSubscriptionFlowsQuery(baseOptions: Apollo.QueryHookOptions<SubscriptionFlowsQuery, SubscriptionFlowsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<SubscriptionFlowsQuery, SubscriptionFlowsQueryVariables>(SubscriptionFlowsDocument, options);
       }

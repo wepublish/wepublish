@@ -1,5 +1,5 @@
-query SubscriptionFlows {
-  SubscriptionFlows {
+query SubscriptionFlows($defaultFlowOnly: Boolean!) {
+  SubscriptionFlows(defaultFlowOnly: $defaultFlowOnly) {
     ...SubscriptionFlow
   }
 }
