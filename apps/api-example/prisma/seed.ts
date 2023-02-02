@@ -43,16 +43,24 @@ async function seed() {
     }
   })
 
-  await prisma.mailTemplate.create({
-    data: {
+  await prisma.mailTemplate.upsert({
+    where: {
+      externalMailTemplateId: 'sample-slug-1'
+    },
+    update: {},
+    create: {
       name: 'sample-template-existing',
       description: 'sample-template-description',
       externalMailTemplateId: 'sample-slug-1'
     }
   })
 
-  await prisma.mailTemplate.create({
-    data: {
+  await prisma.mailTemplate.upsert({
+    where: {
+      externalMailTemplateId: 'sample-slug-2'
+    },
+    update: {},
+    create: {
       name: 'sample-template-deleted',
       description: 'sample-template-description',
       externalMailTemplateId: 'sample-slug-2',
