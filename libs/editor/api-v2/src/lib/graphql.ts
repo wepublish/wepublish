@@ -15,6 +15,36 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
+  DateTime: string;
+};
+
+export type DashboardInvoice = {
+  __typename?: 'DashboardInvoice';
+  amount: Scalars['Int'];
+  dueAt: Scalars['DateTime'];
+  memberPlan?: Maybe<Scalars['String']>;
+  paidAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type DashboardSubscription = {
+  __typename?: 'DashboardSubscription';
+  endsAt?: Maybe<Scalars['DateTime']>;
+  memberPlan: Scalars['String'];
+  monthlyAmount: Scalars['Int'];
+  paymentPeriodicity: PaymentPeriodicity;
+  reasonForDeactivation?: Maybe<SubscriptionDeactivationReason>;
+  renewsAt?: Maybe<Scalars['DateTime']>;
+  startsAt: Scalars['DateTime'];
+};
+
+export type MailTemplate = {
+  __typename?: 'MailTemplate';
+  description?: Maybe<Scalars['String']>;
+  externalMailTemplateId: Scalars['String'];
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  remoteMissing: Scalars['Boolean'];
 };
 
 export type MailTemplateRef = {
@@ -25,50 +55,114 @@ export type MailTemplateRef = {
 
 export type MemberPlanRef = {
   __typename?: 'MemberPlanRef';
-  id: Scalars['Float'];
+  id: Scalars['String'];
   name: Scalars['String'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  syncTemplates: Array<MailTemplate>;
 };
 
 export type PaymentMethodRef = {
   __typename?: 'PaymentMethodRef';
-  id: Scalars['Float'];
+  id: Scalars['String'];
   name: Scalars['String'];
 };
 
 export enum PaymentPeriodicity {
-  Biannual = 'Biannual',
-  Monthly = 'Monthly',
-  Quarterly = 'Quarterly',
-  Yearly = 'Yearly'
+  Biannual = 'biannual',
+  Monthly = 'monthly',
+  Quarterly = 'quarterly',
+  Yearly = 'yearly'
 }
 
 export type Query = {
   __typename?: 'Query';
-  SubscriptionFlows: SubscriptionFlows;
+  SubscriptionFlows: Array<SubscriptionFlowModel>;
+  /**
+   * Returns all active subscribers.
+   * Includes subscribers with a cancelled but not run out subscription.
+   */
+  activeSubscribers: Array<DashboardSubscription>;
+  /**
+   * Returns the expected revenue for the time period given.
+   * Excludes cancelled or manually set as paid invoices.
+   */
+  expectedRevenue: Array<DashboardInvoice>;
+  mailTemplates: Array<MailTemplate>;
+  /**
+   * Returns all new deactivations in a given timeframe.
+   * This considers the time the deactivation was made, not when the subscription runs out.
+   */
+  newDeactivations: Array<DashboardSubscription>;
+  /**
+   * Returns all new subscribers in a given timeframe.
+   * Includes already deactivated ones.
+   */
+  newSubscribers: Array<DashboardSubscription>;
+  /** Returns all renewing subscribers in a given timeframe. */
+  renewingSubscribers: Array<DashboardSubscription>;
+  /**
+   * Returns the revenue generated for the time period given.
+   * Only includes paid invoices that have not been manually paid.
+   */
+  revenue: Array<DashboardInvoice>;
   versionInformation: VersionInformation;
 };
 
-export type SubscriptionFlow = {
-  __typename?: 'SubscriptionFlow';
+
+export type QueryExpectedRevenueArgs = {
+  end?: InputMaybe<Scalars['DateTime']>;
+  start: Scalars['DateTime'];
+};
+
+
+export type QueryNewDeactivationsArgs = {
+  end?: InputMaybe<Scalars['DateTime']>;
+  start: Scalars['DateTime'];
+};
+
+
+export type QueryNewSubscribersArgs = {
+  end?: InputMaybe<Scalars['DateTime']>;
+  start: Scalars['DateTime'];
+};
+
+
+export type QueryRenewingSubscribersArgs = {
+  end?: InputMaybe<Scalars['DateTime']>;
+  start: Scalars['DateTime'];
+};
+
+
+export type QueryRevenueArgs = {
+  end?: InputMaybe<Scalars['DateTime']>;
+  start: Scalars['DateTime'];
+};
+
+export enum SubscriptionDeactivationReason {
+  InvoiceNotPaid = 'invoiceNotPaid',
+  None = 'none',
+  UserSelfDeactivated = 'userSelfDeactivated'
+}
+
+export type SubscriptionFlowModel = {
+  __typename?: 'SubscriptionFlowModel';
   additionalIntervals: Array<SubscriptionInterval>;
   autoRenewal: Array<Scalars['Boolean']>;
-  deactivationByUser?: Maybe<SubscriptionInterval>;
-  deactivationUnpaid?: Maybe<SubscriptionInterval>;
+  deactivationByUserMailTemplate?: Maybe<MailTemplateRef>;
+  deactivationUnpaidMailTemplate?: Maybe<SubscriptionInterval>;
   default: Scalars['Boolean'];
   id: Scalars['Float'];
-  invoiceCreation?: Maybe<SubscriptionInterval>;
+  invoiceCreationMailTemplate?: Maybe<SubscriptionInterval>;
   memberPlan?: Maybe<MemberPlanRef>;
   paymentMethods: Array<PaymentMethodRef>;
   periodicities: Array<PaymentPeriodicity>;
-  reactivation?: Maybe<SubscriptionInterval>;
-  renewalFailed?: Maybe<SubscriptionInterval>;
-  renewalSuccess?: Maybe<SubscriptionInterval>;
-  subscribe?: Maybe<MailTemplateRef>;
-};
-
-export type SubscriptionFlows = {
-  __typename?: 'SubscriptionFlows';
-  subscriptionFlows: Array<SubscriptionFlow>;
+  reactivationMailTemplate?: Maybe<MailTemplateRef>;
+  renewalFailedMailTemplate?: Maybe<MailTemplateRef>;
+  renewalSuccessMailTemplate?: Maybe<MailTemplateRef>;
+  subscribeMailTemplate?: Maybe<MailTemplateRef>;
 };
 
 export type SubscriptionInterval = {
@@ -85,15 +179,17 @@ export type VersionInformation = {
 export type SubscriptionFlowsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SubscriptionFlowsQuery = { __typename?: 'Query', SubscriptionFlows: { __typename?: 'SubscriptionFlows', subscriptionFlows: Array<{ __typename?: 'SubscriptionFlow', id: number, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, additionalIntervals: Array<{ __typename?: 'SubscriptionInterval', daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } }>, deactivationByUser?: { __typename?: 'SubscriptionInterval', daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } } | null, deactivationUnpaid?: { __typename?: 'SubscriptionInterval', daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } } | null, invoiceCreation?: { __typename?: 'SubscriptionInterval', daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } } | null, memberPlan?: { __typename?: 'MemberPlanRef', id: number, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: number, name: string }>, reactivation?: { __typename?: 'SubscriptionInterval', daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } } | null, renewalFailed?: { __typename?: 'SubscriptionInterval', daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } } | null, renewalSuccess?: { __typename?: 'SubscriptionInterval', daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } } | null, subscribe?: { __typename?: 'MailTemplateRef', id: number, name: string } | null }> } };
+export type SubscriptionFlowsQuery = { __typename?: 'Query', SubscriptionFlows: Array<{ __typename?: 'SubscriptionFlowModel', id: number, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, additionalIntervals: Array<{ __typename?: 'SubscriptionInterval', daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } }>, deactivationByUserMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, deactivationUnpaidMailTemplate?: { __typename?: 'SubscriptionInterval', daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } } | null, invoiceCreationMailTemplate?: { __typename?: 'SubscriptionInterval', daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } } | null, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, reactivationMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, renewalFailedMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, renewalSuccessMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, subscribeMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null }> };
+
+export type SubscriptionFlowFragment = { __typename?: 'SubscriptionFlowModel', id: number, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, additionalIntervals: Array<{ __typename?: 'SubscriptionInterval', daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } }>, deactivationByUserMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, deactivationUnpaidMailTemplate?: { __typename?: 'SubscriptionInterval', daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } } | null, invoiceCreationMailTemplate?: { __typename?: 'SubscriptionInterval', daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } } | null, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, reactivationMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, renewalFailedMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, renewalSuccessMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, subscribeMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null };
 
 export type SubscriptionIntervalFragment = { __typename?: 'SubscriptionInterval', daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } };
 
 export type MailTemplateRefFragment = { __typename?: 'MailTemplateRef', id: number, name: string };
 
-export type MemberPlanRefFragment = { __typename?: 'MemberPlanRef', id: number, name: string };
+export type MemberPlanRefFragment = { __typename?: 'MemberPlanRef', id: string, name: string };
 
-export type PaymentMethodRefFragment = { __typename?: 'PaymentMethodRef', id: number, name: string };
+export type PaymentMethodRefFragment = { __typename?: 'PaymentMethodRef', id: string, name: string };
 
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -126,51 +222,54 @@ export const PaymentMethodRefFragmentDoc = gql`
   name
 }
     `;
-export const SubscriptionFlowsDocument = gql`
-    query SubscriptionFlows {
-  SubscriptionFlows {
-    subscriptionFlows {
-      id
-      default
-      additionalIntervals {
-        ...SubscriptionInterval
-      }
-      autoRenewal
-      deactivationByUser {
-        ...SubscriptionInterval
-      }
-      deactivationUnpaid {
-        ...SubscriptionInterval
-      }
-      invoiceCreation {
-        ...SubscriptionInterval
-      }
-      memberPlan {
-        ...MemberPlanRef
-      }
-      paymentMethods {
-        ...PaymentMethodRef
-      }
-      periodicities
-      reactivation {
-        ...SubscriptionInterval
-      }
-      renewalFailed {
-        ...SubscriptionInterval
-      }
-      renewalSuccess {
-        ...SubscriptionInterval
-      }
-      subscribe {
-        ...MailTemplateRef
-      }
-    }
+export const SubscriptionFlowFragmentDoc = gql`
+    fragment SubscriptionFlow on SubscriptionFlowModel {
+  id
+  default
+  additionalIntervals {
+    ...SubscriptionInterval
+  }
+  autoRenewal
+  deactivationByUserMailTemplate {
+    ...MailTemplateRef
+  }
+  deactivationUnpaidMailTemplate {
+    ...SubscriptionInterval
+  }
+  invoiceCreationMailTemplate {
+    ...SubscriptionInterval
+  }
+  memberPlan {
+    ...MemberPlanRef
+  }
+  paymentMethods {
+    ...PaymentMethodRef
+  }
+  periodicities
+  reactivationMailTemplate {
+    ...MailTemplateRef
+  }
+  renewalFailedMailTemplate {
+    ...MailTemplateRef
+  }
+  renewalSuccessMailTemplate {
+    ...MailTemplateRef
+  }
+  subscribeMailTemplate {
+    ...MailTemplateRef
   }
 }
     ${SubscriptionIntervalFragmentDoc}
+${MailTemplateRefFragmentDoc}
 ${MemberPlanRefFragmentDoc}
-${PaymentMethodRefFragmentDoc}
-${MailTemplateRefFragmentDoc}`;
+${PaymentMethodRefFragmentDoc}`;
+export const SubscriptionFlowsDocument = gql`
+    query SubscriptionFlows {
+  SubscriptionFlows {
+    ...SubscriptionFlow
+  }
+}
+    ${SubscriptionFlowFragmentDoc}`;
 
 /**
  * __useSubscriptionFlowsQuery__

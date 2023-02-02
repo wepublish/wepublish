@@ -10,11 +10,15 @@ import {
   TableRow
 } from '@mui/material'
 import {MdTune} from 'react-icons/all'
-import {SubscriptionFlow, useSubscriptionFlowsQuery} from '@wepublish/editor/api-v2'
-import {TFunction, useTranslation} from 'react-i18next'
+import {
+  MailTemplateRef,
+  SubscriptionFlowModel,
+  useSubscriptionFlowsQuery
+} from '@wepublish/editor/api-v2'
+import {useTranslation} from 'react-i18next'
 import {getApiClientV2} from '../../../../../../apps/editor/src/app/utility'
 import {ApolloError} from '@apollo/client'
-import {Message, toaster} from 'rsuite'
+import {Message, SelectPicker, Tag, toaster} from 'rsuite'
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
@@ -24,20 +28,12 @@ const showErrors = (error: ApolloError): void => {
   )
 }
 
-export interface SubscriptionFlowEvent {
-  eventKey: string
-  name: string
-  description: string
-}
+export type SubscriptionEventKey = keyof Pick<SubscriptionFlowModel, 'subscribeMailTemplate'>
 
-export function getSubscriptionFlowEvents(t: TFunction): SubscriptionFlowEvent[] {
-  return [
-    {
-      eventKey: 'subscribe',
-      name: t('flowEvent.subscribe'),
-      description: t('flowEvent.subscribeDescription')
-    }
-  ]
+export interface subscriptionEvent {
+  subscriptionEventKey: SubscriptionEventKey
+  eventName: string
+  description: string
 }
 
 export default function () {
@@ -60,17 +56,23 @@ export default function () {
   /**
    * generate data structure for ui
    */
-  const defaultSubscriptionFlow: SubscriptionFlow | undefined = useMemo(() => {
-    console.log(subscriptionFlows)
+  const defaultSubscriptionFlow: SubscriptionFlowModel | undefined = useMemo(() => {
     if (!subscriptionFlows) {
       return
     }
-    // todo: shorten this endless concatenation
-    if (!subscriptionFlows.SubscriptionFlows.subscriptionFlows.length) {
+    if (!subscriptionFlows.SubscriptionFlows.length) {
       return
     }
-    return subscriptionFlows.SubscriptionFlows.subscriptionFlows[0]
+    return subscriptionFlows.SubscriptionFlows[0]
   }, [subscriptionFlows])
+
+  const subscriptionEvents: subscriptionEvent[] = [
+    {
+      subscriptionEventKey: 'subscribeMailTemplate',
+      eventName: t('flowEvent.subscribe'),
+      description: t('flowEvent.subscribeDescription')
+    }
+  ]
 
   return (
     <>
@@ -101,9 +103,18 @@ export default function () {
             </TableRow>
           </TableHead>
           <TableBody>
+            {/* EVENTS WITHOUT ANY TIME SPECIFICATION */}
+            {/* SUBSCRIBE */}
             <TableRow>
               <TableCell>{t('subscriptionFlowSettings.noDays')}</TableCell>
-              <TableCell>{defaultSubscriptionFlow?.subscribe?.name}</TableCell>
+              <TableCell>
+                <Tag color="green" size="lg">
+                  {subscriptionEvents[0].eventName}
+                </Tag>
+              </TableCell>
+              <TableCell>
+                <SelectPicker data={[]} />
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
