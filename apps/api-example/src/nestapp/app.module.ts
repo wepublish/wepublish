@@ -3,11 +3,7 @@ import {Module} from '@nestjs/common'
 import {GraphQLModule} from '@nestjs/graphql'
 import {MailProviderService, PrismaService} from '@wepublish/api'
 import {ApiModule} from '@wepublish/nest-modules'
-import {
-  DashboardModule,
-  MailTemplateModule,
-  SubscriptionFlowModule
-} from '@wepublish/membership/api'
+import {MembershipModule} from '@wepublish/membership/api'
 
 @Module({
   imports: [
@@ -18,9 +14,7 @@ import {
       path: 'v2'
     }),
     ApiModule,
-    MailTemplateModule,
-    SubscriptionFlowModule,
-    DashboardModule
+    MembershipModule
   ],
   controllers: [],
   providers: [PrismaService, MailProviderService]
