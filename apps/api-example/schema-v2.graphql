@@ -59,7 +59,7 @@ enum PaymentPeriodicity {
 }
 
 type Query {
-  SubscriptionFlows(defaultFlow: Boolean!): [SubscriptionFlowModel!]!
+  SubscriptionFlows(defaultFlowOnly: Boolean!): [SubscriptionFlowModel!]!
 
   """
   
