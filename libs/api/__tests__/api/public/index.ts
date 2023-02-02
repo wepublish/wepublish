@@ -305,7 +305,9 @@ export type EventConnection = {
 };
 
 export type EventFilter = {
+  from?: InputMaybe<Scalars['Date']>;
   tags?: InputMaybe<Array<Scalars['ID']>>;
+  to?: InputMaybe<Scalars['Date']>;
   upcomingOnly?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -982,6 +984,8 @@ export type Query = {
   ratingSystem: FullCommentRatingSystem;
   /** This query returns the subscriptions of the authenticated user. */
   subscriptions: Array<Subscription>;
+  /** This query returns a list of tags */
+  tags?: Maybe<TagConnection>;
   /** This query returns the value of a comments answer rating if the user has already rated it. */
   userCommentRatings: Array<Maybe<CommentRating>>;
   /** This query returns the answerId of a poll if the user has already voted on it. */
@@ -1116,6 +1120,16 @@ export type QueryPollArgs = {
 };
 
 
+export type QueryTagsArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<TagFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<TagSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type QueryUserCommentRatingsArgs = {
   commentId: Scalars['ID'];
 };
@@ -1212,6 +1226,24 @@ export type Tag = {
   tag?: Maybe<Scalars['String']>;
   type?: Maybe<TagType>;
 };
+
+export type TagConnection = {
+  __typename?: 'TagConnection';
+  nodes: Array<Tag>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type TagFilter = {
+  tag?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TagType>;
+};
+
+export enum TagSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  Tag = 'TAG'
+}
 
 export enum TagType {
   Comment = 'Comment',

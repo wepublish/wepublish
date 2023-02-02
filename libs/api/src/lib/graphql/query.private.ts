@@ -58,7 +58,7 @@ import {
   GraphQLEventSort
 } from './event/event'
 import {getAdminEvents} from './event/event.private-queries'
-import {EventSort, getEvent} from './event/event.queries'
+import {EventSort, getEvent} from './event/event.query'
 import {GraphQLImage, GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort} from './image'
 import {getAdminImages, getImageById} from './image/image.private-queries'
 import {
@@ -133,7 +133,8 @@ import {
   getSubscriptionsAsCSV
 } from './subscription/subscription.private-queries'
 import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
-import {getTags, TagSort} from './tag/tag.private-query'
+import {getAdminTags} from './tag/tag.private-query'
+import {TagSort} from './tag/tag.query'
 import {GraphQLToken} from './token'
 import {getTokens} from './token/token.private-queries'
 import {GraphQLUser, GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort} from './user'
@@ -697,7 +698,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       resolve: (root, {filter, sort, order, cursor, take, skip}, {authenticate, prisma}) =>
-        getTags(filter, sort, order, cursor, skip, take, authenticate, prisma.tag)
+        getAdminTags(filter, sort, order, cursor, skip, take, authenticate, prisma.tag)
     },
 
     // Polls

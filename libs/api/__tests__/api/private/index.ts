@@ -486,7 +486,9 @@ export type EventConnection = {
 };
 
 export type EventFilter = {
+  from?: InputMaybe<Scalars['Date']>;
   tags?: InputMaybe<Array<Scalars['ID']>>;
+  to?: InputMaybe<Scalars['Date']>;
   upcomingOnly?: InputMaybe<Scalars['Boolean']>;
 };
 
