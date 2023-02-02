@@ -92,7 +92,7 @@ async function findSubscriptionByExternalId(
       memberPlan: true,
       periods: {
         include: {
-          Invoice: true
+          invoice: true
         }
       }
     }
@@ -266,7 +266,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       // Find last paid period in array
       let longestPeriod
       for (const period of subscription.periods) {
-        if (period.Invoice.paidAt && (!longestPeriod || period.endsAt > longestPeriod.endsAt)) {
+        if (period.invoice.paidAt && (!longestPeriod || period.endsAt > longestPeriod.endsAt)) {
           longestPeriod = period
         }
       }

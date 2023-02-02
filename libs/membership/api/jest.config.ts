@@ -12,5 +12,6 @@ export default {
     '^.+\\.[tj]s$': 'ts-jest'
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../../coverage/libs/membership/api'
+  coverageDirectory: '../../../coverage/libs/membership/api',
+  globalSetup: '<rootDir>/setup-database.js'
 }

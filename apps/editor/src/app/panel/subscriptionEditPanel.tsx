@@ -8,6 +8,7 @@ import {
   InvoiceFragment,
   MetadataPropertyFragment,
   PaymentPeriodicity,
+  stripTypename,
   SubscriptionDeactivationReason,
   useCreateSubscriptionMutation,
   useInvoicesQuery,
@@ -240,7 +241,7 @@ function SubscriptionEditPanel({id, onClose, onSave}: SubscriptionEditPanelProps
     startsAt: startsAt.toISOString(),
     paidUntil: paidUntil ? paidUntil.toISOString() : null,
     properties,
-    deactivation
+    deactivation: deactivation ? stripTypename(deactivation) : deactivation
   }
 
   async function handleSave() {

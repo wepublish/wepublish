@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DashboardSubscriptionResolver activeSubscribers 1`] = `
+Array [
+  Object {
+    "endsAt": null,
+    "memberPlan": "foo",
+    "monthlyAmount": 500,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": null,
+    "renewsAt": null,
+    "startsAt": "2023-02-03T00:00:00.000Z",
+  },
+  Object {
+    "endsAt": "2023-02-03T00:00:00.000Z",
+    "memberPlan": "Bar",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": "invoiceNotPaid",
+    "renewsAt": null,
+    "startsAt": "2023-02-02T00:00:00.000Z",
+  },
+  Object {
+    "endsAt": "2023-02-01T00:00:00.000Z",
+    "memberPlan": "foo",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": null,
+    "renewsAt": "2023-02-01T00:00:00.000Z",
+    "startsAt": "2023-01-01T00:00:00.000Z",
+  },
+]
+`;
+
+exports[`DashboardSubscriptionResolver newDeactivations 1`] = `
+Array [
+  Object {
+    "endsAt": "2023-02-03T00:00:00.000Z",
+    "memberPlan": "foo",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": "invoiceNotPaid",
+    "startsAt": "2023-01-01T00:00:00.000Z",
+  },
+]
+`;
+
+exports[`DashboardSubscriptionResolver newSubscribers 1`] = `
+Array [
+  Object {
+    "endsAt": "2023-02-02T00:00:00.000Z",
+    "memberPlan": "Bar",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": "invoiceNotPaid",
+    "renewsAt": null,
+    "startsAt": "2023-01-02T00:00:00.000Z",
+  },
+  Object {
+    "endsAt": "2023-02-01T00:00:00.000Z",
+    "memberPlan": "foo",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": null,
+    "renewsAt": "2023-02-01T00:00:00.000Z",
+    "startsAt": "2023-01-01T00:00:00.000Z",
+  },
+]
+`;
+
+exports[`DashboardSubscriptionResolver renewingSubscribers 1`] = `
+Array [
+  Object {
+    "memberPlan": "foo",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": null,
+    "renewsAt": "2023-01-29T00:00:00.000Z",
+    "startsAt": "2023-01-01T00:00:00.000Z",
+  },
+]
+`;

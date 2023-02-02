@@ -1,6 +1,6 @@
 import {Mutation, Query, Resolver} from '@nestjs/graphql'
 import {MailTemplateSyncService, PrismaService} from '@wepublish/api'
-import {MailTemplate} from '../models/mail-template.model'
+import {MailTemplate} from './mail-template.model'
 
 @Resolver(of => MailTemplate)
 export class MailTemplatesResolver {

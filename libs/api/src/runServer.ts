@@ -6,8 +6,6 @@ import {createWriteStream} from 'pino-sentry'
 import pinoStackdriver from 'pino-stackdriver'
 import * as process from 'process'
 import {URL} from 'url'
-import yargs from 'yargs'
-import {hideBin} from 'yargs/helpers'
 import {AlgebraicCaptchaChallenge} from './lib/challenges/algebraicCaptchaChallenge'
 import {WepublishServer} from './lib/server'
 import {SendMailType} from './lib/mails/mailContext'
@@ -312,69 +310,6 @@ export async function runServer() {
     logger,
     challenge
   })
-
-  // eslint-disable-next-line no-unused-expressions
-  yargs(hideBin(process.argv))
-    .command(
-      ['listen', '$0'],
-      'start the server',
-      () => {
-        /* do nothing */
-      },
-      async argv => {
-        await server.listen(port, address)
-      }
-    )
-    .command(
-      'dmr',
-      'Renew Memberships',
-      () => {
-        /* do nothing */
-      },
-      async argv => {
-        await server.runJob(JobType.DailyMembershipRenewal, {
-          startDate: new Date()
-        })
-        process.exit(0)
-      }
-    )
-    .command(
-      'dir',
-      'Remind open invoices',
-      () => {
-        /* do nothing */
-      },
-      async () => {
-        await server.runJob(JobType.DailyInvoiceReminder, {
-          userPaymentURL: `${websiteURL}/user/invocies`,
-          replyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch',
-          sendEveryDays: 3
-        })
-        process.exit(0)
-      }
-    )
-    .command(
-      'dic',
-      'charge open invoices',
-      () => {
-        /* do nothing */
-      },
-      async () => {
-        await server.runJob(JobType.DailyInvoiceCharger, {})
-        process.exit(0)
-      }
-    )
-    .command(
-      'checkdic',
-      'check open invoices',
-      () => {
-        /* do nothing */
-      },
-      async () => {
-        await server.runJob(JobType.DailyInvoiceChecker, {})
-        process.exit(0)
-      }
-    ).argv
 }
 
 runServer().catch(err => {

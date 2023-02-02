@@ -2,8 +2,12 @@ import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
 import {Module} from '@nestjs/common'
 import {GraphQLModule} from '@nestjs/graphql'
 import {MailProviderService, PrismaService} from '@wepublish/api'
-import {MembershipApiModule} from '@wepublish/membership/api'
 import {ApiModule} from '@wepublish/nest-modules'
+import {
+  DashboardModule,
+  MailTemplateModule,
+  SubscriptionFlowModule
+} from '@wepublish/membership/api'
 
 @Module({
   imports: [
@@ -14,7 +18,9 @@ import {ApiModule} from '@wepublish/nest-modules'
       path: 'v2'
     }),
     ApiModule,
-    MembershipApiModule
+    MailTemplateModule,
+    SubscriptionFlowModule,
+    DashboardModule
   ],
   controllers: [],
   providers: [PrismaService, MailProviderService]

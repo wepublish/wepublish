@@ -1,5 +1,7 @@
 import {ApolloClient, ApolloLink, ApolloProvider, InMemoryCache} from '@apollo/client'
 import {onError} from '@apollo/client/link/error'
+import {CssBaseline, ThemeProvider} from '@mui/material'
+import {theme} from '@wepublish/ui'
 import {createUploadLink} from 'apollo-upload-client'
 import ReactDOM from 'react-dom'
 import {IconContext} from 'react-icons'
@@ -12,8 +14,6 @@ import {TwitterProvider} from './app/blocks/embeds/twitter'
 import {initI18N} from './app/i18n'
 import {getSettings, LocalStorageKey} from './app/utility'
 import {ElementID} from './shared/elementID'
-import {ThemeProvider, CssBaseline} from '@mui/material'
-import {theme} from '../../../libs/ui/src/lib/theme'
 
 // See: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces
 export async function fetchIntrospectionQueryResultData(url: string) {

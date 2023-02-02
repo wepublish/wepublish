@@ -2,7 +2,7 @@ import {Field, ObjectType, registerEnumType} from '@nestjs/graphql'
 import {PaymentPeriodicity} from '@wepublish/editor/api'
 
 registerEnumType(PaymentPeriodicity, {
-  name: 'PaymentPeriodicity'
+  name: 'PaymentPeriodicity2'
 })
 
 @ObjectType()
