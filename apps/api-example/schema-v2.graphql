@@ -38,7 +38,7 @@ type MailTemplateRef {
 }
 
 type MemberPlanRef {
-  id: Float!
+  id: String!
   name: String!
 }
 
@@ -47,7 +47,7 @@ type Mutation {
 }
 
 type PaymentMethodRef {
-  id: Float!
+  id: String!
   name: String!
 }
 
@@ -56,13 +56,6 @@ enum PaymentPeriodicity {
   monthly
   quarterly
   yearly
-}
-
-enum PaymentPeriodicity2 {
-  Biannual
-  Monthly
-  Quarterly
-  Yearly
 }
 
 type Query {
@@ -134,7 +127,7 @@ type SubscriptionFlowModel {
   invoiceCreation: MailTemplateRef
   memberPlan: MemberPlanRef
   paymentMethods: [PaymentMethodRef!]!
-  periodicities: [PaymentPeriodicity2!]!
+  periodicities: [PaymentPeriodicity!]!
   reactivation: SubscriptionInterval
   renewalFailed: MailTemplateRef
   renewalSuccess: MailTemplateRef
