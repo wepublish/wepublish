@@ -16,17 +16,11 @@ export class MailTemplateSyncService {
     private mailProviderService: MailProviderService
   ) {}
 
-  async synchronizeTemplates(): Promise<MailTemplateSyncDiff> {
+  async synchronizeTemplates(): Promise<void> {
     const localTemplates = await this.prismaService.mailTemplate.findMany()
 
     const mailProvider = await this.mailProviderService.getProvider()
     const remoteTemplates = (await mailProvider.getTemplates()) as MailProviderTemplate[]
-
-    const diff: MailTemplateSyncDiff = {
-      remoteNew: [],
-      remoteExisting: [],
-      localOutdated: []
-    }
 
     // find new and updated remote templates
     for (const remoteTemplate of remoteTemplates) {
@@ -34,9 +28,22 @@ export class MailTemplateSyncService {
         localTemplate => localTemplate.externalMailTemplateId === remoteTemplate.uniqueIdentifier
       )
       if (localMatch) {
-        diff.remoteExisting.push(remoteTemplate)
+        // template exists locally, update properties
+        await this.prismaService.mailTemplate.update({
+          where: {externalMailTemplateId: remoteTemplate.uniqueIdentifier},
+          data: {
+            name: remoteTemplate.name,
+            remoteMissing: false
+          }
+        })
       } else {
-        diff.remoteNew.push(remoteTemplate)
+        // template is new
+        await this.prismaService.mailTemplate.create({
+          data: {
+            name: remoteTemplate.name,
+            externalMailTemplateId: remoteTemplate.uniqueIdentifier
+          }
+        })
       }
     }
 
@@ -46,10 +53,14 @@ export class MailTemplateSyncService {
         remoteTemplate => remoteTemplate.uniqueIdentifier === localTemplate.externalMailTemplateId
       )
       if (!remoteMatch) {
-        diff.localOutdated.push(localTemplate)
+        // template was deleted remotely
+        await this.prismaService.mailTemplate.update({
+          where: {externalMailTemplateId: localTemplate.externalMailTemplateId},
+          data: {
+            remoteMissing: true
+          }
+        })
       }
     }
-
-    return diff
   }
 }

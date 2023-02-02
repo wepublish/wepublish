@@ -14,37 +14,7 @@ export class MailTemplatesResolver {
 
   @Mutation(returns => [MailTemplate])
   async syncTemplates() {
-    const diff = await this.syncService.synchronizeTemplates()
-
-    for (const remoteTemplate of diff.remoteNew) {
-      // template is new
-      await this.prismaService.mailTemplate.create({
-        data: {
-          name: remoteTemplate.name,
-          externalMailTemplateId: remoteTemplate.uniqueIdentifier
-        }
-      })
-    }
-    for (const remoteTemplate of diff.remoteExisting) {
-      // template exists locally, update properties
-      await this.prismaService.mailTemplate.update({
-        where: {externalMailTemplateId: remoteTemplate.uniqueIdentifier},
-        data: {
-          name: remoteTemplate.name,
-          remoteMissing: false
-        }
-      })
-    }
-    for (const localTemplate of diff.localOutdated) {
-      // template was deleted remotely
-      await this.prismaService.mailTemplate.update({
-        where: {externalMailTemplateId: localTemplate.externalMailTemplateId},
-        data: {
-          remoteMissing: true
-        }
-      })
-    }
-
+    await this.syncService.synchronizeTemplates()
     return this.prismaService.mailTemplate.findMany()
   }
 }
