@@ -52,19 +52,19 @@ export class SubscriptionFlowModel {
   @Field(type => [Boolean])
   autoRenewal: boolean[]
   @Field(type => MailTemplateRef, {nullable: true})
-  subscribe: MailTemplateRef
+  subscribeMailTemplate: MailTemplateRef
   @Field(type => SubscriptionInterval, {nullable: true})
-  invoiceCreation: SubscriptionInterval
+  invoiceCreationMailTemplate: SubscriptionInterval
   @Field(type => MailTemplateRef, {nullable: true})
-  renewalSuccess: MailTemplateRef
+  renewalSuccessMailTemplate: MailTemplateRef
   @Field(type => MailTemplateRef, {nullable: true})
-  renewalFailed: MailTemplateRef
+  renewalFailedMailTemplate: MailTemplateRef
   @Field(type => SubscriptionInterval, {nullable: true})
-  deactivationUnpaid: SubscriptionInterval
+  deactivationUnpaidMailTemplate: SubscriptionInterval
   @Field(type => MailTemplateRef, {nullable: true})
-  deactivationByUser: MailTemplateRef
+  deactivationByUserMailTemplate: MailTemplateRef
   @Field(type => MailTemplateRef, {nullable: true})
-  reactivation: MailTemplateRef
+  reactivationMailTemplate: MailTemplateRef
   @Field(type => [SubscriptionInterval])
   additionalIntervals: SubscriptionInterval[]
 }

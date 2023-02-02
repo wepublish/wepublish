@@ -120,18 +120,18 @@ enum SubscriptionDeactivationReason {
 type SubscriptionFlowModel {
   additionalIntervals: [SubscriptionInterval!]!
   autoRenewal: [Boolean!]!
-  deactivationByUser: MailTemplateRef
-  deactivationUnpaid: SubscriptionInterval
+  deactivationByUserMailTemplate: MailTemplateRef
+  deactivationUnpaidMailTemplate: SubscriptionInterval
   default: Boolean!
   id: Float!
-  invoiceCreation: SubscriptionInterval
+  invoiceCreationMailTemplate: SubscriptionInterval
   memberPlan: MemberPlanRef
   paymentMethods: [PaymentMethodRef!]!
   periodicities: [PaymentPeriodicity!]!
-  reactivation: MailTemplateRef
-  renewalFailed: MailTemplateRef
-  renewalSuccess: MailTemplateRef
-  subscribe: MailTemplateRef
+  reactivationMailTemplate: MailTemplateRef
+  renewalFailedMailTemplate: MailTemplateRef
+  renewalSuccessMailTemplate: MailTemplateRef
+  subscribeMailTemplate: MailTemplateRef
 }
 
 type SubscriptionInterval {

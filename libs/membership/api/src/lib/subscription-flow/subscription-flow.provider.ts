@@ -6,7 +6,7 @@ import {PrismaService} from '@wepublish/api'
 @Resolver(of => [SubscriptionFlowProvider])
 export class SubscriptionFlowProvider {
   constructor(private readonly prismaService: PrismaService) {}
-  N
+
   @Query(returns => [SubscriptionFlowModel], {name: 'SubscriptionFlows'})
   async subscriptionFlowSettings() {
     let subscriptionFlow: SubscriptionFlowModel[] = []
@@ -38,46 +38,6 @@ export class SubscriptionFlowProvider {
       }
     })
 
-    const decoratedObject: SubscriptionFlowModel[] = []
-    for (const subscriptionFlow of subscriptionFlows) {
-      // MemberPlans
-      let decoratedMemberplan = null
-      if (subscriptionFlow.memberPlan) {
-        decoratedMemberplan = {
-          id: subscriptionFlow.memberPlan.id,
-          name: subscriptionFlow.memberPlan.name
-        }
-      }
-
-      // PaymentAddapters
-      const decoratedPaymentMethode = []
-      for (const paymentAdapter of subscriptionFlow.paymentMethods) {
-        decoratedPaymentMethode.push({
-          id: paymentAdapter.id,
-          name: paymentAdapter.name
-        })
-      }
-
-      // Construct Main Subscription Flow
-
-      decoratedObject.push({
-        id: subscriptionFlow.id,
-        default: subscriptionFlow.default,
-        memberPlan: decoratedMemberplan,
-        paymentMethods: decoratedPaymentMethode,
-        periodicities: subscriptionFlow.periodicities,
-        autoRenewal: subscriptionFlow.autoRenewal,
-        subscribe: subscriptionFlow.subscribeMailTemplate,
-        invoiceCreation: subscriptionFlow.invoiceCreationMailTemplate,
-        renewalSuccess: subscriptionFlow.renewalSuccessMailTemplate,
-        renewalFailed: subscriptionFlow.renewalFailedMailTemplate,
-        deactivationUnpaid: subscriptionFlow.deactivationUnpaidMailTemplate,
-        deactivationByUser: subscriptionFlow.deactivationByUserMailTemplate,
-        reactivation: subscriptionFlow.reactivationMailTemplate,
-        additionalIntervals: subscriptionFlow.additionalIntervals
-      })
-    }
-
     subscriptionFlow = [
       {
         // FILTER
@@ -95,37 +55,37 @@ export class SubscriptionFlowProvider {
         ],
         periodicities: [PaymentPeriodicity.yearly],
         autoRenewal: [true, false],
-        subscribe: {
+        subscribeMailTemplate: {
           id: 1,
           name: 'Test'
         },
-        invoiceCreation: {
+        invoiceCreationMailTemplate: {
           daysAwayFromEnding: 2,
           mailTemplate: {
             id: 1,
             name: 'Test'
           }
         },
-        renewalSuccess: {
+        renewalSuccessMailTemplate: {
           id: 1,
           name: 'Test'
         },
-        renewalFailed: {
+        renewalFailedMailTemplate: {
           id: 1,
           name: 'Test'
         },
-        deactivationUnpaid: {
+        deactivationUnpaidMailTemplate: {
           daysAwayFromEnding: 2,
           mailTemplate: {
             id: 1,
             name: 'Test'
           }
         },
-        deactivationByUser: {
+        deactivationByUserMailTemplate: {
           id: 1,
           name: 'Test'
         },
-        reactivation: {
+        reactivationMailTemplate: {
           id: 1,
           name: 'Test'
         },
@@ -147,6 +107,6 @@ export class SubscriptionFlowProvider {
         ]
       }
     ]
-    return subscriptionFlow
+    return subscriptionFlows
   }
 }
