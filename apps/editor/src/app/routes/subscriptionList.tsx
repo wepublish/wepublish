@@ -9,8 +9,8 @@ import {
 import React, {useEffect, useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdInfo} from 'react-icons/md'
-import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
-import {Button, Drawer, IconButton as RIconButton, Modal, Pagination, Table as RTable} from 'rsuite'
+import {Link} from 'react-router-dom'
+import {Button, IconButton as RIconButton, Modal, Pagination, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -36,7 +36,6 @@ import {
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
-import {SubscriptionEditView} from './subscriptionEditView'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 
@@ -50,6 +49,10 @@ const IconButton = styled(RIconButton)`
 
 const Info = styled.div`
   position: relative;
+`
+
+const Actions = styled(ListViewActions)`
+  grid-column: 3;
 `
 
 const DeactivationIcon = styled(MdInfo)<{deactivated: boolean}>`
@@ -92,17 +95,6 @@ export const NewSubscriptionButton = ({
 }
 
 function SubscriptionList() {
-  const location = useLocation()
-  const params = useParams()
-  const navigate = useNavigate()
-  const {id} = params
-
-  const isCreateRoute = location.pathname.includes('create')
-  const isEditRoute = location.pathname.includes('edit')
-
-  const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute || isCreateRoute)
-  const [editID, setEditID] = useState<string | undefined>(isEditRoute ? id : undefined)
-
   const [filter, setFilter] = useState({} as SubscriptionFilter)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentSubscription, setCurrentSubscription] = useState<FullSubscriptionFragment>()
@@ -149,18 +141,6 @@ function SubscriptionList() {
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (isCreateRoute) {
-      setEditID(undefined)
-      setEditModalOpen(true)
-    }
-
-    if (isEditRoute) {
-      setEditID(id)
-      setEditModalOpen(true)
-    }
-  }, [location])
-
-  useEffect(() => {
     if (data?.subscriptions?.nodes) {
       setSubscriptions(data.subscriptions.nodes)
       if (data.subscriptions.totalCount + 9 < page * limit) {
@@ -194,10 +174,10 @@ function SubscriptionList() {
           <h2>{t('subscriptionList.overview.subscription')}</h2>
         </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
-          <ListViewActions>
+          <Actions>
             <ExportSubscriptionsAsCsv filter={filter} />
             {NewSubscriptionButton({isLoading, t})}
-          </ListViewActions>
+          </Actions>
         </PermissionControl>
         <ListViewFilterArea>
           <SubscriptionListFilter
@@ -218,9 +198,6 @@ function SubscriptionList() {
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType ?? 'asc')
             setSortField(sortColumn)
-          }}
-          onRowClick={data => {
-            navigate(`/subscriptions/edit/${data.id}`)
           }}>
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('subscriptionList.overview.createdAt')}</HeaderCell>
@@ -245,7 +222,7 @@ function SubscriptionList() {
             <HeaderCell>{t('subscriptionList.overview.memberPlan')}</HeaderCell>
             <RCell dataKey={'subscription'}>
               {(rowData: RowDataType<FullSubscriptionFragment>) => (
-                <Link to={`/subscription/edit/${rowData.id}`}>{rowData.memberPlan.name}</Link>
+                <Link to={`/subscriptions/edit/${rowData.id}`}>{rowData.memberPlan.name}</Link>
               )}
             </RCell>
           </Column>
@@ -280,7 +257,8 @@ function SubscriptionList() {
                       appearance="ghost"
                       color="red"
                       icon={<MdDelete />}
-                      onClick={() => {
+                      onClick={e => {
+                        e.preventDefault()
                         setCurrentSubscription(rowData as FullSubscriptionFragment)
                         setConfirmationDialogOpen(true)
                       }}
@@ -316,27 +294,6 @@ function SubscriptionList() {
         />
       </TableWrapper>
 
-      <Drawer
-        open={isEditModalOpen}
-        size="sm"
-        onClose={() => {
-          setEditModalOpen(false)
-          navigate('/subscriptions')
-        }}>
-        <SubscriptionEditView
-          id={editID!}
-          onClose={() => {
-            setEditModalOpen(false)
-            navigate('/subscriptions')
-          }}
-          onSave={() => {
-            setEditModalOpen(false)
-            refetch()
-            navigate('/subscriptions')
-          }}
-        />
-      </Drawer>
-
       <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('subscriptionList.panels.deleteSubscription')}</Modal.Title>
@@ -353,6 +310,7 @@ function SubscriptionList() {
         <Modal.Footer>
           <Button
             disabled={isDeleting}
+            appearance="primary"
             onClick={async () => {
               if (!currentSubscription) return
 
@@ -362,8 +320,7 @@ function SubscriptionList() {
 
               setConfirmationDialogOpen(false)
               refetch()
-            }}
-            color="red">
+            }}>
             {t('subscriptionList.panels.confirm')}
           </Button>
           <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">

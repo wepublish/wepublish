@@ -19,15 +19,15 @@ import {
 } from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdChevronLeft, MdRequestQuote} from 'react-icons/md'
+import {MdChevronLeft, MdUnpublished} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Button as RButton,
   Col,
   DatePicker,
-  FlexboxGrid,
   Form as RForm,
   Grid as RGrid,
+  IconButton,
   Message,
   Modal,
   Panel as RPanel,
@@ -59,16 +59,8 @@ const Form = styled(RForm)`
   height: 100%;
 `
 
-const QuoteIcon = styled(MdRequestQuote)`
-  margin-right: 10px;
-`
-
 const Button = styled(RButton)`
   margin-top: 10px;
-`
-
-const GridItem = styled(FlexboxGrid.Item)`
-  padding-right: 10px;
 `
 
 const Grid = styled(RGrid)`
@@ -80,10 +72,20 @@ const UserFormGrid = styled(RGrid)`
   padding-left: 0px;
   height: calc(100vh - 160px);
   overflow-y: scroll;
+  margin-top: 2rem;
 `
 
 const ButtonMarginRight = styled(Button)`
   margin-right: 10px;
+`
+
+const IconButtonMarginRight = styled(IconButton)`
+  margin-right: 10px;
+  margin-top: 10px;
+`
+
+const Actions = styled(ListViewActions)`
+  grid-column: 3;
 `
 
 export interface SubscriptionEditViewProps {
@@ -155,7 +157,6 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
   /**
    * Loading the invoices of the current subscription
    */
-
   useEffect(() => {
     const tmpInvoices = invoicesData?.invoices?.nodes
     if (tmpInvoices) {
@@ -387,41 +388,6 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     return !!(id && paymentMethod && memberPlan)
   }
 
-  function subscriptionActionsViewLink() {
-    if (!showInvoiceHistory()) {
-      return <></>
-    }
-    return (
-      <Group>
-        <FormControlLabel>{t('userSubscriptionEdit.paidUntil')}</FormControlLabel>
-
-        <DatePicker block value={paidUntil ?? undefined} disabled />
-      </Group>
-    )
-  }
-
-  function subscriptionActionsView() {
-    if (!showInvoiceHistory()) {
-      return <></>
-    }
-    return (
-      <FlexboxGrid>
-        <FlexboxGrid.Item>
-          <Button
-            appearance="ghost"
-            disabled={isDisabled}
-            onClick={() => setDeactivationPanelOpen(true)}>
-            {t(
-              deactivation
-                ? 'userSubscriptionEdit.deactivation.title.deactivated'
-                : 'userSubscriptionEdit.deactivation.title.activated'
-            )}
-          </Button>
-        </FlexboxGrid.Item>
-      </FlexboxGrid>
-    )
-  }
-
   return (
     <TableWrapper>
       <Form
@@ -444,8 +410,21 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
               {id ? t('userSubscriptionEdit.editTitle') : t('userSubscriptionEdit.createTitle')}
             </h2>
           </ListViewHeader>
-          <ListViewActions>
+          <Actions>
             <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
+              {showInvoiceHistory() && (
+                <IconButtonMarginRight
+                  appearance="ghost"
+                  disabled={isDisabled}
+                  onClick={() => setDeactivationPanelOpen(true)}>
+                  <MdUnpublished />
+                  {t(
+                    deactivation
+                      ? 'userSubscriptionEdit.deactivation.title.deactivated'
+                      : 'userSubscriptionEdit.deactivation.title.activated'
+                  )}
+                </IconButtonMarginRight>
+              )}
               <ButtonMarginRight
                 appearance="primary"
                 disabled={isDisabled || isDeactivated}
@@ -461,7 +440,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                 {user ? t('saveAndClose') : t('createAndClose')}
               </Button>
             </PermissionControl>
-          </ListViewActions>
+          </Actions>
         </ListViewContainer>
         <UserFormGrid>
           <Row gutter={10}>
@@ -586,8 +565,6 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                     />
                   </Group>
 
-                  {subscriptionActionsViewLink()}
-
                   <Group>
                     <FormControlLabel>{t('userSubscriptionEdit.paymentMethod')}</FormControlLabel>
                   </Group>
@@ -617,7 +594,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                     />
                   </Group>
                 </RPanel>
-                <RPanel>{subscriptionActionsView()}</RPanel>
+                {/* <RPanel>{subscriptionActionsView()}</RPanel> */}
               </RGrid>
             </Col>
 
