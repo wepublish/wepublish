@@ -14,7 +14,7 @@ import {ListViewContainer, ListViewHeader} from 'apps/editor/src/app/ui/listView
 import {getApiClientV2} from 'apps/editor/src/app/utility'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdSync, MdTune, MdWarning} from 'react-icons/all'
+import {MdPreview, MdSync, MdWarning} from 'react-icons/all'
 import {Button, Message, Stack, toaster} from 'rsuite'
 import styles from './mailTemplate.module.css'
 
@@ -41,19 +41,18 @@ export function MailTemplateList() {
   const [syncTemplates, {data: mutationData, loading: mutationLoading}] =
     useSynchronizeMailTemplatesMutation({
       client,
-      onError: showErrors
+      onError: showErrors,
+      refetchQueries: ["MailTemplate"]
     })
 
   return (
     <>
-      <Stack>
+      <Stack justifyContent={'space-between'}>
         <ListViewContainer>
           <ListViewHeader>
-            <h2>
-              <MdTune /> Verfügbare E-Mail-Templates
-            </h2>
+            <h2>Verfügbare E-Mail-Templates</h2>
             <Typography variant="subtitle1">
-              Du kannst diese Einstellungen für jeden Memberplan überschreiben.
+              Diese Templates kannst du für den Versand von Benachrichtigungen verwenden.
             </Typography>
           </ListViewHeader>
         </ListViewContainer>
@@ -76,6 +75,9 @@ export function MailTemplateList() {
                 <b>Beschreibung</b>
               </TableCell>
               <TableCell>
+                <b>Vorschau</b>
+              </TableCell>
+              <TableCell>
                 <b>Mitteilungen</b>
               </TableCell>
             </TableRow>
@@ -83,11 +85,12 @@ export function MailTemplateList() {
           <TableBody>
             {queryData &&
               queryData.mailTemplates.map(template => (
-                <TableRow>
+                <TableRow key={template.id.toString()}>
                   <TableCell>{template.name}</TableCell>
                   <TableCell>{template.externalMailTemplateId}</TableCell>
                   <TableCell>{template.description}</TableCell>
-                  <TableCell>{template.remoteMissing ? <MdWarning /> : ''}</TableCell>
+                  <TableCell>{template.remoteMissing ? '' : <a href={template.url} target="_blank" rel="noreferrer"><MdPreview /></a>}</TableCell>
+                  <TableCell>{template.remoteMissing ? (<><MdWarning /> Template bei Mailchimp nicht mehr vorhanden</>) : ''}</TableCell>
                 </TableRow>
               ))}
           </TableBody>

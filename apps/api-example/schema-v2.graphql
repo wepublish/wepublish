@@ -24,17 +24,18 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type MailTemplate {
+type MailTemplateRef {
+  id: Float!
+  name: String!
+}
+
+type MailTemplateWithUrl {
   description: String
   externalMailTemplateId: String!
   id: Int!
   name: String!
   remoteMissing: Boolean!
-}
-
-type MailTemplateRef {
-  id: Float!
-  name: String!
+  url: String!
 }
 
 type MemberPlanRef {
@@ -43,7 +44,7 @@ type MemberPlanRef {
 }
 
 type Mutation {
-  syncTemplates: [MailTemplate!]!
+  syncTemplates: [MailTemplateWithUrl!]!
 }
 
 type PaymentMethodRef {
@@ -76,7 +77,7 @@ type Query {
       
   """
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
-  mailTemplates: [MailTemplate!]!
+  mailTemplates: [MailTemplateWithUrl!]!
 
   """
   

@@ -1,3 +1,4 @@
+import { MailTemplate } from '@prisma/client'
 import {
   BaseMailProvider,
   MailLogStatus,
@@ -56,5 +57,9 @@ export class SlackMailProvider extends BaseMailProvider {
         updatedAt: new Date()
       }
     ]
+  }
+
+  getTemplateUrl(template: MailTemplate): string {
+    return "http://example.com/"
   }
 }

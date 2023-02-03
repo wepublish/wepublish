@@ -11,7 +11,8 @@ import {
   MailProviderProps,
   MailProviderTemplate,
   SendMailProps,
-  WebhookForSendMailProps
+  WebhookForSendMailProps,
+  WithExternalId
 } from './mailProvider'
 
 export interface MailchimpMailProviderProps extends MailProviderProps {
@@ -184,6 +185,10 @@ export class MailchimpMailProvider extends BaseMailProvider {
       }
     })
     return templates
+  }
+
+  getTemplateUrl(template: WithExternalId): string {
+    return `https://mandrillapp.com/templates/code?id=${template.externalMailTemplateId}`
   }
 
   private responseIsError<T>(response: T | AxiosError): response is AxiosError {

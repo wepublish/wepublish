@@ -35,6 +35,14 @@ export interface MailProviderTemplate {
   updatedAt: Date
 }
 
+export type WithExternalId = {
+  externalMailTemplateId: string
+}
+
+export type WithUrl<T> = T & {
+  url: string
+}
+
 export class MailProviderError extends Error {
   constructor(public message: string) {
     super(message)
@@ -52,6 +60,8 @@ export interface MailProvider {
   sendMail(props: SendMailProps): Promise<void | MailProviderError>
 
   getTemplates(): Promise<MailProviderTemplate[] | MailProviderError>
+
+  getTemplateUrl(template: WithExternalId): string
 }
 
 export interface MailProviderProps {
@@ -80,6 +90,8 @@ export abstract class BaseMailProvider implements MailProvider {
   abstract sendMail(props: SendMailProps): Promise<void | MailProviderError>
 
   abstract getTemplates(): Promise<MailProviderTemplate[] | MailProviderError>
+
+  abstract getTemplateUrl(template: WithExternalId): string
 }
 
 export function setupMailProvider(opts: WepublishServerOpts): Router {

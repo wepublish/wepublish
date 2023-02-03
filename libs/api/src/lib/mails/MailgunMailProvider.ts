@@ -11,7 +11,8 @@ import {
   MailProviderProps,
   MailProviderTemplate,
   SendMailProps,
-  WebhookForSendMailProps
+  WebhookForSendMailProps,
+  WithExternalId
 } from './mailProvider'
 
 export interface MailgunMailProviderProps extends MailProviderProps {
@@ -149,5 +150,9 @@ export class MailgunMailProvider extends BaseMailProvider {
     } catch (e) {
       return new MailProviderError(e.details)
     }
+  }
+
+  getTemplateUrl(template: WithExternalId): string {
+    return `https://app.mailgun.com/app/sending/domains/${this.mailDomain}/templates/details/${template.externalMailTemplateId}`
   }
 }

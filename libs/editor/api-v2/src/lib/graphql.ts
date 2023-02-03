@@ -38,19 +38,20 @@ export type DashboardSubscription = {
   startsAt: Scalars['DateTime'];
 };
 
-export type MailTemplate = {
-  __typename?: 'MailTemplate';
+export type MailTemplateRef = {
+  __typename?: 'MailTemplateRef';
+  id: Scalars['Float'];
+  name: Scalars['String'];
+};
+
+export type MailTemplateWithUrl = {
+  __typename?: 'MailTemplateWithUrl';
   description?: Maybe<Scalars['String']>;
   externalMailTemplateId: Scalars['String'];
   id: Scalars['Int'];
   name: Scalars['String'];
   remoteMissing: Scalars['Boolean'];
-};
-
-export type MailTemplateRef = {
-  __typename?: 'MailTemplateRef';
-  id: Scalars['Float'];
-  name: Scalars['String'];
+  url: Scalars['String'];
 };
 
 export type MemberPlanRef = {
@@ -61,7 +62,7 @@ export type MemberPlanRef = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  syncTemplates: Array<MailTemplate>;
+  syncTemplates: Array<MailTemplateWithUrl>;
 };
 
 export type PaymentMethodRef = {
@@ -90,7 +91,7 @@ export type Query = {
    * Excludes cancelled or manually set as paid invoices.
    */
   expectedRevenue: Array<DashboardInvoice>;
-  mailTemplates: Array<MailTemplate>;
+  mailTemplates: Array<MailTemplateWithUrl>;
   /**
    * Returns all new deactivations in a given timeframe.
    * This considers the time the deactivation was made, not when the subscription runs out.
@@ -184,14 +185,14 @@ export type VersionInformation = {
 export type MailTemplateQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ __typename?: 'MailTemplate', description?: string | null, externalMailTemplateId: string, id: number, name: string, remoteMissing: boolean }> };
+export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ __typename?: 'MailTemplateWithUrl', description?: string | null, externalMailTemplateId: string, id: number, name: string, remoteMissing: boolean, url: string }> };
 
 export type SynchronizeMailTemplatesMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SynchronizeMailTemplatesMutation = { __typename?: 'Mutation', syncTemplates: Array<{ __typename?: 'MailTemplate', description?: string | null, externalMailTemplateId: string, id: number, name: string, remoteMissing: boolean }> };
+export type SynchronizeMailTemplatesMutation = { __typename?: 'Mutation', syncTemplates: Array<{ __typename?: 'MailTemplateWithUrl', description?: string | null, externalMailTemplateId: string, id: number, name: string, remoteMissing: boolean, url: string }> };
 
-export type FullTemplateFragment = { __typename?: 'MailTemplate', description?: string | null, externalMailTemplateId: string, id: number, name: string, remoteMissing: boolean };
+export type FullTemplateFragment = { __typename?: 'MailTemplateWithUrl', description?: string | null, externalMailTemplateId: string, id: number, name: string, remoteMissing: boolean, url: string };
 
 export type SubscriptionFlowsQueryVariables = Exact<{
   defaultFlowOnly: Scalars['Boolean'];
@@ -216,12 +217,13 @@ export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 export type VersionInformationQuery = { __typename?: 'Query', versionInformation: { __typename?: 'VersionInformation', version: string } };
 
 export const FullTemplateFragmentDoc = gql`
-    fragment fullTemplate on MailTemplate {
+    fragment fullTemplate on MailTemplateWithUrl {
   description
   externalMailTemplateId
   id
   name
   remoteMissing
+  url
 }
     `;
 export const MailTemplateRefFragmentDoc = gql`

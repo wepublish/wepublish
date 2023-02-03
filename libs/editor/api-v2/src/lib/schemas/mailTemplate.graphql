@@ -10,10 +10,11 @@ mutation SynchronizeMailTemplates {
   }
 }
 
-fragment fullTemplate on MailTemplate {
-  description
-  externalMailTemplateId
+fragment fullTemplate on MailTemplateWithUrl {
   id
   name
+  description
+  externalMailTemplateId
   remoteMissing
+  url
 }

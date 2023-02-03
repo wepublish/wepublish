@@ -1,19 +1,33 @@
 import {Field, Int, ObjectType} from '@nestjs/graphql'
+import { MailProvider, WithExternalId, WithUrl } from '@wepublish/api'
 
 @ObjectType()
-export class MailTemplate {
+export class MailTemplateWithUrl {
   @Field(() => Int)
-  id: number
+  id!: number
 
   @Field()
-  name: string
+  name!: string
 
   @Field({nullable: true})
   description?: string
 
   @Field()
-  externalMailTemplateId: string
+  externalMailTemplateId!: string
 
   @Field()
-  remoteMissing: boolean
+  remoteMissing!: boolean
+
+  @Field()
+  url!: string
+}
+
+export function computeUrl<MailTemplate extends WithExternalId>(
+  mailTemplate: MailTemplate,
+  mailProvider: MailProvider,
+): WithUrl<MailTemplate> {
+  return {
+    ...mailTemplate,
+    url: mailProvider.getTemplateUrl(mailTemplate)
+  }
 }
