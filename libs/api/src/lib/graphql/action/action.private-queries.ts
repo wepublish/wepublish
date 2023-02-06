@@ -35,10 +35,8 @@ export const getActions = async (
       ).map(value => {
         return {
           date: value.createdAt,
-          actionType: ActionType.Article,
-          id: value.id,
-          summary:
-            value?.published?.title ?? value?.pending?.title ?? value?.draft?.title ?? undefined
+          actionType: ActionType.ArticleCreate,
+          id: value.id
         }
       })
     : []
@@ -51,9 +49,8 @@ export const getActions = async (
       ).map((value: any) => {
         return {
           date: value.createdAt,
-          actionType: ActionType.Page,
-          id: value.id,
-          summary: value?.published?.title ?? value?.pending?.title ?? value?.draft?.title ?? null
+          actionType: ActionType.PageCreate,
+          id: value.id
         }
       })
     : []
@@ -61,9 +58,8 @@ export const getActions = async (
     ? (await comment.findMany({take: 5, include: {user: true}})).map((value: any) => {
         return {
           date: value.createdAt,
-          actionType: ActionType.Comment,
-          id: value.id,
-          creator: value.user?.name ?? value.guestUsername
+          actionType: ActionType.CommentCreate,
+          id: value.id
         }
       })
     : []
@@ -71,9 +67,8 @@ export const getActions = async (
     ? (await author.findMany({take: 5})).map((value: any) => {
         return {
           date: value.createdAt,
-          actionType: ActionType.Author,
-          id: value.id,
-          summary: `${value?.name ?? ''} ${value?.jobTitle ? ', ' + value.jobTitle : ''}`
+          actionType: ActionType.AuthorCreate,
+          id: value.id
         }
       })
     : []
@@ -82,10 +77,8 @@ export const getActions = async (
         (value: any) => {
           return {
             date: value.createdAt,
-            actionType: ActionType.Subscription,
-            id: value.id,
-            summary: `on ${value?.memberPlan.name}`,
-            creator: value?.user?.name
+            actionType: ActionType.SubscriptionCreate,
+            id: value.id
           }
         }
       )
@@ -94,9 +87,8 @@ export const getActions = async (
     ? (await poll.findMany({take: 5})).map((value: any) => {
         return {
           date: value.opensAt,
-          actionType: ActionType.Poll,
-          id: value.id,
-          summary: value.question
+          actionType: ActionType.PollStart,
+          id: value.id
         }
       })
     : []
@@ -104,9 +96,8 @@ export const getActions = async (
     ? (await user.findMany({take: 5})).map((value: any) => {
         return {
           date: value.createdAt,
-          actionType: ActionType.User,
-          id: value.id,
-          summary: `${value.firstName ? value.firstName + ' ' : ''}${value.name}`
+          actionType: ActionType.UserCreate,
+          id: value.id
         }
       })
     : []
@@ -114,9 +105,8 @@ export const getActions = async (
     ? (await event.findMany({take: 5})).map((value: any) => {
         return {
           date: value.createdAt,
-          actionType: ActionType.Event,
-          id: value.id,
-          summary: value.name
+          actionType: ActionType.EventCreate,
+          id: value.id
         }
       })
     : []

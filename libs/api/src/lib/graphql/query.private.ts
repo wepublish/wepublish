@@ -766,7 +766,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // Actions
     // =======
     actions: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAction))),
+      type: GraphQLList(GraphQLAction),
       resolve: async (
         root,
         _,

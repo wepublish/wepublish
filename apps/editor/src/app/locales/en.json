@@ -1338,6 +1338,7 @@
       "createdBy": "by {{creator}}",
       "user": "User",
       "itemCreated": "New <1>{{title}}</1> has been created {{creator}}",
+      "itemOpened": "New <1>{{title}}</1> opened {{creator}}",
       "memberPlan": "Member Plan: {{plan}}"
     }
   }

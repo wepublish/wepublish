@@ -2,12 +2,82 @@ fragment FullAction on Action {
   id
   date
   actionType
-  summary
-  creator
+  item {
+     ...FullItem
+  }
 }
 
 query RecentActions {
     actions {
         ...FullAction
     }
+}
+
+fragment FullItem on ActionItem {
+  __typename
+
+  ... on ArticleAction {
+  article {
+    id
+    createdAt
+    }
+  }
+
+  ... on PageAction {
+  page {
+    id
+    createdAt
+    }
+  }
+
+  ... on CommentAction {
+  comment {
+    id
+    revisions {
+        text
+    }
+    }
+  }
+
+  ... on PollAction {
+  poll {
+    id
+    question
+    }
+  }
+
+   ... on SubscriptionAction {
+  subscription {
+    id
+    user { name }
+    memberPlan {
+        name
+        }
+    }
+  }
+    ... on AuthorAction {
+    author {
+      id
+      name
+      jobTitle
+      }
+    }
+  ... on UserAction {
+  user {
+    id
+    name
+    address {
+    city
+    }
+    }
+  }
+
+  ... on EventAction {
+  event {
+    id
+    name
+    location
+    }
+  }
+
 }

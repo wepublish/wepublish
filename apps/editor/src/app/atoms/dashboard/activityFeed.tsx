@@ -26,10 +26,6 @@ export interface Event {
   summary?: string
 }
 
-const SummaryText = styled.p`
-  font-style: italic;
-`
-
 const Timeline = styled(RTimeline)`
   margin-left: 10px;
 `
@@ -62,25 +58,26 @@ export function ActivityFeed() {
   const [actions, setActions] = useState<Action[]>([])
 
   useEffect(() => {
+    console.log('data', data?.actions[0])
     if (data?.actions) {
       setActions(data.actions)
     }
-  }, [data?.actions])
+  }, [data])
 
   return (
     <>
       <Timeline>
-        {actions.map((value, i) => {
+        {actions.map((action, i) => {
           return (
             <TimelineItem
               key={i}
               dot={
                 <TimelineIcon size="sm" circle>
-                  {MapActionTypeToIcon(value.actionType)}
+                  {MapActionTypeToIcon(action.actionType)}
                 </TimelineIcon>
               }>
               <TimelineDiv>
-                <TimelineText action={value} />
+                <TimelineText action={action} />
               </TimelineDiv>
             </TimelineItem>
           )
@@ -90,7 +87,7 @@ export function ActivityFeed() {
   )
 }
 
-const TimelineText = ({action}: Action) => {
+const TimelineText = ({action}: any) => {
   const {i18n} = useTranslation()
   return (
     <>
@@ -114,10 +111,20 @@ function TranslatedCreateTitleWithLink(props: {title: string; to: string}, key: 
   )
 }
 
+function TranslatedOpenTitleWithLink(props: {title: string; to: string}, key: string) {
+  const {title, to} = props
+  return (
+    <Trans i18nKey={key} values={{title}}>
+      New <Link to={to}>{`${title}`}</Link> opened
+    </Trans>
+  )
+}
+
 export const MapDetailsToAction = (action: Action) => {
   const {t} = useTranslation()
+
   switch (action.actionType) {
-    case ActionType.Article:
+    case ActionType.ArticleCreate:
       return (
         <>
           <TranslatedCreateTitleWithLink
@@ -127,7 +134,7 @@ export const MapDetailsToAction = (action: Action) => {
           />
         </>
       )
-    case ActionType.Page:
+    case ActionType.PageCreate:
       return (
         <>
           <TranslatedCreateTitleWithLink
@@ -137,7 +144,7 @@ export const MapDetailsToAction = (action: Action) => {
           />
         </>
       )
-    case ActionType.Comment:
+    case ActionType.CommentCreate:
       return (
         <>
           <TranslatedCreateTitleWithLink
@@ -145,10 +152,9 @@ export const MapDetailsToAction = (action: Action) => {
             title={t('dashboard.newComment')}
             to={`/comments/edit/${action.id}`}
           />
-          {action.creator && ' ' + t('dashboard.createdBy', {creator: action.creator})}
         </>
       )
-    case ActionType.Subscription:
+    case ActionType.SubscriptionCreate:
       return (
         <>
           <TranslatedCreateTitleWithLink
@@ -156,11 +162,9 @@ export const MapDetailsToAction = (action: Action) => {
             key="dashboard.itemCreated"
             to={`/subscriptions/edit/${action.id}`}
           />
-          {action.creator && ' ' + t('dashboard.createdBy', {creator: action.creator})}
-          {action.summary && ' ' + t('dashboard.memberPlan', {plan: action.summary})}
         </>
       )
-    case ActionType.User:
+    case ActionType.UserCreate:
       return (
         <>
           <TranslatedCreateTitleWithLink
@@ -170,7 +174,7 @@ export const MapDetailsToAction = (action: Action) => {
           />
         </>
       )
-    case ActionType.Author:
+    case ActionType.AuthorCreate:
       return (
         <>
           <TranslatedCreateTitleWithLink
@@ -180,17 +184,17 @@ export const MapDetailsToAction = (action: Action) => {
           />
         </>
       )
-    case ActionType.Poll:
+    case ActionType.PollStart:
       return (
         <>
-          <TranslatedCreateTitleWithLink
+          <TranslatedOpenTitleWithLink
             key="dashboard.itemCreated"
             title={t('dashboard.newPoll')}
             to={`/polls/edit/${action.id}`}
           />
         </>
       )
-    case ActionType.Event:
+    case ActionType.EventCreate:
       return (
         <>
           <TranslatedCreateTitleWithLink
@@ -213,21 +217,21 @@ export const MapDetailsToAction = (action: Action) => {
 
 const MapActionTypeToIcon = (actionType: ActionType) => {
   switch (actionType) {
-    case ActionType.Article:
+    case ActionType.ArticleCreate:
       return <MdDescription />
-    case ActionType.Page:
+    case ActionType.PageCreate:
       return <MdDashboard />
-    case ActionType.Comment:
+    case ActionType.CommentCreate:
       return <MdChat />
-    case ActionType.Subscription:
+    case ActionType.SubscriptionCreate:
       return <MdAutorenew />
-    case ActionType.User:
+    case ActionType.UserCreate:
       return <MdAccountCircle />
-    case ActionType.Author:
+    case ActionType.AuthorCreate:
       return <MdGroup />
-    case ActionType.Poll:
+    case ActionType.PollStart:
       return <MdOutlineGridView />
-    case ActionType.Event:
+    case ActionType.EventCreate:
       return <MdEvent />
     default:
       return <MdDescription />
