@@ -635,6 +635,11 @@ export class MemberContext implements MemberContext {
         }
       }
 
+      // do not charge, before we are allowed
+      if (invoice.dueAt > new Date()) {
+        continue
+      }
+
       const user = await this.prisma.user.findUnique({
         where: {id: subscription.userID},
         select: unselectPassword
