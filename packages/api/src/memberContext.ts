@@ -638,7 +638,7 @@ export class MemberContext implements MemberContext {
       }
 
       // do not charge, before we are allowed
-      if (invoice.dueAt >= new Date()) {
+      if (invoice.dueAt > new Date()) {
         continue
       }
 
