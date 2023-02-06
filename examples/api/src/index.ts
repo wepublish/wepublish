@@ -236,7 +236,7 @@ export async function runServer() {
       new PayrexxSubscriptionPaymentProvider({
         id: 'payrexx-subscription',
         name: 'Payrexx Subscription',
-        offSessionPayments: false,
+        offSessionPayments: true,
         instanceName: process.env.PAYREXX_INSTANCE_NAME,
         instanceAPISecret: process.env.PAYREXX_API_SECRET,
         incomingRequestHandler: bodyParser.json(),
