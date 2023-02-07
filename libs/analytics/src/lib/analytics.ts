@@ -4,7 +4,6 @@ const matomo = new MatomoTracker({
   siteId: 1,
   urlBase: 'https://matomo.wepublish.dev/'
 })
-
 let pageInterval: NodeJS.Timer
 let pageTimeout: NodeJS.Timeout
 let trackInterval: NodeJS.Timer
