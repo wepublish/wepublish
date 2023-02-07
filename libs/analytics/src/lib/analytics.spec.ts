@@ -1,7 +1,7 @@
-import {wepublish} from './analytics'
+import {trackPage} from './analytics'
 
 describe('analytics', () => {
   it('should work', () => {
-    expect(wepublish()['name']).toEqual('wp-analytics')
+    expect(typeof trackPage).toBe('function')
   })
 })
