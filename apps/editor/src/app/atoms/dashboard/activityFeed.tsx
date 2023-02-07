@@ -17,7 +17,6 @@ import {Link} from 'react-router-dom'
 import {Avatar, Timeline as RTimeline} from 'rsuite'
 
 import {AVAILABLE_LANG} from '../../base'
-import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 
 const Timeline = styled(RTimeline)`
   margin-left: 10px;
