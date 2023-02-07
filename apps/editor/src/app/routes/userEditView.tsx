@@ -625,13 +625,15 @@ function UserEditView() {
               </RGrid>
             </Col>
             {/* subscriptions */}
-            <Col xs={12}>
-              <Grid fluid>
-                <RPanel bordered header={t('userCreateOrEditView.subscriptionsHeader')}>
-                  <UserSubscriptionsList subscriptions={user?.subscriptions} />
-                </RPanel>
-              </Grid>
-            </Col>
+            {user && (
+              <Col xs={12}>
+                <Grid fluid>
+                  <RPanel bordered header={t('userCreateOrEditView.subscriptionsHeader')}>
+                    <UserSubscriptionsList subscriptions={user.subscriptions} userId={user?.id} />
+                  </RPanel>
+                </Grid>
+              </Col>
+            )}
           </Row>
         </UserFormGrid>
       </Form>
