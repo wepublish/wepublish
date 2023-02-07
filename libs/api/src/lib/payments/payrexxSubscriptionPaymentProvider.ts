@@ -190,7 +190,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
       const deactivation = params.args.data.deactivation
       // Disable Subscription (deactivation.upsert is defined if a deactivation is added)
-      if (deactivation.upsert || !subscription.autoRenew) {
+      if (deactivation?.upsert || ('autoRenew' in subscription && !subscription.autoRenew)) {
         await this.cancelRemoteSubscription(parseInt(isPayrexxExt.value, 10))
 
         // Rewrite properties
@@ -222,7 +222,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
         }
 
         // Update subscription
-      } else {
+      } else if (params?.args?.data?.monthlyAmount) {
         const amount = subscription.monthlyAmount * getMonths(subscription.paymentPeriodicity)
         await this.updateRemoteSubscription(parseInt(isPayrexxExt.value, 10), amount.toString())
       }

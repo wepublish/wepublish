@@ -23,6 +23,7 @@ import {PublicPage} from './lib/db/page'
 import {Author} from './lib/db/author'
 import {PublicComment} from './lib/db/comment'
 import {KarmaMediaAdapter} from './lib/media/karmaMediaAdapter'
+import {PayrexxSubscriptionPaymentProvider} from './lib/payments/payrexxSubscriptionPaymentProvider'
 
 interface WepublishURLAdapterProps {
   websiteURL: string
@@ -200,6 +201,18 @@ export async function runServer() {
         ],
         vatRate: 7.7,
         incomingRequestHandler: bodyParser.json()
+      })
+    )
+    paymentProviders.push(
+      new PayrexxSubscriptionPaymentProvider({
+        id: 'payrexx-subscription',
+        name: 'Payrexx Subscription',
+        offSessionPayments: true,
+        instanceName: process.env.PAYREXX_INSTANCE_NAME,
+        instanceAPISecret: process.env.PAYREXX_API_SECRET,
+        incomingRequestHandler: bodyParser.json(),
+        webhookSecret: process.env.PAYREXX_WEBHOOK_SECRET,
+        prisma
       })
     )
   }
