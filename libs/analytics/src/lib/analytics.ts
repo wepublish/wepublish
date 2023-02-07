@@ -5,10 +5,10 @@ const matomo = new MatomoTracker({
   urlBase: 'https://matomo.wepublish.dev/'
 })
 
-let pageInterval: number
-let pageTimeout: number
-let trackInterval: number
-let trackTimeout: number
+let pageInterval: NodeJS.Timer
+let pageTimeout: NodeJS.Timeout
+let trackInterval: NodeJS.Timer
+let trackTimeout: NodeJS.Timeout
 
 const wepublish = () => {
   return {

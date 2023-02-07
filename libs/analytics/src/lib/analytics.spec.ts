@@ -1,7 +1,7 @@
-import {analytics} from './analytics'
+import {wepublish} from './analytics'
 
 describe('analytics', () => {
   it('should work', () => {
-    expect(analytics()).toEqual('analytics')
+    expect(wepublish()['name']).toEqual('wp-analytics')
   })
 })

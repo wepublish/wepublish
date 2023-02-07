@@ -21,7 +21,6 @@
     "directory": "libs/analytics"
   },
   "license": "MIT",
-  "bin": "./src/run-server.js",
   "publishConfig": {
     "directory": "../../dist/libs/analytics"
   }
