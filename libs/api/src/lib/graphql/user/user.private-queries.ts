@@ -1,6 +1,6 @@
 import {Context} from '../../context'
 import {SessionType} from '../../db/session'
-import {CanGetUser, authorise, CanGetUsers} from '../permissions'
+import {authorise, CanGetUsers} from '../permissions'
 import {UserInputError} from '../../error'
 import {PrismaClient} from '@prisma/client'
 import {unselectPassword, UserFilter, UserSort} from '../../db/user'

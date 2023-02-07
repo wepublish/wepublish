@@ -3,7 +3,7 @@ import {Context} from '../../context'
 import {SubscriptionFilter, SubscriptionSort} from '../../db/subscription'
 import {unselectPassword} from '../../db/user'
 import {mapSubscriptionsAsCsv} from '../../utility'
-import {authorise, CanGetSubscription, CanGetSubscriptions, CanGetUsers} from '../permissions'
+import {authorise, CanGetSubscriptions, CanGetUsers} from '../permissions'
 import {createSubscriptionFilter, getSubscriptions} from './subscription.queries'
 import {format, lastDayOfMonth, startOfMonth, subMonths} from 'date-fns'
 
