@@ -9,7 +9,9 @@ import {
   Peer,
   PrismaClient,
   User,
-  UserRole
+  UserRole,
+  Comment,
+  Subscription
 } from '@prisma/client'
 import AbortController from 'abort-controller'
 import {AuthenticationError} from 'apollo-server-express'
@@ -53,6 +55,9 @@ import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
 import {URLAdapter} from './urlAdapter'
 import {getEvent} from './graphql/event/event.queries'
+import {getComment} from './graphql/comment/comment.private-queries'
+import {getSubscriptionById} from './graphql/subscription/subscription.private-queries'
+import {getUserById} from './graphql/user/user.private-queries'
 
 /**
  * Peered article cache configuration and setup
@@ -111,6 +116,10 @@ export interface DataLoaderContext {
 
   readonly pollById: DataLoader<string, FullPoll | null>
   readonly eventById: DataLoader<string, Event | null>
+
+  readonly commentById: DataLoader<string, Comment | null>
+  readonly subscriptionById: DataLoader<string, Subscription | null>
+  readonly userById: DataLoader<string, User | null>
 }
 
 export interface OAuth2Clients {
@@ -864,7 +873,14 @@ export async function contextFromRequest(
     ),
 
     pollById: new DataLoader(async ids => Promise.all(ids.map(id => getPoll(id, prisma.poll)))),
-    eventById: new DataLoader(async ids => Promise.all(ids.map(id => getEvent(id, prisma.event))))
+    eventById: new DataLoader(async ids => Promise.all(ids.map(id => getEvent(id, prisma.event)))),
+    commentById: new DataLoader(async ids =>
+      Promise.all(ids.map(id => getComment(id, prisma.comment)))
+    ),
+    subscriptionById: new DataLoader(async ids =>
+      Promise.all(ids.map(id => getSubscriptionById(id, prisma.subscription)))
+    ),
+    userById: new DataLoader(async ids => Promise.all(ids.map(id => getUserById(id, prisma.user))))
   }
 
   const mailContext = new MailContext({

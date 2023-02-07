@@ -1855,7 +1855,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
-  actions?: Maybe<Array<Maybe<Action>>>;
+  actions?: Maybe<Array<Action>>;
   article?: Maybe<Article>;
   articlePreviewLink?: Maybe<Scalars['String']>;
   articles: ArticleConnection;

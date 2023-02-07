@@ -1857,7 +1857,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
-  actions?: Maybe<Array<Maybe<Action>>>;
+  actions?: Maybe<Array<Action>>;
   article?: Maybe<Article>;
   articlePreviewLink?: Maybe<Scalars['String']>;
   articles: ArticleConnection;
@@ -2698,18 +2698,18 @@ export type OverriddenRating = {
   value?: Maybe<Scalars['Int']>;
 };
 
-export type FullActionFragment = { __typename?: 'Action', id: string, date: string, actionType: ActionType, item?: { __typename: 'ArticleAction', article?: { __typename?: 'Article', id: string, createdAt: string } | null } | { __typename: 'AuthorAction', author?: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } | null } | { __typename: 'CommentAction', comment?: { __typename?: 'Comment', id: string, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null }> } | null } | { __typename: 'EventAction', event?: { __typename?: 'Event', id: string, name: string, location?: string | null } | null } | { __typename: 'PageAction', page?: { __typename?: 'Page', id: string, createdAt: string } | null } | { __typename: 'PollAction', poll?: { __typename?: 'Poll', id: string, question?: string | null } | null } | { __typename: 'SubscriptionAction', subscription?: { __typename?: 'Subscription', id: string, user?: { __typename?: 'User', name: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } | null } | { __typename: 'UserAction', user?: { __typename?: 'User', id: string, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } | null } | null };
+export type FullActionFragment = { __typename?: 'Action', id: string, date: string, actionType: ActionType, item?: { __typename: 'ArticleAction', article?: { __typename?: 'Article', id: string, createdAt: string } | null } | { __typename: 'AuthorAction', author?: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } | null } | { __typename: 'CommentAction', comment?: { __typename?: 'Comment', id: string, guestUsername?: string | null, user?: { __typename?: 'User', name: string } | null, revisions: Array<{ __typename?: 'CommentRevision', title?: string | null }> } | null } | { __typename: 'EventAction', event?: { __typename?: 'Event', id: string, name: string, location?: string | null } | null } | { __typename: 'PageAction', page?: { __typename?: 'Page', id: string, createdAt: string } | null } | { __typename: 'PollAction', poll?: { __typename?: 'Poll', id: string, question?: string | null } | null } | { __typename: 'SubscriptionAction', subscription?: { __typename?: 'Subscription', id: string, user?: { __typename?: 'User', name: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } | null } | { __typename: 'UserAction', user?: { __typename?: 'User', id: string, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } | null } | null };
 
 export type RecentActionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RecentActionsQuery = { __typename?: 'Query', actions?: Array<{ __typename?: 'Action', id: string, date: string, actionType: ActionType, item?: { __typename: 'ArticleAction', article?: { __typename?: 'Article', id: string, createdAt: string } | null } | { __typename: 'AuthorAction', author?: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } | null } | { __typename: 'CommentAction', comment?: { __typename?: 'Comment', id: string, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null }> } | null } | { __typename: 'EventAction', event?: { __typename?: 'Event', id: string, name: string, location?: string | null } | null } | { __typename: 'PageAction', page?: { __typename?: 'Page', id: string, createdAt: string } | null } | { __typename: 'PollAction', poll?: { __typename?: 'Poll', id: string, question?: string | null } | null } | { __typename: 'SubscriptionAction', subscription?: { __typename?: 'Subscription', id: string, user?: { __typename?: 'User', name: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } | null } | { __typename: 'UserAction', user?: { __typename?: 'User', id: string, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } | null } | null } | null> | null };
+export type RecentActionsQuery = { __typename?: 'Query', actions?: Array<{ __typename?: 'Action', id: string, date: string, actionType: ActionType, item?: { __typename: 'ArticleAction', article?: { __typename?: 'Article', id: string, createdAt: string } | null } | { __typename: 'AuthorAction', author?: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } | null } | { __typename: 'CommentAction', comment?: { __typename?: 'Comment', id: string, guestUsername?: string | null, user?: { __typename?: 'User', name: string } | null, revisions: Array<{ __typename?: 'CommentRevision', title?: string | null }> } | null } | { __typename: 'EventAction', event?: { __typename?: 'Event', id: string, name: string, location?: string | null } | null } | { __typename: 'PageAction', page?: { __typename?: 'Page', id: string, createdAt: string } | null } | { __typename: 'PollAction', poll?: { __typename?: 'Poll', id: string, question?: string | null } | null } | { __typename: 'SubscriptionAction', subscription?: { __typename?: 'Subscription', id: string, user?: { __typename?: 'User', name: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } | null } | { __typename: 'UserAction', user?: { __typename?: 'User', id: string, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } | null } | null }> | null };
 
 type FullItem_ArticleAction_Fragment = { __typename: 'ArticleAction', article?: { __typename?: 'Article', id: string, createdAt: string } | null };
 
 type FullItem_AuthorAction_Fragment = { __typename: 'AuthorAction', author?: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } | null };
 
-type FullItem_CommentAction_Fragment = { __typename: 'CommentAction', comment?: { __typename?: 'Comment', id: string, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null }> } | null };
+type FullItem_CommentAction_Fragment = { __typename: 'CommentAction', comment?: { __typename?: 'Comment', id: string, guestUsername?: string | null, user?: { __typename?: 'User', name: string } | null, revisions: Array<{ __typename?: 'CommentRevision', title?: string | null }> } | null };
 
 type FullItem_EventAction_Fragment = { __typename: 'EventAction', event?: { __typename?: 'Event', id: string, name: string, location?: string | null } | null };
 
@@ -3783,8 +3783,12 @@ export const FullItemFragmentDoc = gql`
   ... on CommentAction {
     comment {
       id
+      user {
+        name
+      }
+      guestUsername
       revisions {
-        text
+        title
       }
     }
   }

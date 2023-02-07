@@ -7,14 +7,7 @@ import {authorise, CanGetSubscription, CanGetSubscriptions, CanGetUsers} from '.
 import {createSubscriptionFilter, getSubscriptions} from './subscription.queries'
 import {format, lastDayOfMonth, startOfMonth, subMonths} from 'date-fns'
 
-export const getSubscriptionById = (
-  id: string,
-  authenticate: Context['authenticate'],
-  subscription: PrismaClient['subscription']
-) => {
-  const {roles} = authenticate()
-  authorise(CanGetSubscription, roles)
-
+export const getSubscriptionById = (id: string, subscription: PrismaClient['subscription']) => {
   return subscription.findUnique({
     where: {
       id

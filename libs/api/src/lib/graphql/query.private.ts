@@ -104,8 +104,11 @@ import {getPeerById, getPeers} from './peer/peer.private-queries'
 import {getPermissions} from './permission/permission.private-queries'
 import {
   authorise,
+  CanGetComments,
   CanGetPaymentProviders,
   CanGetPeerArticle,
+  CanGetSubscription,
+  CanGetUser,
   CanLoginAsOtherUser
 } from './permissions'
 import {
@@ -263,7 +266,12 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     user: {
       type: GraphQLUser,
       args: {id: {type: GraphQLID}},
-      resolve: (root, {id}, {authenticate, prisma: {user}}) => getUserById(id, authenticate, user)
+      resolve: (root, {id}, {authenticate, prisma: {user}}) => {
+        const {roles} = authenticate()
+        authorise(CanGetUser, roles)
+
+        return getUserById(id, user)
+      }
     },
 
     users: {
@@ -285,8 +293,11 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     subscription: {
       type: GraphQLSubscription,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, prisma: {subscription}}) =>
-        getSubscriptionById(id, authenticate, subscription)
+      resolve: (root, {id}, {authenticate, prisma: {subscription}}) => {
+        const {roles} = authenticate()
+        authorise(CanGetSubscription, roles)
+        return getSubscriptionById(id, subscription)
+      }
     },
 
     subscriptions: {
@@ -434,8 +445,11 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      resolve: (root, {id}, {authenticate, prisma: {comment}}) =>
-        getComment(id, authenticate, comment)
+      resolve: (root, {id}, {authenticate, prisma: {comment}}) => {
+        const {roles} = authenticate()
+        authorise(CanGetComments, roles)
+        return getComment(id, comment)
+      }
     },
 
     comments: {
@@ -766,7 +780,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // Actions
     // =======
     actions: {
-      type: GraphQLList(GraphQLAction),
+      type: GraphQLList(GraphQLNonNull(GraphQLAction)),
       resolve: async (
         root,
         _,

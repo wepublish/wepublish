@@ -29,8 +29,7 @@ export const getActions = async (
   const articles = isAuthorised(CanGetArticles, roles)
     ? (
         await article.findMany({
-          take: 5,
-          include: {draft: true, pending: true, published: true}
+          take: 5
         })
       ).map(value => {
         return {
@@ -43,8 +42,7 @@ export const getActions = async (
   const pages = isAuthorised(CanGetPages, roles)
     ? (
         await page.findMany({
-          take: 5,
-          include: {draft: true, pending: true, published: true}
+          take: 5
         })
       ).map((value: any) => {
         return {
@@ -55,7 +53,7 @@ export const getActions = async (
       })
     : []
   const comments = isAuthorised(CanGetComments, roles)
-    ? (await comment.findMany({take: 5, include: {user: true}})).map((value: any) => {
+    ? (await comment.findMany({take: 5})).map((value: any) => {
         return {
           date: value.createdAt,
           actionType: ActionType.CommentCreate,
@@ -73,15 +71,13 @@ export const getActions = async (
       })
     : []
   const subscriptions = isAuthorised(CanGetSubscriptions, roles)
-    ? (await subscription.findMany({take: 5, include: {memberPlan: true, user: true}})).map(
-        (value: any) => {
-          return {
-            date: value.createdAt,
-            actionType: ActionType.SubscriptionCreate,
-            id: value.id
-          }
+    ? (await subscription.findMany({take: 5})).map((value: any) => {
+        return {
+          date: value.createdAt,
+          actionType: ActionType.SubscriptionCreate,
+          id: value.id
         }
-      )
+      })
     : []
   const polls = isAuthorised(CanGetPoll, roles)
     ? (await poll.findMany({take: 5})).map((value: any) => {

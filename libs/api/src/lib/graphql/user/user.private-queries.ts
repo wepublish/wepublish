@@ -12,14 +12,7 @@ export const getMe = (authenticate: Context['authenticate']) => {
   return session?.type === SessionType.User ? session.user : null
 }
 
-export const getUserById = (
-  id: string,
-  authenticate: Context['authenticate'],
-  user: PrismaClient['user']
-) => {
-  const {roles} = authenticate()
-  authorise(CanGetUser, roles)
-
+export const getUserById = (id: string, user: PrismaClient['user']) => {
   if (!id) {
     throw new UserInputError('You must provide `id`')
   }

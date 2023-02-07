@@ -124,13 +124,14 @@ export const GraphQLAction = new GraphQLObjectType<Action>({
         if (actionType === ActionType.ArticleCreate)
           return {article: await loaders.articles.load(id)}
         if (actionType === ActionType.PageCreate) return {page: await loaders.pages.load(id)}
-        // if (actionType === ActionType.CommentCreate)
-        //   return {comment: await loaders.comment.load(id)}
+        if (actionType === ActionType.CommentCreate)
+          return {comment: await loaders.commentById.load(id)}
         if (actionType === ActionType.AuthorCreate)
           return {author: await loaders.authorsByID.load(id)}
         if (actionType === ActionType.PollStart) return {poll: await loaders.pollById.load(id)}
-        // if (actionType === ActionType.SubscriptionCreate) return {subscription: await loaders. .load(id)}
-        // if (actionType === ActionType.UserCreate) return {user: await loaders. .load(id)}
+        if (actionType === ActionType.SubscriptionCreate)
+          return {subscription: await loaders.subscriptionById.load(id)}
+        if (actionType === ActionType.UserCreate) return {user: await loaders.userById.load(id)}
         if (actionType === ActionType.EventCreate) return {event: await loaders.eventById.load(id)}
         return null
       }

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {Action, ActionType, useRecentActionsQuery} from '@wepublish/editor/api'
+import {Action, ActionItem, ActionType, useRecentActionsQuery} from '@wepublish/editor/api'
 import {formatDistanceToNow} from 'date-fns'
 import {useEffect, useState} from 'react'
 import {useTranslation, Trans} from 'react-i18next'
@@ -17,14 +17,7 @@ import {Link} from 'react-router-dom'
 import {Avatar, Timeline as RTimeline} from 'rsuite'
 
 import {AVAILABLE_LANG} from '../../base'
-
-export interface Event {
-  date: string
-  type: string
-  id: string
-  creator?: string
-  summary?: string
-}
+import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 
 const Timeline = styled(RTimeline)`
   margin-left: 10px;
@@ -37,6 +30,12 @@ const TimelineItem = styled(RTimeline.Item)`
 const TimelineDiv = styled.div`
   margin-left: 10px;
   margin-bottom: 10px;
+`
+
+const ActionDetails = styled.p`
+  font-style: italic;
+  padding-top: 2px;
+  color: gray;
 `
 
 const TimelineIcon = styled(Avatar)`
@@ -55,19 +54,19 @@ export function ActivityFeed() {
   const {t} = useTranslation()
 
   const {data, loading: isLoading} = useRecentActionsQuery({fetchPolicy: 'no-cache'})
-  const [actions, setActions] = useState<Action[]>([])
+  const [actions, setActions] = useState<Action[]>()
 
   useEffect(() => {
-    console.log('data', data?.actions[0])
+    console.log('data', data)
     if (data?.actions) {
       setActions(data.actions)
     }
-  }, [data])
+  }, [data?.actions])
 
   return (
     <>
       <Timeline>
-        {actions.map((action, i) => {
+        {actions?.map((action, i) => {
           return (
             <TimelineItem
               key={i}
@@ -89,17 +88,11 @@ export function ActivityFeed() {
 
 const TimelineText = ({action}: any) => {
   const {i18n} = useTranslation()
-  return (
-    <>
-      {MapDetailsToAction(action)}
-      <p>
-        {formatDistanceToNow(new Date(action.date), {
-          locale: AVAILABLE_LANG.find(lang => lang.id === i18n.language)?.locale,
-          addSuffix: true
-        })}
-      </p>
-    </>
-  )
+  const time = formatDistanceToNow(new Date(action.date), {
+    locale: AVAILABLE_LANG.find(lang => lang.id === i18n.language)?.locale,
+    addSuffix: true
+  })
+  return <>{MapDetailsToAction(action, time)}</>
 }
 
 function TranslatedCreateTitleWithLink(props: {title: string; to: string}, key: string) {
@@ -120,11 +113,11 @@ function TranslatedOpenTitleWithLink(props: {title: string; to: string}, key: st
   )
 }
 
-export const MapDetailsToAction = (action: Action) => {
+export const MapDetailsToAction = (action: Action, time: String) => {
   const {t} = useTranslation()
 
-  switch (action.actionType) {
-    case ActionType.ArticleCreate:
+  switch (action?.item?.__typename) {
+    case 'ArticleAction':
       return (
         <>
           <TranslatedCreateTitleWithLink
@@ -132,9 +125,11 @@ export const MapDetailsToAction = (action: Action) => {
             title={t('dashboard.newArticle')}
             to={`/articles/edit/${action.id}`}
           />
+          <p>{time}</p>
+          <ActionDetails>{action.item.article?.latest?.title}</ActionDetails>
         </>
       )
-    case ActionType.PageCreate:
+    case 'PageAction':
       return (
         <>
           <TranslatedCreateTitleWithLink
@@ -142,9 +137,11 @@ export const MapDetailsToAction = (action: Action) => {
             title={t('dashboard.newPage')}
             to={`/pages/edit/${action.id}`}
           />
+          <p>{time}</p>
+          <ActionDetails>{action.item.page?.latest?.title}</ActionDetails>
         </>
       )
-    case ActionType.CommentCreate:
+    case 'CommentAction':
       return (
         <>
           <TranslatedCreateTitleWithLink
@@ -152,9 +149,17 @@ export const MapDetailsToAction = (action: Action) => {
             title={t('dashboard.newComment')}
             to={`/comments/edit/${action.id}`}
           />
+          <p>{time}</p>
+
+          <ActionDetails>
+            {`${action.item.comment?.user?.name ?? action.item.comment?.guestUsername ?? ''}: ${
+              action.item.comment?.revisions[action.item.comment?.revisions?.length - 1]?.title ??
+              ''
+            }`}
+          </ActionDetails>
         </>
       )
-    case ActionType.SubscriptionCreate:
+    case 'SubscriptionAction':
       return (
         <>
           <TranslatedCreateTitleWithLink
@@ -162,9 +167,13 @@ export const MapDetailsToAction = (action: Action) => {
             key="dashboard.itemCreated"
             to={`/subscriptions/edit/${action.id}`}
           />
+          <p>{time}</p>
+          <ActionDetails>
+            {action.item.subscription?.user?.name}, on {action.item.subscription?.memberPlan.name}
+          </ActionDetails>
         </>
       )
-    case ActionType.UserCreate:
+    case 'UserAction':
       return (
         <>
           <TranslatedCreateTitleWithLink
@@ -172,9 +181,13 @@ export const MapDetailsToAction = (action: Action) => {
             title={t('dashboard.newUser')}
             to={`/users/edit/${action.id}`}
           />
+          <p>{time}</p>
+          <ActionDetails>
+            {action.item.user?.name}, {action.item.user?.address?.city}
+          </ActionDetails>
         </>
       )
-    case ActionType.AuthorCreate:
+    case 'AuthorAction':
       return (
         <>
           <TranslatedCreateTitleWithLink
@@ -182,9 +195,13 @@ export const MapDetailsToAction = (action: Action) => {
             title={t('dashboard.newAuthor')}
             to={`/authors/edit/${action.id}`}
           />
+          <p>{time}</p>
+          <ActionDetails>
+            {action.item.author?.name}, {action.item.author?.jobTitle}
+          </ActionDetails>
         </>
       )
-    case ActionType.PollStart:
+    case 'PollAction':
       return (
         <>
           <TranslatedOpenTitleWithLink
@@ -192,9 +209,11 @@ export const MapDetailsToAction = (action: Action) => {
             title={t('dashboard.newPoll')}
             to={`/polls/edit/${action.id}`}
           />
+          <p>{time}</p>
+          <ActionDetails>{action.item?.poll?.question}</ActionDetails>
         </>
       )
-    case ActionType.EventCreate:
+    case 'EventAction':
       return (
         <>
           <TranslatedCreateTitleWithLink
@@ -202,15 +221,21 @@ export const MapDetailsToAction = (action: Action) => {
             title={t('dashboard.newEvent')}
             to={`/events/edit/${action.id}`}
           />
+          <p>{time}</p>
+          <ActionDetails>{action.item.event?.name}</ActionDetails>
+          <ActionDetails>{action.item.event?.location}</ActionDetails>
         </>
       )
     default:
       return (
-        <TranslatedCreateTitleWithLink
-          key="dashboard.itemCreated"
-          title={t('dashboard.newAction')}
-          to={'/'}
-        />
+        <>
+          <TranslatedCreateTitleWithLink
+            key="dashboard.itemCreated"
+            title={t('dashboard.newAction')}
+            to={'/'}
+          />
+          <p>{time}</p>
+        </>
       )
   }
 }
