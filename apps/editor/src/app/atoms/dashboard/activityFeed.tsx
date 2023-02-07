@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {Action, ActionItem, ActionType, useRecentActionsQuery} from '@wepublish/editor/api'
+import {Action, ActionType, useRecentActionsQuery} from '@wepublish/editor/api'
 import {formatDistanceToNow} from 'date-fns'
 import {useEffect, useState} from 'react'
 import {useTranslation, Trans} from 'react-i18next'
@@ -112,7 +112,7 @@ function TranslatedOpenTitleWithLink(props: {title: string; to: string}, key: st
   )
 }
 
-export const MapDetailsToAction = (action: Action, time: String) => {
+export const MapDetailsToAction = (action: Action, time: string) => {
   const {t} = useTranslation()
 
   switch (action?.item?.__typename) {
@@ -168,7 +168,7 @@ export const MapDetailsToAction = (action: Action, time: String) => {
           />
           <p>{time}</p>
           <ActionDetails>
-            {action.item.subscription?.user?.name}, on {action.item.subscription?.memberPlan.name}
+            {action.item.subscription?.user?.name}, {action.item.subscription?.memberPlan.name}
           </ActionDetails>
         </>
       )
