@@ -20,7 +20,6 @@ export * from './graphql/permissions'
 
 export * from './db/user'
 export * from './db/userRole'
-export * from './db/session'
 export * from './db/navigation'
 export * from './db/author'
 export * from './db/image'

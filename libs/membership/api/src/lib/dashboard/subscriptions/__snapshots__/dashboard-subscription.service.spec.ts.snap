@@ -3,6 +3,7 @@
 exports[`DashboardSubscriptionService should get all active subscribers 1`] = `
 Array [
   Object {
+    "deactivationDate": undefined,
     "endsAt": undefined,
     "memberPlan": "foo",
     "monthlyAmount": 500,
@@ -12,6 +13,7 @@ Array [
     "startsAt": "2023-02-03T00:00:00.000Z",
   },
   Object {
+    "deactivationDate": "2023-01-20T14:12:34.832Z",
     "endsAt": "2023-02-03T00:00:00.000Z",
     "memberPlan": "Bar",
     "monthlyAmount": 50,
@@ -21,6 +23,7 @@ Array [
     "startsAt": "2023-02-02T00:00:00.000Z",
   },
   Object {
+    "deactivationDate": undefined,
     "endsAt": "2023-02-01T00:00:00.000Z",
     "memberPlan": "foo",
     "monthlyAmount": 50,
@@ -65,6 +68,7 @@ Object {
 exports[`DashboardSubscriptionService should get the new deactivations 1`] = `
 Array [
   Object {
+    "deactivationDate": "2023-01-01T00:00:00.000Z",
     "endsAt": "2023-02-03T00:00:00.000Z",
     "memberPlan": "foo",
     "monthlyAmount": 50,
@@ -104,6 +108,7 @@ Object {
 exports[`DashboardSubscriptionService should get the new subscribers 1`] = `
 Array [
   Object {
+    "deactivationDate": "2023-01-20T14:11:26.283Z",
     "endsAt": "2023-02-02T00:00:00.000Z",
     "memberPlan": "Bar",
     "monthlyAmount": 50,
@@ -113,6 +118,7 @@ Array [
     "startsAt": "2023-01-02T00:00:00.000Z",
   },
   Object {
+    "deactivationDate": undefined,
     "endsAt": "2023-02-01T00:00:00.000Z",
     "memberPlan": "foo",
     "monthlyAmount": 50,

@@ -1,4 +1,5 @@
 import {Args, Query, Resolver} from '@nestjs/graphql'
+import {CanGetSubscriptions, Permissions} from '@wepublish/permissions/api'
 import {DashboardSubscription} from './dashboard-subscription.model'
 import {DashboardSubscriptionService} from './dashboard-subscription.service'
 
@@ -6,6 +7,7 @@ import {DashboardSubscriptionService} from './dashboard-subscription.service'
 export class DashboardSubscriptionResolver {
   constructor(private subscriptions: DashboardSubscriptionService) {}
 
+  @Permissions(CanGetSubscriptions)
   @Query(returns => [DashboardSubscription], {
     name: 'newSubscribers',
     description: `
@@ -20,6 +22,7 @@ export class DashboardSubscriptionResolver {
     return this.subscriptions.newSubscribers(start, end ?? new Date())
   }
 
+  @Permissions(CanGetSubscriptions)
   @Query(returns => [DashboardSubscription], {
     name: 'activeSubscribers',
     description: `
@@ -31,6 +34,7 @@ export class DashboardSubscriptionResolver {
     return this.subscriptions.activeSubscribers()
   }
 
+  @Permissions(CanGetSubscriptions)
   @Query(returns => [DashboardSubscription], {
     name: 'renewingSubscribers',
     description: `
@@ -44,6 +48,7 @@ export class DashboardSubscriptionResolver {
     return this.subscriptions.renewingSubscribers(start, end ?? new Date())
   }
 
+  @Permissions(CanGetSubscriptions)
   @Query(returns => [DashboardSubscription], {
     name: 'newDeactivations',
     description: `

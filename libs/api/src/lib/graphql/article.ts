@@ -30,7 +30,7 @@ import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPeer} from './peer'
 import {GraphQLPublicComment} from './comment/comment'
-import {SessionType} from '../db/session'
+import {AuthSessionType} from '@wepublish/authentication/api'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
@@ -331,7 +331,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
           ) => {
             // if session exists, should get user's un-approved comments as well
             // if not we should get approved ones
-            const userSession = session?.type === SessionType.User ? authenticateUser() : null
+            const userSession = session?.type === AuthSessionType.User ? authenticateUser() : null
 
             return getPublicCommentsForItemById(
               id,
