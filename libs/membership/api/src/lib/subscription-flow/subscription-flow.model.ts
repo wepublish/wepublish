@@ -1,9 +1,11 @@
-import {Field, ObjectType, registerEnumType} from '@nestjs/graphql'
+import {Field, InputType, ObjectType, registerEnumType} from '@nestjs/graphql'
 import {PaymentPeriodicity} from '@prisma/client'
 
 registerEnumType(PaymentPeriodicity, {
   name: 'PaymentPeriodicity'
 })
+
+// Output
 
 @ObjectType()
 class MailTemplateRef {
@@ -32,9 +34,13 @@ class PaymentMethodRef {
 @ObjectType()
 class SubscriptionInterval {
   @Field()
+  id: number
+  @Field()
   daysAwayFromEnding: number
   @Field(type => MailTemplateRef)
   mailTemplate: MailTemplateRef
+  @Field()
+  mailTemplateId: number
 }
 
 @ObjectType()
@@ -67,4 +73,92 @@ export class SubscriptionFlowModel {
   reactivationMailTemplate: MailTemplateRef
   @Field(type => [SubscriptionInterval])
   additionalIntervals: SubscriptionInterval[]
+}
+
+// Input
+
+@InputType()
+class MailTemplateRefInput {
+  @Field()
+  id: number
+}
+
+@InputType()
+class MemberPlanRefInput {
+  @Field()
+  id: string
+}
+
+@InputType()
+class PaymentMethodRefInput {
+  @Field()
+  id: string
+}
+
+@InputType()
+class SubscriptionIntervalInput {
+  @Field()
+  id: number
+  @Field()
+  daysAwayFromEnding: number
+  @Field()
+  mailTemplateId: number
+}
+
+@InputType()
+export class SubscriptionFlowModelCreateInput {
+  @Field(type => MemberPlanRefInput, {nullable: true})
+  memberPlan: MemberPlanRefInput
+  @Field(type => [PaymentMethodRefInput])
+  paymentMethods: PaymentMethodRefInput[]
+  @Field(type => [PaymentPeriodicity])
+  periodicities: PaymentPeriodicity[]
+  @Field(type => [Boolean])
+  autoRenewal: boolean[]
+  @Field(type => MailTemplateRefInput, {nullable: true})
+  subscribeMailTemplate: MailTemplateRefInput
+  @Field(type => SubscriptionIntervalInput, {nullable: true})
+  invoiceCreationMailTemplate: SubscriptionIntervalInput
+  @Field(type => MailTemplateRefInput, {nullable: true})
+  renewalSuccessMailTemplate: MailTemplateRefInput
+  @Field(type => MailTemplateRefInput, {nullable: true})
+  renewalFailedMailTemplate: MailTemplateRefInput
+  @Field(type => SubscriptionIntervalInput, {nullable: true})
+  deactivationUnpaidMailTemplate: SubscriptionIntervalInput
+  @Field(type => MailTemplateRefInput, {nullable: true})
+  deactivationByUserMailTemplate: MailTemplateRefInput
+  @Field(type => MailTemplateRefInput, {nullable: true})
+  reactivationMailTemplate: MailTemplateRefInput
+  @Field(type => [SubscriptionIntervalInput])
+  additionalIntervals: SubscriptionIntervalInput[]
+}
+
+@InputType()
+export class SubscriptionFlowModelUpdateInput {
+  @Field()
+  id: number
+  @Field(type => MemberPlanRefInput, {nullable: true})
+  memberPlan: MemberPlanRefInput
+  @Field(type => [PaymentMethodRefInput])
+  paymentMethods: PaymentMethodRefInput[]
+  @Field(type => [PaymentPeriodicity])
+  periodicities: PaymentPeriodicity[]
+  @Field(type => [Boolean])
+  autoRenewal: boolean[]
+  @Field(type => MailTemplateRefInput, {nullable: true})
+  subscribeMailTemplate: MailTemplateRefInput
+  @Field(type => SubscriptionIntervalInput, {nullable: true})
+  invoiceCreationMailTemplate: SubscriptionIntervalInput
+  @Field(type => MailTemplateRefInput, {nullable: true})
+  renewalSuccessMailTemplate: MailTemplateRefInput
+  @Field(type => MailTemplateRefInput, {nullable: true})
+  renewalFailedMailTemplate: MailTemplateRefInput
+  @Field(type => SubscriptionIntervalInput, {nullable: true})
+  deactivationUnpaidMailTemplate: SubscriptionIntervalInput
+  @Field(type => MailTemplateRefInput, {nullable: true})
+  deactivationByUserMailTemplate: MailTemplateRefInput
+  @Field(type => MailTemplateRefInput, {nullable: true})
+  reactivationMailTemplate: MailTemplateRefInput
+  @Field(type => [SubscriptionIntervalInput])
+  additionalIntervals: SubscriptionIntervalInput[]
 }
