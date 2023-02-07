@@ -143,7 +143,8 @@
         "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen",
         "enterAuthors": "Bitte Autor:in hinzufügen",
         "peerDisabled": "Dieser Peer ist momentan deaktiviert",
-        "comments": "Kommentare"
+        "comments": "Kommentare",
+        "loadingPeerArticles": "Artikel von Peers laden..."
       }
     },
     "articles": {
