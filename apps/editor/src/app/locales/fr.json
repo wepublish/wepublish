@@ -143,7 +143,8 @@
         "enterTag": "Veuillez ajouter un tag",
         "enterSocialMediaAuthors": "Veuillez ajouter un·e auteur·trice pour les réseaux sociaux",
         "enterAuthors": "Veuillez ajouter un·e auteur·trice",
-        "comments": "Commentaires"
+        "comments": "Commentaires",
+        "loadingPeerArticles": "Chargement des articles des peer..."
       }
     },
     "articles": {
@@ -1244,7 +1245,17 @@
       "days": "jours",
       "allowGuestCommentRating": "Autoriser les évaluations anonymes des commentaires",
       "polls": "Sondages",
-      "guestPollVote": "Autoriser les votes anonymes dans les sondages"
+      "guestPollVote": "Autoriser les votes anonymes dans les sondages",
+      "warnings": {
+        "guestCommenting": "Autoriser les commentaires des utilisateurs·trices non authentifiés·e·s.",
+        "guestCommentRating": "Autoriser les votes des utilisateurs·trices non authentifiés·e·s sur les commentaires.",
+        "guestPollVote": "Autoriser les votes des utilisateurs·trices non authentifié·e·s pour les sondages.",
+        "loginMinutes": "Durée de validité du token de connexion par email — minutes.",
+        "passwordToken": "Durée de validité du token pour la réinitialisation du mot de passe par email — minutes.",
+        "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes",
+        "invoiceReminders": "Nombre de rappels de paiement par facture Délai entre les rappels de paiement — jours",
+        "askOperators": "Attention : la modification d'un ou de plusieurs des paramètres peut entraîner la rupture de la page ou avoir d'autres conséquences imprévisibles. En cas de doute, il est conseillé de consulter les opérateurs. Dans le cas contraire, vous pouvez continuer."
+      }
     },
     "createOrUpdateUserPassword": {
       "unexpectedErrorNoUserFound": "Erreur inattendue : aucun·e utilisateur·trice trouvé·e"

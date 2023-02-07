@@ -29,8 +29,8 @@ import {
   ListViewContainer,
   ListViewHeader,
   StatusBadge,
-  TableWrapper,
-  Table
+  Table,
+  TableWrapper
 } from '../ui/listView'
 import {
   DEFAULT_MAX_TABLE_PAGES,

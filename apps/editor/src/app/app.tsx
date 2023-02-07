@@ -35,6 +35,7 @@ import {PeerList} from './routes/peerList'
 import {PollEditView} from './routes/polls/pollEditView'
 import {PollList} from './routes/polls/pollList'
 import {SettingList} from './routes/settingList'
+import {SubscriptionEditView} from './routes/subscriptionEditView'
 import {SubscriptionList} from './routes/subscriptionList'
 import {TagList} from './routes/tagList'
 import {TokenList} from './routes/tokenList'
@@ -480,7 +481,7 @@ export function App() {
               path="subscriptions/create"
               element={
                 <Base>
-                  <SubscriptionList />
+                  <SubscriptionEditView />
                 </Base>
               }
             />
@@ -488,7 +489,7 @@ export function App() {
               path="subscriptions/edit/:id"
               element={
                 <Base>
-                  <SubscriptionList />
+                  <SubscriptionEditView />
                 </Base>
               }
             />

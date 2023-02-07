@@ -31,6 +31,7 @@ const ListViewFilterArea = styled.div`
   gap: 8px;
   display: flex;
   margin-top: 1rem;
+  grid-column: 1/4;
 `
 
 const TableWrapper = styled.div`
