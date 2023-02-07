@@ -54,7 +54,7 @@ exports[`slugify should transform text with special r like ŔŖŘ correctly 1`] 
 
 exports[`slugify should transform text with special s like ŚŜŞŠ correctly 1`] = `"text-with-special-s-like-ssss"`;
 
-exports[`slugify should transform text with special ss like ß correctly 1`] = `"text-with-special-ss-like-s"`;
+exports[`slugify should transform text with special ss like ß correctly 1`] = `"text-with-special-ss-like-ss"`;
 
 exports[`slugify should transform text with special t like ŢŤ correctly 1`] = `"text-with-special-t-like-tt"`;
 
