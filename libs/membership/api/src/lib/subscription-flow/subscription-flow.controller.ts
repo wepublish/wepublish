@@ -1,6 +1,8 @@
 import {Injectable} from '@nestjs/common'
 import {PrismaService} from '@wepublish/api'
 import {SubscriptionFlowModelCreateInput} from './subscription-flow.model'
+import {PaymentMethodRefInput} from '@wepublish/editor/api-v2'
+import {PaymentPeriodicity} from '@prisma/client'
 
 @Injectable()
 export class SubscriptionFlowController {
@@ -42,6 +44,17 @@ export class SubscriptionFlowController {
     })
   }
   async createFlow(flow: SubscriptionFlowModelCreateInput) {
+    if (
+      await this.filterHasOverlap(
+        flow.memberPlan.id,
+        flow.paymentMethods,
+        flow.periodicities,
+        flow.autoRenewal
+      )
+    ) {
+      throw new Error('There is a filter overlap!')
+    }
+
     await this.prismaService.subscriptionFlow.create({
       data: {
         default: false,
@@ -80,5 +93,48 @@ export class SubscriptionFlowController {
       }
     })
     return this.getFlow(false)
+  }
+  async filterHasOverlap(
+    memberPlanId: string,
+    paymentMethods: PaymentMethodRefInput[],
+    periodicities: PaymentPeriodicity[],
+    autoRenewal: boolean[]
+  ) {
+    const overlaps = await this.prismaService.subscriptionFlow.findMany({
+      where: {
+        AND: [
+          {
+            default: false
+          },
+          {
+            memberPlanId: memberPlanId
+          },
+          {
+            paymentMethods: {
+              some: {
+                id: {
+                  in: paymentMethods.map(paymentMethode => paymentMethode.id)
+                }
+              }
+            }
+          },
+          {
+            periodicities: {
+              hasSome: periodicities
+            }
+          },
+          {
+            autoRenewal: {
+              hasSome: autoRenewal
+            }
+          }
+        ]
+      },
+      include: {
+        paymentMethods: true
+      }
+    })
+    if (overlaps.length > 0) return true
+    return false
   }
 }
