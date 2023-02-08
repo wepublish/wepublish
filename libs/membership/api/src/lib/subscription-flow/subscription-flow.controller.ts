@@ -98,16 +98,27 @@ export class SubscriptionFlowController {
     memberPlanId: string,
     paymentMethods: PaymentMethodRefInput[],
     periodicities: PaymentPeriodicity[],
-    autoRenewal: boolean[]
+    autoRenewal: boolean[],
+    excludeFlowId: number | null = null
   ) {
+    let idFilter = {}
+    if (excludeFlowId) {
+      idFilter = {
+        id: {
+          not: excludeFlowId
+        }
+      }
+    }
+
     const overlaps = await this.prismaService.subscriptionFlow.findMany({
       where: {
         AND: [
+          idFilter,
           {
             default: false
           },
           {
-            memberPlanId: memberPlanId
+            memberPlanId
           },
           {
             paymentMethods: {
