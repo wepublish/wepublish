@@ -1,12 +1,15 @@
 import React from 'react'
 import {IconButton, SelectPicker, Tag} from 'rsuite'
 import {MdAdd, MdDescription, MdRemove} from 'react-icons/all'
+import {SubscriptionIntervalFragment} from '@wepublish/editor/api-v2'
 
-export default function SubscriptionInterval() {
+interface SubscriptionIntervalProps {
+  subscriptionInterval?: SubscriptionIntervalFragment | null
+}
+export default function SubscriptionInterval({subscriptionInterval}: SubscriptionIntervalProps) {
+  const oneDayInPixel = 80
   function selectMailTemplateView() {
     // the width representation of the days in pixels
-    const oneDayInPixel = 40
-
     return (
       <>
         <div
@@ -34,7 +37,7 @@ export default function SubscriptionInterval() {
                 marginBottom: '5px'
               }}>
               <MdDescription style={{marginRight: '4px'}} />
-              Invoice
+              {subscriptionInterval?.mailTemplate?.name}
             </Tag>
             <SelectPicker data={[]} />
           </div>
@@ -64,12 +67,12 @@ export default function SubscriptionInterval() {
         {/* day representation */}
         <div
           style={{
-            width: '200px',
+            width: `${oneDayInPixel * (subscriptionInterval?.daysAwayFromEnding || 1)}px`,
             textAlign: 'center',
             marginBottom: '10px'
           }}>
           <Tag color="green" size="sm">
-            <b>5 d</b>
+            <b>{subscriptionInterval?.daysAwayFromEnding} d</b>
           </Tag>
         </div>
       </div>
