@@ -24,6 +24,10 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type MailProviderModel {
+  name: String!
+}
+
 type MailTemplateRef {
   id: Float!
   name: String!
@@ -33,7 +37,7 @@ input MailTemplateRefInput {
   id: Float!
 }
 
-type MailTemplateWithUrl {
+type MailTemplateWithUrlModel {
   description: String
   externalMailTemplateId: String!
   id: Int!
@@ -53,7 +57,7 @@ input MemberPlanRefInput {
 
 type Mutation {
   createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): SubscriptionFlowModel!
-  syncTemplates: [MailTemplateWithUrl!]!
+  syncTemplates: Boolean!
 }
 
 type PaymentMethodRef {
@@ -90,7 +94,7 @@ type Query {
       
   """
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
-  mailTemplates: [MailTemplateWithUrl!]!
+  mailTemplates: [MailTemplateWithUrlModel!]!
 
   """
   
@@ -107,6 +111,7 @@ type Query {
       
   """
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+  provider: MailProviderModel!
 
   """
   

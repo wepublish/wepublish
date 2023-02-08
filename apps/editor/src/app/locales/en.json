@@ -1337,6 +1337,18 @@
         "body": "Do you really want to delete the event \"{{name}}\"?",
         "delete": "Yes, delete the event"
       }
+    },
+    "mailTemplates": {
+      "availableTemplates": "Available templates",
+      "explanation": "You can use these templates from {{provider}} to deliver notifications to your users.",
+      "name": "Name",
+      "internalName": "Internal name",
+      "description": "Description",
+      "content": "Content",
+      "view": "View at {{provider}}",
+      "status": "Status",
+      "synchronize": "Synchronize templates",
+      "statusDeleted": "Template '{{internalName}}' removed at {{provider}}"
     }
   }
 }

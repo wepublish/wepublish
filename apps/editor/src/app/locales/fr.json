@@ -1311,6 +1311,18 @@
         "body": "Do you really want to delete the event \"{{name}}\"?",
         "delete": "Yes, delete the event"
       }
+    },
+    "mailTemplates": {
+      "availableTemplates": "Modèles de courriels disponibles",
+      "explanation": "Tu peux utiliser ces modèles de {{provider}} pour envoyer des notifications..",
+      "name": "Nom",
+      "internalName": "Nom interne",
+      "description": "Description",
+      "content": "Contenu",
+      "view": "Voir sur {{provider}}",
+      "status": "Statut",
+      "synchronize": "Synchroniser les modèles",
+      "statusDeleted": "Modèle '{{internalName}}' supprimé sur {{provider}}"
     }
   }
 }

@@ -38,14 +38,23 @@ export type DashboardSubscription = {
   startsAt: Scalars['DateTime'];
 };
 
+export type MailProviderModel = {
+  __typename?: 'MailProviderModel';
+  name: Scalars['String'];
+};
+
 export type MailTemplateRef = {
   __typename?: 'MailTemplateRef';
   id: Scalars['Float'];
   name: Scalars['String'];
 };
 
-export type MailTemplateWithUrl = {
-  __typename?: 'MailTemplateWithUrl';
+export type MailTemplateRefInput = {
+  id: Scalars['Float'];
+};
+
+export type MailTemplateWithUrlModel = {
+  __typename?: 'MailTemplateWithUrlModel';
   description?: Maybe<Scalars['String']>;
   externalMailTemplateId: Scalars['String'];
   id: Scalars['Int'];
@@ -60,15 +69,29 @@ export type MemberPlanRef = {
   name: Scalars['String'];
 };
 
+export type MemberPlanRefInput = {
+  id: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
-  syncTemplates: Array<MailTemplateWithUrl>;
+  createSubscriptionFlow: SubscriptionFlowModel;
+  syncTemplates: Scalars['Boolean'];
+};
+
+
+export type MutationCreateSubscriptionFlowArgs = {
+  subscriptionFlow: SubscriptionFlowModelCreateInput;
 };
 
 export type PaymentMethodRef = {
   __typename?: 'PaymentMethodRef';
   id: Scalars['String'];
   name: Scalars['String'];
+};
+
+export type PaymentMethodRefInput = {
+  id: Scalars['String'];
 };
 
 export enum PaymentPeriodicity {
@@ -91,7 +114,7 @@ export type Query = {
    * Excludes cancelled or manually set as paid invoices.
    */
   expectedRevenue: Array<DashboardInvoice>;
-  mailTemplates: Array<MailTemplateWithUrl>;
+  mailTemplates: Array<MailTemplateWithUrlModel>;
   /**
    * Returns all new deactivations in a given timeframe.
    * This considers the time the deactivation was made, not when the subscription runs out.
@@ -102,6 +125,7 @@ export type Query = {
    * Includes already deactivated ones.
    */
   newSubscribers: Array<DashboardSubscription>;
+  provider: MailProviderModel;
   /** Returns all renewing subscribers in a given timeframe. */
   renewingSubscribers: Array<DashboardSubscription>;
   /**
@@ -171,10 +195,33 @@ export type SubscriptionFlowModel = {
   subscribeMailTemplate?: Maybe<MailTemplateRef>;
 };
 
+export type SubscriptionFlowModelCreateInput = {
+  additionalIntervals: Array<SubscriptionIntervalInput>;
+  autoRenewal: Array<Scalars['Boolean']>;
+  deactivationByUserMailTemplate?: InputMaybe<MailTemplateRefInput>;
+  deactivationUnpaidMailTemplate?: InputMaybe<SubscriptionIntervalInput>;
+  invoiceCreationMailTemplate?: InputMaybe<SubscriptionIntervalInput>;
+  memberPlan?: InputMaybe<MemberPlanRefInput>;
+  paymentMethods: Array<PaymentMethodRefInput>;
+  periodicities: Array<PaymentPeriodicity>;
+  reactivationMailTemplate?: InputMaybe<MailTemplateRefInput>;
+  renewalFailedMailTemplate?: InputMaybe<MailTemplateRefInput>;
+  renewalSuccessMailTemplate?: InputMaybe<MailTemplateRefInput>;
+  subscribeMailTemplate?: InputMaybe<MailTemplateRefInput>;
+};
+
 export type SubscriptionInterval = {
   __typename?: 'SubscriptionInterval';
   daysAwayFromEnding: Scalars['Float'];
+  id: Scalars['Float'];
   mailTemplate: MailTemplateRef;
+  mailTemplateId: Scalars['Float'];
+};
+
+export type SubscriptionIntervalInput = {
+  daysAwayFromEnding: Scalars['Float'];
+  id: Scalars['Float'];
+  mailTemplateId: Scalars['Float'];
 };
 
 export type VersionInformation = {
@@ -185,14 +232,16 @@ export type VersionInformation = {
 export type MailTemplateQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ __typename?: 'MailTemplateWithUrl', description?: string | null, externalMailTemplateId: string, id: number, name: string, remoteMissing: boolean, url: string }> };
+export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ __typename?: 'MailTemplateWithUrlModel', id: number, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string }>, provider: { __typename?: 'MailProviderModel', name: string } };
 
 export type SynchronizeMailTemplatesMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SynchronizeMailTemplatesMutation = { __typename?: 'Mutation', syncTemplates: Array<{ __typename?: 'MailTemplateWithUrl', description?: string | null, externalMailTemplateId: string, id: number, name: string, remoteMissing: boolean, url: string }> };
+export type SynchronizeMailTemplatesMutation = { __typename?: 'Mutation', syncTemplates: boolean };
 
-export type FullTemplateFragment = { __typename?: 'MailTemplateWithUrl', description?: string | null, externalMailTemplateId: string, id: number, name: string, remoteMissing: boolean, url: string };
+export type FullMailTemplateFragment = { __typename?: 'MailTemplateWithUrlModel', id: number, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string };
+
+export type FullMailProviderFragment = { __typename?: 'MailProviderModel', name: string };
 
 export type SubscriptionFlowsQueryVariables = Exact<{
   defaultFlowOnly: Scalars['Boolean'];
@@ -216,14 +265,19 @@ export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type VersionInformationQuery = { __typename?: 'Query', versionInformation: { __typename?: 'VersionInformation', version: string } };
 
-export const FullTemplateFragmentDoc = gql`
-    fragment fullTemplate on MailTemplateWithUrl {
-  description
-  externalMailTemplateId
+export const FullMailTemplateFragmentDoc = gql`
+    fragment fullMailTemplate on MailTemplateWithUrlModel {
   id
   name
+  description
+  externalMailTemplateId
   remoteMissing
   url
+}
+    `;
+export const FullMailProviderFragmentDoc = gql`
+    fragment fullMailProvider on MailProviderModel {
+  name
 }
     `;
 export const MailTemplateRefFragmentDoc = gql`
@@ -296,10 +350,14 @@ ${PaymentMethodRefFragmentDoc}`;
 export const MailTemplateDocument = gql`
     query MailTemplate {
   mailTemplates {
-    ...fullTemplate
+    ...fullMailTemplate
+  }
+  provider {
+    ...fullMailProvider
   }
 }
-    ${FullTemplateFragmentDoc}`;
+    ${FullMailTemplateFragmentDoc}
+${FullMailProviderFragmentDoc}`;
 
 /**
  * __useMailTemplateQuery__
@@ -329,11 +387,9 @@ export type MailTemplateLazyQueryHookResult = ReturnType<typeof useMailTemplateL
 export type MailTemplateQueryResult = Apollo.QueryResult<MailTemplateQuery, MailTemplateQueryVariables>;
 export const SynchronizeMailTemplatesDocument = gql`
     mutation SynchronizeMailTemplates {
-  syncTemplates {
-    ...fullTemplate
-  }
+  syncTemplates
 }
-    ${FullTemplateFragmentDoc}`;
+    `;
 export type SynchronizeMailTemplatesMutationFn = Apollo.MutationFunction<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>;
 
 /**

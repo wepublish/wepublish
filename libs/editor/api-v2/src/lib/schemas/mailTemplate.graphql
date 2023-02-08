@@ -1,20 +1,25 @@
 query MailTemplate {
   mailTemplates {
-    ...fullTemplate
+    ...fullMailTemplate
+  }
+  provider {
+    ...fullMailProvider
   }
 }
 
 mutation SynchronizeMailTemplates {
-  syncTemplates {
-    ...fullTemplate
-  }
+  syncTemplates
 }
 
-fragment fullTemplate on MailTemplateWithUrl {
+fragment fullMailTemplate on MailTemplateWithUrlModel {
   id
   name
   description
   externalMailTemplateId
   remoteMissing
   url
+}
+
+fragment fullMailProvider on MailProviderModel {
+  name
 }

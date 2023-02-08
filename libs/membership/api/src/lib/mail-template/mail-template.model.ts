@@ -1,8 +1,8 @@
 import {Field, Int, ObjectType} from '@nestjs/graphql'
-import { MailProvider, WithExternalId, WithUrl } from '@wepublish/api'
+import {MailProvider, WithExternalId, WithUrl} from '@wepublish/api'
 
 @ObjectType()
-export class MailTemplateWithUrl {
+export class MailTemplateWithUrlModel {
   @Field(() => Int)
   id!: number
 
@@ -22,9 +22,15 @@ export class MailTemplateWithUrl {
   url!: string
 }
 
+@ObjectType()
+export class MailProviderModel {
+  @Field()
+  name!: string
+}
+
 export function computeUrl<MailTemplate extends WithExternalId>(
   mailTemplate: MailTemplate,
-  mailProvider: MailProvider,
+  mailProvider: MailProvider
 ): WithUrl<MailTemplate> {
   return {
     ...mailTemplate,
