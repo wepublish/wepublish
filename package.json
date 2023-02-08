@@ -160,7 +160,7 @@
     "@apollo/client": "^3.3.21",
     "@emotion/react": "11.10.5",
     "@emotion/styled": "11.10.5",
-    "@jonkoops/matomo-tracker": "^0.7.0",
+    "matomo-tracker": "^3.0.0-beta.0",
     "@karma.run/react": "^0.1.2",
     "@nestjs/apollo": "^10.1.7",
     "@nestjs/common": "^9.0.0",

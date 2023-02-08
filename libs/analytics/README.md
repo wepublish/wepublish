@@ -12,7 +12,7 @@ Run `nx lint analytics` to execute the lint via [ESLint](https://eslint.org/).
 
 ## Overview 
 
-This is an analytics plugin for WePublish. It includes basic configuration and lets you send some tracking information to WePublish's Matomo. Under the hood, it utilises `@jonkoops/matomo-tracker` for easier integration.
+This is an analytics plugin for WePublish. It includes basic configuration and lets you send some tracking information to WePublish's Matomo. Under the hood, it utilises `matomo-tracker` for easier integration.
 
 ## Prerequisities
 
@@ -56,5 +56,5 @@ If you want to track page views and send peer name and peer article id, please m
 The package exposes two methods that can be called in order to call the tracker - `track` and `page`. Page method is meant to be called on page view, while track method should be called anywhere else - e.g. on successful request or inside some function. More methods are to be added in the future.
 
 ## References
-https://github.com/jonkoops/matomo-tracker/tree/main/packages/js
+https://github.com/matomo-org/matomo-nodejs-tracker
 https://github.com/DavidWells/analytics

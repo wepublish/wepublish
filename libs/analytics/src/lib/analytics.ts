@@ -1,10 +1,10 @@
-import matomoTracker from 'matomo-tracker'
+import {MatomoTracker} from 'matomo-tracker'
 import * as Cookies from 'js-cookie'
-import nanoid = require('nanoid')
-import Analytics from 'analytics'
+import nanoid from 'nanoid'
+import Analytics, {AnalyticsInstance} from 'analytics'
 
-const matomo = matomoTracker(1, 'https://matomo.wepublish.dev/matomo.php')
-let analytics
+const matomo = new MatomoTracker(1, 'https://matomo.wepublish.dev/matomo.php')
+let analytics: AnalyticsInstance
 let pageInterval: NodeJS.Timer | number
 let pageTimeout: NodeJS.Timeout | number
 const cookieName = 'wepublish-matomo'
