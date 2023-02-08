@@ -42,7 +42,6 @@ export class SubscriptionFlowController {
     })
   }
   async createFlow(flow: SubscriptionFlowModelCreateInput) {
-    /**
     await this.prismaService.subscriptionFlow.create({
       data: {
         default: false,
@@ -50,7 +49,7 @@ export class SubscriptionFlowController {
           connect: flow.memberPlan
         },
         paymentMethods: {
-          connect: flow.memberPlan
+          connect: flow.paymentMethods
         },
         periodicities: flow.periodicities,
         autoRenewal: flow.autoRenewal,
@@ -61,7 +60,7 @@ export class SubscriptionFlowController {
           create: flow.invoiceCreationMailTemplate
         },
         renewalSuccessMailTemplate: {
-          connect:  flow.renewalSuccessMailTemplate
+          connect: flow.renewalSuccessMailTemplate
         },
         renewalFailedMailTemplate: {
           connect: flow.renewalFailedMailTemplate
@@ -79,7 +78,7 @@ export class SubscriptionFlowController {
           create: flow.additionalIntervals
         }
       }
-    }) **/
+    })
     return this.getFlow(false)
   }
 }

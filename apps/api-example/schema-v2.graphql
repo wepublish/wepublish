@@ -154,11 +154,11 @@ type SubscriptionFlowModel {
 }
 
 input SubscriptionFlowModelCreateInput {
-  additionalIntervals: [SubscriptionIntervalInput!]!
+  additionalIntervals: [SubscriptionIntervalCreateInput!]!
   autoRenewal: [Boolean!]!
   deactivationByUserMailTemplate: MailTemplateRefInput
-  deactivationUnpaidMailTemplate: SubscriptionIntervalInput
-  invoiceCreationMailTemplate: SubscriptionIntervalInput
+  deactivationUnpaidMailTemplate: SubscriptionIntervalCreateInput
+  invoiceCreationMailTemplate: SubscriptionIntervalCreateInput
   memberPlan: MemberPlanRefInput
   paymentMethods: [PaymentMethodRefInput!]!
   periodicities: [PaymentPeriodicity!]!
@@ -175,9 +175,8 @@ type SubscriptionInterval {
   mailTemplateId: Float!
 }
 
-input SubscriptionIntervalInput {
+input SubscriptionIntervalCreateInput {
   daysAwayFromEnding: Float!
-  id: Float!
   mailTemplateId: Float!
 }
 
