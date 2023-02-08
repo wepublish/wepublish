@@ -403,7 +403,7 @@
       "edit": {
         "title": "Kommentar editieren",
         "tags": "Tags",
-        "unnamedTag": "<Unbennantes Tag>",
+        "unnamedTag": "<Unbennanter Tag>",
         "loading": "Laden",
         "success": "Kommentar erfolgreich editiert"
       },
