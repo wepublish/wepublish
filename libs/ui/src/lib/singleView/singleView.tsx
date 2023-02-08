@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react'
-import {Col, FlexboxGrid, Grid, Row} from 'rsuite'
+import {Col, Grid, Row} from 'rsuite'
 
 interface SingleViewProps {
   children: ReactNode
