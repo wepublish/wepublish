@@ -55,7 +55,7 @@ export class SubscriptionFlowController {
         flow.autoRenewal
       )
     ) {
-      throw new Error('There is a filter overlap!')
+      throw new Error('You cant create this flow because there is a filter overlap!')
     }
 
     await this.prismaService.subscriptionFlow.create({
@@ -108,7 +108,18 @@ export class SubscriptionFlowController {
         additionalIntervals: true
       }
     })
-    if (!originalFlow) throw Error('NOT FOUND')
+    if (!originalFlow) throw Error('The given filter is not found!')
+
+    if (
+      await this.filterHasOverlap(
+        originalFlow.memberPlanId || '',
+        flow.paymentMethods,
+        flow.periodicities,
+        flow.autoRenewal
+      )
+    ) {
+      throw new Error('You cant update this flow because there is a filter overlap!')
+    }
 
     await this.prismaService.subscriptionFlow.update({
       where: {id: flow.id},
@@ -148,6 +159,46 @@ export class SubscriptionFlowController {
         }
       }
     })
+    return this.getFlow(false)
+  }
+
+  async deleteFlow(subscriptionFlowId: number) {
+    const originalFlow = await this.prismaService.subscriptionFlow.findUnique({
+      where: {
+        id: subscriptionFlowId
+      },
+      include: {
+        paymentMethods: true,
+        additionalIntervals: true
+      }
+    })
+    if (!originalFlow) throw Error('The given filter is not found!')
+
+    if (originalFlow.default) throw Error('Its not allowed to delete default flow!')
+
+    const subscriptionIntervalToDelete = []
+    if (originalFlow.invoiceCreationMailTemplateId)
+      subscriptionIntervalToDelete.push(originalFlow.invoiceCreationMailTemplateId)
+    if (originalFlow.deactivationUnpaidMailTemplateId)
+      subscriptionIntervalToDelete.push(originalFlow.deactivationUnpaidMailTemplateId)
+    for (const additionalInterval of originalFlow.additionalIntervals) {
+      subscriptionIntervalToDelete.push(additionalInterval.id)
+    }
+
+    await this.prismaService.$transaction([
+      this.prismaService.subscriptionFlow.delete({
+        where: {
+          id: subscriptionFlowId
+        }
+      }),
+      this.prismaService.subscriptionInterval.deleteMany({
+        where: {
+          id: {
+            in: subscriptionIntervalToDelete
+          }
+        }
+      })
+    ])
 
     return this.getFlow(false)
   }

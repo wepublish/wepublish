@@ -24,4 +24,9 @@ export class SubscriptionFlowProvider {
   async updateSubscriptionFlow(@Args('subscriptionFlow') flow: SubscriptionFlowModelUpdateInput) {
     return await this.controller.updateFlow(flow)
   }
+
+  @Mutation(returns => [SubscriptionFlowModel], {name: 'deleteSubscriptionFlow'})
+  async deleteSubscriptionFlow(@Args('subscriptionFlowId') subscriptionFlowId: number) {
+    return await this.controller.deleteFlow(subscriptionFlowId)
+  }
 }
