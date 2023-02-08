@@ -157,6 +157,43 @@ async function seed() {
     }
   })
 
+  await prisma.subscriptionFlow.upsert({
+    where: {
+      id: 2
+    },
+    update: {},
+    create: {
+      default: false,
+      paymentMethods: {connect: [{id: paymentMethod.id}]},
+      periodicities: [PaymentPeriodicity.monthly, PaymentPeriodicity.yearly],
+      autoRenewal: [true],
+
+      subscribeMailTemplate: {connect: {id: mailTemplate1.id}},
+      invoiceCreationMailTemplate: {connect: {id: subscriptionInterval1.id}},
+      renewalFailedMailTemplate: {connect: {id: mailTemplate2.id}},
+
+      additionalIntervals: {connect: [{id: subscriptionInterval2.id}]}
+    }
+  })
+
+  await prisma.subscriptionFlow.upsert({
+    where: {
+      id: 3
+    },
+    update: {},
+    create: {
+      default: false,
+      paymentMethods: {connect: [{id: paymentMethod.id}]},
+      periodicities: [PaymentPeriodicity.monthly, PaymentPeriodicity.yearly],
+      autoRenewal: [false],
+
+      invoiceCreationMailTemplate: {connect: {id: subscriptionInterval1.id}},
+      renewalFailedMailTemplate: {connect: {id: mailTemplate2.id}},
+
+      additionalIntervals: {connect: [{id: subscriptionInterval2.id}]}
+    }
+  })
+
   await prisma.$disconnect()
 }
 
