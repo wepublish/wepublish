@@ -176,14 +176,16 @@ export class SubscriptionFlowController {
 
     if (originalFlow.default) throw Error('Its not allowed to delete default flow!')
 
-    const subscriptionIntervalToDelete = []
-    if (originalFlow.invoiceCreationMailTemplateId)
-      subscriptionIntervalToDelete.push(originalFlow.invoiceCreationMailTemplateId)
-    if (originalFlow.deactivationUnpaidMailTemplateId)
-      subscriptionIntervalToDelete.push(originalFlow.deactivationUnpaidMailTemplateId)
-    for (const additionalInterval of originalFlow.additionalIntervals) {
-      subscriptionIntervalToDelete.push(additionalInterval.id)
-    }
+    let subscriptionIntervalToDelete = [
+      originalFlow.deactivationUnpaidMailTemplateId,
+      originalFlow.invoiceCreationMailTemplateId
+    ]
+    subscriptionIntervalToDelete = subscriptionIntervalToDelete.concat(
+      originalFlow.additionalIntervals.map(additionalInterval => additionalInterval.id)
+    )
+    subscriptionIntervalToDelete = subscriptionIntervalToDelete.filter(elements => {
+      return elements !== null
+    })
 
     await this.prismaService.$transaction([
       this.prismaService.subscriptionFlow.delete({
@@ -194,7 +196,7 @@ export class SubscriptionFlowController {
       this.prismaService.subscriptionInterval.deleteMany({
         where: {
           id: {
-            in: subscriptionIntervalToDelete
+            in: subscriptionIntervalToDelete as number[]
           }
         }
       })
