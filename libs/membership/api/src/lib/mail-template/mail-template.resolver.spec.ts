@@ -16,7 +16,7 @@ const mockTemplate: MailTemplate = {
 
 const prismaServiceMock = {
   mailTemplate: jest.fn().mockReturnThis(),
-  findMany: jest.fn((): [MailTemplate] => [mockTemplate])
+  findMany: jest.fn((): MailTemplate[] => [mockTemplate])
 }
 
 const mailProviderServiceMock = {
