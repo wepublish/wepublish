@@ -56,7 +56,7 @@ input MemberPlanRefInput {
 }
 
 type Mutation {
-  createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): SubscriptionFlowModel!
+  createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): [SubscriptionFlowModel!]!
   syncTemplates: Boolean!
 }
 

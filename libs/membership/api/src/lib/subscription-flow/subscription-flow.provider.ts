@@ -11,7 +11,7 @@ export class SubscriptionFlowProvider {
     return await this.controller.getFlow(defaultFlowOnly)
   }
 
-  @Mutation(returns => SubscriptionFlowModel, {name: 'createSubscriptionFlow'})
+  @Mutation(returns => [SubscriptionFlowModel], {name: 'createSubscriptionFlow'})
   async createSubscriptionFlow(@Args('subscriptionFlow') flow: SubscriptionFlowModelCreateInput) {
     return await this.controller.createFlow(flow)
   }
