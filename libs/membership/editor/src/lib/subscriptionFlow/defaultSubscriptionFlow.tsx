@@ -9,7 +9,7 @@ import {
   TableCell,
   TableRow
 } from '@mui/material'
-import {MdTune} from 'react-icons/all'
+import {MdDelete, MdTune} from 'react-icons/all'
 import {
   MailTemplateRef,
   SubscriptionFlowModel,
@@ -18,7 +18,9 @@ import {
 import {useTranslation} from 'react-i18next'
 import {getApiClientV2} from '../../../../../../apps/editor/src/app/utility'
 import {ApolloError} from '@apollo/client'
-import {Message, SelectPicker, Tag, toaster} from 'rsuite'
+import {Button, IconButton, Message, SelectPicker, Tag, toaster} from 'rsuite'
+import {Color} from '../../../../../../apps/website-example/src/app/style/colors'
+import SubscriptionFlow from './subscriptionFlow'
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
@@ -88,36 +90,7 @@ export default function () {
       </ListViewContainer>
 
       <TableContainer style={{marginTop: '16px'}}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <b>Tage bis zur Abo-Erneuerung</b>
-              </TableCell>
-              <TableCell>
-                <b>Aktion</b>
-              </TableCell>
-              <TableCell>
-                <b>Standard-Mail</b>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {/* EVENTS WITHOUT ANY TIME SPECIFICATION */}
-            {/* SUBSCRIBE */}
-            <TableRow>
-              <TableCell>{t('subscriptionFlowSettings.noDays')}</TableCell>
-              <TableCell>
-                <Tag color="green" size="lg">
-                  {subscriptionEvents[0].eventName}
-                </Tag>
-              </TableCell>
-              <TableCell>
-                <SelectPicker data={[]} />
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        <SubscriptionFlow />
       </TableContainer>
     </>
   )

@@ -29,6 +29,10 @@ type MailTemplateRef {
   name: String!
 }
 
+input MailTemplateRefInput {
+  id: Float!
+}
+
 type MailTemplateWithUrl {
   description: String
   externalMailTemplateId: String!
@@ -43,13 +47,22 @@ type MemberPlanRef {
   name: String!
 }
 
+input MemberPlanRefInput {
+  id: String!
+}
+
 type Mutation {
+  createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): SubscriptionFlowModel!
   syncTemplates: [MailTemplateWithUrl!]!
 }
 
 type PaymentMethodRef {
   id: String!
   name: String!
+}
+
+input PaymentMethodRefInput {
+  id: String!
 }
 
 enum PaymentPeriodicity {
@@ -135,9 +148,32 @@ type SubscriptionFlowModel {
   subscribeMailTemplate: MailTemplateRef
 }
 
+input SubscriptionFlowModelCreateInput {
+  additionalIntervals: [SubscriptionIntervalInput!]!
+  autoRenewal: [Boolean!]!
+  deactivationByUserMailTemplate: MailTemplateRefInput
+  deactivationUnpaidMailTemplate: SubscriptionIntervalInput
+  invoiceCreationMailTemplate: SubscriptionIntervalInput
+  memberPlan: MemberPlanRefInput
+  paymentMethods: [PaymentMethodRefInput!]!
+  periodicities: [PaymentPeriodicity!]!
+  reactivationMailTemplate: MailTemplateRefInput
+  renewalFailedMailTemplate: MailTemplateRefInput
+  renewalSuccessMailTemplate: MailTemplateRefInput
+  subscribeMailTemplate: MailTemplateRefInput
+}
+
 type SubscriptionInterval {
   daysAwayFromEnding: Float!
+  id: Float!
   mailTemplate: MailTemplateRef!
+  mailTemplateId: Float!
+}
+
+input SubscriptionIntervalInput {
+  daysAwayFromEnding: Float!
+  id: Float!
+  mailTemplateId: Float!
 }
 
 type VersionInformation {

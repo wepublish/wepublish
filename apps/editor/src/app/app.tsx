@@ -536,7 +536,7 @@ export function App() {
               }
             />
             <Route
-              path="subscriptionSettings"
+              path="subscription/flow/default"
               element={
                 <Base>
                   <SubscriptionSettings />
