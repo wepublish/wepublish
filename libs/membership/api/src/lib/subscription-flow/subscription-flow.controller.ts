@@ -1,6 +1,8 @@
+import {Injectable} from '@nestjs/common'
 import {PrismaService} from '@wepublish/api'
 import {SubscriptionFlowModelCreateInput} from './subscription-flow.model'
 
+@Injectable()
 export class SubscriptionFlowController {
   constructor(private readonly prismaService: PrismaService) {}
   async getFlow(defaultFlowOnly: boolean) {
@@ -11,7 +13,7 @@ export class SubscriptionFlowController {
       }
     }
 
-    return await this.prismaService['subscriptionFlow'].findMany({
+    return await this.prismaService.subscriptionFlow.findMany({
       where,
       include: {
         memberPlan: true,
