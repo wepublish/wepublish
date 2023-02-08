@@ -58,6 +58,7 @@ input MemberPlanRefInput {
 type Mutation {
   createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): [SubscriptionFlowModel!]!
   syncTemplates: Boolean!
+  updateSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelUpdateInput!): [SubscriptionFlowModel!]!
 }
 
 type PaymentMethodRef {
@@ -168,6 +169,21 @@ input SubscriptionFlowModelCreateInput {
   subscribeMailTemplate: MailTemplateRefInput
 }
 
+input SubscriptionFlowModelUpdateInput {
+  additionalIntervals: [SubscriptionIntervalUpdateInput!]!
+  autoRenewal: [Boolean!]!
+  deactivationByUserMailTemplate: MailTemplateRefInput
+  deactivationUnpaidMailTemplate: SubscriptionIntervalUpdateInput
+  id: Float!
+  invoiceCreationMailTemplate: SubscriptionIntervalUpdateInput
+  paymentMethods: [PaymentMethodRefInput!]!
+  periodicities: [PaymentPeriodicity!]!
+  reactivationMailTemplate: MailTemplateRefInput
+  renewalFailedMailTemplate: MailTemplateRefInput
+  renewalSuccessMailTemplate: MailTemplateRefInput
+  subscribeMailTemplate: MailTemplateRefInput
+}
+
 type SubscriptionInterval {
   daysAwayFromEnding: Float!
   id: Float!
@@ -177,6 +193,12 @@ type SubscriptionInterval {
 
 input SubscriptionIntervalCreateInput {
   daysAwayFromEnding: Float!
+  mailTemplateId: Float!
+}
+
+input SubscriptionIntervalUpdateInput {
+  daysAwayFromEnding: Float!
+  id: Float!
   mailTemplateId: Float!
 }
 

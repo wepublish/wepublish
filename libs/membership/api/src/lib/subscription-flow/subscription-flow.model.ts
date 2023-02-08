@@ -102,7 +102,7 @@ class SubscriptionIntervalCreateInput {
   @Field()
   mailTemplateId: number
 }
-
+@InputType()
 class SubscriptionIntervalUpdateInput {
   @Field()
   id: number
@@ -144,8 +144,6 @@ export class SubscriptionFlowModelCreateInput {
 export class SubscriptionFlowModelUpdateInput {
   @Field()
   id: number
-  @Field(type => MemberPlanRefInput, {nullable: true})
-  memberPlan: MemberPlanRefInput
   @Field(type => [PaymentMethodRefInput])
   paymentMethods: PaymentMethodRefInput[]
   @Field(type => [PaymentPeriodicity])

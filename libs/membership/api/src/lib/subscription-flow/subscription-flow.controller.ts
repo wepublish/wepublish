@@ -1,6 +1,9 @@
 import {Injectable} from '@nestjs/common'
 import {PrismaService} from '@wepublish/api'
-import {SubscriptionFlowModelCreateInput} from './subscription-flow.model'
+import {
+  SubscriptionFlowModelCreateInput,
+  SubscriptionFlowModelUpdateInput
+} from './subscription-flow.model'
 import {PaymentMethodRefInput} from '@wepublish/editor/api-v2'
 import {PaymentPeriodicity} from '@prisma/client'
 
@@ -94,6 +97,61 @@ export class SubscriptionFlowController {
     })
     return this.getFlow(false)
   }
+
+  async updateFlow(flow: SubscriptionFlowModelUpdateInput) {
+    const originalFlow = await this.prismaService.subscriptionFlow.findUnique({
+      where: {
+        id: flow.id
+      },
+      include: {
+        paymentMethods: true,
+        additionalIntervals: true
+      }
+    })
+    if (!originalFlow) throw Error('NOT FOUND')
+
+    await this.prismaService.subscriptionFlow.update({
+      where: {id: flow.id},
+      data: {
+        paymentMethods: {
+          connect: flow.paymentMethods,
+          disconnect: originalFlow.paymentMethods
+        },
+        periodicities: flow.periodicities,
+        autoRenewal: flow.autoRenewal,
+        subscribeMailTemplate: {
+          connect: flow.subscribeMailTemplate
+        },
+        invoiceCreationMailTemplate: {
+          update: flow.invoiceCreationMailTemplate
+        },
+        renewalSuccessMailTemplate: {
+          connect: flow.renewalSuccessMailTemplate
+        },
+        renewalFailedMailTemplate: {
+          connect: flow.renewalFailedMailTemplate
+        },
+        deactivationUnpaidMailTemplate: {
+          update: flow.deactivationUnpaidMailTemplate
+        },
+        deactivationByUserMailTemplate: {
+          connect: flow.deactivationByUserMailTemplate
+        },
+        reactivationMailTemplate: {
+          connect: flow.reactivationMailTemplate
+        },
+        additionalIntervals: {
+          delete: originalFlow.additionalIntervals.map(additionalInterval => ({
+            id: additionalInterval.id
+          })),
+          create: flow.additionalIntervals
+        }
+      }
+    })
+
+    return this.getFlow(false)
+  }
+
   async filterHasOverlap(
     memberPlanId: string,
     paymentMethods: PaymentMethodRefInput[],
