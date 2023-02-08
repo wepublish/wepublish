@@ -1322,7 +1322,7 @@
       "view": "Voir sur {{provider}}",
       "status": "Statut",
       "synchronize": "Synchroniser les modèles",
-      "statusDeleted": "Modèle supprimé sur {{provider}}"
+      "statusDeleted": "Modèle '{{internalName}}' supprimé sur {{provider}}"
     }
   }
 }

@@ -1348,7 +1348,7 @@
       "view": "View at {{provider}}",
       "status": "Status",
       "synchronize": "Synchronize templates",
-      "statusDeleted": "Template removed at {{provider}}"
+      "statusDeleted": "Template '{{internalName}}' removed at {{provider}}"
     }
   }
 }

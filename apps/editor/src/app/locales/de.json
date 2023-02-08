@@ -1349,7 +1349,7 @@
       "view": "Auf {{provider}} ansehen",
       "status": "Status",
       "synchronize": "Templates synchronisieren",
-      "statusDeleted": "Template bei {{provider}} gelöscht"
+      "statusDeleted": "Template '{{internalName}}' bei {{provider}} gelöscht"
     }
   }
 }

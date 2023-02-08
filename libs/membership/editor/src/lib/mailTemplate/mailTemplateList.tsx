@@ -72,9 +72,6 @@ export function MailTemplateList() {
                 <b>{t('mailTemplates.name')}</b>
               </TableCell>
               <TableCell>
-                <b>{t('mailTemplates.internalName')}</b>
-              </TableCell>
-              <TableCell>
                 <b>{t('mailTemplates.description')}</b>
               </TableCell>
               <TableCell>
@@ -90,7 +87,6 @@ export function MailTemplateList() {
               queryData.mailTemplates.map(template => (
                 <TableRow key={template.id.toString()}>
                   <TableCell>{template.name}</TableCell>
-                  <TableCell>{template.externalMailTemplateId}</TableCell>
                   <TableCell>{template.description}</TableCell>
                   <TableCell>
                     {template.remoteMissing ? (
@@ -105,7 +101,10 @@ export function MailTemplateList() {
                     {template.remoteMissing ? (
                       <>
                         <MdWarning />{' '}
-                        {t('mailTemplates.statusDeleted', {provider: queryData?.provider.name})}
+                        {t('mailTemplates.statusDeleted', {
+                          provider: queryData?.provider.name,
+                          internalName: template.externalMailTemplateId
+                        })}
                       </>
                     ) : (
                       <MdCheck />
