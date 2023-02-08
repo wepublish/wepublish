@@ -42,36 +42,54 @@ export class SubscriptionFlowController {
     })
   }
   async createFlow(flow: SubscriptionFlowModelCreateInput) {
-    /**
-    this.prismaService.subscriptionFlow.create({
+    await this.prismaService.subscriptionFlow.create({
       data: {
         default: false,
-        memberPlanId: flow.memberPlan.id,
+        memberPlan: {
+          connect: flow.memberPlan
+        },
+        paymentMethods: {
+          connect: flow.memberPlan
+        },
         periodicities: flow.periodicities,
         autoRenewal: flow.autoRenewal,
-        subscribeMailTemplateId: flow.subscribeMailTemplate.id,
+        subscribeMailTemplate: {
+          connect: {
+            id: flow.subscribeMailTemplate.id
+          }
+        },
         invoiceCreationMailTemplate: {
-          create: {
-            daysAwayFromEnding: flow.invoiceCreationMailTemplate.daysAwayFromEnding,
-            mailTemplateId: flow.invoiceCreationMailTemplate.mailTemplateId
+          create: flow.invoiceCreationMailTemplate
+        },
+        renewalSuccessMailTemplate: {
+          connect: {
+            id: flow.renewalSuccessMailTemplate.id
           }
         },
-        renewalSuccessMailTemplateId: flow.renewalSuccessMailTemplate.id,
-        renewalFailedMailTemplateId: flow.renewalFailedMailTemplate.id,
+        renewalFailedMailTemplate: {
+          connect: {
+            id: flow.renewalFailedMailTemplate.id
+          }
+        },
+        // deactivationUnpaidMailTemplateId: deactivationUnpaidMailTemplate,
         deactivationUnpaidMailTemplate: {
-          create: {
-            daysAwayFromEnding: flow.deactivationUnpaidMailTemplate.daysAwayFromEnding,
-            mailTemplateId: flow.deactivationUnpaidMailTemplate.mailTemplateId
+          create: flow.deactivationUnpaidMailTemplate
+        },
+        deactivationByUserMailTemplate: {
+          connect: {
+            id: flow.deactivationByUserMailTemplate.id
           }
         },
-        deactivationByUserMailTemplateId: flow.deactivationByUserMailTemplate.id,
-        reactivationMailTemplateId: flow.reactivationMailTemplate.id,
+        reactivationMailTemplate: {
+          connect: {
+            id: flow.reactivationMailTemplate.id
+          }
+        },
         additionalIntervals: {
-          createMany: {data: flow.additionalIntervals}
+          create: flow.additionalIntervals
         }
       }
     })
-     **/
     return flow
   }
 }
