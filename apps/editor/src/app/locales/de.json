@@ -1338,6 +1338,18 @@
         "body": "Willst Du das Event \"{{name}}\" wirklich löschen?",
         "delete": "Ja, lösche das Event"
       }
+    },
+    "mailTemplates": {
+      "availableTemplates": "Verfügbare E-Mail-Templates",
+      "explanation": "Diese Templates von {{provider}} kannst du für den Versand von Benachrichtigungen verwenden.",
+      "name": "Name",
+      "internalName": "Interner Name",
+      "description": "Beschreibung",
+      "content": "Inhalt",
+      "view": "Auf {{provider}} ansehen",
+      "status": "Status",
+      "synchronize": "Templates synchronisieren",
+      "statusDeleted": "Template bei {{provider}} gelöscht"
     }
   }
 }

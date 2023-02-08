@@ -1,5 +1,4 @@
 import {ApolloError} from '@apollo/client'
-import {cssRule} from '@karma.run/react'
 import {
   Table,
   TableBody,
@@ -14,7 +13,7 @@ import {ListViewContainer, ListViewHeader} from 'apps/editor/src/app/ui/listView
 import {getApiClientV2} from 'apps/editor/src/app/utility'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdPreview, MdSync, MdWarning} from 'react-icons/all'
+import {MdCheck, MdSync, MdWarning} from 'react-icons/all'
 import {Button, Message, Stack, toaster} from 'rsuite'
 import styles from './mailTemplate.module.css'
 
@@ -38,26 +37,30 @@ export function MailTemplateList() {
     onError: showErrors
   })
 
-  const [syncTemplates, {data: mutationData, loading: mutationLoading}] =
-    useSynchronizeMailTemplatesMutation({
-      client,
-      onError: showErrors,
-      refetchQueries: ["MailTemplate"]
-    })
+  const [syncTemplates, {loading: mutationLoading}] = useSynchronizeMailTemplatesMutation({
+    client,
+    onError: showErrors,
+    refetchQueries: ['MailTemplate']
+  })
+
+  const openInNewTab = (url: string) => {
+    window.open(url, '_blank', 'noreferrer')
+  }
 
   return (
     <>
       <Stack justifyContent={'space-between'}>
         <ListViewContainer>
           <ListViewHeader>
-            <h2>Verfügbare E-Mail-Templates</h2>
+            <h2>{t('mailTemplates.availableTemplates')}</h2>
             <Typography variant="subtitle1">
-              Diese Templates kannst du für den Versand von Benachrichtigungen verwenden.
+              {t('mailTemplates.explanation', {provider: queryData?.provider.name})}
             </Typography>
           </ListViewHeader>
         </ListViewContainer>
-        <Button appearance="primary" onClick={syncTemplates}>
-          <MdSync className={mutationLoading ? styles.iconSpin : ''} /> Synchronisieren
+        <Button appearance="primary" onClick={() => syncTemplates()}>
+          <MdSync className={mutationLoading ? styles.iconSpin : ''} />{' '}
+          {t('mailTemplates.synchronize')}
         </Button>
       </Stack>
 
@@ -66,19 +69,19 @@ export function MailTemplateList() {
           <TableHead>
             <TableRow>
               <TableCell>
-                <b>Name</b>
+                <b>{t('mailTemplates.name')}</b>
               </TableCell>
               <TableCell>
-                <b>Identifizierung</b>
+                <b>{t('mailTemplates.internalName')}</b>
               </TableCell>
               <TableCell>
-                <b>Beschreibung</b>
+                <b>{t('mailTemplates.description')}</b>
               </TableCell>
               <TableCell>
-                <b>Vorschau</b>
+                <b>{t('mailTemplates.content')}</b>
               </TableCell>
               <TableCell>
-                <b>Mitteilungen</b>
+                <b>{t('mailTemplates.status')}</b>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -89,8 +92,25 @@ export function MailTemplateList() {
                   <TableCell>{template.name}</TableCell>
                   <TableCell>{template.externalMailTemplateId}</TableCell>
                   <TableCell>{template.description}</TableCell>
-                  <TableCell>{template.remoteMissing ? '' : <a href={template.url} target="_blank" rel="noreferrer"><MdPreview /></a>}</TableCell>
-                  <TableCell>{template.remoteMissing ? (<><MdWarning /> Template bei Mailchimp nicht mehr vorhanden</>) : ''}</TableCell>
+                  <TableCell>
+                    {template.remoteMissing ? (
+                      ''
+                    ) : (
+                      <Button appearance="default" onClick={() => openInNewTab(template.url)}>
+                        {t('mailTemplates.view', {provider: queryData?.provider.name})}
+                      </Button>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {template.remoteMissing ? (
+                      <>
+                        <MdWarning />{' '}
+                        {t('mailTemplates.statusDeleted', {provider: queryData?.provider.name})}
+                      </>
+                    ) : (
+                      <MdCheck />
+                    )}
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>

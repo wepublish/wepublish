@@ -1,29 +1,34 @@
 import {Mutation, Query, Resolver} from '@nestjs/graphql'
-import { MailTemplate } from '@prisma/client'
-import { PrismaService, WithUrl } from '@wepublish/api'
-import { MailProviderService } from './mail-provider.service'
+import {MailTemplate} from '@prisma/client'
+import {PrismaService, WithUrl} from '@wepublish/api'
+import {MailProviderService} from './mail-provider.service'
 import {MailTemplateSyncService} from './mail-template-sync.service'
-import {computeUrl, MailTemplateWithUrl} from './mail-template.model'
+import {computeUrl, MailProviderModel, MailTemplateWithUrlModel} from './mail-template.model'
 
-@Resolver(of => MailTemplateWithUrl)
+@Resolver(of => MailTemplateWithUrlModel)
 export class MailTemplatesResolver {
   constructor(
     private prismaService: PrismaService,
     private syncService: MailTemplateSyncService,
-    private mailProviderService: MailProviderService,
+    private mailProviderService: MailProviderService
   ) {}
 
-  @Query(returns => [MailTemplateWithUrl])
+  @Query(returns => [MailTemplateWithUrlModel])
   async mailTemplates() {
     const templates = await this.prismaService.mailTemplate.findMany()
     return this.decorate(templates)
   }
 
-  @Mutation(returns => [MailTemplateWithUrl])
+  @Query(returns => MailProviderModel)
+  async provider() {
+    const provider = await this.mailProviderService.getProvider()
+    return {name: provider.name}
+  }
+
+  @Mutation(returns => Boolean)
   async syncTemplates() {
     await this.syncService.synchronizeTemplates()
-    const templates = await this.prismaService.mailTemplate.findMany()
-    return this.decorate(templates)
+    return true
   }
 
   private async decorate(templates: MailTemplate[]): Promise<WithUrl<MailTemplate>[]> {

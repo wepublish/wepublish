@@ -24,12 +24,20 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type MailProviderModel {
+  name: String!
+}
+
 type MailTemplateRef {
   id: Float!
   name: String!
 }
 
-type MailTemplateWithUrl {
+input MailTemplateRefInput {
+  id: Float!
+}
+
+type MailTemplateWithUrlModel {
   description: String
   externalMailTemplateId: String!
   id: Int!
@@ -43,13 +51,22 @@ type MemberPlanRef {
   name: String!
 }
 
+input MemberPlanRefInput {
+  id: String!
+}
+
 type Mutation {
-  syncTemplates: [MailTemplateWithUrl!]!
+  createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): SubscriptionFlowModel!
+  syncTemplates: Boolean!
 }
 
 type PaymentMethodRef {
   id: String!
   name: String!
+}
+
+input PaymentMethodRefInput {
+  id: String!
 }
 
 enum PaymentPeriodicity {
@@ -77,7 +94,7 @@ type Query {
       
   """
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
-  mailTemplates: [MailTemplateWithUrl!]!
+  mailTemplates: [MailTemplateWithUrlModel!]!
 
   """
   
@@ -94,6 +111,7 @@ type Query {
       
   """
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+  provider: MailProviderModel!
 
   """
   
@@ -135,9 +153,32 @@ type SubscriptionFlowModel {
   subscribeMailTemplate: MailTemplateRef
 }
 
+input SubscriptionFlowModelCreateInput {
+  additionalIntervals: [SubscriptionIntervalInput!]!
+  autoRenewal: [Boolean!]!
+  deactivationByUserMailTemplate: MailTemplateRefInput
+  deactivationUnpaidMailTemplate: SubscriptionIntervalInput
+  invoiceCreationMailTemplate: SubscriptionIntervalInput
+  memberPlan: MemberPlanRefInput
+  paymentMethods: [PaymentMethodRefInput!]!
+  periodicities: [PaymentPeriodicity!]!
+  reactivationMailTemplate: MailTemplateRefInput
+  renewalFailedMailTemplate: MailTemplateRefInput
+  renewalSuccessMailTemplate: MailTemplateRefInput
+  subscribeMailTemplate: MailTemplateRefInput
+}
+
 type SubscriptionInterval {
   daysAwayFromEnding: Float!
+  id: Float!
   mailTemplate: MailTemplateRef!
+  mailTemplateId: Float!
+}
+
+input SubscriptionIntervalInput {
+  daysAwayFromEnding: Float!
+  id: Float!
+  mailTemplateId: Float!
 }
 
 type VersionInformation {
