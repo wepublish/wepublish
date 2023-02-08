@@ -1,5 +1,5 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import {PrismaClient} from '@prisma/client'
+import {PaymentPeriodicity, PrismaClient} from '@prisma/client'
 import {seed as rootSeed} from '../../../libs/api/prisma/seed'
 import {hashPassword} from '../../../libs/api/src/lib/db/user'
 
@@ -43,7 +43,7 @@ async function seed() {
     }
   })
 
-  await prisma.mailTemplate.upsert({
+  const mailTemplate1 = await prisma.mailTemplate.upsert({
     where: {
       externalMailTemplateId: 'sample-slug-1'
     },
@@ -55,7 +55,7 @@ async function seed() {
     }
   })
 
-  await prisma.mailTemplate.upsert({
+  const mailTemplate2 = await prisma.mailTemplate.upsert({
     where: {
       externalMailTemplateId: 'sample-slug-2'
     },
@@ -65,6 +65,95 @@ async function seed() {
       description: 'sample-template-description',
       externalMailTemplateId: 'sample-slug-2',
       remoteMissing: true
+    }
+  })
+
+  const paymentMethod = await prisma.paymentMethod.upsert({
+    where: {
+      id: '1'
+    },
+    update: {},
+    create: {
+      name: 'Shiny Rocks',
+      slug: 'shiny-rocks',
+      description: 'Payment by transaction of a handful of shiny rocks',
+      paymentProviderID: '1234',
+      active: true
+    }
+  })
+
+  const memberPlan = await prisma.memberPlan.upsert({
+    where: {
+      slug: 'test-plan'
+    },
+    update: {},
+    create: {
+      name: 'Test Plan',
+      slug: 'test-plan',
+      tags: [],
+      description: {},
+      active: true,
+      amountPerMonthMin: 1
+    }
+  })
+
+  await prisma.availablePaymentMethod.upsert({
+    where: {
+      id: '1'
+    },
+    update: {},
+    create: {
+      paymentMethodIDs: [],
+      paymentPeriodicities: [PaymentPeriodicity.monthly],
+      forceAutoRenewal: false,
+      MemberPlan: {connect: {id: memberPlan.id}}
+    }
+  })
+
+  const subscriptionInterval1 = await prisma.subscriptionInterval.upsert({
+    where: {
+      id: 1
+    },
+    update: {},
+    create: {
+      daysAwayFromEnding: 3,
+      mailTemplate: {connect: {id: mailTemplate1.id}}
+    }
+  })
+
+  const subscriptionInterval2 = await prisma.subscriptionInterval.upsert({
+    where: {
+      id: 1
+    },
+    update: {},
+    create: {
+      daysAwayFromEnding: 3,
+      mailTemplate: {connect: {id: mailTemplate1.id}}
+    }
+  })
+
+  await prisma.subscriptionFlow.upsert({
+    where: {
+      id: 1
+    },
+    update: {},
+    create: {
+      default: true,
+      memberPlan: {connect: {id: memberPlan.id}},
+      paymentMethods: {connect: [{id: paymentMethod.id}]},
+      periodicities: [
+        PaymentPeriodicity.monthly,
+        PaymentPeriodicity.quarterly,
+        PaymentPeriodicity.biannual,
+        PaymentPeriodicity.yearly
+      ],
+      autoRenewal: [true, false],
+
+      subscribeMailTemplate: {connect: {id: mailTemplate1.id}},
+      invoiceCreationMailTemplate: {connect: {id: subscriptionInterval1.id}},
+      renewalFailedMailTemplate: {connect: {id: mailTemplate2.id}},
+
+      additionalIntervals: {connect: [{id: subscriptionInterval2.id}]}
     }
   })
 
