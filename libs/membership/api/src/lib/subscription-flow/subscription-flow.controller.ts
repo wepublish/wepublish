@@ -115,7 +115,8 @@ export class SubscriptionFlowController {
         originalFlow.memberPlanId || '',
         flow.paymentMethods,
         flow.periodicities,
-        flow.autoRenewal
+        flow.autoRenewal,
+        flow.id
       )
     ) {
       throw new Error('You cant update this flow because there is a filter overlap!')
@@ -126,31 +127,51 @@ export class SubscriptionFlowController {
       data: {
         paymentMethods: {
           connect: flow.paymentMethods,
-          disconnect: originalFlow.paymentMethods
+          disconnect: originalFlow.paymentMethods.map(paymentMethod => ({id: paymentMethod.id}))
         },
         periodicities: flow.periodicities,
         autoRenewal: flow.autoRenewal,
-        subscribeMailTemplate: {
-          connect: flow.subscribeMailTemplate
-        },
-        invoiceCreationMailTemplate: {
-          update: flow.invoiceCreationMailTemplate
-        },
-        renewalSuccessMailTemplate: {
-          connect: flow.renewalSuccessMailTemplate
-        },
-        renewalFailedMailTemplate: {
-          connect: flow.renewalFailedMailTemplate
-        },
-        deactivationUnpaidMailTemplate: {
-          update: flow.deactivationUnpaidMailTemplate
-        },
-        deactivationByUserMailTemplate: {
-          connect: flow.deactivationByUserMailTemplate
-        },
-        reactivationMailTemplate: {
-          connect: flow.reactivationMailTemplate
-        },
+        subscribeMailTemplate: flow.subscribeMailTemplate
+          ? {
+              connect: flow.subscribeMailTemplate
+            }
+          : undefined,
+        invoiceCreationMailTemplate: flow.invoiceCreationMailTemplate
+          ? {
+              upsert: {
+                create: flow.invoiceCreationMailTemplate,
+                update: flow.invoiceCreationMailTemplate
+              }
+            }
+          : {disconnect: true, delete: true},
+        renewalSuccessMailTemplate: flow.renewalSuccessMailTemplate
+          ? {
+              connect: flow.renewalSuccessMailTemplate
+            }
+          : undefined,
+        renewalFailedMailTemplate: flow.renewalFailedMailTemplate
+          ? {
+              connect: flow.renewalFailedMailTemplate
+            }
+          : undefined,
+        deactivationUnpaidMailTemplate: flow.deactivationUnpaidMailTemplate
+          ? {
+              upsert: {
+                create: flow.deactivationUnpaidMailTemplate,
+                update: flow.deactivationUnpaidMailTemplate
+              }
+            }
+          : {disconnect: true, delete: true},
+        deactivationByUserMailTemplate: flow.deactivationByUserMailTemplate
+          ? {
+              connect: flow.deactivationByUserMailTemplate
+            }
+          : undefined,
+        reactivationMailTemplate: flow.reactivationMailTemplate
+          ? {
+              connect: flow.reactivationMailTemplate
+            }
+          : undefined,
         additionalIntervals: {
           delete: originalFlow.additionalIntervals.map(additionalInterval => ({
             id: additionalInterval.id

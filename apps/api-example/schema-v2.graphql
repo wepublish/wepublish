@@ -199,7 +199,7 @@ input SubscriptionIntervalCreateInput {
 
 input SubscriptionIntervalUpdateInput {
   daysAwayFromEnding: Float!
-  id: Float!
+  id: Float
   mailTemplateId: Float!
 }
 

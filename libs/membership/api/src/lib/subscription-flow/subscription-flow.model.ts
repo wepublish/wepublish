@@ -104,8 +104,8 @@ class SubscriptionIntervalCreateInput {
 }
 @InputType()
 class SubscriptionIntervalUpdateInput {
-  @Field()
-  id: number
+  @Field({nullable: true})
+  id?: number
   @Field()
   daysAwayFromEnding: number
   @Field()
