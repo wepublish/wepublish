@@ -2102,8 +2102,10 @@ export type QueryPeerArticleArgs = {
 export type QueryPeerArticlesArgs = {
   cursors?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<ArticleFilter>;
+  first?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<SortOrder>;
   peerFilter?: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<ArticleSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
@@ -2698,28 +2700,28 @@ export type OverriddenRating = {
   value?: Maybe<Scalars['Int']>;
 };
 
-export type FullActionFragment = { __typename?: 'Action', id: string, date: string, actionType: ActionType, item?: { __typename: 'ArticleAction', article?: { __typename?: 'Article', id: string, createdAt: string } | null } | { __typename: 'AuthorAction', author?: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } | null } | { __typename: 'CommentAction', comment?: { __typename?: 'Comment', id: string, guestUsername?: string | null, user?: { __typename?: 'User', name: string } | null, revisions: Array<{ __typename?: 'CommentRevision', title?: string | null }> } | null } | { __typename: 'EventAction', event?: { __typename?: 'Event', id: string, name: string, location?: string | null } | null } | { __typename: 'PageAction', page?: { __typename?: 'Page', id: string, createdAt: string } | null } | { __typename: 'PollAction', poll?: { __typename?: 'Poll', id: string, question?: string | null } | null } | { __typename: 'SubscriptionAction', subscription?: { __typename?: 'Subscription', id: string, user?: { __typename?: 'User', name: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } | null } | { __typename: 'UserAction', user?: { __typename?: 'User', id: string, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } | null } | null };
+export type FullActionFragment = { __typename?: 'Action', id: string, date: string, actionType: ActionType, item?: { __typename: 'ArticleAction', article?: { __typename?: 'Article', id: string, createdAt: string, latest: { __typename?: 'ArticleRevision', title?: string | null, url: string } } | null } | { __typename: 'AuthorAction', author?: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } | null } | { __typename: 'CommentAction', comment?: { __typename?: 'Comment', id: string, guestUsername?: string | null, user?: { __typename?: 'User', name: string } | null, revisions: Array<{ __typename?: 'CommentRevision', title?: string | null, text?: Node[] | null }> } | null } | { __typename: 'EventAction', event?: { __typename?: 'Event', id: string, name: string, location?: string | null } | null } | { __typename: 'PageAction', page?: { __typename?: 'Page', id: string, createdAt: string, latest: { __typename?: 'PageRevision', title?: string | null, socialMediaTitle?: string | null, url: string } } | null } | { __typename: 'PollAction', poll?: { __typename?: 'Poll', id: string, question?: string | null } | null } | { __typename: 'SubscriptionAction', subscription?: { __typename?: 'Subscription', id: string, user?: { __typename?: 'User', email: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } | null } | { __typename: 'UserAction', user?: { __typename?: 'User', id: string, firstName?: string | null, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } | null } | null };
 
 export type RecentActionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RecentActionsQuery = { __typename?: 'Query', actions?: Array<{ __typename?: 'Action', id: string, date: string, actionType: ActionType, item?: { __typename: 'ArticleAction', article?: { __typename?: 'Article', id: string, createdAt: string } | null } | { __typename: 'AuthorAction', author?: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } | null } | { __typename: 'CommentAction', comment?: { __typename?: 'Comment', id: string, guestUsername?: string | null, user?: { __typename?: 'User', name: string } | null, revisions: Array<{ __typename?: 'CommentRevision', title?: string | null }> } | null } | { __typename: 'EventAction', event?: { __typename?: 'Event', id: string, name: string, location?: string | null } | null } | { __typename: 'PageAction', page?: { __typename?: 'Page', id: string, createdAt: string } | null } | { __typename: 'PollAction', poll?: { __typename?: 'Poll', id: string, question?: string | null } | null } | { __typename: 'SubscriptionAction', subscription?: { __typename?: 'Subscription', id: string, user?: { __typename?: 'User', name: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } | null } | { __typename: 'UserAction', user?: { __typename?: 'User', id: string, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } | null } | null }> | null };
+export type RecentActionsQuery = { __typename?: 'Query', actions?: Array<{ __typename?: 'Action', id: string, date: string, actionType: ActionType, item?: { __typename: 'ArticleAction', article?: { __typename?: 'Article', id: string, createdAt: string, latest: { __typename?: 'ArticleRevision', title?: string | null, url: string } } | null } | { __typename: 'AuthorAction', author?: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } | null } | { __typename: 'CommentAction', comment?: { __typename?: 'Comment', id: string, guestUsername?: string | null, user?: { __typename?: 'User', name: string } | null, revisions: Array<{ __typename?: 'CommentRevision', title?: string | null, text?: Node[] | null }> } | null } | { __typename: 'EventAction', event?: { __typename?: 'Event', id: string, name: string, location?: string | null } | null } | { __typename: 'PageAction', page?: { __typename?: 'Page', id: string, createdAt: string, latest: { __typename?: 'PageRevision', title?: string | null, socialMediaTitle?: string | null, url: string } } | null } | { __typename: 'PollAction', poll?: { __typename?: 'Poll', id: string, question?: string | null } | null } | { __typename: 'SubscriptionAction', subscription?: { __typename?: 'Subscription', id: string, user?: { __typename?: 'User', email: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } | null } | { __typename: 'UserAction', user?: { __typename?: 'User', id: string, firstName?: string | null, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } | null } | null }> | null };
 
-type FullItem_ArticleAction_Fragment = { __typename: 'ArticleAction', article?: { __typename?: 'Article', id: string, createdAt: string } | null };
+type FullItem_ArticleAction_Fragment = { __typename: 'ArticleAction', article?: { __typename?: 'Article', id: string, createdAt: string, latest: { __typename?: 'ArticleRevision', title?: string | null, url: string } } | null };
 
 type FullItem_AuthorAction_Fragment = { __typename: 'AuthorAction', author?: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } | null };
 
-type FullItem_CommentAction_Fragment = { __typename: 'CommentAction', comment?: { __typename?: 'Comment', id: string, guestUsername?: string | null, user?: { __typename?: 'User', name: string } | null, revisions: Array<{ __typename?: 'CommentRevision', title?: string | null }> } | null };
+type FullItem_CommentAction_Fragment = { __typename: 'CommentAction', comment?: { __typename?: 'Comment', id: string, guestUsername?: string | null, user?: { __typename?: 'User', name: string } | null, revisions: Array<{ __typename?: 'CommentRevision', title?: string | null, text?: Node[] | null }> } | null };
 
 type FullItem_EventAction_Fragment = { __typename: 'EventAction', event?: { __typename?: 'Event', id: string, name: string, location?: string | null } | null };
 
-type FullItem_PageAction_Fragment = { __typename: 'PageAction', page?: { __typename?: 'Page', id: string, createdAt: string } | null };
+type FullItem_PageAction_Fragment = { __typename: 'PageAction', page?: { __typename?: 'Page', id: string, createdAt: string, latest: { __typename?: 'PageRevision', title?: string | null, socialMediaTitle?: string | null, url: string } } | null };
 
 type FullItem_PollAction_Fragment = { __typename: 'PollAction', poll?: { __typename?: 'Poll', id: string, question?: string | null } | null };
 
-type FullItem_SubscriptionAction_Fragment = { __typename: 'SubscriptionAction', subscription?: { __typename?: 'Subscription', id: string, user?: { __typename?: 'User', name: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } | null };
+type FullItem_SubscriptionAction_Fragment = { __typename: 'SubscriptionAction', subscription?: { __typename?: 'Subscription', id: string, user?: { __typename?: 'User', email: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } | null };
 
-type FullItem_UserAction_Fragment = { __typename: 'UserAction', user?: { __typename?: 'User', id: string, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } | null };
+type FullItem_UserAction_Fragment = { __typename: 'UserAction', user?: { __typename?: 'User', id: string, firstName?: string | null, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } | null };
 
 export type FullItemFragment = FullItem_ArticleAction_Fragment | FullItem_AuthorAction_Fragment | FullItem_CommentAction_Fragment | FullItem_EventAction_Fragment | FullItem_PageAction_Fragment | FullItem_PollAction_Fragment | FullItem_SubscriptionAction_Fragment | FullItem_UserAction_Fragment;
 
@@ -2745,11 +2747,12 @@ export type PeerArticleListQueryVariables = Exact<{
   peerFilter?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<SortOrder>;
   sort?: InputMaybe<ArticleSort>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type PeerArticleListQuery = { __typename?: 'Query', peerArticles: { __typename?: 'PeerArticleConnection', totalCount: number,
-    nodes: Array<{ __typename?: 'PeerArticle', peeredArticleURL: string, peer: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null }, article: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } }>, pageInfo: { __typename?: 'UnidirectionalPageInfo', endCursor?: string | null, hasNextPage: boolean } } };
+export type PeerArticleListQuery = { __typename?: 'Query', peerArticles: { __typename?: 'PeerArticleConnection', totalCount: number, nodes: Array<{ __typename?: 'PeerArticle', peeredArticleURL: string, peer: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null }, article: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } }>, pageInfo: { __typename?: 'UnidirectionalPageInfo', endCursor?: string | null, hasNextPage: boolean } } };
 
 export type CreateArticleMutationVariables = Exact<{
   input: ArticleInput;
@@ -3773,12 +3776,21 @@ export const FullItemFragmentDoc = gql`
     article {
       id
       createdAt
+      latest {
+        title
+        url
+      }
     }
   }
   ... on PageAction {
     page {
       id
       createdAt
+      latest {
+        title
+        socialMediaTitle
+        url
+      }
     }
   }
   ... on CommentAction {
@@ -3790,6 +3802,7 @@ export const FullItemFragmentDoc = gql`
       guestUsername
       revisions {
         title
+        text
       }
     }
   }
@@ -3803,7 +3816,7 @@ export const FullItemFragmentDoc = gql`
     subscription {
       id
       user {
-        name
+        email
       }
       memberPlan {
         name
@@ -3820,6 +3833,7 @@ export const FullItemFragmentDoc = gql`
   ... on UserAction {
     user {
       id
+      firstName
       name
       address {
         city
@@ -4761,6 +4775,8 @@ ${ArticleRefFragmentDoc}`;
  *      peerFilter: // value for 'peerFilter'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
  *   },
  * });
  */

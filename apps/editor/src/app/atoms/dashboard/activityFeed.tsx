@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {Action, ActionType, useRecentActionsQuery} from '@wepublish/editor/api'
 import {formatDistanceToNow} from 'date-fns'
-import {useEffect, useState} from 'react'
+import {useEffect, useState, ReactNode} from 'react'
 import {useTranslation, Trans} from 'react-i18next'
 import {
   MdAccountCircle,
@@ -14,9 +14,10 @@ import {
   MdOutlineGridView
 } from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {Avatar, Timeline as RTimeline} from 'rsuite'
+import {Avatar, Timeline as RTimeline, Message, toaster} from 'rsuite'
 
 import {AVAILABLE_LANG} from '../../base'
+import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 
 const Timeline = styled(RTimeline)`
   margin-left: 10px;
@@ -26,9 +27,15 @@ const TimelineItem = styled(RTimeline.Item)`
   margin-left: '20px';
 `
 
-const TimelineDiv = styled.div`
+const TimelineItemWrapper = styled.div`
   margin-left: 10px;
   margin-bottom: 10px;
+`
+
+const TimelineRichTextWrapper = styled.div`
+  font-style: italic;
+  color: gray;
+  margin-left: 30px;
 `
 
 const ActionDetails = styled.p`
@@ -50,22 +57,29 @@ const TimelineIcon = styled(Avatar)`
 `
 
 export function ActivityFeed() {
-  const {t} = useTranslation()
-
-  const {data, loading: isLoading} = useRecentActionsQuery({fetchPolicy: 'no-cache'})
-  const [actions, setActions] = useState<Action[]>()
+  const {data, error} = useRecentActionsQuery({fetchPolicy: 'no-cache'})
+  const [actions, setActions] = useState<Action[] | undefined>([])
 
   useEffect(() => {
-    console.log('data', data)
     if (data?.actions) {
-      setActions(data.actions)
+      const {actions} = data
+      setActions(actions)
     }
   }, [data?.actions])
+
+  useEffect(() => {
+    if (error)
+      toaster.push(
+        <Message type="error" showIcon closable duration={0}>
+          {error.message}
+        </Message>
+      )
+  }, [error])
 
   return (
     <>
       <Timeline>
-        {actions?.map((action, i) => {
+        {actions?.map((action: Action, i) => {
           return (
             <TimelineItem
               key={i}
@@ -74,9 +88,9 @@ export function ActivityFeed() {
                   {MapActionTypeToIcon(action.actionType)}
                 </TimelineIcon>
               }>
-              <TimelineDiv>
-                <TimelineText action={action} />
-              </TimelineDiv>
+              <TimelineItemWrapper>
+                <TimelineItemDetails date={action.date} id={action.id} item={action.item} />
+              </TimelineItemWrapper>
             </TimelineItem>
           )
         })}
@@ -85,157 +99,130 @@ export function ActivityFeed() {
   )
 }
 
-const TimelineText = ({action}: any) => {
+function RelativeTimeToNow(time: string) {
   const {i18n} = useTranslation()
-  const time = formatDistanceToNow(new Date(action.date), {
+
+  return formatDistanceToNow(new Date(time), {
     locale: AVAILABLE_LANG.find(lang => lang.id === i18n.language)?.locale,
     addSuffix: true
   })
-  return <>{MapDetailsToAction(action, time)}</>
 }
 
-function TranslatedCreateTitleWithLink(props: {title: string; to: string}, key: string) {
-  const {title, to} = props
-  return (
-    <Trans i18nKey={key} values={{title}}>
-      New <Link to={to}>{`${title}`}</Link> has been created
-    </Trans>
-  )
-}
-
-function TranslatedOpenTitleWithLink(props: {title: string; to: string}, key: string) {
-  const {title, to} = props
-  return (
-    <Trans i18nKey={key} values={{title}}>
-      New <Link to={to}>{`${title}`}</Link> opened
-    </Trans>
-  )
-}
-
-export const MapDetailsToAction = (action: Action, time: string) => {
+function TimelineItemDetails({date, item, id}: Omit<Action, 'actionType'>) {
   const {t} = useTranslation()
 
-  switch (action?.item?.__typename) {
+  switch (item?.__typename) {
     case 'ArticleAction':
       return (
-        <>
-          <TranslatedCreateTitleWithLink
-            key="dashboard.itemCreated"
-            title={t('dashboard.newArticle')}
-            to={`/articles/edit/${action.id}`}
-          />
-          <p>{time}</p>
-          <ActionDetails>{action.item.article?.latest?.title}</ActionDetails>
-        </>
+        <ItemCreatedTimelineItem
+          title={t('dashboard.newArticle')}
+          link={`/articles/edit/${id ?? ''}`}
+          date={date}>
+          <ActionDetails>
+            {item.article?.latest?.title ?? t('articles.overview.untitled')}
+          </ActionDetails>
+        </ItemCreatedTimelineItem>
       )
     case 'PageAction':
       return (
-        <>
-          <TranslatedCreateTitleWithLink
-            key="dashboard.itemCreated"
-            title={t('dashboard.newPage')}
-            to={`/pages/edit/${action.id}`}
-          />
-          <p>{time}</p>
-          <ActionDetails>{action.item.page?.latest?.title}</ActionDetails>
-        </>
+        <ItemCreatedTimelineItem
+          title={t('dashboard.newPage')}
+          link={`/pages/edit/${item?.page?.id ?? ''}`}
+          date={date}>
+          <ActionDetails>
+            {item.page?.latest?.title ??
+              item.page?.latest?.socialMediaTitle ??
+              t('pages.overview.untitled')}
+          </ActionDetails>
+        </ItemCreatedTimelineItem>
       )
     case 'CommentAction':
       return (
-        <>
-          <TranslatedCreateTitleWithLink
-            key="dashboard.itemCreated"
-            title={t('dashboard.newComment')}
-            to={`/comments/edit/${action.id}`}
-          />
-          <p>{time}</p>
-
-          <ActionDetails>
-            {`${action.item.comment?.user?.name ?? action.item.comment?.guestUsername ?? ''}: ${
-              action.item.comment?.revisions[action.item.comment?.revisions?.length - 1]?.title ??
-              ''
-            }`}
-          </ActionDetails>
-        </>
+        <ItemCreatedTimelineItem
+          date={date}
+          link={`/comments/edit/${id}`}
+          title={t('dashboard.newComment')}>
+          <>
+            <ActionDetails>
+              {`${item.comment?.user?.name ?? item.comment?.guestUsername ?? ''} ${
+                item.comment?.revisions[item.comment?.revisions?.length - 1]?.title
+                  ? ': ' + item.comment?.revisions[item.comment?.revisions?.length - 1]?.title
+                  : ''
+              }`}
+            </ActionDetails>
+            <TimelineRichTextWrapper>
+              <RichTextBlock
+                displayOnly
+                displayOneLine
+                disabled
+                onChange={() => {
+                  return undefined
+                }}
+                value={item.comment?.revisions[item.comment?.revisions?.length - 1]?.text || []}
+              />
+            </TimelineRichTextWrapper>
+          </>
+        </ItemCreatedTimelineItem>
       )
     case 'SubscriptionAction':
       return (
-        <>
-          <TranslatedCreateTitleWithLink
-            title={t('dashboard.newSubscription')}
-            key="dashboard.itemCreated"
-            to={`/subscriptions/edit/${action.id}`}
-          />
-          <p>{time}</p>
+        <ItemCreatedTimelineItem
+          date={date}
+          link={`/subscriptions/edit/${id}`}
+          title={t('dashboard.newSubscription')}>
           <ActionDetails>
-            {action.item.subscription?.user?.name}, {action.item.subscription?.memberPlan.name}
+            {item.subscription?.memberPlan.name}: {item.subscription?.user?.email}
           </ActionDetails>
-        </>
+        </ItemCreatedTimelineItem>
       )
     case 'UserAction':
       return (
-        <>
-          <TranslatedCreateTitleWithLink
-            key="dashboard.itemCreated"
-            title={t('dashboard.newUser')}
-            to={`/users/edit/${action.id}`}
-          />
-          <p>{time}</p>
+        <ItemCreatedTimelineItem
+          date={date}
+          link={`/users/edit/${id}`}
+          title={t('dashboard.newUser')}>
           <ActionDetails>
-            {action.item.user?.name}, {action.item.user?.address?.city}
+            {`${item.user?.firstName ? item.user?.firstName + ' ' : ''}${item.user?.name}${
+              item.user?.address?.city ? ', ' + item.user?.address?.city : ''
+            }`}
           </ActionDetails>
-        </>
+        </ItemCreatedTimelineItem>
       )
     case 'AuthorAction':
       return (
-        <>
-          <TranslatedCreateTitleWithLink
-            key="dashboard.itemCreated"
-            title={t('dashboard.newAuthor')}
-            to={`/authors/edit/${action.id}`}
-          />
-          <p>{time}</p>
+        <ItemCreatedTimelineItem
+          date={date}
+          link={`/authors/edit/${id}`}
+          title={t('dashboard.newAuthor')}>
           <ActionDetails>
-            {action.item.author?.name}, {action.item.author?.jobTitle}
+            {item.author?.name}
+            {item.author?.jobTitle ? ', ' + item.author?.jobTitle : ''}
           </ActionDetails>
-        </>
+        </ItemCreatedTimelineItem>
       )
     case 'PollAction':
       return (
-        <>
-          <TranslatedOpenTitleWithLink
-            key="dashboard.itemCreated"
-            title={t('dashboard.newPoll')}
-            to={`/polls/edit/${action.id}`}
-          />
-          <p>{time}</p>
-          <ActionDetails>{action.item?.poll?.question}</ActionDetails>
-        </>
+        <ItemOpenedTimelineItem
+          date={date}
+          link={`/polls/edit/${id}`}
+          title={t('dashboard.newPoll')}>
+          <ActionDetails>{item?.poll?.question}</ActionDetails>
+        </ItemOpenedTimelineItem>
       )
     case 'EventAction':
       return (
-        <>
-          <TranslatedCreateTitleWithLink
-            key="dashboard.itemCreated"
-            title={t('dashboard.newEvent')}
-            to={`/events/edit/${action.id}`}
-          />
-          <p>{time}</p>
-          <ActionDetails>{action.item.event?.name}</ActionDetails>
-          <ActionDetails>{action.item.event?.location}</ActionDetails>
-        </>
+        <ItemCreatedTimelineItem
+          date={date}
+          link={`/events/edit/${id}`}
+          title={t('dashboard.newEvent')}>
+          <>
+            <ActionDetails>{item.event?.name}</ActionDetails>
+            <ActionDetails>{item.event?.location}</ActionDetails>
+          </>
+        </ItemCreatedTimelineItem>
       )
     default:
-      return (
-        <>
-          <TranslatedCreateTitleWithLink
-            key="dashboard.itemCreated"
-            title={t('dashboard.newAction')}
-            to={'/'}
-          />
-          <p>{time}</p>
-        </>
-      )
+      return <></>
   }
 }
 
@@ -260,4 +247,44 @@ const MapActionTypeToIcon = (actionType: ActionType) => {
     default:
       return <MdDescription />
   }
+}
+
+function ItemCreatedTimelineItem(props: {
+  date: string
+  link: string
+  title: string
+  children: ReactNode
+}) {
+  const {date, children, title, link} = props
+  const {t} = useTranslation()
+
+  return (
+    <>
+      <Trans i18nKey={t('dashboard.itemCreated')} values={title}>
+        New <Link to={link}>{`${title}`}</Link> has been created
+        <p>{RelativeTimeToNow(date)}</p>
+        {children}
+      </Trans>
+    </>
+  )
+}
+
+function ItemOpenedTimelineItem(props: {
+  date: string
+  link: string
+  title: string
+  children: ReactNode
+}) {
+  const {date, children, title, link} = props
+  const {t} = useTranslation()
+
+  return (
+    <>
+      <Trans i18nKey={t('dashboard.itemOpened')} values={title}>
+        New <Link to={link}>{`${title}`}</Link> opened
+        <p>{RelativeTimeToNow(date)}</p>
+        {children}
+      </Trans>
+    </>
+  )
 }

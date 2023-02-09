@@ -2100,8 +2100,10 @@ export type QueryPeerArticleArgs = {
 export type QueryPeerArticlesArgs = {
   cursors?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<ArticleFilter>;
+  first?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<SortOrder>;
   peerFilter?: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<ArticleSort>;
   take?: InputMaybe<Scalars['Int']>;
 };

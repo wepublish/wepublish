@@ -20,6 +20,10 @@ fragment FullItem on ActionItem {
   article {
     id
     createdAt
+    latest {
+        title
+        url
+    }
     }
   }
 
@@ -27,6 +31,11 @@ fragment FullItem on ActionItem {
   page {
     id
     createdAt
+    latest {
+        title
+        socialMediaTitle
+        url
+    }
     }
   }
 
@@ -37,6 +46,7 @@ fragment FullItem on ActionItem {
     guestUsername
     revisions {
         title
+        text
     }
     }
   }
@@ -51,7 +61,7 @@ fragment FullItem on ActionItem {
    ... on SubscriptionAction {
   subscription {
     id
-    user { name }
+    user { email }
     memberPlan {
         name
         }
@@ -67,6 +77,7 @@ fragment FullItem on ActionItem {
   ... on UserAction {
   user {
     id
+    firstName
     name
     address {
     city
