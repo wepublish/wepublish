@@ -56,8 +56,10 @@ input MemberPlanRefInput {
 }
 
 type Mutation {
-  createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): SubscriptionFlowModel!
+  createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): [SubscriptionFlowModel!]!
+  deleteSubscriptionFlow(subscriptionFlowId: Float!): [SubscriptionFlowModel!]!
   syncTemplates: Boolean!
+  updateSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelUpdateInput!): [SubscriptionFlowModel!]!
 }
 
 type PaymentMethodRef {
@@ -154,12 +156,27 @@ type SubscriptionFlowModel {
 }
 
 input SubscriptionFlowModelCreateInput {
-  additionalIntervals: [SubscriptionIntervalInput!]!
+  additionalIntervals: [SubscriptionIntervalCreateInput!]!
   autoRenewal: [Boolean!]!
   deactivationByUserMailTemplate: MailTemplateRefInput
-  deactivationUnpaidMailTemplate: SubscriptionIntervalInput
-  invoiceCreationMailTemplate: SubscriptionIntervalInput
+  deactivationUnpaidMailTemplate: SubscriptionIntervalCreateInput
+  invoiceCreationMailTemplate: SubscriptionIntervalCreateInput
   memberPlan: MemberPlanRefInput
+  paymentMethods: [PaymentMethodRefInput!]!
+  periodicities: [PaymentPeriodicity!]!
+  reactivationMailTemplate: MailTemplateRefInput
+  renewalFailedMailTemplate: MailTemplateRefInput
+  renewalSuccessMailTemplate: MailTemplateRefInput
+  subscribeMailTemplate: MailTemplateRefInput
+}
+
+input SubscriptionFlowModelUpdateInput {
+  additionalIntervals: [SubscriptionIntervalUpdateInput!]!
+  autoRenewal: [Boolean!]!
+  deactivationByUserMailTemplate: MailTemplateRefInput
+  deactivationUnpaidMailTemplate: SubscriptionIntervalUpdateInput
+  id: Float!
+  invoiceCreationMailTemplate: SubscriptionIntervalUpdateInput
   paymentMethods: [PaymentMethodRefInput!]!
   periodicities: [PaymentPeriodicity!]!
   reactivationMailTemplate: MailTemplateRefInput
@@ -175,9 +192,14 @@ type SubscriptionInterval {
   mailTemplateId: Float!
 }
 
-input SubscriptionIntervalInput {
+input SubscriptionIntervalCreateInput {
   daysAwayFromEnding: Float!
-  id: Float!
+  mailTemplateId: Float!
+}
+
+input SubscriptionIntervalUpdateInput {
+  daysAwayFromEnding: Float!
+  id: Float
   mailTemplateId: Float!
 }
 

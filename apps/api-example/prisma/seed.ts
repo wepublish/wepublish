@@ -139,15 +139,10 @@ async function seed() {
     update: {},
     create: {
       default: true,
-      memberPlan: {connect: {id: memberPlan.id}},
-      paymentMethods: {connect: [{id: paymentMethod.id}]},
-      periodicities: [
-        PaymentPeriodicity.monthly,
-        PaymentPeriodicity.quarterly,
-        PaymentPeriodicity.biannual,
-        PaymentPeriodicity.yearly
-      ],
-      autoRenewal: [true, false],
+      memberPlan: undefined,
+      paymentMethods: undefined,
+      periodicities: [],
+      autoRenewal: [],
 
       subscribeMailTemplate: {connect: {id: mailTemplate1.id}},
       invoiceCreationMailTemplate: {connect: {id: subscriptionInterval1.id}},
@@ -164,6 +159,7 @@ async function seed() {
     update: {},
     create: {
       default: false,
+      memberPlan: {connect: {id: memberPlan.id}},
       paymentMethods: {connect: [{id: paymentMethod.id}]},
       periodicities: [PaymentPeriodicity.monthly, PaymentPeriodicity.yearly],
       autoRenewal: [true],
@@ -183,6 +179,7 @@ async function seed() {
     update: {},
     create: {
       default: false,
+      memberPlan: {connect: {id: memberPlan.id}},
       paymentMethods: {connect: [{id: paymentMethod.id}]},
       periodicities: [PaymentPeriodicity.monthly, PaymentPeriodicity.yearly],
       autoRenewal: [false],
