@@ -1,5 +1,5 @@
 import {MatomoTracker} from 'matomo-tracker'
-import * as Cookies from 'js-cookie'
+import Cookies from 'js-cookie'
 import nanoid from 'nanoid'
 import Analytics, {AnalyticsInstance} from 'analytics'
 
@@ -79,7 +79,7 @@ function track(peerElement: HTMLElement) {
   }
 
   matomo.track({
-    url,
+    url: url || '',
     urlref,
     _id,
     apiv,
@@ -88,7 +88,7 @@ function track(peerElement: HTMLElement) {
     m,
     s,
     send_image: 0,
-    cookie,
+    cookie: 1,
     res,
     dimension1: peerArticleId,
     dimension2: peerName,
