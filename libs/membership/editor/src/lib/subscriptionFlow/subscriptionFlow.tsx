@@ -5,7 +5,6 @@ import {useTranslation} from 'react-i18next'
 import SubscriptionInterval from './subscriptionInterval'
 import {Tag} from 'rsuite'
 import styled from '@emotion/styled'
-import {MdWarning} from 'react-icons/all'
 
 const TimeLineContainer = styled.div`
   display: flex;
@@ -67,6 +66,9 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
     return [...Array(maxDaysInTimeline + 2)]
   }, [subscriptionNonUserActions])
 
+  /**
+   * FUNCTIONS
+   */
   function getSubscriptionActionsByDay(dayIndex: number) {
     return subscriptionNonUserActions.filter(userAction => {
       const subscriptionInterval = userAction.subscriptionInterval

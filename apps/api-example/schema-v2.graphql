@@ -60,6 +60,7 @@ type Mutation {
   deleteSubscriptionFlow(subscriptionFlowId: Float!): [SubscriptionFlowModel!]!
   syncTemplates: Boolean!
   updateSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelUpdateInput!): [SubscriptionFlowModel!]!
+  updateSubscriptionInterval(subscriptionInterval: SubscriptionIntervalUpdateInput!): SubscriptionInterval!
 }
 
 type PaymentMethodRef {

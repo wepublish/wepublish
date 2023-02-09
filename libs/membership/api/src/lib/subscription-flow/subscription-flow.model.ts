@@ -32,7 +32,7 @@ class PaymentMethodRef {
 }
 
 @ObjectType()
-class SubscriptionInterval {
+export class SubscriptionInterval {
   @Field()
   id: number
   @Field()
@@ -103,7 +103,7 @@ class SubscriptionIntervalCreateInput {
   mailTemplateId: number
 }
 @InputType()
-class SubscriptionIntervalUpdateInput {
+export class SubscriptionIntervalUpdateInput {
   @Field({nullable: true})
   id?: number
   @Field()

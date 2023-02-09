@@ -2,7 +2,9 @@ import {Injectable} from '@nestjs/common'
 import {PrismaService} from '@wepublish/api'
 import {
   SubscriptionFlowModelCreateInput,
-  SubscriptionFlowModelUpdateInput
+  SubscriptionFlowModelUpdateInput,
+  SubscriptionInterval,
+  SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
 import {PaymentMethodRefInput} from '@wepublish/editor/api-v2'
 import {PaymentPeriodicity} from '@prisma/client'
@@ -224,6 +226,19 @@ export class SubscriptionFlowController {
     ])
 
     return this.getFlow(false)
+  }
+
+  async updateInterval(interval: SubscriptionIntervalUpdateInput): Promise<SubscriptionInterval> {
+    return await this.prismaService.subscriptionInterval.update({
+      where: {id: interval.id},
+      data: {
+        mailTemplateId: interval.mailTemplateId,
+        daysAwayFromEnding: interval.daysAwayFromEnding
+      },
+      include: {
+        mailTemplate: true
+      }
+    })
   }
 
   async filterHasOverlap(

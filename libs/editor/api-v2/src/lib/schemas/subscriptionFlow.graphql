@@ -4,6 +4,18 @@ query SubscriptionFlows($defaultFlowOnly: Boolean!) {
   }
 }
 
+mutation UpdateSubscriptionFlow($subscriptionFlow: SubscriptionFlowModelUpdateInput!) {
+  updateSubscriptionFlow(subscriptionFlow: $subscriptionFlow) {
+    ...SubscriptionFlow
+  }
+}
+
+mutation UpdateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalUpdateInput!) {
+  updateSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
+    ...SubscriptionInterval
+  }
+}
+
 fragment SubscriptionFlow on SubscriptionFlowModel {
   id
   default
@@ -43,6 +55,7 @@ fragment SubscriptionFlow on SubscriptionFlowModel {
 
 
 fragment SubscriptionInterval on SubscriptionInterval {
+  id
   daysAwayFromEnding
   mailTemplate {
     ...MailTemplateRef

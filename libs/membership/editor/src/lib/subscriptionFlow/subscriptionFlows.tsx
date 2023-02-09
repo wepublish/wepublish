@@ -51,7 +51,7 @@ export interface SubscriptionUserAction extends SubscriptionAction {
   subscriptionEventKey: SubscriptionUserActionKey
 }
 
-const showErrors = (error: ApolloError): void => {
+export const showErrors = (error: ApolloError): void => {
   toaster.push(
     <Message type="error" showIcon closable duration={3000}>
       {error.message}
@@ -97,27 +97,23 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
   /**
    * API SERVICES
    */
+  // get correct v2 client
   const client = useMemo(() => getApiClientV2(), [])
-  const {data: subscriptionFlowsData, loading: loadingSubscriptionFlow} = useSubscriptionFlowsQuery(
-    {
-      variables: {
-        defaultFlowOnly: defaultSubscriptionMode
-      },
-      client,
-      onError: showErrors,
-      onCompleted: data => setSubscriptionFlows(data.SubscriptionFlows)
-    }
-  )
+  // get subscriptions flows
+  const {loading: loadingSubscriptionFlow, refetch} = useSubscriptionFlowsQuery({
+    variables: {
+      defaultFlowOnly: defaultSubscriptionMode
+    },
+    client,
+    onError: showErrors,
+    onCompleted: data => setSubscriptionFlows(data.SubscriptionFlows)
+  })
 
+  // get mail templates
   const {data: mailTemplates, loading: loadingMailTemplates} = useMailTemplateQuery({
     client,
     onError: showErrors
   })
-
-  /**
-   * FUNCTIONS
-   */
-  function updateSubscriptionInterval(subscriptionInterval: SubscriptionIntervalFragment) {}
 
   /**
    * loading

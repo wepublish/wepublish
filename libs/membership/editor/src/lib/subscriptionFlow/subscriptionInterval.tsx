@@ -1,17 +1,46 @@
-import React, {useContext} from 'react'
+import React, {useContext, useMemo} from 'react'
 import {MailTemplatesContext, SubscriptionNonUserAction} from './subscriptionFlows'
-import {SelectPicker} from 'rsuite'
-import {FullMailTemplateFragment} from '@wepublish/editor/api-v2'
+import {
+  FullMailTemplateFragment,
+  useUpdateSubscriptionIntervalMutation
+} from '@wepublish/editor/api-v2'
 import MailTemplateSelect from './mailTemplateSelect'
+import {getApiClientV2} from '../../../../../../apps/editor/src/app/utility'
 
 interface SubscriptionIntervalProps {
   subscriptionNonUserAction: SubscriptionNonUserAction
 }
 export default function SubscriptionInterval({
-  subscriptionNonUserAction
+  subscriptionNonUserAction,
+  updateSubscriptionInterval
 }: SubscriptionIntervalProps) {
   const {subscriptionInterval, title, description, subscriptionEventKey} = subscriptionNonUserAction
   const mailTemplates = useContext<FullMailTemplateFragment[]>(MailTemplatesContext)
+
+  /**
+   * API SERVICES
+   */
+  const client = useMemo(() => getApiClientV2(), [])
+  const [updateSubscriptionIntervalMutation, {loading}] = useUpdateSubscriptionIntervalMutation({
+    client
+  })
+
+  /**
+   * FUNCTIONS
+   */
+  async function changeMailTemplate(mailTemplateId: number) {
+    const updatedInterval = await updateSubscriptionIntervalMutation({
+      variables: {
+        subscriptionInterval: {
+          ...subscriptionInterval,
+          mailTemplateId,
+          mailTemplate: undefined,
+          __typename: undefined
+        }
+      }
+    })
+    console.log('updated interval', updatedInterval)
+  }
 
   return (
     <>
@@ -31,6 +60,7 @@ export default function SubscriptionInterval({
           <MailTemplateSelect
             mailTemplates={mailTemplates}
             mailTemplateId={subscriptionInterval?.mailTemplate.id}
+            onMailTemplateChange={mailTemplateId => changeMailTemplate(mailTemplateId)}
           />
         </div>
       </div>
