@@ -139,8 +139,8 @@ async function seed() {
     update: {},
     create: {
       default: true,
-      memberPlan: null,
-      paymentMethods: null,
+      memberPlan: undefined,
+      paymentMethods: undefined,
       periodicities: [],
       autoRenewal: [],
 
