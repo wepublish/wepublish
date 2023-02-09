@@ -1,4 +1,4 @@
-import {Article, ArticleData} from './article'
+import {Article} from './article'
 import {Page} from './page'
 import {Comment} from './comment'
 import {Author} from './author'
