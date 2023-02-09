@@ -1,51 +1,128 @@
 import React from 'react'
 import {IconButton, SelectPicker, Tag} from 'rsuite'
-import {MdAdd, MdDescription, MdRemove} from 'react-icons/all'
-import {SubscriptionIntervalFragment} from '@wepublish/editor/api-v2'
+import {
+  MdAdd,
+  MdDescription,
+  MdEdit,
+  MdMail,
+  MdOutgoingMail,
+  MdRemove,
+  MdWarning
+} from 'react-icons/all'
+import {SubscriptionNonUserAction} from './subscriptionFlows'
+import {useTranslation} from 'react-i18next'
 
 interface SubscriptionIntervalProps {
-  subscriptionInterval?: SubscriptionIntervalFragment | null
+  subscriptionNonUserAction: SubscriptionNonUserAction
+  editMode: boolean
 }
-export default function SubscriptionInterval({subscriptionInterval}: SubscriptionIntervalProps) {
+export default function SubscriptionInterval({
+  subscriptionNonUserAction,
+  editMode
+}: SubscriptionIntervalProps) {
+  const {t} = useTranslation()
   const oneDayInPixel = 80
+
+  /**
+   * UI helper functions
+   */
+  function timelineView() {
+    return (
+      <div
+        style={{
+          width: `${
+            oneDayInPixel *
+            (subscriptionNonUserAction.subscriptionInterval?.daysAwayFromEnding || 0)
+          }px`,
+          textAlign: 'center',
+          marginBottom: '10px'
+        }}>
+        <Tag color="green" size="sm">
+          <b>{subscriptionNonUserAction.subscriptionInterval?.daysAwayFromEnding} d</b>
+        </Tag>
+      </div>
+    )
+  }
+
+  function mailTemplatePreview() {
+    return (
+      <>
+        <div style={{position: 'relative'}}>
+          <Tag style={{wordBreak: 'break-word', textAlign: 'center'}}>
+            {subscriptionNonUserAction.title}
+          </Tag>
+          {/* outgoing mail */}
+          {subscriptionNonUserAction.subscriptionInterval && (
+            <div style={{marginTop: '5px', textAlign: 'center'}}>
+              <MdOutgoingMail /> {subscriptionNonUserAction.subscriptionInterval.mailTemplate.name}
+            </div>
+          )}
+          {!subscriptionNonUserAction.subscriptionInterval && (
+            <div style={{marginTop: '5px', textAlign: 'center'}}>
+              <MdWarning color="red" />
+              {t('subscriptionInterval.missingMailTemplate')}
+            </div>
+          )}
+
+          {/** edit button */}
+          <IconButton
+            style={{position: 'absolute', top: '-20px', right: '-20px'}}
+            circle
+            appearance="primary"
+            size="xs"
+            icon={<MdEdit />}
+          />
+        </div>
+      </>
+    )
+  }
+
+  function editMailTemplateView() {
+    return (
+      <>
+        <div>
+          <IconButton circle appearance="primary" size="xs" icon={<MdRemove />} />
+        </div>
+        <div style={{textAlign: 'center'}}>
+          <Tag
+            color="orange"
+            size="md"
+            style={{
+              marginBottom: '5px'
+            }}>
+            <MdDescription style={{marginRight: '4px'}} />
+            {subscriptionNonUserAction.title}
+          </Tag>
+          <SelectPicker data={[]} />
+        </div>
+        <div>
+          <IconButton circle appearance="primary" size="xs" icon={<MdAdd />} />
+        </div>
+      </>
+    )
+  }
+
   function selectMailTemplateView() {
     // the width representation of the days in pixels
     return (
-      <>
-        <div
-          style={{
-            position: 'absolute',
-            width: '190px',
-            right: '-95px',
-            bottom: '45px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '5px',
-            borderRadius: '5px',
-            padding: '10px 5px',
-            border: '1px solid black'
-          }}>
-          <div>
-            <IconButton circle appearance="primary" size="xs" icon={<MdRemove />} />
-          </div>
-          <div style={{textAlign: 'center'}}>
-            <Tag
-              color="orange"
-              size="md"
-              style={{
-                marginBottom: '5px'
-              }}>
-              <MdDescription style={{marginRight: '4px'}} />
-              {subscriptionInterval?.mailTemplate?.name}
-            </Tag>
-            <SelectPicker data={[]} />
-          </div>
-          <div>
-            <IconButton circle appearance="primary" size="xs" icon={<MdAdd />} />
-          </div>
-        </div>
-      </>
+      <div
+        style={{
+          position: 'absolute',
+          width: '80px',
+          right: '-40px',
+          bottom: '45px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '5px',
+          borderRadius: '5px',
+          padding: '10px 5px',
+          border: '1px solid black',
+          wordBreak: 'break-word'
+        }}>
+        {editMode && editMailTemplateView()}
+        {!editMode && mailTemplatePreview()}
+      </div>
     )
   }
 
@@ -65,16 +142,7 @@ export default function SubscriptionInterval({subscriptionInterval}: Subscriptio
         {selectMailTemplateView()}
 
         {/* day representation */}
-        <div
-          style={{
-            width: `${oneDayInPixel * (subscriptionInterval?.daysAwayFromEnding || 1)}px`,
-            textAlign: 'center',
-            marginBottom: '10px'
-          }}>
-          <Tag color="green" size="sm">
-            <b>{subscriptionInterval?.daysAwayFromEnding} d</b>
-          </Tag>
-        </div>
+        {timelineView()}
       </div>
     </>
   )

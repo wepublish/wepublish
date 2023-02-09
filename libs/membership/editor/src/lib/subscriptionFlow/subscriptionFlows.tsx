@@ -2,8 +2,12 @@ import React from 'react'
 import {Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material'
 import {IconButton, SelectPicker} from 'rsuite'
 import {MdDelete} from 'react-icons/all'
-import SubscriptionTimeline from './subscriptionTimeline'
-import {SubscriptionFlowFragment, SubscriptionFlowModel} from '@wepublish/editor/api-v2'
+import SubscriptionFlow from './subscriptionFlow'
+import {
+  SubscriptionFlowFragment,
+  SubscriptionFlowModel,
+  SubscriptionIntervalFragment
+} from '@wepublish/editor/api-v2'
 import {useTranslation} from 'react-i18next'
 
 export type SubscriptionUserActionKey = keyof Pick<
@@ -20,12 +24,18 @@ export type SubscriptionNonUserActionKey = keyof Pick<
   'invoiceCreationMailTemplate' | 'deactivationUnpaidMailTemplate'
 >
 
-export type SubscriptionEventKey = SubscriptionUserActionKey | SubscriptionNonUserActionKey
-
-export interface SubscriptionUserAction {
-  subscriptionEventKey: SubscriptionUserActionKey
+export interface SubscriptionAction {
   title: string
   description: string
+}
+
+export interface SubscriptionNonUserAction extends SubscriptionAction {
+  subscriptionEventKey?: SubscriptionNonUserActionKey
+  subscriptionInterval?: SubscriptionIntervalFragment
+}
+
+export interface SubscriptionUserAction extends SubscriptionAction {
+  subscriptionEventKey: SubscriptionUserActionKey
 }
 
 interface SubscriptionFlowsProps {
@@ -122,7 +132,7 @@ export default function SubscriptionFlows({subscriptionFlows}: SubscriptionFlows
 
                 {/* individual flow */}
                 <TableCell>
-                  <SubscriptionTimeline subscriptionFlow={subscriptionFlow} />
+                  <SubscriptionFlow subscriptionFlow={subscriptionFlow} />
                 </TableCell>
                 <TableCell align="center">
                   <IconButton color="red" circle appearance="primary" icon={<MdDelete />} />
