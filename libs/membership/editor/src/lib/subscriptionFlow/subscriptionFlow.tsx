@@ -1,8 +1,20 @@
 import React, {useMemo} from 'react'
-import SubscriptionInterval from './subscriptionInterval'
 import {SubscriptionFlowFragment} from '@wepublish/editor/api-v2'
 import {SubscriptionNonUserAction} from './subscriptionFlows'
 import {useTranslation} from 'react-i18next'
+import SubscriptionInterval from './subscriptionInterval'
+import {Tag} from 'rsuite'
+import styled from '@emotion/styled'
+import {MdError, MdWarning} from 'react-icons/all'
+
+const TimeLineContainer = styled.div`
+  display: flex;
+  flex-wrap: nowrap;
+`
+
+const TimeLineDay = styled.div`
+  width: 80px;
+`
 
 interface SubscriptionTimelineProps {
   subscriptionFlow: SubscriptionFlowFragment
@@ -46,35 +58,123 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
     })
   }, [subscriptionFlow])
 
-  const timeLineInDays = useMemo(() => {
-    return (
-      Math.max(
-        ...subscriptionNonUserActions.map(
-          action => action.subscriptionInterval?.daysAwayFromEnding || 0
-        )
-      ) + 1
+  const timeLineArray: number[] = useMemo(() => {
+    const maxDaysInTimeline = Math.max(
+      ...subscriptionNonUserActions.map(
+        action => action.subscriptionInterval?.daysAwayFromEnding || 0
+      )
     )
+    return [...Array(maxDaysInTimeline + 2)]
   }, [subscriptionNonUserActions])
+
+  function getSubscriptionActionsByDay(dayIndex: number) {
+    return subscriptionNonUserActions.filter(userAction => {
+      const subscriptionInterval = userAction.subscriptionInterval
+      if (!subscriptionInterval?.daysAwayFromEnding && dayIndex === 0) {
+        return userAction
+      }
+      if (subscriptionInterval?.daysAwayFromEnding === dayIndex) {
+        return userAction
+      }
+    })
+  }
 
   return (
     <>
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'nowrap',
-          marginRight: '80px'
-        }}>
-        {subscriptionNonUserActions.map(subscriptionNonUserAction => (
-          <>
-            <div>
-              <SubscriptionInterval
-                subscriptionNonUserAction={subscriptionNonUserAction}
-                editMode={false}
-              />
+      {/* upper subscription intervals */}
+      <TimeLineContainer style={{alignItems: 'flex-end'}}>
+        {timeLineArray.map((day, dayIndex) => {
+          const currentNonUserActions =
+            dayIndex % 2 === 0 ? getSubscriptionActionsByDay(dayIndex) : []
+          return (
+            <TimeLineDay>
+              <div
+                style={{
+                  paddingBottom: '10px',
+                  marginLeft: '5px',
+                  width: '140px',
+                  background: 'white'
+                }}>
+                {!!currentNonUserActions.length &&
+                  currentNonUserActions.map(currentNonUserAction => (
+                    <SubscriptionInterval subscriptionNonUserAction={currentNonUserAction} />
+                  ))}
+              </div>
+            </TimeLineDay>
+          )
+        })}
+      </TimeLineContainer>
+
+      {/* timeline */}
+      <TimeLineContainer>
+        {timeLineArray.map((day, dayIndex) => (
+          <TimeLineDay>
+            <div
+              style={{
+                height: '15px',
+                marginBottom: '15px',
+                borderRight: dayIndex % 2 === 0 ? '1px solid black' : 'none'
+              }}
+            />
+
+            <div
+              style={{
+                borderBottom: dayIndex !== 0 ? '1px solid black' : 'none',
+                position: 'relative'
+              }}>
+              {/* day number */}
+              <div
+                style={{
+                  position: 'absolute',
+                  right: '-40px',
+                  zIndex: 1,
+                  bottom: dayIndex === 0 ? '-15px' : '-10px',
+                  width: '100%'
+                }}>
+                <div style={{textAlign: 'center'}}>
+                  {dayIndex === 0 && <MdWarning size="30px" color="red" />}
+                  {dayIndex !== 0 && (
+                    <Tag color="green" size="sm">
+                      Tag {dayIndex}
+                    </Tag>
+                  )}
+                </div>
+              </div>
             </div>
-          </>
+
+            <div
+              style={{
+                height: '15px',
+                marginTop: '15px',
+                borderRight: dayIndex % 2 !== 0 ? '1px solid black' : 'none'
+              }}
+            />
+          </TimeLineDay>
         ))}
-      </div>
+      </TimeLineContainer>
+
+      {/* upper subscription intervals */}
+      <TimeLineContainer>
+        {timeLineArray.map((day, dayIndex) => {
+          const currentNonUserActions =
+            dayIndex % 2 !== 0 ? getSubscriptionActionsByDay(dayIndex) : []
+          return (
+            <TimeLineDay>
+              <div
+                style={{
+                  marginLeft: '10px',
+                  width: '140px',
+                  background: 'white'
+                }}>
+                {!!currentNonUserActions.length &&
+                  currentNonUserActions.map(currentNonUserAction => (
+                    <SubscriptionInterval subscriptionNonUserAction={currentNonUserAction} />
+                  ))}
+              </div>
+            </TimeLineDay>
+          )
+        })}
+      </TimeLineContainer>
     </>
   )
 }
