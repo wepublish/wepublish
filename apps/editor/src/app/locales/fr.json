@@ -1323,6 +1323,12 @@
         "body": "Do you really want to delete the event \"{{name}}\"?",
         "delete": "Yes, delete the event"
       }
+    },
+    "general": {
+      "deletedSuccess": "Deleted successfully",
+      "created": "Created successfully",
+      "updated": "Updated successfully",
+      "errorOnUpdate": "There was an error, please try again"
     }
   }
 }
