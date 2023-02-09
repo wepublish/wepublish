@@ -1,15 +1,28 @@
-import React from 'react'
+import React, {createContext, useMemo, useState} from 'react'
 import {Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material'
-import {IconButton, SelectPicker} from 'rsuite'
+import {IconButton, Message, SelectPicker, toaster} from 'rsuite'
 import {MdDelete} from 'react-icons/all'
 import SubscriptionFlow from './subscriptionFlow'
 import {
+  FullMailTemplateFragment,
   SubscriptionFlowFragment,
   SubscriptionFlowModel,
-  SubscriptionIntervalFragment
+  SubscriptionIntervalFragment,
+  useMailTemplateQuery,
+  useSubscriptionFlowsQuery
 } from '@wepublish/editor/api-v2'
 import {useTranslation} from 'react-i18next'
+import {getApiClientV2} from '../../../../../../apps/editor/src/app/utility'
+import {ApolloError} from '@apollo/client'
 
+/**
+ * CONTEXT
+ */
+export const MailTemplatesContext = createContext<FullMailTemplateFragment[]>([])
+
+/**
+ * TYPES
+ */
 export type SubscriptionUserActionKey = keyof Pick<
   SubscriptionFlowModel,
   | 'subscribeMailTemplate'
@@ -38,13 +51,21 @@ export interface SubscriptionUserAction extends SubscriptionAction {
   subscriptionEventKey: SubscriptionUserActionKey
 }
 
-interface SubscriptionFlowsProps {
-  subscriptionFlows?: SubscriptionFlowFragment[]
+const showErrors = (error: ApolloError): void => {
+  toaster.push(
+    <Message type="error" showIcon closable duration={3000}>
+      {error.message}
+    </Message>
+  )
 }
 
-export default function SubscriptionFlows({subscriptionFlows}: SubscriptionFlowsProps) {
-  const {t} = useTranslation()
+interface SubscriptionFlowsProps {
+  defaultSubscriptionMode: boolean
+}
 
+export default function SubscriptionFlows({defaultSubscriptionMode}: SubscriptionFlowsProps) {
+  const {t} = useTranslation()
+  const [subscriptionFlows, setSubscriptionFlows] = useState<SubscriptionFlowFragment[]>([])
   const subscriptionUserActions: SubscriptionUserAction[] = [
     {
       subscriptionEventKey: 'subscribeMailTemplate',
@@ -73,12 +94,46 @@ export default function SubscriptionFlows({subscriptionFlows}: SubscriptionFlows
     }
   ]
 
+  /**
+   * API SERVICES
+   */
+  const client = useMemo(() => getApiClientV2(), [])
+  const {data: subscriptionFlowsData, loading: loadingSubscriptionFlow} = useSubscriptionFlowsQuery(
+    {
+      variables: {
+        defaultFlowOnly: defaultSubscriptionMode
+      },
+      client,
+      onError: showErrors,
+      onCompleted: data => setSubscriptionFlows(data.SubscriptionFlows)
+    }
+  )
+
+  const {data: mailTemplates, loading: loadingMailTemplates} = useMailTemplateQuery({
+    client,
+    onError: showErrors
+  })
+
+  /**
+   * FUNCTIONS
+   */
+  function updateSubscriptionInterval(subscriptionInterval: SubscriptionIntervalFragment) {}
+
+  /**
+   * loading
+   * TODO: implement load indication
+   */
+  const loading = useMemo(
+    () => loadingSubscriptionFlow || loadingMailTemplates,
+    [loadingSubscriptionFlow]
+  )
+
   return (
     <>
-      <Table>
-        <TableHead>
-          {!!subscriptionFlows?.length &&
-            subscriptionFlows.map(subscriptionFlow => (
+      <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>
+        <Table>
+          <TableHead>
+            {subscriptionFlows.map(subscriptionFlow => (
               <TableRow>
                 {/* filter TODO: extract */}
                 <TableCell>
@@ -109,10 +164,9 @@ export default function SubscriptionFlows({subscriptionFlows}: SubscriptionFlows
                 <TableCell>Aktionen</TableCell>
               </TableRow>
             ))}
-        </TableHead>
-        <TableBody>
-          {!!subscriptionFlows?.length &&
-            subscriptionFlows.map(subscriptionFlow => (
+          </TableHead>
+          <TableBody>
+            {subscriptionFlows.map(subscriptionFlow => (
               <TableRow>
                 {/* filter */}
                 <TableCell></TableCell>
@@ -139,8 +193,9 @@ export default function SubscriptionFlows({subscriptionFlows}: SubscriptionFlows
                 </TableCell>
               </TableRow>
             ))}
-        </TableBody>
-      </Table>
+          </TableBody>
+        </Table>
+      </MailTemplatesContext.Provider>
     </>
   )
 }

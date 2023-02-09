@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next'
 import SubscriptionInterval from './subscriptionInterval'
 import {Tag} from 'rsuite'
 import styled from '@emotion/styled'
-import {MdError, MdWarning} from 'react-icons/all'
+import {MdWarning} from 'react-icons/all'
 
 const TimeLineContainer = styled.div`
   display: flex;
@@ -128,16 +128,13 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
                   position: 'absolute',
                   right: '-40px',
                   zIndex: 1,
-                  bottom: dayIndex === 0 ? '-15px' : '-10px',
+                  bottom: '-10px',
                   width: '100%'
                 }}>
                 <div style={{textAlign: 'center'}}>
-                  {dayIndex === 0 && <MdWarning size="30px" color="red" />}
-                  {dayIndex !== 0 && (
-                    <Tag color="green" size="sm">
-                      Tag {dayIndex}
-                    </Tag>
-                  )}
+                  <Tag color="green" size="sm">
+                    Tag {dayIndex}
+                  </Tag>
                 </div>
               </div>
             </div>
