@@ -4,13 +4,10 @@ import {MdChevronLeft} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Button, Col, FlexboxGrid, Loader as RLoader, Row} from 'rsuite'
 
-<<<<<<< HEAD:libs/ui/src/lib/singleView/singleViewTitle.tsx
-=======
 const ChevronLeft = styled(MdChevronLeft)`
   font-size: 48px;
 `
 
->>>>>>> master:apps/editor/src/app/atoms/modelTitle.tsx
 const FlexGrid = styled(FlexboxGrid)`
   padding-right: 5px;
   padding-bottom: 20px;
