@@ -125,7 +125,8 @@ describe('DashboardSubscriptionResolver', () => {
               active: true,
               amountPerMonthMin: 10,
               name: 'Foo',
-              slug: 'foo'
+              slug: 'foo',
+              description: {}
             }
           }
         },
@@ -165,7 +166,8 @@ describe('DashboardSubscriptionResolver', () => {
               active: true,
               amountPerMonthMin: 10,
               name: 'Bar',
-              slug: 'bar'
+              slug: 'bar',
+              description: {}
             }
           }
         },
@@ -241,7 +243,8 @@ describe('DashboardSubscriptionResolver', () => {
               active: true,
               amountPerMonthMin: 10,
               name: 'Foo',
-              slug: 'foo'
+              slug: 'foo',
+              description: {}
             }
           }
         },
@@ -281,7 +284,8 @@ describe('DashboardSubscriptionResolver', () => {
               active: true,
               amountPerMonthMin: 10,
               name: 'Bar',
-              slug: 'bar'
+              slug: 'bar',
+              description: {}
             }
           }
         },
@@ -357,7 +361,8 @@ describe('DashboardSubscriptionResolver', () => {
               active: true,
               amountPerMonthMin: 10,
               name: 'Foo',
-              slug: 'foo'
+              slug: 'foo',
+              description: {}
             }
           }
         },
@@ -417,7 +422,8 @@ describe('DashboardSubscriptionResolver', () => {
               active: true,
               amountPerMonthMin: 10,
               name: 'Bar',
-              slug: 'bar'
+              slug: 'bar',
+              description: {}
             }
           }
         },
@@ -501,7 +507,8 @@ describe('DashboardSubscriptionResolver', () => {
               active: true,
               amountPerMonthMin: 10,
               name: 'Foo',
-              slug: 'foo'
+              slug: 'foo',
+              description: {}
             }
           }
         },
