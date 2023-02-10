@@ -2,8 +2,15 @@ import styled from '@emotion/styled'
 import {ReactNode} from 'react'
 import {MdChevronLeft} from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {Button, FlexboxGrid, Loader as RLoader} from 'rsuite'
+import {Button, Col, FlexboxGrid, Loader as RLoader, Row} from 'rsuite'
 
+<<<<<<< HEAD:libs/ui/src/lib/singleView/singleViewTitle.tsx
+=======
+const ChevronLeft = styled(MdChevronLeft)`
+  font-size: 48px;
+`
+
+>>>>>>> master:apps/editor/src/app/atoms/modelTitle.tsx
 const FlexGrid = styled(FlexboxGrid)`
   padding-right: 5px;
   padding-bottom: 20px;
@@ -19,6 +26,29 @@ const Loader = styled(RLoader)`
 
 const SaveButton = styled(Button)`
   margin-right: 10px;
+`
+
+const PaddedCol = styled(Col)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: 3px;
+  margin-right: 1rem;
+`
+
+const FlexRow = styled(Row)`
+  display: flex;
+  align-items: center;
+`
+
+const FlexLink = styled(Link)`
+  display: flex;
+`
+
+const Heading = styled.h1`
+  font-size: 36px;
+  line-height: 50px;
 `
 
 interface modelTitleProps {
@@ -82,13 +112,14 @@ export function SingleViewTitle({
       {/* title */}
       <FlexboxGrid.Item colspan={12}>
         <FlexboxGrid align="middle">
-          <Link to={closePath}>
-            <h1>
-              <MdChevronLeft />
-            </h1>
-          </Link>
-
-          <h1>{titleView()}</h1>
+          <FlexRow>
+            <PaddedCol xs={29}>
+              <FlexLink to={closePath}>
+                <ChevronLeft />
+              </FlexLink>
+              <Heading>{titleView()}</Heading>
+            </PaddedCol>
+          </FlexRow>
         </FlexboxGrid>
       </FlexboxGrid.Item>
 
