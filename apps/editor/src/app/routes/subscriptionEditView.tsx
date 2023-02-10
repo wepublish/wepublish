@@ -285,6 +285,8 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     deactivation
   }
 
+  const goBackLink = editedUserId ? `/users/edit/${editedUserId}` : '/subscriptions'
+
   async function handleSave() {
     if (!memberPlan) return
     if (!paymentMethod) return
@@ -335,9 +337,9 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
         </Message>
       )
 
-      // go back to subscription list
+      // go back to subscription list or user edit, depending on where we came from
       if (closeAfterSave) {
-        navigate('/subscriptions')
+        navigate(goBackLink)
       }
     } catch (e) {
       toaster.push(
@@ -427,7 +429,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
         <ListViewContainer>
           <ListViewHeader>
             <h2>
-              <Link to={id ? '/subscriptions' : '/users'}>
+              <Link to={goBackLink}>
                 <MdChevronLeft />
               </Link>
               {id ? t('userSubscriptionEdit.editTitle') : t('userSubscriptionEdit.createTitle')}
