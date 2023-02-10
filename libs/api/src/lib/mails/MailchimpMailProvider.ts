@@ -147,7 +147,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
         }
       })
       if (this.responseIsError(response)) {
-        return new MailProviderError(response.response.data.message)
+        return new MailProviderError(response.response?.data.message)
       }
     } else {
       const response = await this.mailchimpClient.messages.send({
@@ -165,7 +165,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
         }
       })
       if (this.responseIsError(response)) {
-        return new MailProviderError(response.response.data.message)
+        return new MailProviderError(response.response?.data.message)
       }
     }
   }
@@ -174,7 +174,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
   async getTemplates(): Promise<MailProviderTemplate[] | MailProviderError> {
     const response = await this.mailchimpClient.templates.list()
     if (this.responseIsError(response)) {
-      return new MailProviderError(response.response.data.message)
+      return new MailProviderError(response.response?.data.message)
     }
     const templates: MailProviderTemplate[] = response.map(mailTemplateResponse => {
       return {

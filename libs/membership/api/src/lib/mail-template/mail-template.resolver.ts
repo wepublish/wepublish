@@ -5,7 +5,7 @@ import {MailProviderService} from './mail-provider.service'
 import {MailTemplateSyncService} from './mail-template-sync.service'
 import {computeUrl, MailProviderModel, MailTemplateWithUrlModel} from './mail-template.model'
 
-@Resolver(of => MailTemplateWithUrlModel)
+@Resolver(() => MailTemplateWithUrlModel)
 export class MailTemplatesResolver {
   constructor(
     private prismaService: PrismaService,
@@ -13,19 +13,19 @@ export class MailTemplatesResolver {
     private mailProviderService: MailProviderService
   ) {}
 
-  @Query(returns => [MailTemplateWithUrlModel])
+  @Query(() => [MailTemplateWithUrlModel])
   async mailTemplates() {
     const templates = await this.prismaService.mailTemplate.findMany()
     return this.decorate(templates)
   }
 
-  @Query(returns => MailProviderModel)
+  @Query(() => MailProviderModel)
   async provider() {
     const provider = await this.mailProviderService.getProvider()
     return {name: provider.name}
   }
 
-  @Mutation(returns => Boolean)
+  @Mutation(() => Boolean)
   async syncTemplates() {
     await this.syncService.synchronizeTemplates()
     return true
