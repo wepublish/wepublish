@@ -139,7 +139,7 @@ async function seed() {
     update: {},
     create: {
       default: true,
-      memberPlan: undefined,
+      memberPlan: {connect: {id: memberPlan.id}},
       paymentMethods: undefined,
       periodicities: [],
       autoRenewal: [],

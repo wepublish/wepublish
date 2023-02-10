@@ -29,12 +29,12 @@ type MailProviderModel {
 }
 
 type MailTemplateRef {
-  id: Float!
+  id: Int!
   name: String!
 }
 
 input MailTemplateRefInput {
-  id: Float!
+  id: Int!
 }
 
 type MailTemplateWithUrlModel {
@@ -144,9 +144,9 @@ type SubscriptionFlowModel {
   deactivationByUserMailTemplate: MailTemplateRef
   deactivationUnpaidMailTemplate: SubscriptionInterval
   default: Boolean!
-  id: Float!
+  id: Int!
   invoiceCreationMailTemplate: SubscriptionInterval
-  memberPlan: MemberPlanRef
+  memberPlan: MemberPlanRef!
   paymentMethods: [PaymentMethodRef!]!
   periodicities: [PaymentPeriodicity!]!
   reactivationMailTemplate: MailTemplateRef
@@ -161,7 +161,7 @@ input SubscriptionFlowModelCreateInput {
   deactivationByUserMailTemplate: MailTemplateRefInput
   deactivationUnpaidMailTemplate: SubscriptionIntervalCreateInput
   invoiceCreationMailTemplate: SubscriptionIntervalCreateInput
-  memberPlan: MemberPlanRefInput
+  memberPlan: MemberPlanRefInput!
   paymentMethods: [PaymentMethodRefInput!]!
   periodicities: [PaymentPeriodicity!]!
   reactivationMailTemplate: MailTemplateRefInput
@@ -175,7 +175,7 @@ input SubscriptionFlowModelUpdateInput {
   autoRenewal: [Boolean!]!
   deactivationByUserMailTemplate: MailTemplateRefInput
   deactivationUnpaidMailTemplate: SubscriptionIntervalUpdateInput
-  id: Float!
+  id: Int!
   invoiceCreationMailTemplate: SubscriptionIntervalUpdateInput
   paymentMethods: [PaymentMethodRefInput!]!
   periodicities: [PaymentPeriodicity!]!
@@ -186,20 +186,20 @@ input SubscriptionFlowModelUpdateInput {
 }
 
 type SubscriptionInterval {
-  daysAwayFromEnding: Float!
-  id: Float!
+  daysAwayFromEnding: Int!
+  id: Int!
   mailTemplate: MailTemplateRef!
 }
 
 input SubscriptionIntervalCreateInput {
-  daysAwayFromEnding: Float!
-  mailTemplateId: Float!
+  daysAwayFromEnding: Int!
+  mailTemplate: MailTemplateRefInput!
 }
 
 input SubscriptionIntervalUpdateInput {
-  daysAwayFromEnding: Float!
-  id: Float
-  mailTemplateId: Float!
+  daysAwayFromEnding: Int!
+  id: Int
+  mailTemplate: MailTemplateRefInput!
 }
 
 type VersionInformation {
