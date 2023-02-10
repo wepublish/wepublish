@@ -39,8 +39,6 @@ class SubscriptionInterval {
   daysAwayFromEnding: number
   @Field(type => MailTemplateRef)
   mailTemplate: MailTemplateRef
-  @Field()
-  mailTemplateId: number
 }
 
 @ObjectType()
