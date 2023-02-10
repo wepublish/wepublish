@@ -1325,10 +1325,10 @@
       }
     },
     "general": {
-      "deletedSuccess": "Deleted successfully",
-      "created": "Created successfully",
-      "updated": "Updated successfully",
-      "errorOnUpdate": "There was an error, please try again"
+      "deletedSuccess": "Supprimé avec succès",
+      "created": "Créé avec succès",
+      "updated": "Actualisé avec succès",
+      "errorOnUpdate": "Il y a eu une erreur - veuillez réessayer"
     }
   }
 }
