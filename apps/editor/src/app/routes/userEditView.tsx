@@ -29,7 +29,7 @@ import {
 
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
-import {ModelTitle} from '../atoms/modelTitle'
+import {SingleViewTitle} from '../../../../../libs/ui/src/lib/singleView/singleViewTitle'
 import {createCheckedPermissionComponent, useAuthorisation} from '../atoms/permissionControl'
 import {EditUserPassword} from '../atoms/user/editUserPassword'
 import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
@@ -348,7 +348,7 @@ function UserEditView() {
         fluid
         model={validationModel}
         formValue={{name, email, password}}>
-        <ModelTitle
+        <SingleViewTitle
           loading={false}
           title={titleView()}
           loadingTitle={t('comments.edit.title')}
