@@ -205,7 +205,7 @@
     "nanoid": "^2.1.7",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.0",
-    "openid-client": "^3.14.0",
+    "openid-client": "^5.4.0",
     "pino": "^6.11.0",
     "pino-http": "^5.3.0",
     "pino-multi-stream": "^5.2.0",
