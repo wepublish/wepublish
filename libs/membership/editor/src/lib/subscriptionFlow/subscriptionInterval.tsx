@@ -3,6 +3,7 @@ import {MailTemplatesContext, SubscriptionNonUserAction} from './subscriptionFlo
 import {FullMailTemplateFragment} from '@wepublish/editor/api-v2'
 import MailTemplateSelect from './mailTemplateSelect'
 import {useDraggable} from '@dnd-kit/core'
+import { MdDragIndicator } from 'react-icons/md'
 
 interface SubscriptionIntervalProps {
   subscriptionNonUserAction: SubscriptionNonUserAction
@@ -29,9 +30,6 @@ export default function SubscriptionInterval({
   return (
     <>
       <div
-        ref={setNodeRef}
-        {...listeners}
-        {...attributes}
         style={{
           ...draggableStyle,
           marginTop: '5px',
@@ -43,7 +41,10 @@ export default function SubscriptionInterval({
           textOverflow: 'ellipsis',
           width: '100%'
         }}>
-        <div>{title}</div>
+        <div>
+          <span style={{ cursor: 'move' }} ref={setNodeRef} {...listeners} {...attributes}><MdDragIndicator /></span>
+          {title}
+        </div>
         <div>
           <MailTemplateSelect
             mailTemplates={mailTemplates}
