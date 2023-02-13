@@ -60,3 +60,7 @@ export * from './challenges/algebraicCaptchaChallenge'
 export * from './payments/payrexxSubscriptionPaymentProvider'
 
 export {getUserForCredentials} from './graphql/user/user.queries'
+
+export * from '@wepublish/authentication/api'
+export * from '@wepublish/user/api'
+export * from '@wepublish/permissions/api'
