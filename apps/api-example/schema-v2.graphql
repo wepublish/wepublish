@@ -57,7 +57,7 @@ input MemberPlanRefInput {
 
 type Mutation {
   createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): [SubscriptionFlowModel!]!
-  deleteSubscriptionFlow(subscriptionFlowId: Float!): [SubscriptionFlowModel!]!
+  deleteSubscriptionFlow(subscriptionFlowId: Int!): [SubscriptionFlowModel!]!
   syncTemplates: Boolean!
   updateSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelUpdateInput!): [SubscriptionFlowModel!]!
 }

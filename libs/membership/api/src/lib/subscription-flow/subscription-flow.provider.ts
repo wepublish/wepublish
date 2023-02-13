@@ -1,4 +1,4 @@
-import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
+import {Args, Int, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {
   SubscriptionFlowModel,
   SubscriptionFlowModelCreateInput,
@@ -26,7 +26,7 @@ export class SubscriptionFlowProvider {
   }
 
   @Mutation(returns => [SubscriptionFlowModel], {name: 'deleteSubscriptionFlow'})
-  async deleteSubscriptionFlow(@Args('subscriptionFlowId') subscriptionFlowId: number) {
+  async deleteSubscriptionFlow(@Args('subscriptionFlowId', { type: () => Int }) subscriptionFlowId: number) {
     return await this.controller.deleteFlow(subscriptionFlowId)
   }
 }
