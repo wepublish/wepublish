@@ -103,8 +103,7 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
   }
 
   return (
-    <>
-      <DndContext onDragEnd={event => intervalDragEnd(event)}>
+    <DndContext onDragEnd={event => intervalDragEnd(event)}>
         {/* upper subscription intervals */}
         <TimeLineContainer style={{alignItems: 'flex-end'}}>
           {timeLineArray.map((day, dayIndex) => {
@@ -198,6 +197,5 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
           })}
         </TimeLineContainer>
       </DndContext>
-    </>
   )
 }

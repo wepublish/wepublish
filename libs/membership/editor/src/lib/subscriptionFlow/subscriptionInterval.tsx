@@ -28,8 +28,7 @@ export default function SubscriptionInterval({
     : undefined
 
   return (
-    <>
-      <div
+    <div
         style={{
           ...draggableStyle,
           marginTop: '5px',
@@ -52,6 +51,5 @@ export default function SubscriptionInterval({
           />
         </div>
       </div>
-    </>
   )
 }
