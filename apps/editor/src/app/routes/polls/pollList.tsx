@@ -136,7 +136,7 @@ function PollList() {
             </RCell>
           </Column>
           {/* delete */}
-          <Column resizable>
+          <Column resizable fixed="right">
             <HeaderCell align={'center'}>{t('pollList.delete')}</HeaderCell>
             <PaddedCell align={'center'}>
               {(poll: RowDataType<Poll>) => (

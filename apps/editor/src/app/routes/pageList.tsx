@@ -457,7 +457,7 @@ function PageList() {
 
               setConfirmationDialogOpen(false)
             }}
-            color="red">
+            appearance="primary">
             {t('pages.panels.confirm')}
           </Button>
           <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
