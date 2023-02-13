@@ -8,6 +8,7 @@ import {
   SubscriptionFlowFragment,
   SubscriptionFlowModel,
   SubscriptionIntervalFragment,
+  useDeleteSubscriptionFlowMutation,
   useMailTemplateQuery,
   useSubscriptionFlowsQuery
 } from '@wepublish/editor/api-v2'
@@ -109,6 +110,11 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
     onCompleted: data => setSubscriptionFlows(data.SubscriptionFlows)
   })
 
+  const [deleteSubscriptionFlow, {loading: deletionLoading}] = useDeleteSubscriptionFlowMutation({
+    client,
+    onError: showErrors
+  })
+
   // get mail templates
   const {data: mailTemplates, loading: loadingMailTemplates} = useMailTemplateQuery({
     client,
@@ -180,7 +186,8 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
                   <SubscriptionFlow subscriptionFlow={subscriptionFlow} />
                 </TableCell>
                 <TableCell align="center">
-                  <IconButton color="red" circle appearance="primary" icon={<MdDelete />} />
+                  <IconButton color="red" circle appearance="primary" icon={<MdDelete />}
+                    onClick={() => deleteSubscriptionFlow({ variables: { subscriptionFlowId: subscriptionFlow.id } })} />
                 </TableCell>
               </TableRow>
             ))}
