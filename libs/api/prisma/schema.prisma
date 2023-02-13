@@ -656,7 +656,7 @@ model Session {
   token     String   @unique
 
   userID String
-  user   User   @relation(fields: [userID], references: [id])
+  user   User   @relation(fields: [userID], references: [id], onDelete: Cascade)
 
   @@index([userID])
   @@index([token])
@@ -1011,8 +1011,8 @@ model SubscriptionFlow {
 
   default               Boolean @default(false)
 
-  memberPlan            MemberPlan? @relation(fields: [memberPlanId], references: [id])
-  memberPlanId          String?
+  memberPlan            MemberPlan @relation(fields: [memberPlanId], references: [id])
+  memberPlanId          String
 
 	paymentMethods        PaymentMethod[]
   periodicities         PaymentPeriodicity[]

@@ -2,6 +2,7 @@ import {Test, TestingModule} from '@nestjs/testing'
 import {MailTemplate} from '@prisma/client'
 import {PrismaService} from '@wepublish/api'
 import {MailProviderService} from './mail-provider.service'
+import {MailTemplateSyncService} from './mail-template-sync.service'
 import {MailTemplatesResolver} from './mail-template.resolver'
 
 const mockTemplate: MailTemplate = {
@@ -15,14 +16,15 @@ const mockTemplate: MailTemplate = {
 }
 
 const prismaServiceMock = {
-  mailTemplate: jest.fn().mockReturnThis(),
-  findMany: jest.fn((): MailTemplate[] => [mockTemplate])
+  mailTemplate: {
+    findMany: jest.fn((): MailTemplate[] => [mockTemplate])
+  }
 }
 
 const mailProviderServiceMock = {
   name: 'MockProvider',
   getProvider: jest.fn().mockReturnThis(),
-  computeUrl: jest.fn((): string => 'https://example.com/template.html')
+  getTemplateUrl: jest.fn((): string => 'https://example.com/template.html')
 }
 
 describe('MailTemplatesResolver', () => {
@@ -33,6 +35,7 @@ describe('MailTemplatesResolver', () => {
       providers: [
         MailTemplatesResolver,
         {provide: PrismaService, useValue: prismaServiceMock},
+        {provide: MailTemplateSyncService, useValue: {}},
         {provide: MailProviderService, useValue: mailProviderServiceMock}
       ]
     }).compile()
@@ -47,7 +50,7 @@ describe('MailTemplatesResolver', () => {
   it('returns all templates', async () => {
     const result = await resolver.mailTemplates()
     expect(result.length).toEqual(1)
-    expect(result[0].name).toEqual('MockTemplate')
+    expect(result[0].name).toEqual('Mock Template')
   })
 
   it('computes the template url', async () => {

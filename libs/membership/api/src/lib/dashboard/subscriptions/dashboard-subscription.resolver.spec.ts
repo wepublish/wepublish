@@ -125,7 +125,8 @@ describe('DashboardSubscriptionResolver', () => {
               active: true,
               amountPerMonthMin: 10,
               name: 'Foo',
-              slug: 'foo'
+              slug: 'foo',
+              description: {}
             }
           }
         },
@@ -165,7 +166,8 @@ describe('DashboardSubscriptionResolver', () => {
               active: true,
               amountPerMonthMin: 10,
               name: 'Bar',
-              slug: 'bar'
+              slug: 'bar',
+              description: {}
             }
           }
         },
@@ -196,7 +198,9 @@ describe('DashboardSubscriptionResolver', () => {
       }
     ]
 
-    await Promise.all(mockData.map(data => prisma.subscription.create({data})))
+    // Create first two records before the third
+    await Promise.all(mockData.slice(0, 1).map(data => prisma.subscription.create({data})))
+    await prisma.subscription.create({data: mockData[2]})
 
     await request(app.getHttpServer())
       .post('')
@@ -241,7 +245,8 @@ describe('DashboardSubscriptionResolver', () => {
               active: true,
               amountPerMonthMin: 10,
               name: 'Foo',
-              slug: 'foo'
+              slug: 'foo',
+              description: {}
             }
           }
         },
@@ -281,7 +286,8 @@ describe('DashboardSubscriptionResolver', () => {
               active: true,
               amountPerMonthMin: 10,
               name: 'Bar',
-              slug: 'bar'
+              slug: 'bar',
+              description: {}
             }
           }
         },
@@ -357,7 +363,8 @@ describe('DashboardSubscriptionResolver', () => {
               active: true,
               amountPerMonthMin: 10,
               name: 'Foo',
-              slug: 'foo'
+              slug: 'foo',
+              description: {}
             }
           }
         },
@@ -417,7 +424,8 @@ describe('DashboardSubscriptionResolver', () => {
               active: true,
               amountPerMonthMin: 10,
               name: 'Bar',
-              slug: 'bar'
+              slug: 'bar',
+              description: {}
             }
           }
         },
@@ -501,7 +509,8 @@ describe('DashboardSubscriptionResolver', () => {
               active: true,
               amountPerMonthMin: 10,
               name: 'Foo',
-              slug: 'foo'
+              slug: 'foo',
+              description: {}
             }
           }
         },

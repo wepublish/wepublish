@@ -5,12 +5,10 @@ import {SelectPicker} from 'rsuite'
 interface MailTemplateSelectProps {
   mailTemplates: FullMailTemplateFragment[]
   mailTemplateId?: number
-  onMailTemplateChange(mailTemplateId: number): void
 }
 export default function MailTemplateSelect({
   mailTemplates,
-  mailTemplateId,
-  onMailTemplateChange
+  mailTemplateId
 }: MailTemplateSelectProps) {
   const inactiveMailTemplates = useMemo(
     () => mailTemplates.filter(mailTemplate => mailTemplate.remoteMissing),
@@ -23,7 +21,9 @@ export default function MailTemplateSelect({
       data={mailTemplates.map(mailTemplate => ({label: mailTemplate.name, value: mailTemplate.id}))}
       disabledItemValues={inactiveMailTemplates.map(mailTemplate => mailTemplate.id)}
       defaultValue={mailTemplateId}
-      onSelect={value => onMailTemplateChange(value)}
+      onSelect={value => {
+        /* TODO: save change */
+      }}
     />
   )
 }

@@ -3,11 +3,9 @@ import {PrismaService} from '@wepublish/api'
 import {
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
-  SubscriptionInterval,
+  SubscriptionIntervalCreateInput,
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
-import {PaymentMethodRefInput} from '@wepublish/editor/api-v2'
-import {PaymentPeriodicity} from '@prisma/client'
 
 @Injectable()
 export class SubscriptionFlowController {
@@ -22,6 +20,9 @@ export class SubscriptionFlowController {
 
     return await this.prismaService.subscriptionFlow.findMany({
       where,
+      orderBy: {
+        default: 'desc'
+      },
       include: {
         memberPlan: true,
         subscribeMailTemplate: true,
@@ -49,14 +50,7 @@ export class SubscriptionFlowController {
     })
   }
   async createFlow(flow: SubscriptionFlowModelCreateInput) {
-    if (
-      await this.filterHasOverlap(
-        flow.memberPlan.id,
-        flow.paymentMethods,
-        flow.periodicities,
-        flow.autoRenewal
-      )
-    ) {
+    if (await this.filterHasOverlap(flow.memberPlan.id, flow)) {
       throw new Error('You cant create this flow because there is a filter overlap!')
     }
 
@@ -74,26 +68,29 @@ export class SubscriptionFlowController {
         subscribeMailTemplate: {
           connect: flow.subscribeMailTemplate
         },
-        invoiceCreationMailTemplate: {
-          create: flow.invoiceCreationMailTemplate
-        },
+        invoiceCreationMailTemplate:
+          flow.invoiceCreationMailTemplate == null
+            ? {}
+            : {create: this.nestMailInterval(flow.invoiceCreationMailTemplate)},
         renewalSuccessMailTemplate: {
           connect: flow.renewalSuccessMailTemplate
         },
         renewalFailedMailTemplate: {
           connect: flow.renewalFailedMailTemplate
         },
-        deactivationUnpaidMailTemplate: {
-          create: flow.deactivationUnpaidMailTemplate
-        },
-        deactivationByUserMailTemplate: {
-          connect: flow.deactivationByUserMailTemplate
-        },
+        deactivationUnpaidMailTemplate:
+          flow.deactivationUnpaidMailTemplate == null
+            ? {}
+            : {create: this.nestMailInterval(flow.deactivationUnpaidMailTemplate)},
+        deactivationByUserMailTemplate:
+          flow.deactivationByUserMailTemplate == null
+            ? {}
+            : {connect: flow.deactivationByUserMailTemplate},
         reactivationMailTemplate: {
           connect: flow.reactivationMailTemplate
         },
         additionalIntervals: {
-          create: flow.additionalIntervals
+          create: flow.additionalIntervals.map(this.nestMailInterval)
         }
       }
     })
@@ -112,15 +109,7 @@ export class SubscriptionFlowController {
     })
     if (!originalFlow) throw Error('The given filter is not found!')
 
-    if (
-      await this.filterHasOverlap(
-        originalFlow.memberPlanId || '',
-        flow.paymentMethods,
-        flow.periodicities,
-        flow.autoRenewal,
-        flow.id
-      )
-    ) {
+    if (await this.filterHasOverlap(originalFlow.memberPlanId, flow)) {
       throw new Error('You cant update this flow because there is a filter overlap!')
     }
 
@@ -141,11 +130,13 @@ export class SubscriptionFlowController {
         invoiceCreationMailTemplate: flow.invoiceCreationMailTemplate
           ? {
               upsert: {
-                create: flow.invoiceCreationMailTemplate,
-                update: flow.invoiceCreationMailTemplate
+                create: this.nestMailInterval(flow.invoiceCreationMailTemplate),
+                update: this.nestMailInterval(flow.invoiceCreationMailTemplate)
               }
             }
-          : {disconnect: true, delete: true},
+          : originalFlow.invoiceCreationMailTemplateId
+          ? {delete: true}
+          : {},
         renewalSuccessMailTemplate: flow.renewalSuccessMailTemplate
           ? {
               connect: flow.renewalSuccessMailTemplate
@@ -159,11 +150,13 @@ export class SubscriptionFlowController {
         deactivationUnpaidMailTemplate: flow.deactivationUnpaidMailTemplate
           ? {
               upsert: {
-                create: flow.deactivationUnpaidMailTemplate,
-                update: flow.deactivationUnpaidMailTemplate
+                create: this.nestMailInterval(flow.deactivationUnpaidMailTemplate),
+                update: this.nestMailInterval(flow.deactivationUnpaidMailTemplate)
               }
             }
-          : {disconnect: true, delete: true},
+          : originalFlow.deactivationUnpaidMailTemplateId
+          ? {delete: true}
+          : {},
         deactivationByUserMailTemplate: flow.deactivationByUserMailTemplate
           ? {
               connect: flow.deactivationByUserMailTemplate
@@ -178,7 +171,7 @@ export class SubscriptionFlowController {
           delete: originalFlow.additionalIntervals.map(additionalInterval => ({
             id: additionalInterval.id
           })),
-          create: flow.additionalIntervals
+          create: flow.additionalIntervals.map(this.nestMailInterval)
         }
       }
     })
@@ -228,71 +221,61 @@ export class SubscriptionFlowController {
     return this.getFlow(false)
   }
 
-  async updateInterval(interval: SubscriptionIntervalUpdateInput): Promise<SubscriptionInterval> {
-    return await this.prismaService.subscriptionInterval.update({
-      where: {id: interval.id},
-      data: {
-        mailTemplateId: interval.mailTemplateId,
-        daysAwayFromEnding: interval.daysAwayFromEnding
+  async filterHasOverlap(memberPlanId: string, newFlow: Partial<SubscriptionFlowModelUpdateInput>) {
+    const allFlows = await this.prismaService.subscriptionFlow.findMany({
+      where: {
+        memberPlan: {
+          id: memberPlanId
+        }
       },
-      include: {
-        mailTemplate: true
+      select: {
+        id: true,
+        paymentMethods: {
+          select: {
+            id: true
+          }
+        },
+        periodicities: true,
+        autoRenewal: true
       }
     })
+
+    for (const flow of allFlows) {
+      // skip itself
+      if (newFlow.id === flow.id) {
+        continue
+      }
+      const existingPM = new Set(flow.paymentMethods.map(pm => pm.id))
+      const newPM = new Set((newFlow.paymentMethods || []).map(pm => pm.id))
+
+      const existingPe = new Set(flow.periodicities)
+      const newPe = new Set(newFlow.periodicities)
+
+      const existingAr = new Set(flow.autoRenewal)
+      const newAr = new Set(newFlow.autoRenewal)
+
+      // find filter values that are distinct from the existing values
+      const pmDifference = new Set([...newPM].filter(x => !existingPM.has(x)))
+      const peDifference = new Set([...newPe].filter(x => !existingPe.has(x)))
+      const arDifference = new Set([...newAr].filter(x => !existingAr.has(x)))
+
+      if (pmDifference.size === 0 && peDifference.size === 0 && arDifference.size === 0) {
+        return true
+      }
+    }
+    return false
   }
 
-  async filterHasOverlap(
-    memberPlanId: string,
-    paymentMethods: PaymentMethodRefInput[],
-    periodicities: PaymentPeriodicity[],
-    autoRenewal: boolean[],
-    excludeFlowId: number | null = null
+  private nestMailInterval(
+    interval: SubscriptionIntervalCreateInput | SubscriptionIntervalUpdateInput
   ) {
-    let idFilter = {}
-    if (excludeFlowId) {
-      idFilter = {
-        id: {
-          not: excludeFlowId
+    return {
+      daysAwayFromEnding: interval.daysAwayFromEnding,
+      mailTemplate: {
+        connect: {
+          id: interval.mailTemplate.id
         }
       }
     }
-
-    const overlaps = await this.prismaService.subscriptionFlow.findMany({
-      where: {
-        AND: [
-          idFilter,
-          {
-            default: false
-          },
-          {
-            memberPlanId
-          },
-          {
-            paymentMethods: {
-              some: {
-                id: {
-                  in: paymentMethods.map(paymentMethode => paymentMethode.id)
-                }
-              }
-            }
-          },
-          {
-            periodicities: {
-              hasSome: periodicities
-            }
-          },
-          {
-            autoRenewal: {
-              hasSome: autoRenewal
-            }
-          }
-        ]
-      },
-      include: {
-        paymentMethods: true
-      }
-    })
-    if (overlaps.length > 0) return true
-    return false
   }
 }

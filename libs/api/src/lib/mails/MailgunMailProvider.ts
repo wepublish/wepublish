@@ -147,8 +147,12 @@ export class MailgunMailProvider extends BaseMailProvider {
         }
       })
       return templates
-    } catch (e) {
-      return new MailProviderError(e.details)
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        return new MailProviderError(e.message)
+      } else {
+        return new MailProviderError(String(e))
+      }
     }
   }
 

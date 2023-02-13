@@ -1,11 +1,7 @@
-import React, {useContext, useMemo} from 'react'
+import React, {useContext} from 'react'
 import {MailTemplatesContext, SubscriptionNonUserAction} from './subscriptionFlows'
-import {
-  FullMailTemplateFragment,
-  useUpdateSubscriptionIntervalMutation
-} from '@wepublish/editor/api-v2'
+import {FullMailTemplateFragment} from '@wepublish/editor/api-v2'
 import MailTemplateSelect from './mailTemplateSelect'
-import {getApiClientV2} from '../../../../../../apps/editor/src/app/utility'
 import {useDraggable} from '@dnd-kit/core'
 
 interface SubscriptionIntervalProps {
@@ -30,32 +26,6 @@ export default function SubscriptionInterval({
       }
     : undefined
 
-  /**
-   * API SERVICES
-   */
-  const client = useMemo(() => getApiClientV2(), [])
-  const [updateSubscriptionIntervalMutation, {loading}] = useUpdateSubscriptionIntervalMutation({
-    client
-  })
-
-  /**
-   * FUNCTIONS
-   */
-  // todo => refetch and find __typename solution
-  async function changeMailTemplate(mailTemplateId: number) {
-    const updatedInterval = await updateSubscriptionIntervalMutation({
-      variables: {
-        subscriptionInterval: {
-          ...subscriptionInterval,
-          mailTemplateId,
-          mailTemplate: undefined,
-          __typename: undefined
-        }
-      }
-    })
-    console.log('updated interval', updatedInterval)
-  }
-
   return (
     <>
       <div
@@ -78,7 +48,6 @@ export default function SubscriptionInterval({
           <MailTemplateSelect
             mailTemplates={mailTemplates}
             mailTemplateId={subscriptionInterval?.mailTemplate.id}
-            onMailTemplateChange={mailTemplateId => changeMailTemplate(mailTemplateId)}
           />
         </div>
       </div>

@@ -143,7 +143,8 @@
         "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen",
         "enterAuthors": "Bitte Autor:in hinzufügen",
         "peerDisabled": "Dieser Peer ist momentan deaktiviert",
-        "comments": "Kommentare"
+        "comments": "Kommentare",
+        "loadingPeerArticles": "Artikel von Peers laden..."
       }
     },
     "articles": {
@@ -222,7 +223,7 @@
       "comment": {
         "title": "Kommentarblock Bearbeiten",
         "edit": "Bearbeiten",
-        "filterByTag": "Kommentare filtern nach Etikett",
+        "filterByTag": "Kommentare filtern nach Tag",
         "commentsFilterByTagInformation": "Alle untenstehenden Kommentare werden angezeigt",
         "cherryPick": "Spezifische Kommentare auswählen",
         "displayName": "Anzeigename",
@@ -239,7 +240,7 @@
       "event": {
         "title": "Eventblock Bearbeiten",
         "edit": "Bearbeiten",
-        "filterByTag": "Events filtern nach Etikett",
+        "filterByTag": "Events filtern nach Tag",
         "eventsFilterByTagInformation": "Alle untenstehenden Events werden angezeigt",
         "cherryPick": "Spezifische Events auswählen",
         "events": "{{count}} Event",
@@ -401,8 +402,8 @@
       },
       "edit": {
         "title": "Kommentar editieren",
-        "tags": "Etiketten",
-        "unnamedTag": "<Unbennantes Etikett>",
+        "tags": "Tags",
+        "unnamedTag": "<Unbennanter Tag>",
         "loading": "Laden",
         "success": "Kommentar erfolgreich editiert"
       },
@@ -709,7 +710,7 @@
     },
     "navbar": {
       "events": "Events",
-      "eventTags": "Etiketten",
+      "eventTags": "Tags",
       "articles": "Artikel",
       "blocks": {
         "topMenu": "Inhalts-Blöcke",
@@ -1269,7 +1270,17 @@
       "days": "Tage",
       "allowGuestCommentRating": "Erlaube Gast-Bewertungen von Kommentaren",
       "polls": "Umfragen",
-      "guestPollVote": "Erlaube Gast-Abstimmungen bei Umfragen"
+      "guestPollVote": "Erlaube Gast-Abstimmungen bei Umfragen",
+      "warnings": {
+        "guestCommenting": "Erlaube Gastbesuchern (nicht eingeloggt), Kommentare zu schreiben und zu veröffentlichen.",
+        "guestCommentRating": "Erlaube (nicht eingeloggten) Gastbesuchern, die Kommentare anderer Personen zu bewerten.",
+        "guestPollVote": "Erlaube Gastbesuchern (nicht eingeloggt), an Umfragen teilzunehmen.",
+        "loginMinutes": "Wie lange (in Minuten) ist der per E-Mail gesendete Link zum Erstellen eines Kontos gültig. Die Standardeinstellung ist eine Woche (10080 / 60 / 24).",
+        "passwordToken": "Wie lange (in Minuten) der per E-Mail gesendete Link zum Zurücksetzen des Passworts gültig ist. Die Standardeinstellung ist ein Tag (1440 / 60 / 24).",
+        "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden.",
+        "invoiceReminders": "Wie oft wird der Benutzer daran erinnert, das Abonnement zu bezahlen (einmal pro Tag).",
+        "askOperators": "Achtung: Das Ändern einer oder mehrerer Einstellungen kann die Website zum abstürzen bringen oder andere unvorhersehbare Folgen haben. Falls es Unsicherheiten gibt, wendet euch an eure Operators. Falls nicht, einfach fortfahren."
+      }
     },
     "createOrUpdateUserPassword": {
       "unexpectedErrorNoUserFound": "Unerwartetet Fehler: kein User gefunden"
@@ -1326,7 +1337,7 @@
         "startsAt": "Startet um",
         "endsAt": "Ended um",
         "description": "Beschreibung",
-        "tags": "Etiketten",
+        "tags": "Tags",
         "image": "Bild",
         "scheduled": "Geplant",
         "cancelled": "Abgesagt",

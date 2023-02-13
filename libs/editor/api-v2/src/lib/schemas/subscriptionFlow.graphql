@@ -10,12 +10,6 @@ mutation UpdateSubscriptionFlow($subscriptionFlow: SubscriptionFlowModelUpdateIn
   }
 }
 
-mutation UpdateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalUpdateInput!) {
-  updateSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
-    ...SubscriptionInterval
-  }
-}
-
 fragment SubscriptionFlow on SubscriptionFlowModel {
   id
   default

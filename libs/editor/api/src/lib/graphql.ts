@@ -2044,8 +2044,10 @@ export type QueryPeerArticleArgs = {
 export type QueryPeerArticlesArgs = {
   cursors?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<ArticleFilter>;
+  first?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<SortOrder>;
   peerFilter?: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<ArticleSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
@@ -2646,6 +2648,8 @@ export type PeerArticleListQueryVariables = Exact<{
   peerFilter?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<SortOrder>;
   sort?: InputMaybe<ArticleSort>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -4495,13 +4499,15 @@ export type ArticleListQueryHookResult = ReturnType<typeof useArticleListQuery>;
 export type ArticleListLazyQueryHookResult = ReturnType<typeof useArticleListLazyQuery>;
 export type ArticleListQueryResult = Apollo.QueryResult<ArticleListQuery, ArticleListQueryVariables>;
 export const PeerArticleListDocument = gql`
-    query PeerArticleList($filter: ArticleFilter, $cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort) {
+    query PeerArticleList($filter: ArticleFilter, $cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort, $take: Int, $skip: Int) {
   peerArticles(
     cursors: $cursors
     peerFilter: $peerFilter
     order: $order
     sort: $sort
     filter: $filter
+    take: $take
+    skip: $skip
   ) {
     nodes {
       peer {
@@ -4539,6 +4545,8 @@ ${ArticleRefFragmentDoc}`;
  *      peerFilter: // value for 'peerFilter'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
  *   },
  * });
  */
