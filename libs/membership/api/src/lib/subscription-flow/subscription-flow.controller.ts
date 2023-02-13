@@ -221,13 +221,14 @@ export class SubscriptionFlowController {
     return this.getFlow(false)
   }
 
-  async filterHasOverlap(memberPlanId: string, newFlow: Partial<SubscriptionFlowModelUpdateInput>) {
+  async filterHasOverlap(
+    memberPlanId: string | null,
+    newFlow: Partial<SubscriptionFlowModelUpdateInput>
+  ) {
+    const whereClause = memberPlanId ? {memberPlan: {id: memberPlanId}} : {memberPlan: null}
+
     const allFlows = await this.prismaService.subscriptionFlow.findMany({
-      where: {
-        memberPlan: {
-          id: memberPlanId
-        }
-      },
+      where: whereClause,
       select: {
         id: true,
         paymentMethods: {
