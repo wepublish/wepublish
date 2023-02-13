@@ -130,7 +130,7 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
         <Table>
           <TableHead>
             {subscriptionFlows.map(subscriptionFlow => (
-              <TableRow>
+              <TableRow key={subscriptionFlow.id}>
                 {/* filter TODO: extract */}
                 <TableCell>
                   <b>Memberplan</b>
@@ -149,7 +149,7 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
                 {subscriptionUserActions &&
                   subscriptionUserActions.map(subscriptionUserAction => (
                     <>
-                      <TableCell>{subscriptionUserAction.title}</TableCell>
+                      <TableCell key={subscriptionUserAction.subscriptionEventKey}>{subscriptionUserAction.title}</TableCell>
                     </>
                   ))}
 
@@ -163,7 +163,7 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
           </TableHead>
           <TableBody>
             {subscriptionFlows.map(subscriptionFlow => (
-              <TableRow>
+              <TableRow key={subscriptionFlow.id}>
                 {/* filter */}
                 <TableCell></TableCell>
                 <TableCell></TableCell>
@@ -175,7 +175,7 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
                   subscriptionUserActions.map(subscriptionUserAction => (
                     <>
                       <TableCell>
-                        <SelectPicker data={[]} />
+                          <SelectPicker data={[]} />
                       </TableCell>
                     </>
                   ))}
