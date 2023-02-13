@@ -173,6 +173,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.3.21",
+    "@dnd-kit/core": "^6.0.7",
     "@emotion/react": "11.10.5",
     "@emotion/styled": "11.10.5",
     "@karma.run/react": "^0.1.2",

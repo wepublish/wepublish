@@ -6,16 +6,29 @@ import {
 } from '@wepublish/editor/api-v2'
 import MailTemplateSelect from './mailTemplateSelect'
 import {getApiClientV2} from '../../../../../../apps/editor/src/app/utility'
+import {useDraggable} from '@dnd-kit/core'
 
 interface SubscriptionIntervalProps {
   subscriptionNonUserAction: SubscriptionNonUserAction
 }
 export default function SubscriptionInterval({
-  subscriptionNonUserAction,
-  updateSubscriptionInterval
+  subscriptionNonUserAction
 }: SubscriptionIntervalProps) {
   const {subscriptionInterval, title, description, subscriptionEventKey} = subscriptionNonUserAction
   const mailTemplates = useContext<FullMailTemplateFragment[]>(MailTemplatesContext)
+
+  // draggable
+  const {attributes, listeners, setNodeRef, transform} = useDraggable({
+    id: `draggable-${subscriptionInterval?.id}`,
+    data: {
+      subscriptionInterval
+    }
+  })
+  const draggableStyle = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`
+      }
+    : undefined
 
   /**
    * API SERVICES
@@ -28,6 +41,7 @@ export default function SubscriptionInterval({
   /**
    * FUNCTIONS
    */
+  // todo => refetch and find __typename solution
   async function changeMailTemplate(mailTemplateId: number) {
     const updatedInterval = await updateSubscriptionIntervalMutation({
       variables: {
@@ -45,7 +59,11 @@ export default function SubscriptionInterval({
   return (
     <>
       <div
+        ref={setNodeRef}
+        {...listeners}
+        {...attributes}
         style={{
+          ...draggableStyle,
           marginTop: '5px',
           padding: '5px',
           border: '1px solid black',
