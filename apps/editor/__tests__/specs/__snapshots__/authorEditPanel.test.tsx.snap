@@ -316,7 +316,7 @@ exports[`Author Edit Panel should render 1`] = `
                 role="region"
               >
                 <div
-                  class="css-1pvlote-PlaceholderInputWrapper e1tn6rau0"
+                  class="css-ikjsbz-PlaceholderInputWrapper e1tn6rau0"
                 >
                   <button
                     class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"
@@ -1093,7 +1093,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                 role="region"
               >
                 <div
-                  class="css-1pvlote-PlaceholderInputWrapper e1tn6rau0"
+                  class="css-ikjsbz-PlaceholderInputWrapper e1tn6rau0"
                 >
                   <button
                     class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"
