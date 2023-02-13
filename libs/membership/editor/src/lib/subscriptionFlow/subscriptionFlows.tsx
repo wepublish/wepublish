@@ -125,8 +125,7 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
   )
 
   return (
-    <>
-      <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>
+    <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>
         <Table>
           <TableHead>
             {subscriptionFlows.map(subscriptionFlow => (
@@ -148,9 +147,7 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
                 {/* mail templates only TODO: extract */}
                 {subscriptionUserActions &&
                   subscriptionUserActions.map(subscriptionUserAction => (
-                    <>
-                      <TableCell key={subscriptionUserAction.subscriptionEventKey}>{subscriptionUserAction.title}</TableCell>
-                    </>
+                    <TableCell key={subscriptionUserAction.subscriptionEventKey}>{subscriptionUserAction.title}</TableCell>
                   ))}
 
                 {/* individual flow TODO: extract */}
@@ -173,11 +170,9 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
                 {/* user actions */}
                 {subscriptionUserActions &&
                   subscriptionUserActions.map(subscriptionUserAction => (
-                    <>
-                      <TableCell>
+                    <TableCell>
                           <SelectPicker data={[]} />
                       </TableCell>
-                    </>
                   ))}
 
                 {/* individual flow */}
@@ -192,6 +187,5 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
           </TableBody>
         </Table>
       </MailTemplatesContext.Provider>
-    </>
   )
 }
