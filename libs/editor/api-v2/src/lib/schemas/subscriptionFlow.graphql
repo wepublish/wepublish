@@ -4,8 +4,20 @@ query SubscriptionFlows($defaultFlowOnly: Boolean!) {
   }
 }
 
+mutation CreateSubscriptionFlow($subscriptionFlow: SubscriptionFlowModelCreateInput!) {
+  createSubscriptionFlow(subscriptionFlow: $subscriptionFlow) {
+    ...SubscriptionFlow
+  }
+}
+
 mutation UpdateSubscriptionFlow($subscriptionFlow: SubscriptionFlowModelUpdateInput!) {
   updateSubscriptionFlow(subscriptionFlow: $subscriptionFlow) {
+    ...SubscriptionFlow
+  }
+}
+
+mutation DeleteSubscriptionFlow($subscriptionFlowId: Int!) {
+  deleteSubscriptionFlow(subscriptionFlowId: $subscriptionFlowId) {
     ...SubscriptionFlow
   }
 }
