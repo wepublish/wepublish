@@ -43,30 +43,22 @@ async function seed() {
     }
   })
 
-  const mailTemplate1 = await prisma.mailTemplate.upsert({
-    where: {
-      externalMailTemplateId: 'sample-slug-1'
-    },
-    update: {},
-    create: {
-      name: 'sample-template-existing',
-      description: 'sample-template-description',
-      externalMailTemplateId: 'sample-slug-1'
-    }
-  })
-
-  const mailTemplate2 = await prisma.mailTemplate.upsert({
-    where: {
-      externalMailTemplateId: 'sample-slug-2'
-    },
-    update: {},
-    create: {
-      name: 'sample-template-deleted',
-      description: 'sample-template-description',
-      externalMailTemplateId: 'sample-slug-2',
-      remoteMissing: true
-    }
-  })
+  const mailTemplates = []
+  for(const i of [9,12,13,15,17,95,92,8,5,3]) {
+    const template = await prisma.mailTemplate.upsert({
+      where: {
+        externalMailTemplateId: `sample-slug-${i}`
+      },
+      update: {},
+      create: {
+        name: `sample-template-${i}`,
+        description: `sample-template-description-${i}`,
+        externalMailTemplateId: `sample-slug-${i}`,
+        remoteMissing: false
+      }
+    })
+    mailTemplates.push(template)
+  }
 
   const paymentMethod = await prisma.paymentMethod.upsert({
     where: {
@@ -110,27 +102,22 @@ async function seed() {
     }
   })
 
-  const subscriptionInterval1 = await prisma.subscriptionInterval.upsert({
-    where: {
-      id: 1
-    },
-    update: {},
-    create: {
-      daysAwayFromEnding: 3,
-      mailTemplate: {connect: {id: mailTemplate1.id}}
-    }
-  })
-
-  const subscriptionInterval2 = await prisma.subscriptionInterval.upsert({
-    where: {
-      id: 1
-    },
-    update: {},
-    create: {
-      daysAwayFromEnding: 3,
-      mailTemplate: {connect: {id: mailTemplate1.id}}
-    }
-  })
+  const daysBefore = [1,5,3,6,7,4,2]
+  const subscriptionIntervals = []
+  for(const days of daysBefore) {
+    const index = daysBefore.indexOf(days)
+    const interval = await prisma.subscriptionInterval.upsert({
+      where: {
+        id: index + 1
+      },
+      update: {},
+      create: {
+        daysAwayFromEnding: days,
+        mailTemplate: {connect: {id: mailTemplates[index].id}}
+      }
+    })
+    subscriptionIntervals.push(interval)
+  }
 
   await prisma.subscriptionFlow.upsert({
     where: {
@@ -144,11 +131,11 @@ async function seed() {
       periodicities: [],
       autoRenewal: [],
 
-      subscribeMailTemplate: {connect: {id: mailTemplate1.id}},
-      invoiceCreationMailTemplate: {connect: {id: subscriptionInterval1.id}},
-      renewalFailedMailTemplate: {connect: {id: mailTemplate2.id}},
+      subscribeMailTemplate: {connect: {id: mailTemplates[0].id}},
+      invoiceCreationMailTemplate: {connect: {id: subscriptionIntervals[0].id}},
+      renewalFailedMailTemplate: {connect: {id: mailTemplates[1].id}},
 
-      additionalIntervals: {connect: [{id: subscriptionInterval2.id}]}
+      additionalIntervals: {connect: [{id: subscriptionIntervals[2].id}]}
     }
   })
 
@@ -164,11 +151,11 @@ async function seed() {
       periodicities: [PaymentPeriodicity.monthly, PaymentPeriodicity.yearly],
       autoRenewal: [true],
 
-      subscribeMailTemplate: {connect: {id: mailTemplate1.id}},
-      invoiceCreationMailTemplate: {connect: {id: subscriptionInterval1.id}},
-      renewalFailedMailTemplate: {connect: {id: mailTemplate2.id}},
+      subscribeMailTemplate: {connect: {id: mailTemplates[2].id}},
+      invoiceCreationMailTemplate: {connect: {id: subscriptionIntervals[3].id}},
+      renewalFailedMailTemplate: {connect: {id: mailTemplates[3].id}},
 
-      additionalIntervals: {connect: [{id: subscriptionInterval2.id}]}
+      additionalIntervals: {connect: [{id: subscriptionIntervals[4].id}]}
     }
   })
 
@@ -184,10 +171,10 @@ async function seed() {
       periodicities: [PaymentPeriodicity.monthly, PaymentPeriodicity.yearly],
       autoRenewal: [false],
 
-      invoiceCreationMailTemplate: {connect: {id: subscriptionInterval1.id}},
-      renewalFailedMailTemplate: {connect: {id: mailTemplate2.id}},
+      invoiceCreationMailTemplate: {connect: {id: subscriptionIntervals[5].id}},
+      renewalFailedMailTemplate: {connect: {id: mailTemplates[4].id}},
 
-      additionalIntervals: {connect: [{id: subscriptionInterval2.id}]}
+      additionalIntervals: {connect: [{id: subscriptionIntervals[6].id}]}
     }
   })
 
