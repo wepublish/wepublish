@@ -1,6 +1,16 @@
 import {Field, InputType, Int, ObjectType, registerEnumType} from '@nestjs/graphql'
 import {PaymentPeriodicity} from '@prisma/client'
 
+export enum SubscriptionIntervalTypes {
+  ADDITIONAL_INTERVAL,
+  CREATE_INVOICES,
+  DEACTIVATION_UNPAID_INVOICE
+}
+
+registerEnumType(SubscriptionIntervalTypes, {
+  name: 'SubscriptionIntervalTypes'
+})
+
 registerEnumType(PaymentPeriodicity, {
   name: 'PaymentPeriodicity'
 })
@@ -137,6 +147,18 @@ export class SubscriptionIntervalUpdateInput {
   daysAwayFromEnding?: number
   @Field(() => MailTemplateRefInput, {nullable: true})
   mailTemplate?: MailTemplateRefInput
+}
+
+@InputType()
+export class SubscriptionIntervalCreate {
+  @Field(() => SubscriptionIntervalTypes)
+  subscriptionIntervalTypes!: SubscriptionIntervalTypes
+  @Field(() => Int)
+  daysAwayFromEnding!: number
+  @Field(type => MailTemplateRefInput)
+  mailTemplate!: MailTemplateRefInput
+  @Field(type => Int)
+  subscriptionFlowId!: number
 }
 
 @InputType()

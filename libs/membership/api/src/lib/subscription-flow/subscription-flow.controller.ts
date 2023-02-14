@@ -3,10 +3,11 @@ import {PrismaService} from '@wepublish/api'
 import {
   AdditionalIntervalCreateInput,
   AdditionalIntervalDeleteInput,
-  SubscriptionFlowModel,
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
+  SubscriptionIntervalCreate,
   SubscriptionIntervalCreateInput,
+  SubscriptionIntervalTypes,
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
 
@@ -176,6 +177,47 @@ export class SubscriptionFlowController {
     if (!flow.deactivationUnpaidIntervalId && !!originalFlow.deactivationUnpaidMailTemplateId) {
       await this.deleteUnusedSubscriptionInterval(originalFlow.deactivationUnpaidMailTemplateId)
     }
+    return this.getFlow(false)
+  }
+
+  async createAndLinkSubscriptionInterval(subscriptionInterval: SubscriptionIntervalCreate) {
+    const originalFlow = await this.prismaService.subscriptionFlow.findUnique({
+      where: {
+        id: subscriptionInterval.subscriptionFlowId
+      }
+    })
+    if (!originalFlow) {
+      throw Error('The given filter is not found!')
+    }
+
+    const interval = await this.createSubscriptionInterval(subscriptionInterval)
+    let connectString = {}
+    let originalSubscriptionIntervalId = null
+    if (
+      subscriptionInterval.subscriptionIntervalTypes ===
+      SubscriptionIntervalTypes.ADDITIONAL_INTERVAL
+    ) {
+      connectString = {additionalIntervals: {connect: {id: interval.id}}}
+    } else if (
+      subscriptionInterval.subscriptionIntervalTypes === SubscriptionIntervalTypes.CREATE_INVOICES
+    ) {
+      connectString = {invoiceCreationMailTemplate: {connect: {id: interval.id}}}
+      originalSubscriptionIntervalId = originalFlow.invoiceCreationMailTemplateId
+    } else {
+      connectString = {deactivationUnpaidMailTemplate: {connect: {id: interval.id}}}
+      originalSubscriptionIntervalId = originalFlow.deactivationUnpaidMailTemplateId
+    }
+    await this.prismaService.subscriptionFlow.update({
+      where: {
+        id: subscriptionInterval.subscriptionFlowId
+      },
+      data: connectString
+    })
+
+    if (originalSubscriptionIntervalId) {
+      await this.deleteUnusedSubscriptionInterval(originalSubscriptionIntervalId)
+    }
+
     return this.getFlow(false)
   }
 
