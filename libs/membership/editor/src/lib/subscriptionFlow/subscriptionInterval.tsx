@@ -4,19 +4,22 @@ import {FullMailTemplateFragment} from '@wepublish/editor/api-v2'
 import MailTemplateSelect from './mailTemplateSelect'
 import {useDraggable} from '@dnd-kit/core'
 import { MdDragIndicator } from 'react-icons/md'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 
 interface SubscriptionIntervalProps {
   subscriptionNonUserAction: SubscriptionNonUserAction
+  client: ApolloClient<NormalizedCacheObject>
 }
 export default function SubscriptionInterval({
-  subscriptionNonUserAction
+  subscriptionNonUserAction,
+  client
 }: SubscriptionIntervalProps) {
   const {subscriptionInterval, title, description, subscriptionEventKey} = subscriptionNonUserAction
   const mailTemplates = useContext<FullMailTemplateFragment[]>(MailTemplatesContext)
 
   // draggable
   const {attributes, listeners, setNodeRef, transform} = useDraggable({
-    id: `draggable-${subscriptionInterval?.id}`,
+    id: `draggable-${subscriptionInterval.id}`,
     data: {
       subscriptionInterval
     }
@@ -47,7 +50,9 @@ export default function SubscriptionInterval({
         <div>
           <MailTemplateSelect
             mailTemplates={mailTemplates}
-            mailTemplateId={subscriptionInterval?.mailTemplate.id}
+            mailTemplateId={subscriptionInterval.mailTemplate.id}
+            subscriptionIntervalId={subscriptionInterval.id}
+            client={client}
           />
         </div>
       </div>

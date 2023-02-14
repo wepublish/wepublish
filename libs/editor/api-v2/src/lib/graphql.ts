@@ -79,6 +79,7 @@ export type Mutation = {
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   syncTemplates: Scalars['Boolean'];
   updateSubscriptionFlow: Array<SubscriptionFlowModel>;
+  updateSubscriptionInterval: Array<SubscriptionFlowModel>;
 };
 
 
@@ -94,6 +95,11 @@ export type MutationDeleteSubscriptionFlowArgs = {
 
 export type MutationUpdateSubscriptionFlowArgs = {
   subscriptionFlow: SubscriptionFlowModelUpdateInput;
+};
+
+
+export type MutationUpdateSubscriptionIntervalArgs = {
+  subscriptionInterval: SubscriptionIntervalUpdateInput;
 };
 
 export type PaymentMethodRef = {
@@ -250,9 +256,9 @@ export type SubscriptionIntervalCreateInput = {
 };
 
 export type SubscriptionIntervalUpdateInput = {
-  daysAwayFromEnding: Scalars['Int'];
+  daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
   id?: InputMaybe<Scalars['Int']>;
-  mailTemplate: MailTemplateRefInput;
+  mailTemplate?: InputMaybe<MailTemplateRefInput>;
 };
 
 export type VersionInformation = {
@@ -294,6 +300,13 @@ export type UpdateSubscriptionFlowMutationVariables = Exact<{
 
 
 export type UpdateSubscriptionFlowMutation = { __typename?: 'Mutation', updateSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: number, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, additionalIntervals: Array<{ __typename?: 'SubscriptionInterval', id: number, daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } }>, deactivationByUserMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, deactivationUnpaidMailTemplate?: { __typename?: 'SubscriptionInterval', id: number, daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } } | null, invoiceCreationMailTemplate?: { __typename?: 'SubscriptionInterval', id: number, daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } } | null, memberPlan: { __typename?: 'MemberPlanRef', id: string, name: string }, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, reactivationMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, renewalFailedMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, renewalSuccessMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, subscribeMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null }> };
+
+export type UpdateSubscriptionIntervalMutationVariables = Exact<{
+  subscriptionInterval: SubscriptionIntervalUpdateInput;
+}>;
+
+
+export type UpdateSubscriptionIntervalMutation = { __typename?: 'Mutation', updateSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: number, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, additionalIntervals: Array<{ __typename?: 'SubscriptionInterval', id: number, daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } }>, deactivationByUserMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, deactivationUnpaidMailTemplate?: { __typename?: 'SubscriptionInterval', id: number, daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } } | null, invoiceCreationMailTemplate?: { __typename?: 'SubscriptionInterval', id: number, daysAwayFromEnding: number, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } } | null, memberPlan: { __typename?: 'MemberPlanRef', id: string, name: string }, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, reactivationMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, renewalFailedMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, renewalSuccessMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null, subscribeMailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null }> };
 
 export type DeleteSubscriptionFlowMutationVariables = Exact<{
   subscriptionFlowId: Scalars['Int'];
@@ -569,6 +582,39 @@ export function useUpdateSubscriptionFlowMutation(baseOptions?: Apollo.MutationH
 export type UpdateSubscriptionFlowMutationHookResult = ReturnType<typeof useUpdateSubscriptionFlowMutation>;
 export type UpdateSubscriptionFlowMutationResult = Apollo.MutationResult<UpdateSubscriptionFlowMutation>;
 export type UpdateSubscriptionFlowMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionFlowMutation, UpdateSubscriptionFlowMutationVariables>;
+export const UpdateSubscriptionIntervalDocument = gql`
+    mutation UpdateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalUpdateInput!) {
+  updateSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
+    ...SubscriptionFlow
+  }
+}
+    ${SubscriptionFlowFragmentDoc}`;
+export type UpdateSubscriptionIntervalMutationFn = Apollo.MutationFunction<UpdateSubscriptionIntervalMutation, UpdateSubscriptionIntervalMutationVariables>;
+
+/**
+ * __useUpdateSubscriptionIntervalMutation__
+ *
+ * To run a mutation, you first call `useUpdateSubscriptionIntervalMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSubscriptionIntervalMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSubscriptionIntervalMutation, { data, loading, error }] = useUpdateSubscriptionIntervalMutation({
+ *   variables: {
+ *      subscriptionInterval: // value for 'subscriptionInterval'
+ *   },
+ * });
+ */
+export function useUpdateSubscriptionIntervalMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubscriptionIntervalMutation, UpdateSubscriptionIntervalMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSubscriptionIntervalMutation, UpdateSubscriptionIntervalMutationVariables>(UpdateSubscriptionIntervalDocument, options);
+      }
+export type UpdateSubscriptionIntervalMutationHookResult = ReturnType<typeof useUpdateSubscriptionIntervalMutation>;
+export type UpdateSubscriptionIntervalMutationResult = Apollo.MutationResult<UpdateSubscriptionIntervalMutation>;
+export type UpdateSubscriptionIntervalMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionIntervalMutation, UpdateSubscriptionIntervalMutationVariables>;
 export const DeleteSubscriptionFlowDocument = gql`
     mutation DeleteSubscriptionFlow($subscriptionFlowId: Int!) {
   deleteSubscriptionFlow(subscriptionFlowId: $subscriptionFlowId) {

@@ -2,7 +2,8 @@ import {Args, Int, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {
   SubscriptionFlowModel,
   SubscriptionFlowModelCreateInput,
-  SubscriptionFlowModelUpdateInput
+  SubscriptionFlowModelUpdateInput,
+  SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
 import {SubscriptionFlowController} from './subscription-flow.controller'
 
@@ -23,6 +24,11 @@ export class SubscriptionFlowProvider {
   @Mutation(returns => [SubscriptionFlowModel], {name: 'updateSubscriptionFlow'})
   async updateSubscriptionFlow(@Args('subscriptionFlow') flow: SubscriptionFlowModelUpdateInput) {
     return await this.controller.updateFlow(flow)
+  }
+
+  @Mutation(() => [SubscriptionFlowModel], { name: 'updateSubscriptionInterval' })
+  async updateSubscriptionInterval(@Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalUpdateInput) {
+    return this.controller.updateSubscriptionInterval(subscriptionInterval)
   }
 
   @Mutation(returns => [SubscriptionFlowModel], {name: 'deleteSubscriptionFlow'})

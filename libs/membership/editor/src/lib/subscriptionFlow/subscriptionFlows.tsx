@@ -10,7 +10,7 @@ import {
   SubscriptionIntervalFragment,
   useDeleteSubscriptionFlowMutation,
   useMailTemplateQuery,
-  useSubscriptionFlowsQuery
+  useSubscriptionFlowsQuery,
 } from '@wepublish/editor/api-v2'
 import {useTranslation} from 'react-i18next'
 import {getApiClientV2} from '../../../../../../apps/editor/src/app/utility'
@@ -45,7 +45,7 @@ export interface SubscriptionAction {
 
 export interface SubscriptionNonUserAction extends SubscriptionAction {
   subscriptionEventKey?: SubscriptionNonUserActionKey
-  subscriptionInterval?: SubscriptionIntervalFragment
+  subscriptionInterval: SubscriptionIntervalFragment
 }
 
 export interface SubscriptionUserAction extends SubscriptionAction {
@@ -168,10 +168,10 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
             {subscriptionFlows.map(subscriptionFlow => (
               <TableRow key={subscriptionFlow.id}>
                 {/* filter */}
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
+                <TableCell>{subscriptionFlow.memberPlan.name}</TableCell>
+                <TableCell>{subscriptionFlow.paymentMethods.map(m => m.name).join(', ')}</TableCell>
+                <TableCell>{subscriptionFlow.periodicities.join(', ')}</TableCell>
+                <TableCell>{subscriptionFlow.autoRenewal.join(', ')}</TableCell>
 
                 {/* user actions */}
                 {subscriptionUserActions &&
@@ -183,7 +183,7 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
 
                 {/* individual flow */}
                 <TableCell>
-                  <SubscriptionFlow subscriptionFlow={subscriptionFlow} />
+                  <SubscriptionFlow subscriptionFlow={subscriptionFlow} client={client} />
                 </TableCell>
                 <TableCell align="center">
                   <IconButton color="red" circle appearance="primary" icon={<MdDelete />}

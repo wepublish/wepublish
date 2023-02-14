@@ -178,6 +178,19 @@ export class SubscriptionFlowController {
     return this.getFlow(false)
   }
 
+  async updateSubscriptionInterval(subscriptionInterval: SubscriptionIntervalUpdateInput) {
+    await this.prismaService.subscriptionInterval.update({
+      where: {
+        id: subscriptionInterval.id
+      },
+      data: {
+        daysAwayFromEnding: subscriptionInterval.daysAwayFromEnding,
+        mailTemplate: { connect: subscriptionInterval.mailTemplate }
+      }
+    })
+    return this.getFlow(false)
+  }
+
   async deleteFlow(subscriptionFlowId: number) {
     const originalFlow = await this.prismaService.subscriptionFlow.findUnique({
       where: {
@@ -270,10 +283,10 @@ export class SubscriptionFlowController {
     interval: SubscriptionIntervalCreateInput | SubscriptionIntervalUpdateInput
   ) {
     return {
-      daysAwayFromEnding: interval.daysAwayFromEnding,
+      daysAwayFromEnding: interval.daysAwayFromEnding!,
       mailTemplate: {
         connect: {
-          id: interval.mailTemplate.id
+          id: interval.mailTemplate!.id
         }
       }
     }

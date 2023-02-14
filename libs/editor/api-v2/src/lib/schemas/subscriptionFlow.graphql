@@ -16,6 +16,12 @@ mutation UpdateSubscriptionFlow($subscriptionFlow: SubscriptionFlowModelUpdateIn
   }
 }
 
+mutation UpdateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalUpdateInput!) {
+  updateSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
+    ...SubscriptionFlow
+  }
+}
+
 mutation DeleteSubscriptionFlow($subscriptionFlowId: Int!) {
   deleteSubscriptionFlow(subscriptionFlowId: $subscriptionFlowId) {
     ...SubscriptionFlow

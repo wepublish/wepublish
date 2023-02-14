@@ -1,19 +1,44 @@
 import React, {useMemo} from 'react'
-import {FullMailTemplateFragment} from '@wepublish/editor/api-v2'
+import {FullMailTemplateFragment, useUpdateSubscriptionIntervalMutation} from '@wepublish/editor/api-v2'
 import {SelectPicker} from 'rsuite'
+import { getApiClientV2 } from 'apps/editor/src/app/utility'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 
 interface MailTemplateSelectProps {
   mailTemplates: FullMailTemplateFragment[]
-  mailTemplateId?: number
+  mailTemplateId?: number,
+  subscriptionIntervalId: number,
+  client: ApolloClient<NormalizedCacheObject>
 }
+
 export default function MailTemplateSelect({
   mailTemplates,
-  mailTemplateId
+  mailTemplateId,
+  subscriptionIntervalId,
+  client
 }: MailTemplateSelectProps) {
   const inactiveMailTemplates = useMemo(
     () => mailTemplates.filter(mailTemplate => mailTemplate.remoteMissing),
     [mailTemplates]
   )
+
+  const [updateSubscriptionInterval, {loading: intervalUpdateLoading}] = useUpdateSubscriptionIntervalMutation({
+    client,
+    // TODO: onError: showErrors
+  })
+
+  const updateMailTemplate = async (value: number) => {
+    await updateSubscriptionInterval({
+      variables: {
+        subscriptionInterval: {
+          id: subscriptionIntervalId,
+          mailTemplate: {
+            id: value
+          }
+        }
+      }
+    })
+  }
 
   return (
     <SelectPicker
@@ -21,9 +46,7 @@ export default function MailTemplateSelect({
       data={mailTemplates.map(mailTemplate => ({label: mailTemplate.name, value: mailTemplate.id}))}
       disabledItemValues={inactiveMailTemplates.map(mailTemplate => mailTemplate.id)}
       defaultValue={mailTemplateId}
-      onSelect={value => {
-        /* TODO: save change */
-      }}
+      onSelect={updateMailTemplate}
     />
   )
 }

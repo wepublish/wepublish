@@ -60,6 +60,7 @@ type Mutation {
   deleteSubscriptionFlow(subscriptionFlowId: Int!): [SubscriptionFlowModel!]!
   syncTemplates: Boolean!
   updateSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelUpdateInput!): [SubscriptionFlowModel!]!
+  updateSubscriptionInterval(subscriptionInterval: SubscriptionIntervalUpdateInput!): [SubscriptionFlowModel!]!
 }
 
 type PaymentMethodRef {
@@ -197,9 +198,9 @@ input SubscriptionIntervalCreateInput {
 }
 
 input SubscriptionIntervalUpdateInput {
-  daysAwayFromEnding: Int!
+  daysAwayFromEnding: Int
   id: Int
-  mailTemplate: MailTemplateRefInput!
+  mailTemplate: MailTemplateRefInput
 }
 
 type VersionInformation {
