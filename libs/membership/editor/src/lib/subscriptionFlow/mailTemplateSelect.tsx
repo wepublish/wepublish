@@ -1,31 +1,34 @@
-import React, {useMemo} from 'react'
-import {FullMailTemplateFragment, useUpdateSubscriptionIntervalMutation} from '@wepublish/editor/api-v2'
+import React, {useContext, useMemo} from 'react'
+import {
+  FullMailTemplateFragment,
+  useUpdateSubscriptionIntervalMutation
+} from '@wepublish/editor/api-v2'
 import {SelectPicker} from 'rsuite'
-import { getApiClientV2 } from 'apps/editor/src/app/utility'
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
+import {GraphqlClientContext} from './graphqlClientContext'
 
 interface MailTemplateSelectProps {
   mailTemplates: FullMailTemplateFragment[]
-  mailTemplateId?: number,
-  subscriptionIntervalId: number,
-  client: ApolloClient<NormalizedCacheObject>
+  mailTemplateId?: number
+  subscriptionIntervalId: number
 }
 
 export default function MailTemplateSelect({
   mailTemplates,
   mailTemplateId,
-  subscriptionIntervalId,
-  client
+  subscriptionIntervalId
 }: MailTemplateSelectProps) {
   const inactiveMailTemplates = useMemo(
     () => mailTemplates.filter(mailTemplate => mailTemplate.remoteMissing),
     [mailTemplates]
   )
 
-  const [updateSubscriptionInterval, {loading: intervalUpdateLoading}] = useUpdateSubscriptionIntervalMutation({
-    client,
-    // TODO: onError: showErrors
-  })
+  const client = useContext(GraphqlClientContext)
+
+  const [updateSubscriptionInterval, {loading: intervalUpdateLoading}] =
+    useUpdateSubscriptionIntervalMutation({
+      client
+      // TODO: onError: showErrors
+    })
 
   const updateMailTemplate = async (value: number) => {
     await updateSubscriptionInterval({
