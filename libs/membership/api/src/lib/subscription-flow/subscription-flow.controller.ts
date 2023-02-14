@@ -1,6 +1,8 @@
 import {Injectable} from '@nestjs/common'
 import {PrismaService} from '@wepublish/api'
 import {
+  AdditionalIntervalCreateInput,
+  AdditionalIntervalDeleteInput,
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
   SubscriptionIntervalCreateInput,
@@ -127,16 +129,6 @@ export class SubscriptionFlowController {
               connect: flow.subscribeMailTemplate
             }
           : undefined,
-        invoiceCreationMailTemplate: flow.invoiceCreationMailTemplate
-          ? {
-              upsert: {
-                create: this.nestMailInterval(flow.invoiceCreationMailTemplate),
-                update: this.nestMailInterval(flow.invoiceCreationMailTemplate)
-              }
-            }
-          : originalFlow.invoiceCreationMailTemplateId
-          ? {delete: true}
-          : {},
         renewalSuccessMailTemplate: flow.renewalSuccessMailTemplate
           ? {
               connect: flow.renewalSuccessMailTemplate
@@ -147,16 +139,6 @@ export class SubscriptionFlowController {
               connect: flow.renewalFailedMailTemplate
             }
           : undefined,
-        deactivationUnpaidMailTemplate: flow.deactivationUnpaidMailTemplate
-          ? {
-              upsert: {
-                create: this.nestMailInterval(flow.deactivationUnpaidMailTemplate),
-                update: this.nestMailInterval(flow.deactivationUnpaidMailTemplate)
-              }
-            }
-          : originalFlow.deactivationUnpaidMailTemplateId
-          ? {delete: true}
-          : {},
         deactivationByUserMailTemplate: flow.deactivationByUserMailTemplate
           ? {
               connect: flow.deactivationByUserMailTemplate
@@ -167,11 +149,71 @@ export class SubscriptionFlowController {
               connect: flow.reactivationMailTemplate
             }
           : undefined,
+        invoiceCreationMailTemplate: flow.invoiceCreationIntervalId
+          ? {
+              connect: {
+                id: flow.invoiceCreationIntervalId
+              }
+            }
+          : {
+              disconnect: true,
+              delete: true
+            },
+        deactivationUnpaidMailTemplate: flow.deactivationUnpaidIntervalId
+          ? {
+              connect: {
+                id: flow.deactivationUnpaidIntervalId
+              }
+            }
+          : {
+              disconnect: true,
+              delete: true
+            }
+      }
+    })
+    return this.getFlow(false)
+  }
+
+  async createSubscriptionInterval(subscriptionInterval: SubscriptionIntervalCreateInput) {
+    return await this.prismaService.subscriptionInterval.create({
+      data: {
+        daysAwayFromEnding: subscriptionInterval.daysAwayFromEnding,
+        mailTemplate: {connect: subscriptionInterval.mailTemplate}
+      }
+    })
+  }
+  async addAdditionalIntervalToSubscriptionFlow(additionalInterval: AdditionalIntervalCreateInput) {
+    const interval = await this.createSubscriptionInterval(additionalInterval)
+    this.prismaService.subscriptionFlow.update({
+      where: {
+        id: additionalInterval.subscriptionFlowId
+      },
+      data: {
         additionalIntervals: {
-          delete: originalFlow.additionalIntervals.map(additionalInterval => ({
-            id: additionalInterval.id
-          })),
-          create: flow.additionalIntervals.map(this.nestMailInterval)
+          connect: {
+            id: interval.id
+          }
+        }
+      }
+    })
+    return this.getFlow(false)
+  }
+
+  async removeAdditionalIntervalToSubscriptionFlow(
+    subscriptionInterval: AdditionalIntervalDeleteInput
+  ) {
+    this.prismaService.subscriptionFlow.update({
+      where: {
+        id: subscriptionInterval.subscriptionFlowId
+      },
+      data: {
+        additionalIntervals: {
+          disconnect: {
+            id: subscriptionInterval.additionalIntervalId
+          },
+          delete: {
+            id: subscriptionInterval.additionalIntervalId
+          }
         }
       }
     })
@@ -185,7 +227,7 @@ export class SubscriptionFlowController {
       },
       data: {
         daysAwayFromEnding: subscriptionInterval.daysAwayFromEnding,
-        mailTemplate: { connect: subscriptionInterval.mailTemplate }
+        mailTemplate: {connect: subscriptionInterval.mailTemplate}
       }
     })
     return this.getFlow(false)

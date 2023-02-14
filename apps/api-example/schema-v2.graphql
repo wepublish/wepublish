@@ -2,6 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AdditionalIntervalCreateInput {
+  daysAwayFromEnding: Int!
+  mailTemplate: MailTemplateRefInput!
+  subscriptionFlowId: Int!
+}
+
+input AdditionalIntervalDeleteInput {
+  additionalIntervalId: Int!
+  subscriptionFlowId: Int!
+}
+
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -56,8 +67,11 @@ input MemberPlanRefInput {
 }
 
 type Mutation {
+  addAdditionalIntervalToSubscriptionFlow(additionalInterval: AdditionalIntervalCreateInput!): [SubscriptionFlowModel!]!
   createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): [SubscriptionFlowModel!]!
+  createSubscriptionInterval(subscriptionInterval: SubscriptionIntervalCreateInput!): [SubscriptionFlowModel!]!
   deleteSubscriptionFlow(subscriptionFlowId: Int!): [SubscriptionFlowModel!]!
+  removeAdditionalIntervalToSubscriptionFlow(additionalInterval: AdditionalIntervalDeleteInput!): [SubscriptionFlowModel!]!
   syncTemplates: Boolean!
   updateSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelUpdateInput!): [SubscriptionFlowModel!]!
   updateSubscriptionInterval(subscriptionInterval: SubscriptionIntervalUpdateInput!): [SubscriptionFlowModel!]!
@@ -172,12 +186,11 @@ input SubscriptionFlowModelCreateInput {
 }
 
 input SubscriptionFlowModelUpdateInput {
-  additionalIntervals: [SubscriptionIntervalUpdateInput!]!
   autoRenewal: [Boolean!]!
   deactivationByUserMailTemplate: MailTemplateRefInput
-  deactivationUnpaidMailTemplate: SubscriptionIntervalUpdateInput
+  deactivationUnpaidIntervalId: Float
   id: Int!
-  invoiceCreationMailTemplate: SubscriptionIntervalUpdateInput
+  invoiceCreationIntervalId: Float
   paymentMethods: [PaymentMethodRefInput!]!
   periodicities: [PaymentPeriodicity!]!
   reactivationMailTemplate: MailTemplateRefInput

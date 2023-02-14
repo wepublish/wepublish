@@ -1,8 +1,11 @@
 import {Args, Int, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {
+  AdditionalIntervalCreateInput,
+  AdditionalIntervalDeleteInput,
   SubscriptionFlowModel,
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
+  SubscriptionIntervalCreateInput,
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
 import {SubscriptionFlowController} from './subscription-flow.controller'
@@ -26,13 +29,38 @@ export class SubscriptionFlowProvider {
     return await this.controller.updateFlow(flow)
   }
 
-  @Mutation(() => [SubscriptionFlowModel], { name: 'updateSubscriptionInterval' })
-  async updateSubscriptionInterval(@Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalUpdateInput) {
+  @Mutation(() => [SubscriptionFlowModel], {name: 'updateSubscriptionInterval'})
+  async updateSubscriptionInterval(
+    @Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalUpdateInput
+  ) {
     return this.controller.updateSubscriptionInterval(subscriptionInterval)
   }
 
+  @Mutation(() => [SubscriptionFlowModel], {name: 'createSubscriptionInterval'})
+  async createSubscriptionInterval(
+    @Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalCreateInput
+  ) {
+    return this.controller.createSubscriptionInterval(subscriptionInterval)
+  }
+
+  @Mutation(() => [SubscriptionFlowModel], {name: 'removeAdditionalIntervalToSubscriptionFlow'})
+  async removeAdditionalIntervalToSubscriptionFlow(
+    @Args('additionalInterval') additionalInterval: AdditionalIntervalDeleteInput
+  ) {
+    return this.controller.removeAdditionalIntervalToSubscriptionFlow(additionalInterval)
+  }
+
+  @Mutation(() => [SubscriptionFlowModel], {name: 'addAdditionalIntervalToSubscriptionFlow'})
+  async addAdditionalIntervalToSubscriptionFlow(
+    @Args('additionalInterval') additionalInterval: AdditionalIntervalCreateInput
+  ) {
+    return this.controller.addAdditionalIntervalToSubscriptionFlow(additionalInterval)
+  }
+
   @Mutation(returns => [SubscriptionFlowModel], {name: 'deleteSubscriptionFlow'})
-  async deleteSubscriptionFlow(@Args('subscriptionFlowId', { type: () => Int }) subscriptionFlowId: number) {
+  async deleteSubscriptionFlow(
+    @Args('subscriptionFlowId', {type: () => Int}) subscriptionFlowId: number
+  ) {
     return await this.controller.deleteFlow(subscriptionFlowId)
   }
 }

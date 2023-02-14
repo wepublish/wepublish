@@ -100,13 +100,32 @@ export class SubscriptionIntervalCreateInput {
   @Field(type => MailTemplateRefInput)
   mailTemplate!: MailTemplateRefInput
 }
+
+@InputType()
+export class AdditionalIntervalCreateInput {
+  @Field(() => Int)
+  subscriptionFlowId!: number
+  @Field(() => Int)
+  daysAwayFromEnding!: number
+  @Field(type => MailTemplateRefInput)
+  mailTemplate!: MailTemplateRefInput
+}
+
+@InputType()
+export class AdditionalIntervalDeleteInput {
+  @Field(() => Int)
+  subscriptionFlowId!: number
+  @Field(() => Int)
+  additionalIntervalId!: number
+}
+
 @InputType()
 export class SubscriptionIntervalUpdateInput {
   @Field(() => Int, {nullable: true})
   id?: number
-  @Field(() => Int, { nullable: true })
+  @Field(() => Int, {nullable: true})
   daysAwayFromEnding?: number
-  @Field(() => MailTemplateRefInput, { nullable: true })
+  @Field(() => MailTemplateRefInput, {nullable: true})
   mailTemplate?: MailTemplateRefInput
 }
 
@@ -150,18 +169,16 @@ export class SubscriptionFlowModelUpdateInput {
   autoRenewal!: boolean[]
   @Field(type => MailTemplateRefInput, {nullable: true})
   subscribeMailTemplate?: MailTemplateRefInput
-  @Field(type => SubscriptionIntervalUpdateInput, {nullable: true})
-  invoiceCreationMailTemplate?: SubscriptionIntervalUpdateInput
+  @Field(type => Number, {nullable: true})
+  invoiceCreationIntervalId?: number
   @Field(type => MailTemplateRefInput, {nullable: true})
   renewalSuccessMailTemplate?: MailTemplateRefInput
   @Field(type => MailTemplateRefInput, {nullable: true})
   renewalFailedMailTemplate?: MailTemplateRefInput
-  @Field(type => SubscriptionIntervalUpdateInput, {nullable: true})
-  deactivationUnpaidMailTemplate?: SubscriptionIntervalUpdateInput
+  @Field(type => Number, {nullable: true})
+  deactivationUnpaidIntervalId?: number
   @Field(type => MailTemplateRefInput, {nullable: true})
   deactivationByUserMailTemplate?: MailTemplateRefInput
   @Field(type => MailTemplateRefInput, {nullable: true})
   reactivationMailTemplate?: MailTemplateRefInput
-  @Field(type => [SubscriptionIntervalUpdateInput])
-  additionalIntervals!: SubscriptionIntervalUpdateInput[]
 }
