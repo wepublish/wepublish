@@ -3,6 +3,7 @@ import {PrismaService} from '@wepublish/api'
 import {
   AdditionalIntervalCreateInput,
   AdditionalIntervalDeleteInput,
+  SubscriptionFlowModel,
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
   SubscriptionIntervalCreateInput,
@@ -156,8 +157,7 @@ export class SubscriptionFlowController {
               }
             }
           : {
-              disconnect: true,
-              delete: true
+              disconnect: true
             },
         deactivationUnpaidMailTemplate: flow.deactivationUnpaidIntervalId
           ? {
@@ -166,11 +166,16 @@ export class SubscriptionFlowController {
               }
             }
           : {
-              disconnect: true,
-              delete: true
+              disconnect: true
             }
       }
     })
+    if (!flow.invoiceCreationIntervalId && !!originalFlow.invoiceCreationMailTemplateId) {
+      await this.deleteUnusedSubscriptionInterval(originalFlow.invoiceCreationMailTemplateId)
+    }
+    if (!flow.deactivationUnpaidIntervalId && !!originalFlow.deactivationUnpaidMailTemplateId) {
+      await this.deleteUnusedSubscriptionInterval(originalFlow.deactivationUnpaidMailTemplateId)
+    }
     return this.getFlow(false)
   }
 
@@ -202,7 +207,7 @@ export class SubscriptionFlowController {
   async removeAdditionalIntervalToSubscriptionFlow(
     subscriptionInterval: AdditionalIntervalDeleteInput
   ) {
-    this.prismaService.subscriptionFlow.update({
+    await this.prismaService.subscriptionFlow.update({
       where: {
         id: subscriptionInterval.subscriptionFlowId
       },
@@ -210,13 +215,14 @@ export class SubscriptionFlowController {
         additionalIntervals: {
           disconnect: {
             id: subscriptionInterval.additionalIntervalId
-          },
-          delete: {
-            id: subscriptionInterval.additionalIntervalId
           }
         }
       }
     })
+
+    // Cleanup if interval is not used anymore
+    await this.deleteUnusedSubscriptionInterval(subscriptionInterval.additionalIntervalId)
+
     return this.getFlow(false)
   }
 
@@ -333,5 +339,33 @@ export class SubscriptionFlowController {
         }
       }
     }
+  }
+
+  private async deleteUnusedSubscriptionInterval(intervalId: number) {
+    if (!(await this.isSubscriptionIntervalInUse(intervalId))) {
+      await this.prismaService.subscriptionInterval.delete({
+        where: {
+          id: intervalId
+        }
+      })
+    }
+  }
+
+  private async isSubscriptionIntervalInUse(intervalId: number) {
+    const flows = await this.getFlow(false)
+    for (const flow of flows) {
+      if (flow.invoiceCreationMailTemplateId === intervalId) {
+        return true
+      }
+      if (flow.deactivationUnpaidMailTemplateId === intervalId) {
+        return true
+      }
+      for (const addtionalInterval of flow.additionalIntervals) {
+        if (addtionalInterval.id === intervalId) {
+          return true
+        }
+      }
+    }
+    return false
   }
 }
