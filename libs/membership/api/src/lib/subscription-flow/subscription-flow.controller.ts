@@ -184,7 +184,7 @@ export class SubscriptionFlowController {
   }
   async addAdditionalIntervalToSubscriptionFlow(additionalInterval: AdditionalIntervalCreateInput) {
     const interval = await this.createSubscriptionInterval(additionalInterval)
-    this.prismaService.subscriptionFlow.update({
+    await this.prismaService.subscriptionFlow.update({
       where: {
         id: additionalInterval.subscriptionFlowId
       },
