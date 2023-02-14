@@ -42,6 +42,16 @@ export class SubscriptionInterval {
 }
 
 @ObjectType()
+export class SubscriptionIntervalCreated {
+  @Field(() => Int)
+  id!: number
+  @Field(() => Int)
+  daysAwayFromEnding!: number
+  @Field(type => Int)
+  mailTemplateId!: number
+}
+
+@ObjectType()
 export class SubscriptionFlowModel {
   @Field(() => Int)
   id!: number
