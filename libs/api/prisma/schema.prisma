@@ -1004,6 +1004,17 @@ model UserFlow {
   @@map("user_communication_flows")
 }
 
+enum SubscriptionEvent {
+  SUBSCRIBE
+  INVOICE_CREATION
+  RENEWAL_SUCCESS
+  RENEWAL_FAILED
+  DEACTIVATION_UNPAID
+  DEACTIVATION_BY_USER
+  REACTIVATION
+  CUSTOM
+}
+
 model SubscriptionFlow {
 	id                    Int @id @default(autoincrement())
 	createdAt             DateTime @default(now())
@@ -1018,28 +1029,7 @@ model SubscriptionFlow {
   periodicities         PaymentPeriodicity[]
   autoRenewal           Boolean[]
 
-  subscribeMailTemplate             MailTemplate? @relation("subscriptionMailTemplate", fields: [subscribeMailTemplateId], references: [id]) // initial subscription creation
-	subscribeMailTemplateId           Int?
-
-	invoiceCreationMailTemplate       SubscriptionInterval? @relation("invoiceCreationSubscriptionInterval",fields: [invoiceCreationMailTemplateId], references: [id], onDelete: Restrict, onUpdate: Cascade) // creating new subscription period and invoice
-	invoiceCreationMailTemplateId     Int?
-
-	renewalSuccessMailTemplate        MailTemplate? @relation("renewalSuccessSubscriptionMailTemplate", fields: [renewalSuccessMailTemplateId], references: [id]) // in case paid until is extended
-	renewalSuccessMailTemplateId      Int?
-
-	renewalFailedMailTemplate         MailTemplate? @relation("renewalFailedSubscriptionMailTemplate", fields: [renewalFailedMailTemplateId], references: [id]) // in case off session payment failed
-	renewalFailedMailTemplateId       Int?
-
-	deactivationUnpaidMailTemplate    SubscriptionInterval? @relation("deactivationUnpaidSubscriptionInterval", fields: [deactivationUnpaidMailTemplateId], references: [id]) // subscription is deactivated because user did not pay
-	deactivationUnpaidMailTemplateId  Int?
-
-	deactivationByUserMailTemplate    MailTemplate? @relation("deactivationByUserSubscriptionMailTemplate",fields: [deactivationByUserMailTemplateId], references: [id]) // subscription is deactivated because user or admin did so
-	deactivationByUserMailTemplateId  Int?
-
-	reactivationMailTemplate          MailTemplate? @relation("reactivationSubscriptionMailTemplate", fields: [reactivationMailTemplateId], references: [id])// subscription is re-activated by user
-	reactivationMailTemplateId        Int?
-
-	additionalIntervals   SubscriptionInterval[] // send some more e-mails such as reminders
+	intervals   SubscriptionInterval[] // send some more e-mails such as reminders
 
   @@map("subscription_communication_flows")
 }
@@ -1047,15 +1037,13 @@ model SubscriptionFlow {
 model SubscriptionInterval {
 	id                      Int @id @default(autoincrement())
 	createdAt               DateTime @default(now())
-  modifiedAt              DateTime @updatedAt
-	daysAwayFromEnding      Int @db.SmallInt
+    modifiedAt              DateTime @updatedAt
+    event                   SubscriptionEvent
+	daysAwayFromEnding      Int? @db.SmallInt
 	mailTemplate            MailTemplate @relation(fields: [mailTemplateId], references: [id])
 	mailTemplateId          Int
 
 	subscriptionFlow   SubscriptionFlow[]
-	invoiceCreations        SubscriptionFlow[] @relation("invoiceCreationSubscriptionInterval")
-	deactivationUnpaids     SubscriptionFlow[] @relation("deactivationUnpaidSubscriptionInterval")
-
   @@map("subscriptions.intervals")
 }
 
@@ -1075,11 +1063,6 @@ model MailTemplate {
 	passwordResets              UserFlow? @relation("passwordResetMailTemplate")
 	loginLinks                  UserFlow? @relation("loginLinkMailTemplate")
 
-  subscriptions               SubscriptionFlow[] @relation("subscriptionMailTemplate")
-  renewalSuccesses            SubscriptionFlow[] @relation("renewalSuccessSubscriptionMailTemplate")
-  renewalFaileds              SubscriptionFlow[] @relation("renewalFailedSubscriptionMailTemplate")
-  deactivationByUsers         SubscriptionFlow[] @relation("deactivationByUserSubscriptionMailTemplate")
-  reactivations               SubscriptionFlow[] @relation("reactivationSubscriptionMailTemplate")
 
   @@map("mail_templates")
 }

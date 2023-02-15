@@ -1,5 +1,5 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import {PaymentPeriodicity, PrismaClient} from '@prisma/client'
+import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
 import {seed as rootSeed} from '../../../libs/api/prisma/seed'
 import {hashPassword} from '../../../libs/api/src/lib/db/user'
 
@@ -44,7 +44,7 @@ async function seed() {
   })
 
   const mailTemplates = []
-  for(const i of [9,12,13,15,17,95,92,8,5,3]) {
+  for (const i of [9, 12, 13, 15, 17, 95, 92, 8, 5, 3]) {
     const template = await prisma.mailTemplate.upsert({
       where: {
         externalMailTemplateId: `sample-slug-${i}`
@@ -102,9 +102,9 @@ async function seed() {
     }
   })
 
-  const daysBefore = [1,5,3,6,7,4,2]
+  const daysBefore = [1, 5, 3, 6, 7, 4, 2]
   const subscriptionIntervals = []
-  for(const days of daysBefore) {
+  for (const days of daysBefore) {
     const index = daysBefore.indexOf(days)
     const interval = await prisma.subscriptionInterval.upsert({
       where: {
@@ -113,6 +113,7 @@ async function seed() {
       update: {},
       create: {
         daysAwayFromEnding: days,
+        event: SubscriptionEvent[1],
         mailTemplate: {connect: {id: mailTemplates[index].id}}
       }
     })
@@ -131,11 +132,7 @@ async function seed() {
       periodicities: [],
       autoRenewal: [],
 
-      subscribeMailTemplate: {connect: {id: mailTemplates[0].id}},
-      invoiceCreationMailTemplate: {connect: {id: subscriptionIntervals[0].id}},
-      renewalFailedMailTemplate: {connect: {id: mailTemplates[1].id}},
-
-      additionalIntervals: {connect: [{id: subscriptionIntervals[2].id}]}
+      intervals: {connect: [{id: subscriptionIntervals[2].id}, {id: subscriptionIntervals[0].id}]}
     }
   })
 

@@ -221,7 +221,7 @@ export class SubscriptionFlowController {
     return this.getFlow(false)
   }
 
-  async createSubscriptionInterval(subscriptionInterval: SubscriptionIntervalCreateInput) {
+  async NN(subscriptionInterval: SubscriptionIntervalCreateInput) {
     return await this.prismaService.subscriptionInterval.create({
       data: {
         daysAwayFromEnding: subscriptionInterval.daysAwayFromEnding,
