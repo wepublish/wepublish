@@ -7,7 +7,10 @@ import {
   SubscriptionIntervalDeleteInput,
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
-import {SubscriptionEvent} from '@prisma/client'
+import {
+  subscriptionFlowDaysAwayFromEndingNeedToBeNull,
+  subscriptionFlowNonUniqueEvents
+} from './subscription-flow.type'
 @Injectable()
 export class SubscriptionFlowController {
   constructor(private readonly prismaService: PrismaService) {}
@@ -236,25 +239,17 @@ export class SubscriptionFlowController {
     interval: SubscriptionIntervalCreateInput,
     checkEventUniqueConstraint = true
   ) {
-    const daysAwayFromEndingNeedToBeNull: SubscriptionEvent[] = [
-      SubscriptionEvent.SUBSCRIBE,
-      SubscriptionEvent.REACTIVATION,
-      SubscriptionEvent.DEACTIVATION_BY_USER,
-      SubscriptionEvent.RENEWAL_FAILED,
-      SubscriptionEvent.RENEWAL_SUCCESS
-    ]
-    const NonUniqueEvents: SubscriptionEvent[] = [SubscriptionEvent.CUSTOM]
     if (interval.daysAwayFromEnding === null) {
-      if (!daysAwayFromEndingNeedToBeNull.includes(interval.event)) {
+      if (!subscriptionFlowDaysAwayFromEndingNeedToBeNull.includes(interval.event)) {
         throw Error(`For event ${interval.event} daysAwayFromEnding can not be null!`)
       }
     } else {
-      if (daysAwayFromEndingNeedToBeNull.includes(interval.event)) {
+      if (subscriptionFlowDaysAwayFromEndingNeedToBeNull.includes(interval.event)) {
         throw Error(`For event ${interval.event} daysAwayFromEnding needs to be null!`)
       }
     }
 
-    if (checkEventUniqueConstraint && !NonUniqueEvents.includes(interval.event)) {
+    if (checkEventUniqueConstraint && !subscriptionFlowNonUniqueEvents.includes(interval.event)) {
       const dbIntervals = await this.prismaService.subscriptionInterval.findMany({
         where: {
           subscriptionFlow: {
@@ -273,46 +268,4 @@ export class SubscriptionFlowController {
       }
     }
   }
-  /**
-  private nestMailInterval(
-    interval: SubscriptionIntervalCreateInput | SubscriptionIntervalUpdateInput
-  ) {
-    return {
-      daysAwayFromEnding: interval.daysAwayFromEnding!,
-      mailTemplate: {
-        connect: {
-          id: interval.mailTemplate!.id
-        }
-      }
-    }
-  }
-
-  private async deleteUnusedSubscriptionInterval(intervalId: number) {
-    if (!(await this.isSubscriptionIntervalInUse(intervalId))) {
-      await this.prismaService.subscriptionInterval.delete({
-        where: {
-          id: intervalId
-        }
-      })
-    }
-  }
-
-  private async isSubscriptionIntervalInUse(intervalId: number) {
-    const flows = await this.getFlow(false)
-    for (const flow of flows) {
-      if (flow.invoiceCreationMailTemplateId === intervalId) {
-        return true
-      }
-      if (flow.deactivationUnpaidMailTemplateId === intervalId) {
-        return true
-      }
-      for (const addtionalInterval of flow.additionalIntervals) {
-        if (addtionalInterval.id === intervalId) {
-          return true
-        }
-      }
-    }
-    return false
-  }
-**/
 }
