@@ -24,7 +24,6 @@ export class SubscriptionFlowController {
         default: true
       }
     }
-
     return await this.prismaService.subscriptionFlow.findMany({
       where,
       orderBy: {
@@ -43,6 +42,16 @@ export class SubscriptionFlowController {
   }
 
   async createFlow(flow: SubscriptionFlowModelCreateInput) {
+    if (
+      flow.periodicities.length === 0 ||
+      flow.autoRenewal.length === 0 ||
+      flow.paymentMethodIds.length === 0
+    ) {
+      throw new Error(
+        'Its not allowed to create subscriptioon flow with no periodicities OR autoRenewal OR paymentMethods'
+      )
+    }
+
     if (await this.filterHasOverlap(flow.memberPlanId, flow)) {
       throw new Error('You cant create this flow because there is a filter overlap!')
     }
@@ -100,7 +109,6 @@ export class SubscriptionFlowController {
         }
       })
     ])
-
     return this.getFlow(false)
   }
 
@@ -132,7 +140,6 @@ export class SubscriptionFlowController {
         }
       })
     ])
-
     return this.getFlow(false)
   }
 
