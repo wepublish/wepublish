@@ -85,6 +85,39 @@ export class SubscriptionFlowController {
     })
     return this.getFlow(false)
   }
+
+  async deleteFlow(subscriptionFlowId: number) {
+    const originalFlow = await this.prismaService.subscriptionFlow.findUnique({
+      where: {
+        id: subscriptionFlowId
+      },
+      include: {
+        paymentMethods: true,
+        intervals: true
+      }
+    })
+    if (!originalFlow) throw Error('The given filter is not found!')
+
+    if (originalFlow.default) throw Error('Its not allowed to delete default flow!')
+
+    await this.prismaService.$transaction([
+      this.prismaService.subscriptionFlow.delete({
+        where: {
+          id: subscriptionFlowId
+        }
+      }),
+      this.prismaService.subscriptionInterval.deleteMany({
+        where: {
+          id: {
+            in: originalFlow.intervals.map(additionalInterval => additionalInterval.id)
+          }
+        }
+      })
+    ])
+
+    return this.getFlow(false)
+  }
+
   /**
 
   async createAndLinkSubscriptionInterval(subscriptionInterval: SubscriptionIntervalCreate) {
@@ -185,49 +218,6 @@ export class SubscriptionFlowController {
         mailTemplate: {connect: subscriptionInterval.mailTemplate}
       }
     })
-    return this.getFlow(false)
-  }
-
-  async deleteFlow(subscriptionFlowId: number) {
-    const originalFlow = await this.prismaService.subscriptionFlow.findUnique({
-      where: {
-        id: subscriptionFlowId
-      },
-      include: {
-        paymentMethods: true,
-        additionalIntervals: true
-      }
-    })
-    if (!originalFlow) throw Error('The given filter is not found!')
-
-    if (originalFlow.default) throw Error('Its not allowed to delete default flow!')
-
-    let subscriptionIntervalToDelete = [
-      originalFlow.deactivationUnpaidMailTemplateId,
-      originalFlow.invoiceCreationMailTemplateId
-    ]
-    subscriptionIntervalToDelete = subscriptionIntervalToDelete.concat(
-      originalFlow.additionalIntervals.map(additionalInterval => additionalInterval.id)
-    )
-    subscriptionIntervalToDelete = subscriptionIntervalToDelete.filter(elements => {
-      return elements !== null
-    })
-
-    await this.prismaService.$transaction([
-      this.prismaService.subscriptionFlow.delete({
-        where: {
-          id: subscriptionFlowId
-        }
-      }),
-      this.prismaService.subscriptionInterval.deleteMany({
-        where: {
-          id: {
-            in: subscriptionIntervalToDelete as number[]
-          }
-        }
-      })
-    ])
-
     return this.getFlow(false)
   }
      **/

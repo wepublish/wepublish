@@ -31,6 +31,13 @@ export class SubscriptionFlowProvider {
     return await this.controller.updateFlow(flow)
   }
 
+  @Mutation(returns => [SubscriptionFlowModel], {name: 'deleteSubscriptionFlow'})
+  async deleteSubscriptionFlow(
+    @Args('subscriptionFlowId', {type: () => Int}) subscriptionFlowId: number
+  ) {
+    return await this.controller.deleteFlow(subscriptionFlowId)
+  }
+
   /**
   @Mutation(() => [SubscriptionFlowModel], {name: 'updateSubscriptionInterval'})
   async updateSubscriptionInterval(
@@ -60,12 +67,6 @@ export class SubscriptionFlowProvider {
     return this.controller.addAdditionalIntervalToSubscriptionFlow(additionalInterval)
   }
 
-  @Mutation(returns => [SubscriptionFlowModel], {name: 'deleteSubscriptionFlow'})
-  async deleteSubscriptionFlow(
-    @Args('subscriptionFlowId', {type: () => Int}) subscriptionFlowId: number
-  ) {
-    return await this.controller.deleteFlow(subscriptionFlowId)
-  }
 
   @Mutation(returns => [SubscriptionFlowModel], {name: 'createAndLinkSubscriptionInterval'})
   async createAndLinkSubscriptionInterval(
