@@ -1,6 +1,10 @@
 import React, {useContext, useMemo} from 'react'
 import {
   FullMailTemplateFragment,
+  SubscriptionEvent,
+  SubscriptionFlowFragment,
+  useCreateSubscriptionIntervalMutation,
+  useDeleteSubscriptionIntervalMutation,
   useUpdateSubscriptionIntervalMutation
 } from '@wepublish/editor/api-v2'
 import {SelectPicker} from 'rsuite'
@@ -9,14 +13,16 @@ import {SubscriptionIntervalWithTitle} from './subscriptionFlows'
 
 interface MailTemplateSelectProps {
   mailTemplates: FullMailTemplateFragment[]
-  mailTemplateId?: number
-  subscriptionInterval: SubscriptionIntervalWithTitle
+  subscriptionInterval?: SubscriptionIntervalWithTitle
+  subscriptionFlow: SubscriptionFlowFragment
+  event: SubscriptionEvent
 }
 
 export default function MailTemplateSelect({
   mailTemplates,
-  mailTemplateId,
-  subscriptionInterval
+  subscriptionInterval,
+  subscriptionFlow,
+  event
 }: MailTemplateSelectProps) {
   const inactiveMailTemplates = useMemo(
     () => mailTemplates.filter(mailTemplate => mailTemplate.remoteMissing),
@@ -30,16 +36,38 @@ export default function MailTemplateSelect({
     // TODO: onError: showErrors
   })
 
+  const [createSubscriptionInterval] = useCreateSubscriptionIntervalMutation({
+    client
+    // TODO: onError: showErrors
+  })
+
+  const [deleteSubscriptionInterval] = useDeleteSubscriptionIntervalMutation({
+    client
+  })
+
   const updateMailTemplate = async (value: number) => {
-    await updateSubscriptionInterval({
-      variables: {
-        subscriptionInterval: {
-          id: subscriptionInterval.id,
-          daysAwayFromEnding: subscriptionInterval.daysAwayFromEnding,
-          mailTemplateId: value
+    if (subscriptionInterval) {
+      await updateSubscriptionInterval({
+        variables: {
+          subscriptionInterval: {
+            id: subscriptionInterval.id,
+            daysAwayFromEnding: subscriptionInterval.daysAwayFromEnding,
+            mailTemplateId: value
+          }
         }
-      }
-    })
+      })
+    } else {
+      await createSubscriptionInterval({
+        variables: {
+          subscriptionInterval: {
+            daysAwayFromEnding: 0,
+            mailTemplateId: value,
+            subscriptionFlowId: subscriptionFlow.id,
+            event
+          }
+        }
+      })
+    }
   }
 
   return (
@@ -47,7 +75,7 @@ export default function MailTemplateSelect({
       style={{width: '100%'}}
       data={mailTemplates.map(mailTemplate => ({label: mailTemplate.name, value: mailTemplate.id}))}
       disabledItemValues={inactiveMailTemplates.map(mailTemplate => mailTemplate.id)}
-      defaultValue={mailTemplateId}
+      defaultValue={subscriptionInterval?.mailTemplate.id}
       onSelect={updateMailTemplate}
     />
   )

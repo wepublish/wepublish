@@ -65,10 +65,6 @@ export type MemberPlanRef = {
   name: Scalars['String'];
 };
 
-export type MemberPlanRefInput = {
-  id: Scalars['String'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   createSubscriptionFlow: Array<SubscriptionFlowModel>;
@@ -114,10 +110,6 @@ export type PaymentMethodRef = {
   __typename?: 'PaymentMethodRef';
   id: Scalars['String'];
   name: Scalars['String'];
-};
-
-export type PaymentMethodRefInput = {
-  id: Scalars['String'];
 };
 
 export enum PaymentPeriodicity {
@@ -227,15 +219,15 @@ export type SubscriptionFlowModel = {
 
 export type SubscriptionFlowModelCreateInput = {
   autoRenewal: Array<Scalars['Boolean']>;
-  memberPlan: MemberPlanRefInput;
-  paymentMethods: Array<PaymentMethodRefInput>;
+  memberPlanId: Scalars['String'];
+  paymentMethodIds: Array<Scalars['String']>;
   periodicities: Array<PaymentPeriodicity>;
 };
 
 export type SubscriptionFlowModelUpdateInput = {
   autoRenewal: Array<Scalars['Boolean']>;
   id: Scalars['Int'];
-  paymentMethods: Array<PaymentMethodRefInput>;
+  paymentMethodIds: Array<Scalars['String']>;
   periodicities: Array<PaymentPeriodicity>;
 };
 

@@ -57,7 +57,7 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
     })
 
   // sorted subscription intervals
-  const subscriptionNonUserActions: SubscriptionIntervalWithTitle[] = useMemo(() => {
+  const subscriptionNonUserIntervals: SubscriptionIntervalWithTitle[] = useMemo(() => {
     if (!subscriptionFlow) {
       return []
     }
@@ -67,7 +67,11 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
     const intervals: SubscriptionIntervalWithTitle[] = allIntervals
       .filter(isNonUserAction)
       .map(i => {
-        return {...i, title: t(`subscriptionFlow.${i.event.toLowerCase()}`)}
+        return {
+          ...i,
+          title: t(`subscriptionFlow.${i.event.toLowerCase()}`),
+          subscriptionFlowId: subscriptionFlow.id
+        }
       })
 
     return intervals.sort((a, b) => {
@@ -80,20 +84,20 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
 
   const timeLineArray: number[] = useMemo(() => {
     const maxDaysInTimeline = Math.max(
-      ...subscriptionNonUserActions.map(action => action.daysAwayFromEnding!)
+      ...subscriptionNonUserIntervals.map(action => action.daysAwayFromEnding!)
     )
     return [...Array(maxDaysInTimeline + 2)]
-  }, [subscriptionNonUserActions])
+  }, [subscriptionNonUserIntervals])
 
   /**
    * FUNCTIONS
    */
   function getSubscriptionActionsByDay(dayIndex: number) {
-    return subscriptionNonUserActions.filter(userAction => {
-      if (!userAction.daysAwayFromEnding && dayIndex === 0) {
+    return subscriptionNonUserIntervals.filter(interval => {
+      if (!interval.daysAwayFromEnding && dayIndex === 0) {
         return true
       }
-      if (userAction.daysAwayFromEnding === dayIndex) {
+      if (interval.daysAwayFromEnding === dayIndex) {
         return true
       }
       return false
@@ -132,7 +136,11 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
 
               <UpperIntervalContainer>
                 {currentIntervals.map(currentInterval => (
-                  <SubscriptionInterval subscriptionInterval={currentInterval} />
+                  <SubscriptionInterval
+                    subscriptionInterval={currentInterval}
+                    subscriptionFlow={subscriptionFlow}
+                    event={currentInterval.event}
+                  />
                 ))}
               </UpperIntervalContainer>
             </TimeLineDay>
@@ -193,7 +201,11 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
             <TimeLineDay>
               <LowerIntervalContainer>
                 {currentIntervals.map(currentInterval => (
-                  <SubscriptionInterval subscriptionInterval={currentInterval} />
+                  <SubscriptionInterval
+                    subscriptionInterval={currentInterval}
+                    subscriptionFlow={subscriptionFlow}
+                    event={currentInterval.event}
+                  />
                 ))}
               </LowerIntervalContainer>
 
