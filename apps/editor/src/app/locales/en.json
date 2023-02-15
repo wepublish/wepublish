@@ -1327,6 +1327,12 @@
         "body": "Do you really want to delete the event \"{{name}}\"?",
         "delete": "Yes, delete the event"
       }
+    },
+    "toast": {
+      "deletedSuccess": "Deleted successfully",
+      "createdSuccess": "Created successfully",
+      "updatedSuccess": "Updated successfully",
+      "updateError": "There was an error, please try again"
     }
   }
 }

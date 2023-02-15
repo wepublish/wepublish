@@ -1,8 +1,8 @@
 import {ApolloError} from '@apollo/client'
-import EditIcon from '@rsuite/icons/legacy/Edit'
 import {EventRefFragment, TagType, useEventListLazyQuery} from '@wepublish/editor/api'
-import React, {useEffect, useReducer, useState} from 'react'
+import {useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdEdit} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {
   Button,
@@ -167,7 +167,7 @@ export function SelectEventPanel({selectedFilter, onClose, onSelect}: SelectEven
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_EVENT']}>
                   <IconButtonTooltip caption={t('event.list.edit')}>
                     <Link target="_blank" to={`/events/edit/${rowData.id}`}>
-                      <IconButton icon={<EditIcon />} circle size="sm" />
+                      <IconButton icon={<MdEdit />} circle size="sm" />
                     </Link>
                   </IconButtonTooltip>
                 </PermissionControl>

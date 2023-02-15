@@ -1328,6 +1328,12 @@
         "body": "Willst Du das Event \"{{name}}\" wirklich löschen?",
         "delete": "Ja, lösche das Event"
       }
+    },
+    "general": {
+      "deletedSuccess": "Erfolgreich gelöscht",
+      "created": "Erfolgreich erstellt",
+      "updated": "Erfolgreich aktualisiert",
+      "errorOnUpdate": "Fehler, bitte nochmal versuchen"
     }
   }
 }
