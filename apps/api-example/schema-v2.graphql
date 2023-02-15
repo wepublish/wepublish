@@ -55,6 +55,7 @@ type Mutation {
   createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): [SubscriptionFlowModel!]!
   createSubscriptionInterval(subscriptionInterval: SubscriptionIntervalCreateInput!): [SubscriptionFlowModel!]!
   deleteSubscriptionFlow(subscriptionFlowId: Int!): [SubscriptionFlowModel!]!
+  deleteSubscriptionInterval(subscriptionInterval: SubscriptionIntervalDeleteInput!): [SubscriptionFlowModel!]!
   syncTemplates: Boolean!
   updateSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelUpdateInput!): [SubscriptionFlowModel!]!
   updateSubscriptionInterval(subscriptionInterval: SubscriptionIntervalUpdateInput!): [SubscriptionFlowModel!]!
@@ -183,6 +184,10 @@ input SubscriptionIntervalCreateInput {
   event: SubscriptionEvent!
   mailTemplateId: Int!
   subscriptionFlowId: Int!
+}
+
+input SubscriptionIntervalDeleteInput {
+  id: Int!
 }
 
 input SubscriptionIntervalUpdateInput {

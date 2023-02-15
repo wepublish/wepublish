@@ -140,11 +140,17 @@ export class SubscriptionIntervalCreateInput {
 @InputType()
 export class SubscriptionIntervalUpdateInput {
   @Field(() => Int)
-  id?: number
+  id!: number
   @Field(() => Int, {nullable: true})
   daysAwayFromEnding?: number
   @Field(() => Int)
   mailTemplateId!: number
+}
+
+@InputType()
+export class SubscriptionIntervalDeleteInput {
+  @Field(() => Int)
+  id!: number
 }
 
 @InputType()

@@ -6,6 +6,7 @@ import {
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
   SubscriptionIntervalCreateInput,
+  SubscriptionIntervalDeleteInput,
   SubscriptionIntervalTypes,
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
@@ -162,6 +163,15 @@ export class SubscriptionFlowController {
           }
         },
         daysAwayFromEnding: interval.daysAwayFromEnding
+      }
+    })
+    return this.getFlow(false)
+  }
+
+  async deleteInterval(interval: SubscriptionIntervalDeleteInput) {
+    await this.prismaService.subscriptionInterval.delete({
+      where: {
+        id: interval.id
       }
     })
     return this.getFlow(false)
