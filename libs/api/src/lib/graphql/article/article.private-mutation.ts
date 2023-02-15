@@ -2,7 +2,8 @@ import {Prisma, PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 import {ArticleWithRevisions} from '../../db/article'
 import {DuplicateArticleSlugError, NotFound} from '../../error'
-import {authorise, CanCreateArticle, CanDeleteArticle, CanPublishArticle} from '../permissions'
+import {authorise} from '../permissions'
+import {CanCreateArticle, CanDeleteArticle, CanPublishArticle} from '@wepublish/permissions/api'
 
 export const deleteArticleById = async (
   id: string,

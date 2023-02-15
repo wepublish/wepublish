@@ -1,5 +1,6 @@
 import {Context} from '../../context'
-import {authorise, CanGetSettings} from '../permissions'
+import {authorise} from '../permissions'
+import {CanGetSettings} from '@wepublish/permissions/api'
 import {PrismaClient} from '@prisma/client'
 import {UserInputError} from '../../error'
 

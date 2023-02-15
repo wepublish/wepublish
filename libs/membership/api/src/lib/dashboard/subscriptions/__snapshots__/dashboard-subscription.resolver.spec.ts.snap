@@ -12,15 +12,6 @@ Array [
     "startsAt": "2023-02-03T00:00:00.000Z",
   },
   Object {
-    "endsAt": "2023-02-03T00:00:00.000Z",
-    "memberPlan": "Bar",
-    "monthlyAmount": 50,
-    "paymentPeriodicity": "monthly",
-    "reasonForDeactivation": "invoiceNotPaid",
-    "renewsAt": null,
-    "startsAt": "2023-02-02T00:00:00.000Z",
-  },
-  Object {
     "endsAt": "2023-02-01T00:00:00.000Z",
     "memberPlan": "foo",
     "monthlyAmount": 50,

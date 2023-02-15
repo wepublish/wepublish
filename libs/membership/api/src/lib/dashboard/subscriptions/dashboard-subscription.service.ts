@@ -44,6 +44,7 @@ export class DashboardSubscriptionService {
         monthlyAmount,
         paymentPeriodicity,
         reasonForDeactivation: deactivation?.reason,
+        deactivationDate: deactivation?.createdAt,
         memberPlan
       })
     )
@@ -94,6 +95,7 @@ export class DashboardSubscriptionService {
         monthlyAmount,
         paymentPeriodicity,
         reasonForDeactivation: deactivation?.reason,
+        deactivationDate: deactivation?.createdAt,
         memberPlan
       })
     )
@@ -181,6 +183,7 @@ export class DashboardSubscriptionService {
           startsAt,
           endsAt: deactivation.date,
           reasonForDeactivation: deactivation.reason,
+          deactivationDate: deactivation.createdAt,
           paymentPeriodicity,
           monthlyAmount,
           memberPlan

@@ -1,6 +1,7 @@
 import {Prisma, PrismaClient, User} from '@prisma/client'
 import {Context} from '../../context'
-import {hashPassword, unselectPassword} from '../../db/user'
+import {hashPassword} from '../../db/user'
+import {unselectPassword} from '@wepublish/user/api'
 import {EmailAlreadyInUseError, NotAuthenticatedError, NotFound, UserInputError} from '../../error'
 import {Validator} from '../../validator'
 import {CreateImageInput} from '../image/image.private-mutation'

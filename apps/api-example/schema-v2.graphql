@@ -10,6 +10,7 @@ type DashboardInvoice {
 }
 
 type DashboardSubscription {
+  deactivationDate: DateTime
   endsAt: DateTime
   memberPlan: String!
   monthlyAmount: Int!

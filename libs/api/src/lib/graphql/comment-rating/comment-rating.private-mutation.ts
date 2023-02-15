@@ -1,6 +1,7 @@
 import {PrismaClient, RatingSystemType} from '@prisma/client'
+import {CanUpdateCommentRatingSystem} from '@wepublish/permissions/api'
 import {Context} from '../../context'
-import {authorise, CanUpdateCommentRatingSystem} from '../permissions'
+import {authorise} from '../permissions'
 
 type UpdateCommentRatingAnswer = {id: string; answer: string; type: RatingSystemType}
 

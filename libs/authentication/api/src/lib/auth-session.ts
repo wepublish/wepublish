@@ -1,20 +1,20 @@
 import {User, UserRole} from '@prisma/client'
 
-export enum SessionType {
+export enum AuthSessionType {
   User = 'user',
   Token = 'token'
 }
 
-export interface TokenSession {
-  type: SessionType.Token
+export type TokenSession = {
+  type: AuthSessionType.Token
   id: string
   name: string
   token: string
   roles: UserRole[]
 }
 
-export interface UserSession {
-  type: SessionType.User
+export type UserSession = {
+  type: AuthSessionType.User
   id: string
   user: User
   roles: UserRole[]
@@ -23,4 +23,4 @@ export interface UserSession {
   token: string
 }
 
-export type Session = TokenSession | UserSession
+export type AuthSession = TokenSession | UserSession
