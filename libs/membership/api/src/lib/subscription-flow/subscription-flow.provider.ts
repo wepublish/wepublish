@@ -9,7 +9,7 @@ import {
 } from './subscription-flow.model'
 import {SubscriptionFlowController} from './subscription-flow.controller'
 
-@Resolver(of => [SubscriptionFlowProvider])
+@Resolver(() => [SubscriptionFlowProvider])
 export class SubscriptionFlowProvider {
   constructor(private readonly controller: SubscriptionFlowController) {}
 
