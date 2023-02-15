@@ -83,10 +83,17 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
   }, [t, subscriptionFlow])
 
   const timeLineArray: number[] = useMemo(() => {
+    const minDaysInTimeline = Math.min(
+      ...subscriptionNonUserIntervals.map(action => action.daysAwayFromEnding!)
+    )
     const maxDaysInTimeline = Math.max(
       ...subscriptionNonUserIntervals.map(action => action.daysAwayFromEnding!)
     )
-    return [...Array(maxDaysInTimeline + 2)]
+    const timelineStart = Math.min(0, minDaysInTimeline - 2)
+    const timelineEnd = maxDaysInTimeline + 2
+    // create array of numbers from start to end
+    console.log(timelineStart, timelineEnd)
+    return Array.from({length: timelineEnd - timelineStart}, (_, i) => timelineStart + 1 + i)
   }, [subscriptionNonUserIntervals])
 
   /**
@@ -124,13 +131,13 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
     <DndContext onDragEnd={event => intervalDragEnd(event)}>
       {/* upper subscription intervals */}
       <TimeLineContainer style={{alignItems: 'flex-end'}}>
-        {timeLineArray.map((day, dayIndex) => {
-          const currentIntervals = dayIndex % 2 === 0 ? getSubscriptionActionsByDay(dayIndex) : []
+        {timeLineArray.map(day => {
+          const currentIntervals = day % 2 === 0 ? getSubscriptionActionsByDay(day) : []
           return (
             <TimeLineDay>
-              {dayIndex % 2 === 0 && (
+              {day % 2 === 0 && (
                 <UpperIntervalContainer>
-                  <DropContainerSubscriptionInterval dayIndex={dayIndex} />
+                  <DropContainerSubscriptionInterval dayIndex={day} />
                 </UpperIntervalContainer>
               )}
 
@@ -150,19 +157,19 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
 
       {/* timeline */}
       <TimeLineContainer>
-        {timeLineArray.map((day, dayIndex) => (
+        {timeLineArray.map(day => (
           <TimeLineDay>
             <div
               style={{
                 height: '15px',
                 marginBottom: '15px',
-                borderRight: dayIndex % 2 === 0 ? '1px solid black' : 'none'
+                borderRight: day % 2 === 0 ? '1px solid black' : 'none'
               }}
             />
 
             <div
               style={{
-                borderBottom: dayIndex !== 0 ? '1px solid black' : 'none',
+                borderBottom: day !== 0 ? '1px solid black' : 'none',
                 position: 'relative'
               }}>
               {/* day number */}
@@ -176,7 +183,7 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
                 }}>
                 <div style={{textAlign: 'center'}}>
                   <Tag color="green" size="sm">
-                    Tag {dayIndex}
+                    Tag {day}
                   </Tag>
                 </div>
               </div>
@@ -186,7 +193,7 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
               style={{
                 height: '15px',
                 marginTop: '15px',
-                borderRight: dayIndex % 2 !== 0 ? '1px solid black' : 'none'
+                borderRight: day % 2 !== 0 ? '1px solid black' : 'none'
               }}
             />
           </TimeLineDay>
@@ -195,8 +202,8 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
 
       {/* upper subscription intervals */}
       <TimeLineContainer>
-        {timeLineArray.map((day, dayIndex) => {
-          const currentIntervals = dayIndex % 2 !== 0 ? getSubscriptionActionsByDay(dayIndex) : []
+        {timeLineArray.map(day => {
+          const currentIntervals = day % 2 !== 0 ? getSubscriptionActionsByDay(day) : []
           return (
             <TimeLineDay>
               <LowerIntervalContainer>
@@ -209,9 +216,9 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
                 ))}
               </LowerIntervalContainer>
 
-              {dayIndex % 2 !== 0 && (
+              {day % 2 !== 0 && (
                 <LowerIntervalContainer>
-                  <DropContainerSubscriptionInterval dayIndex={dayIndex} />
+                  <DropContainerSubscriptionInterval dayIndex={day} />
                 </LowerIntervalContainer>
               )}
             </TimeLineDay>
