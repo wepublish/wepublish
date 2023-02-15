@@ -53,6 +53,7 @@ input MemberPlanRefInput {
 
 type Mutation {
   createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): [SubscriptionFlowModel!]!
+  createSubscriptionInterval(subscriptionInterval: SubscriptionIntervalCreateInput!): [SubscriptionFlowModel!]!
   deleteSubscriptionFlow(subscriptionFlowId: Int!): [SubscriptionFlowModel!]!
   syncTemplates: Boolean!
   updateSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelUpdateInput!): [SubscriptionFlowModel!]!
@@ -174,6 +175,13 @@ type SubscriptionInterval {
   event: SubscriptionEvent!
   id: Int!
   mailTemplate: MailTemplateRef!
+}
+
+input SubscriptionIntervalCreateInput {
+  daysAwayFromEnding: Int
+  event: SubscriptionEvent!
+  mailTemplateId: Int!
+  subscriptionFlowId: Int!
 }
 
 type VersionInformation {

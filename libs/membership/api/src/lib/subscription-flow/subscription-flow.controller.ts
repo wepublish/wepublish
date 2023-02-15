@@ -5,9 +5,10 @@ import {
   AdditionalIntervalDeleteInput,
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
-  SubscriptionIntervalTypes,
-  SubscriptionIntervalUpdateInput
+  SubscriptionIntervalCreateInput,
+  SubscriptionIntervalTypes
 } from './subscription-flow.model'
+import {SubscriptionEvent} from '@prisma/client'
 @Injectable()
 export class SubscriptionFlowController {
   constructor(private readonly prismaService: PrismaService) {}
@@ -115,6 +116,27 @@ export class SubscriptionFlowController {
       })
     ])
 
+    return this.getFlow(false)
+  }
+
+  async createInterval(interval: SubscriptionIntervalCreateInput) {
+    await this.isIntervalValid(interval)
+    await this.prismaService.subscriptionInterval.create({
+      data: {
+        daysAwayFromEnding: interval.daysAwayFromEnding,
+        subscriptionFlow: {
+          connect: {
+            id: interval.subscriptionFlowId
+          }
+        },
+        event: interval.event,
+        mailTemplate: {
+          connect: {
+            id: interval.mailTemplateId
+          }
+        }
+      }
+    })
     return this.getFlow(false)
   }
 
@@ -265,6 +287,45 @@ export class SubscriptionFlowController {
       }
     }
     return false
+  }
+
+  async isIntervalValid(interval: SubscriptionIntervalCreateInput) {
+    const daysAwayFromEndingNeedToBeNull: SubscriptionEvent[] = [
+      SubscriptionEvent.SUBSCRIBE,
+      SubscriptionEvent.REACTIVATION,
+      SubscriptionEvent.DEACTIVATION_BY_USER,
+      SubscriptionEvent.RENEWAL_FAILED,
+      SubscriptionEvent.RENEWAL_SUCCESS
+    ]
+    const NonUniqueEvents: SubscriptionEvent[] = [SubscriptionEvent.CUSTOM]
+    if (interval.daysAwayFromEnding === null) {
+      if (!daysAwayFromEndingNeedToBeNull.includes(interval.event)) {
+        throw Error(`For event ${interval.event} daysAwayFromEnding can not be null!`)
+      }
+    } else {
+      if (daysAwayFromEndingNeedToBeNull.includes(interval.event)) {
+        throw Error(`For event ${interval.event} daysAwayFromEnding needs to be null!`)
+      }
+    }
+
+    if (!NonUniqueEvents.includes(interval.event)) {
+      const dbIntervals = await this.prismaService.subscriptionInterval.findMany({
+        where: {
+          subscriptionFlow: {
+            every: {
+              id: interval.subscriptionFlowId
+            }
+          }
+        }
+      })
+      for (const dbInterval of dbIntervals) {
+        if (dbInterval.event === interval.event) {
+          throw Error(
+            `For each subscription flow its not allowed to have more than one events of the type ${interval.event}`
+          )
+        }
+      }
+    }
   }
   /**
   private nestMailInterval(

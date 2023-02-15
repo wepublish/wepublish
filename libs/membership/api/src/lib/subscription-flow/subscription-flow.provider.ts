@@ -7,7 +7,7 @@ import {
   SubscriptionFlowModelUpdateInput,
   SubscriptionInterval,
   SubscriptionIntervalCreated,
-  SubscriptionIntervalUpdateInput
+  SubscriptionIntervalCreateInput
 } from './subscription-flow.model'
 import {SubscriptionFlowController} from './subscription-flow.controller'
 
@@ -36,6 +36,13 @@ export class SubscriptionFlowProvider {
     @Args('subscriptionFlowId', {type: () => Int}) subscriptionFlowId: number
   ) {
     return await this.controller.deleteFlow(subscriptionFlowId)
+  }
+
+  @Mutation(() => [SubscriptionFlowModel], {name: 'createSubscriptionInterval'})
+  async createSubscriptionInterval(
+    @Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalCreateInput
+  ) {
+    return this.controller.createInterval(subscriptionInterval)
   }
 
   /**
