@@ -29,23 +29,8 @@ export class SubscriptionFlowController {
       },
       include: {
         memberPlan: true,
-        subscribeMailTemplate: true,
         paymentMethods: true,
-        invoiceCreationMailTemplate: {
-          include: {
-            mailTemplate: true
-          }
-        },
-        renewalSuccessMailTemplate: true,
-        renewalFailedMailTemplate: true,
-        deactivationUnpaidMailTemplate: {
-          include: {
-            mailTemplate: true
-          }
-        },
-        deactivationByUserMailTemplate: true,
-        reactivationMailTemplate: true,
-        additionalIntervals: {
+        intervals: {
           include: {
             mailTemplate: true
           }

@@ -102,24 +102,6 @@ async function seed() {
     }
   })
 
-  const daysBefore = [1, 5, 3, 6, 7, 4, 2]
-  const subscriptionIntervals = []
-  for (const days of daysBefore) {
-    const index = daysBefore.indexOf(days)
-    const interval = await prisma.subscriptionInterval.upsert({
-      where: {
-        id: index + 1
-      },
-      update: {},
-      create: {
-        daysAwayFromEnding: days,
-        event: SubscriptionEvent[1],
-        mailTemplate: {connect: {id: mailTemplates[index].id}}
-      }
-    })
-    subscriptionIntervals.push(interval)
-  }
-
   await prisma.subscriptionFlow.upsert({
     where: {
       id: 1
@@ -130,9 +112,7 @@ async function seed() {
       memberPlan: {connect: {id: memberPlan.id}},
       paymentMethods: undefined,
       periodicities: [],
-      autoRenewal: [],
-
-      intervals: {connect: [{id: subscriptionIntervals[2].id}, {id: subscriptionIntervals[0].id}]}
+      autoRenewal: []
     }
   })
 
@@ -146,13 +126,7 @@ async function seed() {
       memberPlan: {connect: {id: memberPlan.id}},
       paymentMethods: {connect: [{id: paymentMethod.id}]},
       periodicities: [PaymentPeriodicity.monthly, PaymentPeriodicity.yearly],
-      autoRenewal: [true],
-
-      subscribeMailTemplate: {connect: {id: mailTemplates[2].id}},
-      invoiceCreationMailTemplate: {connect: {id: subscriptionIntervals[3].id}},
-      renewalFailedMailTemplate: {connect: {id: mailTemplates[3].id}},
-
-      additionalIntervals: {connect: [{id: subscriptionIntervals[4].id}]}
+      autoRenewal: [true]
     }
   })
 
@@ -166,14 +140,137 @@ async function seed() {
       memberPlan: {connect: {id: memberPlan.id}},
       paymentMethods: {connect: [{id: paymentMethod.id}]},
       periodicities: [PaymentPeriodicity.monthly, PaymentPeriodicity.yearly],
-      autoRenewal: [false],
-
-      invoiceCreationMailTemplate: {connect: {id: subscriptionIntervals[5].id}},
-      renewalFailedMailTemplate: {connect: {id: mailTemplates[4].id}},
-
-      additionalIntervals: {connect: [{id: subscriptionIntervals[6].id}]}
+      autoRenewal: [false]
     }
   })
+
+  const events = [
+    {
+      id: 1,
+      event: SubscriptionEvent.SUBSCRIBE,
+      daysAwayFromEnding: null,
+      mailTemplate: {connect: {id: 1}},
+      subscriptionFlow: {connect: {id: 1}}
+    },
+    {
+      id: 2,
+      event: SubscriptionEvent.RENEWAL_SUCCESS,
+      daysAwayFromEnding: null,
+      mailTemplate: {connect: {id: 2}},
+      subscriptionFlow: {connect: {id: 1}}
+    },
+    {
+      id: 3,
+      event: SubscriptionEvent.RENEWAL_FAILED,
+      daysAwayFromEnding: null,
+      mailTemplate: {connect: {id: 3}},
+      subscriptionFlow: {connect: {id: 1}}
+    },
+    {
+      id: 4,
+      event: SubscriptionEvent.INVOICE_CREATION,
+      daysAwayFromEnding: -14,
+      mailTemplate: {connect: {id: 4}},
+      subscriptionFlow: {connect: {id: 1}}
+    },
+    {
+      id: 5,
+      event: SubscriptionEvent.DEACTIVATION_UNPAID,
+      daysAwayFromEnding: 5,
+      mailTemplate: {connect: {id: 5}},
+      subscriptionFlow: {connect: {id: 1}}
+    },
+    {
+      id: 6,
+      event: SubscriptionEvent.DEACTIVATION_BY_USER,
+      daysAwayFromEnding: null,
+      mailTemplate: {connect: {id: 6}},
+      subscriptionFlow: {connect: {id: 1}}
+    },
+    {
+      id: 7,
+      event: SubscriptionEvent.REACTIVATION,
+      daysAwayFromEnding: null,
+      mailTemplate: {connect: {id: 7}},
+      subscriptionFlow: {connect: {id: 1}}
+    },
+    {
+      id: 8,
+      event: SubscriptionEvent.CUSTOM,
+      daysAwayFromEnding: 15,
+      mailTemplate: {connect: {id: 8}},
+      subscriptionFlow: {connect: {id: 1}}
+    },
+
+    {
+      id: 9,
+      event: SubscriptionEvent.DEACTIVATION_UNPAID,
+      daysAwayFromEnding: 10,
+      mailTemplate: {connect: {id: 5}},
+      subscriptionFlow: {connect: {id: 2}}
+    },
+    {
+      id: 10,
+      event: SubscriptionEvent.DEACTIVATION_BY_USER,
+      daysAwayFromEnding: null,
+      mailTemplate: {connect: {id: 6}},
+      subscriptionFlow: {connect: {id: 2}}
+    },
+    {
+      id: 11,
+      event: SubscriptionEvent.REACTIVATION,
+      daysAwayFromEnding: null,
+      mailTemplate: {connect: {id: 7}},
+      subscriptionFlow: {connect: {id: 2}}
+    },
+    {
+      id: 12,
+      event: SubscriptionEvent.CUSTOM,
+      daysAwayFromEnding: -6,
+      mailTemplate: {connect: {id: 8}},
+      subscriptionFlow: {connect: {id: 2}}
+    },
+
+    {
+      id: 13,
+      event: SubscriptionEvent.SUBSCRIBE,
+      daysAwayFromEnding: null,
+      mailTemplate: {connect: {id: 1}},
+      subscriptionFlow: {connect: {id: 3}}
+    },
+    {
+      id: 14,
+      event: SubscriptionEvent.RENEWAL_SUCCESS,
+      daysAwayFromEnding: null,
+      mailTemplate: {connect: {id: 2}},
+      subscriptionFlow: {connect: {id: 3}}
+    },
+    {
+      id: 15,
+      event: SubscriptionEvent.RENEWAL_FAILED,
+      daysAwayFromEnding: null,
+      mailTemplate: {connect: {id: 3}},
+      subscriptionFlow: {connect: {id: 3}}
+    },
+    {
+      id: 16,
+      event: SubscriptionEvent.INVOICE_CREATION,
+      daysAwayFromEnding: -30,
+      mailTemplate: {connect: {id: 4}},
+      subscriptionFlow: {connect: {id: 3}}
+    }
+  ]
+
+  for (const event of events) {
+    const {id, ...createObj} = event
+    await prisma.subscriptionInterval.upsert({
+      where: {
+        id: event.id
+      },
+      update: {},
+      create: createObj
+    })
+  }
 
   await prisma.$disconnect()
 }
