@@ -6,9 +6,7 @@ import {
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
   SubscriptionInterval,
-  SubscriptionIntervalCreate,
   SubscriptionIntervalCreated,
-  SubscriptionIntervalCreateInput,
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
 import {SubscriptionFlowController} from './subscription-flow.controller'
@@ -21,7 +19,7 @@ export class SubscriptionFlowProvider {
   async subscriptionFlow(@Args('defaultFlowOnly') defaultFlowOnly: boolean) {
     return await this.controller.getFlow(defaultFlowOnly)
   }
-
+  /**
   @Mutation(returns => [SubscriptionFlowModel], {name: 'createSubscriptionFlow'})
   async createSubscriptionFlow(@Args('subscriptionFlow') flow: SubscriptionFlowModelCreateInput) {
     return await this.controller.createFlow(flow)
@@ -73,4 +71,5 @@ export class SubscriptionFlowProvider {
   ) {
     return await this.controller.createAndLinkSubscriptionInterval(additionalInterval)
   }
+  **/
 }

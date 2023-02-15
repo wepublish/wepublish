@@ -2,17 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-input AdditionalIntervalCreateInput {
-  daysAwayFromEnding: Int!
-  mailTemplate: MailTemplateRefInput!
-  subscriptionFlowId: Int!
-}
-
-input AdditionalIntervalDeleteInput {
-  additionalIntervalId: Int!
-  subscriptionFlowId: Int!
-}
-
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -44,10 +33,6 @@ type MailTemplateRef {
   name: String!
 }
 
-input MailTemplateRefInput {
-  id: Int!
-}
-
 type MailTemplateWithUrlModel {
   description: String
   externalMailTemplateId: String!
@@ -62,29 +47,13 @@ type MemberPlanRef {
   name: String!
 }
 
-input MemberPlanRefInput {
-  id: String!
-}
-
 type Mutation {
-  addAdditionalIntervalToSubscriptionFlow(additionalInterval: AdditionalIntervalCreateInput!): [SubscriptionFlowModel!]!
-  createAndLinkSubscriptionInterval(subscriptionInterval: SubscriptionIntervalCreate!): [SubscriptionFlowModel!]!
-  createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): [SubscriptionFlowModel!]!
-  createSubscriptionInterval(subscriptionInterval: SubscriptionIntervalCreateInput!): SubscriptionIntervalCreated!
-  deleteSubscriptionFlow(subscriptionFlowId: Int!): [SubscriptionFlowModel!]!
-  removeAdditionalIntervalToSubscriptionFlow(additionalInterval: AdditionalIntervalDeleteInput!): [SubscriptionFlowModel!]!
   syncTemplates: Boolean!
-  updateSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelUpdateInput!): [SubscriptionFlowModel!]!
-  updateSubscriptionInterval(subscriptionInterval: SubscriptionIntervalUpdateInput!): [SubscriptionFlowModel!]!
 }
 
 type PaymentMethodRef {
   id: String!
   name: String!
-}
-
-input PaymentMethodRefInput {
-  id: String!
 }
 
 enum PaymentPeriodicity {
@@ -154,86 +123,32 @@ enum SubscriptionDeactivationReason {
   userSelfDeactivated
 }
 
+enum SubscriptionEvent {
+  CUSTOM
+  DEACTIVATION_BY_USER
+  DEACTIVATION_UNPAID
+  INVOICE_CREATION
+  REACTIVATION
+  RENEWAL_FAILED
+  RENEWAL_SUCCESS
+  SUBSCRIBE
+}
+
 type SubscriptionFlowModel {
-  additionalIntervals: [SubscriptionInterval!]!
   autoRenewal: [Boolean!]!
-  deactivationByUserMailTemplate: MailTemplateRef
-  deactivationUnpaidMailTemplate: SubscriptionInterval
   default: Boolean!
   id: Int!
-  invoiceCreationMailTemplate: SubscriptionInterval
+  intervals: [SubscriptionInterval!]!
   memberPlan: MemberPlanRef!
   paymentMethods: [PaymentMethodRef!]!
   periodicities: [PaymentPeriodicity!]!
-  reactivationMailTemplate: MailTemplateRef
-  renewalFailedMailTemplate: MailTemplateRef
-  renewalSuccessMailTemplate: MailTemplateRef
-  subscribeMailTemplate: MailTemplateRef
-}
-
-input SubscriptionFlowModelCreateInput {
-  additionalIntervals: [SubscriptionIntervalCreateInput!]!
-  autoRenewal: [Boolean!]!
-  deactivationByUserMailTemplate: MailTemplateRefInput
-  deactivationUnpaidMailTemplate: SubscriptionIntervalCreateInput
-  invoiceCreationMailTemplate: SubscriptionIntervalCreateInput
-  memberPlan: MemberPlanRefInput!
-  paymentMethods: [PaymentMethodRefInput!]!
-  periodicities: [PaymentPeriodicity!]!
-  reactivationMailTemplate: MailTemplateRefInput
-  renewalFailedMailTemplate: MailTemplateRefInput
-  renewalSuccessMailTemplate: MailTemplateRefInput
-  subscribeMailTemplate: MailTemplateRefInput
-}
-
-input SubscriptionFlowModelUpdateInput {
-  autoRenewal: [Boolean!]!
-  deactivationByUserMailTemplate: MailTemplateRefInput
-  deactivationUnpaidIntervalId: Float
-  id: Int!
-  invoiceCreationIntervalId: Float
-  paymentMethods: [PaymentMethodRefInput!]!
-  periodicities: [PaymentPeriodicity!]!
-  reactivationMailTemplate: MailTemplateRefInput
-  renewalFailedMailTemplate: MailTemplateRefInput
-  renewalSuccessMailTemplate: MailTemplateRefInput
-  subscribeMailTemplate: MailTemplateRefInput
 }
 
 type SubscriptionInterval {
-  daysAwayFromEnding: Int!
+  daysAwayFromEnding: Int
+  event: SubscriptionEvent!
   id: Int!
   mailTemplate: MailTemplateRef!
-}
-
-input SubscriptionIntervalCreate {
-  daysAwayFromEnding: Int!
-  mailTemplate: MailTemplateRefInput!
-  subscriptionFlowId: Int!
-  subscriptionIntervalTypes: SubscriptionIntervalTypes!
-}
-
-input SubscriptionIntervalCreateInput {
-  daysAwayFromEnding: Int!
-  mailTemplate: MailTemplateRefInput!
-}
-
-type SubscriptionIntervalCreated {
-  daysAwayFromEnding: Int!
-  id: Int!
-  mailTemplateId: Int!
-}
-
-enum SubscriptionIntervalTypes {
-  ADDITIONAL_INTERVAL
-  CREATE_INVOICES
-  DEACTIVATION_UNPAID_INVOICE
-}
-
-input SubscriptionIntervalUpdateInput {
-  daysAwayFromEnding: Int
-  id: Int
-  mailTemplate: MailTemplateRefInput
 }
 
 type VersionInformation {

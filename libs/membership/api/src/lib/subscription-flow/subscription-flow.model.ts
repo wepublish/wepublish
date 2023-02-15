@@ -1,5 +1,5 @@
 import {Field, InputType, Int, ObjectType, registerEnumType} from '@nestjs/graphql'
-import {PaymentPeriodicity} from '@prisma/client'
+import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
 
 export enum SubscriptionIntervalTypes {
   ADDITIONAL_INTERVAL,
@@ -13,6 +13,10 @@ registerEnumType(SubscriptionIntervalTypes, {
 
 registerEnumType(PaymentPeriodicity, {
   name: 'PaymentPeriodicity'
+})
+
+registerEnumType(SubscriptionEvent, {
+  name: 'SubscriptionEvent'
 })
 
 // Output
@@ -45,20 +49,24 @@ class PaymentMethodRef {
 export class SubscriptionInterval {
   @Field(() => Int)
   id!: number
-  @Field(() => Int)
-  daysAwayFromEnding!: number
+  @Field(() => Int, {nullable: true})
+  daysAwayFromEnding?: number
   @Field(type => MailTemplateRef)
   mailTemplate!: MailTemplateRef
+  @Field(() => SubscriptionEvent)
+  event!: SubscriptionEvent
 }
 
 @ObjectType()
 export class SubscriptionIntervalCreated {
   @Field(() => Int)
   id!: number
-  @Field(() => Int)
-  daysAwayFromEnding!: number
+  @Field(() => Int, {nullable: true})
+  daysAwayFromEnding?: number
   @Field(type => Int)
   mailTemplateId!: number
+  @Field(() => SubscriptionEvent)
+  event!: SubscriptionEvent
 }
 
 @ObjectType()
@@ -75,22 +83,8 @@ export class SubscriptionFlowModel {
   periodicities!: PaymentPeriodicity[]
   @Field(type => [Boolean])
   autoRenewal!: boolean[]
-  @Field(type => MailTemplateRef, {nullable: true})
-  subscribeMailTemplate?: MailTemplateRef
-  @Field(type => SubscriptionInterval, {nullable: true})
-  invoiceCreationMailTemplate?: SubscriptionInterval
-  @Field(type => MailTemplateRef, {nullable: true})
-  renewalSuccessMailTemplate?: MailTemplateRef
-  @Field(type => MailTemplateRef, {nullable: true})
-  renewalFailedMailTemplate?: MailTemplateRef
-  @Field(type => SubscriptionInterval, {nullable: true})
-  deactivationUnpaidMailTemplate?: SubscriptionInterval
-  @Field(type => MailTemplateRef, {nullable: true})
-  deactivationByUserMailTemplate?: MailTemplateRef
-  @Field(type => MailTemplateRef, {nullable: true})
-  reactivationMailTemplate?: MailTemplateRef
   @Field(type => [SubscriptionInterval])
-  additionalIntervals!: SubscriptionInterval[]
+  intervals!: SubscriptionInterval[]
 }
 
 // Input
@@ -114,27 +108,19 @@ class PaymentMethodRefInput {
 }
 
 @InputType()
-export class SubscriptionIntervalCreateInput {
-  @Field(() => Int)
-  daysAwayFromEnding!: number
-  @Field(type => MailTemplateRefInput)
-  mailTemplate!: MailTemplateRefInput
-}
-
-@InputType()
 export class AdditionalIntervalCreateInput {
   @Field(() => Int)
   subscriptionFlowId!: number
-  @Field(() => Int)
-  daysAwayFromEnding!: number
-  @Field(type => MailTemplateRefInput)
-  mailTemplate!: MailTemplateRefInput
+  @Field(() => Int, {nullable: true})
+  daysAwayFromEnding?: number
+  @Field(type => MailTemplateRef)
+  mailTemplate!: MailTemplateRef
+  @Field(() => SubscriptionEvent)
+  event!: SubscriptionEvent
 }
 
 @InputType()
 export class AdditionalIntervalDeleteInput {
-  @Field(() => Int)
-  subscriptionFlowId!: number
   @Field(() => Int)
   additionalIntervalId!: number
 }
@@ -150,18 +136,6 @@ export class SubscriptionIntervalUpdateInput {
 }
 
 @InputType()
-export class SubscriptionIntervalCreate {
-  @Field(() => SubscriptionIntervalTypes)
-  subscriptionIntervalTypes!: SubscriptionIntervalTypes
-  @Field(() => Int)
-  daysAwayFromEnding!: number
-  @Field(type => MailTemplateRefInput)
-  mailTemplate!: MailTemplateRefInput
-  @Field(type => Int)
-  subscriptionFlowId!: number
-}
-
-@InputType()
 export class SubscriptionFlowModelCreateInput {
   @Field(type => MemberPlanRefInput)
   memberPlan!: MemberPlanRefInput
@@ -171,22 +145,6 @@ export class SubscriptionFlowModelCreateInput {
   periodicities!: PaymentPeriodicity[]
   @Field(type => [Boolean])
   autoRenewal!: boolean[]
-  @Field(type => MailTemplateRefInput, {nullable: true})
-  subscribeMailTemplate?: MailTemplateRefInput
-  @Field(type => SubscriptionIntervalCreateInput, {nullable: true})
-  invoiceCreationMailTemplate?: SubscriptionIntervalCreateInput
-  @Field(type => MailTemplateRefInput, {nullable: true})
-  renewalSuccessMailTemplate?: MailTemplateRefInput
-  @Field(type => MailTemplateRefInput, {nullable: true})
-  renewalFailedMailTemplate?: MailTemplateRefInput
-  @Field(type => SubscriptionIntervalCreateInput, {nullable: true})
-  deactivationUnpaidMailTemplate?: SubscriptionIntervalCreateInput
-  @Field(type => MailTemplateRefInput, {nullable: true})
-  deactivationByUserMailTemplate?: MailTemplateRefInput
-  @Field(type => MailTemplateRefInput, {nullable: true})
-  reactivationMailTemplate?: MailTemplateRefInput
-  @Field(type => [SubscriptionIntervalCreateInput])
-  additionalIntervals!: SubscriptionIntervalCreateInput[]
 }
 
 @InputType()
@@ -199,18 +157,4 @@ export class SubscriptionFlowModelUpdateInput {
   periodicities!: PaymentPeriodicity[]
   @Field(type => [Boolean])
   autoRenewal!: boolean[]
-  @Field(type => MailTemplateRefInput, {nullable: true})
-  subscribeMailTemplate?: MailTemplateRefInput
-  @Field(type => Number, {nullable: true})
-  invoiceCreationIntervalId?: number
-  @Field(type => MailTemplateRefInput, {nullable: true})
-  renewalSuccessMailTemplate?: MailTemplateRefInput
-  @Field(type => MailTemplateRefInput, {nullable: true})
-  renewalFailedMailTemplate?: MailTemplateRefInput
-  @Field(type => Number, {nullable: true})
-  deactivationUnpaidIntervalId?: number
-  @Field(type => MailTemplateRefInput, {nullable: true})
-  deactivationByUserMailTemplate?: MailTemplateRefInput
-  @Field(type => MailTemplateRefInput, {nullable: true})
-  reactivationMailTemplate?: MailTemplateRefInput
 }

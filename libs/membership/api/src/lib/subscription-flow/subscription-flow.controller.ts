@@ -1,5 +1,6 @@
 import {Injectable} from '@nestjs/common'
 import {PrismaService} from '@wepublish/api'
+/**
 import {
   AdditionalIntervalCreateInput,
   AdditionalIntervalDeleteInput,
@@ -10,7 +11,7 @@ import {
   SubscriptionIntervalTypes,
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
-
+ **/
 @Injectable()
 export class SubscriptionFlowController {
   constructor(private readonly prismaService: PrismaService) {}
@@ -38,6 +39,7 @@ export class SubscriptionFlowController {
       }
     })
   }
+  /**
   async createFlow(flow: SubscriptionFlowModelCreateInput) {
     if (await this.filterHasOverlap(flow.memberPlan.id, flow)) {
       throw new Error('You cant create this flow because there is a filter overlap!')
@@ -395,4 +397,5 @@ export class SubscriptionFlowController {
     }
     return false
   }
+   **/
 }
