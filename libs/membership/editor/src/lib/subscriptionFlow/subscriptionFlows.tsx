@@ -1,6 +1,6 @@
 import React, {createContext, useContext, useMemo, useState} from 'react'
 import {Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material'
-import {IconButton, Message, SelectPicker, toaster} from 'rsuite'
+import {IconButton, Message, toaster} from 'rsuite'
 import {MdDelete} from 'react-icons/all'
 import SubscriptionFlow from './subscriptionFlow'
 import {
@@ -15,6 +15,7 @@ import {
 import {useTranslation} from 'react-i18next'
 import {ApolloError} from '@apollo/client'
 import {GraphqlClientContext} from './graphqlClientContext'
+import MailTemplateSelect from './mailTemplateSelect'
 
 /**
  * CONTEXT
@@ -29,14 +30,14 @@ const USER_ACTION_EVENTS = [
   SubscriptionEvent.RenewalSuccess,
   SubscriptionEvent.RenewalFailed,
   SubscriptionEvent.DeactivationByUser,
-  SubscriptionEvent.Reactivation,
-  SubscriptionEvent.Custom
+  SubscriptionEvent.Reactivation
 ]
 type UserActionEvents = typeof USER_ACTION_EVENTS[number]
 
 const NON_USER_ACTION_EVENTS = [
   SubscriptionEvent.InvoiceCreation,
-  SubscriptionEvent.DeactivationUnpaid
+  SubscriptionEvent.DeactivationUnpaid,
+  SubscriptionEvent.Custom
 ]
 type NonUserActionEvents = typeof NON_USER_ACTION_EVENTS[number]
 
@@ -60,13 +61,14 @@ export function isNonUserAction(
   return NON_USER_ACTION_EVENTS.indexOf(subscriptionInterval.event) >= 0
 }
 
-export interface Event {
+export interface SubEvent {
   title: string
   description: string
-  subscriptionEventKey: string
+  subscriptionEventKey: SubscriptionEvent
 }
 
 export interface SubscriptionIntervalWithTitle extends SubscriptionInterval {
+  subscriptionFlowId: number
   title: string
 }
 
@@ -86,7 +88,7 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
   const {t} = useTranslation()
   const [subscriptionFlows, setSubscriptionFlows] = useState<SubscriptionFlowFragment[]>([])
 
-  const userActionEvents: Event[] = USER_ACTION_EVENTS.map(eventName => {
+  const userActionEvents: SubEvent[] = USER_ACTION_EVENTS.map(eventName => {
     return {
       title: t(`subscriptionFlow.${eventName.toLowerCase()}`),
       description: t(`subscriptionFlow.${eventName.toLowerCase()}Description`),
@@ -119,6 +121,20 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
     client,
     onError: showErrors
   })
+
+  const subscriptionIntervalFor = function (
+    subscriptionFlow: SubscriptionFlowFragment,
+    eventName: string
+  ): SubscriptionIntervalWithTitle | undefined {
+    const withTitle = subscriptionFlow.intervals.map(i => {
+      return {
+        ...i,
+        title: t(`subscriptionFlow.${i.event.toLowerCase()}`),
+        subscriptionFlowId: subscriptionFlow.id
+      }
+    })
+    return withTitle.find(i => i.event === eventName)
+  }
 
   /**
    * loading
@@ -174,9 +190,19 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
               <TableCell>{subscriptionFlow.autoRenewal.join(', ')}</TableCell>
 
               {/* user actions */}
-              {userActionEvents.map(userActionEvent => (
+              {userActionEvents.map(event => (
                 <TableCell>
-                  <SelectPicker data={[]} />
+                  {mailTemplates && mailTemplates.mailTemplates && (
+                    <MailTemplateSelect
+                      mailTemplates={mailTemplates.mailTemplates}
+                      subscriptionInterval={subscriptionIntervalFor(
+                        subscriptionFlow,
+                        event.subscriptionEventKey
+                      )}
+                      subscriptionFlow={subscriptionFlow}
+                      event={event.subscriptionEventKey}
+                    />
+                  )}
                 </TableCell>
               ))}
 
