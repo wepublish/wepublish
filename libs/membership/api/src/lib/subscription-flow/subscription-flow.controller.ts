@@ -56,15 +56,14 @@ export class SubscriptionFlowController {
     })
     return this.getFlow(false)
   }
-  /**
+
   async updateFlow(flow: SubscriptionFlowModelUpdateInput) {
     const originalFlow = await this.prismaService.subscriptionFlow.findUnique({
       where: {
         id: flow.id
       },
       include: {
-        paymentMethods: true,
-        additionalIntervals: true
+        paymentMethods: true
       }
     })
     if (!originalFlow) throw Error('The given filter is not found!')
@@ -81,60 +80,12 @@ export class SubscriptionFlowController {
           disconnect: originalFlow.paymentMethods.map(paymentMethod => ({id: paymentMethod.id}))
         },
         periodicities: flow.periodicities,
-        autoRenewal: flow.autoRenewal,
-        subscribeMailTemplate: flow.subscribeMailTemplate
-          ? {
-              connect: flow.subscribeMailTemplate
-            }
-          : undefined,
-        renewalSuccessMailTemplate: flow.renewalSuccessMailTemplate
-          ? {
-              connect: flow.renewalSuccessMailTemplate
-            }
-          : undefined,
-        renewalFailedMailTemplate: flow.renewalFailedMailTemplate
-          ? {
-              connect: flow.renewalFailedMailTemplate
-            }
-          : undefined,
-        deactivationByUserMailTemplate: flow.deactivationByUserMailTemplate
-          ? {
-              connect: flow.deactivationByUserMailTemplate
-            }
-          : undefined,
-        reactivationMailTemplate: flow.reactivationMailTemplate
-          ? {
-              connect: flow.reactivationMailTemplate
-            }
-          : undefined,
-        invoiceCreationMailTemplate: flow.invoiceCreationIntervalId
-          ? {
-              connect: {
-                id: flow.invoiceCreationIntervalId
-              }
-            }
-          : {
-              disconnect: true
-            },
-        deactivationUnpaidMailTemplate: flow.deactivationUnpaidIntervalId
-          ? {
-              connect: {
-                id: flow.deactivationUnpaidIntervalId
-              }
-            }
-          : {
-              disconnect: true
-            }
+        autoRenewal: flow.autoRenewal
       }
     })
-    if (!flow.invoiceCreationIntervalId && !!originalFlow.invoiceCreationMailTemplateId) {
-      await this.deleteUnusedSubscriptionInterval(originalFlow.invoiceCreationMailTemplateId)
-    }
-    if (!flow.deactivationUnpaidIntervalId && !!originalFlow.deactivationUnpaidMailTemplateId) {
-      await this.deleteUnusedSubscriptionInterval(originalFlow.deactivationUnpaidMailTemplateId)
-    }
     return this.getFlow(false)
   }
+  /**
 
   async createAndLinkSubscriptionInterval(subscriptionInterval: SubscriptionIntervalCreate) {
     const originalFlow = await this.prismaService.subscriptionFlow.findUnique({

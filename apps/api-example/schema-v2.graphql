@@ -54,6 +54,7 @@ input MemberPlanRefInput {
 type Mutation {
   createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): [SubscriptionFlowModel!]!
   syncTemplates: Boolean!
+  updateSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelUpdateInput!): [SubscriptionFlowModel!]!
 }
 
 type PaymentMethodRef {
@@ -156,6 +157,13 @@ type SubscriptionFlowModel {
 input SubscriptionFlowModelCreateInput {
   autoRenewal: [Boolean!]!
   memberPlan: MemberPlanRefInput!
+  paymentMethods: [PaymentMethodRefInput!]!
+  periodicities: [PaymentPeriodicity!]!
+}
+
+input SubscriptionFlowModelUpdateInput {
+  autoRenewal: [Boolean!]!
+  id: Int!
   paymentMethods: [PaymentMethodRefInput!]!
   periodicities: [PaymentPeriodicity!]!
 }

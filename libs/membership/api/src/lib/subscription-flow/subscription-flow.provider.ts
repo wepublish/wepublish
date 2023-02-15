@@ -15,6 +15,7 @@ import {SubscriptionFlowController} from './subscription-flow.controller'
 export class SubscriptionFlowProvider {
   constructor(private readonly controller: SubscriptionFlowController) {}
 
+  // Subscription Flow
   @Query(returns => [SubscriptionFlowModel], {name: 'SubscriptionFlows'})
   async subscriptionFlow(@Args('defaultFlowOnly') defaultFlowOnly: boolean) {
     return await this.controller.getFlow(defaultFlowOnly)
@@ -24,12 +25,13 @@ export class SubscriptionFlowProvider {
   async createSubscriptionFlow(@Args('subscriptionFlow') flow: SubscriptionFlowModelCreateInput) {
     return await this.controller.createFlow(flow)
   }
-  /**
+
   @Mutation(returns => [SubscriptionFlowModel], {name: 'updateSubscriptionFlow'})
   async updateSubscriptionFlow(@Args('subscriptionFlow') flow: SubscriptionFlowModelUpdateInput) {
     return await this.controller.updateFlow(flow)
   }
 
+  /**
   @Mutation(() => [SubscriptionFlowModel], {name: 'updateSubscriptionInterval'})
   async updateSubscriptionInterval(
     @Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalUpdateInput
