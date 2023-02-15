@@ -48,7 +48,7 @@ export class SubscriptionFlowController {
       flow.paymentMethodIds.length === 0
     ) {
       throw new Error(
-        'Its not allowed to create subscriptioon flow with no periodicities OR autoRenewal OR paymentMethods'
+        'Its not allowed to create subscription flow with no periodicities OR autoRenewal OR paymentMethods'
       )
     }
 
@@ -75,6 +75,15 @@ export class SubscriptionFlowController {
   }
 
   async updateFlow(flow: SubscriptionFlowModelUpdateInput) {
+    if (
+      flow.periodicities.length === 0 ||
+      flow.autoRenewal.length === 0 ||
+      flow.paymentMethodIds.length === 0
+    ) {
+      throw new Error(
+        'Its not allowed to update subscription flow with no periodicities OR autoRenewal OR paymentMethods'
+      )
+    }
     const originalFlow = await this.prismaService.subscriptionFlow.findUnique({
       where: {
         id: flow.id
