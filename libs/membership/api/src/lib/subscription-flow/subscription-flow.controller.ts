@@ -6,7 +6,8 @@ import {
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
   SubscriptionIntervalCreateInput,
-  SubscriptionIntervalTypes
+  SubscriptionIntervalTypes,
+  SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
 import {SubscriptionEvent} from '@prisma/client'
 @Injectable()
@@ -135,6 +136,32 @@ export class SubscriptionFlowController {
             id: interval.mailTemplateId
           }
         }
+      }
+    })
+    return this.getFlow(false)
+  }
+
+  async updateInterval(interval: SubscriptionIntervalUpdateInput) {
+    const eventToUpdate = await this.prismaService.subscriptionInterval.findUnique({
+      where: {
+        id: interval.id
+      }
+    })
+    if (!eventToUpdate) {
+      throw Error('The given interval not found!')
+    }
+    await this.isIntervalValid({event: eventToUpdate.event, ...interval}, false)
+    await this.prismaService.subscriptionInterval.update({
+      where: {
+        id: interval.id
+      },
+      data: {
+        mailTemplate: {
+          connect: {
+            id: interval.mailTemplateId
+          }
+        },
+        daysAwayFromEnding: interval.daysAwayFromEnding
       }
     })
     return this.getFlow(false)
@@ -289,7 +316,10 @@ export class SubscriptionFlowController {
     return false
   }
 
-  async isIntervalValid(interval: SubscriptionIntervalCreateInput) {
+  async isIntervalValid(
+    interval: SubscriptionIntervalCreateInput,
+    checkEventUniqueConstraint = true
+  ) {
     const daysAwayFromEndingNeedToBeNull: SubscriptionEvent[] = [
       SubscriptionEvent.SUBSCRIBE,
       SubscriptionEvent.REACTIVATION,
@@ -308,7 +338,7 @@ export class SubscriptionFlowController {
       }
     }
 
-    if (!NonUniqueEvents.includes(interval.event)) {
+    if (checkEventUniqueConstraint && !NonUniqueEvents.includes(interval.event)) {
       const dbIntervals = await this.prismaService.subscriptionInterval.findMany({
         where: {
           subscriptionFlow: {
