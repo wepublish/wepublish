@@ -29,35 +29,37 @@ export const getActions = async (
   const articles = isAuthorised(CanGetArticles, roles)
     ? (
         await article.findMany({
-          take: 5
+          take: 5,
+          include: {draft: true, pending: true, published: true}
         })
       ).map(value => {
         return {
           date: value.createdAt,
           actionType: ActionType.ArticleCreate,
-          id: value.id
+          item: value
         }
       })
     : []
   const pages = isAuthorised(CanGetPages, roles)
     ? (
         await page.findMany({
-          take: 5
+          take: 5,
+          include: {draft: true, pending: true, published: true}
         })
       ).map((value: any) => {
         return {
           date: value.createdAt,
           actionType: ActionType.PageCreate,
-          id: value.id
+          item: value
         }
       })
     : []
   const comments = isAuthorised(CanGetComments, roles)
-    ? (await comment.findMany({take: 5})).map((value: any) => {
+    ? (await comment.findMany({take: 5, include: {revisions: true}})).map((value: any) => {
         return {
           date: value.createdAt,
           actionType: ActionType.CommentCreate,
-          id: value.id
+          item: value
         }
       })
     : []
@@ -66,7 +68,7 @@ export const getActions = async (
         return {
           date: value.createdAt,
           actionType: ActionType.AuthorCreate,
-          id: value.id
+          item: value
         }
       })
     : []
@@ -75,7 +77,7 @@ export const getActions = async (
         return {
           date: value.createdAt,
           actionType: ActionType.SubscriptionCreate,
-          id: value.id
+          item: value
         }
       })
     : []
@@ -84,7 +86,7 @@ export const getActions = async (
         return {
           date: value.opensAt,
           actionType: ActionType.PollStart,
-          id: value.id
+          item: value
         }
       })
     : []
@@ -93,7 +95,7 @@ export const getActions = async (
         return {
           date: value.createdAt,
           actionType: ActionType.UserCreate,
-          id: value.id
+          item: value
         }
       })
     : []
@@ -102,7 +104,7 @@ export const getActions = async (
         return {
           date: value.createdAt,
           actionType: ActionType.EventCreate,
-          id: value.id
+          item: value
         }
       })
     : []

@@ -19,49 +19,5 @@ export interface Action {
   date: Date
   actionType: ActionType
   id: string
-  item?: ActionItem
+  item?: Article | Page | Subscription | Comment | Author | Poll | Event | User
 }
-
-interface ActionItem {
-  article?: Article
-  page?: Page
-  comment?: Comment
-  author?: Author
-  poll?: Poll
-  subscription?: Subscription
-  event?: Event
-  user?: User
-}
-/*
-interface ArticleAction {
-  article: Article
-}
-
-interface PageAction {
-  page: Page
-}
-
-interface CommentAction {
-  comment: Comment
-}
-
-interface AuthorAction {
-  author: Author
-}
-
-interface PollAction {
-  poll: Poll
-}
-
-interface SubscriptionAction {
-  subscription: Subscription
-}
-
-interface EventAction {
-  event: Event
-}
-
-interface UserAction {
-  user: User
-}
-*/

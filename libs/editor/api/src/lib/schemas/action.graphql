@@ -1,5 +1,4 @@
 fragment FullAction on Action {
-  id
   date
   actionType
   item {
@@ -14,83 +13,67 @@ query RecentActions {
 }
 
 fragment FullItem on ActionItem {
-  __typename
+    __typename
 
-  ... on ArticleAction {
-  article {
-    id
-    createdAt
-    latest {
-        title
-        url
+    ... on Article {
+        id
+        createdAt
+        latest {
+            title
+            url
+            }
     }
-    }
+
+  ... on Page {
+        id
+        createdAt
+        latest {
+            title
+            socialMediaTitle
+            url
+            }
+      }
+
+  ... on Comment {
+        id
+        user  {name}
+        guestUsername
+        revisions {
+            title
+            text
+            }
   }
 
-  ... on PageAction {
-  page {
-    id
-    createdAt
-    latest {
-        title
-        socialMediaTitle
-        url
-    }
-    }
-  }
-
-  ... on CommentAction {
-  comment {
-    id
-    user  {name}
-    guestUsername
-    revisions {
-        title
-        text
-    }
-    }
-  }
-
-  ... on PollAction {
-  poll {
+  ... on Poll {
     id
     question
-    }
   }
 
-   ... on SubscriptionAction {
-  subscription {
-    id
-    user { email }
-    memberPlan {
-        name
+   ... on Subscription {
+        id
+        user { email }
+        memberPlan {
+            name
         }
-    }
   }
-    ... on AuthorAction {
-    author {
-      id
-      name
-      jobTitle
+
+    ... on Author {
+          id
+          name
+          jobTitle
+    }
+
+  ... on User {
+        firstName
+        name
+        address {
+            city
+        }
+  }
+
+  ... on Event {
+        id
+        name
+        location
       }
-    }
-  ... on UserAction {
-  user {
-    id
-    firstName
-    name
-    address {
-    city
-    }
-    }
-  }
-
-  ... on EventAction {
-  event {
-    id
-    name
-    location
-    }
-  }
-
 }

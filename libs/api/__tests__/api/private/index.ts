@@ -27,11 +27,10 @@ export type Action = {
   __typename?: 'Action';
   actionType: ActionType;
   date: Scalars['DateTime'];
-  id: Scalars['ID'];
   item?: Maybe<ActionItem>;
 };
 
-export type ActionItem = ArticleAction | AuthorAction | CommentAction | EventAction | PageAction | PollAction | SubscriptionAction | UserAction;
+export type ActionItem = Article | Author | Comment | Event | Page | Poll | Subscription | User;
 
 export enum ActionType {
   ArticleCreate = 'ARTICLE_CREATE',
@@ -60,11 +59,6 @@ export type Article = {
   pending?: Maybe<ArticleRevision>;
   published?: Maybe<ArticleRevision>;
   shared: Scalars['Boolean'];
-};
-
-export type ArticleAction = {
-  __typename?: 'ArticleAction';
-  article?: Maybe<Article>;
 };
 
 export type ArticleConnection = {
@@ -193,11 +187,6 @@ export type Author = {
   url: Scalars['String'];
 };
 
-export type AuthorAction = {
-  __typename?: 'AuthorAction';
-  author?: Maybe<Author>;
-};
-
 export type AuthorConnection = {
   __typename?: 'AuthorConnection';
   nodes: Array<Author>;
@@ -309,11 +298,6 @@ export type Comment = {
   state: CommentState;
   tags?: Maybe<Array<Tag>>;
   user?: Maybe<User>;
-};
-
-export type CommentAction = {
-  __typename?: 'CommentAction';
-  comment?: Maybe<Comment>;
 };
 
 export enum CommentAuthorType {
@@ -491,11 +475,6 @@ export type Event = {
   startsAt: Scalars['DateTime'];
   status: EventStatus;
   tags?: Maybe<Array<Tag>>;
-};
-
-export type EventAction = {
-  __typename?: 'EventAction';
-  event?: Maybe<Event>;
 };
 
 export type EventBlock = {
@@ -1479,11 +1458,6 @@ export type Page = {
   shared: Scalars['Boolean'];
 };
 
-export type PageAction = {
-  __typename?: 'PageAction';
-  page?: Maybe<Page>;
-};
-
 export type PageConnection = {
   __typename?: 'PageConnection';
   nodes: Array<Page>;
@@ -1769,11 +1743,6 @@ export type Poll = {
   id: Scalars['ID'];
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
-};
-
-export type PollAction = {
-  __typename?: 'PollAction';
-  poll?: Maybe<Poll>;
 };
 
 export type PollAnswer = {
@@ -2299,11 +2268,6 @@ export type Subscription = {
   user?: Maybe<User>;
 };
 
-export type SubscriptionAction = {
-  __typename?: 'SubscriptionAction';
-  subscription?: Maybe<Subscription>;
-};
-
 export type SubscriptionConnection = {
   __typename?: 'SubscriptionConnection';
   nodes: Array<Subscription>;
@@ -2568,11 +2532,6 @@ export type User = {
   roles: Array<UserRole>;
   subscriptions: Array<UserSubscription>;
   userImage?: Maybe<Image>;
-};
-
-export type UserAction = {
-  __typename?: 'UserAction';
-  user?: Maybe<User>;
 };
 
 export type UserAddress = {

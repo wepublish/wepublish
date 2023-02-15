@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {Action, ActionType, useRecentActionsQuery} from '@wepublish/editor/api'
+import {ActionType, RecentActionsQuery, useRecentActionsQuery} from '@wepublish/editor/api'
 import {formatDistanceToNow} from 'date-fns'
 import {useEffect, useState, ReactNode} from 'react'
 import {useTranslation, Trans} from 'react-i18next'
@@ -56,11 +56,14 @@ const TimelineIcon = styled(Avatar)`
   padding: 4px;
 `
 
+type Action = NonNullable<RecentActionsQuery['actions']>[number]
+
 export function ActivityFeed() {
   const {data, error} = useRecentActionsQuery({fetchPolicy: 'no-cache'})
   const [actions, setActions] = useState<Action[] | undefined>([])
 
   useEffect(() => {
+    console.log('data', data)
     if (data?.actions) {
       const {actions} = data
       setActions(actions)
@@ -89,7 +92,7 @@ export function ActivityFeed() {
                 </TimelineIcon>
               }>
               <TimelineItemWrapper>
-                <TimelineItemDetails date={action.date} id={action.id} item={action.item} />
+                <TimelineItemDetails date={action.date} item={action.item} />
               </TimelineItemWrapper>
             </TimelineItem>
           )
@@ -108,45 +111,41 @@ function RelativeTimeToNow(time: string) {
   })
 }
 
-function TimelineItemDetails({date, item, id}: Omit<Action, 'actionType'>) {
+function TimelineItemDetails({date, item}: Omit<Action, 'actionType'>) {
   const {t} = useTranslation()
 
   switch (item?.__typename) {
-    case 'ArticleAction':
+    case 'Article':
       return (
         <ItemCreatedTimelineItem
           title={t('dashboard.newArticle')}
-          link={`/articles/edit/${id ?? ''}`}
+          link={`/articles/edit/${item.id}`}
           date={date}>
-          <ActionDetails>
-            {item.article?.latest?.title ?? t('articles.overview.untitled')}
-          </ActionDetails>
+          <ActionDetails>{item?.latest?.title ?? t('articles.overview.untitled')}</ActionDetails>
         </ItemCreatedTimelineItem>
       )
-    case 'PageAction':
+    case 'Page':
       return (
         <ItemCreatedTimelineItem
           title={t('dashboard.newPage')}
-          link={`/pages/edit/${item?.page?.id ?? ''}`}
+          link={`/pages/edit/${item?.id}`}
           date={date}>
           <ActionDetails>
-            {item.page?.latest?.title ??
-              item.page?.latest?.socialMediaTitle ??
-              t('pages.overview.untitled')}
+            {item?.latest?.title ?? item?.latest?.socialMediaTitle ?? t('pages.overview.untitled')}
           </ActionDetails>
         </ItemCreatedTimelineItem>
       )
-    case 'CommentAction':
+    case 'Comment':
       return (
         <ItemCreatedTimelineItem
           date={date}
-          link={`/comments/edit/${id}`}
+          link={`/comments/edit/${item.id}`}
           title={t('dashboard.newComment')}>
           <>
             <ActionDetails>
-              {`${item.comment?.user?.name ?? item.comment?.guestUsername ?? ''} ${
-                item.comment?.revisions[item.comment?.revisions?.length - 1]?.title
-                  ? ': ' + item.comment?.revisions[item.comment?.revisions?.length - 1]?.title
+              {`${item?.user?.name ?? item?.guestUsername ?? ''} ${
+                item?.revisions[item?.revisions?.length - 1]?.title
+                  ? ': ' + item?.revisions[item?.revisions?.length - 1]?.title
                   : ''
               }`}
             </ActionDetails>
@@ -158,66 +157,64 @@ function TimelineItemDetails({date, item, id}: Omit<Action, 'actionType'>) {
                 onChange={() => {
                   return undefined
                 }}
-                value={item.comment?.revisions[item.comment?.revisions?.length - 1]?.text || []}
+                value={item?.revisions[item?.revisions?.length - 1]?.text || []}
               />
             </TimelineRichTextWrapper>
           </>
         </ItemCreatedTimelineItem>
       )
-    case 'SubscriptionAction':
+    case 'Subscription':
       return (
         <ItemCreatedTimelineItem
           date={date}
-          link={`/subscriptions/edit/${id}`}
+          link={`/subscriptions/edit/${item.id}`}
           title={t('dashboard.newSubscription')}>
           <ActionDetails>
-            {item.subscription?.memberPlan.name}: {item.subscription?.user?.email}
+            {item?.memberPlan.name}: {item?.user?.email}
           </ActionDetails>
         </ItemCreatedTimelineItem>
       )
-    case 'UserAction':
+    case 'User':
+      // TODO add user id and link
       return (
-        <ItemCreatedTimelineItem
-          date={date}
-          link={`/users/edit/${id}`}
-          title={t('dashboard.newUser')}>
+        <ItemCreatedTimelineItem date={date} link={''} title={t('dashboard.newUser')}>
           <ActionDetails>
-            {`${item.user?.firstName ? item.user?.firstName + ' ' : ''}${item.user?.name}${
-              item.user?.address?.city ? ', ' + item.user?.address?.city : ''
+            {`${item?.firstName ? item?.firstName + ' ' : ''}${item?.name}${
+              item?.address?.city ? ', ' + item?.address?.city : ''
             }`}
           </ActionDetails>
         </ItemCreatedTimelineItem>
       )
-    case 'AuthorAction':
+    case 'Author':
       return (
         <ItemCreatedTimelineItem
           date={date}
-          link={`/authors/edit/${id}`}
+          link={`/authors/edit/${item.id}`}
           title={t('dashboard.newAuthor')}>
           <ActionDetails>
-            {item.author?.name}
-            {item.author?.jobTitle ? ', ' + item.author?.jobTitle : ''}
+            {item?.name}
+            {item?.jobTitle ? ', ' + item?.jobTitle : ''}
           </ActionDetails>
         </ItemCreatedTimelineItem>
       )
-    case 'PollAction':
+    case 'Poll':
       return (
         <ItemOpenedTimelineItem
           date={date}
-          link={`/polls/edit/${id}`}
+          link={`/polls/edit/${item.id}`}
           title={t('dashboard.newPoll')}>
-          <ActionDetails>{item?.poll?.question}</ActionDetails>
+          <ActionDetails>{item?.question}</ActionDetails>
         </ItemOpenedTimelineItem>
       )
-    case 'EventAction':
+    case 'Event':
       return (
         <ItemCreatedTimelineItem
           date={date}
-          link={`/events/edit/${id}`}
+          link={`/events/edit/${item.id}`}
           title={t('dashboard.newEvent')}>
           <>
-            <ActionDetails>{item.event?.name}</ActionDetails>
-            <ActionDetails>{item.event?.location}</ActionDetails>
+            <ActionDetails>{item?.name}</ActionDetails>
+            <ActionDetails>{item?.location}</ActionDetails>
           </>
         </ItemCreatedTimelineItem>
       )
