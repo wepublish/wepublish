@@ -11,6 +11,9 @@ import {
   subscriptionFlowDaysAwayFromEndingNeedToBeNull,
   subscriptionFlowNonUniqueEvents
 } from './subscription-flow.type'
+import {SubscriptionEvent} from '@prisma/client'
+const SUBSCRIPTION_EVEN_MAX_DAYS_BEFORE = -25
+const SUBSCRIPTION_EVEN_MAX_DAYS_AFTER = 90
 @Injectable()
 export class SubscriptionFlowController {
   constructor(private readonly prismaService: PrismaService) {}
@@ -265,6 +268,33 @@ export class SubscriptionFlowController {
             `For each subscription flow its not allowed to have more than one events of the type ${interval.event}`
           )
         }
+      }
+    }
+
+    // Limit daysAwayFromEnding
+    if (
+      !!interval.daysAwayFromEnding &&
+      (interval.daysAwayFromEnding < SUBSCRIPTION_EVEN_MAX_DAYS_BEFORE ||
+        interval.daysAwayFromEnding > SUBSCRIPTION_EVEN_MAX_DAYS_AFTER)
+    ) {
+      throw Error(
+        `daysAwayFromEnding is not in allowed range ${SUBSCRIPTION_EVEN_MAX_DAYS_BEFORE} to ${SUBSCRIPTION_EVEN_MAX_DAYS_AFTER}: ${interval.daysAwayFromEnding}`
+      )
+    }
+
+    // check for special daysAwayFromEnding event constraints
+    if (interval.event === SubscriptionEvent.INVOICE_CREATION) {
+      if (!!interval.daysAwayFromEnding && interval.daysAwayFromEnding > 0) {
+        throw Error(
+          `Its not possible to set event ${interval.event} to a date later as the subscription is renewed`
+        )
+      }
+    }
+    if (interval.event === SubscriptionEvent.DEACTIVATION_UNPAID) {
+      if (!!interval.daysAwayFromEnding && interval.daysAwayFromEnding < 0) {
+        throw Error(
+          `Its not possible to set event ${interval.event} to a date before as the subscription is renewed`
+        )
       }
     }
   }
