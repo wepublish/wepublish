@@ -47,10 +47,6 @@ type MemberPlanRef {
   name: String!
 }
 
-input MemberPlanRefInput {
-  id: String!
-}
-
 type Mutation {
   createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): [SubscriptionFlowModel!]!
   createSubscriptionInterval(subscriptionInterval: SubscriptionIntervalCreateInput!): [SubscriptionFlowModel!]!
@@ -64,10 +60,6 @@ type Mutation {
 type PaymentMethodRef {
   id: String!
   name: String!
-}
-
-input PaymentMethodRefInput {
-  id: String!
 }
 
 enum PaymentPeriodicity {
@@ -160,15 +152,15 @@ type SubscriptionFlowModel {
 
 input SubscriptionFlowModelCreateInput {
   autoRenewal: [Boolean!]!
-  memberPlan: MemberPlanRefInput!
-  paymentMethods: [PaymentMethodRefInput!]!
+  memberPlanId: String!
+  paymentMethodIds: [String!]!
   periodicities: [PaymentPeriodicity!]!
 }
 
 input SubscriptionFlowModelUpdateInput {
   autoRenewal: [Boolean!]!
   id: Int!
-  paymentMethods: [PaymentMethodRefInput!]!
+  paymentMethodIds: [String!]!
   periodicities: [PaymentPeriodicity!]!
 }
 

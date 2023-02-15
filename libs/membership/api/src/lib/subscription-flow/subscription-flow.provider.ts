@@ -1,12 +1,8 @@
 import {Args, Int, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {
-  AdditionalIntervalCreateInput,
-  AdditionalIntervalDeleteInput,
   SubscriptionFlowModel,
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
-  SubscriptionInterval,
-  SubscriptionIntervalCreated,
   SubscriptionIntervalCreateInput,
   SubscriptionIntervalDeleteInput,
   SubscriptionIntervalUpdateInput
@@ -60,42 +56,4 @@ export class SubscriptionFlowProvider {
   ) {
     return this.controller.deleteInterval(subscriptionInterval)
   }
-
-  /**
-  @Mutation(() => [SubscriptionFlowModel], {name: 'updateSubscriptionInterval'})
-  async updateSubscriptionInterval(
-    @Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalUpdateInput
-  ) {
-    return this.controller.updateSubscriptionInterval(subscriptionInterval)
-  }
-
-  @Mutation(() => SubscriptionIntervalCreated, {name: 'createSubscriptionInterval'})
-  async createSubscriptionInterval(
-    @Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalCreateInput
-  ) {
-    return this.controller.createSubscriptionInterval(subscriptionInterval)
-  }
-
-  @Mutation(() => [SubscriptionFlowModel], {name: 'removeAdditionalIntervalToSubscriptionFlow'})
-  async removeAdditionalIntervalToSubscriptionFlow(
-    @Args('additionalInterval') additionalInterval: AdditionalIntervalDeleteInput
-  ) {
-    return this.controller.removeAdditionalIntervalToSubscriptionFlow(additionalInterval)
-  }
-
-  @Mutation(() => [SubscriptionFlowModel], {name: 'addAdditionalIntervalToSubscriptionFlow'})
-  async addAdditionalIntervalToSubscriptionFlow(
-    @Args('additionalInterval') additionalInterval: AdditionalIntervalCreateInput
-  ) {
-    return this.controller.addAdditionalIntervalToSubscriptionFlow(additionalInterval)
-  }
-
-
-  @Mutation(returns => [SubscriptionFlowModel], {name: 'createAndLinkSubscriptionInterval'})
-  async createAndLinkSubscriptionInterval(
-    @Args('subscriptionInterval') additionalInterval: SubscriptionIntervalCreate
-  ) {
-    return await this.controller.createAndLinkSubscriptionInterval(additionalInterval)
-  }
-  **/
 }

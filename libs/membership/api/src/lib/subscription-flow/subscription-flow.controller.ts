@@ -1,13 +1,10 @@
 import {Injectable} from '@nestjs/common'
 import {PrismaService} from '@wepublish/api'
 import {
-  AdditionalIntervalCreateInput,
-  AdditionalIntervalDeleteInput,
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
   SubscriptionIntervalCreateInput,
   SubscriptionIntervalDeleteInput,
-  SubscriptionIntervalTypes,
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
 import {SubscriptionEvent} from '@prisma/client'
@@ -40,7 +37,7 @@ export class SubscriptionFlowController {
   }
 
   async createFlow(flow: SubscriptionFlowModelCreateInput) {
-    if (await this.filterHasOverlap(flow.memberPlan.id, flow)) {
+    if (await this.filterHasOverlap(flow.memberPlanId, flow)) {
       throw new Error('You cant create this flow because there is a filter overlap!')
     }
 
@@ -48,10 +45,12 @@ export class SubscriptionFlowController {
       data: {
         default: false,
         memberPlan: {
-          connect: flow.memberPlan
+          connect: {
+            id: flow.memberPlanId
+          }
         },
         paymentMethods: {
-          connect: flow.paymentMethods
+          connect: flow.paymentMethodIds.map(paymentMethodeId => ({id: paymentMethodeId}))
         },
         periodicities: flow.periodicities,
         autoRenewal: flow.autoRenewal
@@ -75,17 +74,27 @@ export class SubscriptionFlowController {
       throw new Error('You cant update this flow because there is a filter overlap!')
     }
 
-    await this.prismaService.subscriptionFlow.update({
-      where: {id: flow.id},
-      data: {
-        paymentMethods: {
-          connect: flow.paymentMethods,
-          disconnect: originalFlow.paymentMethods.map(paymentMethod => ({id: paymentMethod.id}))
-        },
-        periodicities: flow.periodicities,
-        autoRenewal: flow.autoRenewal
-      }
-    })
+    await this.prismaService.$transaction([
+      this.prismaService.subscriptionFlow.update({
+        where: {id: flow.id},
+        data: {
+          paymentMethods: {
+            disconnect: originalFlow.paymentMethods.map(paymentMethod => ({id: paymentMethod.id}))
+          }
+        }
+      }),
+      this.prismaService.subscriptionFlow.update({
+        where: {id: flow.id},
+        data: {
+          paymentMethods: {
+            connect: flow.paymentMethodIds.map(paymentMethodeId => ({id: paymentMethodeId}))
+          },
+          periodicities: flow.periodicities,
+          autoRenewal: flow.autoRenewal
+        }
+      })
+    ])
+
     return this.getFlow(false)
   }
 
@@ -177,109 +186,6 @@ export class SubscriptionFlowController {
     return this.getFlow(false)
   }
 
-  /**
-
-  async createAndLinkSubscriptionInterval(subscriptionInterval: SubscriptionIntervalCreate) {
-    const originalFlow = await this.prismaService.subscriptionFlow.findUnique({
-      where: {
-        id: subscriptionInterval.subscriptionFlowId
-      }
-    })
-    if (!originalFlow) {
-      throw Error('The given filter is not found!')
-    }
-
-    const interval = await this.createSubscriptionInterval(subscriptionInterval)
-    let connectString = {}
-    let originalSubscriptionIntervalId = null
-    if (
-      subscriptionInterval.subscriptionIntervalTypes ===
-      SubscriptionIntervalTypes.ADDITIONAL_INTERVAL
-    ) {
-      connectString = {additionalIntervals: {connect: {id: interval.id}}}
-    } else if (
-      subscriptionInterval.subscriptionIntervalTypes === SubscriptionIntervalTypes.CREATE_INVOICES
-    ) {
-      connectString = {invoiceCreationMailTemplate: {connect: {id: interval.id}}}
-      originalSubscriptionIntervalId = originalFlow.invoiceCreationMailTemplateId
-    } else {
-      connectString = {deactivationUnpaidMailTemplate: {connect: {id: interval.id}}}
-      originalSubscriptionIntervalId = originalFlow.deactivationUnpaidMailTemplateId
-    }
-    await this.prismaService.subscriptionFlow.update({
-      where: {
-        id: subscriptionInterval.subscriptionFlowId
-      },
-      data: connectString
-    })
-
-    if (originalSubscriptionIntervalId) {
-      await this.deleteUnusedSubscriptionInterval(originalSubscriptionIntervalId)
-    }
-
-    return this.getFlow(false)
-  }
-
-  async NN(subscriptionInterval: SubscriptionIntervalCreateInput) {
-    return await this.prismaService.subscriptionInterval.create({
-      data: {
-        daysAwayFromEnding: subscriptionInterval.daysAwayFromEnding,
-        mailTemplate: {connect: subscriptionInterval.mailTemplate}
-      }
-    })
-  }
-  async addAdditionalIntervalToSubscriptionFlow(additionalInterval: AdditionalIntervalCreateInput) {
-    const interval = await this.createSubscriptionInterval(additionalInterval)
-    await this.prismaService.subscriptionFlow.update({
-      where: {
-        id: additionalInterval.subscriptionFlowId
-      },
-      data: {
-        additionalIntervals: {
-          connect: {
-            id: interval.id
-          }
-        }
-      }
-    })
-    return this.getFlow(false)
-  }
-
-  async removeAdditionalIntervalToSubscriptionFlow(
-    subscriptionInterval: AdditionalIntervalDeleteInput
-  ) {
-    await this.prismaService.subscriptionFlow.update({
-      where: {
-        id: subscriptionInterval.subscriptionFlowId
-      },
-      data: {
-        additionalIntervals: {
-          disconnect: {
-            id: subscriptionInterval.additionalIntervalId
-          }
-        }
-      }
-    })
-
-    // Cleanup if interval is not used anymore
-    await this.deleteUnusedSubscriptionInterval(subscriptionInterval.additionalIntervalId)
-
-    return this.getFlow(false)
-  }
-
-  async updateSubscriptionInterval(subscriptionInterval: SubscriptionIntervalUpdateInput) {
-    await this.prismaService.subscriptionInterval.update({
-      where: {
-        id: subscriptionInterval.id
-      },
-      data: {
-        daysAwayFromEnding: subscriptionInterval.daysAwayFromEnding,
-        mailTemplate: {connect: subscriptionInterval.mailTemplate}
-      }
-    })
-    return this.getFlow(false)
-  }
-     **/
   async filterHasOverlap(
     memberPlanId: string | null,
     newFlow: Partial<SubscriptionFlowModelUpdateInput>
@@ -306,7 +212,7 @@ export class SubscriptionFlowController {
         continue
       }
       const existingPM = new Set(flow.paymentMethods.map(pm => pm.id))
-      const newPM = new Set((newFlow.paymentMethods || []).map(pm => pm.id))
+      const newPM = new Set((newFlow.paymentMethodIds || []).map(pm => pm))
 
       const existingPe = new Set(flow.periodicities)
       const newPe = new Set(newFlow.periodicities)
