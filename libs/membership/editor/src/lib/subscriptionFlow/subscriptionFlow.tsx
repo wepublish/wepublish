@@ -137,19 +137,17 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
             <TimeLineDay>
               {day % 2 === 0 && (
                 <UpperIntervalContainer>
-                  <DropContainerSubscriptionInterval dayIndex={day} />
+                  <DropContainerSubscriptionInterval dayIndex={day}>
+                    {currentIntervals.map(currentInterval => (
+                      <SubscriptionInterval
+                        subscriptionInterval={currentInterval}
+                        subscriptionFlow={subscriptionFlow}
+                        event={currentInterval.event}
+                      />
+                    ))}
+                  </DropContainerSubscriptionInterval>
                 </UpperIntervalContainer>
               )}
-
-              <UpperIntervalContainer>
-                {currentIntervals.map(currentInterval => (
-                  <SubscriptionInterval
-                    subscriptionInterval={currentInterval}
-                    subscriptionFlow={subscriptionFlow}
-                    event={currentInterval.event}
-                  />
-                ))}
-              </UpperIntervalContainer>
             </TimeLineDay>
           )
         })}
@@ -206,19 +204,17 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
           const currentIntervals = day % 2 !== 0 ? getSubscriptionActionsByDay(day) : []
           return (
             <TimeLineDay>
-              <LowerIntervalContainer>
-                {currentIntervals.map(currentInterval => (
-                  <SubscriptionInterval
-                    subscriptionInterval={currentInterval}
-                    subscriptionFlow={subscriptionFlow}
-                    event={currentInterval.event}
-                  />
-                ))}
-              </LowerIntervalContainer>
-
               {day % 2 !== 0 && (
                 <LowerIntervalContainer>
-                  <DropContainerSubscriptionInterval dayIndex={day} />
+                  <DropContainerSubscriptionInterval dayIndex={day}>
+                    {currentIntervals.map(currentInterval => (
+                      <SubscriptionInterval
+                        subscriptionInterval={currentInterval}
+                        subscriptionFlow={subscriptionFlow}
+                        event={currentInterval.event}
+                      />
+                    ))}
+                  </DropContainerSubscriptionInterval>
                 </LowerIntervalContainer>
               )}
             </TimeLineDay>

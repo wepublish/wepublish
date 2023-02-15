@@ -1360,6 +1360,13 @@
       "status": "Status",
       "synchronize": "Synchronize templates",
       "statusDeleted": "Template '{{internalName}}' removed at {{provider}}"
+    },
+    "subscriptionFlow": {
+      "subscribe": "Subscribe",
+      "renewal_success": "Renewal successful",
+      "renewal_failed": "Renewal failed",
+      "deactivation_by_user": "Deactivated by user",
+      "reactivation": "Reactivated"
     }
   }
 }

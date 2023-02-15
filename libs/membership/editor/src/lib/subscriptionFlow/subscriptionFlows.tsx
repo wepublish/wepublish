@@ -152,31 +152,31 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
           {subscriptionFlows.map(subscriptionFlow => (
             <TableRow key={subscriptionFlow.id}>
               {/* filter TODO: extract */}
-              <TableCell>
+              <TableCell size="small">
                 <b>Memberplan</b>
               </TableCell>
-              <TableCell>
+              <TableCell size="small">
                 <b>Payment Provider</b>
               </TableCell>
-              <TableCell>
+              <TableCell size="small">
                 <b>Periodicity</b>
               </TableCell>
-              <TableCell>
+              <TableCell size="small">
                 <b>Auto Renewal?</b>
               </TableCell>
 
               {/* mail templates only TODO: extract */}
               {userActionEvents.map(userActionEvent => (
-                <TableCell key={userActionEvent.subscriptionEventKey}>
+                <TableCell key={userActionEvent.subscriptionEventKey} size="small">
                   {userActionEvent.title}
                 </TableCell>
               ))}
 
               {/* individual flow TODO: extract */}
-              <TableCell>Individual flow</TableCell>
+              <TableCell size="small">Individual flow</TableCell>
 
               {/* actions */}
-              <TableCell>Aktionen</TableCell>
+              <TableCell size="small">Aktionen</TableCell>
             </TableRow>
           ))}
         </TableHead>
@@ -184,14 +184,16 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
           {subscriptionFlows.map(subscriptionFlow => (
             <TableRow key={subscriptionFlow.id}>
               {/* filter */}
-              <TableCell>{subscriptionFlow.memberPlan.name}</TableCell>
-              <TableCell>{subscriptionFlow.paymentMethods.map(m => m.name).join(', ')}</TableCell>
-              <TableCell>{subscriptionFlow.periodicities.join(', ')}</TableCell>
-              <TableCell>{subscriptionFlow.autoRenewal.join(', ')}</TableCell>
+              <TableCell size="small">{subscriptionFlow.memberPlan.name}</TableCell>
+              <TableCell size="small">
+                {subscriptionFlow.paymentMethods.map(m => m.name).join(', ')}
+              </TableCell>
+              <TableCell size="small">{subscriptionFlow.periodicities.join(', ')}</TableCell>
+              <TableCell size="small">{subscriptionFlow.autoRenewal.join(', ')}</TableCell>
 
               {/* user actions */}
               {userActionEvents.map(event => (
-                <TableCell>
+                <TableCell size="small">
                   {mailTemplates && mailTemplates.mailTemplates && (
                     <MailTemplateSelect
                       mailTemplates={mailTemplates.mailTemplates}
@@ -207,10 +209,10 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
               ))}
 
               {/* individual flow */}
-              <TableCell>
+              <TableCell size="small">
                 <SubscriptionFlow subscriptionFlow={subscriptionFlow} />
               </TableCell>
-              <TableCell align="center">
+              <TableCell align="center" size="small">
                 <IconButton
                   color="red"
                   circle

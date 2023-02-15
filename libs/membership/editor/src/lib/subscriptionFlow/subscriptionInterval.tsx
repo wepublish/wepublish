@@ -38,7 +38,6 @@ export default function SubscriptionInterval({
     <div
       style={{
         ...draggableStyle,
-        marginTop: '5px',
         padding: '5px',
         border: '1px solid black',
         borderRadius: '5px',
