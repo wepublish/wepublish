@@ -1,17 +1,14 @@
 import React, {useContext} from 'react'
-import {MailTemplatesContext, SubscriptionNonUserAction} from './subscriptionFlows'
+import {MailTemplatesContext, SubscriptionIntervalWithTitle} from './subscriptionFlows'
 import {FullMailTemplateFragment} from '@wepublish/editor/api-v2'
 import MailTemplateSelect from './mailTemplateSelect'
 import {useDraggable} from '@dnd-kit/core'
 import {MdDragIndicator} from 'react-icons/md'
 
 interface SubscriptionIntervalProps {
-  subscriptionNonUserAction: SubscriptionNonUserAction
+  subscriptionInterval: SubscriptionIntervalWithTitle
 }
-export default function SubscriptionInterval({
-  subscriptionNonUserAction
-}: SubscriptionIntervalProps) {
-  const {subscriptionInterval, title, description, subscriptionEventKey} = subscriptionNonUserAction
+export default function SubscriptionInterval({subscriptionInterval}: SubscriptionIntervalProps) {
   const mailTemplates = useContext<FullMailTemplateFragment[]>(MailTemplatesContext)
 
   // draggable
@@ -44,13 +41,13 @@ export default function SubscriptionInterval({
         <span style={{cursor: 'move'}} ref={setNodeRef} {...listeners} {...attributes}>
           <MdDragIndicator />
         </span>
-        {title}
+        {subscriptionInterval.title}
       </div>
       <div>
         <MailTemplateSelect
           mailTemplates={mailTemplates}
           mailTemplateId={subscriptionInterval.mailTemplate.id}
-          subscriptionIntervalId={subscriptionInterval.id}
+          subscriptionInterval={subscriptionInterval}
         />
       </div>
     </div>

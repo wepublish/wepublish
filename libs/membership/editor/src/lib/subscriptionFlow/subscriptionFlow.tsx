@@ -1,9 +1,15 @@
 import React, {useContext, useMemo} from 'react'
 import {
   SubscriptionFlowFragment,
+  SubscriptionIntervalFragment,
   useUpdateSubscriptionIntervalMutation
 } from '@wepublish/editor/api-v2'
-import {SubscriptionNonUserAction} from './subscriptionFlows'
+import {
+  isNonUserAction,
+  NonUserActionInterval,
+  SubscriptionIntervalWithTitle,
+  UserActionInterval
+} from './subscriptionFlows'
 import {useTranslation} from 'react-i18next'
 import SubscriptionInterval from './subscriptionInterval'
 import {Tag} from 'rsuite'
@@ -51,50 +57,30 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
     })
 
   // sorted subscription intervals
-  const subscriptionNonUserActions: SubscriptionNonUserAction[] = useMemo(() => {
+  const subscriptionNonUserActions: SubscriptionIntervalWithTitle[] = useMemo(() => {
     if (!subscriptionFlow) {
       return []
     }
 
-    const intervals: SubscriptionNonUserAction[] = subscriptionFlow.additionalIntervals.map(
-      subscriptionInterval => {
-        return {
-          title: t('subscriptionFlow.additionalIntervalTitle'),
-          description: t('subscriptionFlow.additionalIntervalDescription'),
-          subscriptionInterval
-        }
-      }
-    )
+    const allIntervals: (UserActionInterval | NonUserActionInterval)[] = subscriptionFlow.intervals
 
-    if (subscriptionFlow.invoiceCreationMailTemplate) {
-      intervals.push({
-        subscriptionEventKey: 'invoiceCreationMailTemplate',
-        subscriptionInterval: subscriptionFlow['invoiceCreationMailTemplate'],
-        title: t('subscriptionFlow.invoiceCreationTitle'),
-        description: t('subscriptionFlow.invoiceCreationDescription')
+    const intervals: SubscriptionIntervalWithTitle[] = allIntervals
+      .filter(isNonUserAction)
+      .map(i => {
+        return {...i, title: t(`subscriptionFlow.${i.event.toLowerCase()}`)}
       })
-    }
-
-    if (subscriptionFlow.deactivationUnpaidMailTemplate) {
-      intervals.push({
-        subscriptionEventKey: 'deactivationUnpaidMailTemplate',
-        subscriptionInterval: subscriptionFlow['deactivationUnpaidMailTemplate'],
-        title: t('subscriptionFlow.deactivationUnpaidTitle'),
-        description: t('subscriptionFlow.deactivationUnpaidDescription')
-      })
-    }
 
     return intervals.sort((a, b) => {
-      if (!a.subscriptionInterval || !b.subscriptionInterval) {
+      if (!a.daysAwayFromEnding || !b.daysAwayFromEnding) {
         return -1
       }
-      return a.subscriptionInterval.daysAwayFromEnding - b.subscriptionInterval.daysAwayFromEnding
+      return a.daysAwayFromEnding - b.daysAwayFromEnding
     })
-  }, [subscriptionFlow])
+  }, [t, subscriptionFlow])
 
   const timeLineArray: number[] = useMemo(() => {
     const maxDaysInTimeline = Math.max(
-      ...subscriptionNonUserActions.map(action => action.subscriptionInterval.daysAwayFromEnding)
+      ...subscriptionNonUserActions.map(action => action.daysAwayFromEnding!)
     )
     return [...Array(maxDaysInTimeline + 2)]
   }, [subscriptionNonUserActions])
@@ -104,11 +90,10 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
    */
   function getSubscriptionActionsByDay(dayIndex: number) {
     return subscriptionNonUserActions.filter(userAction => {
-      const subscriptionInterval = userAction.subscriptionInterval
-      if (!subscriptionInterval.daysAwayFromEnding && dayIndex === 0) {
+      if (!userAction.daysAwayFromEnding && dayIndex === 0) {
         return true
       }
-      if (subscriptionInterval.daysAwayFromEnding === dayIndex) {
+      if (userAction.daysAwayFromEnding === dayIndex) {
         return true
       }
       return false
@@ -116,14 +101,16 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
   }
 
   async function intervalDragEnd(dragEvent: DragEndEvent) {
-    const id = dragEvent.active.data.current?.subscriptionInterval.id
+    const interval: SubscriptionIntervalFragment = dragEvent.active.data.current
+      ?.subscriptionInterval as SubscriptionIntervalFragment
     const daysAwayFromEnding = dragEvent.over?.data.current?.dayIndex
 
     await updateSubscriptionInterval({
       variables: {
         subscriptionInterval: {
-          id,
-          daysAwayFromEnding
+          id: interval.id,
+          daysAwayFromEnding,
+          mailTemplateId: interval.mailTemplate.id
         }
       }
     })
@@ -134,8 +121,7 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
       {/* upper subscription intervals */}
       <TimeLineContainer style={{alignItems: 'flex-end'}}>
         {timeLineArray.map((day, dayIndex) => {
-          const currentNonUserActions =
-            dayIndex % 2 === 0 ? getSubscriptionActionsByDay(dayIndex) : []
+          const currentIntervals = dayIndex % 2 === 0 ? getSubscriptionActionsByDay(dayIndex) : []
           return (
             <TimeLineDay>
               {dayIndex % 2 === 0 && (
@@ -145,10 +131,9 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
               )}
 
               <UpperIntervalContainer>
-                {!!currentNonUserActions.length &&
-                  currentNonUserActions.map(currentNonUserAction => (
-                    <SubscriptionInterval subscriptionNonUserAction={currentNonUserAction} />
-                  ))}
+                {currentIntervals.map(currentInterval => (
+                  <SubscriptionInterval subscriptionInterval={currentInterval} />
+                ))}
               </UpperIntervalContainer>
             </TimeLineDay>
           )
@@ -203,15 +188,13 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
       {/* upper subscription intervals */}
       <TimeLineContainer>
         {timeLineArray.map((day, dayIndex) => {
-          const currentNonUserActions =
-            dayIndex % 2 !== 0 ? getSubscriptionActionsByDay(dayIndex) : []
+          const currentIntervals = dayIndex % 2 !== 0 ? getSubscriptionActionsByDay(dayIndex) : []
           return (
             <TimeLineDay>
               <LowerIntervalContainer>
-                {!!currentNonUserActions.length &&
-                  currentNonUserActions.map(currentNonUserAction => (
-                    <SubscriptionInterval subscriptionNonUserAction={currentNonUserAction} />
-                  ))}
+                {currentIntervals.map(currentInterval => (
+                  <SubscriptionInterval subscriptionInterval={currentInterval} />
+                ))}
               </LowerIntervalContainer>
 
               {dayIndex % 2 !== 0 && (

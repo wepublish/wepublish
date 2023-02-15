@@ -5,17 +5,18 @@ import {
 } from '@wepublish/editor/api-v2'
 import {SelectPicker} from 'rsuite'
 import {GraphqlClientContext} from './graphqlClientContext'
+import {SubscriptionIntervalWithTitle} from './subscriptionFlows'
 
 interface MailTemplateSelectProps {
   mailTemplates: FullMailTemplateFragment[]
   mailTemplateId?: number
-  subscriptionIntervalId: number
+  subscriptionInterval: SubscriptionIntervalWithTitle
 }
 
 export default function MailTemplateSelect({
   mailTemplates,
   mailTemplateId,
-  subscriptionIntervalId
+  subscriptionInterval
 }: MailTemplateSelectProps) {
   const inactiveMailTemplates = useMemo(
     () => mailTemplates.filter(mailTemplate => mailTemplate.remoteMissing),
@@ -24,20 +25,18 @@ export default function MailTemplateSelect({
 
   const client = useContext(GraphqlClientContext)
 
-  const [updateSubscriptionInterval, {loading: intervalUpdateLoading}] =
-    useUpdateSubscriptionIntervalMutation({
-      client
-      // TODO: onError: showErrors
-    })
+  const [updateSubscriptionInterval] = useUpdateSubscriptionIntervalMutation({
+    client
+    // TODO: onError: showErrors
+  })
 
   const updateMailTemplate = async (value: number) => {
     await updateSubscriptionInterval({
       variables: {
         subscriptionInterval: {
-          id: subscriptionIntervalId,
-          mailTemplate: {
-            id: value
-          }
+          id: subscriptionInterval.id,
+          daysAwayFromEnding: subscriptionInterval.daysAwayFromEnding,
+          mailTemplateId: value
         }
       }
     })

@@ -16,14 +16,26 @@ mutation UpdateSubscriptionFlow($subscriptionFlow: SubscriptionFlowModelUpdateIn
   }
 }
 
+mutation DeleteSubscriptionFlow($subscriptionFlowId: Int!) {
+  deleteSubscriptionFlow(subscriptionFlowId: $subscriptionFlowId) {
+    ...SubscriptionFlow
+  }
+}
+
+mutation CreateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalCreateInput!) {
+  createSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
+    ...SubscriptionFlow
+  }
+}
+
 mutation UpdateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalUpdateInput!) {
   updateSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
     ...SubscriptionFlow
   }
 }
 
-mutation DeleteSubscriptionFlow($subscriptionFlowId: Int!) {
-  deleteSubscriptionFlow(subscriptionFlowId: $subscriptionFlowId) {
+mutation DeleteSubscriptionInterval($subscriptionInterval: SubscriptionIntervalDeleteInput!) {
+  deleteSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
     ...SubscriptionFlow
   }
 }
@@ -31,44 +43,23 @@ mutation DeleteSubscriptionFlow($subscriptionFlowId: Int!) {
 fragment SubscriptionFlow on SubscriptionFlowModel {
   id
   default
-  additionalIntervals {
-    ...SubscriptionInterval
-  }
-  autoRenewal
-  deactivationByUserMailTemplate {
-    ...MailTemplateRef
-  }
-  deactivationUnpaidMailTemplate {
-    ...SubscriptionInterval
-  }
-  invoiceCreationMailTemplate {
-    ...SubscriptionInterval
-  }
   memberPlan {
     ...MemberPlanRef
   }
+  autoRenewal
   paymentMethods {
     ...PaymentMethodRef
   }
   periodicities
-  reactivationMailTemplate {
-    ...MailTemplateRef
-  }
-  renewalFailedMailTemplate {
-    ...MailTemplateRef
-  }
-  renewalSuccessMailTemplate {
-    ...MailTemplateRef
-  }
-  subscribeMailTemplate {
-    ...MailTemplateRef
+  intervals {
+    ...SubscriptionInterval
   }
 }
-
 
 fragment SubscriptionInterval on SubscriptionInterval {
   id
   daysAwayFromEnding
+  event
   mailTemplate {
     ...MailTemplateRef
   }

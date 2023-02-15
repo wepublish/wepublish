@@ -6,11 +6,11 @@ import SubscriptionFlow from './subscriptionFlow'
 import {
   FullMailTemplateFragment,
   SubscriptionFlowFragment,
-  SubscriptionFlowModel,
-  SubscriptionIntervalFragment,
-  useDeleteSubscriptionFlowMutation,
+  SubscriptionInterval,
   useMailTemplateQuery,
-  useSubscriptionFlowsQuery
+  useSubscriptionFlowsQuery,
+  SubscriptionEvent,
+  useDeleteSubscriptionFlowMutation
 } from '@wepublish/editor/api-v2'
 import {useTranslation} from 'react-i18next'
 import {ApolloError} from '@apollo/client'
@@ -24,32 +24,50 @@ export const MailTemplatesContext = createContext<FullMailTemplateFragment[]>([]
 /**
  * TYPES
  */
-export type SubscriptionUserActionKey = keyof Pick<
-  SubscriptionFlowModel,
-  | 'subscribeMailTemplate'
-  | 'renewalSuccessMailTemplate'
-  | 'renewalFailedMailTemplate'
-  | 'deactivationByUserMailTemplate'
-  | 'reactivationMailTemplate'
->
+const USER_ACTION_EVENTS = [
+  SubscriptionEvent.Subscribe,
+  SubscriptionEvent.RenewalSuccess,
+  SubscriptionEvent.RenewalFailed,
+  SubscriptionEvent.DeactivationByUser,
+  SubscriptionEvent.Reactivation,
+  SubscriptionEvent.Custom
+]
+type UserActionEvents = typeof USER_ACTION_EVENTS[number]
 
-export type SubscriptionNonUserActionKey = keyof Pick<
-  SubscriptionFlowModel,
-  'invoiceCreationMailTemplate' | 'deactivationUnpaidMailTemplate'
->
+const NON_USER_ACTION_EVENTS = [
+  SubscriptionEvent.InvoiceCreation,
+  SubscriptionEvent.DeactivationUnpaid
+]
+type NonUserActionEvents = typeof NON_USER_ACTION_EVENTS[number]
 
-export interface SubscriptionAction {
+export type UserActionEvent = Extract<SubscriptionInterval['event'], UserActionEvents>
+export type NonUserActionEvent = Extract<SubscriptionInterval['event'], NonUserActionEvents>
+
+export interface UserActionInterval extends SubscriptionInterval {
+  event: UserActionEvents
+  daysAwayFromEnding?: number | null
+  // TODO: make null
+}
+
+export interface NonUserActionInterval extends SubscriptionInterval {
+  event: NonUserActionEvents
+  daysAwayFromEnding?: number | null
+}
+
+export function isNonUserAction(
+  subscriptionInterval: UserActionInterval | NonUserActionInterval
+): subscriptionInterval is NonUserActionInterval {
+  return NON_USER_ACTION_EVENTS.indexOf(subscriptionInterval.event) >= 0
+}
+
+export interface Event {
   title: string
   description: string
+  subscriptionEventKey: string
 }
 
-export interface SubscriptionNonUserAction extends SubscriptionAction {
-  subscriptionEventKey?: SubscriptionNonUserActionKey
-  subscriptionInterval: SubscriptionIntervalFragment
-}
-
-export interface SubscriptionUserAction extends SubscriptionAction {
-  subscriptionEventKey: SubscriptionUserActionKey
+export interface SubscriptionIntervalWithTitle extends SubscriptionInterval {
+  title: string
 }
 
 export const showErrors = (error: ApolloError): void => {
@@ -67,33 +85,14 @@ interface SubscriptionFlowsProps {
 export default function SubscriptionFlows({defaultSubscriptionMode}: SubscriptionFlowsProps) {
   const {t} = useTranslation()
   const [subscriptionFlows, setSubscriptionFlows] = useState<SubscriptionFlowFragment[]>([])
-  const subscriptionUserActions: SubscriptionUserAction[] = [
-    {
-      subscriptionEventKey: 'subscribeMailTemplate',
-      title: t('subscriptionFlow.subscribe'),
-      description: t('subscriptionFlow.subscribeDescription')
-    },
-    {
-      subscriptionEventKey: 'renewalSuccessMailTemplate',
-      title: t('subscriptionFlow.renewalSuccess'),
-      description: t('subscriptionFlow.renewalSuccessDescription')
-    },
-    {
-      subscriptionEventKey: 'renewalFailedMailTemplate',
-      title: t('subscriptionFlow.renewalFailed'),
-      description: t('subscriptionFlow.renewalFailedDescription')
-    },
-    {
-      subscriptionEventKey: 'deactivationByUserMailTemplate',
-      title: t('subscriptionFlow.deactivationByUser'),
-      description: t('subscriptionFlow.deactivationByUserDescription')
-    },
-    {
-      subscriptionEventKey: 'reactivationMailTemplate',
-      title: t('subscriptionFlow.reactivation'),
-      description: t('subscriptionFlow.reactivationDescription')
+
+  const userActionEvents: Event[] = USER_ACTION_EVENTS.map(eventName => {
+    return {
+      title: t(`subscriptionFlow.${eventName.toLowerCase()}`),
+      description: t(`subscriptionFlow.${eventName.toLowerCase()}Description`),
+      subscriptionEventKey: eventName
     }
-  ]
+  })
 
   /**
    * API SERVICES
@@ -151,12 +150,11 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
               </TableCell>
 
               {/* mail templates only TODO: extract */}
-              {subscriptionUserActions &&
-                subscriptionUserActions.map(subscriptionUserAction => (
-                  <TableCell key={subscriptionUserAction.subscriptionEventKey}>
-                    {subscriptionUserAction.title}
-                  </TableCell>
-                ))}
+              {userActionEvents.map(userActionEvent => (
+                <TableCell key={userActionEvent.subscriptionEventKey}>
+                  {userActionEvent.title}
+                </TableCell>
+              ))}
 
               {/* individual flow TODO: extract */}
               <TableCell>Individual flow</TableCell>
@@ -176,12 +174,11 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
               <TableCell>{subscriptionFlow.autoRenewal.join(', ')}</TableCell>
 
               {/* user actions */}
-              {subscriptionUserActions &&
-                subscriptionUserActions.map(subscriptionUserAction => (
-                  <TableCell>
-                    <SelectPicker data={[]} />
-                  </TableCell>
-                ))}
+              {userActionEvents.map(userActionEvent => (
+                <TableCell>
+                  <SelectPicker data={[]} />
+                </TableCell>
+              ))}
 
               {/* individual flow */}
               <TableCell>
