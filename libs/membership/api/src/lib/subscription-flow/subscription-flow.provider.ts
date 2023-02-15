@@ -19,12 +19,12 @@ export class SubscriptionFlowProvider {
   async subscriptionFlow(@Args('defaultFlowOnly') defaultFlowOnly: boolean) {
     return await this.controller.getFlow(defaultFlowOnly)
   }
-  /**
+
   @Mutation(returns => [SubscriptionFlowModel], {name: 'createSubscriptionFlow'})
   async createSubscriptionFlow(@Args('subscriptionFlow') flow: SubscriptionFlowModelCreateInput) {
     return await this.controller.createFlow(flow)
   }
-
+  /**
   @Mutation(returns => [SubscriptionFlowModel], {name: 'updateSubscriptionFlow'})
   async updateSubscriptionFlow(@Args('subscriptionFlow') flow: SubscriptionFlowModelUpdateInput) {
     return await this.controller.updateFlow(flow)

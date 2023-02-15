@@ -1,17 +1,13 @@
 import {Injectable} from '@nestjs/common'
 import {PrismaService} from '@wepublish/api'
-/**
 import {
   AdditionalIntervalCreateInput,
   AdditionalIntervalDeleteInput,
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
-  SubscriptionIntervalCreate,
-  SubscriptionIntervalCreateInput,
   SubscriptionIntervalTypes,
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
- **/
 @Injectable()
 export class SubscriptionFlowController {
   constructor(private readonly prismaService: PrismaService) {}
@@ -39,7 +35,7 @@ export class SubscriptionFlowController {
       }
     })
   }
-  /**
+
   async createFlow(flow: SubscriptionFlowModelCreateInput) {
     if (await this.filterHasOverlap(flow.memberPlan.id, flow)) {
       throw new Error('You cant create this flow because there is a filter overlap!')
@@ -55,39 +51,12 @@ export class SubscriptionFlowController {
           connect: flow.paymentMethods
         },
         periodicities: flow.periodicities,
-        autoRenewal: flow.autoRenewal,
-        subscribeMailTemplate: {
-          connect: flow.subscribeMailTemplate
-        },
-        invoiceCreationMailTemplate:
-          flow.invoiceCreationMailTemplate == null
-            ? {}
-            : {create: this.nestMailInterval(flow.invoiceCreationMailTemplate)},
-        renewalSuccessMailTemplate: {
-          connect: flow.renewalSuccessMailTemplate
-        },
-        renewalFailedMailTemplate: {
-          connect: flow.renewalFailedMailTemplate
-        },
-        deactivationUnpaidMailTemplate:
-          flow.deactivationUnpaidMailTemplate == null
-            ? {}
-            : {create: this.nestMailInterval(flow.deactivationUnpaidMailTemplate)},
-        deactivationByUserMailTemplate:
-          flow.deactivationByUserMailTemplate == null
-            ? {}
-            : {connect: flow.deactivationByUserMailTemplate},
-        reactivationMailTemplate: {
-          connect: flow.reactivationMailTemplate
-        },
-        additionalIntervals: {
-          create: flow.additionalIntervals.map(this.nestMailInterval)
-        }
+        autoRenewal: flow.autoRenewal
       }
     })
     return this.getFlow(false)
   }
-
+  /**
   async updateFlow(flow: SubscriptionFlowModelUpdateInput) {
     const originalFlow = await this.prismaService.subscriptionFlow.findUnique({
       where: {
@@ -310,7 +279,7 @@ export class SubscriptionFlowController {
 
     return this.getFlow(false)
   }
-
+     **/
   async filterHasOverlap(
     memberPlanId: string | null,
     newFlow: Partial<SubscriptionFlowModelUpdateInput>
@@ -356,7 +325,7 @@ export class SubscriptionFlowController {
     }
     return false
   }
-
+  /**
   private nestMailInterval(
     interval: SubscriptionIntervalCreateInput | SubscriptionIntervalUpdateInput
   ) {
@@ -397,5 +366,5 @@ export class SubscriptionFlowController {
     }
     return false
   }
-   **/
+**/
 }
