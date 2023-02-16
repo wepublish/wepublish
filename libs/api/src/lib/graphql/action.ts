@@ -56,7 +56,7 @@ export const GraphQLAction = new GraphQLObjectType<Action>({
     actionType: {type: GraphQLNonNull(GraphQLActionType)},
     item: {
       type: GraphQLActionItem,
-      async resolve({actionType, item}, {}, {}) {
+      async resolve({actionType, item}) {
         return {actionType, ...item}
       }
     }
