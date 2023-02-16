@@ -1,14 +1,9 @@
 import React, {useContext, useMemo} from 'react'
-import {
-  SubscriptionFlowFragment,
-  SubscriptionIntervalFragment,
-  useUpdateSubscriptionIntervalMutation
-} from '@wepublish/editor/api-v2'
+import {SubscriptionFlowFragment, SubscriptionIntervalFragment} from '@wepublish/editor/api-v2'
 import {
   isNonUserAction,
-  NonUserActionInterval,
-  SubscriptionIntervalWithTitle,
-  UserActionInterval
+  DecoratedSubscriptionInterval,
+  NonUserActionInterval
 } from './subscriptionFlows'
 import {useTranslation} from 'react-i18next'
 import SubscriptionInterval from './subscriptionInterval'
@@ -50,44 +45,36 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
 
   const client = useContext(GraphqlClientContext)
 
-  const [updateSubscriptionInterval, {loading: intervalUpdateLoading}] =
-    useUpdateSubscriptionIntervalMutation({
-      client
-      // TODO: onError: showErrors
-    })
-
   // sorted subscription intervals
-  const subscriptionNonUserIntervals: SubscriptionIntervalWithTitle[] = useMemo(() => {
-    if (!subscriptionFlow) {
-      return []
-    }
-
-    const allIntervals: (UserActionInterval | NonUserActionInterval)[] = subscriptionFlow.intervals
-
-    const intervals: SubscriptionIntervalWithTitle[] = allIntervals
-      .filter(isNonUserAction)
-      .map(i => {
-        return {
-          ...i,
-          title: t(`subscriptionFlow.${i.event.toLowerCase()}`),
-          subscriptionFlowId: subscriptionFlow.id
-        }
-      })
-
-    return intervals.sort((a, b) => {
-      if (!a.daysAwayFromEnding || !b.daysAwayFromEnding) {
-        return -1
+  const subscriptionNonUserIntervals: DecoratedSubscriptionInterval<NonUserActionInterval>[] =
+    useMemo(() => {
+      if (!subscriptionFlow) {
+        return []
       }
-      return a.daysAwayFromEnding - b.daysAwayFromEnding
-    })
-  }, [t, subscriptionFlow])
+
+      return subscriptionFlow.intervals
+        .filter(isNonUserAction)
+        .map(i => {
+          return {
+            title: t(`subscriptionFlow.${i.event.toLowerCase()}`),
+            subscriptionFlowId: subscriptionFlow.id,
+            object: i
+          }
+        })
+        .sort((a, b) => {
+          if (!a.object.daysAwayFromEnding || !b.object.daysAwayFromEnding) {
+            return -1
+          }
+          return a.object.daysAwayFromEnding - b.object.daysAwayFromEnding
+        })
+    }, [t, subscriptionFlow])
 
   const timeLineArray: number[] = useMemo(() => {
     const minDaysInTimeline = Math.min(
-      ...subscriptionNonUserIntervals.map(action => action.daysAwayFromEnding!)
+      ...subscriptionNonUserIntervals.map(action => action.object.daysAwayFromEnding)
     )
     const maxDaysInTimeline = Math.max(
-      ...subscriptionNonUserIntervals.map(action => action.daysAwayFromEnding!)
+      ...subscriptionNonUserIntervals.map(action => action.object.daysAwayFromEnding)
     )
     const timelineStart = Math.min(0, minDaysInTimeline - 2)
     const timelineEnd = maxDaysInTimeline + 2
@@ -100,10 +87,10 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
    */
   function getSubscriptionActionsByDay(dayIndex: number) {
     return subscriptionNonUserIntervals.filter(interval => {
-      if (!interval.daysAwayFromEnding && dayIndex === 0) {
+      if (!interval.object.daysAwayFromEnding && dayIndex === 0) {
         return true
       }
-      if (interval.daysAwayFromEnding === dayIndex) {
+      if (interval.object.daysAwayFromEnding === dayIndex) {
         return true
       }
       return false
@@ -115,7 +102,7 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
       ?.subscriptionInterval as SubscriptionIntervalFragment
     const daysAwayFromEnding = dragEvent.over?.data.current?.dayIndex
 
-    await updateSubscriptionInterval({
+    await client.updateSubscriptionInterval({
       variables: {
         subscriptionInterval: {
           id: interval.id,
@@ -141,8 +128,8 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
                       <SubscriptionInterval
                         subscriptionInterval={currentInterval}
                         subscriptionFlow={subscriptionFlow}
-                        event={currentInterval.event}
-                        key={currentInterval.id}
+                        event={currentInterval.object.event}
+                        key={currentInterval.object.id}
                       />
                     ))}
                   </DropContainerSubscriptionInterval>
@@ -211,8 +198,8 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
                       <SubscriptionInterval
                         subscriptionInterval={currentInterval}
                         subscriptionFlow={subscriptionFlow}
-                        event={currentInterval.event}
-                        key={currentInterval.id}
+                        event={currentInterval.object.event}
+                        key={currentInterval.object.id}
                       />
                     ))}
                   </DropContainerSubscriptionInterval>
