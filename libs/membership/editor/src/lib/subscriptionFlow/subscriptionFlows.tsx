@@ -16,7 +16,7 @@ import {
   useDeleteSubscriptionIntervalMutation
 } from '@wepublish/editor/api-v2'
 import {useTranslation} from 'react-i18next'
-import {ApolloError} from '@apollo/client'
+import {ApolloClient, ApolloError, NormalizedCacheObject} from '@apollo/client'
 import {GraphqlClientContext} from './graphqlClientContext'
 import MailTemplateSelect from './mailTemplateSelect'
 import {getApiClientV2} from 'apps/editor/src/app/utility'
@@ -94,7 +94,7 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
   /**
    * API SERVICES
    */
-  const client = getApiClientV2()
+  const client: ApolloClient<NormalizedCacheObject> = useMemo(() => getApiClientV2(), [])
 
   // get subscriptions flows
   const {loading: loadingSubscriptionFlow} = useSubscriptionFlowsQuery({
