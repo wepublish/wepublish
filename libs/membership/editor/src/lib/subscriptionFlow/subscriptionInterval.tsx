@@ -1,5 +1,9 @@
 import React, {useContext} from 'react'
-import {MailTemplatesContext, SubscriptionIntervalWithTitle} from './subscriptionFlows'
+import {
+  MailTemplatesContext,
+  DecoratedSubscriptionInterval,
+  NonUserActionInterval
+} from './subscriptionFlows'
 import {
   FullMailTemplateFragment,
   SubscriptionEvent,
@@ -10,7 +14,7 @@ import {useDraggable} from '@dnd-kit/core'
 import {MdDragIndicator} from 'react-icons/md'
 
 interface SubscriptionIntervalProps {
-  subscriptionInterval: SubscriptionIntervalWithTitle
+  subscriptionInterval: DecoratedSubscriptionInterval<NonUserActionInterval>
   subscriptionFlow: SubscriptionFlowFragment
   event: SubscriptionEvent
 }
@@ -23,7 +27,7 @@ export default function SubscriptionInterval({
 
   // draggable
   const {attributes, listeners, setNodeRef, transform} = useDraggable({
-    id: `draggable-${subscriptionInterval.id}`,
+    id: `draggable-${subscriptionInterval.object.id}`,
     data: {
       subscriptionInterval
     }
