@@ -92,7 +92,6 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
     const timelineStart = Math.min(0, minDaysInTimeline - 2)
     const timelineEnd = maxDaysInTimeline + 2
     // create array of numbers from start to end
-    console.log(timelineStart, timelineEnd)
     return Array.from({length: timelineEnd - timelineStart}, (_, i) => timelineStart + 1 + i)
   }, [subscriptionNonUserIntervals])
 
