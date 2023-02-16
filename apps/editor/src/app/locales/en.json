@@ -1368,7 +1368,7 @@
       "deactivation_by_user": "Deactivated by user",
       "reactivation": "Reactivated",
       "invoice_creation": "Invoice creation",
-      "deactivation_unpaid": "Deactivation due to non payment",
+      "deactivation_unpaid": "Deactivated for non payment",
       "custom": "Custom event"
     }
   }

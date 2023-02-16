@@ -45,10 +45,10 @@ export default function SubscriptionInterval({
         padding: '5px',
         border: '1px solid black',
         borderRadius: '5px',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        width: '100%'
+        width: '100%',
+        backgroundColor: 'white',
+        textAlign: 'left',
+        hyphens: 'auto'
       }}>
       <div>
         <span style={{cursor: 'move'}} ref={setNodeRef} {...listeners} {...attributes}>

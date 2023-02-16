@@ -143,7 +143,7 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
 
       {/* timeline */}
       <TimeLineContainer>
-        {timeLineArray.map(day => (
+        {timeLineArray.map((day, dayIndex) => (
           <TimeLineDay key={day}>
             <div
               style={{
@@ -155,7 +155,7 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
 
             <div
               style={{
-                borderBottom: day !== 0 ? '1px solid black' : 'none',
+                borderBottom: dayIndex !== 0 ? '1px solid black' : 'none',
                 position: 'relative'
               }}>
               {/* day number */}
