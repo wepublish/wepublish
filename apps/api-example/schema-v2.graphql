@@ -145,7 +145,7 @@ type SubscriptionFlowModel {
   default: Boolean!
   id: Int!
   intervals: [SubscriptionInterval!]!
-  memberPlan: MemberPlanRef!
+  memberPlan: MemberPlanRef
   paymentMethods: [PaymentMethodRef!]!
   periodicities: [PaymentPeriodicity!]!
 }

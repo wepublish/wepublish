@@ -53,8 +53,8 @@ export class SubscriptionFlowModel {
   id!: number
   @Field()
   default!: boolean
-  @Field(type => MemberPlanRef)
-  memberPlan!: MemberPlanRef
+  @Field(type => MemberPlanRef, {nullable: true})
+  memberPlan?: MemberPlanRef
   @Field(type => [PaymentMethodRef])
   paymentMethods!: PaymentMethodRef[]
   @Field(type => [PaymentPeriodicity])

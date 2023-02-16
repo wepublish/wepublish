@@ -184,7 +184,7 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
           {subscriptionFlows.map(subscriptionFlow => (
             <TableRow key={subscriptionFlow.id}>
               {/* filter */}
-              <TableCell size="small">{subscriptionFlow.memberPlan.name}</TableCell>
+              <TableCell size="small">{subscriptionFlow.memberPlan?.name}</TableCell>
               <TableCell size="small">
                 {subscriptionFlow.paymentMethods.map(m => m.name).join(', ')}
               </TableCell>
