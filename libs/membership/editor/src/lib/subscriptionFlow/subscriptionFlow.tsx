@@ -1,5 +1,5 @@
 import React, {useContext, useMemo} from 'react'
-import {SubscriptionFlowFragment, SubscriptionIntervalFragment} from '@wepublish/editor/api-v2'
+import {SubscriptionFlowFragment} from '@wepublish/editor/api-v2'
 import {
   isNonUserAction,
   DecoratedSubscriptionInterval,
@@ -98,16 +98,17 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
   }
 
   async function intervalDragEnd(dragEvent: DragEndEvent) {
-    const interval: SubscriptionIntervalFragment = dragEvent.active.data.current
-      ?.subscriptionInterval as SubscriptionIntervalFragment
+    const interval: DecoratedSubscriptionInterval<NonUserActionInterval> = dragEvent.active.data
+      .current
+      ?.decoratedSubscriptionInterval as DecoratedSubscriptionInterval<NonUserActionInterval>
     const daysAwayFromEnding = dragEvent.over?.data.current?.dayIndex
 
     await client.updateSubscriptionInterval({
       variables: {
         subscriptionInterval: {
-          id: interval.id,
+          id: interval.object.id,
           daysAwayFromEnding,
-          mailTemplateId: interval.mailTemplate.id
+          mailTemplateId: interval.object.mailTemplate?.id
         }
       }
     })

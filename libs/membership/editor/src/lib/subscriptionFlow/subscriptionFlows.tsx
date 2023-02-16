@@ -61,6 +61,10 @@ export function isNonUserAction(
   return NON_USER_ACTION_EVENTS.includes(subscriptionInterval.event as NonUserActionEvents)
 }
 
+export function isNonUserEvent(event: SubscriptionEvent): event is NonUserActionEvents {
+  return NON_USER_ACTION_EVENTS.includes(event as NonUserActionEvents)
+}
+
 export interface DecoratedSubscriptionInterval<T extends SubscriptionInterval> {
   subscriptionFlowId: number
   title: string
@@ -154,6 +158,10 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
     () => loadingSubscriptionFlow || loadingMailTemplates,
     [loadingSubscriptionFlow, loadingMailTemplates]
   )
+
+  if (loading) {
+    return <Loader center />
+  }
 
   return (
     <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>

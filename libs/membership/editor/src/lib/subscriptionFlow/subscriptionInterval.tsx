@@ -29,7 +29,7 @@ export default function SubscriptionInterval({
   const {attributes, listeners, setNodeRef, transform} = useDraggable({
     id: `draggable-${subscriptionInterval.object.id}`,
     data: {
-      subscriptionInterval
+      decoratedSubscriptionInterval: subscriptionInterval
     }
   })
   const draggableStyle = transform

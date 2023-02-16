@@ -8,7 +8,7 @@ import {SelectPicker} from 'rsuite'
 import {GraphqlClientContext} from './graphqlClientContext'
 import {
   DecoratedSubscriptionInterval,
-  isNonUserAction,
+  isNonUserEvent,
   NonUserActionInterval,
   UserActionInterval
 } from './subscriptionFlows'
@@ -50,7 +50,7 @@ export default function MailTemplateSelect({
       await client.createSubscriptionInterval({
         variables: {
           subscriptionInterval: {
-            daysAwayFromEnding: 0,
+            daysAwayFromEnding: isNonUserEvent(event) ? 0 : null,
             mailTemplateId: value,
             subscriptionFlowId: subscriptionFlow.id,
             event
@@ -67,7 +67,9 @@ export default function MailTemplateSelect({
     }
     await client.deleteSubscriptionInterval({
       variables: {
-        id: subscriptionInterval.object.id
+        subscriptionInterval: {
+          id: subscriptionInterval.object.id
+        }
       }
     })
   }
@@ -77,7 +79,7 @@ export default function MailTemplateSelect({
       style={{width: '100%'}}
       data={mailTemplates.map(mailTemplate => ({label: mailTemplate.name, value: mailTemplate.id}))}
       disabledItemValues={inactiveMailTemplates.map(mailTemplate => mailTemplate.id)}
-      defaultValue={subscriptionInterval?.object.mailTemplate.id}
+      defaultValue={subscriptionInterval?.object.mailTemplate?.id}
       onSelect={updateMailTemplate}
       onClean={deleteMailTemplate}
     />
