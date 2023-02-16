@@ -39,8 +39,6 @@ export class MailTemplatesResolver {
     const provider = await this.mailProviderService.getProvider()
     const usedTemplates = await this.mailProviderService.getUsedTemplateIdentifiers()
 
-    console.log(usedTemplates)
-
     return templates.map(t => {
       return {
         ...t,

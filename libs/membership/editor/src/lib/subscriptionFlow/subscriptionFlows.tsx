@@ -1,6 +1,6 @@
 import React, {createContext, useMemo, useState} from 'react'
 import {Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material'
-import {IconButton, Loader, Message, toaster} from 'rsuite'
+import {Button, IconButton, Loader, Message, toaster} from 'rsuite'
 import {MdDelete} from 'react-icons/all'
 import SubscriptionFlow from './subscriptionFlow'
 import {
@@ -103,7 +103,7 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
   // get subscriptions flows
   const {loading: loadingSubscriptionFlow} = useSubscriptionFlowsQuery({
     variables: {
-      defaultFlowOnly: defaultSubscriptionMode
+      defaultFlowOnly: false
     },
     client,
     onError: showErrors,
@@ -173,36 +173,34 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
         }}>
         <Table>
           <TableHead>
-            {subscriptionFlows.map(subscriptionFlow => (
-              <TableRow key={subscriptionFlow.id}>
-                {/* filter TODO: extract */}
-                <TableCell size="small">
-                  <b>Memberplan</b>
-                </TableCell>
-                <TableCell size="small">
-                  <b>Payment Provider</b>
-                </TableCell>
-                <TableCell size="small">
-                  <b>Periodicity</b>
-                </TableCell>
-                <TableCell size="small">
-                  <b>Auto Renewal?</b>
-                </TableCell>
+            <TableRow>
+              {/* filter TODO: extract */}
+              <TableCell size="small">
+                <b>Memberplan</b>
+              </TableCell>
+              <TableCell size="small">
+                <b>Payment Provider</b>
+              </TableCell>
+              <TableCell size="small">
+                <b>Periodicity</b>
+              </TableCell>
+              <TableCell size="small">
+                <b>Auto Renewal?</b>
+              </TableCell>
 
-                {/* mail templates only TODO: extract */}
-                {userActionEvents.map(userActionEvent => (
-                  <TableCell key={userActionEvent.subscriptionEventKey} size="small">
-                    {userActionEvent.title}
-                  </TableCell>
-                ))}
+              {/* mail templates only TODO: extract */}
+              {userActionEvents.map(userActionEvent => (
+                <TableCell key={userActionEvent.subscriptionEventKey} size="small">
+                  {userActionEvent.title}
+                </TableCell>
+              ))}
 
-                {/* individual flow TODO: extract */}
-                <TableCell size="small">Individual flow</TableCell>
+              {/* individual flow TODO: extract */}
+              <TableCell size="small">Individual flow</TableCell>
 
-                {/* actions */}
-                <TableCell size="small">Aktionen</TableCell>
-              </TableRow>
-            ))}
+              {/* actions */}
+              <TableCell size="small">Aktionen</TableCell>
+            </TableRow>
           </TableHead>
           <TableBody>
             {subscriptionFlows.map(subscriptionFlow => (
@@ -246,6 +244,22 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
                       deleteSubscriptionFlow({variables: {subscriptionFlowId: subscriptionFlow.id}})
                     }
                   />
+                  <Button
+                    appearance="primary"
+                    onClick={() => {
+                      createSubscriptionInterval({
+                        variables: {
+                          subscriptionInterval: {
+                            event: SubscriptionEvent.Custom,
+                            subscriptionFlowId: subscriptionFlow.id,
+                            daysAwayFromEnding: 0
+                          }
+                        }
+                      })
+                    }}
+                    style={{marginTop: '1em'}}>
+                    ADD NEW
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
