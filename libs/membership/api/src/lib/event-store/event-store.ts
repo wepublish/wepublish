@@ -1,4 +1,4 @@
-import {LookupActionInput, Store, StoreInterval, StoreTimeline} from './event-store.type'
+import {Action, LookupActionInput, Store, StoreInterval, StoreTimeline} from './event-store.type'
 import {PrismaService} from '@wepublish/api'
 
 export class EventStore {
@@ -11,7 +11,7 @@ export class EventStore {
   private storeIsBuild = false
   constructor(private readonly prismaService: PrismaService) {}
 
-  async initialize() {
+  public async initialize() {
     let defaultFlowInitialized = false
     const subscriptionFlows = await this.prismaService.subscriptionFlow.findMany({
       include: {
@@ -68,7 +68,7 @@ export class EventStore {
     }
     this.storeIsBuild = true
   }
-  assignActions(storeTimeline: StoreTimeline | undefined, intervals: StoreInterval[]) {
+  private assignActions(storeTimeline: StoreTimeline | undefined, intervals: StoreInterval[]) {
     if (!storeTimeline) {
       throw Error('StoreTimeline is undefined, this should not happen! You should never see this')
     }
@@ -88,8 +88,7 @@ export class EventStore {
       })
     }
   }
-
-  getActionFromStore(query: LookupActionInput) {
+  public getActionFromStore(query: LookupActionInput): Action[] {
     if (!this.storeIsBuild) {
       throw Error('Tried to access store before it was successfully initialized!')
     }
@@ -113,7 +112,7 @@ export class EventStore {
     return this.getActionByDay(custom_path, query.daysAwayFromEnding)
   }
 
-  getActionByDay(timeline: StoreTimeline, daysAwayFromEnding: number | null) {
+  private getActionByDay(timeline: StoreTimeline, daysAwayFromEnding: number | null): Action[] {
     if (!daysAwayFromEnding) {
       return timeline.onUserAction
     }

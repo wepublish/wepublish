@@ -26,17 +26,7 @@ export class SubscriptionFlowController {
         default: true
       }
     }
-    const es = new EventStore(this.prismaService)
-    await es.initialize()
-    console.log(
-      es.getActionFromStore({
-        autorenwal: true,
-        memberplanId: 'cle6tbcyh0127jhs0azd8ladg',
-        paymentmethodeId: 'cle6tbcyf0117jhs0ddiqoz08',
-        periodicity: PaymentPeriodicity.yearly,
-        daysAwayFromEnding: null
-      })
-    )
+
     return await this.prismaService.subscriptionFlow.findMany({
       where,
       orderBy: {

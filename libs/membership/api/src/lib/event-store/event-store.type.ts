@@ -25,7 +25,7 @@ export type StoreTimeline = {
   [key: number]: Action[]
   onUserAction: Action[]
 }
-type Action = {
+export type Action = {
   type: SubscriptionEvent
   externalMailTemplate: string | null
 }
