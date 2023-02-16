@@ -41,8 +41,8 @@ export class SubscriptionInterval {
   id!: number
   @Field(() => Int, {nullable: true})
   daysAwayFromEnding?: number
-  @Field(type => MailTemplateRef)
-  mailTemplate!: MailTemplateRef
+  @Field(type => MailTemplateRef, {nullable: true})
+  mailTemplate!: MailTemplateRef | null
   @Field(() => SubscriptionEvent)
   event!: SubscriptionEvent
 }
@@ -73,8 +73,8 @@ export class SubscriptionIntervalCreateInput {
   subscriptionFlowId?: number
   @Field(() => Int, {nullable: true})
   daysAwayFromEnding?: number
-  @Field(() => Int)
-  mailTemplateId!: number
+  @Field(() => Int, {nullable: true})
+  mailTemplateId!: number | null
   @Field(() => SubscriptionEvent)
   event!: SubscriptionEvent
 }
@@ -85,8 +85,8 @@ export class SubscriptionIntervalUpdateInput {
   id!: number
   @Field(() => Int, {nullable: true})
   daysAwayFromEnding?: number
-  @Field(() => Int)
-  mailTemplateId!: number
+  @Field(() => Int, {nullable: true})
+  mailTemplateId!: number | null
 }
 
 @InputType()

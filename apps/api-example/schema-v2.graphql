@@ -168,13 +168,13 @@ type SubscriptionInterval {
   daysAwayFromEnding: Int
   event: SubscriptionEvent!
   id: Int!
-  mailTemplate: MailTemplateRef!
+  mailTemplate: MailTemplateRef
 }
 
 input SubscriptionIntervalCreateInput {
   daysAwayFromEnding: Int
   event: SubscriptionEvent!
-  mailTemplateId: Int!
+  mailTemplateId: Int
   subscriptionFlowId: Int!
 }
 
@@ -185,7 +185,7 @@ input SubscriptionIntervalDeleteInput {
 input SubscriptionIntervalUpdateInput {
   daysAwayFromEnding: Int
   id: Int!
-  mailTemplateId: Int!
+  mailTemplateId: Int
 }
 
 type VersionInformation {

@@ -230,7 +230,13 @@ async function seed() {
       mailTemplate: {connect: {id: 8}},
       subscriptionFlow: {connect: {id: 2}}
     },
-
+    {
+      id: 17,
+      event: SubscriptionEvent.INVOICE_CREATION,
+      daysAwayFromEnding: -30,
+      mailTemplate: {connect: {id: 4}},
+      subscriptionFlow: {connect: {id: 2}}
+    },
     {
       id: 13,
       event: SubscriptionEvent.SUBSCRIBE,
@@ -257,6 +263,13 @@ async function seed() {
       event: SubscriptionEvent.INVOICE_CREATION,
       daysAwayFromEnding: -30,
       mailTemplate: {connect: {id: 4}},
+      subscriptionFlow: {connect: {id: 3}}
+    },
+    {
+      id: 18,
+      event: SubscriptionEvent.DEACTIVATION_UNPAID,
+      daysAwayFromEnding: 10,
+      mailTemplate: {connect: {id: 5}},
       subscriptionFlow: {connect: {id: 3}}
     }
   ]

@@ -9,7 +9,8 @@ import {
 } from './subscription-flow.model'
 import {
   subscriptionFlowDaysAwayFromEndingNeedToBeNull,
-  subscriptionFlowNonUniqueEvents
+  subscriptionFlowNonUniqueEvents,
+  subscriptionFlowRequiredEvents
 } from './subscription-flow.type'
 import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
 import {EventStore} from '../event-store/event-store'
@@ -80,7 +81,21 @@ export class SubscriptionFlowController {
           connect: flow.paymentMethodIds.map(paymentMethodeId => ({id: paymentMethodeId}))
         },
         periodicities: flow.periodicities,
-        autoRenewal: flow.autoRenewal
+        autoRenewal: flow.autoRenewal,
+        intervals: {
+          create: [
+            {
+              daysAwayFromEnding: -7,
+              event: SubscriptionEvent.INVOICE_CREATION,
+              mailTemplate: undefined
+            },
+            {
+              daysAwayFromEnding: 7,
+              event: SubscriptionEvent.DEACTIVATION_UNPAID,
+              mailTemplate: undefined
+            }
+          ]
+        }
       }
     })
     return this.getFlow(false)
@@ -175,11 +190,13 @@ export class SubscriptionFlowController {
           }
         },
         event: interval.event,
-        mailTemplate: {
-          connect: {
-            id: interval.mailTemplateId
-          }
-        }
+        mailTemplate: interval.mailTemplateId
+          ? {
+              connect: {
+                id: interval.mailTemplateId
+              }
+            }
+          : {}
       }
     })
     return this.getFlow(false)
@@ -195,23 +212,45 @@ export class SubscriptionFlowController {
       throw Error('The given interval not found!')
     }
     await this.isIntervalValid({event: eventToUpdate.event, ...interval}, false)
-    await this.prismaService.subscriptionInterval.update({
-      where: {
-        id: interval.id
-      },
-      data: {
-        mailTemplate: {
-          connect: {
-            id: interval.mailTemplateId
-          }
+
+    await this.prismaService.$transaction([
+      this.prismaService.subscriptionInterval.update({
+        where: {id: interval.id},
+        data: {mailTemplate: {disconnect: true}}
+      }),
+      this.prismaService.subscriptionInterval.update({
+        where: {
+          id: interval.id
         },
-        daysAwayFromEnding: interval.daysAwayFromEnding
-      }
-    })
+        data: {
+          mailTemplate: interval.mailTemplateId
+            ? {
+                connect: {
+                  id: interval.mailTemplateId
+                }
+              }
+            : {},
+          daysAwayFromEnding: interval.daysAwayFromEnding
+        }
+      })
+    ])
     return this.getFlow(false)
   }
 
   async deleteInterval(interval: SubscriptionIntervalDeleteInput) {
+    const intervalToDelete = await this.prismaService.subscriptionInterval.findUnique({
+      where: {
+        id: interval.id
+      }
+    })
+    if (!intervalToDelete) {
+      throw Error('The given interval not found!')
+    }
+
+    if (subscriptionFlowRequiredEvents.includes(intervalToDelete.event)) {
+      throw Error(`Its not allowed to delete a required ${intervalToDelete.event} event! `)
+    }
+
     await this.prismaService.subscriptionInterval.delete({
       where: {
         id: interval.id

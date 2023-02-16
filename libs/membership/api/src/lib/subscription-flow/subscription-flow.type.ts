@@ -9,3 +9,8 @@ export const subscriptionFlowDaysAwayFromEndingNeedToBeNull: SubscriptionEvent[]
 ]
 
 export const subscriptionFlowNonUniqueEvents: SubscriptionEvent[] = [SubscriptionEvent.CUSTOM]
+
+export const subscriptionFlowRequiredEvents: SubscriptionEvent[] = [
+  SubscriptionEvent.INVOICE_CREATION,
+  SubscriptionEvent.DEACTIVATION_UNPAID
+]
