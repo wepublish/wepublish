@@ -1,21 +1,19 @@
-import {useContext, useMemo} from 'react'
+import React, {useContext, useMemo} from 'react'
 import {
   FullMailTemplateFragment,
   SubscriptionEvent,
-  SubscriptionFlowFragment
+  SubscriptionFlowFragment,
+  useCreateSubscriptionIntervalMutation,
+  useDeleteSubscriptionIntervalMutation,
+  useUpdateSubscriptionIntervalMutation
 } from '@wepublish/editor/api-v2'
 import {SelectPicker} from 'rsuite'
 import {GraphqlClientContext} from './graphqlClientContext'
-import {
-  DecoratedSubscriptionInterval,
-  isNonUserAction,
-  NonUserActionInterval,
-  UserActionInterval
-} from './subscriptionFlows'
+import {SubscriptionIntervalWithTitle} from './subscriptionFlows'
 
 interface MailTemplateSelectProps {
   mailTemplates: FullMailTemplateFragment[]
-  subscriptionInterval?: DecoratedSubscriptionInterval<NonUserActionInterval | UserActionInterval>
+  subscriptionInterval?: SubscriptionIntervalWithTitle
   subscriptionFlow: SubscriptionFlowFragment
   event: SubscriptionEvent
 }
@@ -33,21 +31,33 @@ export default function MailTemplateSelect({
 
   const client = useContext(GraphqlClientContext)
 
+  const [updateSubscriptionInterval] = useUpdateSubscriptionIntervalMutation({
+    client
+    // TODO: onError: showErrors
+  })
+
+  const [createSubscriptionInterval] = useCreateSubscriptionIntervalMutation({
+    client
+    // TODO: onError: showErrors
+  })
+
+  const [deleteSubscriptionInterval] = useDeleteSubscriptionIntervalMutation({
+    client
+  })
+
   const updateMailTemplate = async (value: number) => {
     if (subscriptionInterval) {
-      // MailTemplate existed before, was changed
-      await client.updateSubscriptionInterval({
+      await updateSubscriptionInterval({
         variables: {
           subscriptionInterval: {
-            id: subscriptionInterval.object.id,
-            daysAwayFromEnding: subscriptionInterval.object.daysAwayFromEnding,
+            id: subscriptionInterval.id,
+            daysAwayFromEnding: subscriptionInterval.daysAwayFromEnding,
             mailTemplateId: value
           }
         }
       })
     } else {
-      // No MailTemplate selected previously, must create one
-      await client.createSubscriptionInterval({
+      await createSubscriptionInterval({
         variables: {
           subscriptionInterval: {
             daysAwayFromEnding: 0,
@@ -65,11 +75,11 @@ export default function MailTemplateSelect({
       // TODO: show error; this should never happen, because clearing only works when value was selected before (and therefore, an interval existed)
       return
     }
-    await client.deleteSubscriptionInterval({
+    /*await client.deleteSubscriptionInterval({
       variables: {
         id: subscriptionInterval.object.id
       }
-    })
+    })*/
   }
 
   return (
@@ -77,7 +87,7 @@ export default function MailTemplateSelect({
       style={{width: '100%'}}
       data={mailTemplates.map(mailTemplate => ({label: mailTemplate.name, value: mailTemplate.id}))}
       disabledItemValues={inactiveMailTemplates.map(mailTemplate => mailTemplate.id)}
-      defaultValue={subscriptionInterval?.object.mailTemplate.id}
+      defaultValue={subscriptionInterval?.mailTemplate.id}
       onSelect={updateMailTemplate}
       onClean={deleteMailTemplate}
     />

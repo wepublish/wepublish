@@ -1,6 +1,6 @@
-import React, {createContext, useMemo, useState} from 'react'
+import React, {createContext, useContext, useMemo, useState} from 'react'
 import {Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material'
-import {IconButton, Loader, Message, toaster} from 'rsuite'
+import {IconButton, Message, toaster} from 'rsuite'
 import {MdDelete} from 'react-icons/all'
 import SubscriptionFlow from './subscriptionFlow'
 import {
@@ -10,16 +10,12 @@ import {
   useMailTemplateQuery,
   useSubscriptionFlowsQuery,
   SubscriptionEvent,
-  useDeleteSubscriptionFlowMutation,
-  useUpdateSubscriptionIntervalMutation,
-  useCreateSubscriptionIntervalMutation,
-  useDeleteSubscriptionIntervalMutation
+  useDeleteSubscriptionFlowMutation
 } from '@wepublish/editor/api-v2'
 import {useTranslation} from 'react-i18next'
 import {ApolloError} from '@apollo/client'
 import {GraphqlClientContext} from './graphqlClientContext'
 import MailTemplateSelect from './mailTemplateSelect'
-import {getApiClientV2} from 'apps/editor/src/app/utility'
 
 /**
  * CONTEXT
@@ -35,36 +31,45 @@ const USER_ACTION_EVENTS = [
   SubscriptionEvent.RenewalFailed,
   SubscriptionEvent.DeactivationByUser,
   SubscriptionEvent.Reactivation
-] as const
+]
 type UserActionEvents = typeof USER_ACTION_EVENTS[number]
 
 const NON_USER_ACTION_EVENTS = [
   SubscriptionEvent.InvoiceCreation,
   SubscriptionEvent.DeactivationUnpaid,
   SubscriptionEvent.Custom
-] as const
+]
 type NonUserActionEvents = typeof NON_USER_ACTION_EVENTS[number]
+
+export type UserActionEvent = Extract<SubscriptionInterval['event'], UserActionEvents>
+export type NonUserActionEvent = Extract<SubscriptionInterval['event'], NonUserActionEvents>
 
 export interface UserActionInterval extends SubscriptionInterval {
   event: UserActionEvents
-  daysAwayFromEnding: null
+  daysAwayFromEnding?: number | null
+  // TODO: make null
 }
 
 export interface NonUserActionInterval extends SubscriptionInterval {
   event: NonUserActionEvents
-  daysAwayFromEnding: number
+  daysAwayFromEnding?: number | null
 }
 
 export function isNonUserAction(
-  subscriptionInterval: SubscriptionInterval
+  subscriptionInterval: UserActionInterval | NonUserActionInterval
 ): subscriptionInterval is NonUserActionInterval {
-  return NON_USER_ACTION_EVENTS.includes(subscriptionInterval.event as NonUserActionEvents)
+  return NON_USER_ACTION_EVENTS.indexOf(subscriptionInterval.event) >= 0
 }
 
-export interface DecoratedSubscriptionInterval<T extends SubscriptionInterval> {
+export interface SubEvent {
+  title: string
+  description: string
+  subscriptionEventKey: SubscriptionEvent
+}
+
+export interface SubscriptionIntervalWithTitle extends SubscriptionInterval {
   subscriptionFlowId: number
   title: string
-  object: T
 }
 
 export const showErrors = (error: ApolloError): void => {
@@ -83,7 +88,7 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
   const {t} = useTranslation()
   const [subscriptionFlows, setSubscriptionFlows] = useState<SubscriptionFlowFragment[]>([])
 
-  const userActionEvents = USER_ACTION_EVENTS.map(eventName => {
+  const userActionEvents: SubEvent[] = USER_ACTION_EVENTS.map(eventName => {
     return {
       title: t(`subscriptionFlow.${eventName.toLowerCase()}`),
       description: t(`subscriptionFlow.${eventName.toLowerCase()}Description`),
@@ -94,10 +99,10 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
   /**
    * API SERVICES
    */
-  const client = getApiClientV2()
+  const client = useContext(GraphqlClientContext)
 
   // get subscriptions flows
-  const {loading: loadingSubscriptionFlow} = useSubscriptionFlowsQuery({
+  const {loading: loadingSubscriptionFlow, refetch} = useSubscriptionFlowsQuery({
     variables: {
       defaultFlowOnly: defaultSubscriptionMode
     },
@@ -106,26 +111,13 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
     onCompleted: data => setSubscriptionFlows(data.SubscriptionFlows)
   })
 
+  const [deleteSubscriptionFlow, {loading: deletionLoading}] = useDeleteSubscriptionFlowMutation({
+    client,
+    onError: showErrors
+  })
+
   // get mail templates
   const {data: mailTemplates, loading: loadingMailTemplates} = useMailTemplateQuery({
-    client,
-    onError: showErrors
-  })
-
-  const [createSubscriptionInterval] = useCreateSubscriptionIntervalMutation({
-    client,
-    onError: showErrors
-  })
-  const [updateSubscriptionInterval] = useUpdateSubscriptionIntervalMutation({
-    client,
-    onError: showErrors
-  })
-  const [deleteSubscriptionInterval] = useDeleteSubscriptionIntervalMutation({
-    client,
-    onError: showErrors
-  })
-
-  const [deleteSubscriptionFlow] = useDeleteSubscriptionFlowMutation({
     client,
     onError: showErrors
   })
@@ -133,117 +125,108 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
   const subscriptionIntervalFor = function (
     subscriptionFlow: SubscriptionFlowFragment,
     eventName: string
-  ): DecoratedSubscriptionInterval<NonUserActionInterval> | undefined {
+  ): SubscriptionIntervalWithTitle | undefined {
     const withTitle = subscriptionFlow.intervals.map(i => {
       return {
+        ...i,
         title: t(`subscriptionFlow.${i.event.toLowerCase()}`),
-        subscriptionFlowId: subscriptionFlow.id,
-        object: i
+        subscriptionFlowId: subscriptionFlow.id
       }
     })
-    return withTitle.find(
-      i => i.object.event === eventName
-    ) as DecoratedSubscriptionInterval<NonUserActionInterval>
+    return withTitle.find(i => i.event === eventName)
   }
 
   /**
    * loading
    * TODO: implement load indication
    */
-  const loading: boolean = useMemo(
+  const loading = useMemo(
     () => loadingSubscriptionFlow || loadingMailTemplates,
-    [loadingSubscriptionFlow, loadingMailTemplates]
+    [loadingSubscriptionFlow]
   )
 
   return (
     <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>
-      <GraphqlClientContext.Provider
-        value={{
-          createSubscriptionInterval,
-          updateSubscriptionInterval,
-          deleteSubscriptionInterval
-        }}>
-        <Table>
-          <TableHead>
-            {subscriptionFlows.map(subscriptionFlow => (
-              <TableRow key={subscriptionFlow.id}>
-                {/* filter TODO: extract */}
-                <TableCell size="small">
-                  <b>Memberplan</b>
-                </TableCell>
-                <TableCell size="small">
-                  <b>Payment Provider</b>
-                </TableCell>
-                <TableCell size="small">
-                  <b>Periodicity</b>
-                </TableCell>
-                <TableCell size="small">
-                  <b>Auto Renewal?</b>
-                </TableCell>
+      <Table>
+        <TableHead>
+          {subscriptionFlows.map(subscriptionFlow => (
+            <TableRow key={subscriptionFlow.id}>
+              {/* filter TODO: extract */}
+              <TableCell size="small">
+                <b>Memberplan</b>
+              </TableCell>
+              <TableCell size="small">
+                <b>Payment Provider</b>
+              </TableCell>
+              <TableCell size="small">
+                <b>Periodicity</b>
+              </TableCell>
+              <TableCell size="small">
+                <b>Auto Renewal?</b>
+              </TableCell>
 
-                {/* mail templates only TODO: extract */}
-                {userActionEvents.map(userActionEvent => (
-                  <TableCell key={userActionEvent.subscriptionEventKey} size="small">
-                    {userActionEvent.title}
-                  </TableCell>
-                ))}
-
-                {/* individual flow TODO: extract */}
-                <TableCell size="small">Individual flow</TableCell>
-
-                {/* actions */}
-                <TableCell size="small">Aktionen</TableCell>
-              </TableRow>
-            ))}
-          </TableHead>
-          <TableBody>
-            {subscriptionFlows.map(subscriptionFlow => (
-              <TableRow key={subscriptionFlow.id}>
-                {/* filter */}
-                <TableCell size="small">{subscriptionFlow.memberPlan?.name}</TableCell>
-                <TableCell size="small">
-                  {subscriptionFlow.paymentMethods.map(m => m.name).join(', ')}
+              {/* mail templates only TODO: extract */}
+              {userActionEvents.map(userActionEvent => (
+                <TableCell key={userActionEvent.subscriptionEventKey} size="small">
+                  {userActionEvent.title}
                 </TableCell>
-                <TableCell size="small">{subscriptionFlow.periodicities.join(', ')}</TableCell>
-                <TableCell size="small">{subscriptionFlow.autoRenewal.join(', ')}</TableCell>
+              ))}
 
-                {/* user actions */}
-                {userActionEvents.map(event => (
-                  <TableCell size="small" key={event.subscriptionEventKey}>
-                    {mailTemplates && mailTemplates.mailTemplates && (
-                      <MailTemplateSelect
-                        mailTemplates={mailTemplates.mailTemplates}
-                        subscriptionInterval={subscriptionIntervalFor(
-                          subscriptionFlow,
-                          event.subscriptionEventKey
-                        )}
-                        subscriptionFlow={subscriptionFlow}
-                        event={event.subscriptionEventKey}
-                      />
-                    )}
-                  </TableCell>
-                ))}
+              {/* individual flow TODO: extract */}
+              <TableCell size="small">Individual flow</TableCell>
 
-                {/* individual flow */}
-                <TableCell size="small">
-                  <SubscriptionFlow subscriptionFlow={subscriptionFlow} />
+              {/* actions */}
+              <TableCell size="small">Aktionen</TableCell>
+            </TableRow>
+          ))}
+        </TableHead>
+        <TableBody>
+          {subscriptionFlows.map(subscriptionFlow => (
+            <TableRow key={subscriptionFlow.id}>
+              {/* filter */}
+              <TableCell size="small">{subscriptionFlow.memberPlan?.name}</TableCell>
+              <TableCell size="small">
+                {subscriptionFlow.paymentMethods.map(m => m.name).join(', ')}
+              </TableCell>
+              <TableCell size="small">{subscriptionFlow.periodicities.join(', ')}</TableCell>
+              <TableCell size="small">{subscriptionFlow.autoRenewal.join(', ')}</TableCell>
+
+              {/* user actions */}
+              {userActionEvents.map(event => (
+                <TableCell size="small" key={event.subscriptionEventKey}>
+                  {mailTemplates && mailTemplates.mailTemplates && (
+                    <MailTemplateSelect
+                      mailTemplates={mailTemplates.mailTemplates}
+                      subscriptionInterval={subscriptionIntervalFor(
+                        subscriptionFlow,
+                        event.subscriptionEventKey
+                      )}
+                      subscriptionFlow={subscriptionFlow}
+                      event={event.subscriptionEventKey}
+                    />
+                  )}
                 </TableCell>
-                <TableCell align="center" size="small">
-                  <IconButton
-                    color="red"
-                    circle
-                    appearance="primary"
-                    icon={<MdDelete />}
-                    onClick={() =>
-                      deleteSubscriptionFlow({variables: {subscriptionFlowId: subscriptionFlow.id}})
-                    }
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </GraphqlClientContext.Provider>
+              ))}
+
+              {/* individual flow */}
+              <TableCell size="small">
+                <SubscriptionFlow subscriptionFlow={subscriptionFlow} />
+              </TableCell>
+              <TableCell align="center" size="small">
+                <IconButton
+                  color="red"
+                  circle
+                  appearance="primary"
+                  icon={<MdDelete />}
+                  onClick={() =>
+                    deleteSubscriptionFlow({variables: {subscriptionFlowId: subscriptionFlow.id}})
+                  }
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </MailTemplatesContext.Provider>
   )
 }
