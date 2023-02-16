@@ -1,11 +1,11 @@
 import {Module} from '@nestjs/common'
 import {PrismaService} from '@wepublish/api'
 import {SubscriptionFlowController} from './subscription-flow.controller'
-import {SubscriptionFlowProvider} from './subscription-flow.provider'
+import {SubscriptionFlowResolver} from './subscription-flow.resolver'
 
 @Module({
   controllers: [],
-  providers: [SubscriptionFlowProvider, PrismaService, SubscriptionFlowController],
+  providers: [SubscriptionFlowResolver, PrismaService, SubscriptionFlowController],
   exports: [],
   imports: []
 })
