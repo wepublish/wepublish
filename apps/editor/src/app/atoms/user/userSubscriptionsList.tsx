@@ -187,7 +187,7 @@ function UserSubscriptionsList({subscriptions, userId}: UserSubscriptionsProps) 
             </FlexItemAlignSelf>
             {/* edit subscription */}
             <FlexItemAlignRight colspan={6}>
-              <Link to={`/subscriptions/edit/${subscription.id}`}>
+              <Link to={`/subscriptions/edit/${subscription.id}?userId=${userId}`}>
                 <Button appearance="ghost">
                   <MdEdit /> {t('userSubscriptionList.editSubscription')}
                 </Button>

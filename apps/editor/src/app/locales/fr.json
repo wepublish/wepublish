@@ -1325,6 +1325,12 @@
         "delete": "Yes, delete the event"
       }
     },
+    "general": {
+      "deletedSuccess": "Supprimé avec succès",
+      "created": "Créé avec succès",
+      "updated": "Actualisé avec succès",
+      "errorOnUpdate": "Il y a eu une erreur - veuillez réessayer"
+    },
     "dashboard": {
       "dashboard": "Dashboard",
       "greeting": "Salut, {{name}}!",

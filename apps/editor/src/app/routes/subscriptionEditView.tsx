@@ -285,43 +285,68 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     deactivation
   }
 
+  const goBackLink = editedUserId ? `/users/edit/${editedUserId}` : '/subscriptions'
+
   async function handleSave() {
     if (!memberPlan) return
     if (!paymentMethod) return
     if (!user) return
 
-    if (id) {
-      const {data} = await updateSubscription({
-        variables: {
-          id,
-          input: {
-            ...inputBase,
-            userID: user?.id,
-            paymentMethodID: paymentMethod.id,
-            memberPlanID: memberPlan.id
+    try {
+      if (id) {
+        const {data} = await updateSubscription({
+          variables: {
+            id,
+            input: {
+              ...inputBase,
+              userID: user?.id,
+              paymentMethodID: paymentMethod.id,
+              memberPlanID: memberPlan.id
+            }
           }
-        }
-      })
+        })
 
-      if (data?.updateSubscription) onSave?.(data.updateSubscription)
-    } else {
-      const {data} = await createSubscription({
-        variables: {
-          input: {
-            ...inputBase,
-            userID: user.id,
-            paymentMethodID: paymentMethod.id,
-            memberPlanID: memberPlan.id
+        if (data?.updateSubscription) onSave?.(data.updateSubscription)
+      } else {
+        const {data} = await createSubscription({
+          variables: {
+            input: {
+              ...inputBase,
+              userID: user.id,
+              paymentMethodID: paymentMethod.id,
+              memberPlanID: memberPlan.id
+            }
           }
+        })
+
+        const newSubscription = data?.createSubscription
+        if (!newSubscription) {
+          throw new Error('Subscription id not created')
         }
-      })
 
-      if (data?.createSubscription) onSave?.(data.createSubscription)
-    }
+        if (!closeAfterSave) {
+          navigate(`/subscriptions/edit/${newSubscription.id}`)
+        }
 
-    // go back to subscription list
-    if (closeAfterSave) {
-      navigate('/subscriptions')
+        if (data?.createSubscription) onSave?.(data.createSubscription)
+      }
+
+      toaster.push(
+        <Message type="success" showIcon closable duration={2000}>
+          {id ? `${t('toast.updatedSuccess')}` : `${t('toast.createdSuccess')}`}
+        </Message>
+      )
+
+      // go back to subscription list or user edit, depending on where we came from
+      if (closeAfterSave) {
+        navigate(goBackLink)
+      }
+    } catch (e) {
+      toaster.push(
+        <Message type="error" showIcon closable duration={2000}>
+          {t('toast.updateError', {error: e})}
+        </Message>
+      )
     }
   }
 
@@ -404,7 +429,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
         <ListViewContainer>
           <ListViewHeader>
             <h2>
-              <Link to={id ? '/subscriptions' : '/users'}>
+              <Link to={goBackLink}>
                 <MdChevronLeft />
               </Link>
               {id ? t('userSubscriptionEdit.editTitle') : t('userSubscriptionEdit.createTitle')}

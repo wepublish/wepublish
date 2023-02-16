@@ -415,7 +415,7 @@ function ArticleList() {
 
         <Modal.Footer>
           <Button
-            color={'red'}
+            appearance="primary"
             disabled={isUnpublishing || isDeleting || isDuplicating}
             onClick={async () => {
               if (!currentArticle) return

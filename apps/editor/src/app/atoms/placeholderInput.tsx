@@ -3,13 +3,14 @@ import {ReactNode} from 'react'
 import {MdAddCircle} from 'react-icons/md'
 import {IconButton} from 'rsuite'
 
-const PlaceholderInputWrapper = styled.div<{maxHeight: number}>`
+const PlaceholderInputWrapper = styled.div<{maxHeight: number; minHeight: number}>`
   display: grid;
   width: 100%;
   height: 100%;
   place-items: center;
   background-color: #f7f9fa;
   max-height: ${({maxHeight}) => `${maxHeight}px`};
+  min-height: ${({minHeight}) => `${minHeight}px`};
 `
 
 export interface PlaceholderInputProps {
@@ -35,14 +36,14 @@ export function PlaceholderInput({
   onAddClick,
   disabled,
   maxHeight = 450,
-  minHeight
+  minHeight = 100
 }: PlaceholderInputProps) {
   if (children) {
     return <>{children}</>
   }
 
   return (
-    <PlaceholderInputWrapper maxHeight={maxHeight}>
+    <PlaceholderInputWrapper maxHeight={maxHeight} minHeight={minHeight}>
       <IconButton
         disabled={disabled}
         size="sm"

@@ -223,7 +223,7 @@
       "comment": {
         "title": "Kommentarblock Bearbeiten",
         "edit": "Bearbeiten",
-        "filterByTag": "Kommentare filtern nach Etikett",
+        "filterByTag": "Kommentare filtern nach Tag",
         "commentsFilterByTagInformation": "Alle untenstehenden Kommentare werden angezeigt",
         "cherryPick": "Spezifische Kommentare auswählen",
         "displayName": "Anzeigename",
@@ -240,7 +240,7 @@
       "event": {
         "title": "Eventblock Bearbeiten",
         "edit": "Bearbeiten",
-        "filterByTag": "Events filtern nach Etikett",
+        "filterByTag": "Events filtern nach Tag",
         "eventsFilterByTagInformation": "Alle untenstehenden Events werden angezeigt",
         "cherryPick": "Spezifische Events auswählen",
         "events": "{{count}} Event",
@@ -402,8 +402,8 @@
       },
       "edit": {
         "title": "Kommentar editieren",
-        "tags": "Etiketten",
-        "unnamedTag": "<Unbennantes Etikett>",
+        "tags": "Tags",
+        "unnamedTag": "<Unbennanter Tag>",
         "loading": "Laden",
         "success": "Kommentar erfolgreich editiert"
       },
@@ -692,7 +692,7 @@
     "navbar": {
       "dashboard": "Dashboard",
       "events": "Events",
-      "eventTags": "Etiketten",
+      "eventTags": "Tags",
       "articles": "Artikel",
       "blocks": {
         "topMenu": "Inhalts-Blöcke",
@@ -1317,7 +1317,7 @@
         "startsAt": "Startet um",
         "endsAt": "Ended um",
         "description": "Beschreibung",
-        "tags": "Etiketten",
+        "tags": "Tags",
         "image": "Bild",
         "scheduled": "Geplant",
         "cancelled": "Abgesagt",
@@ -1329,6 +1329,12 @@
         "body": "Willst Du das Event \"{{name}}\" wirklich löschen?",
         "delete": "Ja, lösche das Event"
       }
+    },
+    "general": {
+      "deletedSuccess": "Erfolgreich gelöscht",
+      "created": "Erfolgreich erstellt",
+      "updated": "Erfolgreich aktualisiert",
+      "errorOnUpdate": "Fehler, bitte nochmal versuchen"
     },
     "dashboard": {
       "dashboard": "Dashboard",

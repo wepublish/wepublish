@@ -313,7 +313,7 @@ const TagList = memo<TagListProps>(({type}) => {
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
                         color="red"
-                        appearance="primary"
+                        appearance="ghost"
                         circle
                         size="sm"
                         icon={<MdDelete />}

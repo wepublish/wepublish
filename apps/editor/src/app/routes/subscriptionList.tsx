@@ -10,7 +10,15 @@ import React, {useEffect, useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdInfo} from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {Button, IconButton as RIconButton, Modal, Pagination, Table as RTable} from 'rsuite'
+import {
+  Button,
+  IconButton as RIconButton,
+  Message,
+  Modal,
+  Pagination,
+  Table as RTable,
+  toaster
+} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -317,7 +325,11 @@ function SubscriptionList() {
               await deleteSubscription({
                 variables: {id: currentSubscription.id}
               })
-
+              toaster.push(
+                <Message type="success" showIcon closable duration={2000}>
+                  {t('toast.deletedSuccess')}
+                </Message>
+              )
               setConfirmationDialogOpen(false)
               refetch()
             }}>

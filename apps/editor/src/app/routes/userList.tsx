@@ -13,9 +13,11 @@ import {
   IconButton as RIconButton,
   Input,
   InputGroup,
+  Message,
   Modal,
   Pagination,
-  Table as RTable
+  Table as RTable,
+  toaster
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
@@ -304,6 +306,7 @@ function UserList() {
 
         <Modal.Footer>
           <Button
+            appearance="primary"
             disabled={isDeleting}
             onClick={async () => {
               if (!currentUser) return
@@ -311,11 +314,14 @@ function UserList() {
               await deleteUser({
                 variables: {id: currentUser.id}
               })
-
+              toaster.push(
+                <Message type="success" showIcon closable duration={2000}>
+                  {t('toast.deletedSuccess')}
+                </Message>
+              )
               setConfirmationDialogOpen(false)
               refetch()
-            }}
-            color="red">
+            }}>
             {t('userCreateOrEditView.confirm')}
           </Button>
           <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
