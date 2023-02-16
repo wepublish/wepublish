@@ -8,6 +8,7 @@ import {SelectPicker} from 'rsuite'
 import {GraphqlClientContext} from './graphqlClientContext'
 import {
   DecoratedSubscriptionInterval,
+  isNonUserAction,
   NonUserActionInterval,
   UserActionInterval
 } from './subscriptionFlows'
@@ -34,6 +35,7 @@ export default function MailTemplateSelect({
 
   const updateMailTemplate = async (value: number) => {
     if (subscriptionInterval) {
+      // MailTemplate existed before, was changed
       await client.updateSubscriptionInterval({
         variables: {
           subscriptionInterval: {
@@ -44,6 +46,7 @@ export default function MailTemplateSelect({
         }
       })
     } else {
+      // No MailTemplate selected previously, must create one
       await client.createSubscriptionInterval({
         variables: {
           subscriptionInterval: {
@@ -57,6 +60,18 @@ export default function MailTemplateSelect({
     }
   }
 
+  const deleteMailTemplate = async () => {
+    if (!subscriptionInterval) {
+      // TODO: show error; this should never happen, because clearing only works when value was selected before (and therefore, an interval existed)
+      return
+    }
+    await client.deleteSubscriptionInterval({
+      variables: {
+        id: subscriptionInterval.object.id
+      }
+    })
+  }
+
   return (
     <SelectPicker
       style={{width: '100%'}}
@@ -64,6 +79,7 @@ export default function MailTemplateSelect({
       disabledItemValues={inactiveMailTemplates.map(mailTemplate => mailTemplate.id)}
       defaultValue={subscriptionInterval?.object.mailTemplate.id}
       onSelect={updateMailTemplate}
+      onClean={deleteMailTemplate}
     />
   )
 }

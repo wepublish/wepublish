@@ -155,14 +155,6 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
     [loadingSubscriptionFlow, loadingMailTemplates]
   )
 
-  if (loading) {
-    return (
-      <div>
-        <Loader center />
-      </div>
-    )
-  }
-
   return (
     <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>
       <GraphqlClientContext.Provider
