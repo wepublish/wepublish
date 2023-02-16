@@ -193,7 +193,7 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
 
               {/* user actions */}
               {userActionEvents.map(event => (
-                <TableCell size="small">
+                <TableCell size="small" key={event.subscriptionEventKey}>
                   {mailTemplates && mailTemplates.mailTemplates && (
                     <MailTemplateSelect
                       mailTemplates={mailTemplates.mailTemplates}

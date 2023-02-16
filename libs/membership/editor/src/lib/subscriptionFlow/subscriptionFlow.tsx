@@ -133,7 +133,7 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
         {timeLineArray.map(day => {
           const currentIntervals = day % 2 === 0 ? getSubscriptionActionsByDay(day) : []
           return (
-            <TimeLineDay>
+            <TimeLineDay key={day}>
               {day % 2 === 0 && (
                 <UpperIntervalContainer>
                   <DropContainerSubscriptionInterval dayIndex={day}>
@@ -142,6 +142,7 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
                         subscriptionInterval={currentInterval}
                         subscriptionFlow={subscriptionFlow}
                         event={currentInterval.event}
+                        key={currentInterval.id}
                       />
                     ))}
                   </DropContainerSubscriptionInterval>
@@ -155,7 +156,7 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
       {/* timeline */}
       <TimeLineContainer>
         {timeLineArray.map(day => (
-          <TimeLineDay>
+          <TimeLineDay key={day}>
             <div
               style={{
                 height: '15px',
@@ -202,7 +203,7 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
         {timeLineArray.map(day => {
           const currentIntervals = day % 2 !== 0 ? getSubscriptionActionsByDay(day) : []
           return (
-            <TimeLineDay>
+            <TimeLineDay key={day}>
               {day % 2 !== 0 && (
                 <LowerIntervalContainer>
                   <DropContainerSubscriptionInterval dayIndex={day}>
@@ -211,6 +212,7 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
                         subscriptionInterval={currentInterval}
                         subscriptionFlow={subscriptionFlow}
                         event={currentInterval.event}
+                        key={currentInterval.id}
                       />
                     ))}
                   </DropContainerSubscriptionInterval>
