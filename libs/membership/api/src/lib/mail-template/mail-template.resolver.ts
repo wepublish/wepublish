@@ -15,7 +15,11 @@ export class MailTemplatesResolver {
 
   @Query(() => [MailTemplateWithUrlAndStatusModel])
   async mailTemplates() {
-    const templates = await this.prismaService.mailTemplate.findMany()
+    const templates = await this.prismaService.mailTemplate.findMany({
+      orderBy: {
+        id: 'asc'
+      }
+    })
     return this.decorate(templates)
   }
 
