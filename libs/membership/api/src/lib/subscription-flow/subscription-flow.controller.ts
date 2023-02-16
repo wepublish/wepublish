@@ -11,7 +11,8 @@ import {
   subscriptionFlowDaysAwayFromEndingNeedToBeNull,
   subscriptionFlowNonUniqueEvents
 } from './subscription-flow.type'
-import {SubscriptionEvent} from '@prisma/client'
+import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
+import {EventStore} from '../event-store/event-store'
 const SUBSCRIPTION_EVEN_MAX_DAYS_BEFORE = -25
 const SUBSCRIPTION_EVEN_MAX_DAYS_AFTER = 90
 @Injectable()
@@ -24,6 +25,17 @@ export class SubscriptionFlowController {
         default: true
       }
     }
+    const es = new EventStore(this.prismaService)
+    await es.initialize()
+    console.log(
+      es.getActionFromStore({
+        autorenwal: true,
+        memberplanId: 'cle6tbcyh0127jhs0azd8ladg',
+        paymentmethodeId: 'cle6tbcyf0117jhs0ddiqoz08',
+        periodicity: PaymentPeriodicity.yearly,
+        daysAwayFromEnding: null
+      })
+    )
     return await this.prismaService.subscriptionFlow.findMany({
       where,
       orderBy: {

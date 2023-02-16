@@ -1040,8 +1040,8 @@ model SubscriptionInterval {
     modifiedAt              DateTime @updatedAt
     event                   SubscriptionEvent
 	daysAwayFromEnding      Int? @db.SmallInt
-	mailTemplate            MailTemplate @relation(fields: [mailTemplateId], references: [id])
-	mailTemplateId          Int
+	mailTemplate            MailTemplate? @relation(fields: [mailTemplateId], references: [id])
+	mailTemplateId          Int?
 
 	subscriptionFlow   SubscriptionFlow[]
   @@map("subscriptions.intervals")
