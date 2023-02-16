@@ -17,8 +17,8 @@ export default function DropContainerSubscriptionInterval({
   })
 
   const defaultStyle = {
-    transition: 'padding 400ms ease-in-out',
-    border: '2px dashed lightgrey',
+    transition: 'border 600ms ease-in-out',
+    border: '2px dashed white',
     borderRadius: '12px',
     display: 'flex',
     flexDirection: 'column',
@@ -32,6 +32,10 @@ export default function DropContainerSubscriptionInterval({
     return <div style={{...defaultStyle}}>{children}</div>
   }
 
+  const activeStyle = {
+    border: '2px dashed lightgrey'
+  }
+
   const hoverStyle = isOver
     ? {
         backgroundColor: '#EEE'
@@ -39,7 +43,7 @@ export default function DropContainerSubscriptionInterval({
     : {}
 
   return (
-    <div ref={setNodeRef} style={{...defaultStyle, ...hoverStyle}}>
+    <div ref={setNodeRef} style={{...defaultStyle, ...activeStyle, ...hoverStyle}}>
       {children}
     </div>
   )

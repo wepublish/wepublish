@@ -1366,7 +1366,10 @@
       "renewal_success": "Renewal successful",
       "renewal_failed": "Renewal failed",
       "deactivation_by_user": "Deactivated by user",
-      "reactivation": "Reactivated"
+      "reactivation": "Reactivated",
+      "invoice_creation": "Invoice creation",
+      "deactivation_unpaid": "Deactivation due to non payment",
+      "custom": "Custom event"
     }
   }
 }
