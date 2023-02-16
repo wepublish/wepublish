@@ -1,14 +1,9 @@
 import React, {useContext, useMemo} from 'react'
-import {
-  SubscriptionFlowFragment,
-  SubscriptionIntervalFragment,
-  useUpdateSubscriptionIntervalMutation
-} from '@wepublish/editor/api-v2'
+import {SubscriptionFlowFragment, SubscriptionIntervalFragment} from '@wepublish/editor/api-v2'
 import {
   isNonUserAction,
-  NonUserActionInterval,
-  SubscriptionIntervalWithTitle,
-  UserActionInterval
+  DecoratedSubscriptionInterval,
+  NonUserActionInterval
 } from './subscriptionFlows'
 import {useTranslation} from 'react-i18next'
 import SubscriptionInterval from './subscriptionInterval'
@@ -50,43 +45,41 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
 
   const client = useContext(GraphqlClientContext)
 
-  const [updateSubscriptionInterval, {loading: intervalUpdateLoading}] =
-    useUpdateSubscriptionIntervalMutation({
-      client
-      // TODO: onError: showErrors
-    })
-
   // sorted subscription intervals
-  const subscriptionNonUserIntervals: SubscriptionIntervalWithTitle[] = useMemo(() => {
-    if (!subscriptionFlow) {
-      return []
-    }
-
-    const allIntervals: (UserActionInterval | NonUserActionInterval)[] = subscriptionFlow.intervals
-
-    const intervals: SubscriptionIntervalWithTitle[] = allIntervals
-      .filter(isNonUserAction)
-      .map(i => {
-        return {
-          ...i,
-          title: t(`subscriptionFlow.${i.event.toLowerCase()}`),
-          subscriptionFlowId: subscriptionFlow.id
-        }
-      })
-
-    return intervals.sort((a, b) => {
-      if (!a.daysAwayFromEnding || !b.daysAwayFromEnding) {
-        return -1
+  const subscriptionNonUserIntervals: DecoratedSubscriptionInterval<NonUserActionInterval>[] =
+    useMemo(() => {
+      if (!subscriptionFlow) {
+        return []
       }
-      return a.daysAwayFromEnding - b.daysAwayFromEnding
-    })
-  }, [t, subscriptionFlow])
+
+      return subscriptionFlow.intervals
+        .filter(isNonUserAction)
+        .map(i => {
+          return {
+            title: t(`subscriptionFlow.${i.event.toLowerCase()}`),
+            subscriptionFlowId: subscriptionFlow.id,
+            object: i
+          }
+        })
+        .sort((a, b) => {
+          if (!a.object.daysAwayFromEnding || !b.object.daysAwayFromEnding) {
+            return -1
+          }
+          return a.object.daysAwayFromEnding - b.object.daysAwayFromEnding
+        })
+    }, [t, subscriptionFlow])
 
   const timeLineArray: number[] = useMemo(() => {
-    const maxDaysInTimeline = Math.max(
-      ...subscriptionNonUserIntervals.map(action => action.daysAwayFromEnding!)
+    const minDaysInTimeline = Math.min(
+      ...subscriptionNonUserIntervals.map(action => action.object.daysAwayFromEnding)
     )
-    return [...Array(maxDaysInTimeline + 2)]
+    const maxDaysInTimeline = Math.max(
+      ...subscriptionNonUserIntervals.map(action => action.object.daysAwayFromEnding)
+    )
+    const timelineStart = Math.min(0, minDaysInTimeline - 2)
+    const timelineEnd = maxDaysInTimeline + 2
+    // create array of numbers from start to end
+    return Array.from({length: timelineEnd - timelineStart}, (_, i) => timelineStart + 1 + i)
   }, [subscriptionNonUserIntervals])
 
   /**
@@ -94,10 +87,10 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
    */
   function getSubscriptionActionsByDay(dayIndex: number) {
     return subscriptionNonUserIntervals.filter(interval => {
-      if (!interval.daysAwayFromEnding && dayIndex === 0) {
+      if (!interval.object.daysAwayFromEnding && dayIndex === 0) {
         return true
       }
-      if (interval.daysAwayFromEnding === dayIndex) {
+      if (interval.object.daysAwayFromEnding === dayIndex) {
         return true
       }
       return false
@@ -109,7 +102,7 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
       ?.subscriptionInterval as SubscriptionIntervalFragment
     const daysAwayFromEnding = dragEvent.over?.data.current?.dayIndex
 
-    await updateSubscriptionInterval({
+    await client.updateSubscriptionInterval({
       variables: {
         subscriptionInterval: {
           id: interval.id,
@@ -124,25 +117,24 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
     <DndContext onDragEnd={event => intervalDragEnd(event)}>
       {/* upper subscription intervals */}
       <TimeLineContainer style={{alignItems: 'flex-end'}}>
-        {timeLineArray.map((day, dayIndex) => {
-          const currentIntervals = dayIndex % 2 === 0 ? getSubscriptionActionsByDay(dayIndex) : []
+        {timeLineArray.map(day => {
+          const currentIntervals = day % 2 === 0 ? getSubscriptionActionsByDay(day) : []
           return (
-            <TimeLineDay>
-              {dayIndex % 2 === 0 && (
+            <TimeLineDay key={day}>
+              {day % 2 === 0 && (
                 <UpperIntervalContainer>
-                  <DropContainerSubscriptionInterval dayIndex={dayIndex} />
+                  <DropContainerSubscriptionInterval dayIndex={day}>
+                    {currentIntervals.map(currentInterval => (
+                      <SubscriptionInterval
+                        subscriptionInterval={currentInterval}
+                        subscriptionFlow={subscriptionFlow}
+                        event={currentInterval.object.event}
+                        key={currentInterval.object.id}
+                      />
+                    ))}
+                  </DropContainerSubscriptionInterval>
                 </UpperIntervalContainer>
               )}
-
-              <UpperIntervalContainer>
-                {currentIntervals.map(currentInterval => (
-                  <SubscriptionInterval
-                    subscriptionInterval={currentInterval}
-                    subscriptionFlow={subscriptionFlow}
-                    event={currentInterval.event}
-                  />
-                ))}
-              </UpperIntervalContainer>
             </TimeLineDay>
           )
         })}
@@ -150,19 +142,19 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
 
       {/* timeline */}
       <TimeLineContainer>
-        {timeLineArray.map((day, dayIndex) => (
-          <TimeLineDay>
+        {timeLineArray.map(day => (
+          <TimeLineDay key={day}>
             <div
               style={{
                 height: '15px',
                 marginBottom: '15px',
-                borderRight: dayIndex % 2 === 0 ? '1px solid black' : 'none'
+                borderRight: day % 2 === 0 ? '1px solid black' : 'none'
               }}
             />
 
             <div
               style={{
-                borderBottom: dayIndex !== 0 ? '1px solid black' : 'none',
+                borderBottom: day !== 0 ? '1px solid black' : 'none',
                 position: 'relative'
               }}>
               {/* day number */}
@@ -176,7 +168,7 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
                 }}>
                 <div style={{textAlign: 'center'}}>
                   <Tag color="green" size="sm">
-                    Tag {dayIndex}
+                    Tag {day}
                   </Tag>
                 </div>
               </div>
@@ -186,7 +178,7 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
               style={{
                 height: '15px',
                 marginTop: '15px',
-                borderRight: dayIndex % 2 !== 0 ? '1px solid black' : 'none'
+                borderRight: day % 2 !== 0 ? '1px solid black' : 'none'
               }}
             />
           </TimeLineDay>
@@ -195,23 +187,22 @@ export default function SubscriptionFlow({subscriptionFlow}: SubscriptionTimelin
 
       {/* upper subscription intervals */}
       <TimeLineContainer>
-        {timeLineArray.map((day, dayIndex) => {
-          const currentIntervals = dayIndex % 2 !== 0 ? getSubscriptionActionsByDay(dayIndex) : []
+        {timeLineArray.map(day => {
+          const currentIntervals = day % 2 !== 0 ? getSubscriptionActionsByDay(day) : []
           return (
-            <TimeLineDay>
-              <LowerIntervalContainer>
-                {currentIntervals.map(currentInterval => (
-                  <SubscriptionInterval
-                    subscriptionInterval={currentInterval}
-                    subscriptionFlow={subscriptionFlow}
-                    event={currentInterval.event}
-                  />
-                ))}
-              </LowerIntervalContainer>
-
-              {dayIndex % 2 !== 0 && (
+            <TimeLineDay key={day}>
+              {day % 2 !== 0 && (
                 <LowerIntervalContainer>
-                  <DropContainerSubscriptionInterval dayIndex={dayIndex} />
+                  <DropContainerSubscriptionInterval dayIndex={day}>
+                    {currentIntervals.map(currentInterval => (
+                      <SubscriptionInterval
+                        subscriptionInterval={currentInterval}
+                        subscriptionFlow={subscriptionFlow}
+                        event={currentInterval.object.event}
+                        key={currentInterval.object.id}
+                      />
+                    ))}
+                  </DropContainerSubscriptionInterval>
                 </LowerIntervalContainer>
               )}
             </TimeLineDay>

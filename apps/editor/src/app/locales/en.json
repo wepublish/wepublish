@@ -1360,6 +1360,16 @@
       "status": "Status",
       "synchronize": "Synchronize templates",
       "statusDeleted": "Template '{{internalName}}' removed at {{provider}}"
+    },
+    "subscriptionFlow": {
+      "subscribe": "Subscribe",
+      "renewal_success": "Renewal successful",
+      "renewal_failed": "Renewal failed",
+      "deactivation_by_user": "Deactivated by user",
+      "reactivation": "Reactivated",
+      "invoice_creation": "Invoice creation",
+      "deactivation_unpaid": "Deactivation due to non payment",
+      "custom": "Custom event"
     }
   }
 }
