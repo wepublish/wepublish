@@ -1,7 +1,13 @@
-import {Action, LookupActionInput, Store, StoreInterval, StoreTimeline} from './event-store.type'
+import {
+  Action,
+  LookupActionInput,
+  Store,
+  StoreInterval,
+  StoreTimeline
+} from './subscription-event-dictionary.type'
 import {PrismaService} from '@wepublish/api'
 
-export class EventStore {
+export class SubscriptionEventDictionary {
   private store: Store = {
     customFlow: {},
     defaultFlow: {
