@@ -1,11 +1,11 @@
 import {Mutation, Query, Resolver} from '@nestjs/graphql'
 import {MailTemplate} from '@prisma/client'
-import {PrismaService, WithUrl} from '@wepublish/api'
+import {PrismaService, WithUrlAndStatus} from '@wepublish/api'
 import {MailProviderService} from './mail-provider.service'
 import {MailTemplateSyncService} from './mail-template-sync.service'
-import {computeUrl, MailProviderModel, MailTemplateWithUrlModel} from './mail-template.model'
+import {MailProviderModel, MailTemplateWithUrlAndStatusModel} from './mail-template.model'
 
-@Resolver(() => MailTemplateWithUrlModel)
+@Resolver(() => MailTemplateWithUrlAndStatusModel)
 export class MailTemplatesResolver {
   constructor(
     private prismaService: PrismaService,
@@ -13,7 +13,7 @@ export class MailTemplatesResolver {
     private mailProviderService: MailProviderService
   ) {}
 
-  @Query(() => [MailTemplateWithUrlModel])
+  @Query(() => [MailTemplateWithUrlAndStatusModel])
   async mailTemplates() {
     const templates = await this.prismaService.mailTemplate.findMany()
     return this.decorate(templates)
@@ -31,8 +31,18 @@ export class MailTemplatesResolver {
     return true
   }
 
-  private async decorate(templates: MailTemplate[]): Promise<WithUrl<MailTemplate>[]> {
+  private async decorate(templates: MailTemplate[]): Promise<WithUrlAndStatus<MailTemplate>[]> {
     const provider = await this.mailProviderService.getProvider()
-    return templates.map(t => computeUrl(t, provider))
+    const usedTemplates = await this.mailProviderService.getUsedTemplateIdentifiers()
+
+    console.log(usedTemplates)
+
+    return templates.map(t => {
+      return {
+        ...t,
+        url: provider.getTemplateUrl(t),
+        status: usedTemplates.indexOf(t.externalMailTemplateId) > -1 ? 'ok' : 'unused'
+      }
+    })
   }
 }

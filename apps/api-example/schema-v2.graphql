@@ -33,12 +33,13 @@ type MailTemplateRef {
   name: String!
 }
 
-type MailTemplateWithUrlModel {
+type MailTemplateWithUrlAndStatusModel {
   description: String
   externalMailTemplateId: String!
   id: Int!
   name: String!
   remoteMissing: Boolean!
+  status: String!
   url: String!
 }
 
@@ -87,7 +88,7 @@ type Query {
       
   """
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
-  mailTemplates: [MailTemplateWithUrlModel!]!
+  mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
 
   """
   

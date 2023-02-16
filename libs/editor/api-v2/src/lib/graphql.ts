@@ -49,13 +49,14 @@ export type MailTemplateRef = {
   name: Scalars['String'];
 };
 
-export type MailTemplateWithUrlModel = {
-  __typename?: 'MailTemplateWithUrlModel';
+export type MailTemplateWithUrlAndStatusModel = {
+  __typename?: 'MailTemplateWithUrlAndStatusModel';
   description?: Maybe<Scalars['String']>;
   externalMailTemplateId: Scalars['String'];
   id: Scalars['Int'];
   name: Scalars['String'];
   remoteMissing: Scalars['Boolean'];
+  status: Scalars['String'];
   url: Scalars['String'];
 };
 
@@ -132,7 +133,7 @@ export type Query = {
    * Excludes cancelled or manually set as paid invoices.
    */
   expectedRevenue: Array<DashboardInvoice>;
-  mailTemplates: Array<MailTemplateWithUrlModel>;
+  mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /**
    * Returns all new deactivations in a given timeframe.
    * This considers the time the deactivation was made, not when the subscription runs out.
@@ -264,14 +265,14 @@ export type VersionInformation = {
 export type MailTemplateQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ __typename?: 'MailTemplateWithUrlModel', id: number, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string }>, provider: { __typename?: 'MailProviderModel', name: string } };
+export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ __typename?: 'MailTemplateWithUrlAndStatusModel', id: number, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string, status: string }>, provider: { __typename?: 'MailProviderModel', name: string } };
 
 export type SynchronizeMailTemplatesMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type SynchronizeMailTemplatesMutation = { __typename?: 'Mutation', syncTemplates: boolean };
 
-export type FullMailTemplateFragment = { __typename?: 'MailTemplateWithUrlModel', id: number, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string };
+export type FullMailTemplateFragment = { __typename?: 'MailTemplateWithUrlAndStatusModel', id: number, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string, status: string };
 
 export type FullMailProviderFragment = { __typename?: 'MailProviderModel', name: string };
 
@@ -340,13 +341,14 @@ export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 export type VersionInformationQuery = { __typename?: 'Query', versionInformation: { __typename?: 'VersionInformation', version: string } };
 
 export const FullMailTemplateFragmentDoc = gql`
-    fragment fullMailTemplate on MailTemplateWithUrlModel {
+    fragment fullMailTemplate on MailTemplateWithUrlAndStatusModel {
   id
   name
   description
   externalMailTemplateId
   remoteMissing
   url
+  status
 }
     `;
 export const FullMailProviderFragmentDoc = gql`

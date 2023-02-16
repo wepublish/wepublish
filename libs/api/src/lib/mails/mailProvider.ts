@@ -39,8 +39,9 @@ export type WithExternalId = {
   externalMailTemplateId: string
 }
 
-export type WithUrl<T> = T & {
+export type WithUrlAndStatus<T> = T & {
   url: string
+  status: string
 }
 
 export class MailProviderError extends Error {

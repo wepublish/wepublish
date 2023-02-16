@@ -11,13 +11,14 @@ mutation SynchronizeMailTemplates {
   syncTemplates
 }
 
-fragment fullMailTemplate on MailTemplateWithUrlModel {
+fragment fullMailTemplate on MailTemplateWithUrlAndStatusModel {
   id
   name
   description
   externalMailTemplateId
   remoteMissing
   url
+  status
 }
 
 fragment fullMailProvider on MailProviderModel {

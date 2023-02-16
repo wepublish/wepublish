@@ -106,6 +106,8 @@ export function MailTemplateList() {
                           internalName: template.externalMailTemplateId
                         })}
                       </>
+                    ) : template.status !== 'ok' ? (
+                      template.status
                     ) : (
                       <MdCheck />
                     )}

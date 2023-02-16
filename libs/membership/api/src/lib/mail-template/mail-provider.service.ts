@@ -39,4 +39,13 @@ export class MailProviderService {
       throw new Error(`Invalid mail provider name: ${providerName}`)
     }
   }
+
+  async getUsedTemplateIdentifiers(): Promise<string[]> {
+    const intervals = await this.prismaService.subscriptionInterval.findMany({
+      include: {
+        mailTemplate: true
+      }
+    })
+    return intervals.map(i => i.mailTemplate?.externalMailTemplateId || '')
+  }
 }
