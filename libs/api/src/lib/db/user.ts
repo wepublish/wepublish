@@ -24,6 +24,7 @@ export enum UserSort {
 export interface UserFilter {
   readonly name?: string
   readonly text?: string
+  readonly userRole?: string[]
 }
 
 export const unselectPassword: Record<

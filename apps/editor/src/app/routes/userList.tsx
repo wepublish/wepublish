@@ -1,18 +1,17 @@
 import {
   FullUserFragment,
   useDeleteUserMutation,
+  UserRole,
   UserSort,
   useUserListQuery
 } from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete, MdPassword, MdSearch} from 'react-icons/md'
+import {MdAdd, MdDelete, MdPassword} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {
   Button,
   IconButton as RIconButton,
-  Input,
-  InputGroup,
   Message,
   Modal,
   Pagination,
@@ -27,9 +26,9 @@ import {createCheckedPermissionComponent, PermissionControl} from '../atoms/perm
 import {ResetUserPasswordForm} from '../atoms/user/resetUserPasswordForm'
 import {
   IconButton,
+  ListFilters,
   ListViewActions,
   ListViewContainer,
-  ListViewFilterArea,
   ListViewHeader,
   PaddedCell,
   Table,
@@ -59,7 +58,7 @@ function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
 }
 
 function UserList() {
-  const [filter, setFilter] = useState('')
+  const [filter, setFilter] = useState({})
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
@@ -142,14 +141,12 @@ function UserList() {
             </Link>
           </ListViewActions>
         </PermissionControl>
-        <ListViewFilterArea>
-          <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
-            <InputGroup.Addon>
-              <MdSearch />
-            </InputGroup.Addon>
-          </InputGroup>
-        </ListViewFilterArea>
+        <ListFilters
+          fields={['userRole', 'text']}
+          filter={filter}
+          isLoading={isLoading}
+          onSetFilter={filter => setFilter(filter)}
+        />
       </ListViewContainer>
 
       <TableWrapper>
@@ -197,12 +194,20 @@ function UserList() {
               )}
             </RCell>
           </Column>
-          <Column width={400} align="left" resizable>
-            <HeaderCell>{t('email')}</HeaderCell>
+          <Column width={200} align="left" resizable>
+            <HeaderCell>{t('userCreateOrEditView.email')}</HeaderCell>
             <RCell dataKey="email" />
           </Column>
+          <Column width={200} align="left" resizable>
+            <HeaderCell>{t('userCreateOrEditView.userRoles')}</HeaderCell>
+            <RCell dataKey="roles">
+              {(rowData: RowDataType<FullUserFragment>) =>
+                rowData.roles?.map((r: UserRole) => r.name).join(', ')
+              }
+            </RCell>
+          </Column>
           {/* subscription */}
-          <Column width={400} align="left" resizable>
+          <Column width={200} align="left" resizable>
             <HeaderCell>{t('userList.overview.subscriptions')}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<FullUserFragment>) => (
@@ -211,7 +216,7 @@ function UserList() {
             </RCell>
           </Column>
           <Column width={100} align="center" fixed="right">
-            <HeaderCell>{t('action')}</HeaderCell>
+            <HeaderCell>{t('userList.overview.action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<FullUserFragment>) => (
                 <>
