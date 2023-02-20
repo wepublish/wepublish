@@ -35,14 +35,14 @@ export type Action = {
 export type ActionItem = Article | Author | Comment | Event | Page | Poll | Subscription | User;
 
 export enum ActionType {
-  ArticleCreate = 'ARTICLE_CREATE',
-  AuthorCreate = 'AUTHOR_CREATE',
-  CommentCreate = 'COMMENT_CREATE',
-  EventCreate = 'EVENT_CREATE',
-  PageCreate = 'PAGE_CREATE',
-  PollStart = 'POLL_START',
-  SubscriptionCreate = 'SUBSCRIPTION_CREATE',
-  UserCreate = 'USER_CREATE'
+  ArticleCreated = 'ARTICLE_CREATED',
+  AuthorCreated = 'AUTHOR_CREATED',
+  CommentCreated = 'COMMENT_CREATED',
+  EventCreated = 'EVENT_CREATED',
+  PageCreated = 'PAGE_CREATED',
+  PollStarted = 'POLL_STARTED',
+  SubscriptionCreated = 'SUBSCRIPTION_CREATED',
+  UserCreated = 'USER_CREATED'
 }
 
 export type AllowedSettingVals = {

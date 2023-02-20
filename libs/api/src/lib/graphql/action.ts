@@ -13,14 +13,14 @@ import {GraphQLEvent} from './event/event'
 export const GraphQLActionType = new GraphQLEnumType({
   name: 'ActionType',
   values: {
-    ARTICLE_CREATE: {value: ActionType.ArticleCreate},
-    PAGE_CREATE: {value: ActionType.PageCreate},
-    COMMENT_CREATE: {value: ActionType.CommentCreate},
-    SUBSCRIPTION_CREATE: {value: ActionType.SubscriptionCreate},
-    AUTHOR_CREATE: {value: ActionType.AuthorCreate},
-    POLL_START: {value: ActionType.PollStart},
-    USER_CREATE: {value: ActionType.UserCreate},
-    EVENT_CREATE: {value: ActionType.EventCreate}
+    ARTICLE_CREATED: {value: ActionType.ArticleCreated},
+    PAGE_CREATED: {value: ActionType.PageCreated},
+    COMMENT_CREATED: {value: ActionType.CommentCreated},
+    SUBSCRIPTION_CREATED: {value: ActionType.SubscriptionCreated},
+    AUTHOR_CREATED: {value: ActionType.AuthorCreated},
+    POLL_STARTED: {value: ActionType.PollStarted},
+    USER_CREATED: {value: ActionType.UserCreated},
+    EVENT_CREATED: {value: ActionType.EventCreated}
   }
 })
 
@@ -37,14 +37,14 @@ export const GraphQLActionItem = new GraphQLUnionType({
     GraphQLEvent
   ],
   resolveType({actionType}) {
-    if (actionType === ActionType.ArticleCreate) return GraphQLArticle
-    if (actionType === ActionType.PageCreate) return GraphQLPage
-    if (actionType === ActionType.CommentCreate) return GraphQLComment
-    if (actionType === ActionType.SubscriptionCreate) return GraphQLSubscription
-    if (actionType === ActionType.UserCreate) return GraphQLUser
-    if (actionType === ActionType.EventCreate) return GraphQLEvent
-    if (actionType === ActionType.PollStart) return GraphQLPoll
-    if (actionType === ActionType.AuthorCreate) return GraphQLAuthor
+    if (actionType === ActionType.ArticleCreated) return GraphQLArticle
+    if (actionType === ActionType.PageCreated) return GraphQLPage
+    if (actionType === ActionType.CommentCreated) return GraphQLComment
+    if (actionType === ActionType.SubscriptionCreated) return GraphQLSubscription
+    if (actionType === ActionType.UserCreated) return GraphQLUser
+    if (actionType === ActionType.EventCreated) return GraphQLEvent
+    if (actionType === ActionType.PollStarted) return GraphQLPoll
+    if (actionType === ActionType.AuthorCreated) return GraphQLAuthor
     return null
   }
 })

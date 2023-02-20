@@ -5,14 +5,14 @@ import {Author} from './author'
 import {Subscription, Event, Poll, User} from '@prisma/client'
 
 export enum ActionType {
-  ArticleCreate = 'articleCreate',
-  PageCreate = 'pageCreate',
-  CommentCreate = 'commentCreate',
-  SubscriptionCreate = 'subscriptionCreate',
-  AuthorCreate = 'authorCreate',
-  PollStart = 'pollStart',
-  UserCreate = 'userCreate',
-  EventCreate = 'eventCreate'
+  ArticleCreated = 'articleCreated',
+  PageCreated = 'pageCreated',
+  CommentCreated = 'commentCreated',
+  SubscriptionCreated = 'subscriptionCreated',
+  AuthorCreated = 'authorCreated',
+  PollStarted = 'pollStarted',
+  UserCreated = 'userCreated',
+  EventCreated = 'eventCreated'
 }
 
 export interface Action {

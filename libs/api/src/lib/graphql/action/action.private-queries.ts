@@ -35,7 +35,7 @@ export const getActions = async (
       ).map(value => {
         return {
           date: value.createdAt,
-          actionType: ActionType.ArticleCreate,
+          actionType: ActionType.ArticleCreated,
           item: value
         }
       })
@@ -49,7 +49,7 @@ export const getActions = async (
       ).map((value: any) => {
         return {
           date: value.createdAt,
-          actionType: ActionType.PageCreate,
+          actionType: ActionType.PageCreated,
           item: value
         }
       })
@@ -58,7 +58,7 @@ export const getActions = async (
     ? (await comment.findMany({take: 5, include: {revisions: true}})).map((value: any) => {
         return {
           date: value.createdAt,
-          actionType: ActionType.CommentCreate,
+          actionType: ActionType.CommentCreated,
           item: value
         }
       })
@@ -67,7 +67,7 @@ export const getActions = async (
     ? (await author.findMany({take: 5})).map((value: any) => {
         return {
           date: value.createdAt,
-          actionType: ActionType.AuthorCreate,
+          actionType: ActionType.AuthorCreated,
           item: value
         }
       })
@@ -76,7 +76,7 @@ export const getActions = async (
     ? (await subscription.findMany({take: 5})).map((value: any) => {
         return {
           date: value.createdAt,
-          actionType: ActionType.SubscriptionCreate,
+          actionType: ActionType.SubscriptionCreated,
           item: value
         }
       })
@@ -85,7 +85,7 @@ export const getActions = async (
     ? (await poll.findMany({take: 5})).map((value: any) => {
         return {
           date: value.opensAt,
-          actionType: ActionType.PollStart,
+          actionType: ActionType.PollStarted,
           item: value
         }
       })
@@ -94,7 +94,7 @@ export const getActions = async (
     ? (await user.findMany({take: 5})).map((value: any) => {
         return {
           date: value.createdAt,
-          actionType: ActionType.UserCreate,
+          actionType: ActionType.UserCreated,
           item: value
         }
       })
@@ -103,7 +103,7 @@ export const getActions = async (
     ? (await event.findMany({take: 5})).map((value: any) => {
         return {
           date: value.createdAt,
-          actionType: ActionType.EventCreate,
+          actionType: ActionType.EventCreated,
           item: value
         }
       })
