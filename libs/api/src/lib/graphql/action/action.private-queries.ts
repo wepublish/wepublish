@@ -1,5 +1,15 @@
-import {PrismaClient} from '@prisma/client'
-import {ActionType} from '../../db/action'
+import {
+  Author,
+  Article,
+  Comment,
+  Page,
+  Poll,
+  PrismaClient,
+  Subscription,
+  User,
+  Event
+} from '@prisma/client'
+import {Action, ActionType} from '../../db/action'
 import {Context} from '../../context'
 import {
   CanGetArticles,
@@ -23,7 +33,7 @@ export const getActions = async (
   poll: PrismaClient['poll'],
   user: PrismaClient['user'],
   event: PrismaClient['event']
-) => {
+): Promise<Array<Action>> => {
   const {roles} = authenticate()
 
   const articles = isAuthorised(CanGetArticles, roles)
@@ -32,11 +42,11 @@ export const getActions = async (
           take: 5,
           include: {draft: true, pending: true, published: true}
         })
-      ).map(value => {
+      ).map((article: Article) => {
         return {
-          date: value.createdAt,
+          date: article.createdAt,
           actionType: ActionType.ArticleCreated,
-          item: value
+          id: article.id
         }
       })
     : []
@@ -46,65 +56,65 @@ export const getActions = async (
           take: 5,
           include: {draft: true, pending: true, published: true}
         })
-      ).map((value: any) => {
+      ).map((page: Page) => {
         return {
-          date: value.createdAt,
+          date: page.createdAt,
           actionType: ActionType.PageCreated,
-          item: value
+          id: page.id
         }
       })
     : []
   const comments = isAuthorised(CanGetComments, roles)
-    ? (await comment.findMany({take: 5, include: {revisions: true}})).map((value: any) => {
+    ? (await comment.findMany({take: 5, include: {revisions: true}})).map((comment: Comment) => {
         return {
-          date: value.createdAt,
+          date: comment.createdAt,
           actionType: ActionType.CommentCreated,
-          item: value
+          id: comment.id
         }
       })
     : []
   const authors = isAuthorised(CanGetAuthors, roles)
-    ? (await author.findMany({take: 5})).map((value: any) => {
+    ? (await author.findMany({take: 5})).map((author: Author) => {
         return {
-          date: value.createdAt,
+          date: author.createdAt,
           actionType: ActionType.AuthorCreated,
-          item: value
+          id: author.id
         }
       })
     : []
   const subscriptions = isAuthorised(CanGetSubscriptions, roles)
-    ? (await subscription.findMany({take: 5})).map((value: any) => {
+    ? (await subscription.findMany({take: 5})).map((subscription: Subscription) => {
         return {
-          date: value.createdAt,
+          date: subscription.createdAt,
           actionType: ActionType.SubscriptionCreated,
-          item: value
+          id: subscription.id
         }
       })
     : []
   const polls = isAuthorised(CanGetPoll, roles)
-    ? (await poll.findMany({take: 5})).map((value: any) => {
+    ? (await poll.findMany({take: 5})).map((poll: Poll) => {
         return {
-          date: value.opensAt,
+          date: poll.opensAt,
           actionType: ActionType.PollStarted,
-          item: value
+          id: poll.id
         }
       })
     : []
   const users = isAuthorised(CanGetUsers, roles)
-    ? (await user.findMany({take: 5})).map((value: any) => {
+    ? (await user.findMany({take: 5})).map((user: User) => {
         return {
-          date: value.createdAt,
+          date: user.createdAt,
           actionType: ActionType.UserCreated,
-          item: value
+          id: user.id
         }
       })
     : []
   const events = isAuthorised(CanGetEvent, roles)
-    ? (await event.findMany({take: 5})).map((value: any) => {
+    ? (await event.findMany({take: 5})).map((event: Event) => {
         return {
-          date: value.createdAt,
+          date: event.createdAt,
           actionType: ActionType.EventCreated,
-          item: value
+          id: event.id
         }
       })
     : []
@@ -118,5 +128,5 @@ export const getActions = async (
     ...users,
     ...events
   ]
-  return actions.sort((v1, v2) => v2.date - v1.date)
+  return actions.sort((v1, v2) => v2.date.getDate() - v1.date.getDate())
 }

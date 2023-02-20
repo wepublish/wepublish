@@ -23,25 +23,7 @@ export type Scalars = {
   VoteValue: number;
 };
 
-export type Action = {
-  __typename?: 'Action';
-  actionType: ActionType;
-  date: Scalars['DateTime'];
-  item?: Maybe<ActionItem>;
-};
-
-export type ActionItem = Article | Author | Comment | Event | Page | Poll | Subscription | User;
-
-export enum ActionType {
-  ArticleCreated = 'ARTICLE_CREATED',
-  AuthorCreated = 'AUTHOR_CREATED',
-  CommentCreated = 'COMMENT_CREATED',
-  EventCreated = 'EVENT_CREATED',
-  PageCreated = 'PAGE_CREATED',
-  PollStarted = 'POLL_STARTED',
-  SubscriptionCreated = 'SUBSCRIPTION_CREATED',
-  UserCreated = 'USER_CREATED'
-}
+export type Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction;
 
 export type AllowedSettingVals = {
   __typename?: 'AllowedSettingVals';
@@ -66,6 +48,12 @@ export type ArticleConnection = {
   nodes: Array<Article>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type ArticleCreatedAction = {
+  __typename?: 'ArticleCreatedAction';
+  article: Article;
+  date: Scalars['DateTime'];
 };
 
 export type ArticleFilter = {
@@ -192,6 +180,12 @@ export type AuthorConnection = {
   nodes: Array<Author>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type AuthorCreatedAction = {
+  __typename?: 'AuthorCreatedAction';
+  author: Author;
+  date: Scalars['DateTime'];
 };
 
 export type AuthorFilter = {
@@ -335,6 +329,12 @@ export type CommentConnection = {
   nodes: Array<Comment>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type CommentCreatedAction = {
+  __typename?: 'CommentCreatedAction';
+  comment: Comment;
+  date: Scalars['DateTime'];
 };
 
 export type CommentFilter = {
@@ -503,6 +503,12 @@ export type EventConnection = {
   nodes: Array<Event>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type EventCreatedAction = {
+  __typename?: 'EventCreatedAction';
+  date: Scalars['DateTime'];
+  event: Event;
 };
 
 export type EventFilter = {
@@ -1465,6 +1471,12 @@ export type PageConnection = {
   totalCount: Scalars['Int'];
 };
 
+export type PageCreatedAction = {
+  __typename?: 'PageCreatedAction';
+  date: Scalars['DateTime'];
+  page: Page;
+};
+
 export type PageFilter = {
   description?: InputMaybe<Scalars['String']>;
   draft?: InputMaybe<Scalars['Boolean']>;
@@ -1800,6 +1812,12 @@ export enum PollSort {
   OpensAt = 'OPENS_AT'
 }
 
+export type PollStartedAction = {
+  __typename?: 'PollStartedAction';
+  date: Scalars['DateTime'];
+  poll: Poll;
+};
+
 export type PollWithAnswers = {
   __typename?: 'PollWithAnswers';
   answers?: Maybe<Array<PollAnswer>>;
@@ -1824,7 +1842,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
-  actions?: Maybe<Array<Action>>;
+  actions: Array<Action>;
   article?: Maybe<Article>;
   articlePreviewLink?: Maybe<Scalars['String']>;
   articles: ArticleConnection;
@@ -2275,6 +2293,12 @@ export type SubscriptionConnection = {
   totalCount: Scalars['Int'];
 };
 
+export type SubscriptionCreatedAction = {
+  __typename?: 'SubscriptionCreatedAction';
+  date: Scalars['DateTime'];
+  subscription: Subscription;
+};
+
 export type SubscriptionDeactivation = {
   __typename?: 'SubscriptionDeactivation';
   date: Scalars['DateTime'];
@@ -2558,6 +2582,12 @@ export type UserConnection = {
   nodes: Array<User>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type UserCreatedAction = {
+  __typename?: 'UserCreatedAction';
+  date: Scalars['DateTime'];
+  user: User;
 };
 
 export type UserFilter = {

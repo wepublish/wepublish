@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
-import {ActionType, RecentActionsQuery, useRecentActionsQuery} from '@wepublish/editor/api'
+import {RecentActionsQuery, useRecentActionsQuery} from '@wepublish/editor/api'
 import {formatDistanceToNow} from 'date-fns'
-import {useEffect, useState, ReactNode} from 'react'
-import {useTranslation, Trans} from 'react-i18next'
+import {ReactNode, useEffect, useState} from 'react'
+import {Trans, useTranslation} from 'react-i18next'
 import {
   MdAccountCircle,
   MdAutorenew,
@@ -14,7 +14,7 @@ import {
   MdOutlineGridView
 } from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {Avatar, Timeline as RTimeline, Message, toaster} from 'rsuite'
+import {Avatar, Message, Timeline as RTimeline, toaster} from 'rsuite'
 
 import {AVAILABLE_LANG} from '../../base'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
@@ -80,25 +80,23 @@ export function ActivityFeed() {
   }, [error])
 
   return (
-    <>
-      <Timeline>
-        {actions?.map((action: Action, i) => {
-          return (
-            <TimelineItem
-              key={i}
-              dot={
-                <TimelineIcon size="sm" circle>
-                  {MapActionTypeToIcon(action.actionType)}
-                </TimelineIcon>
-              }>
-              <TimelineItemWrapper>
-                <TimelineItemDetails date={action.date} item={action.item} />
-              </TimelineItemWrapper>
-            </TimelineItem>
-          )
-        })}
-      </Timeline>
-    </>
+    <Timeline>
+      {actions?.map((action: Action, i) => {
+        return (
+          <TimelineItem
+            key={i}
+            dot={
+              <TimelineIcon size="sm" circle>
+                {MapActionTypeToIcon(action.__typename)}
+              </TimelineIcon>
+            }>
+            <TimelineItemWrapper>
+              <TimelineItemDetails action={action} />
+            </TimelineItemWrapper>
+          </TimelineItem>
+        )
+      })}
+    </Timeline>
   )
 }
 
@@ -111,41 +109,54 @@ function RelativeTimeToNow(time: string) {
   })
 }
 
-function TimelineItemDetails({date, item}: Omit<Action, 'actionType'>) {
+export type Props = {
+  action: Action
+}
+
+function TimelineItemDetails(props: Props) {
+  const {action} = props
   const {t} = useTranslation()
 
-  switch (item?.__typename) {
-    case 'Article':
+  if (!action) {
+    return <></>
+  }
+
+  switch (action.__typename) {
+    case 'ArticleCreatedAction':
       return (
         <ItemCreatedTimelineItem
           title={t('dashboard.newArticle')}
-          link={`/articles/edit/${item.id}`}
-          date={date}>
-          <ActionDetails>{item?.latest?.title ?? t('articles.overview.untitled')}</ActionDetails>
-        </ItemCreatedTimelineItem>
-      )
-    case 'Page':
-      return (
-        <ItemCreatedTimelineItem
-          title={t('dashboard.newPage')}
-          link={`/pages/edit/${item?.id}`}
-          date={date}>
+          link={`/articles/edit/${action.article.id}`}
+          date={action.date}>
           <ActionDetails>
-            {item?.latest?.title ?? item?.latest?.socialMediaTitle ?? t('pages.overview.untitled')}
+            {action.article.latest?.title ?? t('articles.overview.untitled')}
           </ActionDetails>
         </ItemCreatedTimelineItem>
       )
-    case 'Comment':
+    case 'PageCreatedAction':
       return (
         <ItemCreatedTimelineItem
-          date={date}
-          link={`/comments/edit/${item.id}`}
+          title={t('dashboard.newPage')}
+          link={`/pages/edit/${action.page.id}`}
+          date={action.date}>
+          <ActionDetails>
+            {action.page.latest.title ??
+              action.page.latest.socialMediaTitle ??
+              t('pages.overview.untitled')}
+          </ActionDetails>
+        </ItemCreatedTimelineItem>
+      )
+    case 'CommentCreatedAction':
+      return (
+        <ItemCreatedTimelineItem
+          date={action.date}
+          link={`/comments/edit/${action.comment.id}`}
           title={t('dashboard.newComment')}>
           <>
             <ActionDetails>
-              {`${item?.user?.name ?? item?.guestUsername ?? ''} ${
-                item?.revisions[item?.revisions?.length - 1]?.title
-                  ? ': ' + item?.revisions[item?.revisions?.length - 1]?.title
+              {`${action.comment.user?.name ?? action.comment.guestUsername ?? ''} ${
+                action.comment.revisions[action.comment.revisions.length - 1]?.title
+                  ? ': ' + action.comment.revisions[action.comment.revisions?.length - 1]?.title
                   : ''
               }`}
             </ActionDetails>
@@ -157,64 +168,64 @@ function TimelineItemDetails({date, item}: Omit<Action, 'actionType'>) {
                 onChange={() => {
                   return undefined
                 }}
-                value={item?.revisions[item?.revisions?.length - 1]?.text || []}
+                value={action.comment.revisions[action.comment.revisions?.length - 1]?.text || []}
               />
             </TimelineRichTextWrapper>
           </>
         </ItemCreatedTimelineItem>
       )
-    case 'Subscription':
+    case 'SubscriptionCreatedAction':
       return (
         <ItemCreatedTimelineItem
-          date={date}
-          link={`/subscriptions/edit/${item.id}`}
+          date={action.date}
+          link={`/subscriptions/edit/${action.subscription.id}`}
           title={t('dashboard.newSubscription')}>
           <ActionDetails>
-            {item?.memberPlan.name}: {item?.user?.email}
+            {action.subscription.memberPlan.name}: {action.subscription.user?.email}
           </ActionDetails>
         </ItemCreatedTimelineItem>
       )
-    case 'User':
+    case 'UserCreatedAction':
       // TODO add user id and link
       return (
-        <ItemCreatedTimelineItem date={date} link={''} title={t('dashboard.newUser')}>
+        <ItemCreatedTimelineItem date={action.date} link={''} title={t('dashboard.newUser')}>
           <ActionDetails>
-            {`${item?.firstName ? item?.firstName + ' ' : ''}${item?.name}${
-              item?.address?.city ? ', ' + item?.address?.city : ''
+            {`${action.user.firstName ? action.user.firstName + ' ' : ''}${action.user.name}${
+              action.user.address?.city ? ', ' + action.user.address?.city : ''
             }`}
           </ActionDetails>
         </ItemCreatedTimelineItem>
       )
-    case 'Author':
+    case 'AuthorCreatedAction':
       return (
         <ItemCreatedTimelineItem
-          date={date}
-          link={`/authors/edit/${item.id}`}
+          date={action.date}
+          link={`/authors/edit/${action.author.id}`}
           title={t('dashboard.newAuthor')}>
           <ActionDetails>
-            {item?.name}
-            {item?.jobTitle ? ', ' + item?.jobTitle : ''}
+            {action.author.name}
+            {action.author.jobTitle ? ', ' + action.author.jobTitle : ''}
           </ActionDetails>
         </ItemCreatedTimelineItem>
       )
-    case 'Poll':
+    case 'PollStartedAction':
       return (
         <ItemOpenedTimelineItem
-          date={date}
-          link={`/polls/edit/${item.id}`}
+          date={action.date}
+          link={`/polls/edit/${action.poll.id}`}
           title={t('dashboard.newPoll')}>
-          <ActionDetails>{item?.question}</ActionDetails>
+          <ActionDetails>{action.poll.question}</ActionDetails>
         </ItemOpenedTimelineItem>
       )
-    case 'Event':
+    case 'EventCreatedAction':
       return (
         <ItemCreatedTimelineItem
-          date={date}
-          link={`/events/edit/${item.id}`}
+          date={action.date}
+          link={`/events/edit/${action.event.id}`}
           title={t('dashboard.newEvent')}>
           <>
-            <ActionDetails>{item?.name}</ActionDetails>
-            <ActionDetails>{item?.location}</ActionDetails>
+            <ActionDetails>{action.event.name}</ActionDetails>
+            <ActionDetails>{action.event.location}</ActionDetails>
           </>
         </ItemCreatedTimelineItem>
       )
@@ -223,23 +234,23 @@ function TimelineItemDetails({date, item}: Omit<Action, 'actionType'>) {
   }
 }
 
-const MapActionTypeToIcon = (actionType: ActionType) => {
+const MapActionTypeToIcon = (actionType: Action['__typename']) => {
   switch (actionType) {
-    case ActionType.ArticleCreate:
+    case 'ArticleCreatedAction':
       return <MdDescription />
-    case ActionType.PageCreate:
+    case 'PageCreatedAction':
       return <MdDashboard />
-    case ActionType.CommentCreate:
+    case 'CommentCreatedAction':
       return <MdChat />
-    case ActionType.SubscriptionCreate:
+    case 'SubscriptionCreatedAction':
       return <MdAutorenew />
-    case ActionType.UserCreate:
+    case 'UserCreatedAction':
       return <MdAccountCircle />
-    case ActionType.AuthorCreate:
+    case 'AuthorCreatedAction':
       return <MdGroup />
-    case ActionType.PollStart:
+    case 'PollStartedAction':
       return <MdOutlineGridView />
-    case ActionType.EventCreate:
+    case 'EventCreatedAction':
       return <MdEvent />
     default:
       return <MdDescription />
@@ -256,13 +267,11 @@ function ItemCreatedTimelineItem(props: {
   const {t} = useTranslation()
 
   return (
-    <>
-      <Trans i18nKey={t('dashboard.itemCreated')} values={title}>
-        New <Link to={link}>{`${title}`}</Link> has been created
-        <p>{RelativeTimeToNow(date)}</p>
-        {children}
-      </Trans>
-    </>
+    <Trans i18nKey={t('dashboard.itemCreated')} values={title}>
+      New <Link to={link}>{`${title}`}</Link> has been created
+      <p>{RelativeTimeToNow(date)}</p>
+      {children}
+    </Trans>
   )
 }
 
@@ -276,12 +285,10 @@ function ItemOpenedTimelineItem(props: {
   const {t} = useTranslation()
 
   return (
-    <>
-      <Trans i18nKey={t('dashboard.itemOpened')} values={title}>
-        New <Link to={link}>{`${title}`}</Link> opened
-        <p>{RelativeTimeToNow(date)}</p>
-        {children}
-      </Trans>
-    </>
+    <Trans i18nKey={t('dashboard.itemOpened')} values={title}>
+      New <Link to={link}>{`${title}`}</Link> opened
+      <p>{RelativeTimeToNow(date)}</p>
+      {children}
+    </Trans>
   )
 }

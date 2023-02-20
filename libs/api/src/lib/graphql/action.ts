@@ -1,4 +1,4 @@
-import {GraphQLEnumType, GraphQLObjectType, GraphQLNonNull, GraphQLUnionType} from 'graphql'
+import {GraphQLObjectType, GraphQLNonNull, GraphQLUnionType} from 'graphql'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {Action, ActionType} from '../db/action'
 import {GraphQLPage} from './page'
@@ -10,55 +10,144 @@ import {GraphQLSubscription} from './subscription'
 import {GraphQLUser} from './user'
 import {GraphQLEvent} from './event/event'
 
-export const GraphQLActionType = new GraphQLEnumType({
-  name: 'ActionType',
-  values: {
-    ARTICLE_CREATED: {value: ActionType.ArticleCreated},
-    PAGE_CREATED: {value: ActionType.PageCreated},
-    COMMENT_CREATED: {value: ActionType.CommentCreated},
-    SUBSCRIPTION_CREATED: {value: ActionType.SubscriptionCreated},
-    AUTHOR_CREATED: {value: ActionType.AuthorCreated},
-    POLL_STARTED: {value: ActionType.PollStarted},
-    USER_CREATED: {value: ActionType.UserCreated},
-    EVENT_CREATED: {value: ActionType.EventCreated}
-  }
-})
-
-export const GraphQLActionItem = new GraphQLUnionType({
-  name: 'ActionItem',
-  types: [
-    GraphQLArticle,
-    GraphQLPage,
-    GraphQLComment,
-    GraphQLPoll,
-    GraphQLSubscription,
-    GraphQLAuthor,
-    GraphQLUser,
-    GraphQLEvent
-  ],
-  resolveType({actionType}) {
-    if (actionType === ActionType.ArticleCreated) return GraphQLArticle
-    if (actionType === ActionType.PageCreated) return GraphQLPage
-    if (actionType === ActionType.CommentCreated) return GraphQLComment
-    if (actionType === ActionType.SubscriptionCreated) return GraphQLSubscription
-    if (actionType === ActionType.UserCreated) return GraphQLUser
-    if (actionType === ActionType.EventCreated) return GraphQLEvent
-    if (actionType === ActionType.PollStarted) return GraphQLPoll
-    if (actionType === ActionType.AuthorCreated) return GraphQLAuthor
-    return null
-  }
-})
-
-export const GraphQLAction = new GraphQLObjectType<Action>({
-  name: 'Action',
+const actionFields = {
+  date: {type: GraphQLNonNull(GraphQLDateTime)}
+}
+const GraphQLArticleCreatedAction = new GraphQLObjectType<Action>({
+  name: 'ArticleCreatedAction',
   fields: {
     date: {type: GraphQLNonNull(GraphQLDateTime)},
-    actionType: {type: GraphQLNonNull(GraphQLActionType)},
-    item: {
-      type: GraphQLActionItem,
-      async resolve({actionType, item}) {
-        return {actionType, ...item}
+    article: {
+      type: GraphQLNonNull(GraphQLArticle),
+      async resolve({id}, args, {loaders}) {
+        return await loaders.articles.load(id)
       }
+    }
+  },
+  interfaces: () => []
+})
+
+const GraphQLPageCreatedAction = new GraphQLObjectType({
+  name: 'PageCreatedAction',
+  fields: {
+    ...actionFields,
+    page: {
+      type: GraphQLNonNull(GraphQLPage),
+      async resolve({id}, args, {loaders}) {
+        return await loaders.pages.load(id)
+      }
+    }
+  }
+})
+
+const GraphQLCommentCreatedAction = new GraphQLObjectType({
+  name: 'CommentCreatedAction',
+  fields: {
+    ...actionFields,
+    comment: {
+      type: GraphQLNonNull(GraphQLComment),
+      async resolve({id}, args, {loaders}) {
+        return await loaders.commentById.load(id)
+      }
+    }
+  }
+})
+
+const GraphQLPollStartedAction = new GraphQLObjectType({
+  name: 'PollStartedAction',
+  fields: {
+    ...actionFields,
+    poll: {
+      type: GraphQLNonNull(GraphQLPoll),
+      async resolve({id}, args, {loaders}) {
+        return await loaders.pollById.load(id)
+      }
+    }
+  }
+})
+
+const GraphQLSubscriptionCreatedAction = new GraphQLObjectType({
+  name: 'SubscriptionCreatedAction',
+  fields: {
+    ...actionFields,
+    subscription: {
+      type: GraphQLNonNull(GraphQLSubscription),
+      async resolve({id}, args, {loaders}) {
+        return await loaders.subscriptionById.load(id)
+      }
+    }
+  }
+})
+
+const GraphQLAuthorCreatedAction = new GraphQLObjectType({
+  name: 'AuthorCreatedAction',
+  fields: {
+    ...actionFields,
+    author: {
+      type: GraphQLNonNull(GraphQLAuthor),
+      async resolve({id}, args, {loaders}) {
+        return await loaders.authorsByID.load(id)
+      }
+    }
+  }
+})
+
+const GraphQLUserCraetedAction = new GraphQLObjectType({
+  name: 'UserCreatedAction',
+  fields: {
+    ...actionFields,
+    user: {
+      type: GraphQLNonNull(GraphQLUser),
+      async resolve({id}, args, {loaders}) {
+        return await loaders.userById.load(id)
+      }
+    }
+  }
+})
+
+const GraphQLEventCreatedAction = new GraphQLObjectType({
+  name: 'EventCreatedAction',
+  fields: {
+    ...actionFields,
+    event: {
+      type: GraphQLNonNull(GraphQLEvent),
+      async resolve({id}, args, {loaders}) {
+        return await loaders.eventById.load(id)
+      }
+    }
+  }
+})
+
+export const GraphQLAction = new GraphQLUnionType({
+  name: 'Action',
+  types: [
+    GraphQLArticleCreatedAction,
+    GraphQLPageCreatedAction,
+    GraphQLCommentCreatedAction,
+    GraphQLPollStartedAction,
+    GraphQLSubscriptionCreatedAction,
+    GraphQLAuthorCreatedAction,
+    GraphQLUserCraetedAction,
+    GraphQLEventCreatedAction
+  ],
+  resolveType(value: Action) {
+    switch (value.actionType) {
+      case ActionType.ArticleCreated:
+        return GraphQLArticleCreatedAction
+      case ActionType.PageCreated:
+        return GraphQLPageCreatedAction
+      case ActionType.CommentCreated:
+        return GraphQLCommentCreatedAction
+      case ActionType.PollStarted:
+        return GraphQLPollStartedAction
+      case ActionType.SubscriptionCreated:
+        return GraphQLSubscriptionCreatedAction
+      case ActionType.AuthorCreated:
+        return GraphQLAuthorCreatedAction
+      case ActionType.UserCreated:
+        return GraphQLUserCraetedAction
+      case ActionType.EventCreated:
+        return GraphQLEventCreatedAction
     }
   }
 })

@@ -1,79 +1,94 @@
-fragment FullAction on Action {
-  date
-  actionType
-  item {
-     ...FullItem
-  }
-}
-
 query RecentActions {
     actions {
         ...FullAction
     }
 }
-
-fragment FullItem on ActionItem {
+fragment FullAction on Action {
     __typename
 
-    ... on Article {
-        id
-        createdAt
-        latest {
-            title
-            url
+    ... on ArticleCreatedAction {
+        date
+        article {
+            id
+            createdAt
+            latest {
+                title
+                url
             }
+        }
     }
 
-  ... on Page {
-        id
-        createdAt
-        latest {
-            title
-            socialMediaTitle
-            url
+    ... on PageCreatedAction {
+        date
+        page {
+            id
+            createdAt
+            latest {
+                title
+                socialMediaTitle
+                url
             }
-      }
+        }
+    }
 
-  ... on Comment {
-        id
-        user  {name}
-        guestUsername
-        revisions {
-            title
-            text
+    ... on CommentCreatedAction {
+        date
+        comment {
+            id
+            user  {name}
+            guestUsername
+            revisions {
+                title
+                text
             }
-  }
+        }
+    }
 
-  ... on Poll {
-    id
-    question
-  }
+    ... on PollStartedAction {
+        date
+        poll {
+            id
+            question
+        }
+    }
 
-   ... on Subscription {
-        id
-        user { email }
-        memberPlan {
+    ... on SubscriptionCreatedAction {
+        date
+        subscription {
+            id
+            user { email }
+            memberPlan {
+                name
+            }
+        }
+    }
+
+    ... on AuthorCreatedAction {
+        date
+        author {
+            id
             name
+            jobTitle
         }
-  }
-
-    ... on Author {
-          id
-          name
-          jobTitle
     }
 
-  ... on User {
-        firstName
-        name
-        address {
-            city
+    ... on UserCreatedAction {
+        date
+        user {
+            firstName
+            name
+            address {
+                city
+            }
         }
-  }
+    }
 
-  ... on Event {
-        id
-        name
-        location
-      }
+    ... on EventCreatedAction {
+        date
+        event {
+            id
+            name
+            location
+        }
+    }
 }
