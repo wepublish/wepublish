@@ -1354,8 +1354,8 @@
       "newAction": "action",
       "createdBy": "by {{creator}}",
       "user": "User",
-      "itemCreated": "New <1>{{title}}</1> has been created {{creator}}",
-      "itemOpened": "New <1>{{title}}</1> opened {{creator}}",
+      "itemCreated": "New <1>{{title}}</1> has been created",
+      "itemOpened": "New <1>{{title}}</1> opened",
       "memberPlan": "Member Plan: {{plan}}"
     }
   }

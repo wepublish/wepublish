@@ -23,11 +23,11 @@ const Timeline = styled(RTimeline)`
   margin-left: 10px;
 `
 
-const TimelineItem = styled(RTimeline.Item)`
+const TimelineItemStyled = styled(RTimeline.Item)`
   margin-left: '20px';
 `
 
-const TimelineItemWrapper = styled.div`
+const TimelineItemDetails = styled.div`
   margin-left: 10px;
   margin-bottom: 10px;
 `
@@ -82,19 +82,7 @@ export function ActivityFeed() {
   return (
     <Timeline>
       {actions?.map((action: Action, i) => {
-        return (
-          <TimelineItem
-            key={i}
-            dot={
-              <TimelineIcon size="sm" circle>
-                {MapActionTypeToIcon(action.__typename)}
-              </TimelineIcon>
-            }>
-            <TimelineItemWrapper>
-              <TimelineItemDetails action={action} />
-            </TimelineItemWrapper>
-          </TimelineItem>
-        )
+        return <TimelineItemContainer key={i} action={action} />
       })}
     </Timeline>
   )
@@ -110,185 +98,221 @@ function RelativeTimeToNow(time: string) {
 }
 
 export type Props = {
+  key: number
   action: Action
 }
 
-function TimelineItemDetails(props: Props) {
-  const {action} = props
+function TimelineItemContainer(props: Props) {
+  const {action, key} = props
   const {t} = useTranslation()
-
-  if (!action) {
-    return <></>
-  }
 
   switch (action.__typename) {
     case 'ArticleCreatedAction':
       return (
-        <ItemCreatedTimelineItem
-          title={t('dashboard.newArticle')}
-          link={`/articles/edit/${action.article.id}`}
-          date={action.date}>
-          <ActionDetails>
-            {action.article.latest?.title ?? t('articles.overview.untitled')}
-          </ActionDetails>
-        </ItemCreatedTimelineItem>
+        <TimelineItem
+          key={key}
+          icon={<MdDescription />}
+          summary={
+            <ItemCreatedSummary
+              link={`/articles/edit/${action.article.id}`}
+              title={t('dashboard.newArticle')}
+            />
+          }
+          date={action.date}
+          details={action.article.latest?.title ?? t('articles.overview.untitled')}
+        />
       )
     case 'PageCreatedAction':
       return (
-        <ItemCreatedTimelineItem
-          title={t('dashboard.newPage')}
-          link={`/pages/edit/${action.page.id}`}
-          date={action.date}>
-          <ActionDetails>
-            {action.page.latest.title ??
-              action.page.latest.socialMediaTitle ??
-              t('pages.overview.untitled')}
-          </ActionDetails>
-        </ItemCreatedTimelineItem>
+        <TimelineItem
+          key={key}
+          icon={<MdDashboard />}
+          summary={
+            <ItemCreatedSummary
+              link={`/pages/edit/${action.page.id}`}
+              title={t('dashboard.newPage')}
+            />
+          }
+          date={action.date}
+          details={
+            action.page.latest.title ??
+            action.page.latest.socialMediaTitle ??
+            t('pages.overview.untitled')
+          }
+        />
       )
     case 'CommentCreatedAction':
       return (
-        <ItemCreatedTimelineItem
+        <TimelineItem
+          key={key}
+          icon={<MdChat />}
+          summary={
+            <ItemCreatedSummary
+              link={`/comments/edit/${action.comment.id}`}
+              title={t('dashboard.newComment')}
+            />
+          }
           date={action.date}
-          link={`/comments/edit/${action.comment.id}`}
-          title={t('dashboard.newComment')}>
-          <>
-            <ActionDetails>
-              {`${action.comment.user?.name ?? action.comment.guestUsername ?? ''} ${
-                action.comment.revisions[action.comment.revisions.length - 1]?.title
-                  ? ': ' + action.comment.revisions[action.comment.revisions?.length - 1]?.title
-                  : ''
-              }`}
-            </ActionDetails>
-            <TimelineRichTextWrapper>
-              <RichTextBlock
-                displayOnly
-                displayOneLine
-                disabled
-                onChange={() => {
-                  return undefined
-                }}
-                value={action.comment.revisions[action.comment.revisions?.length - 1]?.text || []}
-              />
-            </TimelineRichTextWrapper>
-          </>
-        </ItemCreatedTimelineItem>
+          details={
+            <>
+              <ActionDetails>
+                {`${action.comment.user?.name ?? action.comment.guestUsername ?? ''} ${
+                  action.comment.revisions[action.comment.revisions.length - 1]?.title
+                    ? ': ' + action.comment.revisions[action.comment.revisions?.length - 1]?.title
+                    : ''
+                }`}
+              </ActionDetails>
+              <TimelineRichTextWrapper>
+                <RichTextBlock
+                  displayOnly
+                  displayOneLine
+                  disabled
+                  onChange={() => {
+                    return undefined
+                  }}
+                  value={action.comment.revisions[action.comment.revisions?.length - 1]?.text || []}
+                />
+              </TimelineRichTextWrapper>
+            </>
+          }
+        />
       )
     case 'SubscriptionCreatedAction':
       return (
-        <ItemCreatedTimelineItem
+        <TimelineItem
+          key={key}
+          icon={<MdAutorenew />}
+          summary={
+            <ItemCreatedSummary
+              link={`/subscriptions/edit/${action.subscription.id}`}
+              title={t('dashboard.newSubscription')}
+            />
+          }
           date={action.date}
-          link={`/subscriptions/edit/${action.subscription.id}`}
-          title={t('dashboard.newSubscription')}>
-          <ActionDetails>
-            {action.subscription.memberPlan.name}: {action.subscription.user?.email}
-          </ActionDetails>
-        </ItemCreatedTimelineItem>
+          details={
+            <>
+              {action.subscription.memberPlan.name}: {action.subscription.user?.email}
+            </>
+          }
+        />
       )
     case 'UserCreatedAction':
-      // TODO add user id and link
       return (
-        <ItemCreatedTimelineItem date={action.date} link={''} title={t('dashboard.newUser')}>
-          <ActionDetails>
-            {`${action.user.firstName ? action.user.firstName + ' ' : ''}${action.user.name}${
-              action.user.address?.city ? ', ' + action.user.address?.city : ''
-            }`}
-          </ActionDetails>
-        </ItemCreatedTimelineItem>
+        <TimelineItem
+          key={key}
+          icon={<MdAccountCircle />}
+          summary={
+            <ItemCreatedSummary
+              link={`/users/edit/${action.user.id}`}
+              title={t('dashboard.newUser')}
+            />
+          }
+          date={action.date}
+          details={`${action.user.firstName ? action.user.firstName + ' ' : ''}${action.user.name}${
+            action.user.address?.city ? ', ' + action.user.address?.city : ''
+          }`}
+        />
       )
     case 'AuthorCreatedAction':
       return (
-        <ItemCreatedTimelineItem
+        <TimelineItem
+          key={key}
+          icon={<MdGroup />}
+          summary={
+            <ItemCreatedSummary
+              link={`/authors/edit/${action.author.id}`}
+              title={t('dashboard.newAuthor')}
+            />
+          }
           date={action.date}
-          link={`/authors/edit/${action.author.id}`}
-          title={t('dashboard.newAuthor')}>
-          <ActionDetails>
-            {action.author.name}
-            {action.author.jobTitle ? ', ' + action.author.jobTitle : ''}
-          </ActionDetails>
-        </ItemCreatedTimelineItem>
+          details={
+            <>
+              {action.author.name}
+              {action.author.jobTitle ? ', ' + action.author.jobTitle : ''}
+            </>
+          }
+        />
       )
     case 'PollStartedAction':
       return (
-        <ItemOpenedTimelineItem
+        <TimelineItem
+          key={key}
+          icon={<MdOutlineGridView />}
+          summary={
+            <ItemOpenedSummary
+              link={`/polls/edit/${action.poll.id}`}
+              title={t('dashboard.newPoll')}
+            />
+          }
           date={action.date}
-          link={`/polls/edit/${action.poll.id}`}
-          title={t('dashboard.newPoll')}>
-          <ActionDetails>{action.poll.question}</ActionDetails>
-        </ItemOpenedTimelineItem>
+          details={<ActionDetails>{action.poll.question}</ActionDetails>}
+        />
       )
     case 'EventCreatedAction':
       return (
-        <ItemCreatedTimelineItem
+        <TimelineItem
+          key={key}
+          icon={<MdEvent />}
+          summary={
+            <ItemCreatedSummary
+              link={`/events/edit/${action.event.id}`}
+              title={t('dashboard.newEvent')}
+            />
+          }
           date={action.date}
-          link={`/events/edit/${action.event.id}`}
-          title={t('dashboard.newEvent')}>
-          <>
-            <ActionDetails>{action.event.name}</ActionDetails>
-            <ActionDetails>{action.event.location}</ActionDetails>
-          </>
-        </ItemCreatedTimelineItem>
+          details={
+            <>
+              <ActionDetails>{action.event.name}</ActionDetails>
+              <ActionDetails>{action.event.location}</ActionDetails>
+            </>
+          }
+        />
       )
     default:
       return <></>
   }
 }
 
-const MapActionTypeToIcon = (actionType: Action['__typename']) => {
-  switch (actionType) {
-    case 'ArticleCreatedAction':
-      return <MdDescription />
-    case 'PageCreatedAction':
-      return <MdDashboard />
-    case 'CommentCreatedAction':
-      return <MdChat />
-    case 'SubscriptionCreatedAction':
-      return <MdAutorenew />
-    case 'UserCreatedAction':
-      return <MdAccountCircle />
-    case 'AuthorCreatedAction':
-      return <MdGroup />
-    case 'PollStartedAction':
-      return <MdOutlineGridView />
-    case 'EventCreatedAction':
-      return <MdEvent />
-    default:
-      return <MdDescription />
-  }
+type TimelineItemCustomProps = {
+  key: number
+  icon: JSX.Element
+  summary: ReactNode
+  date: string
+  details: ReactNode
 }
 
-function ItemCreatedTimelineItem(props: {
-  date: string
-  link: string
-  title: string
-  children: ReactNode
-}) {
-  const {date, children, title, link} = props
-  const {t} = useTranslation()
-
+function TimelineItem({key, icon, summary, date, details}: TimelineItemCustomProps) {
   return (
-    <Trans i18nKey={t('dashboard.itemCreated')} values={title}>
+    <TimelineItemStyled
+      key={key}
+      dot={
+        <TimelineIcon size="sm" circle>
+          {icon}
+        </TimelineIcon>
+      }>
+      <TimelineItemDetails>
+        {summary}
+        <p>{RelativeTimeToNow(date)}</p>
+        <ActionDetails>{details}</ActionDetails>
+      </TimelineItemDetails>
+    </TimelineItemStyled>
+  )
+}
+
+function ItemCreatedSummary(props: {title: string; link: string}) {
+  const {title, link} = props
+  return (
+    <Trans i18nKey={'dashboard.itemCreated'} values={{title}}>
       New <Link to={link}>{`${title}`}</Link> has been created
-      <p>{RelativeTimeToNow(date)}</p>
-      {children}
     </Trans>
   )
 }
 
-function ItemOpenedTimelineItem(props: {
-  date: string
-  link: string
-  title: string
-  children: ReactNode
-}) {
-  const {date, children, title, link} = props
-  const {t} = useTranslation()
-
+function ItemOpenedSummary(props: {title: string; link: string}) {
+  const {title, link} = props
   return (
-    <Trans i18nKey={t('dashboard.itemOpened')} values={title}>
+    <Trans i18nKey={'dashboard.itemOpened'} values={{title}}>
       New <Link to={link}>{`${title}`}</Link> opened
-      <p>{RelativeTimeToNow(date)}</p>
-      {children}
     </Trans>
   )
 }

@@ -2692,7 +2692,7 @@ export type OverriddenRating = {
 export type RecentActionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RecentActionsQuery = { __typename?: 'Query', actions: Array<{ __typename: 'ArticleCreatedAction', date: string, article: { __typename?: 'Article', id: string, createdAt: string, latest: { __typename?: 'ArticleRevision', title?: string | null, url: string } } } | { __typename: 'AuthorCreatedAction', date: string, author: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } } | { __typename: 'CommentCreatedAction', date: string, comment: { __typename?: 'Comment', id: string, guestUsername?: string | null, user?: { __typename?: 'User', name: string } | null, revisions: Array<{ __typename?: 'CommentRevision', title?: string | null, text?: Node[] | null }> } } | { __typename: 'EventCreatedAction', date: string, event: { __typename?: 'Event', id: string, name: string, location?: string | null } } | { __typename: 'PageCreatedAction', date: string, page: { __typename?: 'Page', id: string, createdAt: string, latest: { __typename?: 'PageRevision', title?: string | null, socialMediaTitle?: string | null, url: string } } } | { __typename: 'PollStartedAction', date: string, poll: { __typename?: 'Poll', id: string, question?: string | null } } | { __typename: 'SubscriptionCreatedAction', date: string, subscription: { __typename?: 'Subscription', id: string, user?: { __typename?: 'User', email: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } } | { __typename: 'UserCreatedAction', date: string, user: { __typename?: 'User', firstName?: string | null, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } }> };
+export type RecentActionsQuery = { __typename?: 'Query', actions: Array<{ __typename: 'ArticleCreatedAction', date: string, article: { __typename?: 'Article', id: string, createdAt: string, latest: { __typename?: 'ArticleRevision', title?: string | null, url: string } } } | { __typename: 'AuthorCreatedAction', date: string, author: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } } | { __typename: 'CommentCreatedAction', date: string, comment: { __typename?: 'Comment', id: string, guestUsername?: string | null, user?: { __typename?: 'User', name: string } | null, revisions: Array<{ __typename?: 'CommentRevision', title?: string | null, text?: Node[] | null }> } } | { __typename: 'EventCreatedAction', date: string, event: { __typename?: 'Event', id: string, name: string, location?: string | null } } | { __typename: 'PageCreatedAction', date: string, page: { __typename?: 'Page', id: string, createdAt: string, latest: { __typename?: 'PageRevision', title?: string | null, socialMediaTitle?: string | null, url: string } } } | { __typename: 'PollStartedAction', date: string, poll: { __typename?: 'Poll', id: string, question?: string | null } } | { __typename: 'SubscriptionCreatedAction', date: string, subscription: { __typename?: 'Subscription', id: string, user?: { __typename?: 'User', email: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } } | { __typename: 'UserCreatedAction', date: string, user: { __typename?: 'User', id: string, firstName?: string | null, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } }> };
 
 type FullAction_ArticleCreatedAction_Fragment = { __typename: 'ArticleCreatedAction', date: string, article: { __typename?: 'Article', id: string, createdAt: string, latest: { __typename?: 'ArticleRevision', title?: string | null, url: string } } };
 
@@ -2708,7 +2708,7 @@ type FullAction_PollStartedAction_Fragment = { __typename: 'PollStartedAction', 
 
 type FullAction_SubscriptionCreatedAction_Fragment = { __typename: 'SubscriptionCreatedAction', date: string, subscription: { __typename?: 'Subscription', id: string, user?: { __typename?: 'User', email: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } };
 
-type FullAction_UserCreatedAction_Fragment = { __typename: 'UserCreatedAction', date: string, user: { __typename?: 'User', firstName?: string | null, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } };
+type FullAction_UserCreatedAction_Fragment = { __typename: 'UserCreatedAction', date: string, user: { __typename?: 'User', id: string, firstName?: string | null, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } };
 
 export type FullActionFragment = FullAction_ArticleCreatedAction_Fragment | FullAction_AuthorCreatedAction_Fragment | FullAction_CommentCreatedAction_Fragment | FullAction_EventCreatedAction_Fragment | FullAction_PageCreatedAction_Fragment | FullAction_PollStartedAction_Fragment | FullAction_SubscriptionCreatedAction_Fragment | FullAction_UserCreatedAction_Fragment;
 
@@ -3826,6 +3826,7 @@ export const FullActionFragmentDoc = gql`
   ... on UserCreatedAction {
     date
     user {
+      id
       firstName
       name
       address {

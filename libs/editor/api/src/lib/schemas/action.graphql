@@ -75,6 +75,7 @@ fragment FullAction on Action {
     ... on UserCreatedAction {
         date
         user {
+            id
             firstName
             name
             address {
