@@ -13,18 +13,18 @@ import {GraphQLEvent} from './event/event'
 const actionFields = {
   date: {type: GraphQLNonNull(GraphQLDateTime)}
 }
+
 const GraphQLArticleCreatedAction = new GraphQLObjectType<Action>({
   name: 'ArticleCreatedAction',
   fields: {
-    date: {type: GraphQLNonNull(GraphQLDateTime)},
+    ...actionFields,
     article: {
       type: GraphQLNonNull(GraphQLArticle),
       async resolve({id}, args, {loaders}) {
         return await loaders.articles.load(id)
       }
     }
-  },
-  interfaces: () => []
+  }
 })
 
 const GraphQLPageCreatedAction = new GraphQLObjectType({
@@ -92,7 +92,7 @@ const GraphQLAuthorCreatedAction = new GraphQLObjectType({
   }
 })
 
-const GraphQLUserCraetedAction = new GraphQLObjectType({
+const GraphQLUserCreatedAction = new GraphQLObjectType({
   name: 'UserCreatedAction',
   fields: {
     ...actionFields,
@@ -127,7 +127,7 @@ export const GraphQLAction = new GraphQLUnionType({
     GraphQLPollStartedAction,
     GraphQLSubscriptionCreatedAction,
     GraphQLAuthorCreatedAction,
-    GraphQLUserCraetedAction,
+    GraphQLUserCreatedAction,
     GraphQLEventCreatedAction
   ],
   resolveType(value: Action) {
@@ -145,7 +145,7 @@ export const GraphQLAction = new GraphQLUnionType({
       case ActionType.AuthorCreated:
         return GraphQLAuthorCreatedAction
       case ActionType.UserCreated:
-        return GraphQLUserCraetedAction
+        return GraphQLUserCreatedAction
       case ActionType.EventCreated:
         return GraphQLEventCreatedAction
     }
