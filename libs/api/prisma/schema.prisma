@@ -1066,3 +1066,16 @@ model MailTemplate {
 
   @@map("mail_templates")
 }
+
+model PeriodicJob {
+	id                          Int @id @default(autoincrement())
+	createdAt                   DateTime @default(now())
+    modifiedAt                  DateTime @updatedAt
+
+    date                        DateTime @db.Date @unique
+    executionTime               DateTime?
+    successfullyFinished        DateTime?
+    finishedWithError           DateTime?
+
+  @@map("periodic_jobs")
+}
