@@ -70,6 +70,7 @@ import {
   GraphQLEventFilter,
   GraphQLEventSort
 } from './event/event'
+import {getNavigations} from './navigation/navigation.public-queries'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -106,6 +107,12 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
         return id ? loaders.navigationByID.load(id) : loaders.navigationByKey.load(key)
       }
+    },
+
+    navigations: {
+      type: GraphQLList(GraphQLNonNull(GraphQLPublicNavigation)),
+      description: 'This query returns all navigations.',
+      resolve: (root, _, {prisma: {navigation}}) => getNavigations(navigation)
     },
 
     // Author

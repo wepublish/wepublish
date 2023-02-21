@@ -5,6 +5,7 @@ import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
 import {DashboardModule} from '@wepublish/membership/api'
 import {AuthenticationModule} from '@wepublish/authentication/api'
 import {PermissionModule} from '@wepublish/permissions/api'
+import {SettingModule} from '@wepublish/api'
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import {PermissionModule} from '@wepublish/permissions/api'
     ApiModule,
     DashboardModule,
     AuthenticationModule,
-    PermissionModule
+    PermissionModule,
+    SettingModule
   ],
   controllers: [],
   providers: []

@@ -12,7 +12,7 @@ import {
 } from 'graphql'
 
 import {Context} from '../context'
-import {Setting, SettingName} from '../db/setting'
+import {Setting, SettingName} from '@wepublish/settings/api'
 
 export const GraphQLSettingValueType = new GraphQLScalarType({
   name: 'Value',

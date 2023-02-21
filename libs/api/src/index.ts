@@ -34,7 +34,7 @@ export * from './lib/db/invoice'
 export * from './lib/db/payment'
 export * from './lib/db/mailLog'
 export * from './lib/db/subscription'
-export * from './lib/db/setting'
+export * from '@wepublish/settings/api'
 
 export * from './lib/media/mediaAdapter'
 export * from './lib/media/karmaMediaAdapter'
