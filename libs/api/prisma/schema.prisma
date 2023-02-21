@@ -1076,6 +1076,8 @@ model PeriodicJob {
     executionTime               DateTime?
     successfullyFinished        DateTime?
     finishedWithError           DateTime?
+    tries                       Int @default(0)
+    error                       String?
 
   @@map("periodic_jobs")
 }

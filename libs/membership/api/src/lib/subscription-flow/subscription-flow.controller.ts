@@ -13,7 +13,7 @@ import {
   subscriptionFlowRequiredEvents
 } from './subscription-flow.type'
 import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
-import {PeriodicJob} from '../periodic-job/periodic-job'
+import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
 // import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subscription-event-dictionary'
 const SUBSCRIPTION_EVEN_MAX_DAYS_BEFORE = -25
 const SUBSCRIPTION_EVEN_MAX_DAYS_AFTER = 90
@@ -40,7 +40,7 @@ export class SubscriptionFlowController {
         })
     )
      **/
-    const pj = new PeriodicJob(this.prismaService)
+    const pj = new PeriodicJobController(this.prismaService)
     await pj.execute()
 
     return await this.prismaService.subscriptionFlow.findMany({
