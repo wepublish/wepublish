@@ -15,8 +15,11 @@ export class SubscriptionFlowResolver {
 
   // Subscription Flow
   @Query(returns => [SubscriptionFlowModel], {name: 'SubscriptionFlows'})
-  async subscriptionFlow(@Args('defaultFlowOnly') defaultFlowOnly: boolean) {
-    return await this.controller.getFlow(defaultFlowOnly)
+  async subscriptionFlow(
+    @Args('defaultFlowOnly') defaultFlowOnly: boolean,
+    @Args('memberPlanId', {nullable: true}) memberPlanId?: string
+  ) {
+    return await this.controller.getFlow(defaultFlowOnly, memberPlanId)
   }
 
   @Mutation(returns => [SubscriptionFlowModel], {name: 'createSubscriptionFlow'})

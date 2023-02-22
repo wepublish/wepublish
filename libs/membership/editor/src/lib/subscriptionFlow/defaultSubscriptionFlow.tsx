@@ -4,9 +4,15 @@ import {TableContainer, Typography} from '@mui/material'
 import {MdTune} from 'react-icons/all'
 import {useTranslation} from 'react-i18next'
 import SubscriptionFlows from './subscriptionFlows'
+import {useParams} from 'react-router-dom'
 
 export default function () {
   const {t} = useTranslation()
+
+  const params = useParams()
+  const {id: memberPlanId} = params
+
+  const defaultFlowOnly = memberPlanId === 'default'
 
   return (
     <>
@@ -23,7 +29,7 @@ export default function () {
       </ListViewContainer>
 
       <TableContainer style={{marginTop: '16px'}}>
-        <SubscriptionFlows defaultSubscriptionMode />
+        <SubscriptionFlows defaultFlowOnly={defaultFlowOnly} memberPlanId={memberPlanId} />
       </TableContainer>
     </>
   )

@@ -80,10 +80,11 @@ export const showErrors = (error: ApolloError): void => {
 }
 
 interface SubscriptionFlowsProps {
-  defaultSubscriptionMode: boolean
+  defaultFlowOnly: boolean
+  memberPlanId?: string
 }
 
-export default function SubscriptionFlows({defaultSubscriptionMode}: SubscriptionFlowsProps) {
+export default function SubscriptionFlows({defaultFlowOnly, memberPlanId}: SubscriptionFlowsProps) {
   const {t} = useTranslation()
   const [subscriptionFlows, setSubscriptionFlows] = useState<SubscriptionFlowFragment[]>([])
 
@@ -103,7 +104,8 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
   // get subscriptions flows
   const {loading: loadingSubscriptionFlow} = useSubscriptionFlowsQuery({
     variables: {
-      defaultFlowOnly: false
+      defaultFlowOnly,
+      memberPlanId
     },
     client,
     onError: showErrors,

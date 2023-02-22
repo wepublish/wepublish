@@ -158,6 +158,7 @@ export type Query = {
 
 export type QuerySubscriptionFlowsArgs = {
   defaultFlowOnly: Scalars['Boolean'];
+  memberPlanId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -278,6 +279,7 @@ export type FullMailProviderFragment = { __typename?: 'MailProviderModel', name:
 
 export type SubscriptionFlowsQueryVariables = Exact<{
   defaultFlowOnly: Scalars['Boolean'];
+  memberPlanId?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -472,8 +474,11 @@ export type SynchronizeMailTemplatesMutationHookResult = ReturnType<typeof useSy
 export type SynchronizeMailTemplatesMutationResult = Apollo.MutationResult<SynchronizeMailTemplatesMutation>;
 export type SynchronizeMailTemplatesMutationOptions = Apollo.BaseMutationOptions<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>;
 export const SubscriptionFlowsDocument = gql`
-    query SubscriptionFlows($defaultFlowOnly: Boolean!) {
-  SubscriptionFlows(defaultFlowOnly: $defaultFlowOnly) {
+    query SubscriptionFlows($defaultFlowOnly: Boolean!, $memberPlanId: String) {
+  SubscriptionFlows(
+    defaultFlowOnly: $defaultFlowOnly
+    memberPlanId: $memberPlanId
+  ) {
     ...SubscriptionFlow
   }
 }
@@ -492,6 +497,7 @@ export const SubscriptionFlowsDocument = gql`
  * const { data, loading, error } = useSubscriptionFlowsQuery({
  *   variables: {
  *      defaultFlowOnly: // value for 'defaultFlowOnly'
+ *      memberPlanId: // value for 'memberPlanId'
  *   },
  * });
  */
