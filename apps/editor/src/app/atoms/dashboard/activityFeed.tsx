@@ -38,7 +38,7 @@ const TimelineRichTextWrapper = styled.div`
   margin-left: 30px;
 `
 
-const ActionDetails = styled.p`
+const ActionDetails = styled.div`
   font-style: italic;
   padding-top: 2px;
   color: gray;
@@ -113,7 +113,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           icon={<MdDescription />}
           summary={
             <TranslationWithLink
-              translationKey={'dashboard.newArticle'}
+              translationKey={t('dashboard.newArticle')}
               link={`/articles/edit/${action.article.id}`}
             />
           }
@@ -128,7 +128,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           icon={<MdDashboard />}
           summary={
             <TranslationWithLink
-              translationKey={'dashboard.newPage'}
+              translationKey={t('dashboard.newPage')}
               link={`/pages/edit/${action.page.id}`}
             />
           }
@@ -147,20 +147,18 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           icon={<MdChat />}
           summary={
             <TranslationWithLink
-              translationKey={'dashboard.newComment'}
+              translationKey={t('dashboard.newComment')}
               link={`/comments/edit/${action.comment.id}`}
             />
           }
           date={action.date}
           details={
             <>
-              <ActionDetails>
-                {`${action.comment.user?.name ?? action.comment.guestUsername ?? ''} ${
-                  action.comment.revisions[action.comment.revisions.length - 1]?.title
-                    ? ': ' + action.comment.revisions[action.comment.revisions?.length - 1]?.title
-                    : ''
-                }`}
-              </ActionDetails>
+              {`${action.comment.user?.name ?? action.comment.guestUsername ?? ''} ${
+                action.comment.revisions[action.comment.revisions.length - 1]?.title
+                  ? ': ' + action.comment.revisions[action.comment.revisions?.length - 1]?.title
+                  : ''
+              }`}
               <TimelineRichTextWrapper>
                 <RichTextBlock
                   displayOnly
@@ -183,7 +181,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           icon={<MdAutorenew />}
           summary={
             <TranslationWithLink
-              translationKey={'dashboard.newSubscription'}
+              translationKey={t('dashboard.newSubscription')}
               link={`/subscriptions/edit/${action.subscription.id}`}
             />
           }
@@ -202,7 +200,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           icon={<MdAccountCircle />}
           summary={
             <TranslationWithLink
-              translationKey={'dashboard.newUser'}
+              translationKey={t('dashboard.newUser')}
               link={`/users/edit/${action.user.id}`}
             />
           }
@@ -219,7 +217,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           icon={<MdGroup />}
           summary={
             <TranslationWithLink
-              translationKey={'dashboard.newAuthor'}
+              translationKey={t('dashboard.newAuthor')}
               link={`/authors/edit/${action.author.id}`}
             />
           }
@@ -244,7 +242,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
             />
           }
           date={action.date}
-          details={<ActionDetails>{action.poll.question}</ActionDetails>}
+          details={action.poll.question}
         />
       )
     case 'EventCreatedAction':
@@ -254,15 +252,15 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           icon={<MdEvent />}
           summary={
             <TranslationWithLink
-              translationKey={'dashboard.newEvent'}
+              translationKey={t('dashboard.newEvent')}
               link={`/events/edit/${action.event.id}`}
             />
           }
           date={action.date}
           details={
             <>
-              <ActionDetails>{action.event.name}</ActionDetails>
-              <ActionDetails>{action.event.location}</ActionDetails>
+              {action.event.name}
+              {action.event.location}
             </>
           }
         />
@@ -300,7 +298,6 @@ function TimelineItem({key, icon, summary, date, details}: TimelineItemCustomPro
 
 function TranslationWithLink(props: {link: string; translationKey: string}) {
   const {link, translationKey} = props
-  const {t} = useTranslation()
 
-  return <Trans i18nKey={translationKey} t={t} components={[<Link to={link} />]} />
+  return <Trans i18nKey={translationKey} components={[<Link to={link} />]} />
 }
