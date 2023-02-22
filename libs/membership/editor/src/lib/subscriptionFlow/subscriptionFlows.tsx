@@ -1,6 +1,6 @@
 import React, {createContext, useMemo, useState} from 'react'
 import {Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material'
-import {Button, IconButton, Loader, Message, toaster} from 'rsuite'
+import {Button, CheckPicker, IconButton, Loader, Message, toaster} from 'rsuite'
 import {MdDelete} from 'react-icons/all'
 import SubscriptionFlow from './subscriptionFlow'
 import {
@@ -13,7 +13,10 @@ import {
   useDeleteSubscriptionFlowMutation,
   useUpdateSubscriptionIntervalMutation,
   useCreateSubscriptionIntervalMutation,
-  useDeleteSubscriptionIntervalMutation
+  useDeleteSubscriptionIntervalMutation,
+  PaymentPeriodicity,
+  useUpdateSubscriptionFlowMutation,
+  SubscriptionFlowModelUpdateInput
 } from '@wepublish/editor/api-v2'
 import {useTranslation} from 'react-i18next'
 import {ApolloClient, ApolloError, NormalizedCacheObject} from '@apollo/client'
@@ -131,6 +134,30 @@ export default function SubscriptionFlows({defaultFlowOnly, memberPlanId}: Subsc
     onError: showErrors
   })
 
+  const [updateSubscriptionFlow] = useUpdateSubscriptionFlowMutation({
+    client,
+    onError: showErrors
+  })
+
+  const updateFlow = async function (
+    subscriptionFlow: SubscriptionFlowFragment,
+    payload: Partial<SubscriptionFlowModelUpdateInput>
+  ) {
+    const mutation: SubscriptionFlowModelUpdateInput = {
+      id: subscriptionFlow.id,
+      paymentMethodIds:
+        payload.paymentMethodIds || subscriptionFlow.paymentMethods.map(pm => pm.id),
+      periodicities: payload.periodicities || subscriptionFlow.periodicities,
+      autoRenewal: payload.autoRenewal || subscriptionFlow.autoRenewal
+    }
+
+    await updateSubscriptionFlow({
+      variables: {
+        subscriptionFlow: mutation
+      }
+    })
+  }
+
   const [deleteSubscriptionFlow] = useDeleteSubscriptionFlowMutation({
     client,
     onError: showErrors
@@ -212,8 +239,27 @@ export default function SubscriptionFlows({defaultFlowOnly, memberPlanId}: Subsc
                 <TableCell size="small">
                   {subscriptionFlow.paymentMethods.map(m => m.name).join(', ')}
                 </TableCell>
-                <TableCell size="small">{subscriptionFlow.periodicities.join(', ')}</TableCell>
-                <TableCell size="small">{subscriptionFlow.autoRenewal.join(', ')}</TableCell>
+                <TableCell size="small">
+                  <CheckPicker
+                    data={Object.values(PaymentPeriodicity).map(item => ({
+                      label: item,
+                      value: item
+                    }))}
+                    countable={false}
+                    cleanable={false}
+                    defaultValue={subscriptionFlow.periodicities}
+                    onChange={v => updateFlow(subscriptionFlow, {periodicities: v})}
+                  />
+                </TableCell>
+                <TableCell size="small">
+                  <CheckPicker
+                    data={[true, false].map(item => ({label: item.toString(), value: item}))}
+                    countable={false}
+                    cleanable={false}
+                    defaultValue={subscriptionFlow.autoRenewal}
+                    onChange={v => updateFlow(subscriptionFlow, {autoRenewal: v})}
+                  />
+                </TableCell>
 
                 {/* user actions */}
                 {userActionEvents.map(event => (
