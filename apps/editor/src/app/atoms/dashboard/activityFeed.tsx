@@ -63,7 +63,6 @@ export function ActivityFeed() {
   const [actions, setActions] = useState<Action[] | undefined>([])
 
   useEffect(() => {
-    console.log('data', data)
     if (data?.actions) {
       const {actions} = data
       setActions(actions)
@@ -97,12 +96,12 @@ function RelativeTimeToNow(time: string) {
   })
 }
 
-export type Props = {
+export type TimelineItemContainerProps = {
   key: number
   action: Action
 }
 
-function TimelineItemContainer(props: Props) {
+function TimelineItemContainer(props: TimelineItemContainerProps) {
   const {action, key} = props
   const {t} = useTranslation()
 
@@ -113,9 +112,9 @@ function TimelineItemContainer(props: Props) {
           key={key}
           icon={<MdDescription />}
           summary={
-            <ItemCreatedSummary
+            <TranslationWithLink
+              translationKey={'dashboard.newArticle'}
               link={`/articles/edit/${action.article.id}`}
-              title={t('dashboard.newArticle')}
             />
           }
           date={action.date}
@@ -128,9 +127,9 @@ function TimelineItemContainer(props: Props) {
           key={key}
           icon={<MdDashboard />}
           summary={
-            <ItemCreatedSummary
+            <TranslationWithLink
+              translationKey={'dashboard.newPage'}
               link={`/pages/edit/${action.page.id}`}
-              title={t('dashboard.newPage')}
             />
           }
           date={action.date}
@@ -147,9 +146,9 @@ function TimelineItemContainer(props: Props) {
           key={key}
           icon={<MdChat />}
           summary={
-            <ItemCreatedSummary
+            <TranslationWithLink
+              translationKey={'dashboard.newComment'}
               link={`/comments/edit/${action.comment.id}`}
-              title={t('dashboard.newComment')}
             />
           }
           date={action.date}
@@ -183,9 +182,9 @@ function TimelineItemContainer(props: Props) {
           key={key}
           icon={<MdAutorenew />}
           summary={
-            <ItemCreatedSummary
+            <TranslationWithLink
+              translationKey={'dashboard.newSubscription'}
               link={`/subscriptions/edit/${action.subscription.id}`}
-              title={t('dashboard.newSubscription')}
             />
           }
           date={action.date}
@@ -202,9 +201,9 @@ function TimelineItemContainer(props: Props) {
           key={key}
           icon={<MdAccountCircle />}
           summary={
-            <ItemCreatedSummary
+            <TranslationWithLink
+              translationKey={'dashboard.newUser'}
               link={`/users/edit/${action.user.id}`}
-              title={t('dashboard.newUser')}
             />
           }
           date={action.date}
@@ -219,9 +218,9 @@ function TimelineItemContainer(props: Props) {
           key={key}
           icon={<MdGroup />}
           summary={
-            <ItemCreatedSummary
+            <TranslationWithLink
+              translationKey={'dashboard.newAuthor'}
               link={`/authors/edit/${action.author.id}`}
-              title={t('dashboard.newAuthor')}
             />
           }
           date={action.date}
@@ -239,9 +238,9 @@ function TimelineItemContainer(props: Props) {
           key={key}
           icon={<MdOutlineGridView />}
           summary={
-            <ItemOpenedSummary
+            <TranslationWithLink
               link={`/polls/edit/${action.poll.id}`}
-              title={t('dashboard.newPoll')}
+              translationKey={t('dashboard.newPoll')}
             />
           }
           date={action.date}
@@ -254,9 +253,9 @@ function TimelineItemContainer(props: Props) {
           key={key}
           icon={<MdEvent />}
           summary={
-            <ItemCreatedSummary
+            <TranslationWithLink
+              translationKey={'dashboard.newEvent'}
               link={`/events/edit/${action.event.id}`}
-              title={t('dashboard.newEvent')}
             />
           }
           date={action.date}
@@ -299,20 +298,9 @@ function TimelineItem({key, icon, summary, date, details}: TimelineItemCustomPro
   )
 }
 
-function ItemCreatedSummary(props: {title: string; link: string}) {
-  const {title, link} = props
-  return (
-    <Trans i18nKey={'dashboard.itemCreated'} values={{title}}>
-      New <Link to={link}>{`${title}`}</Link> has been created
-    </Trans>
-  )
-}
+function TranslationWithLink(props: {link: string; translationKey: string}) {
+  const {link, translationKey} = props
+  const {t} = useTranslation()
 
-function ItemOpenedSummary(props: {title: string; link: string}) {
-  const {title, link} = props
-  return (
-    <Trans i18nKey={'dashboard.itemOpened'} values={{title}}>
-      New <Link to={link}>{`${title}`}</Link> opened
-    </Trans>
-  )
+  return <Trans i18nKey={translationKey} t={t} components={[<Link to={link} />]} />
 }

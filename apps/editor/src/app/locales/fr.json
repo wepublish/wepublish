@@ -1339,17 +1339,17 @@
       "event": "Événement",
       "summary": "Résumé",
       "noData": "Pas de données actuelles sur les abonnés",
-      "newArticle": "Nouvel article créé",
-      "newPage": "Nouvelle page créée",
-      "newComment": "Nouveau commentaire ajouté",
-      "newPoll": "Nouveau sondage créé",
-      "newSubscription": "Nouvel abonnement",
-      "newAuthor": "Nouvel auteur ajouté",
-      "newEvent": "Nouvel event ajouté",
-      "newAction": "Nouvel action",
-      "newUser": "Nouvel utilisateur ajouté",
+      "newArticle": "Nouvel <0>article</0> créé",
+      "newPage": "Nouvelle <0>page</0> créée",
+      "newComment": "Nouveau <0>commentaire</0> ajouté",
+      "newPoll": "Nouveau <0>sondage</0> créé",
+      "newSubscription": "Nouvel <0>abonnement</0>",
+      "newAuthor": "Nouvel <0>auteur</0> ajouté",
+      "newEvent": "Nouvel <0>event</0> ajouté",
+      "newUser": "Nouvel <0>utilisateur</0> ajouté",
       "createdBy": " de {{creator}}",
-      "user": "Utilisateur"
+      "user": "Utilisateur",
+      "memberPlan": "Plan membre: {{plan}}"
     }
   }
 }

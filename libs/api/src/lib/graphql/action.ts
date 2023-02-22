@@ -27,7 +27,7 @@ const GraphQLArticleCreatedAction = new GraphQLObjectType<Action>({
   }
 })
 
-const GraphQLPageCreatedAction = new GraphQLObjectType({
+const GraphQLPageCreatedAction = new GraphQLObjectType<Action>({
   name: 'PageCreatedAction',
   fields: {
     ...actionFields,
@@ -40,7 +40,7 @@ const GraphQLPageCreatedAction = new GraphQLObjectType({
   }
 })
 
-const GraphQLCommentCreatedAction = new GraphQLObjectType({
+const GraphQLCommentCreatedAction = new GraphQLObjectType<Action>({
   name: 'CommentCreatedAction',
   fields: {
     ...actionFields,
@@ -53,7 +53,7 @@ const GraphQLCommentCreatedAction = new GraphQLObjectType({
   }
 })
 
-const GraphQLPollStartedAction = new GraphQLObjectType({
+const GraphQLPollStartedAction = new GraphQLObjectType<Action>({
   name: 'PollStartedAction',
   fields: {
     ...actionFields,
@@ -66,7 +66,7 @@ const GraphQLPollStartedAction = new GraphQLObjectType({
   }
 })
 
-const GraphQLSubscriptionCreatedAction = new GraphQLObjectType({
+const GraphQLSubscriptionCreatedAction = new GraphQLObjectType<Action>({
   name: 'SubscriptionCreatedAction',
   fields: {
     ...actionFields,
@@ -79,7 +79,7 @@ const GraphQLSubscriptionCreatedAction = new GraphQLObjectType({
   }
 })
 
-const GraphQLAuthorCreatedAction = new GraphQLObjectType({
+const GraphQLAuthorCreatedAction = new GraphQLObjectType<Action>({
   name: 'AuthorCreatedAction',
   fields: {
     ...actionFields,
@@ -92,7 +92,7 @@ const GraphQLAuthorCreatedAction = new GraphQLObjectType({
   }
 })
 
-const GraphQLUserCreatedAction = new GraphQLObjectType({
+const GraphQLUserCreatedAction = new GraphQLObjectType<Action>({
   name: 'UserCreatedAction',
   fields: {
     ...actionFields,
@@ -105,7 +105,7 @@ const GraphQLUserCreatedAction = new GraphQLObjectType({
   }
 })
 
-const GraphQLEventCreatedAction = new GraphQLObjectType({
+const GraphQLEventCreatedAction = new GraphQLObjectType<Action>({
   name: 'EventCreatedAction',
   fields: {
     ...actionFields,

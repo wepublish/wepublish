@@ -1344,17 +1344,17 @@
       "event": "Event",
       "summary": "Zusammenfassung",
       "noData": "Keine aktuellen Abo-Daten",
-      "newArticle": "Neuer Artikel erstellt",
-      "newPage": "Neue Seite erstellt",
-      "newComment": "Neuer Kommentar",
-      "newPoll": "Neue Umfrage",
-      "newSubscription": "Neues Abo",
-      "newAuthor": "Neuer Author erstellt",
-      "newUser": "Neuer User erstellt",
-      "newEvent": "Neues event",
-      "newAction": "Neues action",
+      "newArticle": "Neuer <0>Artikel</0> erstellt",
+      "newPage": "Neue <0>Seite</0> erstellt",
+      "newComment": "Neuer <0>Kommentar</0>",
+      "newPoll": "Neue <0>Umfrage</0>",
+      "newSubscription": "Neues <0>Abo</0>",
+      "newAuthor": "Neuer <0>Author</0> erstellt",
+      "newUser": "Neuer <0>User</0> erstellt",
+      "newEvent": "Neues <0>event</0>",
       "createdBy": " von {{creator}}",
-      "user": "Benutzer"
+      "user": "Benutzer",
+      "memberPlan": "Memberplan: {{plan}}"
     }
   }
 }
