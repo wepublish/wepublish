@@ -14,7 +14,10 @@ export const getAdminPeerArticles = async (
   peerNameFilter: string,
   stringifiedCursors: string,
   context: Context,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
+  take: number,
+  skip: number,
+  first: number
 ): Promise<ConnectionResult<PeerArticle>> => {
   const {authenticate, loaders, prisma} = context
   const {roles} = authenticate()
@@ -36,9 +39,13 @@ export const getAdminPeerArticles = async (
     .filter(({isDisabled}) => !isDisabled)
 
   for (const peer of peers) {
-    // Prime loader cache so we don't need to refetch inside `delegateToPeerSchema`.
+    // Prime loader cache we don't need to refetch inside `delegateToPeerSchema`.
     loaders.peer.prime(peer.id, peer)
   }
+
+  // If the peers count is not a multiple of the object requested return more than requested (backwards compatible)
+  const articleToTakeFromEachPeer = Math.ceil(first || take / peers.length)
+  const articleToSkipFromEachPeer = Math.ceil(skip / peers.length)
 
   const articles = await Promise.all(
     peers.map(peer => {
@@ -52,13 +59,16 @@ export const getAdminPeerArticles = async (
           fieldName: 'articles',
           args: {
             cursor: cursors ? cursors[peer.id] : undefined,
-            take: 50,
+            take: articleToTakeFromEachPeer,
+            // Skip isn't backwards compatible since the in pre primsa it means skip pages and in prisma skip object.
+            skip: articleToSkipFromEachPeer,
             filter: {
               published: true
             },
             // needed for versions before prisma
             after: cursors ? base64Encode(cursors[peer.id]) : undefined,
-            first: 50
+            // Backwards compatability for older instances (non prisma)
+            first: articleToTakeFromEachPeer
           },
           transforms: [
             new ExtractField({

@@ -4,7 +4,7 @@ exports[`DashboardSubscriptionResolver activeSubscribers 1`] = `
 Array [
   Object {
     "endsAt": null,
-    "memberPlan": "foo",
+    "memberPlan": "Foo",
     "monthlyAmount": 500,
     "paymentPeriodicity": "monthly",
     "reasonForDeactivation": null,
@@ -13,7 +13,7 @@ Array [
   },
   Object {
     "endsAt": "2023-02-01T00:00:00.000Z",
-    "memberPlan": "foo",
+    "memberPlan": "Foo",
     "monthlyAmount": 50,
     "paymentPeriodicity": "monthly",
     "reasonForDeactivation": null,
@@ -27,7 +27,7 @@ exports[`DashboardSubscriptionResolver newDeactivations 1`] = `
 Array [
   Object {
     "endsAt": "2023-02-03T00:00:00.000Z",
-    "memberPlan": "foo",
+    "memberPlan": "Foo",
     "monthlyAmount": 50,
     "paymentPeriodicity": "monthly",
     "reasonForDeactivation": "invoiceNotPaid",
@@ -49,7 +49,7 @@ Array [
   },
   Object {
     "endsAt": "2023-02-01T00:00:00.000Z",
-    "memberPlan": "foo",
+    "memberPlan": "Foo",
     "monthlyAmount": 50,
     "paymentPeriodicity": "monthly",
     "reasonForDeactivation": null,
@@ -62,7 +62,7 @@ Array [
 exports[`DashboardSubscriptionResolver renewingSubscribers 1`] = `
 Array [
   Object {
-    "memberPlan": "foo",
+    "memberPlan": "Foo",
     "monthlyAmount": 50,
     "paymentPeriodicity": "monthly",
     "reasonForDeactivation": null,

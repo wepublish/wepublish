@@ -28,13 +28,12 @@ import {
 } from 'rsuite'
 
 import {CommentDeleteBtn} from '../../atoms/comment/commentDeleteBtn'
+import {CommentHistory} from '../../atoms/comment/commentHistory'
 import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {CommentUser} from '../../atoms/comment/commentUser'
 import {ModelTitle} from '../../atoms/modelTitle'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {SelectTags} from '../../atoms/tag/selectTags'
-import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../../blocks/types'
 
 const ColNoMargin = styled(RCol)`
   margin-top: 0px;
@@ -226,52 +225,20 @@ const CommentEditView = memo(() => {
       <Grid fluid>
         <Row gutter={30}>
           {/* comment content */}
-          <RCol xs={14}>
-            <Panel bordered>
-              <Row>
-                {/* comment title */}
-                <RCol xs={18}>
-                  <Form.ControlLabel>{t('commentEditView.title')}</Form.ControlLabel>
-                  <Form.Control
-                    name="commentTitle"
-                    value={revision?.title || ''}
-                    placeholder={t('commentEditView.title')}
-                    onChange={(title: string) =>
-                      setRevision(oldRevision => ({...oldRevision, title}))
-                    }
-                  />
-                </RCol>
-
-                {/* comment lead */}
-                <RCol xs={18}>
-                  <Form.ControlLabel>{t('commentEditView.lead')}</Form.ControlLabel>
-                  <Form.Control
-                    name="commentLead"
-                    value={revision?.lead || ''}
-                    placeholder={t('commentEditView.lead')}
-                    onChange={(lead: string) =>
-                      setRevision(oldRevision => ({...oldRevision, lead}))
-                    }
-                  />
-                </RCol>
-
-                {/* comment text */}
-                <Col xs={24}>
-                  <Form.ControlLabel>{t('commentEditView.comment')}</Form.ControlLabel>
-                  <Panel bordered>
-                    <RichTextBlock
-                      value={revision?.text || []}
-                      onChange={text =>
-                        setRevision(oldRevision => ({
-                          ...oldRevision,
-                          text: text as RichTextBlockValue
-                        }))
-                      }
-                    />
-                  </Panel>
-                </Col>
-              </Row>
-            </Panel>
+          <RCol
+            xs={14}
+            style={{maxHeight: 'calc(100vh - 80px - 60px - 15px)', overflowY: 'scroll'}}>
+            <RPanel bordered header={t('commentEditView.commentContextHeader')}>
+              {comment && (
+                <CommentHistory
+                  commentItemID={comment.itemID}
+                  commentItemType={comment.itemType}
+                  originComment={comment}
+                  revision={revision}
+                  setRevision={setRevision}
+                />
+              )}
+            </RPanel>
           </RCol>
 
           <RCol xs={10}>

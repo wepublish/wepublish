@@ -13,7 +13,6 @@ import {
   Avatar,
   Button,
   Drawer,
-  FlexboxGrid,
   IconButton as RIconButton,
   Input,
   InputGroup,
@@ -28,6 +27,16 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {AuthorEditPanel} from '../panel/authorEditPanel'
 import {
+  IconButton,
+  ListViewActions,
+  ListViewContainer,
+  ListViewFilterArea,
+  ListViewHeader,
+  PaddedCell,
+  Table,
+  TableWrapper
+} from '../ui/listView'
+import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
@@ -35,38 +44,10 @@ import {
 
 const {Column, HeaderCell, Cell} = RTable
 
-const IconButton = styled(RIconButton)`
-  margin-left: 5px;
-`
-
-const CellWithPadding = styled(Cell)`
-  .rs-table-cell-content {
-    padding: 6px 0;
-  }
-`
-
 const CellSmallPadding = styled(Cell)`
   .rs-table-cell-content {
     padding: 2px;
   }
-`
-
-const Table = styled(RTable)`
-  flex: 1;
-`
-
-const FlexColumn = styled.div`
-  display: flex;
-  flex-flow: column;
-  margin-top: 20px;
-`
-
-const FlexItemTextAlign = styled(FlexboxGrid.Item)`
-  text-align: right;
-`
-
-const FlexItemMarginTop = styled(FlexboxGrid.Item)`
-  margin-top: 20px;
 `
 
 function mapColumFieldToGraphQLField(columnField: string): AuthorSort | null {
@@ -149,32 +130,33 @@ function AuthorList() {
 
   return (
     <>
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
+      <ListViewContainer>
+        <ListViewHeader>
           <h2>{t('authors.overview.authors')}</h2>
-        </FlexboxGrid.Item>
+        </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_AUTHOR']}>
-          <FlexItemTextAlign colspan={8}>
+          <ListViewActions>
             <Link to="/authors/create">
               <RIconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('authors.overview.newAuthor')}
               </RIconButton>
             </Link>
-          </FlexItemTextAlign>
+          </ListViewActions>
         </PermissionControl>
-        <FlexItemMarginTop colspan={24}>
+
+        <ListViewFilterArea>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
           </InputGroup>
-        </FlexItemMarginTop>
-      </FlexboxGrid>
-      <FlexColumn>
+        </ListViewFilterArea>
+      </ListViewContainer>
+
+      <TableWrapper>
         <Table
-          minHeight={600}
-          autoHeight
+          fillHeight
           loading={isLoading}
           data={authors}
           sortColumn={sortField}
@@ -213,7 +195,7 @@ function AuthorList() {
           </Column>
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('authors.overview.action')}</HeaderCell>
-            <CellWithPadding>
+            <PaddedCell>
               {(rowData: RowDataType<FullAuthorFragment>) => (
                 <PermissionControl qualifyingPermissions={['CAN_DELETE_AUTHOR']}>
                   <IconButtonTooltip caption={t('delete')}>
@@ -229,7 +211,7 @@ function AuthorList() {
                   </IconButtonTooltip>
                 </PermissionControl>
               )}
-            </CellWithPadding>
+            </PaddedCell>
           </Column>
         </Table>
 
@@ -249,7 +231,7 @@ function AuthorList() {
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </FlexColumn>
+      </TableWrapper>
 
       <Drawer
         open={isEditModalOpen}

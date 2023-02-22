@@ -88,3 +88,16 @@ export type PageWithRevisions = PrismaPage & {
   pending: PageRevisionWithProperties | null
   published: PageRevisionWithProperties | null
 }
+
+export const pageWithRevisionsToPublicPage = ({
+  id,
+  published,
+  pending
+}: Omit<PageWithRevisions, 'draft'>): PublicPage => {
+  const returnValue = {...(published || pending!), id}
+
+  return {
+    ...returnValue,
+    blocks: returnValue.blocks as PageBlock[]
+  }
+}

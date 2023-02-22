@@ -63,6 +63,8 @@ import {GraphQLPublicSubscription} from './subscription'
 import {GraphQLPublicUser} from './user'
 import {GraphQLPublicComment, GraphQLPublicCommentSort} from './comment/comment'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
+import {queryPhrase} from './phrase/phrase.public-queries'
+import {GraphQLPublicPhrase} from './phrase/phrase'
 import {EventSort, getEvent, getEvents} from './event/event.queries'
 import {
   GraphQLEvent,
@@ -553,6 +555,20 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {prisma: {event}}) => getEvent(id, event)
+    },
+
+    // Phrase
+    // =======
+
+    phrase: {
+      type: GraphQLPublicPhrase,
+      description:
+        'This query performs a fulltext search on titles and blocks of articles/pages and returns all matching ones.',
+      args: {
+        query: {type: GraphQLNonNull(GraphQLString)}
+      },
+      resolve: (root, {query}, {prisma, loaders}) =>
+        queryPhrase(query, prisma, loaders.publicArticles, loaders.publicPagesByID)
     }
   }
 })

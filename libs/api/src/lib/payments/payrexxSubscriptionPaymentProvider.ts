@@ -150,29 +150,39 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
     const hook = (): Prisma.Middleware => async (params, next) => {
       // Only handle subscription update db queries skip all other
-      if (
-        params.model !== 'Subscription' ||
-        params.action !== 'update' ||
-        !params.args.data.paymentMethodID
-      ) {
+      if (params.model !== 'Subscription' || params.action !== 'update') {
         return next(params)
       }
       const subscription = params.args.data
+      const subscriptionID = params.args.where.id
+
+      const subscriptionObject = await prisma.subscription.findUnique({
+        where: {
+          id: subscriptionID
+        },
+        include: {
+          properties: true
+        }
+      })
+
+      if (!subscriptionObject) {
+        throw Error('Payrexx subscription: Subscription not found!')
+      }
 
       // Get paymentProviderName
       const paymentProvider = await prisma.paymentMethod.findUnique({
         where: {
-          id: subscription.paymentMethodID
+          id: subscriptionObject.paymentMethodID
         }
       })
 
       // Exit if subscription has no external id or is other payment provider
-      if (!subscription || paymentProvider?.paymentProviderID !== this.id) {
+      if (paymentProvider?.paymentProviderID !== this.id) {
         return next(params)
       }
 
       // Find external id property and fail if subscription has been deactivated
-      const properties: MetadataProperty[] = params.args.data?.properties?.createMany?.data
+      const properties: MetadataProperty[] = subscriptionObject.properties
       const isPayrexxExt = properties.find(sub => sub.key === 'payrexx_external_id')
       if (!isPayrexxExt) {
         throw Error("It's not supported to reactivate a deactivated Payrexx subscription!")
@@ -180,7 +190,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
       const deactivation = params.args.data.deactivation
       // Disable Subscription (deactivation.upsert is defined if a deactivation is added)
-      if (deactivation.upsert || !subscription.autoRenew) {
+      if (deactivation?.upsert || ('autoRenew' in subscription && !subscription.autoRenew)) {
         await this.cancelRemoteSubscription(parseInt(isPayrexxExt.value, 10))
 
         // Rewrite properties
@@ -200,9 +210,19 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
             }
           }
         }
+        subscription.properties = {
+          update: {
+            where: {
+              id: isPayrexxExt.id
+            },
+            data: {
+              key: isPayrexxExt.key
+            }
+          }
+        }
 
         // Update subscription
-      } else {
+      } else if (params?.args?.data?.monthlyAmount) {
         const amount = subscription.monthlyAmount * getMonths(subscription.paymentPeriodicity)
         await this.updateRemoteSubscription(parseInt(isPayrexxExt.value, 10), amount.toString())
       }

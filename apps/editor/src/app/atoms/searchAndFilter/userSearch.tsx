@@ -35,10 +35,14 @@ export function UserSearch({
   useEffect(() => {
     if (userData?.users) {
       const userList = [...userData.users.nodes.filter(usr => usr.id !== user?.id)]
-      if (user) userList.push(user)
+
+      if (user) {
+        userList.push(user)
+      }
+
       setUsers(userList)
     }
-  }, [userData?.users])
+  }, [userData?.users, user])
 
   useEffect(() => {
     if (error) {
@@ -105,16 +109,17 @@ export function UserSearch({
           key={`user-id-${resetFilterKey}`}
           placeholder={placeholder}
           block
-          name={name}
           disabled={loading || !!error}
           data={formData}
           cleanable
-          accepter={SelectPicker}
+          name={name}
           onChange={(userId: any) => setUser(userId)}
           onSearch={(searchString: any) => {
             setUserSearch(searchString)
             refetch()
           }}
+          value={user?.id}
+          accepter={SelectPicker}
         />
       </Form.Group>
     )
