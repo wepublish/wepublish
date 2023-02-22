@@ -1,7 +1,8 @@
 import {Prisma, PrismaClient, TagType} from '@prisma/client'
 import {Context} from '../../context'
 import {MaxResultsPerPage} from '../../db/common'
-import {authorise, CanGetTags} from '../permissions'
+import {authorise} from '../permissions'
+import {CanGetTags} from '@wepublish/permissions/api'
 import {getSortOrder, SortOrder} from '../queries/sort'
 
 export type TagFilter = {

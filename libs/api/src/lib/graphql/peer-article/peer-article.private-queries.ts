@@ -4,7 +4,8 @@ import {Context} from '../../context'
 import {ArticleFilter, ArticleSort, PeerArticle} from '../../db/article'
 import {ConnectionResult, SortOrder} from '../../db/common'
 import {delegateToPeerSchema, base64Encode} from '../../utility'
-import {authorise, CanGetPeerArticles} from '../permissions'
+import {authorise} from '../permissions'
+import {CanGetPeerArticles} from '@wepublish/permissions/api'
 
 export const getAdminPeerArticles = async (
   filter: Partial<ArticleFilter>,

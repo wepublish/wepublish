@@ -1,5 +1,7 @@
 import {ApolloClient, ApolloLink, ApolloProvider, InMemoryCache} from '@apollo/client'
 import {onError} from '@apollo/client/link/error'
+import {CssBaseline, ThemeProvider} from '@mui/material'
+import {theme} from '@wepublish/ui'
 import {createUploadLink} from 'apollo-upload-client'
 import ReactDOM from 'react-dom'
 import {IconContext} from 'react-icons'
@@ -108,7 +110,10 @@ const onDOMContentLoaded = async () => {
           <FacebookProvider sdkLanguage={'en_US'}>
             <InstagramProvider>
               <TwitterProvider>
-                <App />
+                <ThemeProvider theme={theme}>
+                  <CssBaseline />
+                  <App />
+                </ThemeProvider>
               </TwitterProvider>
             </InstagramProvider>
           </FacebookProvider>

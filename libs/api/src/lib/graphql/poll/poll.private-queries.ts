@@ -1,7 +1,8 @@
 import {Prisma, PrismaClient} from '@prisma/client'
 import {MaxResultsPerPage} from '../../db/common'
 import {getSortOrder, SortOrder} from '../queries/sort'
-import {authorise, CanGetPoll} from '../permissions'
+import {authorise} from '../permissions'
+import {CanGetPoll} from '@wepublish/permissions/api'
 import {Context} from '../../context'
 
 export type PollFilter = {

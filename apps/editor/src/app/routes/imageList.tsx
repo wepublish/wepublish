@@ -152,7 +152,7 @@ function ImageList() {
           <Column width={160} align="left" resizable>
             <HeaderCell>{t('images.overview.image')}</HeaderCell>
             <RCell>
-              {(rowData: ImageRefFragment) => (
+              {(rowData: RowDataType<ImageRefFragment>) => (
                 <Link to={`/images/edit/${rowData.id}`}>
                   <Img src={rowData.thumbURL || ''} />
                 </Link>
