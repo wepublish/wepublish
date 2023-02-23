@@ -1,5 +1,5 @@
 import {PrismaService} from '@wepublish/api'
-import {add, addDays, addMinutes, format, set, subMinutes} from 'date-fns'
+import {add, addDays, set, subMinutes} from 'date-fns'
 import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subscription-event-dictionary'
 import {PeriodicJob} from '@prisma/client'
 import {PeriodicJobRunObject} from './periodic-job.type'
@@ -21,6 +21,32 @@ export class PeriodicJobController {
       }
       try {
         // Put code here to execute as job use periodicJobRunObject as input
+        this.subscriptionEventDictionary.buildEventDateList(new Date())
+        const subscriptionsWithEvents = await this.prismaService.subscription.findMany({
+          where: {
+            OR: this.subscriptionEventDictionary
+              .getDatesWithEvent()
+              .map(date => ({
+                paidUntil: {
+                  gte: date,
+                  lte: subMinutes(
+                    set(date, {hours: 23, minutes: 59, seconds: 59, milliseconds: 999}),
+                    date.getTimezoneOffset()
+                  )
+                }
+              }))
+          },
+          include: {
+            user: true,
+            paymentMethod: true,
+            memberPlan: true
+          }
+        })
+        for (const subscriptionsWithEvent of subscriptionsWithEvents) {
+          console.log(subscriptionsWithEvent)
+        }
+
+        throw Error('dsadsad')
       } catch (e) {
         await this.markJobFailed((e as Error).toString())
         throw e

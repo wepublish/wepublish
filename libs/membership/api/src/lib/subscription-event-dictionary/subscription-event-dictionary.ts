@@ -6,6 +6,7 @@ import {
   StoreTimeline
 } from './subscription-event-dictionary.type'
 import {PrismaService} from '@wepublish/api'
+import {addDays, startOfDay, subMinutes} from 'date-fns'
 
 export class SubscriptionEventDictionary {
   private store: Store = {
@@ -15,6 +16,8 @@ export class SubscriptionEventDictionary {
     }
   }
   private storeIsBuild = false
+  private daysAwayFromEndingList: number[] = [0]
+  private dateAwayFromEndingList: Date[] = []
   constructor(private readonly prismaService: PrismaService) {}
 
   public async initialize() {
@@ -86,14 +89,37 @@ export class SubscriptionEventDictionary {
         })
         continue
       }
-      if (!storeTimeline[interval.daysAwayFromEnding])
+      if (!storeTimeline[interval.daysAwayFromEnding]) {
         storeTimeline[interval.daysAwayFromEnding] = []
+      }
       storeTimeline[interval.daysAwayFromEnding].push({
         type: interval.event,
         externalMailTemplate: interval.externalMailTemplate
       })
+
+      if (!this.daysAwayFromEndingList.includes(interval.daysAwayFromEnding)) {
+        this.daysAwayFromEndingList.push(interval.daysAwayFromEnding)
+      }
     }
   }
+  public buildEventDateList(date: Date) {
+    if (!this.storeIsBuild) {
+      throw Error('Tried to access store before it was successfully initialized!')
+    }
+    const normalizedDate = this.normalizeDate(date)
+
+    for (const daysAwayFromEnding of this.daysAwayFromEndingList) {
+      this.dateAwayFromEndingList.push(addDays(normalizedDate, daysAwayFromEnding))
+    }
+  }
+
+  public getDatesWithEvent(): Date[] {
+    if (this.dateAwayFromEndingList.length === 0) {
+      throw Error('Tried to access eventDataList before it was successfully initialized!')
+    }
+    return this.dateAwayFromEndingList
+  }
+
   public getActionFromStore(query: LookupActionInput): Action[] {
     if (!this.storeIsBuild) {
       throw Error('Tried to access store before it was successfully initialized!')
@@ -126,5 +152,9 @@ export class SubscriptionEventDictionary {
       return timeline[daysAwayFromEnding]
     }
     return []
+  }
+
+  private normalizeDate(date: Date): Date {
+    return new Date(subMinutes(startOfDay(date), date.getTimezoneOffset()))
   }
 }

@@ -5,7 +5,7 @@ export type Store = {
   customFlow: StoreMemberPlan
 }
 
-type StoreMemberPlan = {
+export type StoreMemberPlan = {
   [key: string]: StorePaymentMethode
 }
 
