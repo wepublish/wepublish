@@ -210,19 +210,23 @@ export default function SubscriptionFlows({defaultFlowOnly, memberPlanId}: Subsc
         <Table>
           <TableHead>
             <TableRow>
-              {/* filter TODO: extract */}
-              <TableCell size="small">
-                <b>Memberplan</b>
-              </TableCell>
-              <TableCell size="small">
-                <b>Payment Method</b>
-              </TableCell>
-              <TableCell size="small">
-                <b>Periodicity</b>
-              </TableCell>
-              <TableCell size="small">
-                <b>Auto Renewal?</b>
-              </TableCell>
+              {!defaultFlowOnly && (
+                <>
+                  {/* filter TODO: extract */}
+                  <TableCell size="small">
+                    <b>Memberplan</b>
+                  </TableCell>
+                  <TableCell size="small">
+                    <b>Payment Method</b>
+                  </TableCell>
+                  <TableCell size="small">
+                    <b>Periodicity</b>
+                  </TableCell>
+                  <TableCell size="small">
+                    <b>Auto Renewal?</b>
+                  </TableCell>
+                </>
+              )}
 
               {/* mail templates only TODO: extract */}
               {userActionEvents.map(userActionEvent => (
@@ -242,43 +246,49 @@ export default function SubscriptionFlows({defaultFlowOnly, memberPlanId}: Subsc
             {subscriptionFlows.map(subscriptionFlow => (
               <TableRow key={subscriptionFlow.id}>
                 {/* filter */}
-                <TableCell size="small">{subscriptionFlow.memberPlan?.name}</TableCell>
-                <TableCell size="small">
-                  {paymentMethods && paymentMethods.paymentMethods && (
-                    <CheckPicker
-                      data={paymentMethods.paymentMethods.map(method => ({
-                        label: method.name,
-                        value: method.id
-                      }))}
-                      countable={false}
-                      cleanable={false}
-                      defaultValue={subscriptionFlow.paymentMethods.map(m => m.id)}
-                      onChange={v => updateFlow(subscriptionFlow, {paymentMethodIds: v})}
-                    />
-                  )}
-                </TableCell>
-                <TableCell size="small">
-                  <CheckPicker
-                    data={Object.values(PaymentPeriodicity).map(item => ({
-                      label: item,
-                      value: item
-                    }))}
-                    countable={false}
-                    cleanable={false}
-                    defaultValue={subscriptionFlow.periodicities}
-                    onChange={v => updateFlow(subscriptionFlow, {periodicities: v})}
-                  />
-                </TableCell>
-                <TableCell size="small">
-                  <CheckPicker
-                    data={[true, false].map(item => ({label: item.toString(), value: item}))}
-                    countable={false}
-                    cleanable={false}
-                    defaultValue={subscriptionFlow.autoRenewal}
-                    onChange={v => updateFlow(subscriptionFlow, {autoRenewal: v})}
-                  />
-                </TableCell>
-
+                {!defaultFlowOnly && (
+                  <>
+                    <TableCell size="small">{subscriptionFlow.memberPlan?.name}</TableCell>
+                    <TableCell size="small">
+                      {paymentMethods && paymentMethods.paymentMethods && (
+                        <CheckPicker
+                          data={paymentMethods.paymentMethods.map(method => ({
+                            label: method.name,
+                            value: method.id
+                          }))}
+                          disabled={subscriptionFlow.default}
+                          countable={false}
+                          cleanable={false}
+                          defaultValue={subscriptionFlow.paymentMethods.map(m => m.id)}
+                          onChange={v => updateFlow(subscriptionFlow, {paymentMethodIds: v})}
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell size="small">
+                      <CheckPicker
+                        data={Object.values(PaymentPeriodicity).map(item => ({
+                          label: item,
+                          value: item
+                        }))}
+                        disabled={subscriptionFlow.default}
+                        countable={false}
+                        cleanable={false}
+                        defaultValue={subscriptionFlow.periodicities}
+                        onChange={v => updateFlow(subscriptionFlow, {periodicities: v})}
+                      />
+                    </TableCell>
+                    <TableCell size="small">
+                      <CheckPicker
+                        data={[true, false].map(item => ({label: item.toString(), value: item}))}
+                        disabled={subscriptionFlow.default}
+                        countable={false}
+                        cleanable={false}
+                        defaultValue={subscriptionFlow.autoRenewal}
+                        onChange={v => updateFlow(subscriptionFlow, {autoRenewal: v})}
+                      />
+                    </TableCell>
+                  </>
+                )}
                 {/* user actions */}
                 {userActionEvents.map(event => (
                   <TableCell size="small" key={event.subscriptionEventKey}>

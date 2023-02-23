@@ -28,7 +28,14 @@ export class SubscriptionFlowController {
       }
     } else {
       where = {
-        memberPlanId
+        OR: [
+          {
+            memberPlanId
+          },
+          {
+            memberPlanId: null
+          }
+        ]
       }
     }
     /**
