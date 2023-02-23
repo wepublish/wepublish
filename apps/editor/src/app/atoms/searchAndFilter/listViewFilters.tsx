@@ -184,9 +184,20 @@ export function ListViewFilters({
   return (
     <>
       <Form className={className}>
+        {fields.includes('text') && (
+          <Group style={formInputStyle}>
+            <WideInput
+              value={filter.text || ''}
+              placeholder={t('subscriptionList.filter.searchPlaceholder')}
+              onChange={value => updateFilter({text: value})}
+            />
+          </Group>
+        )}
+
         {fields.includes('userRole') && (
           <Group style={formInputStyle}>
             <CheckPicker
+              data-testid="userRole-combobox"
               name="userRoles"
               block
               value={filter?.userRole || []}
@@ -205,16 +216,6 @@ export function ListViewFilters({
                 onSetFilter({userRole: []})
               }}
               placeholder={t('userCreateOrEditView.userRoles')}
-            />
-          </Group>
-        )}
-
-        {fields.includes('text') && (
-          <Group style={formInputStyle}>
-            <WideInput
-              value={filter.text || ''}
-              placeholder={t('subscriptionList.filter.searchPlaceholder')}
-              onChange={value => updateFilter({text: value})}
             />
           </Group>
         )}

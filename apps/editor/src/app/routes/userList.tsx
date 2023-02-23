@@ -1,6 +1,7 @@
 import {
   FullUserFragment,
   useDeleteUserMutation,
+  UserFilter,
   UserRole,
   UserSort,
   useUserListQuery
@@ -58,7 +59,7 @@ function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
 }
 
 function UserList() {
-  const [filter, setFilter] = useState({})
+  const [filter, setFilter] = useState<UserFilter>({})
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
@@ -73,7 +74,8 @@ function UserList() {
   const {
     data,
     refetch,
-    loading: isLoading
+    loading: isLoading,
+    error: userListQueryError
   } = useUserListQuery({
     variables: {
       filter: filter || undefined,
@@ -85,6 +87,11 @@ function UserList() {
     fetchPolicy: 'network-only'
   })
 
+  const updateFilter = (filter: UserFilter) => {
+    setFilter(filter)
+    refetch()
+  }
+
   useEffect(() => {
     refetch({
       filter: filter || undefined,
@@ -93,7 +100,7 @@ function UserList() {
       sort: mapColumFieldToGraphQLField(sortField),
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
     })
-  }, [filter, page, limit, sortOrder, sortField])
+  }, [filter, page, limit, sortOrder, sortField, refetch])
 
   const [deleteUser, {loading: isDeleting}] = useDeleteUserMutation()
 
@@ -107,6 +114,10 @@ function UserList() {
       }
     }
   }, [data?.users])
+
+  if (userListQueryError) {
+    return <div>{userListQueryError.message}</div>
+  }
 
   /**
    * UI helpers
@@ -145,7 +156,7 @@ function UserList() {
           fields={['userRole', 'text']}
           filter={filter}
           isLoading={isLoading}
-          onSetFilter={filter => setFilter(filter)}
+          onSetFilter={filter => updateFilter(filter)}
         />
       </ListViewContainer>
 
