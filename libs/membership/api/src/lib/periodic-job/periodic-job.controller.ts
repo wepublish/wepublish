@@ -1,7 +1,7 @@
 import {PrismaService} from '@wepublish/api'
-import {add, addDays, set, subMinutes} from 'date-fns'
+import {addDays, differenceInDays, set, subMinutes} from 'date-fns'
 import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subscription-event-dictionary'
-import {PeriodicJob} from '@prisma/client'
+import {PeriodicJob, SubscriptionEvent} from '@prisma/client'
 import {PeriodicJobRunObject} from './periodic-job.type'
 
 export class PeriodicJobController {
@@ -22,19 +22,18 @@ export class PeriodicJobController {
       try {
         // Put code here to execute as job use periodicJobRunObject as input
         this.subscriptionEventDictionary.buildEventDateList(new Date())
+        console.log(' XXXXXXXXXXXXXX: ' + this.subscriptionEventDictionary.getDatesWithEvent())
         const subscriptionsWithEvents = await this.prismaService.subscription.findMany({
           where: {
-            OR: this.subscriptionEventDictionary
-              .getDatesWithEvent()
-              .map(date => ({
-                paidUntil: {
-                  gte: date,
-                  lte: subMinutes(
-                    set(date, {hours: 23, minutes: 59, seconds: 59, milliseconds: 999}),
-                    date.getTimezoneOffset()
-                  )
-                }
-              }))
+            OR: this.subscriptionEventDictionary.getDatesWithEvent().map(date => ({
+              paidUntil: {
+                gte: date,
+                lte: subMinutes(
+                  set(date, {hours: 23, minutes: 59, seconds: 59, milliseconds: 999}),
+                  date.getTimezoneOffset()
+                )
+              }
+            }))
           },
           include: {
             user: true,
@@ -43,7 +42,59 @@ export class PeriodicJobController {
           }
         })
         for (const subscriptionsWithEvent of subscriptionsWithEvents) {
-          console.log(subscriptionsWithEvent)
+          const subscriptionDictionary = this.subscriptionEventDictionary.getActionFromStore({
+            memberplanId: subscriptionsWithEvent.memberPlanID,
+            paymentmethodeId: subscriptionsWithEvent.paymentMethodID,
+            periodicity: subscriptionsWithEvent.paymentPeriodicity,
+            autorenwal: subscriptionsWithEvent.autoRenew,
+            daysAwayFromEnding: differenceInDays(
+              periodicJobRunObject.date,
+              this.setDateMidnight(subscriptionsWithEvent.paidUntil!)
+            )
+          })
+
+          console.log(
+            this.setDateMidnight(subscriptionsWithEvent.paidUntil!),
+            '===',
+            periodicJobRunObject.date
+          )
+          console.log(
+            differenceInDays(
+              periodicJobRunObject.date,
+              this.setDateMidnight(subscriptionsWithEvent.paidUntil!)
+            )
+          )
+          console.log(subscriptionDictionary)
+
+          // Here renewal code
+          if (
+            this.setDateMidnight(subscriptionsWithEvent.paidUntil!).getTime() ==
+            periodicJobRunObject.date.getTime()
+          ) {
+            const renewalSuccessMailTemplate = subscriptionDictionary.filter(
+              sd => sd.type === SubscriptionEvent.RENEWAL_SUCCESS
+            )[0].externalMailTemplate
+            const renewalFailedMailTemplate = subscriptionDictionary.filter(
+              sd => sd.type === SubscriptionEvent.RENEWAL_FAILED
+            )[0].externalMailTemplate
+            console.log('CODE FOR RENEW OF SUBSCRIPTION')
+            console.log(
+              `SEND FAILED RENEWAL MAIL ${renewalFailedMailTemplate} OR SEND SUCCESS RENEWAL ${renewalSuccessMailTemplate}`
+            )
+          }
+
+          // HERE DO OTHER ACTIONS
+          for (const event of subscriptionDictionary) {
+            if (event.type === SubscriptionEvent.CUSTOM) {
+              console.log(`SEND MAIL TEMPLATE ${event.externalMailTemplate}`)
+            } else if (event.type === SubscriptionEvent.DEACTIVATION_UNPAID) {
+              console.log(
+                `SEND MAIL TEMPLATE ${event.externalMailTemplate} and deactivate subscription`
+              )
+            } else if (event.type === SubscriptionEvent.INVOICE_CREATION) {
+              console.log(`SEND MAIL EMPLATE ${event.externalMailTemplate} and create new invoice`)
+            }
+          }
         }
 
         throw Error('dsadsad')

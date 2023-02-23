@@ -6,7 +6,7 @@ import {
   StoreTimeline
 } from './subscription-event-dictionary.type'
 import {PrismaService} from '@wepublish/api'
-import {addDays, startOfDay, subMinutes} from 'date-fns'
+import {startOfDay, subDays, subMinutes} from 'date-fns'
 
 export class SubscriptionEventDictionary {
   private store: Store = {
@@ -109,7 +109,7 @@ export class SubscriptionEventDictionary {
     const normalizedDate = this.normalizeDate(date)
 
     for (const daysAwayFromEnding of this.daysAwayFromEndingList) {
-      this.dateAwayFromEndingList.push(addDays(normalizedDate, daysAwayFromEnding))
+      this.dateAwayFromEndingList.push(subDays(normalizedDate, daysAwayFromEnding))
     }
   }
 
@@ -145,6 +145,7 @@ export class SubscriptionEventDictionary {
   }
 
   private getActionByDay(timeline: StoreTimeline, daysAwayFromEnding: number | null): Action[] {
+    // Return user actions for null and 0!
     if (!daysAwayFromEnding) {
       return timeline.onUserAction
     }
