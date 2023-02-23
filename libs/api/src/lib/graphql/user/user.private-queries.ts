@@ -1,6 +1,6 @@
 import {Context} from '../../context'
 import {AuthSessionType} from '@wepublish/authentication/api'
-import {CanGetUser, CanGetUsers} from '@wepublish/permissions/api'
+import {CanGetUsers} from '@wepublish/permissions/api'
 import {authorise} from '../permissions'
 import {UserInputError} from '../../error'
 import {PrismaClient} from '@prisma/client'
