@@ -19,9 +19,9 @@ import {
   CanGetPages,
   CanGetPoll,
   CanGetSubscriptions,
-  CanGetUsers,
-  isAuthorised
-} from '../permissions'
+  CanGetUsers
+} from '@wepublish/permissions/api'
+import {hasPermission} from '@wepublish/permissions/api'
 
 export const getActions = async (
   authenticate: Context['authenticate'],
@@ -36,7 +36,7 @@ export const getActions = async (
 ): Promise<Array<Action>> => {
   const {roles} = authenticate()
 
-  const articles = isAuthorised(CanGetArticles, roles)
+  const articles = hasPermission(CanGetArticles, roles)
     ? (
         await article.findMany({
           take: 5,
@@ -50,7 +50,7 @@ export const getActions = async (
         }
       })
     : []
-  const pages = isAuthorised(CanGetPages, roles)
+  const pages = hasPermission(CanGetPages, roles)
     ? (
         await page.findMany({
           take: 5,
@@ -64,7 +64,7 @@ export const getActions = async (
         }
       })
     : []
-  const comments = isAuthorised(CanGetComments, roles)
+  const comments = hasPermission(CanGetComments, roles)
     ? (await comment.findMany({take: 5, include: {revisions: true}})).map((comment: Comment) => {
         return {
           date: comment.createdAt,
@@ -73,7 +73,7 @@ export const getActions = async (
         }
       })
     : []
-  const authors = isAuthorised(CanGetAuthors, roles)
+  const authors = hasPermission(CanGetAuthors, roles)
     ? (await author.findMany({take: 5})).map((author: Author) => {
         return {
           date: author.createdAt,
@@ -82,7 +82,7 @@ export const getActions = async (
         }
       })
     : []
-  const subscriptions = isAuthorised(CanGetSubscriptions, roles)
+  const subscriptions = hasPermission(CanGetSubscriptions, roles)
     ? (await subscription.findMany({take: 5})).map((subscription: Subscription) => {
         return {
           date: subscription.createdAt,
@@ -91,7 +91,7 @@ export const getActions = async (
         }
       })
     : []
-  const polls = isAuthorised(CanGetPoll, roles)
+  const polls = hasPermission(CanGetPoll, roles)
     ? (await poll.findMany({take: 5})).map((poll: Poll) => {
         return {
           date: poll.opensAt,
@@ -100,7 +100,7 @@ export const getActions = async (
         }
       })
     : []
-  const users = isAuthorised(CanGetUsers, roles)
+  const users = hasPermission(CanGetUsers, roles)
     ? (await user.findMany({take: 5})).map((user: User) => {
         return {
           date: user.createdAt,
@@ -109,7 +109,7 @@ export const getActions = async (
         }
       })
     : []
-  const events = isAuthorised(CanGetEvent, roles)
+  const events = hasPermission(CanGetEvent, roles)
     ? (await event.findMany({take: 5})).map((event: Event) => {
         return {
           date: event.createdAt,

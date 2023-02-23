@@ -1,6 +1,7 @@
 import {Context} from '../../context'
 import {UserInputError} from '../../error'
-import {authorise, CanGetNavigation, CanGetNavigations} from '../permissions'
+import {authorise} from '../permissions'
+import {CanGetNavigation, CanGetNavigations} from '@wepublish/permissions/api'
 import {PrismaClient} from '@prisma/client'
 
 export const getNavigationByIdOrKey = (

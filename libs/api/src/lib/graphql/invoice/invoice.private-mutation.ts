@@ -1,5 +1,6 @@
 import {Context} from '../../context'
-import {authorise, CanCreateInvoice, CanDeleteInvoice} from '../permissions'
+import {authorise} from '../permissions'
+import {CanCreateInvoice, CanDeleteInvoice} from '@wepublish/permissions/api'
 import {PrismaClient, Prisma, Invoice} from '@prisma/client'
 import {InvoiceWithItems} from '../../db/invoice'
 
@@ -19,7 +20,7 @@ export const deleteInvoiceById = async (
 }
 
 type CreateInvoiceInput = Omit<Prisma.InvoiceUncheckedCreateInput, 'items' | 'modifiedAt'> & {
-  items: Prisma.InvoiceItemUncheckedCreateWithoutInvoiceInput[]
+  items: Prisma.InvoiceItemUncheckedCreateWithoutInvoicesInput[]
 }
 
 export const createInvoice = (
@@ -47,7 +48,7 @@ type UpdateInvoiceInput = Omit<
   Prisma.InvoiceUncheckedUpdateInput,
   'items' | 'modifiedAt' | 'createdAt'
 > & {
-  items: Prisma.InvoiceItemUncheckedCreateWithoutInvoiceInput[]
+  items: Prisma.InvoiceItemUncheckedCreateWithoutInvoicesInput[]
 }
 
 export const updateInvoice = async (

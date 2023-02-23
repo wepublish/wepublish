@@ -13,6 +13,13 @@ import {
   Comment,
   Subscription
 } from '@prisma/client'
+import {
+  AuthenticationService,
+  AuthSession,
+  AuthSessionType,
+  TokenSession,
+  UserSession
+} from '@wepublish/authentication/api'
 import AbortController from 'abort-controller'
 import {AuthenticationError} from 'apollo-server-express'
 import crypto from 'crypto'
@@ -41,9 +48,7 @@ import {InvoiceWithItems} from './db/invoice'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {NavigationWithLinks} from './db/navigation'
 import {PageWithRevisions, pageWithRevisionsToPublicPage, PublicPage} from './db/page'
-import {Session, SessionType, TokenSession, UserSession} from './db/session'
 import {SettingName} from './db/setting'
-import {unselectPassword} from './db/user'
 import {TokenExpiredError} from './error'
 import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
 import {Hooks} from './hooks'
@@ -127,7 +132,7 @@ export interface Context {
   readonly sessionTTL: number
   readonly hashCostFactor: number
 
-  readonly session: Session | null
+  readonly session: AuthSession | null
   readonly loaders: DataLoaderContext
 
   readonly mailContext: MailContext
@@ -143,7 +148,7 @@ export interface Context {
 
   getOauth2Clients(): Promise<OAuth2Clients[]>
 
-  authenticate(): Session
+  authenticate(): AuthSession
   authenticateToken(): TokenSession
   authenticateUser(): UserSession
   optionalAuthenticateUser(): UserSession | null
@@ -228,70 +233,6 @@ const createOptionalsArray = <Data, Attribute extends keyof Data, Key extends Da
   return keys.map(id => dataMap[id] ?? null)
 }
 
-const getSessionByToken = async (
-  token: string,
-  sessionClient: PrismaClient['session'],
-  tokenClient: PrismaClient['token'],
-  userClient: PrismaClient['user'],
-  userRoleClient: PrismaClient['userRole']
-): Promise<Session | null> => {
-  const [tokenMatch, session] = await Promise.all([
-    tokenClient.findFirst({
-      where: {
-        token
-      }
-    }),
-    sessionClient.findFirst({
-      where: {
-        token
-      }
-    })
-  ])
-
-  if (tokenMatch) {
-    return {
-      type: SessionType.Token,
-      id: tokenMatch.id,
-      name: tokenMatch.name,
-      token: tokenMatch.token,
-      roles: await userRoleClient.findMany({
-        where: {
-          id: {
-            in: tokenMatch.roleIDs
-          }
-        }
-      })
-    }
-  } else if (session) {
-    const user = await userClient.findUnique({
-      where: {
-        id: session.userID
-      },
-      select: unselectPassword
-    })
-
-    if (!user) return null
-
-    return {
-      type: SessionType.User,
-      id: session.id,
-      token: session.token,
-      createdAt: session.createdAt,
-      expiresAt: session.expiresAt,
-      user,
-      roles: await userRoleClient.findMany({
-        where: {
-          id: {
-            in: user.roleIDs
-          }
-        }
-      })
-    }
-  }
-
-  return null
-}
-
 export async function contextFromRequest(
   req: IncomingMessage | null,
   {
@@ -310,15 +251,11 @@ export async function contextFromRequest(
     hashCostFactor
   }: ContextOptions
 ): Promise<Context> {
+  const authService = new AuthenticationService(prisma)
+
   const token = tokenFromRequest(req)
-  const session = token
-    ? await getSessionByToken(token, prisma.session, prisma.token, prisma.user, prisma.userRole)
-    : null
-  const isSessionValid = session
-    ? session.type === SessionType.User
-      ? session.expiresAt! > new Date()
-      : true
-    : false
+  const session = token ? await authService.getSessionByToken(token) : null
+  const isSessionValid = authService.isSessionValid(session)
 
   const peerDataLoader = new DataLoader(async ids =>
     createOptionalsArray(
@@ -951,7 +888,7 @@ export async function contextFromRequest(
     },
 
     authenticateUser() {
-      if (!session || session.type !== SessionType.User) {
+      if (!session || session.type !== AuthSessionType.User) {
         throw new AuthenticationError('Invalid user session!')
       }
 
@@ -963,14 +900,14 @@ export async function contextFromRequest(
     },
 
     optionalAuthenticateUser() {
-      if (!session || session.type !== SessionType.User || !isSessionValid) {
+      if (!session || session.type !== AuthSessionType.User || !isSessionValid) {
         return null
       }
       return session
     },
 
     authenticateToken() {
-      if (!session || session.type !== SessionType.Token) {
+      if (!session || session.type !== AuthSessionType.Token) {
         throw new AuthenticationError('Invalid token session!')
       }
 

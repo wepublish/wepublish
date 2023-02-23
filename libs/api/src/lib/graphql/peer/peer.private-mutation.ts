@@ -1,6 +1,7 @@
 import {Prisma, PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
-import {authorise, CanCreatePeer, CanDeletePeer} from '../permissions'
+import {authorise} from '../permissions'
+import {CanCreatePeer, CanDeletePeer} from '@wepublish/permissions/api'
 
 export const deletePeerById = (
   id: string,

@@ -1,4 +1,5 @@
-import {authorise, CanGetComments} from '../permissions'
+import {authorise} from '../permissions'
+import {CanGetComments} from '@wepublish/permissions/api'
 import {Context} from '../../context'
 import {CommentFilter, CommentSort} from '../../db/comment'
 import {PrismaClient} from '@prisma/client'

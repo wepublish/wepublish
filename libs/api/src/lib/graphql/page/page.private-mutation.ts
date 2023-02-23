@@ -2,7 +2,8 @@ import {Page, Prisma, PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 import {PageWithRevisions} from '../../db/page'
 import {DuplicatePageSlugError, NotFound} from '../../error'
-import {authorise, CanCreatePage, CanDeletePage, CanPublishPage} from '../permissions'
+import {authorise} from '../permissions'
+import {CanCreatePage, CanDeletePage, CanPublishPage} from '@wepublish/permissions/api'
 
 export const deletePageById = async (
   id: string,

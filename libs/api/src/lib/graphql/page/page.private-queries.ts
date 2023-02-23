@@ -3,7 +3,8 @@ import {UserInputError} from 'apollo-server-express'
 import {Context} from '../../context'
 import {PageFilter, PageSort} from '../../db/page'
 import {NotFound} from '../../error'
-import {authorise, CanGetPage, CanGetPagePreviewLink, CanGetPages} from '../permissions'
+import {authorise} from '../permissions'
+import {CanGetPage, CanGetPagePreviewLink, CanGetPages} from '@wepublish/permissions/api'
 import {getPages} from './page.queries'
 
 export const getPageById = (

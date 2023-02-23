@@ -1,6 +1,7 @@
 import {Prisma, PrismaClient} from '@prisma/client'
+import {CanUpdatePeerProfile} from '@wepublish/permissions/api'
 import {Context} from '../../context'
-import {authorise, CanUpdatePeerProfile} from '../permissions'
+import {authorise} from '../permissions'
 
 export const upsertPeerProfile = async (
   input:

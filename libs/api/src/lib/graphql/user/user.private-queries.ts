@@ -1,15 +1,17 @@
 import {Context} from '../../context'
-import {SessionType} from '../../db/session'
-import {authorise, CanGetUsers} from '../permissions'
+import {AuthSessionType} from '@wepublish/authentication/api'
+import {CanGetUser, CanGetUsers} from '@wepublish/permissions/api'
+import {authorise} from '../permissions'
 import {UserInputError} from '../../error'
 import {PrismaClient} from '@prisma/client'
-import {unselectPassword, UserFilter, UserSort} from '../../db/user'
+import {UserFilter, UserSort} from '../../db/user'
+import {unselectPassword} from '@wepublish/user/api'
 import {getUsers} from './user.queries'
 
 export const getMe = (authenticate: Context['authenticate']) => {
   const session = authenticate()
 
-  return session?.type === SessionType.User ? session.user : null
+  return session?.type === AuthSessionType.User ? session.user : null
 }
 
 export const getUserById = (id: string, user: PrismaClient['user']) => {

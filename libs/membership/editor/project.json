@@ -1,0 +1,23 @@
+{
+  "name": "membership-editor",
+  "sourceRoot": "libs/membership/editor/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/membership/editor/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/membership/editor/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}
