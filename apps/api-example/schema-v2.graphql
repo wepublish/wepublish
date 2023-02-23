@@ -105,6 +105,7 @@ type Query {
       
   """
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+  paymentMethods: [PaymentMethodRef!]!
   provider: MailProviderModel!
 
   """

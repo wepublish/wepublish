@@ -16,7 +16,8 @@ import {
   useDeleteSubscriptionIntervalMutation,
   PaymentPeriodicity,
   useUpdateSubscriptionFlowMutation,
-  SubscriptionFlowModelUpdateInput
+  SubscriptionFlowModelUpdateInput,
+  useListPaymentMethodsQuery
 } from '@wepublish/editor/api-v2'
 import {useTranslation} from 'react-i18next'
 import {ApolloClient, ApolloError, NormalizedCacheObject} from '@apollo/client'
@@ -121,6 +122,12 @@ export default function SubscriptionFlows({defaultFlowOnly, memberPlanId}: Subsc
     onError: showErrors
   })
 
+  // get payment methods
+  const {data: paymentMethods, loading: loadingPaymentMethods} = useListPaymentMethodsQuery({
+    client,
+    onError: showErrors
+  })
+
   const [createSubscriptionInterval] = useCreateSubscriptionIntervalMutation({
     client,
     onError: showErrors
@@ -184,8 +191,8 @@ export default function SubscriptionFlows({defaultFlowOnly, memberPlanId}: Subsc
    * TODO: implement load indication
    */
   const loading: boolean = useMemo(
-    () => loadingSubscriptionFlow || loadingMailTemplates,
-    [loadingSubscriptionFlow, loadingMailTemplates]
+    () => loadingSubscriptionFlow || loadingMailTemplates || loadingPaymentMethods,
+    [loadingSubscriptionFlow, loadingMailTemplates, loadingPaymentMethods]
   )
 
   if (loading) {
@@ -208,7 +215,7 @@ export default function SubscriptionFlows({defaultFlowOnly, memberPlanId}: Subsc
                 <b>Memberplan</b>
               </TableCell>
               <TableCell size="small">
-                <b>Payment Provider</b>
+                <b>Payment Method</b>
               </TableCell>
               <TableCell size="small">
                 <b>Periodicity</b>
@@ -237,7 +244,18 @@ export default function SubscriptionFlows({defaultFlowOnly, memberPlanId}: Subsc
                 {/* filter */}
                 <TableCell size="small">{subscriptionFlow.memberPlan?.name}</TableCell>
                 <TableCell size="small">
-                  {subscriptionFlow.paymentMethods.map(m => m.name).join(', ')}
+                  {paymentMethods && paymentMethods.paymentMethods && (
+                    <CheckPicker
+                      data={paymentMethods.paymentMethods.map(method => ({
+                        label: method.name,
+                        value: method.id
+                      }))}
+                      countable={false}
+                      cleanable={false}
+                      defaultValue={subscriptionFlow.paymentMethods.map(m => m.id)}
+                      onChange={v => updateFlow(subscriptionFlow, {paymentMethodIds: v})}
+                    />
+                  )}
                 </TableCell>
                 <TableCell size="small">
                   <CheckPicker

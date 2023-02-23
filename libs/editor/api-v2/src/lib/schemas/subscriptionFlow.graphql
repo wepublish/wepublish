@@ -40,6 +40,12 @@ mutation DeleteSubscriptionInterval($subscriptionInterval: SubscriptionIntervalD
   }
 }
 
+query ListPaymentMethods {
+  paymentMethods {
+    ...PaymentMethodRef
+  }
+}
+
 fragment SubscriptionFlow on SubscriptionFlowModel {
   id
   default

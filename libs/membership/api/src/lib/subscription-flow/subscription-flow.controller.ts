@@ -269,6 +269,10 @@ export class SubscriptionFlowController {
     return this.getFlow(false)
   }
 
+  async paymentMethods() {
+    return this.prismaService.paymentMethod.findMany({})
+  }
+
   async filterHasOverlap(
     memberPlanId: string | null,
     newFlow: Partial<SubscriptionFlowModelUpdateInput>
