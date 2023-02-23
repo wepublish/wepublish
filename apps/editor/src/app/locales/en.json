@@ -621,7 +621,9 @@
         "YEARLY": "Yearly"
       },
       "priceRange": "Price-(Range) in CHF",
-      "title": "Member Plans"
+      "title": "Member Plans",
+      "editFlow": "Edit communication flow",
+      "editFlowShort": "Edit flow"
     },
     "memberPlanEdit": {
       "nameRequired": "Name required",

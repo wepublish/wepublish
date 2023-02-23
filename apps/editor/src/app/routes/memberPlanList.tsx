@@ -86,7 +86,7 @@ function MemberPlanList() {
               )}
             </RCell>
           </Column>
-          <Column width={100} align="center" fixed="right">
+          <Column width={100} align="center">
             <HeaderCell>{t('memberPlanList.action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<FullMemberPlanFragment>) => (
@@ -108,19 +108,19 @@ function MemberPlanList() {
               )}
             </PaddedCell>
           </Column>
-          <Column width={200} align="center">
-            <HeaderCell>EDITH!</HeaderCell>
-            <PaddedCell>
+          <Column width={200} align="center" fixed="right">
+            <HeaderCell>{t('memberPlanList.editFlowShort')}</HeaderCell>
+            <RCell>
               {(rowData: RowDataType<FullMemberPlanFragment>) => (
                 <PermissionControl qualifyingPermissions={['CAN_DELETE_MEMBER_PLAN']}>
                   <IconButtonTooltip caption={t('delete')}>
                     <Link to={`/communicationflows/edit/${rowData.id}`}>
-                      Edit communication flow
+                      {t('memberPlanList.editFlow')}
                     </Link>
                   </IconButtonTooltip>
                 </PermissionControl>
               )}
-            </PaddedCell>
+            </RCell>
           </Column>
         </Table>
       </TableWrapper>
