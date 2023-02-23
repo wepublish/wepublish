@@ -28,7 +28,7 @@ class MemberPlanRef {
 }
 
 @ObjectType()
-class PaymentMethodRef {
+export class PaymentMethodRef {
   @Field()
   id!: string
   @Field()

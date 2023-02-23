@@ -454,8 +454,8 @@ export function Base({children}: BaseProps) {
                       ]}>
                       <Nav.Item
                         as={NavLink}
-                        href="/subscription/flow/default"
-                        active={path === 'subscription/flow/default'}
+                        href="/communicationflows/edit/default"
+                        active={path === 'communicationflows/edit/default'}
                         icon={<MdTune />}>
                         {t('navbar.subscriptionSettings')}
                       </Nav.Item>

@@ -1,6 +1,6 @@
 import React, {createContext, useMemo, useState} from 'react'
 import {Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material'
-import {Button, IconButton, Loader, Message, toaster} from 'rsuite'
+import {Button, CheckPicker, IconButton, Loader, Message, toaster} from 'rsuite'
 import {MdDelete} from 'react-icons/all'
 import SubscriptionFlow from './subscriptionFlow'
 import {
@@ -13,7 +13,11 @@ import {
   useDeleteSubscriptionFlowMutation,
   useUpdateSubscriptionIntervalMutation,
   useCreateSubscriptionIntervalMutation,
-  useDeleteSubscriptionIntervalMutation
+  useDeleteSubscriptionIntervalMutation,
+  PaymentPeriodicity,
+  useUpdateSubscriptionFlowMutation,
+  SubscriptionFlowModelUpdateInput,
+  useListPaymentMethodsQuery
 } from '@wepublish/editor/api-v2'
 import {useTranslation} from 'react-i18next'
 import {ApolloClient, ApolloError, NormalizedCacheObject} from '@apollo/client'
@@ -80,10 +84,11 @@ export const showErrors = (error: ApolloError): void => {
 }
 
 interface SubscriptionFlowsProps {
-  defaultSubscriptionMode: boolean
+  defaultFlowOnly: boolean
+  memberPlanId?: string
 }
 
-export default function SubscriptionFlows({defaultSubscriptionMode}: SubscriptionFlowsProps) {
+export default function SubscriptionFlows({defaultFlowOnly, memberPlanId}: SubscriptionFlowsProps) {
   const {t} = useTranslation()
   const [subscriptionFlows, setSubscriptionFlows] = useState<SubscriptionFlowFragment[]>([])
 
@@ -103,7 +108,8 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
   // get subscriptions flows
   const {loading: loadingSubscriptionFlow} = useSubscriptionFlowsQuery({
     variables: {
-      defaultFlowOnly: false
+      defaultFlowOnly,
+      memberPlanId
     },
     client,
     onError: showErrors,
@@ -112,6 +118,12 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
 
   // get mail templates
   const {data: mailTemplates, loading: loadingMailTemplates} = useMailTemplateQuery({
+    client,
+    onError: showErrors
+  })
+
+  // get payment methods
+  const {data: paymentMethods, loading: loadingPaymentMethods} = useListPaymentMethodsQuery({
     client,
     onError: showErrors
   })
@@ -128,6 +140,30 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
     client,
     onError: showErrors
   })
+
+  const [updateSubscriptionFlow] = useUpdateSubscriptionFlowMutation({
+    client,
+    onError: showErrors
+  })
+
+  const updateFlow = async function (
+    subscriptionFlow: SubscriptionFlowFragment,
+    payload: Partial<SubscriptionFlowModelUpdateInput>
+  ) {
+    const mutation: SubscriptionFlowModelUpdateInput = {
+      id: subscriptionFlow.id,
+      paymentMethodIds:
+        payload.paymentMethodIds || subscriptionFlow.paymentMethods.map(pm => pm.id),
+      periodicities: payload.periodicities || subscriptionFlow.periodicities,
+      autoRenewal: payload.autoRenewal || subscriptionFlow.autoRenewal
+    }
+
+    await updateSubscriptionFlow({
+      variables: {
+        subscriptionFlow: mutation
+      }
+    })
+  }
 
   const [deleteSubscriptionFlow] = useDeleteSubscriptionFlowMutation({
     client,
@@ -155,8 +191,8 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
    * TODO: implement load indication
    */
   const loading: boolean = useMemo(
-    () => loadingSubscriptionFlow || loadingMailTemplates,
-    [loadingSubscriptionFlow, loadingMailTemplates]
+    () => loadingSubscriptionFlow || loadingMailTemplates || loadingPaymentMethods,
+    [loadingSubscriptionFlow, loadingMailTemplates, loadingPaymentMethods]
   )
 
   if (loading) {
@@ -174,19 +210,23 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
         <Table>
           <TableHead>
             <TableRow>
-              {/* filter TODO: extract */}
-              <TableCell size="small">
-                <b>Memberplan</b>
-              </TableCell>
-              <TableCell size="small">
-                <b>Payment Provider</b>
-              </TableCell>
-              <TableCell size="small">
-                <b>Periodicity</b>
-              </TableCell>
-              <TableCell size="small">
-                <b>Auto Renewal?</b>
-              </TableCell>
+              {!defaultFlowOnly && (
+                <>
+                  {/* filter TODO: extract */}
+                  <TableCell size="small">
+                    <b>Memberplan</b>
+                  </TableCell>
+                  <TableCell size="small">
+                    <b>Payment Method</b>
+                  </TableCell>
+                  <TableCell size="small">
+                    <b>Periodicity</b>
+                  </TableCell>
+                  <TableCell size="small">
+                    <b>Auto Renewal?</b>
+                  </TableCell>
+                </>
+              )}
 
               {/* mail templates only TODO: extract */}
               {userActionEvents.map(userActionEvent => (
@@ -206,13 +246,49 @@ export default function SubscriptionFlows({defaultSubscriptionMode}: Subscriptio
             {subscriptionFlows.map(subscriptionFlow => (
               <TableRow key={subscriptionFlow.id}>
                 {/* filter */}
-                <TableCell size="small">{subscriptionFlow.memberPlan?.name}</TableCell>
-                <TableCell size="small">
-                  {subscriptionFlow.paymentMethods.map(m => m.name).join(', ')}
-                </TableCell>
-                <TableCell size="small">{subscriptionFlow.periodicities.join(', ')}</TableCell>
-                <TableCell size="small">{subscriptionFlow.autoRenewal.join(', ')}</TableCell>
-
+                {!defaultFlowOnly && (
+                  <>
+                    <TableCell size="small">{subscriptionFlow.memberPlan?.name}</TableCell>
+                    <TableCell size="small">
+                      {paymentMethods && paymentMethods.paymentMethods && (
+                        <CheckPicker
+                          data={paymentMethods.paymentMethods.map(method => ({
+                            label: method.name,
+                            value: method.id
+                          }))}
+                          disabled={subscriptionFlow.default}
+                          countable={false}
+                          cleanable={false}
+                          defaultValue={subscriptionFlow.paymentMethods.map(m => m.id)}
+                          onChange={v => updateFlow(subscriptionFlow, {paymentMethodIds: v})}
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell size="small">
+                      <CheckPicker
+                        data={Object.values(PaymentPeriodicity).map(item => ({
+                          label: item,
+                          value: item
+                        }))}
+                        disabled={subscriptionFlow.default}
+                        countable={false}
+                        cleanable={false}
+                        defaultValue={subscriptionFlow.periodicities}
+                        onChange={v => updateFlow(subscriptionFlow, {periodicities: v})}
+                      />
+                    </TableCell>
+                    <TableCell size="small">
+                      <CheckPicker
+                        data={[true, false].map(item => ({label: item.toString(), value: item}))}
+                        disabled={subscriptionFlow.default}
+                        countable={false}
+                        cleanable={false}
+                        defaultValue={subscriptionFlow.autoRenewal}
+                        onChange={v => updateFlow(subscriptionFlow, {autoRenewal: v})}
+                      />
+                    </TableCell>
+                  </>
+                )}
                 {/* user actions */}
                 {userActionEvents.map(event => (
                   <TableCell size="small" key={event.subscriptionEventKey}>

@@ -144,6 +144,7 @@ export type Query = {
    * Includes already deactivated ones.
    */
   newSubscribers: Array<DashboardSubscription>;
+  paymentMethods: Array<PaymentMethodRef>;
   provider: MailProviderModel;
   /** Returns all renewing subscribers in a given timeframe. */
   renewingSubscribers: Array<DashboardSubscription>;
@@ -158,6 +159,7 @@ export type Query = {
 
 export type QuerySubscriptionFlowsArgs = {
   defaultFlowOnly: Scalars['Boolean'];
+  memberPlanId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -278,6 +280,7 @@ export type FullMailProviderFragment = { __typename?: 'MailProviderModel', name:
 
 export type SubscriptionFlowsQueryVariables = Exact<{
   defaultFlowOnly: Scalars['Boolean'];
+  memberPlanId?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -324,6 +327,11 @@ export type DeleteSubscriptionIntervalMutationVariables = Exact<{
 
 
 export type DeleteSubscriptionIntervalMutation = { __typename?: 'Mutation', deleteSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: number, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: number, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null }> }> };
+
+export type ListPaymentMethodsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ListPaymentMethodsQuery = { __typename?: 'Query', paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }> };
 
 export type SubscriptionFlowFragment = { __typename?: 'SubscriptionFlowModel', id: number, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: number, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null }> };
 
@@ -472,8 +480,11 @@ export type SynchronizeMailTemplatesMutationHookResult = ReturnType<typeof useSy
 export type SynchronizeMailTemplatesMutationResult = Apollo.MutationResult<SynchronizeMailTemplatesMutation>;
 export type SynchronizeMailTemplatesMutationOptions = Apollo.BaseMutationOptions<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>;
 export const SubscriptionFlowsDocument = gql`
-    query SubscriptionFlows($defaultFlowOnly: Boolean!) {
-  SubscriptionFlows(defaultFlowOnly: $defaultFlowOnly) {
+    query SubscriptionFlows($defaultFlowOnly: Boolean!, $memberPlanId: String) {
+  SubscriptionFlows(
+    defaultFlowOnly: $defaultFlowOnly
+    memberPlanId: $memberPlanId
+  ) {
     ...SubscriptionFlow
   }
 }
@@ -492,6 +503,7 @@ export const SubscriptionFlowsDocument = gql`
  * const { data, loading, error } = useSubscriptionFlowsQuery({
  *   variables: {
  *      defaultFlowOnly: // value for 'defaultFlowOnly'
+ *      memberPlanId: // value for 'memberPlanId'
  *   },
  * });
  */
@@ -704,6 +716,40 @@ export function useDeleteSubscriptionIntervalMutation(baseOptions?: Apollo.Mutat
 export type DeleteSubscriptionIntervalMutationHookResult = ReturnType<typeof useDeleteSubscriptionIntervalMutation>;
 export type DeleteSubscriptionIntervalMutationResult = Apollo.MutationResult<DeleteSubscriptionIntervalMutation>;
 export type DeleteSubscriptionIntervalMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionIntervalMutation, DeleteSubscriptionIntervalMutationVariables>;
+export const ListPaymentMethodsDocument = gql`
+    query ListPaymentMethods {
+  paymentMethods {
+    ...PaymentMethodRef
+  }
+}
+    ${PaymentMethodRefFragmentDoc}`;
+
+/**
+ * __useListPaymentMethodsQuery__
+ *
+ * To run a query within a React component, call `useListPaymentMethodsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListPaymentMethodsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListPaymentMethodsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useListPaymentMethodsQuery(baseOptions?: Apollo.QueryHookOptions<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>(ListPaymentMethodsDocument, options);
+      }
+export function useListPaymentMethodsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>(ListPaymentMethodsDocument, options);
+        }
+export type ListPaymentMethodsQueryHookResult = ReturnType<typeof useListPaymentMethodsQuery>;
+export type ListPaymentMethodsLazyQueryHookResult = ReturnType<typeof useListPaymentMethodsLazyQuery>;
+export type ListPaymentMethodsQueryResult = Apollo.QueryResult<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>;
 export const VersionInformationDocument = gql`
     query VersionInformation {
   versionInformation {

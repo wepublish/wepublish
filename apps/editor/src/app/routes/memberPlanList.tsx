@@ -7,7 +7,7 @@ import {
 } from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
+import {MdAdd, MdDelete, MdEdit, MdSearch} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Button, IconButton as RIconButton, Input, InputGroup, Modal, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
@@ -86,7 +86,7 @@ function MemberPlanList() {
               )}
             </RCell>
           </Column>
-          <Column width={100} align="center" fixed="right">
+          <Column width={100} align="center">
             <HeaderCell>{t('memberPlanList.action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<FullMemberPlanFragment>) => (
@@ -107,6 +107,20 @@ function MemberPlanList() {
                 </PermissionControl>
               )}
             </PaddedCell>
+          </Column>
+          <Column width={200} align="center" fixed="right">
+            <HeaderCell>{t('memberPlanList.editFlowShort')}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<FullMemberPlanFragment>) => (
+                <PermissionControl qualifyingPermissions={['CAN_DELETE_MEMBER_PLAN']}>
+                  <IconButtonTooltip caption={t('delete')}>
+                    <Link to={`/communicationflows/edit/${rowData.id}`}>
+                      {t('memberPlanList.editFlow')}
+                    </Link>
+                  </IconButtonTooltip>
+                </PermissionControl>
+              )}
+            </RCell>
           </Column>
         </Table>
       </TableWrapper>

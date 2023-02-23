@@ -1,5 +1,5 @@
-query SubscriptionFlows($defaultFlowOnly: Boolean!) {
-  SubscriptionFlows(defaultFlowOnly: $defaultFlowOnly) {
+query SubscriptionFlows($defaultFlowOnly: Boolean!, $memberPlanId: String) {
+  SubscriptionFlows(defaultFlowOnly: $defaultFlowOnly, memberPlanId: $memberPlanId) {
     ...SubscriptionFlow
   }
 }
@@ -37,6 +37,12 @@ mutation UpdateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalU
 mutation DeleteSubscriptionInterval($subscriptionInterval: SubscriptionIntervalDeleteInput!) {
   deleteSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
     ...SubscriptionFlow
+  }
+}
+
+query ListPaymentMethods {
+  paymentMethods {
+    ...PaymentMethodRef
   }
 }
 

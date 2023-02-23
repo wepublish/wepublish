@@ -537,7 +537,7 @@ export function App() {
               }
             />
             <Route
-              path="subscription/flow/default"
+              path="communicationflows/edit/:id"
               element={
                 <Base>
                   <SubscriptionSettings />

@@ -1,5 +1,6 @@
 import {Args, Int, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {
+  PaymentMethodRef,
   SubscriptionFlowModel,
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
@@ -15,8 +16,11 @@ export class SubscriptionFlowResolver {
 
   // Subscription Flow
   @Query(returns => [SubscriptionFlowModel], {name: 'SubscriptionFlows'})
-  async subscriptionFlow(@Args('defaultFlowOnly') defaultFlowOnly: boolean) {
-    return await this.controller.getFlow(defaultFlowOnly)
+  async subscriptionFlow(
+    @Args('defaultFlowOnly') defaultFlowOnly: boolean,
+    @Args('memberPlanId', {nullable: true}) memberPlanId?: string
+  ) {
+    return await this.controller.getFlow(defaultFlowOnly, memberPlanId)
   }
 
   @Mutation(returns => [SubscriptionFlowModel], {name: 'createSubscriptionFlow'})
@@ -55,5 +59,10 @@ export class SubscriptionFlowResolver {
     @Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalDeleteInput
   ) {
     return this.controller.deleteInterval(subscriptionInterval)
+  }
+
+  @Query(() => [PaymentMethodRef])
+  async paymentMethods() {
+    return this.controller.paymentMethods()
   }
 }
