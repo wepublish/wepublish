@@ -31,7 +31,7 @@ export const deletePoll = (
 }
 
 export const createPoll = (
-  input: Pick<Prisma.PollUncheckedCreateInput, 'question' | 'opensAt' | 'closedAt'>,
+  input: Pick<Prisma.PollUncheckedCreateInput, 'question' | 'opensAt' | 'closedAt' | 'infoText'>,
   authenticate: Context['authenticate'],
   poll: PrismaClient['poll']
 ) => {

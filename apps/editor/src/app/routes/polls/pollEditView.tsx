@@ -16,6 +16,8 @@ import {ModelTitle} from '../../atoms/modelTitle'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {PollAnswers} from '../../atoms/poll/pollAnswers'
 import {PollExternalVotes} from '../../atoms/poll/pollExternalVotes'
+import {createDefaultValue, RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
+import {RichTextBlockValue} from '../../blocks/types'
 
 const OpensAtLabel = styled(Form.ControlLabel)`
   margin-right: 5px;
@@ -30,6 +32,7 @@ function PollEditView() {
   const params = useParams()
   const navigate = useNavigate()
   const [poll, setPoll] = useState<FullPoll | undefined>(undefined)
+  const [infoText, setInfoText] = useState<RichTextBlockValue>(createDefaultValue())
   const [close, setClose] = useState<boolean>(false)
   const closePath = '/polls'
 
@@ -74,6 +77,7 @@ function PollEditView() {
   useEffect(() => {
     if (data?.poll) {
       setPoll(data.poll)
+      setInfoText(data.poll.infoText ? data.poll.infoText : createDefaultValue())
     } else {
       setPoll(undefined)
     }
@@ -117,6 +121,7 @@ function PollEditView() {
       variables: {
         pollId: poll.id,
         question: poll.question,
+        infoText,
         opensAt,
         closedAt,
         answers: poll.answers?.map(answer => {
@@ -229,6 +234,13 @@ function PollEditView() {
                     setPoll(poll)
                   }}
                 />
+              </Panel>
+            </Col>
+            <Col xs={24}>
+              <Panel header="info text to translate" bordered>
+                <div className="richTextFrame">
+                  <RichTextBlock value={infoText} onChange={value => setInfoText(value)} />
+                </div>
               </Panel>
             </Col>
           </Row>

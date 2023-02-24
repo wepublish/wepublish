@@ -582,6 +582,7 @@ export type FullPoll = {
   closedAt?: Maybe<Scalars['DateTime']>;
   externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
   id: Scalars['ID'];
+  infoText?: Maybe<Scalars['RichText']>;
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
 };
@@ -1353,6 +1354,7 @@ export type MutationUpdatePollArgs = {
   answers?: InputMaybe<Array<UpdatePollAnswer>>;
   closedAt?: InputMaybe<Scalars['DateTime']>;
   externalVoteSources?: InputMaybe<Array<UpdatePollExternalVoteSources>>;
+  infoText?: InputMaybe<Scalars['RichText']>;
   opensAt?: InputMaybe<Scalars['DateTime']>;
   pollId: Scalars['ID'];
   question?: InputMaybe<Scalars['String']>;
@@ -2044,8 +2046,10 @@ export type QueryPeerArticleArgs = {
 export type QueryPeerArticlesArgs = {
   cursors?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<ArticleFilter>;
+  first?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<SortOrder>;
   peerFilter?: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<ArticleSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
@@ -2646,11 +2650,12 @@ export type PeerArticleListQueryVariables = Exact<{
   peerFilter?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<SortOrder>;
   sort?: InputMaybe<ArticleSort>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type PeerArticleListQuery = { __typename?: 'Query', peerArticles: { __typename?: 'PeerArticleConnection', totalCount: number,
-    nodes: Array<{ __typename?: 'PeerArticle', peeredArticleURL: string, peer: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null }, article: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } }>, pageInfo: { __typename?: 'UnidirectionalPageInfo', endCursor?: string | null, hasNextPage: boolean } } };
+export type PeerArticleListQuery = { __typename?: 'Query', peerArticles: { __typename?: 'PeerArticleConnection', totalCount: number, nodes: Array<{ __typename?: 'PeerArticle', peeredArticleURL: string, peer: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null }, article: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, canonicalUrl?: string | null, authors: Array<{ __typename?: 'Author', name: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } }>, pageInfo: { __typename?: 'UnidirectionalPageInfo', endCursor?: string | null, hasNextPage: boolean } } };
 
 export type CreateArticleMutationVariables = Exact<{
   input: ArticleInput;
@@ -3361,12 +3366,13 @@ export type UpdatePollMutationVariables = Exact<{
   opensAt?: InputMaybe<Scalars['DateTime']>;
   closedAt?: InputMaybe<Scalars['DateTime']>;
   question?: InputMaybe<Scalars['String']>;
+  infoText?: InputMaybe<Scalars['RichText']>;
   answers?: InputMaybe<Array<UpdatePollAnswer> | UpdatePollAnswer>;
   externalVoteSources?: InputMaybe<Array<UpdatePollExternalVoteSources> | UpdatePollExternalVoteSources>;
 }>;
 
 
-export type UpdatePollMutation = { __typename?: 'Mutation', updatePoll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, answers?: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }> | null, externalVoteSources?: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: number | null }> | null }> | null } | null };
+export type UpdatePollMutation = { __typename?: 'Mutation', updatePoll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: Node[] | null, answers?: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }> | null, externalVoteSources?: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: number | null }> | null }> | null } | null };
 
 export type DeletePollMutationVariables = Exact<{
   deletePollId: Scalars['ID'];
@@ -3422,7 +3428,7 @@ export type PollQueryVariables = Exact<{
 }>;
 
 
-export type PollQuery = { __typename?: 'Query', poll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, answers?: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }> | null, externalVoteSources?: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: number | null }> | null }> | null } | null };
+export type PollQuery = { __typename?: 'Query', poll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: Node[] | null, answers?: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }> | null, externalVoteSources?: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: number | null }> | null }> | null } | null };
 
 export type FullSettingFragment = { __typename?: 'Setting', id: string, name: SettingName, value: any, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null } | null };
 
@@ -4542,6 +4548,8 @@ ${ArticleRefFragmentDoc}`;
  *      peerFilter: // value for 'peerFilter'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
  *   },
  * });
  */
@@ -7444,12 +7452,13 @@ export type CreatePollMutationHookResult = ReturnType<typeof useCreatePollMutati
 export type CreatePollMutationResult = Apollo.MutationResult<CreatePollMutation>;
 export type CreatePollMutationOptions = Apollo.BaseMutationOptions<CreatePollMutation, CreatePollMutationVariables>;
 export const UpdatePollDocument = gql`
-    mutation UpdatePoll($pollId: ID!, $opensAt: DateTime, $closedAt: DateTime, $question: String, $answers: [UpdatePollAnswer!], $externalVoteSources: [UpdatePollExternalVoteSources!]) {
+    mutation UpdatePoll($pollId: ID!, $opensAt: DateTime, $closedAt: DateTime, $question: String, $infoText: RichText, $answers: [UpdatePollAnswer!], $externalVoteSources: [UpdatePollExternalVoteSources!]) {
   updatePoll(
     pollId: $pollId
     opensAt: $opensAt
     closedAt: $closedAt
     question: $question
+    infoText: $infoText
     answers: $answers
     externalVoteSources: $externalVoteSources
   ) {
@@ -7457,6 +7466,7 @@ export const UpdatePollDocument = gql`
     question
     opensAt
     closedAt
+    infoText
     answers {
       id
       pollId
@@ -7488,6 +7498,7 @@ export type UpdatePollMutationFn = Apollo.MutationFunction<UpdatePollMutation, U
  *      opensAt: // value for 'opensAt'
  *      closedAt: // value for 'closedAt'
  *      question: // value for 'question'
+ *      infoText: // value for 'infoText'
  *      answers: // value for 'answers'
  *      externalVoteSources: // value for 'externalVoteSources'
  *   },
@@ -7735,6 +7746,7 @@ export const PollDocument = gql`
     question
     opensAt
     closedAt
+    infoText
     answers {
       id
       pollId

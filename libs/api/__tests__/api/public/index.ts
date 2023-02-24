@@ -362,6 +362,7 @@ export type FullPoll = {
   closedAt?: Maybe<Scalars['DateTime']>;
   externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
   id: Scalars['ID'];
+  infoText?: Maybe<Scalars['RichText']>;
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
 };
