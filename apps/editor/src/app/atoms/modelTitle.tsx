@@ -2,10 +2,10 @@ import styled from '@emotion/styled'
 import {ReactChild} from 'react'
 import {MdChevronLeft} from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {Button, Col as RCol, FlexboxGrid, Loader as RLoader, Row} from 'rsuite'
+import {Button, Col, FlexboxGrid, Loader as RLoader, Row} from 'rsuite'
 
 const ChevronLeft = styled(MdChevronLeft)`
-  fontsize: 48px;
+  font-size: 48px;
 `
 
 const FlexGrid = styled(FlexboxGrid)`
@@ -23,6 +23,29 @@ const Loader = styled(RLoader)`
 
 const SaveButton = styled(Button)`
   margin-right: 10px;
+`
+
+const PaddedCol = styled(Col)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: 3px;
+  margin-right: 1rem;
+`
+
+const FlexRow = styled(Row)`
+  display: flex;
+  align-items: center;
+`
+
+const FlexLink = styled(Link)`
+  display: flex;
+`
+
+const Heading = styled.h1`
+  font-size: 36px;
+  line-height: 50px;
 `
 
 interface modelTitleProps {
@@ -86,11 +109,14 @@ export function ModelTitle({
       {/* title */}
       <FlexboxGrid.Item colspan={12}>
         <FlexboxGrid align="middle">
-          <Link to={closePath}>
-            <ChevronLeft />
-          </Link>
-
-          <h1>{titleView()}</h1>
+          <FlexRow>
+            <PaddedCol xs={29}>
+              <FlexLink to={closePath}>
+                <ChevronLeft />
+              </FlexLink>
+              <Heading>{titleView()}</Heading>
+            </PaddedCol>
+          </FlexRow>
         </FlexboxGrid>
       </FlexboxGrid.Item>
 

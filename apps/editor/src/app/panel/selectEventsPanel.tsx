@@ -1,8 +1,8 @@
 import {ApolloError} from '@apollo/client'
-import EditIcon from '@rsuite/icons/legacy/Edit'
 import {EventRefFragment, TagType, useEventListLazyQuery} from '@wepublish/editor/api'
-import React, {useEffect, useReducer, useState} from 'react'
+import {useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdEdit} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {
   Button,
@@ -22,6 +22,7 @@ import {PermissionControl} from '../atoms/permissionControl'
 import {SelectTags} from '../atoms/tag/selectTags'
 import {EventBlockValue} from '../blocks/types'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
+import {RowDataType} from 'rsuite-table'
 
 const onErrorToast = (error: ApolloError) => {
   if (error?.message) {
@@ -130,7 +131,7 @@ export function SelectEventPanel({selectedFilter, onClose, onSelect}: SelectEven
             <Table.Column width={36}>
               <Table.HeaderCell>{}</Table.HeaderCell>
               <Table.Cell style={{padding: 0}}>
-                {(rowData: EventRefFragment) => (
+                {(rowData: RowDataType<EventRefFragment>) => (
                   <div
                     style={{
                       height: '46px',
@@ -157,17 +158,17 @@ export function SelectEventPanel({selectedFilter, onClose, onSelect}: SelectEven
 
           <Table.Column width={250} resizable>
             <Table.HeaderCell>{t('event.list.name')}</Table.HeaderCell>
-            <Table.Cell>{(rowData: EventRefFragment) => rowData.name}</Table.Cell>
+            <Table.Cell>{(rowData: RowDataType<EventRefFragment>) => rowData.name}</Table.Cell>
           </Table.Column>
 
           <Table.Column width={150} align="center" fixed="right">
             <Table.HeaderCell>{t('event.list.edit')}</Table.HeaderCell>
             <Table.Cell style={{padding: '6px 0'}}>
-              {(rowData: EventRefFragment) => (
+              {(rowData: RowDataType<EventRefFragment>) => (
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_EVENT']}>
                   <IconButtonTooltip caption={t('event.list.edit')}>
                     <Link target="_blank" to={`/events/edit/${rowData.id}`}>
-                      <IconButton icon={<EditIcon />} circle size="sm" />
+                      <IconButton icon={<MdEdit />} circle size="sm" />
                     </Link>
                   </IconButtonTooltip>
                 </PermissionControl>

@@ -2,8 +2,7 @@ import {Args, Query, Resolver} from '@nestjs/graphql'
 import {CanGetInvoices, Permissions} from '@wepublish/permissions/api'
 import {DashboardInvoice} from './dashboard-invoice.model'
 import {DashboardInvoiceService} from './dashboard-invoice.service'
-import {Settings} from '@wepublish/settings/api'
-import {SettingName} from '../../../../../../settings/api/src/lib/setting'
+import {SettingName, Settings} from '@wepublish/settings/api'
 
 @Resolver()
 export class DashboardInvoiceResolver {

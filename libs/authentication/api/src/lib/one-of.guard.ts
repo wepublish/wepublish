@@ -14,11 +14,10 @@ export class OneOfGuard implements CanActivate {
   constructor(private readonly reflector: Reflector, private readonly moduleRef: ModuleRef) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
-    const allowedGuards =
-      this.reflector.getAllAndMerge<Type<CanActivate>[]>(ONE_OF_METADATA_KEY, [
-        context.getHandler(),
-        context.getClass()
-      ]) ?? []
+    const allowedGuards = this.reflector.getAllAndMerge<Type<CanActivate>[]>(ONE_OF_METADATA_KEY, [
+      context.getHandler(),
+      context.getClass()
+    ])
 
     const guards = allowedGuards.map(guardReference =>
       this.moduleRef.get<CanActivate>(guardReference, {strict: false})

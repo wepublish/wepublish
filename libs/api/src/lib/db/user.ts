@@ -1,6 +1,5 @@
 import {
   PaymentProviderCustomer,
-  Prisma,
   User,
   UserAddress,
   UserOAuth2Account,

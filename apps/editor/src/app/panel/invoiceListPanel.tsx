@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {InvoiceFragment, useMeQuery} from '@wepublish/editor/api'
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Message} from 'rsuite'
+import {Drawer, Message} from 'rsuite'
 
 import {Invoice} from '../atoms/invoice'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
@@ -51,7 +51,7 @@ function InvoiceListPanel({
     }
     // iterate invoices
     return (
-      <Drawer.Body>
+      <>
         {invoices?.map((invoice, invoiceId) => (
           <InvoiceWrapper key={invoiceId}>
             <Invoice
@@ -63,23 +63,11 @@ function InvoiceListPanel({
             />
           </InvoiceWrapper>
         ))}
-      </Drawer.Body>
+      </>
     )
   }
 
-  return (
-    <>
-      <Drawer.Header>
-        <Drawer.Title>{t('invoice.panel.invoiceHistory')}</Drawer.Title>
-      </Drawer.Header>
-      {invoiceHistoryView()}
-      <Drawer.Footer>
-        <Button appearance="primary" onClick={onClose}>
-          {t('close')}
-        </Button>
-      </Drawer.Footer>
-    </>
-  )
+  return <>{invoiceHistoryView()}</>
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_INVOICES',

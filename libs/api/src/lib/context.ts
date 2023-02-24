@@ -36,13 +36,16 @@ import fetch from 'node-fetch'
 import {Client, Issuer} from 'openid-client'
 import url from 'url'
 import {ChallengeProvider} from './challenges/challengeProvider'
-import {ArticleWithRevisions, PublicArticle} from './db/article'
+import {
+  ArticleWithRevisions,
+  articleWithRevisionsToPublicArticle,
+  PublicArticle
+} from './db/article'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
 import {InvoiceWithItems} from './db/invoice'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {NavigationWithLinks} from './db/navigation'
-import {PageWithRevisions, PublicPage} from './db/page'
-import {SettingName} from '@wepublish/settings/api'
+import {PageWithRevisions, pageWithRevisionsToPublicPage, PublicPage} from './db/page'
 import {TokenExpiredError} from './error'
 import {getEvent} from './graphql/event/event.queries'
 import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
@@ -54,24 +57,18 @@ import {MemberContext} from './memberContext'
 import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
 import {URLAdapter} from './urlAdapter'
+import {SettingName} from '@wepublish/settings/api'
 
 /**
  * Peered article cache configuration and setup
  */
-const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000
+const ONE_HOUR_IN_SEC = 60 * 60
+const ONE_MIN_IN_SEC = 60
 const fetcherCache = new NodeCache({
-  stdTTL: 1800,
-  checkperiod: 60,
-  deleteOnExpire: false,
-  useClones: false
-})
-fetcherCache.on('expired', async function (key: string, value: PeerCacheValue) {
-  // Refresh cache only if last use of cached entry is less than 24h ago
-  if (value.queryParams.lastQueried > new Date().getTime() - ONE_DAY_IN_MS) {
-    await loadFreshData(value.queryParams)
-  } else {
-    fetcherCache.del(key)
-  }
+  stdTTL: ONE_HOUR_IN_SEC,
+  checkperiod: ONE_MIN_IN_SEC,
+  deleteOnExpire: true,
+  useClones: true
 })
 
 export interface DataLoaderContext {
@@ -164,7 +161,6 @@ export interface Oauth2Provider {
 
 interface PeerQueryParams {
   cacheKey: string
-  lastQueried: number
   readonly hostURL: string
   readonly variables: {[p: string]: any} | undefined
   readonly query: string
@@ -425,7 +421,7 @@ export async function contextFromRequest(
               }
             }
           })
-        ).map(({id, shared, published, pending}) => ({shared, ...(published || pending!), id})),
+        ).map(articleWithRevisionsToPublicArticle),
         'id'
       )
     ),
@@ -495,7 +491,7 @@ export async function contextFromRequest(
               }
             }
           })
-        ).map(({id, published, pending}) => ({...(published || pending!), id})),
+        ).map(pageWithRevisionsToPublicPage),
         'id'
       )
     ),
@@ -539,7 +535,7 @@ export async function contextFromRequest(
               }
             }
           })
-        ).map(({id, published, pending}) => ({...(published || pending!), id})),
+        ).map(pageWithRevisionsToPublicPage),
         'slug'
       )
     ),
@@ -606,7 +602,7 @@ export async function contextFromRequest(
                 })
               )?.value as number) ||
               parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
-              3000
+              10 * 1000 // 10 Seconds timeout in  ms
             const fetcher = createFetcher(peer.hostURL, peer.token, peerTimeout)
 
             return makeRemoteExecutableSchema({
@@ -640,7 +636,7 @@ export async function contextFromRequest(
                 })
               )?.value as number) ||
               parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
-              3000
+              10 * 1000 // 10 Seconds timeout in  ms
             const fetcher = createFetcher(
               url.resolve(peer.hostURL, 'admin'),
               peer.token,
@@ -1007,10 +1003,10 @@ async function loadFreshData(params: PeerQueryParams) {
   try {
     const abortController = new AbortController()
 
-    const peerTimeOUT = params.timeout ? params.timeout : 3000
+    const peerTimeOut = params.timeout ? params.timeout : 10 * 1000 // 10 Seconds timeout in  ms
 
     // Since we use auto refresh cache we can safely set the timeout to 3sec
-    setTimeout(() => abortController.abort(), peerTimeOUT)
+    setTimeout(() => abortController.abort(), peerTimeOut)
 
     const fetchResult = await fetch(params.hostURL, {
       method: 'POST',
@@ -1028,7 +1024,6 @@ async function loadFreshData(params: PeerQueryParams) {
         errors: [new GraphQLError(`Peer responded with invalid status: ${fetchResult?.status}`)]
       }
     }
-    params.lastQueried = params.lastQueried ? params.lastQueried : new Date().getTime()
     const cacheValue: PeerCacheValue = {
       data: res,
       queryParams: params
@@ -1046,43 +1041,36 @@ async function loadFreshData(params: PeerQueryParams) {
 }
 
 export function createFetcher(hostURL: string, token: string, peerTimeOut: number): Fetcher {
-  const data = new DataLoader<
-    {query: string} & Omit<IFetcherOperation, 'query' | 'context'>,
-    any,
-    string
-  >(async queries => {
-    const results = await Promise.all(
-      queries.map(async ({query, variables, operationName}) => {
-        // Initialize and prepare caching
-        const fetchParams: PeerQueryParams = {
-          hostURL,
-          variables,
-          query,
-          operationName,
-          token,
-          cacheKey: '',
-          lastQueried: 0,
-          timeout: peerTimeOut
-        }
-        fetchParams.cacheKey = generateCacheKey(fetchParams)
-        const cachedData: PeerCacheValue | undefined = fetcherCache.get(fetchParams.cacheKey)
+  const loadData = async ({
+    query,
+    variables,
+    operationName
+  }: {query: string} & Omit<IFetcherOperation, 'query' | 'context'>) => {
+    // Initialize and prepare caching
+    const fetchParams: PeerQueryParams = {
+      hostURL,
+      variables,
+      query,
+      operationName,
+      token,
+      cacheKey: '',
+      timeout: peerTimeOut
+    }
 
-        // On initial query add data to cache queue
-        if (!cachedData) {
-          return await loadFreshData(fetchParams)
-        }
+    fetchParams.cacheKey = generateCacheKey(fetchParams)
+    const cachedData = fetcherCache.get<PeerCacheValue>(fetchParams.cacheKey)
 
-        // Serve cached entries direct
-        cachedData.queryParams.lastQueried = new Date().getTime()
-        return cachedData.data
-      })
-    )
+    if (cachedData) {
+      // Serve cached entries direct
+      return cachedData.data
+    }
 
-    return results
-  })
+    return await loadFreshData(fetchParams)
+  }
 
   return async ({query: queryDocument, variables, operationName}) => {
     const query = print(queryDocument)
-    return data.load({query, variables, operationName})
+
+    return loadData({query, variables, operationName})
   }
 }
