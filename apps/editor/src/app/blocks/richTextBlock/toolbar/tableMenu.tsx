@@ -165,21 +165,6 @@ export function TableMenu() {
 
   return (
     <>
-      <Global
-        styles={css`
-          table {
-            white-space: pre-wrap;
-            width: 100%;
-            margin: 10px;
-            table-layout: fixed;
-          }
-
-          td {
-            border: 1px solid;
-            padding: 8px;
-          }
-        `}
-      />
       <Row>
         <Col xs={24}>
           <IconButton icon={<MdClose />} onClick={() => closeMenu()} />
