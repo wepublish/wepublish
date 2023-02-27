@@ -237,7 +237,7 @@ function PollEditView() {
               </Panel>
             </Col>
             <Col xs={24}>
-              <Panel header="info text to translate" bordered>
+              <Panel header={t('pollEditView.infoText')} bordered>
                 <div className="richTextFrame">
                   <RichTextBlock value={infoText} onChange={value => setInfoText(value)} />
                 </div>
