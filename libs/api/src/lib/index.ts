@@ -20,7 +20,6 @@ export * from './graphql/permissions'
 
 export * from './db/user'
 export * from './db/userRole'
-export * from './db/session'
 export * from './db/navigation'
 export * from './db/author'
 export * from './db/image'
@@ -61,3 +60,7 @@ export * from './challenges/algebraicCaptchaChallenge'
 export * from './payments/payrexxSubscriptionPaymentProvider'
 
 export {getUserForCredentials} from './graphql/user/user.queries'
+
+export * from '@wepublish/authentication/api'
+export * from '@wepublish/user/api'
+export * from '@wepublish/permissions/api'

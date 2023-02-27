@@ -1,9 +1,10 @@
 import {PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 import {SubscriptionFilter, SubscriptionSort} from '../../db/subscription'
-import {unselectPassword} from '../../db/user'
+import {unselectPassword} from '@wepublish/user/api'
 import {mapSubscriptionsAsCsv} from '../../utility'
-import {authorise, CanGetSubscription, CanGetSubscriptions, CanGetUsers} from '../permissions'
+import {authorise} from '../permissions'
+import {CanGetSubscription, CanGetSubscriptions, CanGetUsers} from '@wepublish/permissions/api'
 import {createSubscriptionFilter, getSubscriptions} from './subscription.queries'
 
 export const getSubscriptionById = (

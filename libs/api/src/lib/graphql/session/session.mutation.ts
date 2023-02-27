@@ -2,8 +2,8 @@ import {PrismaClient, User} from '@prisma/client'
 import nanoid from 'nanoid/generate'
 import {Issuer} from 'openid-client'
 import {Context} from '../../context'
-import {SessionType} from '../../db/session'
-import {unselectPassword} from '../../db/user'
+import {AuthSessionType} from '@wepublish/authentication/api'
+import {unselectPassword} from '@wepublish/user/api'
 import {
   InvalidCredentialsError,
   InvalidOAuth2TokenError,
@@ -52,7 +52,7 @@ export const createUserSession = async (
   })
 
   return {
-    type: SessionType.User,
+    type: AuthSessionType.User,
     id,
     user,
     token,

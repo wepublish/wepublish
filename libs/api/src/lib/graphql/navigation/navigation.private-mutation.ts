@@ -1,5 +1,6 @@
 import {Context} from '../../context'
-import {authorise, CanCreateNavigation, CanDeleteNavigation} from '../permissions'
+import {authorise} from '../permissions'
+import {CanCreateNavigation, CanDeleteNavigation} from '@wepublish/permissions/api'
 import {PrismaClient, Prisma} from '@prisma/client'
 
 export const deleteNavigationById = (

@@ -1,6 +1,7 @@
 import {Prisma, PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
-import {authorise, CanCreateEvent, CanDeleteEvent, CanUpdateEvent} from '../permissions'
+import {authorise} from '../permissions'
+import {CanCreateEvent, CanDeleteEvent, CanUpdateEvent} from '@wepublish/permissions/api'
 import {ApolloError} from 'apollo-server-express'
 
 export const deleteEvent = (

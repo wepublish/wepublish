@@ -1,7 +1,8 @@
 import {Prisma, PrismaClient} from '@prisma/client'
 import bcrypt from 'bcrypt'
 import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
-import {unselectPassword, UserFilter, UserSort, UserWithRelations} from '../../db/user'
+import {UserFilter, UserSort, UserWithRelations} from '../../db/user'
+import {unselectPassword} from '@wepublish/user/api'
 import {Validator} from '../../validator'
 import {getSortOrder, SortOrder} from '../queries/sort'
 

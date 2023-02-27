@@ -13,7 +13,7 @@ import {
 import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../context'
 import {SubscriptionSort, SubscriptionWithRelations} from '../db/subscription'
-import {unselectPassword} from '../db/user'
+import {unselectPassword} from '@wepublish/user/api'
 import {
   GraphQLDateFilter,
   GraphQLMetadataProperty,
