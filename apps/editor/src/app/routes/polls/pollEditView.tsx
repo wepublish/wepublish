@@ -11,13 +11,13 @@ import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Col, DatePicker, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
+import {Node} from 'slate'
 
 import {ModelTitle} from '../../atoms/modelTitle'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {PollAnswers} from '../../atoms/poll/pollAnswers'
 import {PollExternalVotes} from '../../atoms/poll/pollExternalVotes'
-import {createDefaultValue, RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../../blocks/types'
+import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 
 const OpensAtLabel = styled(Form.ControlLabel)`
   margin-right: 5px;
@@ -32,7 +32,6 @@ function PollEditView() {
   const params = useParams()
   const navigate = useNavigate()
   const [poll, setPoll] = useState<FullPoll | undefined>(undefined)
-  const [infoText, setInfoText] = useState<RichTextBlockValue>(createDefaultValue())
   const [close, setClose] = useState<boolean>(false)
   const closePath = '/polls'
 
@@ -77,7 +76,6 @@ function PollEditView() {
   useEffect(() => {
     if (data?.poll) {
       setPoll(data.poll)
-      setInfoText(data.poll.infoText ? data.poll.infoText : createDefaultValue())
     } else {
       setPoll(undefined)
     }
@@ -121,7 +119,7 @@ function PollEditView() {
       variables: {
         pollId: poll.id,
         question: poll.question,
-        infoText,
+        infoText: poll.infoText,
         opensAt,
         closedAt,
         answers: poll.answers?.map(answer => {
@@ -239,7 +237,15 @@ function PollEditView() {
             <Col xs={24}>
               <Panel header={t('pollEditView.infoText')} bordered>
                 <div className="richTextFrame">
-                  <RichTextBlock value={infoText} onChange={value => setInfoText(value)} />
+                  <RichTextBlock
+                    value={poll?.infoText ? poll?.infoText : []}
+                    onChange={value => {
+                      if (!poll) {
+                        return
+                      }
+                      setPoll({...poll, infoText: value as Node[]})
+                    }}
+                  />
                 </div>
               </Panel>
             </Col>
