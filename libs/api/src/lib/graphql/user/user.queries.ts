@@ -36,7 +36,6 @@ export const createUserOrder = (
 const createUserRoleFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
   if (filter?.userRole) {
     return {
-      // todo
       roleIDs: {
         hasSome: filter.userRole
       }
