@@ -5,7 +5,16 @@ import {PERMISSIONS_METADATA_KEY} from './permission.decorator'
 import {GqlExecutionContext} from '@nestjs/graphql'
 import {Permission} from './permissions'
 
-jest.mock('@nestjs/graphql')
+jest.mock('@nestjs/graphql', () => {
+  const original = jest.requireActual('@nestjs/graphql')
+
+  return {
+    ...original,
+    GqlExecutionContext: {
+      create: jest.fn()
+    }
+  }
+})
 
 const mockPermission: Permission = {
   id: 'Foo',
@@ -48,7 +57,7 @@ describe('PermissionsGuard', () => {
 
     const result = guard.canActivate(mockContext)
     expect(result).toBeTruthy()
-    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, {})
+    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, [{}, {}])
   })
 
   it('should return true if the user has the required permissions', () => {
@@ -60,7 +69,7 @@ describe('PermissionsGuard', () => {
 
     const result = guard.canActivate(mockContext)
     expect(result).toBeTruthy()
-    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, {})
+    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, [{}, {}])
   })
 
   it('should return false if the user is not logged in', () => {
@@ -82,7 +91,7 @@ describe('PermissionsGuard', () => {
 
     const result = guard.canActivate(mockContext)
     expect(result).toBeFalsy()
-    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, {})
+    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, [{}, {}])
   })
 
   it('should return false if the user does not have the required permissions', () => {
@@ -101,6 +110,6 @@ describe('PermissionsGuard', () => {
 
     const result = guard.canActivate(mockContext)
     expect(result).toBeFalsy()
-    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, {})
+    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, [{}, {}])
   })
 })

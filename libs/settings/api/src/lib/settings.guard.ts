@@ -2,7 +2,7 @@ import {Injectable, CanActivate, ExecutionContext} from '@nestjs/common'
 import {Reflector} from '@nestjs/core'
 import {SETTINGS_METADATA_KEY} from './settings.decorator'
 import {PrismaClient} from '@prisma/client'
-import {SettingName} from '@wepublish/settings/api'
+import {SettingName} from './setting'
 
 @Injectable()
 export class SettingsGuard implements CanActivate {

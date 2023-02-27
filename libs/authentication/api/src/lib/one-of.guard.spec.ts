@@ -7,24 +7,18 @@ import {of, Observable} from 'rxjs'
 import {ONE_OF_METADATA_KEY} from './one-of.decorator'
 
 export class MockTrueGuard implements CanActivate {
-  constructor() {}
-
   public canActivate(context: ExecutionContext): Observable<boolean> {
     return of(true)
   }
 }
 
 export class MockFalseGuard implements CanActivate {
-  constructor() {}
-
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     return false
   }
 }
 
 export class MockThrowGuard implements CanActivate {
-  constructor() {}
-
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     throw new UnauthorizedException()
   }
