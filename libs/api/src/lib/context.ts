@@ -60,9 +60,6 @@ import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
 import {URLAdapter} from './urlAdapter'
 import {getEvent} from './graphql/event/event.queries'
-import {getComment} from './graphql/comment/comment.private-queries'
-import {getSubscriptionById} from './graphql/subscription/subscription.private-queries'
-import {getUserById} from './graphql/user/user.private-queries'
 
 /**
  * Peered article cache configuration and setup
@@ -115,9 +112,9 @@ export interface DataLoaderContext {
   readonly pollById: DataLoader<string, FullPoll | null>
   readonly eventById: DataLoader<string, Event | null>
 
-  readonly commentById: DataLoader<string, Comment | null>
-  readonly subscriptionById: DataLoader<string, Subscription | null>
-  readonly userById: DataLoader<string, User | null>
+  readonly commentsById: DataLoader<string, Comment | null>
+  readonly subscriptionsById: DataLoader<string, Subscription | null>
+  readonly usersById: DataLoader<string, User | null>
 }
 
 export interface OAuth2Clients {
@@ -803,13 +800,53 @@ export async function contextFromRequest(
 
     pollById: new DataLoader(async ids => Promise.all(ids.map(id => getPoll(id, prisma.poll)))),
     eventById: new DataLoader(async ids => Promise.all(ids.map(id => getEvent(id, prisma.event)))),
-    commentById: new DataLoader(async ids =>
-      Promise.all(ids.map(id => getComment(id, prisma.comment)))
+
+    commentsById: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.comment.findMany({
+          where: {
+            id: {in: ids as string[]}
+          },
+          include: {
+            overriddenRatings: true,
+            revisions: {orderBy: {createdAt: 'asc'}}
+          }
+        }),
+        'id'
+      )
     ),
-    subscriptionById: new DataLoader(async ids =>
-      Promise.all(ids.map(id => getSubscriptionById(id, prisma.subscription)))
+
+    subscriptionsById: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.subscription.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          },
+          include: {
+            memberPlan: true,
+            user: true
+          }
+        }),
+        'id'
+      )
     ),
-    userById: new DataLoader(async ids => Promise.all(ids.map(id => getUserById(id, prisma.user))))
+
+    usersById: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.user.findMany({
+          where: {
+            id: {in: ids as string[]}
+          },
+          include: {address: true}
+        }),
+        'id'
+      )
+    )
   }
 
   const mailContext = new MailContext({

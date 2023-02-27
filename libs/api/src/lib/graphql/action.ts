@@ -47,7 +47,7 @@ const GraphQLCommentCreatedAction = new GraphQLObjectType<Action>({
     comment: {
       type: GraphQLNonNull(GraphQLComment),
       async resolve({id}, args, {loaders}) {
-        return await loaders.commentById.load(id)
+        return await loaders.commentsById.load(id)
       }
     }
   }
@@ -73,7 +73,7 @@ const GraphQLSubscriptionCreatedAction = new GraphQLObjectType<Action>({
     subscription: {
       type: GraphQLNonNull(GraphQLSubscription),
       async resolve({id}, args, {loaders}) {
-        return await loaders.subscriptionById.load(id)
+        return await loaders.subscriptionsById.load(id)
       }
     }
   }
@@ -99,7 +99,7 @@ const GraphQLUserCreatedAction = new GraphQLObjectType<Action>({
     user: {
       type: GraphQLNonNull(GraphQLUser),
       async resolve({id}, args, {loaders}) {
-        return await loaders.userById.load(id)
+        return await loaders.usersById.load(id)
       }
     }
   }

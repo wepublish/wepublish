@@ -5,7 +5,14 @@ import {CommentFilter, CommentSort} from '../../db/comment'
 import {PrismaClient} from '@prisma/client'
 import {getComments} from './comment.queries'
 
-export const getComment = (commentId: string, comment: PrismaClient['comment']) => {
+export const getComment = (
+  commentId: string,
+  authenticate: Context['authenticate'],
+  comment: PrismaClient['comment']
+) => {
+  const {roles} = authenticate()
+  authorise(CanGetComments, roles)
+
   return comment.findUnique({
     where: {
       id: commentId

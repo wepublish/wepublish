@@ -1,6 +1,6 @@
 import {Context} from '../../context'
 import {AuthSessionType} from '@wepublish/authentication/api'
-import {CanGetUsers} from '@wepublish/permissions/api'
+import {CanGetUser, CanGetUsers} from '@wepublish/permissions/api'
 import {authorise} from '../permissions'
 import {UserInputError} from '../../error'
 import {PrismaClient} from '@prisma/client'
@@ -14,7 +14,13 @@ export const getMe = (authenticate: Context['authenticate']) => {
   return session?.type === AuthSessionType.User ? session.user : null
 }
 
-export const getUserById = (id: string, user: PrismaClient['user']) => {
+export const getUserById = (
+  id: string,
+  authenticate: Context['authenticate'],
+  user: PrismaClient['user']
+) => {
+  const {roles} = authenticate()
+  authorise(CanGetUser, roles)
   if (!id) {
     throw new UserInputError('You must provide `id`')
   }

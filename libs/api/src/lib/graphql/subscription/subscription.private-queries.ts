@@ -4,11 +4,18 @@ import {SubscriptionFilter, SubscriptionSort} from '../../db/subscription'
 import {unselectPassword} from '@wepublish/user/api'
 import {mapSubscriptionsAsCsv} from '../../utility'
 import {authorise} from '../permissions'
-import {CanGetSubscriptions, CanGetUsers} from '@wepublish/permissions/api'
+import {CanGetSubscription, CanGetSubscriptions, CanGetUsers} from '@wepublish/permissions/api'
 import {createSubscriptionFilter, getSubscriptions} from './subscription.queries'
 import {format, lastDayOfMonth, startOfMonth, subMonths} from 'date-fns'
 
-export const getSubscriptionById = (id: string, subscription: PrismaClient['subscription']) => {
+export const getSubscriptionById = (
+  id: string,
+  authenticate: Context['authenticate'],
+  subscription: PrismaClient['subscription']
+) => {
+  const {roles} = authenticate()
+  authorise(CanGetSubscription, roles)
+
   return subscription.findUnique({
     where: {
       id

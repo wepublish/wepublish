@@ -1,10 +1,7 @@
 import {
   CanGetPaymentProviders,
   CanGetPeerArticle,
-  CanLoginAsOtherUser,
-  CanGetUser,
-  CanGetSubscription,
-  CanGetComments
+  CanLoginAsOtherUser
 } from '@wepublish/permissions/api'
 import {
   GraphQLID,
@@ -267,10 +264,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLUser,
       args: {id: {type: GraphQLID}},
       resolve: (root, {id}, {authenticate, prisma: {user}}) => {
-        const {roles} = authenticate()
-        authorise(CanGetUser, roles)
-
-        return getUserById(id, user)
+        return getUserById(id, authenticate, user)
       }
     },
 
@@ -294,9 +288,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLSubscription,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
       resolve: (root, {id}, {authenticate, prisma: {subscription}}) => {
-        const {roles} = authenticate()
-        authorise(CanGetSubscription, roles)
-        return getSubscriptionById(id, subscription)
+        return getSubscriptionById(id, authenticate, subscription)
       }
     },
 
@@ -446,9 +438,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {comment}}) => {
-        const {roles} = authenticate()
-        authorise(CanGetComments, roles)
-        return getComment(id, comment)
+        return getComment(id, authenticate, comment)
       }
     },
 
