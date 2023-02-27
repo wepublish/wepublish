@@ -11,7 +11,7 @@ import {
   MdDescription,
   MdEvent,
   MdGroup,
-  MdOutlineGridView
+  MdQueryStats
 } from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Avatar, Message, Timeline as RTimeline, toaster} from 'rsuite'
@@ -67,7 +67,7 @@ export function ActivityFeed() {
       const {actions} = data
       setActions(actions)
     }
-  }, [data?.actions])
+  }, [data])
 
   useEffect(() => {
     if (error)
@@ -234,7 +234,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
       return (
         <TimelineItem
           key={key}
-          icon={<MdOutlineGridView />}
+          icon={<MdQueryStats />}
           summary={
             <TranslationWithLink
               link={`/polls/edit/${action.poll.id}`}
