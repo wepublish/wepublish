@@ -776,8 +776,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     newSubscribersPerMonth: {
       type: GraphQLList(GraphQLSubscribersPerMonth),
       args: {monthsBack: {type: GraphQLInt}},
-      resolve: async (root, {monthsBack}, {authenticate, prisma: {subscription}}) => {
-        return await getNewSubscribersPerMonth(authenticate, subscription, monthsBack)
+      resolve: (root, {monthsBack}, {authenticate, prisma: {subscription}}) => {
+        return getNewSubscribersPerMonth(authenticate, subscription, monthsBack)
       }
     },
 
@@ -785,7 +785,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // =======
     actions: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAction))),
-      resolve: async (
+      resolve: (
         root,
         _,
         {authenticate, prisma: {article, page, comment, subscription, author, poll, user, event}}

@@ -98,7 +98,7 @@ export const getNewSubscribersPerMonth = async (
 
 const getSubscriberCount = (subscribers, monthsBack) => {
   const res = []
-  for (let i = 0; i < monthsBack; i++) {
+  for (let i = monthsBack - 1; i >= 0; i--) {
     const count = subscribers.filter(subsc => {
       return (
         subsc.startsAt > startOfMonth(subMonths(new Date(), i)) &&
@@ -109,5 +109,5 @@ const getSubscriberCount = (subscribers, monthsBack) => {
     month.setMonth(month.getMonth() - i)
     res.push({month: format(month, 'MMM-yy'), subscriberCount: count})
   }
-  return res.reverse()
+  return res
 }

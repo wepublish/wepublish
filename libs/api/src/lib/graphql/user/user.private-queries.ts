@@ -21,6 +21,7 @@ export const getUserById = (
 ) => {
   const {roles} = authenticate()
   authorise(CanGetUser, roles)
+
   if (!id) {
     throw new UserInputError('You must provide `id`')
   }
