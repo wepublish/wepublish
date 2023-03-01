@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common'
-import {PrismaService} from '@wepublish/api'
+import {OldContextService, PrismaService} from '@wepublish/api'
 import {
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
@@ -19,7 +19,10 @@ const SUBSCRIPTION_EVEN_MAX_DAYS_BEFORE = -25
 const SUBSCRIPTION_EVEN_MAX_DAYS_AFTER = 90
 @Injectable()
 export class SubscriptionFlowController {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private oldContextService: OldContextService
+  ) {}
   async getFlow(defaultFlowOnly: boolean, memberPlanId?: string) {
     let where = {}
     if (defaultFlowOnly) {
@@ -51,7 +54,7 @@ export class SubscriptionFlowController {
         })
     )
      **/
-    const pj = new PeriodicJobController(this.prismaService)
+    const pj = new PeriodicJobController(this.prismaService, this.oldContextService)
     await pj.execute()
 
     return await this.prismaService.subscriptionFlow.findMany({

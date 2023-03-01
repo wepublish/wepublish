@@ -14,6 +14,13 @@ import {
   ApolloServerPluginLandingPageDisabled
 } from 'apollo-server-core'
 import {graphqlUploadExpress} from 'graphql-upload'
+import {Context} from './context'
+
+declare global {
+  // Workaround not working with let or const https://stackoverflow.com/questions/68481686/type-typeof-globalthis-has-no-index-signature
+  // eslint-disable-next-line no-var
+  var oldContext: Context
+}
 
 let serverLogger: pino.Logger
 
@@ -109,7 +116,8 @@ export class WepublishServer {
         res.status(500).end()
       }
     })
-
+    // Only as workaround until everything is migrated to NESTJS
+    global.oldContext = await contextFromRequest(null, this.opts)
     this.app = app
   }
 

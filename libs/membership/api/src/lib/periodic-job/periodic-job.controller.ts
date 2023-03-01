@@ -1,4 +1,4 @@
-import {PrismaService} from '@wepublish/api'
+import {Context, OldContextService, PrismaService} from '@wepublish/api'
 import {addDays, differenceInDays, set, subMinutes} from 'date-fns'
 import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subscription-event-dictionary'
 import {PeriodicJob, SubscriptionEvent} from '@prisma/client'
@@ -7,11 +7,18 @@ import {PeriodicJobRunObject} from './periodic-job.type'
 export class PeriodicJobController {
   private subscriptionEventDictionary: SubscriptionEventDictionary
   private runningJob: PeriodicJob | undefined = undefined
-  constructor(private readonly prismaService: PrismaService) {
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly oldContextService: OldContextService
+  ) {
     this.subscriptionEventDictionary = new SubscriptionEventDictionary(this.prismaService)
   }
 
   public async execute() {
+    const x = global.oldContext
+    console.log(
+      this.oldContextService.context.generateJWT({id: '223', audience: '111', expiresInMinutes: 10})
+    )
     await this.loadEnvironment()
     for (const periodicJobRunObject of await this.getOutstandingRuns()) {
       if (periodicJobRunObject.isRetry) {
