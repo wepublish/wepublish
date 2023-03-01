@@ -16,7 +16,7 @@ export function SubscriberChart() {
   const {t} = useTranslation()
   const {data, loading} = useNewSubscribersPerMonthQuery({variables: {months: 12}})
 
-  const pastYearSubscriptions = useMemo(() => data?.newSubscribersPerMonth ?? [], [data])
+  const pastYearSubscriptions = data?.newSubscribersPerMonth ?? []
   const hasSubscriptions = useMemo(
     () =>
       data?.newSubscribersPerMonth?.some((sub: SubscribersPerMonth) => {
