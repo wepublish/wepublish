@@ -2595,6 +2595,7 @@ export type UserCreatedAction = {
 export type UserFilter = {
   name?: InputMaybe<Scalars['String']>;
   text?: InputMaybe<Scalars['String']>;
+  userRole?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type UserInput = {
@@ -3647,7 +3648,7 @@ export type FullUserFragment = { __typename?: 'User', id: string, createdAt: str
 export type UserSubscriptionFragment = { __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> };
 
 export type UserListQueryVariables = Exact<{
-  filter?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<UserFilter>;
   cursor?: InputMaybe<Scalars['ID']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -8599,9 +8600,9 @@ export type DeleteTokenMutationHookResult = ReturnType<typeof useDeleteTokenMuta
 export type DeleteTokenMutationResult = Apollo.MutationResult<DeleteTokenMutation>;
 export type DeleteTokenMutationOptions = Apollo.BaseMutationOptions<DeleteTokenMutation, DeleteTokenMutationVariables>;
 export const UserListDocument = gql`
-    query UserList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
+    query UserList($filter: UserFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
   users(
-    filter: {text: $filter}
+    filter: $filter
     cursor: $cursor
     take: $take
     skip: $skip

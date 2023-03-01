@@ -2593,6 +2593,7 @@ export type UserCreatedAction = {
 export type UserFilter = {
   name?: InputMaybe<Scalars['String']>;
   text?: InputMaybe<Scalars['String']>;
+  userRole?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type UserInput = {
