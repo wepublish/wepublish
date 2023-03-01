@@ -225,7 +225,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           details={
             <>
               {action.author.name}
-              {action.author.jobTitle ? ', ' + action.author.jobTitle : ''}
+              {action.author.jobTitle  && `, ${action.author.jobTitle}`}
             </>
           }
         />
