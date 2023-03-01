@@ -1371,7 +1371,9 @@
       "reactivation": "Reactivated",
       "invoice_creation": "Invoice creation",
       "deactivation_unpaid": "Deactivated for non payment",
-      "custom": "Custom event"
+      "custom": "Custom event",
+      "settings": "Subscription flow settings",
+      "edit": "Edit subscription flow"
     }
   }
 }
