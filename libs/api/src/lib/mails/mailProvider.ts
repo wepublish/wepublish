@@ -39,9 +39,16 @@ export type WithExternalId = {
   externalMailTemplateId: string
 }
 
+export enum MailTemplateStatus {
+  Ok = 'ok',
+  RemoteMissing = 'remoteMissing',
+  Unused = 'unused',
+  Error = 'error'
+}
+
 export type WithUrlAndStatus<T> = T & {
   url: string
-  status: string
+  status: MailTemplateStatus
 }
 
 export class MailProviderError extends Error {

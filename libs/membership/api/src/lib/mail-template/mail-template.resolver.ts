@@ -1,6 +1,6 @@
 import {Mutation, Query, Resolver} from '@nestjs/graphql'
 import {MailTemplate} from '@prisma/client'
-import {PrismaService, WithUrlAndStatus} from '@wepublish/api'
+import {MailTemplateStatus, PrismaService, WithUrlAndStatus} from '@wepublish/api'
 import {MailProviderService} from './mail-provider.service'
 import {MailTemplateSyncService} from './mail-template-sync.service'
 import {MailProviderModel, MailTemplateWithUrlAndStatusModel} from './mail-template.model'
@@ -40,10 +40,20 @@ export class MailTemplatesResolver {
     const usedTemplates = await this.mailProviderService.getUsedTemplateIdentifiers()
 
     return templates.map(t => {
+      let status = MailTemplateStatus.Ok
+
+      if (usedTemplates.indexOf(t.externalMailTemplateId) === -1) {
+        status = MailTemplateStatus.Unused
+      }
+
+      if (t.remoteMissing) {
+        status = MailTemplateStatus.RemoteMissing
+      }
+
       return {
         ...t,
         url: provider.getTemplateUrl(t),
-        status: usedTemplates.indexOf(t.externalMailTemplateId) > -1 ? 'ok' : 'unused'
+        status
       }
     })
   }
