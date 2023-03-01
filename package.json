@@ -10,7 +10,7 @@
     "clean": "run-p --print-label clean:**",
     "test": "run-p --print-label test:**",
     "build": "run-p --print-label build:api build:editor build:api-example build:website-example",
-    "prerelease": "run-s clean build",
+    "prerelease": "npm run build",
     "changelog": "node -r dotenv/config ./node_modules/.bin/lerna-changelog",
     "release": "lerna publish from-package --ignore-scripts",
     "release:next": "lerna publish from-package --ignore-scripts --dist-tag next",

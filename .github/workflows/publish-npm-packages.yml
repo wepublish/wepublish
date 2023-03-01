@@ -28,15 +28,12 @@ jobs:
       - name: "npm install"
         run: npm ci
 
-      - name: "Build"
-        run: npm run build
-
       - if: |
           contains(github.ref, 'tags/') && contains(github.ref, 'alpha')
         name: "Publish next npms"
-        run: npm run publish:next -- --yes
+        run: npm run release:next -- --yes
 
       - if: |
           contains(github.ref, 'tags/') && !contains(github.ref, 'alpha')
         name: "Publish latest npms"
-        run: npm run publish -- --yes
+        run: npm run release -- --yes
