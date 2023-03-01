@@ -266,7 +266,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
         />
       )
     default:
-      return <></>
+      return null
   }
 }
 
