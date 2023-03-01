@@ -582,6 +582,7 @@ export type FullPoll = {
   closedAt?: Maybe<Scalars['DateTime']>;
   externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
   id: Scalars['ID'];
+  infoText?: Maybe<Scalars['RichText']>;
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
 };
@@ -1353,6 +1354,7 @@ export type MutationUpdatePollArgs = {
   answers?: InputMaybe<Array<UpdatePollAnswer>>;
   closedAt?: InputMaybe<Scalars['DateTime']>;
   externalVoteSources?: InputMaybe<Array<UpdatePollExternalVoteSources>>;
+  infoText?: InputMaybe<Scalars['RichText']>;
   opensAt?: InputMaybe<Scalars['DateTime']>;
   pollId: Scalars['ID'];
   question?: InputMaybe<Scalars['String']>;
@@ -3365,12 +3367,13 @@ export type UpdatePollMutationVariables = Exact<{
   opensAt?: InputMaybe<Scalars['DateTime']>;
   closedAt?: InputMaybe<Scalars['DateTime']>;
   question?: InputMaybe<Scalars['String']>;
+  infoText?: InputMaybe<Scalars['RichText']>;
   answers?: InputMaybe<Array<UpdatePollAnswer> | UpdatePollAnswer>;
   externalVoteSources?: InputMaybe<Array<UpdatePollExternalVoteSources> | UpdatePollExternalVoteSources>;
 }>;
 
 
-export type UpdatePollMutation = { __typename?: 'Mutation', updatePoll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, answers?: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }> | null, externalVoteSources?: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: number | null }> | null }> | null } | null };
+export type UpdatePollMutation = { __typename?: 'Mutation', updatePoll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: Node[] | null, answers?: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }> | null, externalVoteSources?: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: number | null }> | null }> | null } | null };
 
 export type DeletePollMutationVariables = Exact<{
   deletePollId: Scalars['ID'];
@@ -3426,7 +3429,7 @@ export type PollQueryVariables = Exact<{
 }>;
 
 
-export type PollQuery = { __typename?: 'Query', poll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, answers?: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }> | null, externalVoteSources?: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: number | null }> | null }> | null } | null };
+export type PollQuery = { __typename?: 'Query', poll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: Node[] | null, answers?: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }> | null, externalVoteSources?: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: number | null }> | null }> | null } | null };
 
 export type FullSettingFragment = { __typename?: 'Setting', id: string, name: SettingName, value: any, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null } | null };
 
@@ -7450,12 +7453,13 @@ export type CreatePollMutationHookResult = ReturnType<typeof useCreatePollMutati
 export type CreatePollMutationResult = Apollo.MutationResult<CreatePollMutation>;
 export type CreatePollMutationOptions = Apollo.BaseMutationOptions<CreatePollMutation, CreatePollMutationVariables>;
 export const UpdatePollDocument = gql`
-    mutation UpdatePoll($pollId: ID!, $opensAt: DateTime, $closedAt: DateTime, $question: String, $answers: [UpdatePollAnswer!], $externalVoteSources: [UpdatePollExternalVoteSources!]) {
+    mutation UpdatePoll($pollId: ID!, $opensAt: DateTime, $closedAt: DateTime, $question: String, $infoText: RichText, $answers: [UpdatePollAnswer!], $externalVoteSources: [UpdatePollExternalVoteSources!]) {
   updatePoll(
     pollId: $pollId
     opensAt: $opensAt
     closedAt: $closedAt
     question: $question
+    infoText: $infoText
     answers: $answers
     externalVoteSources: $externalVoteSources
   ) {
@@ -7463,6 +7467,7 @@ export const UpdatePollDocument = gql`
     question
     opensAt
     closedAt
+    infoText
     answers {
       id
       pollId
@@ -7494,6 +7499,7 @@ export type UpdatePollMutationFn = Apollo.MutationFunction<UpdatePollMutation, U
  *      opensAt: // value for 'opensAt'
  *      closedAt: // value for 'closedAt'
  *      question: // value for 'question'
+ *      infoText: // value for 'infoText'
  *      answers: // value for 'answers'
  *      externalVoteSources: // value for 'externalVoteSources'
  *   },
@@ -7741,6 +7747,7 @@ export const PollDocument = gql`
     question
     opensAt
     closedAt
+    infoText
     answers {
       id
       pollId

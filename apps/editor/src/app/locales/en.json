@@ -662,6 +662,7 @@
       "opensAtLabel": "Opened at",
       "closesAtLabel": "Closed at",
       "pollExternalVotesPanelHeader": "External Vote Sources",
+      "infoText": "Info text",
       "defaultAnswer": "Default answer"
     },
     "pollAnswer": {

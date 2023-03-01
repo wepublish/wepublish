@@ -580,6 +580,7 @@ export type FullPoll = {
   closedAt?: Maybe<Scalars['DateTime']>;
   externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
   id: Scalars['ID'];
+  infoText?: Maybe<Scalars['RichText']>;
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
 };
@@ -1351,6 +1352,7 @@ export type MutationUpdatePollArgs = {
   answers?: InputMaybe<Array<UpdatePollAnswer>>;
   closedAt?: InputMaybe<Scalars['DateTime']>;
   externalVoteSources?: InputMaybe<Array<UpdatePollExternalVoteSources>>;
+  infoText?: InputMaybe<Scalars['RichText']>;
   opensAt?: InputMaybe<Scalars['DateTime']>;
   pollId: Scalars['ID'];
   question?: InputMaybe<Scalars['String']>;
