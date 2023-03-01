@@ -15,10 +15,6 @@ export class PeriodicJobController {
   }
 
   public async execute() {
-    const x = global.oldContext
-    console.log(
-      this.oldContextService.context.generateJWT({id: '223', audience: '111', expiresInMinutes: 10})
-    )
     await this.loadEnvironment()
     for (const periodicJobRunObject of await this.getOutstandingRuns()) {
       if (periodicJobRunObject.isRetry) {
@@ -28,8 +24,7 @@ export class PeriodicJobController {
       }
       try {
         // Put code here to execute as job use periodicJobRunObject as input
-        this.subscriptionEventDictionary.buildEventDateList(new Date())
-        console.log(' XXXXXXXXXXXXXX: ' + this.subscriptionEventDictionary.getDatesWithEvent())
+        this.subscriptionEventDictionary.buildEventDateList(periodicJobRunObject.date)
         const subscriptionsWithEvents = await this.prismaService.subscription.findMany({
           where: {
             OR: this.subscriptionEventDictionary.getDatesWithEvent().map(date => ({
@@ -60,19 +55,6 @@ export class PeriodicJobController {
             )
           })
 
-          console.log(
-            this.setDateMidnight(subscriptionsWithEvent.paidUntil!),
-            '===',
-            periodicJobRunObject.date
-          )
-          console.log(
-            differenceInDays(
-              periodicJobRunObject.date,
-              this.setDateMidnight(subscriptionsWithEvent.paidUntil!)
-            )
-          )
-          console.log(subscriptionDictionary)
-
           // Here renewal code
           if (
             this.setDateMidnight(subscriptionsWithEvent.paidUntil!).getTime() ==
@@ -93,12 +75,27 @@ export class PeriodicJobController {
           // HERE DO OTHER ACTIONS
           for (const event of subscriptionDictionary) {
             if (event.type === SubscriptionEvent.CUSTOM) {
+              await oldContext.mailContext.sendRemoteTemplate({
+                remoteTemplate: event.externalMailTemplate || '',
+                recipient: subscriptionsWithEvent.user.email,
+                data: {}
+              })
               console.log(`SEND MAIL TEMPLATE ${event.externalMailTemplate}`)
             } else if (event.type === SubscriptionEvent.DEACTIVATION_UNPAID) {
+              await oldContext.mailContext.sendRemoteTemplate({
+                remoteTemplate: event.externalMailTemplate || '',
+                recipient: subscriptionsWithEvent.user.email,
+                data: {}
+              })
               console.log(
                 `SEND MAIL TEMPLATE ${event.externalMailTemplate} and deactivate subscription`
               )
             } else if (event.type === SubscriptionEvent.INVOICE_CREATION) {
+              await oldContext.mailContext.sendRemoteTemplate({
+                remoteTemplate: event.externalMailTemplate || '',
+                recipient: subscriptionsWithEvent.user.email,
+                data: {}
+              })
               console.log(`SEND MAIL EMPLATE ${event.externalMailTemplate} and create new invoice`)
             }
           }

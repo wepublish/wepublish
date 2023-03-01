@@ -20,6 +20,11 @@ export interface SendEMailProps {
   readonly recipient: string
   readonly data: Record<string, any>
 }
+export interface SendRemoteEMailProps {
+  readonly remoteTemplate: string
+  readonly recipient: string
+  readonly data: Record<string, any>
+}
 
 export interface MailTemplateMap {
   type: SendMailType
@@ -82,6 +87,28 @@ export class MailContext implements MailContext {
     })
 
     this.mailTemplateMaps = props.mailTemplateMaps ?? []
+  }
+  async sendRemoteTemplate({remoteTemplate, recipient, data}: SendRemoteEMailProps): Promise<void> {
+    const mailLog = await this.prisma.mailLog.create({
+      data: {
+        state: MailLogState.submitted,
+        subject: 'N/A',
+        recipient,
+        mailProviderID: this.mailProvider?.id ?? 'N/A',
+        modifiedAt: new Date()
+      }
+    })
+
+    if (this.mailProvider) {
+      await this.mailProvider.sendMail({
+        mailLogID: mailLog.id,
+        recipient,
+        replyToAddress: this.defaultReplyToAddress ?? this.defaultFromAddress,
+        subject: '',
+        template: remoteTemplate,
+        templateData: data
+      })
+    }
   }
 
   async sendMail({type, recipient, data}: SendEMailProps): Promise<void> {
