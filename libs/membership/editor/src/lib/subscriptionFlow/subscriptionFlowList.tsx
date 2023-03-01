@@ -44,7 +44,7 @@ export default function () {
             <MdTune />
             {defaultFlowOnly
               ? t('subscriptionFlow.titleDefaultSettings')
-              : `${memberPlan?.name} ${t('subscriptionFlow.titleSettings')}`}
+              : `${memberPlan?.name || ''} ${t('subscriptionFlow.titleSettings')}`}
           </h2>
           <Typography variant="subtitle1">{t('subscriptionFlow.settingsDescription')}</Typography>
         </ListViewHeader>
