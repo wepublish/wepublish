@@ -29,6 +29,6 @@
     "libs/api",
     "libs/nest-modules",
     "libs/analytics",
-    "apps/editor",
+    "apps/editor"
   ]
 }
