@@ -1,4 +1,9 @@
-import {Field, Int, ObjectType} from '@nestjs/graphql'
+import {Field, Int, ObjectType, registerEnumType} from '@nestjs/graphql'
+import {MailTemplateStatus} from '@wepublish/api'
+
+registerEnumType(MailTemplateStatus, {
+  name: 'MailTemplateStatus'
+})
 
 @ObjectType()
 export class MailTemplateWithUrlAndStatusModel {

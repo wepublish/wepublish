@@ -1361,7 +1361,12 @@
       "view": "View at {{provider}}",
       "status": "Status",
       "synchronize": "Synchronize templates",
-      "statusDeleted": "Template '{{internalName}}' removed at {{provider}}"
+      "statuses": {
+        "ok": "🗸",
+        "remoteMissing": "Template '{{internalName}}' removed at {{provider}}",
+        "unused": "Template '{{internalName}}' is unused",
+        "error": "Unknown error"
+      }
     },
     "subscriptionFlow": {
       "subscribe": "Subscribe",
@@ -1371,7 +1376,13 @@
       "reactivation": "Reactivated",
       "invoice_creation": "Invoice creation",
       "deactivation_unpaid": "Deactivated for non payment",
-      "custom": "Custom event"
+      "custom": "Custom event",
+      "settings": "Subscription flow settings",
+      "edit": "Edit subscription flow",
+      "titleSettings": "Subscription settings",
+      "titleDefaultSettings": "Default subscription settings",
+      "settingsDescription": "You can overwrite these settings for every member plan.",
+      "addNew": "Create new flow"
     }
   }
 }

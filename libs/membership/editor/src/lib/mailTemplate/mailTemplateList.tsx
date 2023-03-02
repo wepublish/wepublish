@@ -98,18 +98,16 @@ export function MailTemplateList() {
                     )}
                   </TableCell>
                   <TableCell>
-                    {template.remoteMissing ? (
+                    {template.status === 'ok' ? (
+                      <MdCheck />
+                    ) : (
                       <>
                         <MdWarning />{' '}
-                        {t('mailTemplates.statusDeleted', {
+                        {t(`mailTemplates.statuses.${template.status}`, {
                           provider: queryData?.provider.name,
                           internalName: template.externalMailTemplateId
                         })}
                       </>
-                    ) : template.status !== 'ok' ? (
-                      template.status
-                    ) : (
-                      <MdCheck />
                     )}
                   </TableCell>
                 </TableRow>

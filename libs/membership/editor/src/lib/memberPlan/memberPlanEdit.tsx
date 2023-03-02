@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react'
 import {SingleView} from '../../../../../ui/src/lib/singleView/singleView'
 import {SingleViewTitle} from '../../../../../ui/src/lib/singleView/singleViewTitle'
 import {SingleViewContent} from '../../../../../ui/src/lib/singleView/singleViewContent'
-import {useNavigate, useParams} from 'react-router-dom'
+import {Link, useNavigate, useParams} from 'react-router-dom'
 import {useTranslation} from 'react-i18next'
 import {createCheckedPermissionComponent} from '../../../../../../apps/editor/src/app/atoms/permissionControl'
 import {
@@ -216,8 +216,10 @@ function MemberPlanEdit() {
 
           <Row>
             <Col xs={24}>
-              <Panel bordered header="User-Flow Einstellungen">
-                To be programmed
+              <Panel bordered header={t('subscriptionFlow.settings')}>
+                <Link to={`/communicationflows/edit/${memberPlanId}`}>
+                  {t('subscriptionFlow.edit')}
+                </Link>
               </Panel>
             </Col>
           </Row>

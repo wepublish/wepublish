@@ -42,7 +42,7 @@ import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
 import {LocalStorageKey} from './utility'
-import SubscriptionSettings from '../../../../libs/membership/editor/src/lib/subscriptionFlow/defaultSubscriptionFlow'
+import SubscriptionFlowList from '../../../../libs/membership/editor/src/lib/subscriptionFlow/subscriptionFlowList'
 import {MemberPlanEdit} from '../../../../libs/membership/editor/src/lib/memberPlan/memberPlanEdit'
 import {MailTemplateList} from '../../../../libs/membership/editor/src/lib/mailTemplate/mailTemplateList'
 
@@ -540,7 +540,7 @@ export function App() {
               path="communicationflows/edit/:id"
               element={
                 <Base>
-                  <SubscriptionSettings />
+                  <SubscriptionFlowList />
                 </Base>
               }
             />

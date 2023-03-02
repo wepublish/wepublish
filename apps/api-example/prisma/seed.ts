@@ -69,7 +69,7 @@ async function seed() {
       name: 'Shiny Rocks',
       slug: 'shiny-rocks',
       description: 'Payment by transaction of a handful of shiny rocks',
-      paymentProviderID: '1234',
+      paymentProviderID: 'stripe_checkout',
       active: true
     }
   })
