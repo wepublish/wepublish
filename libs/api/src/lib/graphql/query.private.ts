@@ -133,7 +133,7 @@ import {
   getSubscriptionsAsCSV
 } from './subscription/subscription.private-queries'
 import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
-import {getAdminTags} from './tag/tag.private-query'
+import {getTags} from './tag/tag.private-query'
 import {TagSort} from './tag/tag.query'
 import {GraphQLToken} from './token'
 import {getTokens} from './token/token.private-queries'
@@ -712,7 +712,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       resolve: (root, {filter, sort, order, cursor, take, skip}, {authenticate, prisma}) =>
-        getAdminTags(filter, sort, order, cursor, skip, take, authenticate, prisma.tag)
+        getTags(filter, sort, order, cursor, skip, take, authenticate, prisma.tag)
     },
 
     // Polls
