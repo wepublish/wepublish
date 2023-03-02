@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 import {RecentActionsQuery, useRecentActionsQuery} from '@wepublish/editor/api'
 import {formatDistanceToNow} from 'date-fns'
-import {ReactNode, useEffect, useState} from 'react'
+import {ActionType} from 'libs/api/src/lib/db/action'
+import {ReactNode, useEffect} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
 import {
   MdAccountCircle,
@@ -60,14 +61,8 @@ type Action = NonNullable<RecentActionsQuery['actions']>[number]
 
 export function ActivityFeed() {
   const {data, error} = useRecentActionsQuery({fetchPolicy: 'no-cache'})
-  const [actions, setActions] = useState<Action[] | undefined>([])
 
-  useEffect(() => {
-    if (data?.actions) {
-      const {actions} = data
-      setActions(actions)
-    }
-  }, [data])
+  const actions = data?.actions ?? []
 
   useEffect(() => {
     if (error)
@@ -106,7 +101,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
   const {t} = useTranslation()
 
   switch (action.__typename) {
-    case 'ArticleCreatedAction':
+    case ActionType.ArticleCreated:
       return (
         <TimelineItem
           key={key}
@@ -121,7 +116,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           details={action.article.latest?.title ?? t('articles.overview.untitled')}
         />
       )
-    case 'PageCreatedAction':
+    case ActionType.PageCreated:
       return (
         <TimelineItem
           key={key}
@@ -140,7 +135,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           }
         />
       )
-    case 'CommentCreatedAction': {
+    case ActionType.CommentCreated: {
       const userName = action.comment?.user?.name ?? action.comment?.guestUsername ?? ''
       const commentTitle = action.comment?.revisions[action.comment.revisions.length - 1]?.title
         ? ': ' + action.comment?.revisions[action.comment?.revisions?.length - 1]?.title
@@ -176,7 +171,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
         />
       )
     }
-    case 'SubscriptionCreatedAction':
+    case ActionType.SubscriptionCreated:
       return (
         <TimelineItem
           key={key}
@@ -195,7 +190,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           }
         />
       )
-    case 'UserCreatedAction':
+    case ActionType.UserCreated:
       return (
         <TimelineItem
           key={key}
@@ -212,7 +207,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           }`}
         />
       )
-    case 'AuthorCreatedAction':
+    case ActionType.AuthorCreated:
       return (
         <TimelineItem
           key={key}
@@ -232,7 +227,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           }
         />
       )
-    case 'PollStartedAction':
+    case ActionType.PollStarted:
       return (
         <TimelineItem
           key={key}
@@ -247,7 +242,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           details={action.poll.question}
         />
       )
-    case 'EventCreatedAction':
+    case ActionType.EventCreated:
       return (
         <TimelineItem
           key={key}
