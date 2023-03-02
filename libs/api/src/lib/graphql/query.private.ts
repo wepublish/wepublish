@@ -63,7 +63,7 @@ import {
   GraphQLEventSort
 } from './event/event'
 import {getAdminEvents} from './event/event.private-queries'
-import {EventSort, getEvent} from './event/event.queries'
+import {EventSort, getEvent} from './event/event.query'
 import {GraphQLImage, GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort} from './image'
 import {getAdminImages, getImageById} from './image/image.private-queries'
 import {
@@ -135,7 +135,8 @@ import {
   getNewSubscribersPerMonth
 } from './subscription/subscription.private-queries'
 import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
-import {getTags, TagSort} from './tag/tag.private-query'
+import {getTags} from './tag/tag.private-query'
+import {TagSort} from './tag/tag.query'
 import {GraphQLToken} from './token'
 import {getTokens} from './token/token.private-queries'
 import {GraphQLUser, GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort} from './user'

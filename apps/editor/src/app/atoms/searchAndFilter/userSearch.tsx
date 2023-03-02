@@ -1,5 +1,5 @@
 import {FullUserFragment, useUserListQuery} from '@wepublish/editor/api'
-import {useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {Form, Message, SelectPicker, toaster} from 'rsuite'
 
 export interface UserSearchProps {

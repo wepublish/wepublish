@@ -1009,6 +1009,7 @@
       "opensAtLabel": "Commence le",
       "closesAtLabel": "Clôture à",
       "pollExternalVotesPanelHeader": "Soruces de vote externes",
+      "infoText": "Texte d'information",
       "defaultAnswer": "Réponse standard"
     },
     "pollAnswer": {

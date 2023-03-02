@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {ReactNode, useEffect, useState} from 'react'
+import {forwardRef, ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
   MdAccountCircle,
@@ -48,7 +48,7 @@ export interface BaseProps {
   children?: ReactNode
 }
 
-const NavLink = React.forwardRef<HTMLAnchorElement, any>(({href, children, ...rest}, ref) => (
+const NavLink = forwardRef<HTMLAnchorElement, any>(({href, children, ...rest}, ref) => (
   <Link ref={ref} to={href} {...rest}>
     {children}
   </Link>
