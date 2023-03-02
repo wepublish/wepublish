@@ -362,6 +362,7 @@ export type FullPoll = {
   closedAt?: Maybe<Scalars['DateTime']>;
   externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
   id: Scalars['ID'];
+  infoText?: Maybe<Scalars['RichText']>;
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
 };
@@ -862,6 +863,12 @@ export type PeerProfile = {
   websiteURL: Scalars['String'];
 };
 
+export type Phrase = {
+  __typename?: 'Phrase';
+  articles: Array<Article>;
+  pages: Array<Page>;
+};
+
 export type Point = {
   __typename?: 'Point';
   x: Scalars['Float'];
@@ -971,6 +978,8 @@ export type Query = {
   peerArticle?: Maybe<Article>;
   /** This query returns the peer profile. */
   peerProfile: PeerProfile;
+  /** This query performs a fulltext search on titles and blocks of articles/pages and returns all matching ones. */
+  phrase?: Maybe<Phrase>;
   /** This query returns a poll with all the needed data */
   poll: FullPoll;
   ratingSystem: FullCommentRatingSystem;
@@ -1097,6 +1106,11 @@ export type QueryPeerArticleArgs = {
   id: Scalars['ID'];
   peerID?: InputMaybe<Scalars['ID']>;
   peerSlug?: InputMaybe<Scalars['Slug']>;
+};
+
+
+export type QueryPhraseArgs = {
+  query: Scalars['String'];
 };
 
 
@@ -1497,6 +1511,13 @@ export type PeerQueryVariables = Exact<{
 
 
 export type PeerQuery = { __typename?: 'Query', peer?: { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string } | null };
+
+export type PhraseQueryVariables = Exact<{
+  query: Scalars['String'];
+}>;
+
+
+export type PhraseQuery = { __typename?: 'Query', phrase?: { __typename?: 'Phrase', articles: Array<{ __typename?: 'Article', id: string, slug: string, title: string, blocks: Array<{ __typename?: 'BildwurfAdBlock' } | { __typename?: 'CommentBlock' } | { __typename?: 'EmbedBlock' } | { __typename?: 'EventBlock' } | { __typename?: 'FacebookPostBlock' } | { __typename?: 'HTMLBlock' } | { __typename?: 'ImageBlock' } | { __typename?: 'ImageGalleryBlock' } | { __typename?: 'InstagramPostBlock' } | { __typename?: 'LinkPageBreakBlock' } | { __typename?: 'ListicleBlock' } | { __typename?: 'PolisConversationBlock' } | { __typename?: 'PollBlock' } | { __typename?: 'QuoteBlock' } | { __typename?: 'RichTextBlock', richText: Node[] } | { __typename?: 'SoundCloudTrackBlock' } | { __typename?: 'TeaserGridBlock' } | { __typename?: 'TeaserGridFlexBlock' } | { __typename?: 'TikTokVideoBlock' } | { __typename?: 'TitleBlock' } | { __typename?: 'TwitterTweetBlock' } | { __typename?: 'VimeoVideoBlock' } | { __typename?: 'YouTubeVideoBlock' }> }>, pages: Array<{ __typename?: 'Page', id: string, slug: string, title: string, blocks: Array<{ __typename?: 'BildwurfAdBlock' } | { __typename?: 'CommentBlock' } | { __typename?: 'EmbedBlock' } | { __typename?: 'EventBlock' } | { __typename?: 'FacebookPostBlock' } | { __typename?: 'HTMLBlock' } | { __typename?: 'ImageBlock' } | { __typename?: 'ImageGalleryBlock' } | { __typename?: 'InstagramPostBlock' } | { __typename?: 'LinkPageBreakBlock' } | { __typename?: 'ListicleBlock' } | { __typename?: 'PolisConversationBlock' } | { __typename?: 'PollBlock' } | { __typename?: 'QuoteBlock' } | { __typename?: 'RichTextBlock', richText: Node[] } | { __typename?: 'SoundCloudTrackBlock' } | { __typename?: 'TeaserGridBlock' } | { __typename?: 'TeaserGridFlexBlock' } | { __typename?: 'TikTokVideoBlock' } | { __typename?: 'TitleBlock' } | { __typename?: 'TwitterTweetBlock' } | { __typename?: 'VimeoVideoBlock' } | { __typename?: 'YouTubeVideoBlock' }> }> } | null };
 
 export type FullUserFragment = { __typename?: 'User', name: string, email: string };
 
@@ -1987,6 +2008,32 @@ export const Peer = gql`
   }
 }
     ${PeerRef}`;
+export const Phrase = gql`
+    query Phrase($query: String!) {
+  phrase(query: $query) {
+    articles {
+      id
+      slug
+      title
+      blocks {
+        ... on RichTextBlock {
+          richText
+        }
+      }
+    }
+    pages {
+      id
+      slug
+      title
+      blocks {
+        ... on RichTextBlock {
+          richText
+        }
+      }
+    }
+  }
+}
+    `;
 export const CreateSession = gql`
     mutation CreateSession($email: String!, $password: String!) {
   createSession(email: $email, password: $password) {

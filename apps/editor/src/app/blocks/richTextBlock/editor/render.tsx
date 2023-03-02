@@ -3,9 +3,17 @@ import {RenderElementProps, RenderLeafProps} from 'slate-react'
 
 import {BlockFormat, InlineFormat, TextFormat} from './formats'
 
+const Table = styled.table`
+  white-space: pre-wrap;
+  width: 100%;
+  margin: 10px;
+  table-layout: fixed;
+`
+
 const TD = styled.td<{borderColor: string}>`
-  border-color: ${({borderColor}) =>
-    borderColor === 'transparent' ? 'rgba(0, 0, 0, 0.1)' : borderColor};
+  border: ${({borderColor}) =>
+    borderColor === 'transparent' ? '1px solid rgba(0, 0, 0, 0.1)' : `1px solid ${borderColor}`};
+  padding: 8px;
 `
 
 export function renderElement({attributes, children, element}: RenderElementProps) {
@@ -30,9 +38,9 @@ export function renderElement({attributes, children, element}: RenderElementProp
 
     case BlockFormat.Table:
       return (
-        <table>
+        <Table>
           <tbody {...attributes}>{children}</tbody>
-        </table>
+        </Table>
       )
 
     case BlockFormat.TableRow:

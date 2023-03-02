@@ -582,6 +582,7 @@ export type FullPoll = {
   closedAt?: Maybe<Scalars['DateTime']>;
   externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
   id: Scalars['ID'];
+  infoText?: Maybe<Scalars['RichText']>;
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
 };
@@ -1353,6 +1354,7 @@ export type MutationUpdatePollArgs = {
   answers?: InputMaybe<Array<UpdatePollAnswer>>;
   closedAt?: InputMaybe<Scalars['DateTime']>;
   externalVoteSources?: InputMaybe<Array<UpdatePollExternalVoteSources>>;
+  infoText?: InputMaybe<Scalars['RichText']>;
   opensAt?: InputMaybe<Scalars['DateTime']>;
   pollId: Scalars['ID'];
   question?: InputMaybe<Scalars['String']>;
@@ -2044,8 +2046,10 @@ export type QueryPeerArticleArgs = {
 export type QueryPeerArticlesArgs = {
   cursors?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<ArticleFilter>;
+  first?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<SortOrder>;
   peerFilter?: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<ArticleSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
@@ -2530,6 +2534,7 @@ export type UserConnection = {
 export type UserFilter = {
   name?: InputMaybe<Scalars['String']>;
   text?: InputMaybe<Scalars['String']>;
+  userRole?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type UserInput = {
@@ -2646,6 +2651,8 @@ export type PeerArticleListQueryVariables = Exact<{
   peerFilter?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<SortOrder>;
   sort?: InputMaybe<ArticleSort>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -3360,12 +3367,13 @@ export type UpdatePollMutationVariables = Exact<{
   opensAt?: InputMaybe<Scalars['DateTime']>;
   closedAt?: InputMaybe<Scalars['DateTime']>;
   question?: InputMaybe<Scalars['String']>;
+  infoText?: InputMaybe<Scalars['RichText']>;
   answers?: InputMaybe<Array<UpdatePollAnswer> | UpdatePollAnswer>;
   externalVoteSources?: InputMaybe<Array<UpdatePollExternalVoteSources> | UpdatePollExternalVoteSources>;
 }>;
 
 
-export type UpdatePollMutation = { __typename?: 'Mutation', updatePoll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, answers?: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }> | null, externalVoteSources?: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: number | null }> | null }> | null } | null };
+export type UpdatePollMutation = { __typename?: 'Mutation', updatePoll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: Node[] | null, answers?: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }> | null, externalVoteSources?: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: number | null }> | null }> | null } | null };
 
 export type DeletePollMutationVariables = Exact<{
   deletePollId: Scalars['ID'];
@@ -3421,7 +3429,7 @@ export type PollQueryVariables = Exact<{
 }>;
 
 
-export type PollQuery = { __typename?: 'Query', poll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, answers?: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }> | null, externalVoteSources?: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: number | null }> | null }> | null } | null };
+export type PollQuery = { __typename?: 'Query', poll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: Node[] | null, answers?: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }> | null, externalVoteSources?: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: number | null }> | null }> | null } | null };
 
 export type FullSettingFragment = { __typename?: 'Setting', id: string, name: SettingName, value: any, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null } | null };
 
@@ -3550,7 +3558,7 @@ export type FullUserFragment = { __typename?: 'User', id: string, createdAt: str
 export type UserSubscriptionFragment = { __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> };
 
 export type UserListQueryVariables = Exact<{
-  filter?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<UserFilter>;
   cursor?: InputMaybe<Scalars['ID']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -4495,13 +4503,15 @@ export type ArticleListQueryHookResult = ReturnType<typeof useArticleListQuery>;
 export type ArticleListLazyQueryHookResult = ReturnType<typeof useArticleListLazyQuery>;
 export type ArticleListQueryResult = Apollo.QueryResult<ArticleListQuery, ArticleListQueryVariables>;
 export const PeerArticleListDocument = gql`
-    query PeerArticleList($filter: ArticleFilter, $cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort) {
+    query PeerArticleList($filter: ArticleFilter, $cursors: String, $peerFilter: String, $order: SortOrder, $sort: ArticleSort, $take: Int, $skip: Int) {
   peerArticles(
     cursors: $cursors
     peerFilter: $peerFilter
     order: $order
     sort: $sort
     filter: $filter
+    take: $take
+    skip: $skip
   ) {
     nodes {
       peer {
@@ -4539,6 +4549,8 @@ ${ArticleRefFragmentDoc}`;
  *      peerFilter: // value for 'peerFilter'
  *      order: // value for 'order'
  *      sort: // value for 'sort'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
  *   },
  * });
  */
@@ -7441,12 +7453,13 @@ export type CreatePollMutationHookResult = ReturnType<typeof useCreatePollMutati
 export type CreatePollMutationResult = Apollo.MutationResult<CreatePollMutation>;
 export type CreatePollMutationOptions = Apollo.BaseMutationOptions<CreatePollMutation, CreatePollMutationVariables>;
 export const UpdatePollDocument = gql`
-    mutation UpdatePoll($pollId: ID!, $opensAt: DateTime, $closedAt: DateTime, $question: String, $answers: [UpdatePollAnswer!], $externalVoteSources: [UpdatePollExternalVoteSources!]) {
+    mutation UpdatePoll($pollId: ID!, $opensAt: DateTime, $closedAt: DateTime, $question: String, $infoText: RichText, $answers: [UpdatePollAnswer!], $externalVoteSources: [UpdatePollExternalVoteSources!]) {
   updatePoll(
     pollId: $pollId
     opensAt: $opensAt
     closedAt: $closedAt
     question: $question
+    infoText: $infoText
     answers: $answers
     externalVoteSources: $externalVoteSources
   ) {
@@ -7454,6 +7467,7 @@ export const UpdatePollDocument = gql`
     question
     opensAt
     closedAt
+    infoText
     answers {
       id
       pollId
@@ -7485,6 +7499,7 @@ export type UpdatePollMutationFn = Apollo.MutationFunction<UpdatePollMutation, U
  *      opensAt: // value for 'opensAt'
  *      closedAt: // value for 'closedAt'
  *      question: // value for 'question'
+ *      infoText: // value for 'infoText'
  *      answers: // value for 'answers'
  *      externalVoteSources: // value for 'externalVoteSources'
  *   },
@@ -7732,6 +7747,7 @@ export const PollDocument = gql`
     question
     opensAt
     closedAt
+    infoText
     answers {
       id
       pollId
@@ -8340,9 +8356,9 @@ export type DeleteTokenMutationHookResult = ReturnType<typeof useDeleteTokenMuta
 export type DeleteTokenMutationResult = Apollo.MutationResult<DeleteTokenMutation>;
 export type DeleteTokenMutationOptions = Apollo.BaseMutationOptions<DeleteTokenMutation, DeleteTokenMutationVariables>;
 export const UserListDocument = gql`
-    query UserList($filter: String, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
+    query UserList($filter: UserFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
   users(
-    filter: {text: $filter}
+    filter: $filter
     cursor: $cursor
     take: $take
     skip: $skip

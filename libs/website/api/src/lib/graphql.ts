@@ -387,6 +387,7 @@ export type FullPoll = {
   closedAt?: Maybe<Scalars['DateTime']>
   externalVoteSources?: Maybe<Array<PollExternalVoteSource>>
   id: Scalars['ID']
+  infoText?: Maybe<Scalars['RichText']>
   opensAt: Scalars['DateTime']
   question?: Maybe<Scalars['String']>
 }
@@ -867,6 +868,12 @@ export type PeerProfile = {
   websiteURL: Scalars['String']
 }
 
+export type Phrase = {
+  __typename?: 'Phrase'
+  articles: Array<Article>
+  pages: Array<Page>
+}
+
 export type Point = {
   __typename?: 'Point'
   x: Scalars['Float']
@@ -976,6 +983,8 @@ export type Query = {
   peerArticle?: Maybe<Article>
   /** This query returns the peer profile. */
   peerProfile: PeerProfile
+  /** This query performs a fulltext search on titles and blocks of articles/pages and returns all matching ones. */
+  phrase?: Maybe<Phrase>
   /** This query returns a poll with all the needed data */
   poll: FullPoll
   ratingSystem: FullCommentRatingSystem
@@ -1086,6 +1095,10 @@ export type QueryPeerArticleArgs = {
   id: Scalars['ID']
   peerID?: InputMaybe<Scalars['ID']>
   peerSlug?: InputMaybe<Scalars['Slug']>
+}
+
+export type QueryPhraseArgs = {
+  query: Scalars['String']
 }
 
 export type QueryPollArgs = {

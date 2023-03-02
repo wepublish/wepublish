@@ -1,6 +1,5 @@
 import {
   PaymentProviderCustomer,
-  Prisma,
   User,
   UserAddress,
   UserOAuth2Account,
@@ -24,6 +23,7 @@ export enum UserSort {
 export interface UserFilter {
   readonly name?: string
   readonly text?: string
+  readonly userRole?: string[]
 }
 
 export type UserWithRelations = User & {

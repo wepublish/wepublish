@@ -74,6 +74,10 @@ export class AuthenticationService {
       return false
     }
 
-    return session.type === 'user' ? session.expiresAt > new Date() : true
+    if (session.type === AuthSessionType.User) {
+      return session.expiresAt > new Date()
+    }
+
+    return true
   }
 }

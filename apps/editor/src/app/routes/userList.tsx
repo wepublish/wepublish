@@ -1,23 +1,23 @@
-import styled from '@emotion/styled'
 import {
   FullUserFragment,
   useDeleteUserMutation,
+  UserFilter,
+  UserRole,
   UserSort,
   useUserListQuery
 } from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete, MdPassword, MdSearch} from 'react-icons/md'
+import {MdAdd, MdDelete, MdPassword} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {
   Button,
-  FlexboxGrid,
   IconButton as RIconButton,
-  Input,
-  InputGroup,
+  Message,
   Modal,
   Pagination,
-  Table as RTable
+  Table as RTable,
+  toaster
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
@@ -26,40 +26,22 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {ResetUserPasswordForm} from '../atoms/user/resetUserPasswordForm'
 import {
+  IconButton,
+  ListFilters,
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  PaddedCell,
+  Table,
+  TableWrapper
+} from '../ui/listView'
+import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
-
-const Cell = styled(RCell)`
-  .rs-table-cell-content {
-    padding: 6px 0;
-  }
-`
-
-const IconButton = styled(RIconButton)`
-  margin-left: 5px;
-`
-
-const Table = styled(RTable)`
-  flex: 1;
-`
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-flow: column;
-  margin-top: 20px;
-`
-
-const FlexItemAlignRight = styled(FlexboxGrid.Item)`
-  text-align: right;
-`
-
-const FlexItemMarginTop = styled(FlexboxGrid.Item)`
-  margin-top: 20px;
-`
 
 function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
   switch (columnField) {
@@ -77,7 +59,7 @@ function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
 }
 
 function UserList() {
-  const [filter, setFilter] = useState('')
+  const [filter, setFilter] = useState<UserFilter>({})
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
@@ -92,7 +74,8 @@ function UserList() {
   const {
     data,
     refetch,
-    loading: isLoading
+    loading: isLoading,
+    error: userListQueryError
   } = useUserListQuery({
     variables: {
       filter: filter || undefined,
@@ -104,6 +87,11 @@ function UserList() {
     fetchPolicy: 'network-only'
   })
 
+  const updateFilter = (filter: UserFilter) => {
+    setFilter(filter)
+    refetch()
+  }
+
   useEffect(() => {
     refetch({
       filter: filter || undefined,
@@ -112,7 +100,7 @@ function UserList() {
       sort: mapColumFieldToGraphQLField(sortField),
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
     })
-  }, [filter, page, limit, sortOrder, sortField])
+  }, [filter, page, limit, sortOrder, sortField, refetch])
 
   const [deleteUser, {loading: isDeleting}] = useDeleteUserMutation()
 
@@ -126,6 +114,10 @@ function UserList() {
       }
     }
   }, [data?.users])
+
+  if (userListQueryError) {
+    return <div>{userListQueryError.message}</div>
+  }
 
   /**
    * UI helpers
@@ -147,33 +139,30 @@ function UserList() {
 
   return (
     <>
-      <FlexboxGrid>
-        <FlexboxGrid.Item colspan={16}>
+      <ListViewContainer>
+        <ListViewHeader>
           <h2>{t('userList.overview.users')}</h2>
-        </FlexboxGrid.Item>
+        </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_USER']}>
-          <FlexItemAlignRight colspan={8}>
+          <ListViewActions>
             <Link to="/users/create">
               <RIconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
                 {t('userList.overview.newUser')}
               </RIconButton>
             </Link>
-          </FlexItemAlignRight>
+          </ListViewActions>
         </PermissionControl>
-        <FlexItemMarginTop colspan={24}>
-          <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
-            <InputGroup.Addon>
-              <MdSearch />
-            </InputGroup.Addon>
-          </InputGroup>
-        </FlexItemMarginTop>
-      </FlexboxGrid>
+        <ListFilters
+          fields={['userRole', 'text']}
+          filter={filter}
+          isLoading={isLoading}
+          onSetFilter={filter => updateFilter(filter)}
+        />
+      </ListViewContainer>
 
-      <Wrapper>
+      <TableWrapper>
         <Table
-          minHeight={600}
-          autoHeight
+          fillHeight
           loading={isLoading}
           data={users}
           sortColumn={sortField}
@@ -216,12 +205,20 @@ function UserList() {
               )}
             </RCell>
           </Column>
-          <Column width={400} align="left" resizable>
-            <HeaderCell>{t('email')}</HeaderCell>
+          <Column width={200} align="left" resizable>
+            <HeaderCell>{t('userCreateOrEditView.email')}</HeaderCell>
             <RCell dataKey="email" />
           </Column>
+          <Column width={200} align="left" resizable>
+            <HeaderCell>{t('userCreateOrEditView.userRoles')}</HeaderCell>
+            <RCell dataKey="roles">
+              {(rowData: RowDataType<FullUserFragment>) =>
+                rowData.roles?.map((r: UserRole) => r.name).join(', ')
+              }
+            </RCell>
+          </Column>
           {/* subscription */}
-          <Column width={400} align="left" resizable>
+          <Column width={200} align="left" resizable>
             <HeaderCell>{t('userList.overview.subscriptions')}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<FullUserFragment>) => (
@@ -230,8 +227,8 @@ function UserList() {
             </RCell>
           </Column>
           <Column width={100} align="center" fixed="right">
-            <HeaderCell>{t('action')}</HeaderCell>
-            <Cell>
+            <HeaderCell>{t('userList.overview.action')}</HeaderCell>
+            <PaddedCell>
               {(rowData: RowDataType<FullUserFragment>) => (
                 <>
                   <PermissionControl qualifyingPermissions={['CAN_RESET_USER_PASSWORD']}>
@@ -264,7 +261,7 @@ function UserList() {
                   </PermissionControl>
                 </>
               )}
-            </Cell>
+            </PaddedCell>
           </Column>
         </Table>
 
@@ -284,7 +281,7 @@ function UserList() {
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}
         />
-      </Wrapper>
+      </TableWrapper>
 
       {/* reset user password */}
       {currentUser?.id && (
@@ -325,6 +322,7 @@ function UserList() {
 
         <Modal.Footer>
           <Button
+            appearance="primary"
             disabled={isDeleting}
             onClick={async () => {
               if (!currentUser) return
@@ -332,11 +330,14 @@ function UserList() {
               await deleteUser({
                 variables: {id: currentUser.id}
               })
-
+              toaster.push(
+                <Message type="success" showIcon closable duration={2000}>
+                  {t('toast.deletedSuccess')}
+                </Message>
+              )
               setConfirmationDialogOpen(false)
               refetch()
-            }}
-            color="red">
+            }}>
             {t('userCreateOrEditView.confirm')}
           </Button>
           <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
