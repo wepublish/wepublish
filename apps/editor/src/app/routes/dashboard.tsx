@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import {useMeQuery} from '@wepublish/editor/api'
-import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Panel as RPanel} from 'rsuite'
 
@@ -22,10 +21,7 @@ export function Dashboard() {
   const {t} = useTranslation()
 
   const {data: me} = useMeQuery()
-  const name = useMemo(
-    () => me?.me?.preferredName ?? me?.me?.firstName ?? me?.me?.name ?? t('dashboard.user'),
-    [me]
-  )
+  const name = me?.me?.preferredName ?? me?.me?.firstName ?? me?.me?.name ?? t('dashboard.user')
 
   return (
     <>

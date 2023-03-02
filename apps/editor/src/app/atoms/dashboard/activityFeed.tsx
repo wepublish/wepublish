@@ -140,7 +140,12 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           }
         />
       )
-    case 'CommentCreatedAction':
+    case 'CommentCreatedAction': {
+      const userName = action.comment?.user?.name ?? action.comment?.guestUsername ?? ''
+      const commentTitle = action.comment?.revisions[action.comment.revisions.length - 1]?.title
+        ? ': ' + action.comment?.revisions[action.comment?.revisions?.length - 1]?.title
+        : ''
+
       return (
         <TimelineItem
           key={key}
@@ -154,11 +159,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           date={action.date}
           details={
             <>
-              {`${action.comment.user?.name ?? action.comment.guestUsername ?? ''} ${
-                action.comment.revisions[action.comment.revisions.length - 1]?.title
-                  ? ': ' + action.comment.revisions[action.comment.revisions?.length - 1]?.title
-                  : ''
-              }`}
+              {userName + commentTitle}
               <TimelineRichTextWrapper>
                 <RichTextBlock
                   displayOnly
@@ -174,6 +175,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           }
         />
       )
+    }
     case 'SubscriptionCreatedAction':
       return (
         <TimelineItem
@@ -225,7 +227,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           details={
             <>
               {action.author.name}
-              {action.author.jobTitle  && `, ${action.author.jobTitle}`}
+              {action.author.jobTitle && `, ${action.author.jobTitle}`}
             </>
           }
         />
