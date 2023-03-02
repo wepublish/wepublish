@@ -15,12 +15,12 @@ export class SubscriptionFlowResolver {
   constructor(private readonly controller: SubscriptionFlowController) {}
 
   // Subscription Flow
-  @Query(returns => [SubscriptionFlowModel], {name: 'SubscriptionFlows'})
-  async subscriptionFlow(
+  @Query(returns => [SubscriptionFlowModel], {name: 'subscriptionFlows'})
+  async subscriptionFlows(
     @Args('defaultFlowOnly') defaultFlowOnly: boolean,
     @Args('memberPlanId', {nullable: true}) memberPlanId?: string
   ) {
-    return await this.controller.getFlow(defaultFlowOnly, memberPlanId)
+    return await this.controller.getFlows(defaultFlowOnly, memberPlanId)
   }
 
   @Mutation(returns => [SubscriptionFlowModel], {name: 'createSubscriptionFlow'})

@@ -122,7 +122,6 @@ export enum PaymentPeriodicity {
 
 export type Query = {
   __typename?: 'Query';
-  SubscriptionFlows: Array<SubscriptionFlowModel>;
   /**
    * Returns all active subscribers.
    * Includes subscribers with a cancelled but not run out subscription.
@@ -153,13 +152,8 @@ export type Query = {
    * Only includes paid invoices that have not been manually paid.
    */
   revenue: Array<DashboardInvoice>;
+  subscriptionFlows: Array<SubscriptionFlowModel>;
   versionInformation: VersionInformation;
-};
-
-
-export type QuerySubscriptionFlowsArgs = {
-  defaultFlowOnly: Scalars['Boolean'];
-  memberPlanId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -190,6 +184,12 @@ export type QueryRenewingSubscribersArgs = {
 export type QueryRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+
+export type QuerySubscriptionFlowsArgs = {
+  defaultFlowOnly: Scalars['Boolean'];
+  memberPlanId?: InputMaybe<Scalars['String']>;
 };
 
 export enum SubscriptionDeactivationReason {
@@ -284,7 +284,7 @@ export type SubscriptionFlowsQueryVariables = Exact<{
 }>;
 
 
-export type SubscriptionFlowsQuery = { __typename?: 'Query', SubscriptionFlows: Array<{ __typename?: 'SubscriptionFlowModel', id: number, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: number, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null }> }> };
+export type SubscriptionFlowsQuery = { __typename?: 'Query', subscriptionFlows: Array<{ __typename?: 'SubscriptionFlowModel', id: number, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: number, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null }> }> };
 
 export type CreateSubscriptionFlowMutationVariables = Exact<{
   subscriptionFlow: SubscriptionFlowModelCreateInput;
@@ -481,7 +481,7 @@ export type SynchronizeMailTemplatesMutationResult = Apollo.MutationResult<Synch
 export type SynchronizeMailTemplatesMutationOptions = Apollo.BaseMutationOptions<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>;
 export const SubscriptionFlowsDocument = gql`
     query SubscriptionFlows($defaultFlowOnly: Boolean!, $memberPlanId: String) {
-  SubscriptionFlows(
+  subscriptionFlows(
     defaultFlowOnly: $defaultFlowOnly
     memberPlanId: $memberPlanId
   ) {

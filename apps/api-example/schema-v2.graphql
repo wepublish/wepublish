@@ -71,8 +71,6 @@ enum PaymentPeriodicity {
 }
 
 type Query {
-  SubscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
-
   """
   
         Returns all active subscribers.
@@ -122,6 +120,7 @@ type Query {
       
   """
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+  subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
   versionInformation: VersionInformation!
 }
 

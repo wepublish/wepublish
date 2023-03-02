@@ -11,7 +11,7 @@ import {
   isNonUserEvent,
   NonUserActionInterval,
   UserActionInterval
-} from './subscriptionFlows'
+} from './subscriptionFlowList'
 
 interface MailTemplateSelectProps {
   mailTemplates: FullMailTemplateFragment[]
@@ -77,7 +77,10 @@ export default function MailTemplateSelect({
   return (
     <SelectPicker
       style={{width: '100%'}}
-      data={mailTemplates.map(mailTemplate => ({label: mailTemplate.name, value: mailTemplate.id}))}
+      data={mailTemplates.map(mailTemplate => ({
+        label: `${mailTemplate.remoteMissing ? '⚠' : ''} ${mailTemplate.name}`,
+        value: mailTemplate.id
+      }))}
       disabledItemValues={inactiveMailTemplates.map(mailTemplate => mailTemplate.id)}
       defaultValue={subscriptionInterval?.object.mailTemplate?.id}
       onSelect={updateMailTemplate}

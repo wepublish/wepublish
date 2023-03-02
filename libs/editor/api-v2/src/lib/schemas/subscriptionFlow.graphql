@@ -1,5 +1,5 @@
 query SubscriptionFlows($defaultFlowOnly: Boolean!, $memberPlanId: String) {
-  SubscriptionFlows(defaultFlowOnly: $defaultFlowOnly, memberPlanId: $memberPlanId) {
+  subscriptionFlows(defaultFlowOnly: $defaultFlowOnly, memberPlanId: $memberPlanId) {
     ...SubscriptionFlow
   }
 }

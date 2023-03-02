@@ -23,7 +23,7 @@ export class SubscriptionFlowController {
     private readonly prismaService: PrismaService,
     private oldContextService: OldContextService
   ) {}
-  async getFlow(defaultFlowOnly: boolean, memberPlanId?: string) {
+  async getFlows(defaultFlowOnly: boolean, memberPlanId?: string) {
     let where = {}
     if (defaultFlowOnly) {
       where = {
@@ -118,7 +118,7 @@ export class SubscriptionFlowController {
         }
       }
     })
-    return this.getFlow(false)
+    return this.getFlows(false)
   }
 
   async updateFlow(flow: SubscriptionFlowModelUpdateInput) {
@@ -165,7 +165,7 @@ export class SubscriptionFlowController {
         }
       })
     ])
-    return this.getFlow(false)
+    return this.getFlows(false)
   }
 
   async deleteFlow(subscriptionFlowId: number) {
@@ -196,7 +196,7 @@ export class SubscriptionFlowController {
         }
       })
     ])
-    return this.getFlow(false)
+    return this.getFlows(false)
   }
 
   async createInterval(interval: SubscriptionIntervalCreateInput) {
@@ -219,7 +219,7 @@ export class SubscriptionFlowController {
           : {}
       }
     })
-    return this.getFlow(false)
+    return this.getFlows(false)
   }
 
   async updateInterval(interval: SubscriptionIntervalUpdateInput) {
@@ -254,7 +254,7 @@ export class SubscriptionFlowController {
         }
       })
     ])
-    return this.getFlow(false)
+    return this.getFlows(false)
   }
 
   async deleteInterval(interval: SubscriptionIntervalDeleteInput) {
@@ -276,7 +276,7 @@ export class SubscriptionFlowController {
         id: interval.id
       }
     })
-    return this.getFlow(false)
+    return this.getFlows(false)
   }
 
   async paymentMethods() {

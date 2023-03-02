@@ -16,9 +16,7 @@ export class MailTemplatesResolver {
   @Query(() => [MailTemplateWithUrlAndStatusModel])
   async mailTemplates() {
     const templates = await this.prismaService.mailTemplate.findMany({
-      orderBy: {
-        id: 'asc'
-      }
+      orderBy: [{remoteMissing: 'asc'}, {id: 'asc'}]
     })
     return this.decorate(templates)
   }
