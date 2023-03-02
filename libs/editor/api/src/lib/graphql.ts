@@ -488,9 +488,9 @@ export type EventConnection = {
 };
 
 export type EventFilter = {
-  from?: InputMaybe<Scalars['Date']>;
+  from?: InputMaybe<Scalars['DateTime']>;
   tags?: InputMaybe<Array<Scalars['ID']>>;
-  to?: InputMaybe<Scalars['Date']>;
+  to?: InputMaybe<Scalars['DateTime']>;
   upcomingOnly?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -3669,7 +3669,7 @@ export type DeleteUserRoleMutationVariables = Exact<{
 
 export type DeleteUserRoleMutation = { __typename?: 'Mutation', deleteUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
 
-export const MutationArtgicleFragmentDoc = gql`
+export const MutationArticleFragmentDoc = gql`
     fragment MutationArticle on Article {
   id
   draft {
