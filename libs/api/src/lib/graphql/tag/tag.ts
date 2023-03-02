@@ -11,7 +11,7 @@ import {
 } from 'graphql'
 import {Context} from '../../context'
 import {GraphQLPageInfo} from '../common'
-import {TagSort} from './tag.private-query'
+import {TagSort} from './tag.query'
 
 export const GraphQLTagType = new GraphQLEnumType({
   name: 'TagType',

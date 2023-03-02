@@ -1,6 +1,5 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
-import {Visible} from '@rsuite/icons'
 import {
   CommentRevisionUpdateInput,
   FullCommentFragment,
@@ -12,6 +11,7 @@ import {
 } from '@wepublish/editor/api'
 import {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {MdVisibility} from 'react-icons/md'
 import {useNavigate, useParams} from 'react-router-dom'
 import {
   Col as RCol,
@@ -251,7 +251,7 @@ const CommentEditView = memo(() => {
                       <IconButton
                         appearance="ghost"
                         color="violet"
-                        icon={<Visible />}
+                        icon={<MdVisibility />}
                         onClick={() => {
                           navigate(`/articles/edit/${comment?.itemID}`)
                         }}>
