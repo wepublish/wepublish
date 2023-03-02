@@ -3661,7 +3661,7 @@ export type DeleteUserRoleMutationVariables = Exact<{
 
 export type DeleteUserRoleMutation = { __typename?: 'Mutation', deleteUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
 
-export const MutationArtgicleFragmentDoc = gql`
+export const MutationArticleFragmentDoc = gql`
     fragment MutationArticle on Article {
   id
   draft {
