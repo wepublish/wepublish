@@ -622,7 +622,7 @@ export async function contextFromRequest(
         ids as string[],
         await prisma.mailLog.findMany({
           where: {
-            id: {
+            mailIdentifier: {
               in: ids as string[]
             }
           }

@@ -412,17 +412,22 @@ enum MailLogState {
 }
 
 model MailLog {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id                      String   @id @default(cuid())
+  createdAt               DateTime @default(now())
+  modifiedAt              DateTime @updatedAt
 
-  recipient      String
-  subject        String
-  state          MailLogState
-  mailData       String?
-  mailProviderID String
+  recipientID             String
+  recipient               User   @relation(fields: [recipientID], references: [id], onDelete: Cascade)
+  state                   MailLogState
+  sentDate                DateTime
+  mailProviderID          String
+  mailIdentifier          String @unique
+  mailTemplate            MailTemplate @relation(fields: [mailTemplateId], references: [id])
+  mailTemplateId          Int
+  mailData                String?
+  subject                 String?
 
-  @@index([subject])
+  @@index([mailIdentifier])
   @@map("mail.log")
 }
 
@@ -812,6 +817,7 @@ model User {
   Invoice       Invoice[]
   CommentRating CommentRating[]
   PollVote      PollVote[]
+  mailSent      MailLog[]
 
   @@map("users")
 }
@@ -1062,6 +1068,8 @@ model MailTemplate {
 	accountCreations            UserFlow? @relation("accountCreationMailTemplate")
 	passwordResets              UserFlow? @relation("passwordResetMailTemplate")
 	loginLinks                  UserFlow? @relation("loginLinkMailTemplate")
+
+	mailLog                     MailLog[]
 
 
   @@map("mail_templates")

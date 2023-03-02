@@ -127,7 +127,6 @@ export function setupMailProvider(opts: WepublishServerOpts): Router {
             await context.prisma.mailLog.update({
               where: {id: mailLog.id},
               data: {
-                recipient: mailLog.recipient,
                 subject: mailLog.subject,
                 mailProviderID: mailLog.mailProviderID,
                 state: mailLogStatus.state,

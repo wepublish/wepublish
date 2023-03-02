@@ -37,6 +37,7 @@ export const unselectPassword: Record<
     | 'CommentRating'
     | 'PollVote'
     | 'userImage'
+    | 'mailSent'
   >,
   boolean
 > = {

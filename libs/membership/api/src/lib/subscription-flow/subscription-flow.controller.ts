@@ -21,6 +21,7 @@ const SUBSCRIPTION_EVEN_MAX_DAYS_AFTER = 90
 export class SubscriptionFlowController {
   constructor(
     private readonly prismaService: PrismaService,
+    private readonly periodicJobController: PeriodicJobController,
     private oldContextService: OldContextService
   ) {}
   async getFlows(defaultFlowOnly: boolean, memberPlanId?: string) {
@@ -54,8 +55,7 @@ export class SubscriptionFlowController {
         })
     )
      **/
-    const pj = new PeriodicJobController(this.prismaService, this.oldContextService)
-    await pj.execute()
+    await this.periodicJobController.execute()
 
     return await this.prismaService.subscriptionFlow.findMany({
       where,
