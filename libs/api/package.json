@@ -1,0 +1,33 @@
+{
+  "name": "@wepublish/api",
+  "version": "9.0.0",
+  "description": "API core for we.publish.",
+  "keywords": [
+    "api",
+    "publishing",
+    "media",
+    "newspaper",
+    "cms",
+    "subscription",
+    "graphql"
+  ],
+  "homepage": "https://github.com/wepublish/wepublish",
+  "bugs": {
+    "url": "https://github.com/wepublish/wepublish/issues",
+    "email": "development@wepublish.ch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wepublish/wepublish.git",
+    "directory": "libs/api"
+  },
+  "license": "MIT",
+  "bin": "./src/run-server.js",
+  "prisma": {
+    "schema": "prisma/schema.prisma",
+    "seed": "npx ts-node __tests__/seed.ts"
+  },
+  "publishConfig": {
+    "directory": "../../dist/libs/api"
+  }
+}

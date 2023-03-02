@@ -1,0 +1,28 @@
+{
+  "name": "@wepublish/editor",
+  "version": "9.0.0",
+  "description": "We.publish CMS Editor",
+  "keywords": [
+    "editor",
+    "react",
+    "postgres",
+    "publishing",
+    "media",
+    "newspaper",
+    "cms",
+    "subscription"
+  ],
+  "homepage": "https://github.com/wepublish/wepublish",
+  "bugs": {
+    "url": "https://github.com/wepublish/wepublish/issues",
+    "email": "development@wepublish.ch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wepublish/wepublish.git",
+    "directory": "apps/editor"
+  },
+  "bin": "main.js",
+  "main": "main.js",
+  "license": "MIT"
+}

@@ -9,8 +9,7 @@ async function main() {
   - Editor: https://editor.${GITHUB_REF_SHORT}.wepublish.dev
   - Public API: https://api.${GITHUB_REF_SHORT}.wepublish.dev
   - Privat API: https://api.${GITHUB_REF_SHORT}.wepublish.dev/admin
-  - Media: https://media.${GITHUB_REF_SHORT}.wepublish.dev
-  - Login: https://login.${GITHUB_REF_SHORT}.wepublish.dev`
+  - Media: https://media.${GITHUB_REF_SHORT}.wepublish.dev`
 
   console.log(deploymentMessage)
 }

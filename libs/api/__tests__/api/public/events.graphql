@@ -1,0 +1,46 @@
+fragment EventRef on Event {
+  id
+  name
+  description
+  status
+  location
+  image {
+    ...ImageRef
+  }
+  tags {
+    id
+    tag
+  }
+  startsAt
+  endsAt
+}
+
+query EventList(
+  $filter: EventFilter
+  $cursor: ID
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: EventSort
+) {
+  events(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...EventRef
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query Event($id: ID!) {
+  event(id: $id) {
+    ...EventRef
+  }
+}

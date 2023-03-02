@@ -1,0 +1,100 @@
+fragment EventRef on Event {
+  id
+  name
+  description
+  status
+  location
+  image {
+    ...ImageRef
+  }
+  tags {
+    id
+    tag
+  }
+  startsAt
+  endsAt
+}
+
+query EventList(
+  $filter: EventFilter
+  $cursor: ID
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: EventSort
+) {
+  events(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...EventRef
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query Event($id: ID!) {
+  event(id: $id) {
+    ...EventRef
+  }
+}
+
+mutation CreateEvent(
+  $name: String!
+  $description: RichText
+  $location: String
+  $startsAt: DateTime!
+  $endsAt: DateTime
+  $imageId: ID
+  $tagIds: [ID!]
+) {
+  createEvent(
+    name: $name
+    description: $description
+    location: $location
+    startsAt: $startsAt
+    endsAt: $endsAt
+    imageId: $imageId
+    tagIds: $tagIds
+  ) {
+    ...EventRef
+  }
+}
+
+mutation UpdateEvent(
+  $id: ID!
+  $name: String
+  $description: RichText
+  $status: EventStatus
+  $location: String
+  $startsAt: DateTime
+  $endsAt: DateTime
+  $imageId: ID
+  $tagIds: [ID!]
+) {
+  updateEvent(
+    id: $id
+    name: $name
+    description: $description
+    status: $status
+    location: $location
+    startsAt: $startsAt
+    endsAt: $endsAt
+    imageId: $imageId
+    tagIds: $tagIds
+  ) {
+    ...EventRef
+  }
+}
+
+mutation DeleteEvent($id: ID!) {
+  deleteEvent(id: $id) {
+    ...EventRef
+  }
+}

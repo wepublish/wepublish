@@ -1,5 +1,5 @@
 {
-  "version": "8.1.1",
+  "version": "9.0.0",
   "changelog": {
     "repo": "wepublish/wepublish",
     "cacheDir": ".changelog",
@@ -13,7 +13,6 @@
       "PR: Revert :leftwards_arrow_with_hook:": ":leftwards_arrow_with_hook: Revert"
     }
   },
-  "npmClient": "yarn",
   "command": {
     "version": {
       "allowBranch": "master"
@@ -27,9 +26,8 @@
     }
   },
   "packages": [
-    "packages/api",
-    "packages/api-media-karma",
-    "packages/editor",
-    "packages/oauth2"
+    "libs/api",
+    "libs/nest-modules",
+    "apps/editor"
   ]
 }
