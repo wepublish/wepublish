@@ -1,5 +1,11 @@
 # Change Log
 
+## v9.0.1
+
+#### :bug: Bug Fix
+* Editor
+  * Fix MutationArticleFragmentDoc typo ([@tomaszdurka](https://github.com/tomaszdurka))
+
 ## v9.0.0
 
 #### :boom: Breaking Change
