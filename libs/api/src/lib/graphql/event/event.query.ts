@@ -10,6 +10,8 @@ export const getEvent = (id: string, event: PrismaClient['event']) => {
 
 export type EventFilter = {
   upcomingOnly: boolean
+  from: Date
+  to: Date
   tags: string[]
 }
 
@@ -67,12 +69,11 @@ const createTagFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput 
 const createUpcomingOnlyFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput => {
   if (filter?.upcomingOnly) {
     return {
-      startsAt: {
-        gte: new Date()
-      },
       OR: [
         {
-          endsAt: null
+          startsAt: {
+            gte: new Date()
+          }
         },
         {
           endsAt: {
@@ -86,8 +87,55 @@ const createUpcomingOnlyFilter = (filter?: Partial<EventFilter>): Prisma.EventWh
   return {}
 }
 
+const createFromFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput => {
+  if (filter?.from) {
+    return {
+      OR: [
+        {
+          startsAt: {
+            gte: filter.from
+          }
+        },
+        {
+          endsAt: {
+            gte: filter.from
+          }
+        }
+      ]
+    }
+  }
+
+  return {}
+}
+
+const createToFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput => {
+  if (filter?.to) {
+    return {
+      OR: [
+        {
+          startsAt: {
+            lte: filter.to
+          }
+        },
+        {
+          endsAt: {
+            lte: filter.to
+          }
+        }
+      ]
+    }
+  }
+
+  return {}
+}
+
 export const createEventFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput => ({
-  AND: [createUpcomingOnlyFilter(filter), createTagFilter(filter)]
+  AND: [
+    createUpcomingOnlyFilter(filter),
+    createFromFilter(filter),
+    createToFilter(filter),
+    createTagFilter(filter)
+  ]
 })
 
 export const getEvents = async (

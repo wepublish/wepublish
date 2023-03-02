@@ -21,6 +21,7 @@ import {createUserSession} from '../src/lib/graphql/session/session.mutation'
 export interface TestClient {
   testServerPublic: ApolloServer
   testServerPrivate: ApolloServer
+  prisma: PrismaClient
 }
 
 class ExampleURLAdapter implements URLAdapter {
@@ -150,7 +151,8 @@ export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
 
   return {
     testServerPublic,
-    testServerPrivate
+    testServerPrivate,
+    prisma
   }
 }
 
