@@ -3,7 +3,9 @@ import {addDays, differenceInDays, set, subMinutes} from 'date-fns'
 import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subscription-event-dictionary'
 import {PeriodicJob, SubscriptionEvent} from '@prisma/client'
 import {PeriodicJobRunObject} from './periodic-job.type'
+import {Injectable} from '@nestjs/common'
 
+@Injectable()
 export class PeriodicJobController {
   private subscriptionEventDictionary: SubscriptionEventDictionary
   private runningJob: PeriodicJob | undefined = undefined
@@ -75,27 +77,12 @@ export class PeriodicJobController {
           // HERE DO OTHER ACTIONS
           for (const event of subscriptionDictionary) {
             if (event.type === SubscriptionEvent.CUSTOM) {
-              await oldContext.mailContext.sendRemoteTemplate({
-                remoteTemplate: event.externalMailTemplate || '',
-                recipient: subscriptionsWithEvent.user.email,
-                data: {}
-              })
               console.log(`SEND MAIL TEMPLATE ${event.externalMailTemplate}`)
             } else if (event.type === SubscriptionEvent.DEACTIVATION_UNPAID) {
-              await oldContext.mailContext.sendRemoteTemplate({
-                remoteTemplate: event.externalMailTemplate || '',
-                recipient: subscriptionsWithEvent.user.email,
-                data: {}
-              })
               console.log(
                 `SEND MAIL TEMPLATE ${event.externalMailTemplate} and deactivate subscription`
               )
             } else if (event.type === SubscriptionEvent.INVOICE_CREATION) {
-              await oldContext.mailContext.sendRemoteTemplate({
-                remoteTemplate: event.externalMailTemplate || '',
-                recipient: subscriptionsWithEvent.user.email,
-                data: {}
-              })
               console.log(`SEND MAIL EMPLATE ${event.externalMailTemplate} and create new invoice`)
             }
           }
@@ -108,6 +95,30 @@ export class PeriodicJobController {
       }
       await this.markJobSuccessful()
     }
+  }
+
+  public async getSubscriptionsForInvoiceCreation(generationDate: Date) {
+    this.prismaService.subscription.findMany({
+      where: {
+        paidUntil: {
+          lte: generationDate
+        },
+        deactivation: {
+          is: null
+        },
+        autoRenew: true
+      },
+      include: {
+        periods: {
+          where: {
+            startsAt: {
+              gte: generationDate
+            }
+          }
+        },
+        deactivation: true
+      }
+    })
   }
 
   private async retryFailedJob(runDate: Date) {
