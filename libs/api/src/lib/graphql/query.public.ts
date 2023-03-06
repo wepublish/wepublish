@@ -65,13 +65,15 @@ import {GraphQLPublicComment, GraphQLPublicCommentSort} from './comment/comment'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 import {queryPhrase} from './phrase/phrase.public-queries'
 import {GraphQLPublicPhrase} from './phrase/phrase'
-import {EventSort, getEvent, getEvents} from './event/event.queries'
+import {EventSort, getEvent, getEvents} from './event/event.query'
 import {
   GraphQLEvent,
   GraphQLEventConnection,
   GraphQLEventFilter,
   GraphQLEventSort
 } from './event/event'
+import {getTags, TagSort} from './tag/tag.query'
+import {GraphQLTagFilter, GraphQLTagConnection, GraphQLTagSort} from './tag/tag'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -555,6 +557,24 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {prisma: {event}}) => getEvent(id, event)
+    },
+
+    // Tag
+    // ==========
+
+    tags: {
+      type: GraphQLTagConnection,
+      description: 'This query returns a list of tags',
+      args: {
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
+        filter: {type: GraphQLTagFilter},
+        sort: {type: GraphQLTagSort, defaultValue: TagSort.CreatedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve: (root, {filter, sort, order, cursor, take, skip}, {prisma}) =>
+        getTags(filter, sort, order, cursor, skip, take, prisma.tag)
     },
 
     // Phrase

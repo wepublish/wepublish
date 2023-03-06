@@ -16,13 +16,13 @@ import {
   toaster,
   Toggle
 } from 'rsuite'
+import {RowDataType} from 'rsuite-table'
 
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {PermissionControl} from '../atoms/permissionControl'
 import {SelectTags} from '../atoms/tag/selectTags'
 import {EventBlockValue} from '../blocks/types'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
-import {RowDataType} from 'rsuite-table'
 
 const onErrorToast = (error: ApolloError) => {
   if (error?.message) {

@@ -11,11 +11,13 @@ import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Col, DatePicker, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
+import {Node} from 'slate'
 
 import {ModelTitle} from '../../atoms/modelTitle'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {PollAnswers} from '../../atoms/poll/pollAnswers'
 import {PollExternalVotes} from '../../atoms/poll/pollExternalVotes'
+import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 
 const OpensAtLabel = styled(Form.ControlLabel)`
   margin-right: 5px;
@@ -117,6 +119,7 @@ function PollEditView() {
       variables: {
         pollId: poll.id,
         question: poll.question,
+        infoText: poll.infoText,
         opensAt,
         closedAt,
         answers: poll.answers?.map(answer => {
@@ -229,6 +232,21 @@ function PollEditView() {
                     setPoll(poll)
                   }}
                 />
+              </Panel>
+            </Col>
+            <Col xs={24}>
+              <Panel header={t('pollEditView.infoText')} bordered>
+                <div className="richTextFrame">
+                  <RichTextBlock
+                    value={poll?.infoText ? poll?.infoText : []}
+                    onChange={value => {
+                      if (!poll) {
+                        return
+                      }
+                      setPoll({...poll, infoText: value as Node[]})
+                    }}
+                  />
+                </div>
               </Panel>
             </Col>
           </Row>

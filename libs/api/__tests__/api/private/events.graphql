@@ -3,6 +3,7 @@ fragment EventRef on Event {
   name
   description
   status
+  location
   image {
     ...ImageRef
   }
