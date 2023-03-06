@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import {RecentActionsQuery, useRecentActionsQuery} from '@wepublish/editor/api'
 import {formatDistanceToNow} from 'date-fns'
-import {ActionType} from 'libs/api/src/lib/db/action'
 import {ReactNode, useEffect} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
 import {
@@ -58,6 +57,17 @@ const TimelineIcon = styled(Avatar)`
 `
 
 type Action = NonNullable<RecentActionsQuery['actions']>[number]
+
+export enum ActionType {
+  ArticleCreated = 'ArticleCreatedAction',
+  PageCreated = 'PageCreatedAction',
+  CommentCreated = 'CommentCreatedAction',
+  SubscriptionCreated = 'SubscriptionCreatedAction',
+  AuthorCreated = 'AuthorCreatedAction',
+  PollStarted = 'PollStartedAction',
+  UserCreated = 'UserCreatedAction',
+  EventCreated = 'EventCreatedAction'
+}
 
 export function ActivityFeed() {
   const {data, error} = useRecentActionsQuery({fetchPolicy: 'no-cache'})
