@@ -15,7 +15,7 @@ const actionFields = {
 }
 
 const GraphQLArticleCreatedAction = new GraphQLObjectType<Action>({
-  name: ActionType.ArticleCreated,
+  name: 'ArticleCreatedAction',
   fields: {
     ...actionFields,
     article: {
@@ -28,7 +28,7 @@ const GraphQLArticleCreatedAction = new GraphQLObjectType<Action>({
 })
 
 const GraphQLPageCreatedAction = new GraphQLObjectType<Action>({
-  name: ActionType.PageCreated,
+  name: 'PageCreatedAction',
   fields: {
     ...actionFields,
     page: {
@@ -41,7 +41,7 @@ const GraphQLPageCreatedAction = new GraphQLObjectType<Action>({
 })
 
 const GraphQLCommentCreatedAction = new GraphQLObjectType<Action>({
-  name: ActionType.CommentCreated,
+  name: 'CommentCreatedAction',
   fields: {
     ...actionFields,
     comment: {
@@ -54,7 +54,7 @@ const GraphQLCommentCreatedAction = new GraphQLObjectType<Action>({
 })
 
 const GraphQLPollStartedAction = new GraphQLObjectType<Action>({
-  name: ActionType.PollStarted,
+  name: 'PollStartedAction',
   fields: {
     ...actionFields,
     poll: {
@@ -67,7 +67,7 @@ const GraphQLPollStartedAction = new GraphQLObjectType<Action>({
 })
 
 const GraphQLSubscriptionCreatedAction = new GraphQLObjectType<Action>({
-  name: ActionType.SubscriptionCreated,
+  name: 'SubscriptionCreatedAction',
   fields: {
     ...actionFields,
     subscription: {
@@ -80,7 +80,7 @@ const GraphQLSubscriptionCreatedAction = new GraphQLObjectType<Action>({
 })
 
 const GraphQLAuthorCreatedAction = new GraphQLObjectType<Action>({
-  name: ActionType.AuthorCreated,
+  name: 'AuthorCreatedAction',
   fields: {
     ...actionFields,
     author: {
@@ -93,7 +93,7 @@ const GraphQLAuthorCreatedAction = new GraphQLObjectType<Action>({
 })
 
 const GraphQLUserCreatedAction = new GraphQLObjectType<Action>({
-  name: ActionType.UserCreated,
+  name: 'UserCreatedAction',
   fields: {
     ...actionFields,
     user: {
@@ -106,7 +106,7 @@ const GraphQLUserCreatedAction = new GraphQLObjectType<Action>({
 })
 
 const GraphQLEventCreatedAction = new GraphQLObjectType<Action>({
-  name: ActionType.EventCreated,
+  name: 'EventCreatedAction',
   fields: {
     ...actionFields,
     event: {

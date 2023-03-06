@@ -1,12 +1,12 @@
 export enum ActionType {
-  ArticleCreated = 'ArticleCreatedAction',
-  PageCreated = 'PageCreatedAction',
-  CommentCreated = 'CommentCreatedAction',
-  SubscriptionCreated = 'SubscriptionCreatedAction',
-  AuthorCreated = 'AuthorCreatedAction',
-  PollStarted = 'PollStartedAction',
-  UserCreated = 'UserCreatedAction',
-  EventCreated = 'EventCreatedAction'
+  ArticleCreated = 'articleCreated',
+  PageCreated = 'pageCreated',
+  CommentCreated = 'commentCreated',
+  SubscriptionCreated = 'subscriptionCreated',
+  AuthorCreated = 'authorCreated',
+  PollStarted = 'pollStarted',
+  UserCreated = 'userCreated',
+  EventCreated = 'eventCreated'
 }
 
 export interface Action {
