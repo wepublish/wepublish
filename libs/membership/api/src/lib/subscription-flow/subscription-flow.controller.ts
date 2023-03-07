@@ -30,7 +30,8 @@ export class SubscriptionFlowController {
       where = {
         default: true
       }
-    } else {
+    } else if (memberPlanId !== undefined) {
+      // do not pass undefined member plan id.
       where = {
         OR: [
           {
