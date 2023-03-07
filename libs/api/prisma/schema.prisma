@@ -866,6 +866,7 @@ model Poll {
   closedAt DateTime?
 
   question String?
+  infoText Json?
 
   answers             PollAnswer[]
   votes               PollVote[]

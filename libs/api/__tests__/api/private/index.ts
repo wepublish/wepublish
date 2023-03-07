@@ -486,7 +486,9 @@ export type EventConnection = {
 };
 
 export type EventFilter = {
+  from?: InputMaybe<Scalars['DateTime']>;
   tags?: InputMaybe<Array<Scalars['ID']>>;
+  to?: InputMaybe<Scalars['DateTime']>;
   upcomingOnly?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -580,6 +582,7 @@ export type FullPoll = {
   closedAt?: Maybe<Scalars['DateTime']>;
   externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
   id: Scalars['ID'];
+  infoText?: Maybe<Scalars['RichText']>;
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
 };
@@ -1351,6 +1354,7 @@ export type MutationUpdatePollArgs = {
   answers?: InputMaybe<Array<UpdatePollAnswer>>;
   closedAt?: InputMaybe<Scalars['DateTime']>;
   externalVoteSources?: InputMaybe<Array<UpdatePollExternalVoteSources>>;
+  infoText?: InputMaybe<Scalars['RichText']>;
   opensAt?: InputMaybe<Scalars['DateTime']>;
   pollId: Scalars['ID'];
   question?: InputMaybe<Scalars['String']>;
@@ -2042,8 +2046,10 @@ export type QueryPeerArticleArgs = {
 export type QueryPeerArticlesArgs = {
   cursors?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<ArticleFilter>;
+  first?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<SortOrder>;
   peerFilter?: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<ArticleSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
@@ -2534,6 +2540,7 @@ export type UserConnection = {
 export type UserFilter = {
   name?: InputMaybe<Scalars['String']>;
   text?: InputMaybe<Scalars['String']>;
+  userRole?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type UserInput = {
@@ -2799,7 +2806,7 @@ type FullBlock_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock', v
 
 export type FullBlockFragment = FullBlock_BildwurfAdBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_EventBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_RichTextBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment;
 
-export type EventRefFragment = { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null };
+export type EventRefFragment = { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null };
 
 export type EventListQueryVariables = Exact<{
   filter?: InputMaybe<EventFilter>;
@@ -2811,14 +2818,14 @@ export type EventListQueryVariables = Exact<{
 }>;
 
 
-export type EventListQuery = { __typename?: 'Query', events?: { __typename?: 'EventConnection', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
+export type EventListQuery = { __typename?: 'Query', events?: { __typename?: 'EventConnection', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
 
 export type EventQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type EventQuery = { __typename?: 'Query', event?: { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null } | null };
+export type EventQuery = { __typename?: 'Query', event?: { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null } | null };
 
 export type CreateEventMutationVariables = Exact<{
   name: Scalars['String'];
@@ -2831,7 +2838,7 @@ export type CreateEventMutationVariables = Exact<{
 }>;
 
 
-export type CreateEventMutation = { __typename?: 'Mutation', createEvent?: { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null } | null };
+export type CreateEventMutation = { __typename?: 'Mutation', createEvent?: { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null } | null };
 
 export type UpdateEventMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -2846,14 +2853,14 @@ export type UpdateEventMutationVariables = Exact<{
 }>;
 
 
-export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null } | null };
+export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null } | null };
 
 export type DeleteEventMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeleteEventMutation = { __typename?: 'Mutation', deleteEvent?: { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null } | null };
+export type DeleteEventMutation = { __typename?: 'Mutation', deleteEvent?: { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null } | null };
 
 export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
@@ -3286,6 +3293,7 @@ export const EventRef = gql`
   name
   description
   status
+  location
   image {
     ...ImageRef
   }

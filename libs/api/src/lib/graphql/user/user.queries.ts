@@ -33,11 +33,23 @@ export const createUserOrder = (
   }
 }
 
+const createUserRoleFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
+  if (filter?.userRole) {
+    return {
+      roleIDs: {
+        hasSome: filter.userRole
+      }
+    }
+  }
+
+  return {}
+}
+
 const createNameFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
   if (filter?.name) {
     return {
       name: {
-        contains: filter.text,
+        contains: filter.name,
         mode: 'insensitive'
       }
     }
@@ -105,9 +117,11 @@ const createTextFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput =>
   return {}
 }
 
-export const createUserFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => ({
-  AND: [createNameFilter(filter), createTextFilter(filter)]
-})
+export const createUserFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
+  return {
+    AND: [createNameFilter(filter), createTextFilter(filter), createUserRoleFilter(filter)]
+  }
+}
 
 export const getUsers = async (
   filter: Partial<UserFilter>,

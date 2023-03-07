@@ -1091,6 +1091,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         opensAt: {type: GraphQLDateTime},
         closedAt: {type: GraphQLDateTime},
         question: {type: GraphQLString},
+        infoText: {type: GraphQLRichText},
         answers: {type: GraphQLList(GraphQLNonNull(GraphQLUpdatePollAnswer))},
         externalVoteSources: {
           type: GraphQLList(GraphQLNonNull(GraphQLUpdatePollExternalVoteSources))
