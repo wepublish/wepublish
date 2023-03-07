@@ -12,6 +12,8 @@ import {
   NonUserActionInterval,
   UserActionInterval
 } from './subscriptionFlowList'
+import {useTranslation} from 'react-i18next'
+import {MdDoNotDisturb, MdUnsubscribe} from 'react-icons/all'
 
 interface MailTemplateSelectProps {
   mailTemplates: FullMailTemplateFragment[]
@@ -26,6 +28,7 @@ export default function MailTemplateSelect({
   subscriptionFlow,
   event
 }: MailTemplateSelectProps) {
+  const {t} = useTranslation()
   const inactiveMailTemplates = useMemo(
     () => mailTemplates.filter(mailTemplate => mailTemplate.remoteMissing),
     [mailTemplates]
@@ -85,6 +88,12 @@ export default function MailTemplateSelect({
       defaultValue={subscriptionInterval?.object.mailTemplate?.id}
       onSelect={updateMailTemplate}
       onClean={deleteMailTemplate}
+      placeholder={
+        <>
+          <MdUnsubscribe size={16} style={{marginRight: '5px'}} />
+          {t('mailTemplateSelect.noMailSentSelectNow')}
+        </>
+      }
     />
   )
 }

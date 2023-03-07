@@ -1375,7 +1375,7 @@
       "deactivation_by_user": "Deactivated by user",
       "reactivation": "Reactivated",
       "invoice_creation": "Invoice creation",
-      "deactivation_unpaid": "Deactivated for non payment",
+      "deactivation_unpaid": "Deactivation for unpaid invoice",
       "custom": "Custom event",
       "settings": "Subscription flow settings",
       "edit": "Edit subscription flow",
@@ -1383,6 +1383,9 @@
       "titleDefaultSettings": "Default subscription settings",
       "settingsDescription": "You can overwrite these settings for every member plan.",
       "addNew": "Create new flow"
+    },
+    "mailTemplateSelect": {
+      "noMailSentSelectNow": "No mailing"
     }
   }
 }

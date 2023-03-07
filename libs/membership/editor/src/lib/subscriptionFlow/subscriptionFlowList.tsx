@@ -22,7 +22,11 @@ import {
   MdFilter,
   MdFilterAlt,
   MdMouse,
+  MdNoteAdd,
+  MdOutlineCancel,
+  MdOutlineClose,
   MdOutlineHourglassTop,
+  MdOutlineNoteAdd,
   MdOutlineTextSnippet,
   MdTune
 } from 'react-icons/all'
@@ -63,6 +67,7 @@ import {
 import {GraphqlClientContext} from './graphqlClientContext'
 import MailTemplateSelect from './mailTemplateSelect'
 import {theme} from '@wepublish/ui'
+import {TypeAttributes} from 'rsuite/esm/@types/common'
 
 const MailTemplatesContext = createContext<FullMailTemplateFragment[]>([])
 
@@ -119,12 +124,16 @@ export function isNonUserEvent(event: SubscriptionEvent): event is NonUserAction
   return NON_USER_ACTION_EVENTS.includes(event as NonUserActionEvents)
 }
 
+interface IntervalColoring {
+  bg: TypeAttributes.Color
+  fg: TypeAttributes.Color | string
+}
 export interface DecoratedSubscriptionInterval<T extends SubscriptionInterval> {
   subscriptionFlowId: number
   title: string
   object: T
   icon: JSX.Element
-  color: {bg: string; fg: string}
+  color: IntervalColoring
 }
 
 /**
@@ -229,13 +238,13 @@ export default function () {
   }
 
   const eventIcons: {[key: string]: JSX.Element} = {
-    [SubscriptionEvent.InvoiceCreation]: <MdOutlineTextSnippet />,
-    [SubscriptionEvent.DeactivationUnpaid]: <MdOutlineHourglassTop />
+    [SubscriptionEvent.InvoiceCreation]: <MdOutlineNoteAdd size={16} />,
+    [SubscriptionEvent.DeactivationUnpaid]: <MdOutlineClose size={16} />
   }
 
-  const eventColors: {[key: string]: {bg: string; fg: string}} = {
-    [SubscriptionEvent.InvoiceCreation]: {bg: 'blue', fg: 'white'},
-    [SubscriptionEvent.DeactivationUnpaid]: {bg: 'black', fg: 'white'}
+  const eventColors: {[key: string]: IntervalColoring} = {
+    [SubscriptionEvent.InvoiceCreation]: {bg: 'green', fg: 'white'},
+    [SubscriptionEvent.DeactivationUnpaid]: {bg: 'orange', fg: 'white'}
   }
 
   const userActionIntervalFor = function (
@@ -589,10 +598,10 @@ export default function () {
                                 {currentInterval.object.event !== SubscriptionEvent.Custom && (
                                   <Tag
                                     style={{
-                                      backgroundColor: currentInterval.color.bg,
                                       color: currentInterval.color.fg
-                                    }}>
-                                    {currentInterval.icon}
+                                    }}
+                                    color={currentInterval.color.bg}>
+                                    <span style={{marginRight: '5px'}}>{currentInterval.icon}</span>
                                     {currentInterval.title}
                                   </Tag>
                                 )}

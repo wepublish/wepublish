@@ -1361,6 +1361,9 @@
       "status": "Status",
       "synchronize": "Templates synchronisieren",
       "statusDeleted": "Template '{{internalName}}' bei {{provider}} gelöscht"
+    },
+    "mailTemplateSelect": {
+      "noMailSentSelectNow": "Kein Mailversand"
     }
   }
 }

@@ -1334,6 +1334,9 @@
       "status": "Statut",
       "synchronize": "Synchroniser les modèles",
       "statusDeleted": "Modèle '{{internalName}}' supprimé sur {{provider}}"
+    },
+    "mailTemplateSelect": {
+      "noMailSentSelectNow": "pas d'envoi mail"
     }
   }
 }
