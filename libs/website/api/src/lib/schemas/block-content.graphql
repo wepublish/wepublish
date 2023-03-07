@@ -1,0 +1,94 @@
+# fragment FullTeaser on Teaser {
+#   ... on ArticleTeaser {
+#     style
+
+#     image {
+#       ...ImageRef
+#     }
+
+#     preTitle
+#     title
+#     lead
+
+#     article {
+#       id
+#     }
+#   }
+
+#   ... on PageTeaser {
+#     style
+
+#     image {
+#       ...ImageRef
+#     }
+
+#     preTitle
+#     title
+#     lead
+
+#     page {
+#       id
+#     }
+#   }
+
+#   ... on CustomTeaser {
+#     style
+
+#     image {
+#       ...ImageRef
+#     }
+
+#     preTitle
+#     title
+#     lead
+#     contentUrl
+#     properties {
+#       key
+#       value
+#     }
+#   }
+# }
+
+# fragment FullBlock on Block {
+#   __typename
+
+#   ... on TitleBlock {
+#     title
+#     lead
+#   }
+
+#   ... on ImageBlock {
+#     caption
+#     image {
+#       ...FullImage
+#     }
+#   }
+
+#   ... on QuoteBlock {
+#     quote
+#     author
+#   }
+
+#   ... on RichTextBlock {
+#     richText
+#   }
+
+#   ... on HTMLBlock {
+#     html
+#   }
+
+#   ... on TeaserGridFlexBlock {
+#     flexTeasers {
+#       alignment {
+#         x
+#         y
+#         w
+#         h
+#       }
+
+#       teaser {
+#         ...FullTeaser
+#       }
+#     }
+#   }
+# }

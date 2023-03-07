@@ -16,7 +16,9 @@ const Title = styled.div`
 export type NavigationProps = BuilderNavigationProps
 
 export function Navigation({data, loading, error}: NavigationProps) {
-  const {Button} = useWebsiteBuilder()
+  const {
+    ui: {Button}
+  } = useWebsiteBuilder()
 
   return (
     <NavigationWrapper>

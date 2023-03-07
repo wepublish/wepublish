@@ -1,7 +1,7 @@
 {
-  "name": "grupetto",
+  "name": "gruppetto",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/grupetto",
+  "sourceRoot": "apps/gruppetto",
   "projectType": "application",
   "targets": {
     "build": {
@@ -9,12 +9,12 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "root": "apps/grupetto",
-        "outputPath": "dist/apps/grupetto"
+        "root": "apps/gruppetto",
+        "outputPath": "dist/apps/gruppetto"
       },
       "configurations": {
         "development": {
-          "outputPath": "apps/grupetto"
+          "outputPath": "apps/gruppetto"
         },
         "production": {}
       }
@@ -23,16 +23,16 @@
       "executor": "@nrwl/next:server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "grupetto:build",
+        "buildTarget": "gruppetto:build",
         "dev": true
       },
       "configurations": {
         "development": {
-          "buildTarget": "grupetto:build:development",
+          "buildTarget": "gruppetto:build:development",
           "dev": true
         },
         "production": {
-          "buildTarget": "grupetto:build:production",
+          "buildTarget": "gruppetto:build:production",
           "dev": false
         }
       }
@@ -40,14 +40,14 @@
     "export": {
       "executor": "@nrwl/next:export",
       "options": {
-        "buildTarget": "grupetto:build:production"
+        "buildTarget": "gruppetto:build:production"
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/grupetto/jest.config.ts",
+        "jestConfig": "apps/gruppetto/jest.config.ts",
         "passWithNoTests": true
       }
     },
@@ -55,7 +55,7 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/grupetto/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": ["apps/gruppetto/**/*.{ts,tsx,js,jsx}"]
       }
     }
   },

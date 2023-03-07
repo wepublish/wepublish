@@ -1,0 +1,12 @@
+# fragment FullArticle on Article {
+#   id
+#   blocks {
+#     ...FullBlock
+#   }
+# }
+
+# query Article($slug: Slug, $id: ID) {
+#   article(slug: $slug, id: $id) {
+#     ...FullArticle
+#   }
+# }

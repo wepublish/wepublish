@@ -3,6 +3,16 @@ import {BuilderNavigationProps} from './navigation.interface'
 import {BuilderButtonProps} from './button.interface'
 import {BuilderMemberPlansProps} from './member-plans.interface'
 import {BuilderSubscribeProps} from './subscribe.interface'
+import {BuilderPageProps} from './page.interface'
+import {mergeDeepRight} from 'ramda'
+import {PartialDeep} from 'type-fest'
+import {BuilderHeadingProps, BuilderParagraphProps} from './typography.interface'
+import {
+  BuilderOrderedListProps,
+  BuilderUnorderedListProps,
+  BuilderListItemProps
+} from './lists.interface'
+import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
 
 const NoComponent = () => null
 
@@ -11,7 +21,26 @@ export type WebsiteBuilderComponents = {
   Navigation: ComponentType<BuilderNavigationProps>
   MemberPlans: ComponentType<BuilderMemberPlansProps>
   Subscribe: ComponentType<BuilderSubscribeProps>
-  Button: ComponentType<BuilderButtonProps>
+  Page: ComponentType<BuilderPageProps>
+
+  ui: {
+    Button: ComponentType<BuilderButtonProps>
+    H1: ComponentType<BuilderHeadingProps>
+    H2: ComponentType<BuilderHeadingProps>
+    H3: ComponentType<BuilderHeadingProps>
+    H4: ComponentType<BuilderHeadingProps>
+    H5: ComponentType<BuilderHeadingProps>
+    H6: ComponentType<BuilderHeadingProps>
+    Paragraph: ComponentType<BuilderParagraphProps>
+    OrderedList: ComponentType<BuilderOrderedListProps>
+    UnorderedList: ComponentType<BuilderUnorderedListProps>
+    ListItem: ComponentType<BuilderListItemProps>
+  }
+
+  richtext: {
+    RenderLeaf: ComponentType<BuilderRenderLeafProps>
+    RenderElement: ComponentType<BuilderRenderElementProps>
+  }
 }
 
 const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
@@ -19,25 +48,41 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   Navigation: NoComponent,
   MemberPlans: NoComponent,
   Subscribe: NoComponent,
-  Button: NoComponent
+  Page: NoComponent,
+
+  ui: {
+    Button: NoComponent,
+    H1: NoComponent,
+    H2: NoComponent,
+    H3: NoComponent,
+    H4: NoComponent,
+    H5: NoComponent,
+    H6: NoComponent,
+    Paragraph: NoComponent,
+    OrderedList: NoComponent,
+    UnorderedList: NoComponent,
+    ListItem: NoComponent
+  },
+
+  richtext: {
+    RenderLeaf: NoComponent,
+    RenderElement: NoComponent
+  }
 })
 
 export const useWebsiteBuilder = () => {
   return useContext(WebsiteBuilderContext)
 }
 
-export const WebsiteBuilderProvider = memo<PropsWithChildren<Partial<WebsiteBuilderComponents>>>(
-  ({children, ...components}) => {
-    const parentComponents = useWebsiteBuilder()
-    const newComponents = {
-      ...parentComponents,
-      ...components
-    }
+export const WebsiteBuilderProvider = memo<
+  PropsWithChildren<PartialDeep<WebsiteBuilderComponents>>
+>(({children, ...components}) => {
+  const parentComponents = useWebsiteBuilder()
+  const newComponents = mergeDeepRight(parentComponents, components) as WebsiteBuilderComponents
 
-    return (
-      <WebsiteBuilderContext.Provider value={newComponents}>
-        {children}
-      </WebsiteBuilderContext.Provider>
-    )
-  }
-)
+  return (
+    <WebsiteBuilderContext.Provider value={newComponents}>
+      {children}
+    </WebsiteBuilderContext.Provider>
+  )
+})

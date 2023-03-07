@@ -1336,6 +1336,64 @@ export type ChallengeQuery = {
   }
 }
 
+export type ImageUrLsFragment = {
+  __typename?: 'Image'
+  url?: string | null
+  largeURL?: string | null
+  mediumURL?: string | null
+  thumbURL?: string | null
+  squareURL?: string | null
+  previewURL?: string | null
+  column1URL?: string | null
+  column6URL?: string | null
+}
+
+export type ImageRefFragment = {
+  __typename?: 'Image'
+  id: string
+  filename?: string | null
+  extension: string
+  title?: string | null
+  description?: string | null
+  width: number
+  height: number
+  url?: string | null
+  largeURL?: string | null
+  mediumURL?: string | null
+  thumbURL?: string | null
+  squareURL?: string | null
+  previewURL?: string | null
+  column1URL?: string | null
+  column6URL?: string | null
+}
+
+export type FullImageFragment = {
+  __typename?: 'Image'
+  id: string
+  createdAt: string
+  modifiedAt: string
+  filename?: string | null
+  extension: string
+  width: number
+  height: number
+  fileSize: number
+  description?: string | null
+  tags: Array<string>
+  source?: string | null
+  link?: string | null
+  license?: string | null
+  title?: string | null
+  url?: string | null
+  largeURL?: string | null
+  mediumURL?: string | null
+  thumbURL?: string | null
+  squareURL?: string | null
+  previewURL?: string | null
+  column1URL?: string | null
+  column6URL?: string | null
+  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+}
+
 export type MemberPlanListQueryVariables = Exact<{
   take?: InputMaybe<Scalars['Int']>
   skip?: InputMaybe<Scalars['Int']>
@@ -1434,6 +1492,280 @@ export type NavigationListQuery = {
   }> | null
 }
 
+type FullTeaser_ArticleTeaser_Fragment = {__typename?: 'ArticleTeaser'}
+
+type FullTeaser_CustomTeaser_Fragment = {
+  __typename?: 'CustomTeaser'
+  style: TeaserStyle
+  preTitle?: string | null
+  title?: string | null
+  lead?: string | null
+  contentUrl?: string | null
+  image?: {
+    __typename?: 'Image'
+    id: string
+    filename?: string | null
+    extension: string
+    title?: string | null
+    description?: string | null
+    width: number
+    height: number
+    url?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    thumbURL?: string | null
+    squareURL?: string | null
+    previewURL?: string | null
+    column1URL?: string | null
+    column6URL?: string | null
+  } | null
+  properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+}
+
+type FullTeaser_PageTeaser_Fragment = {
+  __typename?: 'PageTeaser'
+  style: TeaserStyle
+  preTitle?: string | null
+  title?: string | null
+  lead?: string | null
+  image?: {
+    __typename?: 'Image'
+    id: string
+    filename?: string | null
+    extension: string
+    title?: string | null
+    description?: string | null
+    width: number
+    height: number
+    url?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    thumbURL?: string | null
+    squareURL?: string | null
+    previewURL?: string | null
+    column1URL?: string | null
+    column6URL?: string | null
+  } | null
+  page?: {__typename?: 'Page'; id: string} | null
+}
+
+type FullTeaser_PeerArticleTeaser_Fragment = {__typename?: 'PeerArticleTeaser'}
+
+export type FullTeaserFragment =
+  | FullTeaser_ArticleTeaser_Fragment
+  | FullTeaser_CustomTeaser_Fragment
+  | FullTeaser_PageTeaser_Fragment
+  | FullTeaser_PeerArticleTeaser_Fragment
+
+export type PageQueryVariables = Exact<{
+  slug?: InputMaybe<Scalars['Slug']>
+  id?: InputMaybe<Scalars['ID']>
+}>
+
+export type PageQuery = {
+  __typename?: 'Query'
+  page?: {
+    __typename?: 'Page'
+    id: string
+    blocks: Array<
+      | {__typename: 'BildwurfAdBlock'}
+      | {__typename: 'CommentBlock'}
+      | {__typename: 'EmbedBlock'}
+      | {__typename: 'EventBlock'}
+      | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'HTMLBlock'; html?: string | null}
+      | {
+          __typename: 'ImageBlock'
+          caption?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            title?: string | null
+            url?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            thumbURL?: string | null
+            squareURL?: string | null
+            previewURL?: string | null
+            column1URL?: string | null
+            column6URL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+        }
+      | {__typename: 'ImageGalleryBlock'}
+      | {__typename: 'InstagramPostBlock'}
+      | {__typename: 'LinkPageBreakBlock'}
+      | {__typename: 'ListicleBlock'}
+      | {__typename: 'PolisConversationBlock'}
+      | {__typename: 'PollBlock'}
+      | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+      | {__typename: 'RichTextBlock'; richText: Node[]}
+      | {__typename: 'SoundCloudTrackBlock'}
+      | {__typename: 'TeaserGridBlock'}
+      | {
+          __typename: 'TeaserGridFlexBlock'
+          flexTeasers: Array<{
+            __typename?: 'FlexTeaser'
+            alignment: {__typename?: 'FlexAlignment'; x: number; y: number; w: number; h: number}
+            teaser?:
+              | {__typename?: 'ArticleTeaser'}
+              | {
+                  __typename?: 'CustomTeaser'
+                  style: TeaserStyle
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  contentUrl?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    filename?: string | null
+                    extension: string
+                    title?: string | null
+                    description?: string | null
+                    width: number
+                    height: number
+                    url?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    thumbURL?: string | null
+                    squareURL?: string | null
+                    previewURL?: string | null
+                    column1URL?: string | null
+                    column6URL?: string | null
+                  } | null
+                  properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+                }
+              | {
+                  __typename?: 'PageTeaser'
+                  style: TeaserStyle
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    filename?: string | null
+                    extension: string
+                    title?: string | null
+                    description?: string | null
+                    width: number
+                    height: number
+                    url?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    thumbURL?: string | null
+                    squareURL?: string | null
+                    previewURL?: string | null
+                    column1URL?: string | null
+                    column6URL?: string | null
+                  } | null
+                  page?: {__typename?: 'Page'; id: string} | null
+                }
+              | {__typename?: 'PeerArticleTeaser'}
+              | null
+          }>
+        }
+      | {__typename: 'TikTokVideoBlock'}
+      | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+      | {__typename: 'TwitterTweetBlock'}
+      | {__typename: 'VimeoVideoBlock'}
+      | {__typename: 'YouTubeVideoBlock'}
+    >
+  } | null
+}
+
+export const ImageUrLsFragmentDoc = gql`
+  fragment ImageURLs on Image {
+    url
+    largeURL: transformURL(input: {width: 500})
+    mediumURL: transformURL(input: {width: 300})
+    thumbURL: transformURL(input: {width: 280, height: 200})
+    squareURL: transformURL(input: {width: 100, height: 100})
+    previewURL: transformURL(input: {width: 400, height: 200})
+    column1URL: transformURL(input: {width: 800, height: 300})
+    column6URL: transformURL(input: {width: 260, height: 300})
+  }
+`
+export const ImageRefFragmentDoc = gql`
+  fragment ImageRef on Image {
+    id
+    filename
+    extension
+    title
+    description
+    width
+    height
+    ...ImageURLs
+  }
+  ${ImageUrLsFragmentDoc}
+`
+export const FullImageFragmentDoc = gql`
+  fragment FullImage on Image {
+    id
+    createdAt
+    modifiedAt
+    filename
+    extension
+    width
+    height
+    fileSize
+    description
+    tags
+    source
+    link
+    license
+    focalPoint {
+      x
+      y
+    }
+    ...ImageRef
+  }
+  ${ImageRefFragmentDoc}
+`
+export const FullTeaserFragmentDoc = gql`
+  fragment FullTeaser on Teaser {
+    ... on PageTeaser {
+      style
+      image {
+        ...ImageRef
+      }
+      preTitle
+      title
+      lead
+      page {
+        id
+      }
+    }
+    ... on CustomTeaser {
+      style
+      image {
+        ...ImageRef
+      }
+      preTitle
+      title
+      lead
+      contentUrl
+      properties {
+        key
+        value
+      }
+    }
+  }
+  ${ImageRefFragmentDoc}
+`
 export const MeDocument = gql`
   query Me {
     me {
@@ -1807,3 +2139,79 @@ export type NavigationListQueryResult = Apollo.QueryResult<
   NavigationListQuery,
   NavigationListQueryVariables
 >
+export const PageDocument = gql`
+  query Page($slug: Slug, $id: ID) {
+    page(slug: $slug, id: $id) {
+      id
+      blocks {
+        __typename
+        ... on TitleBlock {
+          title
+          lead
+        }
+        ... on ImageBlock {
+          caption
+          image {
+            ...FullImage
+          }
+        }
+        ... on QuoteBlock {
+          quote
+          author
+        }
+        ... on RichTextBlock {
+          richText
+        }
+        ... on HTMLBlock {
+          html
+        }
+        ... on TeaserGridFlexBlock {
+          flexTeasers {
+            alignment {
+              x
+              y
+              w
+              h
+            }
+            teaser {
+              ...FullTeaser
+            }
+          }
+        }
+      }
+    }
+  }
+  ${FullImageFragmentDoc}
+  ${FullTeaserFragmentDoc}
+`
+
+/**
+ * __usePageQuery__
+ *
+ * To run a query within a React component, call `usePageQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePageQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function usePageQuery(baseOptions?: Apollo.QueryHookOptions<PageQuery, PageQueryVariables>) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<PageQuery, PageQueryVariables>(PageDocument, options)
+}
+export function usePageLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<PageQuery, PageQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<PageQuery, PageQueryVariables>(PageDocument, options)
+}
+export type PageQueryHookResult = ReturnType<typeof usePageQuery>
+export type PageLazyQueryHookResult = ReturnType<typeof usePageLazyQuery>
+export type PageQueryResult = Apollo.QueryResult<PageQuery, PageQueryVariables>

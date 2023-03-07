@@ -82,12 +82,7 @@ const ChallengeWrapper = styled('div')`
 const CustomSubscribe = ({challenge, memberPlans, onSubmit: submit}: BuilderSubscribeProps) => {
   const {Button} = useWebsiteBuilder()
 
-  const {
-    handleSubmit,
-    control,
-    formState: {errors},
-    setValue
-  } = useForm({
+  const {handleSubmit, control, setValue} = useForm({
     defaultValues: {
       monthlyAmount: 0,
       name: '',
