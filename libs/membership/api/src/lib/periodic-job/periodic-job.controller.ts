@@ -88,7 +88,7 @@ export class PeriodicJobController {
           }
         }
 
-        throw Error('dsadsad')
+        // throw Error('dsadsad')
       } catch (e) {
         await this.markJobFailed((e as Error).toString())
         throw e

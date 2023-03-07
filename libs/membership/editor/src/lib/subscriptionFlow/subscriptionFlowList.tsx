@@ -15,7 +15,17 @@ import {
   TableRow,
   Typography
 } from '@mui/material'
-import {MdAdd, MdDelete, MdOutlineHourglassTop, MdOutlineTextSnippet, MdTune} from 'react-icons/all'
+import {
+  MdAdd,
+  MdAlarmOn,
+  MdDelete,
+  MdFilter,
+  MdFilterAlt,
+  MdMouse,
+  MdOutlineHourglassTop,
+  MdOutlineTextSnippet,
+  MdTune
+} from 'react-icons/all'
 import {useTranslation} from 'react-i18next'
 import {useParams} from 'react-router-dom'
 import {
@@ -52,6 +62,7 @@ import {
 } from '@wepublish/editor/api-v2'
 import {GraphqlClientContext} from './graphqlClientContext'
 import MailTemplateSelect from './mailTemplateSelect'
+import {theme} from '@wepublish/ui'
 
 const MailTemplatesContext = createContext<FullMailTemplateFragment[]>([])
 
@@ -310,7 +321,7 @@ export default function () {
   }
 
   // Add a separation border after every table section (filters | user actions | timeline | actions)
-  const filterCount = 4
+  const filterCount = defaultFlowOnly ? 0 : 4
   const userActionCount = userActionEvents.length
   const nonUserActionCount = days.length
 
@@ -415,13 +426,18 @@ export default function () {
             <Table size="small">
               <TableHead>
                 <TableRow>
-                  <DarkTableCell align="center" colSpan={filterCount}>
-                    Filters
-                  </DarkTableCell>
+                  {!defaultFlowOnly && (
+                    <DarkTableCell align="center" colSpan={filterCount}>
+                      <MdFilterAlt size={20} style={{marginRight: '5px'}} />
+                      Filters
+                    </DarkTableCell>
+                  )}
                   <DarkTableCell align="center" colSpan={userActionCount}>
+                    <MdMouse size={20} style={{marginRight: '5px'}} />
                     User Actions
                   </DarkTableCell>
                   <DarkTableCell align="center" colSpan={nonUserActionCount}>
+                    <MdAlarmOn size={20} style={{marginRight: '5px'}} />
                     Timeline
                   </DarkTableCell>
                   <DarkTableCell align="center">Actions</DarkTableCell>
