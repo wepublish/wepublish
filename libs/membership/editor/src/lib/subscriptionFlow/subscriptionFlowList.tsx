@@ -19,15 +19,10 @@ import {
   MdAdd,
   MdAlarmOn,
   MdDelete,
-  MdFilter,
   MdFilterAlt,
   MdMouse,
-  MdNoteAdd,
-  MdOutlineCancel,
   MdOutlineClose,
-  MdOutlineHourglassTop,
   MdOutlineNoteAdd,
-  MdOutlineTextSnippet,
   MdTune
 } from 'react-icons/all'
 import {useTranslation} from 'react-i18next'
@@ -66,7 +61,6 @@ import {
 } from '@wepublish/editor/api-v2'
 import {GraphqlClientContext} from './graphqlClientContext'
 import MailTemplateSelect from './mailTemplateSelect'
-import {theme} from '@wepublish/ui'
 import {TypeAttributes} from 'rsuite/esm/@types/common'
 
 const MailTemplatesContext = createContext<FullMailTemplateFragment[]>([])
@@ -625,6 +619,7 @@ export default function () {
                         circle
                         appearance="primary"
                         icon={<MdDelete />}
+                        disabled={subscriptionFlow.default}
                         onClick={() =>
                           deleteSubscriptionFlow({
                             variables: {subscriptionFlowId: subscriptionFlow.id}
