@@ -968,6 +968,8 @@ export type Query = {
   memberPlans: MemberPlanConnection;
   /** This query takes either the ID or the key and returns the navigation. */
   navigation?: Maybe<Navigation>;
+  /** This query returns all navigations. */
+  navigations?: Maybe<Array<Navigation>>;
   /** This query takes either the ID, slug or token and returns the page. */
   page?: Maybe<Page>;
   /** This query returns the pages. */

@@ -16,8 +16,8 @@ import {
   toaster,
   Toggle
 } from 'rsuite'
-import {RowDataType} from 'rsuite-table'
 
+import {RowDataType} from 'rsuite-table'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {PermissionControl} from '../atoms/permissionControl'
 import {SelectTags} from '../atoms/tag/selectTags'
