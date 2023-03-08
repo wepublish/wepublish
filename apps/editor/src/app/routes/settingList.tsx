@@ -482,16 +482,29 @@ function SettingList() {
                   </Col>
                   {/* payment */}
                   <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={
-                        <>
-                          {t('settingList.payment')}
-                          <SettingInfo text={t('settingList.warnings.invoiceReminders')} />
-                        </>
-                      }>
+                    <Panel bordered header={t('settingList.payment')}>
                       <Form.Group controlId="invoiceReminders">
-                        <Form.ControlLabel>{t('settingList.invoiceReminders')}</Form.ControlLabel>
+                        <Form.ControlLabel>
+                          {t('settingList.invoiceReminders')}
+                          <SettingInfo text={t('settingList.warnings.invoiceReminders')} />
+                        </Form.ControlLabel>
+                        <Form.Control
+                          name="invoiceTries"
+                          accepter={InputNumber}
+                          value={invoiceReminderTries.value}
+                          onChange={(value: number) =>
+                            setInvoiceReminderTries({
+                              ...invoiceReminderTries,
+                              value
+                            })
+                          }
+                        />
+                      </Form.Group>
+                      <Form.Group controlId="invoiceFrequency">
+                        <Form.ControlLabel>
+                          {t('settingList.invoiceFrequency')}
+                          <SettingInfo text={t('settingList.warnings.invoiceFrequency')} />
+                        </Form.ControlLabel>
                         <InputGroup>
                           <Form.Control
                             name="invoiceFrequency"
