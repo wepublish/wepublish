@@ -35,16 +35,16 @@ const CardSubLabel = styled(Typography)`
 `
 
 export type RadioCardProps = PropsWithChildren<
-  RadioProps & {label: ReactNode; subLabel?: ReactNode}
+  RadioProps & {label: ReactNode; subLabel?: ReactNode; className?: string}
 >
 
 export const RadioCard = forwardRef<HTMLButtonElement, RadioCardProps>(
-  ({label, subLabel, children, ...props}, ref) => {
+  ({label, subLabel, children, className, ...props}, ref) => {
     const radioGroup = useRadioGroup()
     const isChecked = props.checked ?? radioGroup?.value === props.value
 
     return (
-      <Card isChecked={isChecked}>
+      <Card isChecked={isChecked} className={className}>
         <CardRadioWrapper>
           <CardTitleWrapper>
             <Typography variant="h6" component="span">

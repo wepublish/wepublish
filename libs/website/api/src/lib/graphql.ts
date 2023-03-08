@@ -1467,6 +1467,26 @@ export type SubscribeMutation = {
   }
 }
 
+export type FullNavigationFragment = {
+  __typename?: 'Navigation'
+  id: string
+  key: string
+  name: string
+  links: Array<
+    | {
+        __typename?: 'ArticleNavigationLink'
+        label: string
+        article?: {__typename?: 'Article'; url: string} | null
+      }
+    | {__typename?: 'ExternalNavigationLink'; label: string; url: string}
+    | {
+        __typename?: 'PageNavigationLink'
+        label: string
+        page?: {__typename?: 'Page'; url: string} | null
+      }
+  >
+}
+
 export type NavigationListQueryVariables = Exact<{[key: string]: never}>
 
 export type NavigationListQuery = {
@@ -1492,70 +1512,192 @@ export type NavigationListQuery = {
   }> | null
 }
 
-type FullTeaser_ArticleTeaser_Fragment = {__typename?: 'ArticleTeaser'}
+export type NavigationQueryVariables = Exact<{
+  slug?: InputMaybe<Scalars['ID']>
+}>
 
-type FullTeaser_CustomTeaser_Fragment = {
-  __typename?: 'CustomTeaser'
-  style: TeaserStyle
-  preTitle?: string | null
-  title?: string | null
-  lead?: string | null
-  contentUrl?: string | null
-  image?: {
-    __typename?: 'Image'
+export type NavigationQuery = {
+  __typename?: 'Query'
+  navigation?: {
+    __typename?: 'Navigation'
     id: string
-    filename?: string | null
-    extension: string
-    title?: string | null
-    description?: string | null
-    width: number
-    height: number
-    url?: string | null
-    largeURL?: string | null
-    mediumURL?: string | null
-    thumbURL?: string | null
-    squareURL?: string | null
-    previewURL?: string | null
-    column1URL?: string | null
-    column6URL?: string | null
+    key: string
+    name: string
+    links: Array<
+      | {
+          __typename?: 'ArticleNavigationLink'
+          label: string
+          article?: {__typename?: 'Article'; url: string} | null
+        }
+      | {__typename?: 'ExternalNavigationLink'; label: string; url: string}
+      | {
+          __typename?: 'PageNavigationLink'
+          label: string
+          page?: {__typename?: 'Page'; url: string} | null
+        }
+    >
   } | null
-  properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
 }
 
-type FullTeaser_PageTeaser_Fragment = {
-  __typename?: 'PageTeaser'
-  style: TeaserStyle
-  preTitle?: string | null
-  title?: string | null
-  lead?: string | null
-  image?: {
-    __typename?: 'Image'
-    id: string
-    filename?: string | null
-    extension: string
-    title?: string | null
-    description?: string | null
-    width: number
-    height: number
-    url?: string | null
-    largeURL?: string | null
-    mediumURL?: string | null
-    thumbURL?: string | null
-    squareURL?: string | null
-    previewURL?: string | null
-    column1URL?: string | null
-    column6URL?: string | null
-  } | null
-  page?: {__typename?: 'Page'; id: string} | null
+export type FullPageFragment = {
+  __typename?: 'Page'
+  id: string
+  blocks: Array<
+    | {__typename: 'BildwurfAdBlock'}
+    | {__typename: 'CommentBlock'}
+    | {__typename: 'EmbedBlock'}
+    | {__typename: 'EventBlock'}
+    | {__typename: 'FacebookPostBlock'}
+    | {__typename: 'HTMLBlock'; html?: string | null}
+    | {
+        __typename: 'ImageBlock'
+        caption?: string | null
+        image?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          extension: string
+          width: number
+          height: number
+          fileSize: number
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
+          title?: string | null
+          url?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          thumbURL?: string | null
+          squareURL?: string | null
+          previewURL?: string | null
+          column1URL?: string | null
+          column6URL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+      }
+    | {__typename: 'ImageGalleryBlock'}
+    | {__typename: 'InstagramPostBlock'}
+    | {__typename: 'LinkPageBreakBlock'}
+    | {__typename: 'ListicleBlock'}
+    | {__typename: 'PolisConversationBlock'}
+    | {__typename: 'PollBlock'}
+    | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+    | {__typename: 'RichTextBlock'; richText: Node[]}
+    | {__typename: 'SoundCloudTrackBlock'}
+    | {__typename: 'TeaserGridBlock'}
+    | {
+        __typename: 'TeaserGridFlexBlock'
+        flexTeasers: Array<{
+          __typename?: 'FlexTeaser'
+          alignment: {__typename?: 'FlexAlignment'; x: number; y: number; w: number; h: number}
+          teaser?:
+            | {
+                __typename?: 'ArticleTeaser'
+                style: TeaserStyle
+                preTitle?: string | null
+                title?: string | null
+                lead?: string | null
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  filename?: string | null
+                  extension: string
+                  title?: string | null
+                  description?: string | null
+                  width: number
+                  height: number
+                  url?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  thumbURL?: string | null
+                  squareURL?: string | null
+                  previewURL?: string | null
+                  column1URL?: string | null
+                  column6URL?: string | null
+                } | null
+                article?: {
+                  __typename?: 'Article'
+                  id: string
+                  title: string
+                  preTitle?: string | null
+                  lead?: string | null
+                  url: string
+                } | null
+              }
+            | {
+                __typename?: 'CustomTeaser'
+                style: TeaserStyle
+                preTitle?: string | null
+                title?: string | null
+                lead?: string | null
+                contentUrl?: string | null
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  filename?: string | null
+                  extension: string
+                  title?: string | null
+                  description?: string | null
+                  width: number
+                  height: number
+                  url?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  thumbURL?: string | null
+                  squareURL?: string | null
+                  previewURL?: string | null
+                  column1URL?: string | null
+                  column6URL?: string | null
+                } | null
+                properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+              }
+            | {
+                __typename?: 'PageTeaser'
+                style: TeaserStyle
+                preTitle?: string | null
+                title?: string | null
+                lead?: string | null
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  filename?: string | null
+                  extension: string
+                  title?: string | null
+                  description?: string | null
+                  width: number
+                  height: number
+                  url?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  thumbURL?: string | null
+                  squareURL?: string | null
+                  previewURL?: string | null
+                  column1URL?: string | null
+                  column6URL?: string | null
+                } | null
+                page?: {
+                  __typename?: 'Page'
+                  id: string
+                  title: string
+                  description?: string | null
+                  url: string
+                } | null
+              }
+            | {__typename?: 'PeerArticleTeaser'}
+            | null
+        }>
+      }
+    | {__typename: 'TikTokVideoBlock'}
+    | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+    | {__typename: 'TwitterTweetBlock'}
+    | {__typename: 'VimeoVideoBlock'}
+    | {__typename: 'YouTubeVideoBlock'}
+  >
 }
-
-type FullTeaser_PeerArticleTeaser_Fragment = {__typename?: 'PeerArticleTeaser'}
-
-export type FullTeaserFragment =
-  | FullTeaser_ArticleTeaser_Fragment
-  | FullTeaser_CustomTeaser_Fragment
-  | FullTeaser_PageTeaser_Fragment
-  | FullTeaser_PeerArticleTeaser_Fragment
 
 export type PageQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['Slug']>
@@ -1620,7 +1762,39 @@ export type PageQuery = {
             __typename?: 'FlexTeaser'
             alignment: {__typename?: 'FlexAlignment'; x: number; y: number; w: number; h: number}
             teaser?:
-              | {__typename?: 'ArticleTeaser'}
+              | {
+                  __typename?: 'ArticleTeaser'
+                  style: TeaserStyle
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    filename?: string | null
+                    extension: string
+                    title?: string | null
+                    description?: string | null
+                    width: number
+                    height: number
+                    url?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    thumbURL?: string | null
+                    squareURL?: string | null
+                    previewURL?: string | null
+                    column1URL?: string | null
+                    column6URL?: string | null
+                  } | null
+                  article?: {
+                    __typename?: 'Article'
+                    id: string
+                    title: string
+                    preTitle?: string | null
+                    lead?: string | null
+                    url: string
+                  } | null
+                }
               | {
                   __typename?: 'CustomTeaser'
                   style: TeaserStyle
@@ -1672,7 +1846,13 @@ export type PageQuery = {
                     column1URL?: string | null
                     column6URL?: string | null
                   } | null
-                  page?: {__typename?: 'Page'; id: string} | null
+                  page?: {
+                    __typename?: 'Page'
+                    id: string
+                    title: string
+                    description?: string | null
+                    url: string
+                  } | null
                 }
               | {__typename?: 'PeerArticleTeaser'}
               | null
@@ -1687,6 +1867,31 @@ export type PageQuery = {
   } | null
 }
 
+export const FullNavigationFragmentDoc = gql`
+  fragment FullNavigation on Navigation {
+    id
+    key
+    name
+    links {
+      ... on PageNavigationLink {
+        label
+        page {
+          url
+        }
+      }
+      ... on ArticleNavigationLink {
+        label
+        article {
+          url
+        }
+      }
+      ... on ExternalNavigationLink {
+        label
+        url
+      }
+    }
+  }
+`
 export const ImageUrLsFragmentDoc = gql`
   fragment ImageURLs on Image {
     url
@@ -1735,35 +1940,91 @@ export const FullImageFragmentDoc = gql`
   }
   ${ImageRefFragmentDoc}
 `
-export const FullTeaserFragmentDoc = gql`
-  fragment FullTeaser on Teaser {
-    ... on PageTeaser {
-      style
-      image {
-        ...ImageRef
+export const FullPageFragmentDoc = gql`
+  fragment FullPage on Page {
+    id
+    blocks {
+      __typename
+      ... on TitleBlock {
+        title
+        lead
       }
-      preTitle
-      title
-      lead
-      page {
-        id
+      ... on ImageBlock {
+        caption
+        image {
+          ...FullImage
+        }
       }
-    }
-    ... on CustomTeaser {
-      style
-      image {
-        ...ImageRef
+      ... on QuoteBlock {
+        quote
+        author
       }
-      preTitle
-      title
-      lead
-      contentUrl
-      properties {
-        key
-        value
+      ... on RichTextBlock {
+        richText
+      }
+      ... on HTMLBlock {
+        html
+      }
+      ... on TeaserGridFlexBlock {
+        flexTeasers {
+          alignment {
+            x
+            y
+            w
+            h
+          }
+          teaser {
+            ... on ArticleTeaser {
+              style
+              image {
+                ...ImageRef
+              }
+              preTitle
+              title
+              lead
+              article {
+                id
+                title
+                preTitle
+                lead
+                url
+              }
+            }
+            ... on PageTeaser {
+              style
+              image {
+                ...ImageRef
+              }
+              preTitle
+              title
+              lead
+              page {
+                id
+                title
+                description
+                url
+              }
+            }
+            ... on CustomTeaser {
+              style
+              image {
+                ...ImageRef
+              }
+              preTitle
+              title
+              lead
+              contentUrl
+              properties {
+                key
+                value
+              }
+            }
+          }
+        }
       }
     }
   }
+  ${FullImageFragmentDoc}
   ${ImageRefFragmentDoc}
 `
 export const MeDocument = gql`
@@ -2075,29 +2336,10 @@ export type SubscribeMutationOptions = Apollo.BaseMutationOptions<
 export const NavigationListDocument = gql`
   query NavigationList {
     navigations {
-      id
-      key
-      name
-      links {
-        ... on PageNavigationLink {
-          label
-          page {
-            url
-          }
-        }
-        ... on ArticleNavigationLink {
-          label
-          article {
-            url
-          }
-        }
-        ... on ExternalNavigationLink {
-          label
-          url
-        }
-      }
+      ...FullNavigation
     }
   }
+  ${FullNavigationFragmentDoc}
 `
 
 /**
@@ -2139,50 +2381,53 @@ export type NavigationListQueryResult = Apollo.QueryResult<
   NavigationListQuery,
   NavigationListQueryVariables
 >
+export const NavigationDocument = gql`
+  query Navigation($slug: ID) {
+    navigation(key: $slug) {
+      ...FullNavigation
+    }
+  }
+  ${FullNavigationFragmentDoc}
+`
+
+/**
+ * __useNavigationQuery__
+ *
+ * To run a query within a React component, call `useNavigationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNavigationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNavigationQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useNavigationQuery(
+  baseOptions?: Apollo.QueryHookOptions<NavigationQuery, NavigationQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<NavigationQuery, NavigationQueryVariables>(NavigationDocument, options)
+}
+export function useNavigationLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<NavigationQuery, NavigationQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<NavigationQuery, NavigationQueryVariables>(NavigationDocument, options)
+}
+export type NavigationQueryHookResult = ReturnType<typeof useNavigationQuery>
+export type NavigationLazyQueryHookResult = ReturnType<typeof useNavigationLazyQuery>
+export type NavigationQueryResult = Apollo.QueryResult<NavigationQuery, NavigationQueryVariables>
 export const PageDocument = gql`
   query Page($slug: Slug, $id: ID) {
     page(slug: $slug, id: $id) {
-      id
-      blocks {
-        __typename
-        ... on TitleBlock {
-          title
-          lead
-        }
-        ... on ImageBlock {
-          caption
-          image {
-            ...FullImage
-          }
-        }
-        ... on QuoteBlock {
-          quote
-          author
-        }
-        ... on RichTextBlock {
-          richText
-        }
-        ... on HTMLBlock {
-          html
-        }
-        ... on TeaserGridFlexBlock {
-          flexTeasers {
-            alignment {
-              x
-              y
-              w
-              h
-            }
-            teaser {
-              ...FullTeaser
-            }
-          }
-        }
-      }
+      ...FullPage
     }
   }
-  ${FullImageFragmentDoc}
-  ${FullTeaserFragmentDoc}
+  ${FullPageFragmentDoc}
 `
 
 /**

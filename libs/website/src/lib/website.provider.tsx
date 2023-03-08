@@ -1,4 +1,4 @@
-import {ThemeProvider, CssBaseline} from '@mui/material'
+import {ThemeProvider} from '@mui/material'
 import {
   theme,
   Button,
@@ -9,6 +9,7 @@ import {
   H5,
   H6,
   Paragraph,
+  Link,
   UnorderedList,
   OrderedList,
   ListItem
@@ -16,7 +17,7 @@ import {
 import {WebsiteBuilderProvider} from '@wepublish/website-builder'
 import {MemberPlans, Subscribe} from '@wepublish/membership/website'
 import {memo, PropsWithChildren} from 'react'
-import {Navigation} from '@wepublish/navigation/website'
+import {Navbar, Footer} from '@wepublish/navigation/website'
 import {IconContext} from 'react-icons'
 import {Page} from '@wepublish/page/website'
 import {css, Global} from '@emotion/react'
@@ -33,16 +34,29 @@ export type WebsiteProps = PropsWithChildren
 
 export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
   <ThemeProvider theme={theme}>
-    <CssBaseline />
     <Global styles={globalStyles} />
 
     <IconContext.Provider value={{}}>
       <WebsiteBuilderProvider
-        Navigation={Navigation}
+        Navbar={Navbar}
+        Footer={Footer}
         MemberPlans={MemberPlans}
         Subscribe={Subscribe}
         Page={Page}
-        ui={{Button, H1, H2, H3, H4, H5, H6, Paragraph, UnorderedList, OrderedList, ListItem}}
+        elements={{
+          Button,
+          H1,
+          H2,
+          H3,
+          H4,
+          H5,
+          H6,
+          Paragraph,
+          Link,
+          UnorderedList,
+          OrderedList,
+          ListItem
+        }}
         richtext={{RenderElement, RenderLeaf}}>
         {children}
       </WebsiteBuilderProvider>

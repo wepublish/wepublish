@@ -7,14 +7,14 @@ export const isQuoteBlock = (block: Block): block is QuoteBlockType =>
 
 export const QuoteBlockWrapper = styled('blockquote')`
   font-style: italic;
-  margin: ${({theme}) => theme.spacing(3)};
+  margin: ${({theme}) => theme.spacing(3)} ${({theme}) => theme.spacing(5)};
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
 `
 
 export const QuoteBlock = ({quote, author, className}: QuoteBlockType & {className?: string}) => {
   const {
-    ui: {H4, Paragraph}
+    elements: {H4, Paragraph}
   } = useWebsiteBuilder()
 
   return (

@@ -26,7 +26,7 @@ export enum TextFormat {
 
 export function RenderElement({attributes, children, element}: RenderElementProps) {
   const {
-    ui: {H1, H2, H3, Paragraph, UnorderedList, OrderedList, ListItem}
+    elements: {H1, H2, H3, Paragraph, UnorderedList, OrderedList, ListItem}
   } = useWebsiteBuilder()
 
   switch (element.type) {

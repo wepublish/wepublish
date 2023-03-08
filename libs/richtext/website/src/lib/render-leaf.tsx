@@ -1,4 +1,4 @@
-import {RenderLeafProps} from 'slate-react'
+import {BuilderRenderLeafProps} from '@wepublish/website-builder'
 
 export enum TextFormat {
   Bold = 'bold',
@@ -9,7 +9,7 @@ export enum TextFormat {
   Subscript = 'subscript'
 }
 
-export function RenderLeaf({attributes, children, leaf}: RenderLeafProps): JSX.Element {
+export function RenderLeaf({attributes, children, leaf}: BuilderRenderLeafProps): JSX.Element {
   if (leaf[TextFormat.Bold]) {
     children = <strong {...attributes}>{children}</strong>
   }

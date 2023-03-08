@@ -44,18 +44,12 @@ export const Block = ({block}: BlockProp) => {
 
 export type BlocksProp = {
   blocks: BlockType[]
-  className?: string
 }
 
-export const BlocksWrapper = styled('div')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
-`
-
-export const Blocks = ({className, blocks}: BlocksProp) => (
-  <BlocksWrapper className={className}>
+export const Blocks = ({blocks}: BlocksProp) => (
+  <>
     {blocks.map((block, index) => (
       <Block key={index} block={block} />
     ))}
-  </BlocksWrapper>
+  </>
 )

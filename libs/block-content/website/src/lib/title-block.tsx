@@ -12,7 +12,7 @@ export const TitleBlockWrapper = styled('div')`
 
 export const TitleBlock = ({title, lead, className}: TitleBlockType & {className?: string}) => {
   const {
-    ui: {H3, H6}
+    elements: {H3, H6}
   } = useWebsiteBuilder()
 
   return (

@@ -5,7 +5,10 @@ import {Blocks} from '@wepublish/block-content/website'
 
 export type PageProps = BuilderPageProps
 
-const PageWrapper = styled('div')``
+const PageWrapper = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(3)};
+`
 
 export function Page({data, loading, error}: PageProps) {
   return (

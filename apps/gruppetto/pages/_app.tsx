@@ -2,23 +2,55 @@ import {AppProps} from 'next/app'
 import Head from 'next/head'
 import {WebsiteProvider} from '@wepublish/website'
 import {createWithV1ApiClient} from '@wepublish/website/api'
-import {NavigationContainer} from '@wepublish/navigation/website'
-import {Container} from '@mui/material'
+import {Container, createTheme, CssBaseline, ThemeProvider, styled} from '@mui/material'
 import {WebsiteBuilderProvider} from '@wepublish/website-builder'
+import {Header} from '../src/header'
+import {FooterContainer} from '@wepublish/navigation/website'
+import {Logo} from '../src/logo'
+import {theme} from '@wepublish/ui'
+
+const gruppettoTheme = createTheme(theme, {
+  palette: {
+    primary: {
+      main: '#F084AD'
+    },
+    background: {
+      default: '#E9E9E9'
+    }
+  }
+})
+
+const Spacer = styled('div')`
+  display: grid;
+  align-items: flex-start;
+  grid-template-rows: min-content 1fr min-content;
+  gap: ${({theme}) => theme.spacing(3)};
+  min-height: 100vh;
+`
 
 function CustomApp({Component, pageProps}: AppProps) {
   return (
     <WebsiteProvider>
       <WebsiteBuilderProvider Head={Head}>
-        <Head>
-          <title>Welcome to gruppetto!</title>
-        </Head>
+        <ThemeProvider theme={gruppettoTheme}>
+          <CssBaseline />
 
-        <NavigationContainer />
+          <Head>
+            <title>Welcome to gruppetto!</title>
+          </Head>
 
-        <Container component="main">
-          <Component {...pageProps} />
-        </Container>
+          <Spacer>
+            <Header />
+
+            <Container component="main">
+              <Component {...pageProps} />
+            </Container>
+
+            <FooterContainer slug="footer">
+              <Logo />
+            </FooterContainer>
+          </Spacer>
+        </ThemeProvider>
       </WebsiteBuilderProvider>
     </WebsiteProvider>
   )

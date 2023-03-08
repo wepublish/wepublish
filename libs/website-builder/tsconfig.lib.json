@@ -28,6 +28,6 @@
     "src/**/*.jsx",
     "src/**/*.ts",
     "src/**/*.tsx",
-    "../navigation/website/src/lib/navigation-container.spec.tsx"
+    "../navigation/website/src/lib/navbar/navbar-container.spec.tsx"
   ]
 }

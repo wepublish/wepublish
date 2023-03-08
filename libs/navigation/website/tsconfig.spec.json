@@ -16,6 +16,6 @@
     "src/**/*.test.jsx",
     "src/**/*.spec.jsx",
     "src/**/*.d.ts",
-    "src/lib/navigation-container.spec.tsx"
+    "src/lib/navbar/navbar-container.spec.tsx"
   ]
 }

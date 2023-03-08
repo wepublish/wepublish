@@ -1,29 +1,31 @@
 import {createContext, useContext, PropsWithChildren, memo, ComponentType, ReactNode} from 'react'
-import {BuilderNavigationProps} from './navigation.interface'
+import {BuilderNavbarProps} from './navbar.interface'
 import {BuilderButtonProps} from './button.interface'
 import {BuilderMemberPlansProps} from './member-plans.interface'
 import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderPageProps} from './page.interface'
 import {mergeDeepRight} from 'ramda'
 import {PartialDeep} from 'type-fest'
-import {BuilderHeadingProps, BuilderParagraphProps} from './typography.interface'
+import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
 import {
   BuilderOrderedListProps,
   BuilderUnorderedListProps,
   BuilderListItemProps
 } from './lists.interface'
-import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
+import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richtext.interface'
+import {BuilderFooterProps} from './footer.interface'
 
 const NoComponent = () => null
 
 export type WebsiteBuilderComponents = {
   Head: ComponentType<{children: ReactNode}>
-  Navigation: ComponentType<BuilderNavigationProps>
+  Navbar: ComponentType<BuilderNavbarProps>
+  Footer: ComponentType<BuilderFooterProps>
   MemberPlans: ComponentType<BuilderMemberPlansProps>
   Subscribe: ComponentType<BuilderSubscribeProps>
   Page: ComponentType<BuilderPageProps>
 
-  ui: {
+  elements: {
     Button: ComponentType<BuilderButtonProps>
     H1: ComponentType<BuilderHeadingProps>
     H2: ComponentType<BuilderHeadingProps>
@@ -32,6 +34,7 @@ export type WebsiteBuilderComponents = {
     H5: ComponentType<BuilderHeadingProps>
     H6: ComponentType<BuilderHeadingProps>
     Paragraph: ComponentType<BuilderParagraphProps>
+    Link: ComponentType<BuilderLinkProps>
     OrderedList: ComponentType<BuilderOrderedListProps>
     UnorderedList: ComponentType<BuilderUnorderedListProps>
     ListItem: ComponentType<BuilderListItemProps>
@@ -45,12 +48,13 @@ export type WebsiteBuilderComponents = {
 
 const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   Head: NoComponent,
-  Navigation: NoComponent,
+  Navbar: NoComponent,
+  Footer: NoComponent,
   MemberPlans: NoComponent,
   Subscribe: NoComponent,
   Page: NoComponent,
 
-  ui: {
+  elements: {
     Button: NoComponent,
     H1: NoComponent,
     H2: NoComponent,
@@ -59,6 +63,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     H5: NoComponent,
     H6: NoComponent,
     Paragraph: NoComponent,
+    Link: NoComponent,
     OrderedList: NoComponent,
     UnorderedList: NoComponent,
     ListItem: NoComponent

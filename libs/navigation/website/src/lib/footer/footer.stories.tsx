@@ -1,19 +1,19 @@
-import {Navigation, NavigationProps} from './navigation'
-import {NavigationContainer} from './navigation-container'
+import {Footer, FooterProps} from './footer'
+import {FooterContainer} from './footer-container'
 import {action} from '@storybook/addon-actions'
 import {ComponentStory, ComponentMeta} from '@storybook/react'
 import {NavigationListDocument} from '@wepublish/website/api'
 
 export default {
-  component: Navigation,
-  title: 'Navigation'
-} as ComponentMeta<typeof Navigation>
+  component: Footer,
+  title: 'Footer'
+} as ComponentMeta<typeof Footer>
 
-const Template = (args: NavigationProps) => <Navigation {...args} />
+const Template = (args: FooterProps) => <Footer {...args} />
 export const Default = Template.bind({})
 
-const ContainerTemplate: ComponentStory<typeof NavigationContainer> = args => (
-  <NavigationContainer {...args} />
+const ContainerTemplate: ComponentStory<typeof FooterContainer> = args => (
+  <FooterContainer {...args} />
 )
 export const WithContainer = ContainerTemplate.bind({})
 

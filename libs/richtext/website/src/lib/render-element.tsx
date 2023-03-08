@@ -1,5 +1,6 @@
 import {useWebsiteBuilder} from '@wepublish/website-builder'
-import {RenderElementProps} from 'slate-react'
+import {BuilderRenderElementProps} from '@wepublish/website-builder'
+import {Link} from '@mui/material'
 
 export enum BlockFormat {
   H1 = 'heading-one',
@@ -18,9 +19,13 @@ export enum InlineFormat {
   Link = 'link'
 }
 
-export function RenderElement({attributes, children, element}: RenderElementProps): JSX.Element {
+export function RenderElement({
+  attributes,
+  children,
+  element
+}: BuilderRenderElementProps): JSX.Element {
   const {
-    ui: {H1, H2, H3, Paragraph, UnorderedList, OrderedList, ListItem}
+    elements: {H1, H2, H3, Paragraph, UnorderedList, OrderedList, ListItem}
   } = useWebsiteBuilder()
 
   switch (element.type) {
@@ -68,14 +73,14 @@ export function RenderElement({attributes, children, element}: RenderElementProp
 
     case InlineFormat.Link:
       return (
-        <a
+        <Link
           target="_blank"
           rel="noreferrer"
           href={element.url as string}
           title={element.title as string}
           {...attributes}>
           {children}
-        </a>
+        </Link>
       )
 
     default:

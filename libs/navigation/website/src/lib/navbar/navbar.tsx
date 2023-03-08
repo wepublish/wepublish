@@ -3,9 +3,9 @@ import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-import {BuilderNavigationProps, useWebsiteBuilder} from '@wepublish/website-builder'
+import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website-builder'
 
-const NavigationWrapper = styled(Box)`
+const NavbarWrapper = styled(Box)`
   flex-grow: 1;
 `
 
@@ -13,15 +13,15 @@ const Title = styled.div`
   flex-grow: 1;
 `
 
-export type NavigationProps = BuilderNavigationProps
+export type NavbarProps = BuilderNavbarProps
 
-export function Navigation({data, loading, error}: NavigationProps) {
+export function Navbar({data, loading, error}: NavbarProps) {
   const {
-    ui: {Button}
+    elements: {Button}
   } = useWebsiteBuilder()
 
   return (
-    <NavigationWrapper>
+    <NavbarWrapper>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component={Title}>
@@ -31,6 +31,6 @@ export function Navigation({data, loading, error}: NavigationProps) {
           <Button>Login</Button>
         </Toolbar>
       </AppBar>
-    </NavigationWrapper>
+    </NavbarWrapper>
   )
 }
