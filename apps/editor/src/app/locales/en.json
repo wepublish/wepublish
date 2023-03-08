@@ -1382,7 +1382,8 @@
       "titleSettings": "Subscription settings",
       "titleDefaultSettings": "Default subscription settings",
       "settingsDescription": "You can overwrite these settings for every member plan.",
-      "addNew": "Create new flow"
+      "addNew": "Create new flow",
+      "day": "day {{day}}"
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "No mailing"

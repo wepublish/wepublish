@@ -18,6 +18,7 @@ import {MdDoNotDisturb, MdUnsubscribe} from 'react-icons/all'
 interface MailTemplateSelectProps {
   mailTemplates: FullMailTemplateFragment[]
   subscriptionInterval?: DecoratedSubscriptionInterval<NonUserActionInterval | UserActionInterval>
+  newDaysAwayFromEnding?: number
   subscriptionFlow: SubscriptionFlowFragment
   event: SubscriptionEvent
 }
@@ -25,6 +26,7 @@ interface MailTemplateSelectProps {
 export default function MailTemplateSelect({
   mailTemplates,
   subscriptionInterval,
+  newDaysAwayFromEnding,
   subscriptionFlow,
   event
 }: MailTemplateSelectProps) {
@@ -53,7 +55,7 @@ export default function MailTemplateSelect({
       await client.createSubscriptionInterval({
         variables: {
           subscriptionInterval: {
-            daysAwayFromEnding: isNonUserEvent(event) ? 0 : null,
+            daysAwayFromEnding: isNonUserEvent(event) ? newDaysAwayFromEnding || 0 : null,
             mailTemplateId: value,
             subscriptionFlowId: subscriptionFlow.id,
             event

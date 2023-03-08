@@ -477,7 +477,7 @@ export default function () {
                       key={`day-${day}`}
                       align="center"
                       style={day === 0 ? {backgroundColor: 'lightyellow'} : {}}>
-                      Day {day}
+                      {t('subscriptionFlow.day', {day})}
                     </TableCell>
                   ))}
 
@@ -577,6 +577,7 @@ export default function () {
                                 mailTemplates={mailTemplates.mailTemplates}
                                 subscriptionInterval={undefined}
                                 subscriptionFlow={subscriptionFlow}
+                                newDaysAwayFromEnding={day as number}
                                 event={SubscriptionEvent.Custom}
                               />
                             </TableCell>
