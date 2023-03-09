@@ -31,7 +31,6 @@ import {useTranslation} from 'react-i18next'
 import {useParams} from 'react-router-dom'
 import {
   Button,
-  CheckPicker,
   IconButton,
   InputNumber,
   Loader,
@@ -46,19 +45,15 @@ import {ApolloClient, ApolloError, NormalizedCacheObject} from '@apollo/client'
 import {getApiClientV2} from 'apps/editor/src/app/utility'
 import {
   FullMailTemplateFragment,
-  PaymentPeriodicity,
   SubscriptionEvent,
   SubscriptionFlowFragment,
-  SubscriptionFlowModelUpdateInput,
   SubscriptionInterval,
   useCreateSubscriptionFlowMutation,
   useCreateSubscriptionIntervalMutation,
   useDeleteSubscriptionFlowMutation,
   useDeleteSubscriptionIntervalMutation,
-  useListPaymentMethodsQuery,
   useMailTemplateQuery,
   useSubscriptionFlowsQuery,
-  useUpdateSubscriptionFlowMutation,
   useUpdateSubscriptionIntervalMutation,
   useUpdateSubscriptionIntervalsMutation
 } from '@wepublish/editor/api-v2'
@@ -68,13 +63,15 @@ import {TypeAttributes} from 'rsuite/esm/@types/common'
 import DraggableSubscriptionInterval from './draggableSubscriptionInterval'
 import {DndContext, DragEndEvent} from '@dnd-kit/core'
 import DroppableSubscriptionInterval from './droppableSubscriptionInterval'
+import FilterBody from './filter/filterBody'
+import FilterHead from './filter/filterHead'
 
 /**
  * CONTEXT
  */
 const MailTemplatesContext = createContext<FullMailTemplateFragment[]>([])
 
-const showErrors = (error: ApolloError): void => {
+export const showErrors = (error: ApolloError): void => {
   toaster.push(
     <Message type="error" showIcon closable duration={8000}>
       {error.message}
@@ -179,12 +176,6 @@ export default function () {
     onError: showErrors
   })
 
-  // get payment methods
-  const {data: paymentMethods, loading: loadingPaymentMethods} = useListPaymentMethodsQuery({
-    client,
-    onError: showErrors
-  })
-
   const [createSubscriptionFlow] = useCreateSubscriptionFlowMutation({
     client,
     onError: showErrors
@@ -207,11 +198,6 @@ export default function () {
     onError: showErrors
   })
 
-  const [updateSubscriptionFlow] = useUpdateSubscriptionFlowMutation({
-    client,
-    onError: showErrors
-  })
-
   const [deleteSubscriptionFlow] = useDeleteSubscriptionFlowMutation({
     client,
     onError: showErrors
@@ -220,25 +206,6 @@ export default function () {
   /******************************************
    * HELPER METHODS
    ******************************************/
-  const updateFlow = async function (
-    subscriptionFlow: SubscriptionFlowFragment,
-    payload: Partial<SubscriptionFlowModelUpdateInput>
-  ) {
-    const mutation: SubscriptionFlowModelUpdateInput = {
-      id: subscriptionFlow.id,
-      paymentMethodIds:
-        payload.paymentMethodIds || subscriptionFlow.paymentMethods.map(pm => pm.id),
-      periodicities: payload.periodicities || subscriptionFlow.periodicities,
-      autoRenewal: payload.autoRenewal || subscriptionFlow.autoRenewal
-    }
-
-    await updateSubscriptionFlow({
-      variables: {
-        subscriptionFlow: mutation
-      }
-    })
-  }
-
   async function intervalDragEnd(dragEvent: DragEndEvent) {
     const interval: DecoratedSubscriptionInterval<NonUserActionInterval> = dragEvent.active.data
       .current
@@ -321,8 +288,8 @@ export default function () {
   }
 
   const loading: boolean = useMemo(
-    () => loadingSubscriptionFlows || loadingMailTemplates || loadingPaymentMethods,
-    [loadingSubscriptionFlows, loadingMailTemplates, loadingPaymentMethods]
+    () => loadingSubscriptionFlows || loadingMailTemplates,
+    [loadingSubscriptionFlows, loadingMailTemplates]
   )
 
   const userActionEvents = USER_ACTION_EVENTS.map(eventName => {
@@ -496,23 +463,7 @@ export default function () {
                   <DarkTableCell align="center">Actions</DarkTableCell>
                 </TableRow>
                 <SplitTableRow>
-                  {!defaultFlowOnly && (
-                    <>
-                      {/* filter TODO: extract */}
-                      <TableCell align="center">
-                        <b>Memberplan</b>
-                      </TableCell>
-                      <TableCell align="center">
-                        <b>Payment Method</b>
-                      </TableCell>
-                      <TableCell align="center">
-                        <b>Periodicity</b>
-                      </TableCell>
-                      <TableCell align="center">
-                        <b>Auto Renewal?</b>
-                      </TableCell>
-                    </>
-                  )}
+                  <FilterHead defaultFlowOnly={defaultFlowOnly} />
 
                   {userActionEvents.map(userActionEvent => (
                     <TableCell key={userActionEvent.subscriptionEventKey} align="center">
@@ -585,52 +536,10 @@ export default function () {
                   <SplitTableRow key={subscriptionFlow.id}>
                     <DndContext onDragEnd={event => intervalDragEnd(event)}>
                       {/************************************************** FILTERS **************************************************/}
-                      {!defaultFlowOnly && (
-                        <>
-                          <TableCell align="center">{subscriptionFlow.memberPlan?.name}</TableCell>
-                          <TableCell align="center">
-                            {paymentMethods && paymentMethods.paymentMethods && (
-                              <CheckPicker
-                                data={paymentMethods.paymentMethods.map(method => ({
-                                  label: method.name,
-                                  value: method.id
-                                }))}
-                                disabled={subscriptionFlow.default}
-                                countable={false}
-                                cleanable={false}
-                                defaultValue={subscriptionFlow.paymentMethods.map(m => m.id)}
-                                onChange={v => updateFlow(subscriptionFlow, {paymentMethodIds: v})}
-                              />
-                            )}
-                          </TableCell>
-                          <TableCell align="center">
-                            <CheckPicker
-                              data={Object.values(PaymentPeriodicity).map(item => ({
-                                label: item,
-                                value: item
-                              }))}
-                              disabled={subscriptionFlow.default}
-                              countable={false}
-                              cleanable={false}
-                              defaultValue={subscriptionFlow.periodicities}
-                              onChange={v => updateFlow(subscriptionFlow, {periodicities: v})}
-                            />
-                          </TableCell>
-                          <TableCell align="center">
-                            <CheckPicker
-                              data={[true, false].map(item => ({
-                                label: item.toString(),
-                                value: item
-                              }))}
-                              disabled={subscriptionFlow.default}
-                              countable={false}
-                              cleanable={false}
-                              defaultValue={subscriptionFlow.autoRenewal}
-                              onChange={v => updateFlow(subscriptionFlow, {autoRenewal: v})}
-                            />
-                          </TableCell>
-                        </>
-                      )}
+                      <FilterBody
+                        subscriptionFlow={subscriptionFlow}
+                        defaultFlowOnly={defaultFlowOnly}
+                      />
                       {/************************************************** USER ACTIONS **************************************************/}
                       {userActionEvents.map(event => (
                         <TableCell key={event.subscriptionEventKey} align="center">
