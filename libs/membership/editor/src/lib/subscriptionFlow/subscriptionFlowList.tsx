@@ -257,6 +257,9 @@ export default function () {
   }
 
   async function updateTimelineDay(dayToUpdate: number) {
+    if (editDay.current === undefined) {
+      return
+    }
     const intervalsToUpdate = intervals.filter(
       interval => interval?.daysAwayFromEnding === dayToUpdate
     )
@@ -523,51 +526,43 @@ export default function () {
                       key={`day-${day}`}
                       align="center"
                       style={day === 0 ? {backgroundColor: 'lightyellow'} : {}}>
+                      {t('subscriptionFlow.dayWithNumber', {day})}
                       {!!day && (
-                        <div>
-                          <Whisper
-                            placement="bottom"
-                            trigger="click"
-                            speaker={
-                              <Popover>
-                                <EditDaysContainer>
-                                  <InputNumber
-                                    onChange={value => {
-                                      editDay.current =
-                                        typeof value === 'string' ? parseInt(value) : value
-                                    }}
-                                    size="sm"
-                                    defaultValue={day || 0}
-                                    step={1}
-                                    postfix={t('subscriptionFlow.days')}
-                                  />
-                                  <IconButton
-                                    icon={<MdCheck />}
-                                    color={'green'}
-                                    appearance={'primary'}
-                                    onClick={() => updateTimelineDay(day as number)}
-                                  />
-                                </EditDaysContainer>
-                              </Popover>
-                            }>
-                            <IconButton
-                              icon={<MdEdit />}
-                              size={'xs'}
-                              circle
-                              color={'blue'}
-                              appearance={'link'}
-                            />
-                          </Whisper>
+                        <Whisper
+                          placement="bottom"
+                          trigger="click"
+                          onClose={() => (editDay.current = undefined)}
+                          speaker={
+                            <Popover>
+                              <EditDaysContainer>
+                                <InputNumber
+                                  onChange={value => {
+                                    editDay.current =
+                                      typeof value === 'string' ? parseInt(value) : value
+                                  }}
+                                  size="sm"
+                                  defaultValue={day || 0}
+                                  step={1}
+                                  postfix={t('subscriptionFlow.days')}
+                                />
+                                <IconButton
+                                  icon={<MdCheck />}
+                                  color={'green'}
+                                  appearance={'primary'}
+                                  onClick={() => updateTimelineDay(day as number)}
+                                />
+                              </EditDaysContainer>
+                            </Popover>
+                          }>
                           <IconButton
-                            icon={<MdDelete />}
-                            size={'xs'}
+                            icon={<MdEdit />}
+                            size={'sm'}
                             circle
-                            color={'red'}
+                            color={'blue'}
                             appearance={'link'}
                           />
-                        </div>
+                        </Whisper>
                       )}
-                      <div>{t('subscriptionFlow.dayWithNumber', {day})}</div>
                     </TableCell>
                   ))}
 
