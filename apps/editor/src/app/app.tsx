@@ -22,6 +22,7 @@ import {CommentRatingEditView} from './routes/commentRatingEditView'
 import {CommentEditView} from './routes/comments/commentEditView'
 import {CommentList} from './routes/comments/commentList'
 import {UserConsentListView} from './routes/consents/userConsentListView'
+import {Dashboard} from './routes/dashboard'
 import {EventCreateView} from './routes/events/eventCreateView'
 import {EventEditView} from './routes/events/eventEditView'
 import {EventListView} from './routes/events/eventListView'
@@ -206,15 +207,24 @@ export function App() {
         <BrowserRouter>
           <Routes>
             <Route path="login" element={<Login />} />
-            {/* Articles Routes */}
+            {/* Dashboard Routes */}
+            <Route
+              path="dashboard"
+              element={
+                <Base>
+                  <Dashboard />
+                </Base>
+              }
+            />
             <Route
               path="/"
               element={
                 <Base>
-                  <ArticleList />
+                  <Dashboard />
                 </Base>
               }
             />
+            {/* Articles Routes */}
             <Route
               path="articles"
               element={

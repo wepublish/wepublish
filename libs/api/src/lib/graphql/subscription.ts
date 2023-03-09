@@ -12,7 +12,7 @@ import {
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../context'
-import {SubscriptionSort, SubscriptionWithRelations} from '../db/subscription'
+import {SubscriptionSort, SubscriptionWithRelations, SubscribersPerMonth} from '../db/subscription'
 import {unselectPassword} from '@wepublish/user/api'
 import {
   GraphQLDateFilter,
@@ -172,5 +172,13 @@ export const GraphQLPublicSubscriptionInput = new GraphQLInputObjectType({
     monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
     autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
     paymentMethodID: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
+export const GraphQLSubscribersPerMonth = new GraphQLObjectType<SubscribersPerMonth, Context>({
+  name: 'SubscribersPerMonth',
+  fields: {
+    month: {type: GraphQLNonNull(GraphQLString)},
+    subscriberCount: {type: GraphQLNonNull(GraphQLInt)}
   }
 })

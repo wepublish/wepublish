@@ -125,12 +125,14 @@ import {
   GraphQLSubscription,
   GraphQLSubscriptionConnection,
   GraphQLSubscriptionFilter,
-  GraphQLSubscriptionSort
+  GraphQLSubscriptionSort,
+  GraphQLSubscribersPerMonth
 } from './subscription'
 import {
   getAdminSubscriptions,
   getSubscriptionById,
-  getSubscriptionsAsCSV
+  getSubscriptionsAsCSV,
+  getNewSubscribersPerMonth
 } from './subscription/subscription.private-queries'
 import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
 import {getTags} from './tag/tag.private-query'
@@ -147,6 +149,8 @@ import {
   GraphQLUserRoleFilter,
   GraphQLUserRoleSort
 } from './userRole'
+import {GraphQLAction} from './action'
+import {getActions} from './action/action.private-queries'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -260,7 +264,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     user: {
       type: GraphQLUser,
       args: {id: {type: GraphQLID}},
-      resolve: (root, {id}, {authenticate, prisma: {user}}) => getUserById(id, authenticate, user)
+      resolve: (root, {id}, {authenticate, prisma: {user}}) => {
+        return getUserById(id, authenticate, user)
+      }
     },
 
     users: {
@@ -282,8 +288,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     subscription: {
       type: GraphQLSubscription,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, prisma: {subscription}}) =>
-        getSubscriptionById(id, authenticate, subscription)
+      resolve: (root, {id}, {authenticate, prisma: {subscription}}) => {
+        return getSubscriptionById(id, authenticate, subscription)
+      }
     },
 
     subscriptions: {
@@ -431,8 +438,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      resolve: (root, {id}, {authenticate, prisma: {comment}}) =>
-        getComment(id, authenticate, comment)
+      resolve: (root, {id}, {authenticate, prisma: {comment}}) => {
+        return getComment(id, authenticate, comment)
+      }
     },
 
     comments: {
@@ -763,6 +771,38 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLID}
       },
       resolve: (root, {id}, {prisma: {event}}) => getEvent(id, event)
+    },
+
+    // Stats
+    newSubscribersPerMonth: {
+      type: GraphQLList(GraphQLSubscribersPerMonth),
+      args: {monthsBack: {type: GraphQLInt}},
+      resolve: (root, {monthsBack}, {authenticate, prisma: {subscription}}) => {
+        return getNewSubscribersPerMonth(authenticate, subscription, monthsBack)
+      }
+    },
+
+    // Actions
+    // =======
+    actions: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAction))),
+      resolve: (
+        root,
+        _,
+        {authenticate, prisma: {article, page, comment, subscription, author, poll, user, event}}
+      ) => {
+        return getActions(
+          authenticate,
+          article,
+          page,
+          comment,
+          subscription,
+          author,
+          poll,
+          user,
+          event
+        )
+      }
     }
   }
 })
