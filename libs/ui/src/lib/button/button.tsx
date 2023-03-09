@@ -3,9 +3,9 @@ import {ComponentProps, PropsWithChildren} from 'react'
 
 export type ButtonProps = PropsWithChildren<ComponentProps<typeof MuiButton>>
 
-export function Button({children, ...props}: ButtonProps) {
+export function Button({children, variant = 'contained', ...props}: ButtonProps) {
   return (
-    <MuiButton {...props} variant="contained">
+    <MuiButton {...props} variant={variant}>
       {children}
     </MuiButton>
   )

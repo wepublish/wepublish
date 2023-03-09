@@ -47,7 +47,8 @@ export function SelectTags({name, tagType, selectedTags, setSelectedTags}: Selec
         type: tagType
       },
       sort: TagSort.Tag,
-      order: SortOrder.Ascending
+      order: SortOrder.Ascending,
+      take: 50
     },
     fetchPolicy: 'no-cache',
     onError: showErrors

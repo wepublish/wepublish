@@ -15,7 +15,7 @@ import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdComment, MdContentCopy, MdDelete, MdPreview, MdUnpublished} from 'react-icons/md'
 import {Link, useNavigate} from 'react-router-dom'
-import {Button, IconButton, Message, Modal, Pagination, Table} from 'rsuite'
+import {Button, IconButton, Message, Modal, Pagination, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -29,6 +29,7 @@ import {
   ListViewContainer,
   ListViewHeader,
   StatusBadge,
+  Table,
   TableWrapper
 } from '../ui/listView'
 import {
@@ -37,7 +38,7 @@ import {
   mapTableSortTypeToGraphQLSortOrder
 } from '../utility'
 
-const {Column, HeaderCell, Cell} = Table
+const {Column, HeaderCell, Cell} = RTable
 
 interface State {
   state: string
@@ -155,8 +156,7 @@ function ArticleList() {
 
       <TableWrapper>
         <Table
-          minHeight={600}
-          autoHeight
+          fillHeight
           loading={isLoading}
           data={articles}
           sortColumn={sortField}
@@ -219,7 +219,7 @@ function ArticleList() {
             <HeaderCell>{t('articles.overview.states')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<ArticleRefFragment>) => {
-                const states = []
+                const states: State[] = []
 
                 if (rowData.draft) states.push({state: 'draft', text: t('articles.overview.draft')})
                 if (rowData.pending)
@@ -415,7 +415,7 @@ function ArticleList() {
 
         <Modal.Footer>
           <Button
-            color={'red'}
+            appearance="primary"
             disabled={isUnpublishing || isDeleting || isDuplicating}
             onClick={async () => {
               if (!currentArticle) return

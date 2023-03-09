@@ -19,7 +19,7 @@ const FooterInnerWrapper = styled(Container)`
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
       justify-content: space-between;
-      grid-template-columns: 200px auto;
+      grid-template-columns: auto auto;
     }
   `}
 `

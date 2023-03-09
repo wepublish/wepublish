@@ -192,7 +192,8 @@ export const GraphQLUserFilter = new GraphQLInputObjectType({
   name: 'UserFilter',
   fields: {
     name: {type: GraphQLString},
-    text: {type: GraphQLString}
+    text: {type: GraphQLString},
+    userRole: {type: GraphQLList(GraphQLString)}
   }
 })
 

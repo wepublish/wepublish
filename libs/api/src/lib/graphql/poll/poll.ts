@@ -24,6 +24,7 @@ import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../../context'
 import {ConnectionResult} from '../../db/common'
 import {GraphQLPageInfo} from '../common'
+import {GraphQLRichText} from '../richText'
 import {PollSort} from './poll.private-queries'
 
 const validateVoteValue = (voteValue: unknown): number => {
@@ -165,6 +166,7 @@ export const GraphQLFullPoll = new GraphQLObjectType<Poll, Context>({
     question: {type: GraphQLString},
     opensAt: {type: GraphQLNonNull(GraphQLDateTime)},
     closedAt: {type: GraphQLDateTime},
+    infoText: {type: GraphQLRichText},
 
     answers: {
       type: GraphQLList(GraphQLNonNull(GraphQLPollAnswerWithVoteCount))

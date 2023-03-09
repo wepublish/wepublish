@@ -1,7 +1,7 @@
-import {useMemberPlanListQuery, MemberPlanListQuery} from '@wepublish/website/api'
 import {QueryResult} from '@apollo/client'
-import {memo, useEffect} from 'react'
 import {useWebsiteBuilder} from '@wepublish/website-builder'
+import {MemberPlanListQuery, useMemberPlanListQuery} from '@wepublish/website/api'
+import {useEffect} from 'react'
 
 export type MemberPlansContainerProps = {
   onQuery?: (

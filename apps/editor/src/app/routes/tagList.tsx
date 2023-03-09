@@ -25,14 +25,16 @@ import {
 
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
+import {ListViewActions, ListViewContainer, ListViewHeader, TableWrapper} from '../ui/listView'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
 
 const FlexGridSmallerMargin = styled(FlexboxGrid)`
   margin-bottom: 12px;
 `
 
-const FlexGrid = styled(FlexboxGrid)`
-  margin-bottom: 40px;
+const Content = styled.div`
+  margin-top: 2rem;
+  height: 100%;
 `
 
 const IconButton = styled(RIconButton)`
@@ -50,10 +52,6 @@ const FlexWrapper = styled.div`
 
 const Loader = styled(RLoader)`
   margin: 30px;
-`
-
-const FlexItemAlignRight = styled(FlexboxGrid.Item)`
-  text-align: right;
 `
 
 export type TagListProps = {
@@ -243,13 +241,13 @@ const TagList = memo<TagListProps>(({type}) => {
 
   return (
     <>
-      <FlexGrid>
-        <FlexboxGrid.Item colspan={16}>
+      <ListViewContainer>
+        <ListViewHeader>
           <h2>{t('tags.overview.title')}</h2>
-        </FlexboxGrid.Item>
+        </ListViewHeader>
 
-        <FlexItemAlignRight colspan={8}>
-          <PermissionControl qualifyingPermissions={['CAN_CREATE_TAG']}>
+        <PermissionControl qualifyingPermissions={['CAN_CREATE_TAG']}>
+          <ListViewActions>
             <RIconButton
               type="button"
               appearance="primary"
@@ -258,9 +256,9 @@ const TagList = memo<TagListProps>(({type}) => {
               onClick={() => createTag()}>
               {t('tags.overview.createTag')}
             </RIconButton>
-          </PermissionControl>
-        </FlexItemAlignRight>
-      </FlexGrid>
+          </ListViewActions>
+        </PermissionControl>
+      </ListViewContainer>
 
       {loading && (
         <FlexboxGrid justify="center">
@@ -268,80 +266,84 @@ const TagList = memo<TagListProps>(({type}) => {
         </FlexboxGrid>
       )}
 
-      {Object.entries(formValue).map(([tagId, inputValue]) => (
-        <Form key={tagId}>
-          <FlexGridSmallerMargin>
-            <FlexWrapper>
-              <Form.Control
-                name={tagId}
-                value={inputValue}
-                placeholder={t('tags.overview.placeholder')}
-                onChange={(value: string) => {
-                  dispatchFormValue({
-                    type: TagListActionType.Update,
-                    payload: {
-                      id: tagId,
-                      value
-                    }
-                  })
-                }}
-              />
-            </FlexWrapper>
-
-            <Flex>
-              <PermissionControl qualifyingPermissions={['CAN_UPDATE_TAG']}>
-                <IconButtonTooltip caption={t('save')}>
-                  <IconButton
-                    type="submit"
-                    circle
-                    size="sm"
-                    icon={<MdSave />}
-                    onClick={() => {
-                      updateTag({
-                        variables: {
+      <TableWrapper>
+        <Content>
+          {Object.entries(formValue).map(([tagId, inputValue]) => (
+            <Form key={tagId}>
+              <FlexGridSmallerMargin>
+                <FlexWrapper>
+                  <Form.Control
+                    name={tagId}
+                    value={inputValue}
+                    placeholder={t('tags.overview.placeholder')}
+                    onChange={(value: string) => {
+                      dispatchFormValue({
+                        type: TagListActionType.Update,
+                        payload: {
                           id: tagId,
-                          tag: formValue[tagId] ? formValue[tagId] : null
+                          value
                         }
                       })
                     }}
-                    disabled={!shouldUpdateTag(tagId)}
                   />
-                </IconButtonTooltip>
-              </PermissionControl>
+                </FlexWrapper>
 
-              <PermissionControl qualifyingPermissions={['CAN_DELETE_TAG']}>
-                <IconButtonTooltip caption={t('delete')}>
-                  <IconButton
-                    color="red"
-                    appearance="primary"
-                    circle
-                    size="sm"
-                    icon={<MdDelete />}
-                    onClick={() => setTagToDelete(tagId)}
-                  />
-                </IconButtonTooltip>
-              </PermissionControl>
-            </Flex>
-          </FlexGridSmallerMargin>
-        </Form>
-      ))}
+                <Flex>
+                  <PermissionControl qualifyingPermissions={['CAN_UPDATE_TAG']}>
+                    <IconButtonTooltip caption={t('save')}>
+                      <IconButton
+                        type="submit"
+                        circle
+                        size="sm"
+                        icon={<MdSave />}
+                        onClick={() => {
+                          updateTag({
+                            variables: {
+                              id: tagId,
+                              tag: formValue[tagId] ? formValue[tagId] : null
+                            }
+                          })
+                        }}
+                        disabled={!shouldUpdateTag(tagId)}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
 
-      <Pagination
-        limit={limit}
-        limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-        maxButtons={DEFAULT_MAX_TABLE_PAGES}
-        first
-        last
-        prev
-        next
-        ellipsis
-        boundaryLinks
-        layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-        total={total}
-        activePage={page}
-        onChangePage={page => setPage(page)}
-        onChangeLimit={limit => setLimit(limit)}
-      />
+                  <PermissionControl qualifyingPermissions={['CAN_DELETE_TAG']}>
+                    <IconButtonTooltip caption={t('delete')}>
+                      <IconButton
+                        color="red"
+                        appearance="ghost"
+                        circle
+                        size="sm"
+                        icon={<MdDelete />}
+                        onClick={() => setTagToDelete(tagId)}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
+                </Flex>
+              </FlexGridSmallerMargin>
+            </Form>
+          ))}
+        </Content>
+
+        <Pagination
+          limit={limit}
+          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
+          maxButtons={DEFAULT_MAX_TABLE_PAGES}
+          first
+          last
+          prev
+          next
+          ellipsis
+          boundaryLinks
+          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+          total={total}
+          activePage={page}
+          onChangePage={page => setPage(page)}
+          onChangeLimit={limit => setLimit(limit)}
+        />
+      </TableWrapper>
 
       <Modal open={!!tagToDelete} backdrop="static" size="xs" onClose={() => setTagToDelete(null)}>
         <Modal.Title>{t('tags.overview.areYouSure')}</Modal.Title>

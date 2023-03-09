@@ -23,11 +23,5 @@
     "**/*.stories.jsx",
     "**/*.stories.tsx"
   ],
-  "include": [
-    "src/**/*.js",
-    "src/**/*.jsx",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "../navigation/website/src/lib/navbar/navbar-container.spec.tsx"
-  ]
+  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"]
 }

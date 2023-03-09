@@ -305,7 +305,9 @@ export type EventConnection = {
 };
 
 export type EventFilter = {
+  from?: InputMaybe<Scalars['DateTime']>;
   tags?: InputMaybe<Array<Scalars['ID']>>;
+  to?: InputMaybe<Scalars['DateTime']>;
   upcomingOnly?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -362,6 +364,7 @@ export type FullPoll = {
   closedAt?: Maybe<Scalars['DateTime']>;
   externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
   id: Scalars['ID'];
+  infoText?: Maybe<Scalars['RichText']>;
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
 };
@@ -862,6 +865,12 @@ export type PeerProfile = {
   websiteURL: Scalars['String'];
 };
 
+export type Phrase = {
+  __typename?: 'Phrase';
+  articles: Array<Article>;
+  pages: Array<Page>;
+};
+
 export type Point = {
   __typename?: 'Point';
   x: Scalars['Float'];
@@ -971,11 +980,15 @@ export type Query = {
   peerArticle?: Maybe<Article>;
   /** This query returns the peer profile. */
   peerProfile: PeerProfile;
+  /** This query performs a fulltext search on titles and blocks of articles/pages and returns all matching ones. */
+  phrase?: Maybe<Phrase>;
   /** This query returns a poll with all the needed data */
   poll: FullPoll;
   ratingSystem: FullCommentRatingSystem;
   /** This query returns the subscriptions of the authenticated user. */
   subscriptions: Array<Subscription>;
+  /** This query returns a list of tags */
+  tags?: Maybe<TagConnection>;
   /** This query returns the value of a comments answer rating if the user has already rated it. */
   userCommentRatings: Array<Maybe<CommentRating>>;
   /** This query returns the answerId of a poll if the user has already voted on it. */
@@ -1100,8 +1113,23 @@ export type QueryPeerArticleArgs = {
 };
 
 
+export type QueryPhraseArgs = {
+  query: Scalars['String'];
+};
+
+
 export type QueryPollArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryTagsArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<TagFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<TagSort>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -1201,6 +1229,24 @@ export type Tag = {
   tag?: Maybe<Scalars['String']>;
   type?: Maybe<TagType>;
 };
+
+export type TagConnection = {
+  __typename?: 'TagConnection';
+  nodes: Array<Tag>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type TagFilter = {
+  tag?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TagType>;
+};
+
+export enum TagSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  Tag = 'TAG'
+}
 
 export enum TagType {
   Comment = 'Comment',
@@ -1435,7 +1481,7 @@ export type AddCommentMutationVariables = Exact<{
 
 export type AddCommentMutation = { __typename?: 'Mutation', addComment: { __typename?: 'Comment', itemID: string, itemType: CommentItemType, text?: Node[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null } };
 
-export type EventRefFragment = { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null };
+export type EventRefFragment = { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null };
 
 export type EventListQueryVariables = Exact<{
   filter?: InputMaybe<EventFilter>;
@@ -1447,14 +1493,14 @@ export type EventListQueryVariables = Exact<{
 }>;
 
 
-export type EventListQuery = { __typename?: 'Query', events?: { __typename?: 'EventConnection', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
+export type EventListQuery = { __typename?: 'Query', events?: { __typename?: 'EventConnection', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
 
 export type EventQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null } };
+export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null } };
 
 export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
@@ -1497,6 +1543,13 @@ export type PeerQueryVariables = Exact<{
 
 
 export type PeerQuery = { __typename?: 'Query', peer?: { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string } | null };
+
+export type PhraseQueryVariables = Exact<{
+  query: Scalars['String'];
+}>;
+
+
+export type PhraseQuery = { __typename?: 'Query', phrase?: { __typename?: 'Phrase', articles: Array<{ __typename?: 'Article', id: string, slug: string, title: string, blocks: Array<{ __typename?: 'BildwurfAdBlock' } | { __typename?: 'CommentBlock' } | { __typename?: 'EmbedBlock' } | { __typename?: 'EventBlock' } | { __typename?: 'FacebookPostBlock' } | { __typename?: 'HTMLBlock' } | { __typename?: 'ImageBlock' } | { __typename?: 'ImageGalleryBlock' } | { __typename?: 'InstagramPostBlock' } | { __typename?: 'LinkPageBreakBlock' } | { __typename?: 'ListicleBlock' } | { __typename?: 'PolisConversationBlock' } | { __typename?: 'PollBlock' } | { __typename?: 'QuoteBlock' } | { __typename?: 'RichTextBlock', richText: Node[] } | { __typename?: 'SoundCloudTrackBlock' } | { __typename?: 'TeaserGridBlock' } | { __typename?: 'TeaserGridFlexBlock' } | { __typename?: 'TikTokVideoBlock' } | { __typename?: 'TitleBlock' } | { __typename?: 'TwitterTweetBlock' } | { __typename?: 'VimeoVideoBlock' } | { __typename?: 'YouTubeVideoBlock' }> }>, pages: Array<{ __typename?: 'Page', id: string, slug: string, title: string, blocks: Array<{ __typename?: 'BildwurfAdBlock' } | { __typename?: 'CommentBlock' } | { __typename?: 'EmbedBlock' } | { __typename?: 'EventBlock' } | { __typename?: 'FacebookPostBlock' } | { __typename?: 'HTMLBlock' } | { __typename?: 'ImageBlock' } | { __typename?: 'ImageGalleryBlock' } | { __typename?: 'InstagramPostBlock' } | { __typename?: 'LinkPageBreakBlock' } | { __typename?: 'ListicleBlock' } | { __typename?: 'PolisConversationBlock' } | { __typename?: 'PollBlock' } | { __typename?: 'QuoteBlock' } | { __typename?: 'RichTextBlock', richText: Node[] } | { __typename?: 'SoundCloudTrackBlock' } | { __typename?: 'TeaserGridBlock' } | { __typename?: 'TeaserGridFlexBlock' } | { __typename?: 'TikTokVideoBlock' } | { __typename?: 'TitleBlock' } | { __typename?: 'TwitterTweetBlock' } | { __typename?: 'VimeoVideoBlock' } | { __typename?: 'YouTubeVideoBlock' }> }> } | null };
 
 export type FullUserFragment = { __typename?: 'User', name: string, email: string };
 
@@ -1756,6 +1809,7 @@ export const EventRef = gql`
   name
   description
   status
+  location
   image {
     ...ImageRef
   }
@@ -1987,6 +2041,32 @@ export const Peer = gql`
   }
 }
     ${PeerRef}`;
+export const Phrase = gql`
+    query Phrase($query: String!) {
+  phrase(query: $query) {
+    articles {
+      id
+      slug
+      title
+      blocks {
+        ... on RichTextBlock {
+          richText
+        }
+      }
+    }
+    pages {
+      id
+      slug
+      title
+      blocks {
+        ... on RichTextBlock {
+          richText
+        }
+      }
+    }
+  }
+}
+    `;
 export const CreateSession = gql`
     mutation CreateSession($email: String!, $password: String!) {
   createSession(email: $email, password: $password) {

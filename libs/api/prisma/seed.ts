@@ -1,5 +1,5 @@
 import {PrismaClient} from '@prisma/client'
-import {SettingName} from '../src/lib/db/setting'
+import {SettingName} from '../../settings/api/src/lib/setting'
 
 const seedSettings = (prisma: PrismaClient) => [
   prisma.setting.upsert({

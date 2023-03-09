@@ -20,7 +20,12 @@ export const RichTextBlock = ({className, richText}: BuilderRichTextBlockProps) 
 
   return (
     <RichTextBlockWrapper className={className}>
-      <Slate editor={editor} value={richText ?? defaultValue} onChange={newValue => {}}>
+      <Slate
+        editor={editor}
+        value={richText ?? defaultValue}
+        onChange={newValue => {
+          // readonly
+        }}>
         <Editable readOnly renderElement={RenderElement as any} renderLeaf={RenderLeaf as any} />
       </Slate>
     </RichTextBlockWrapper>

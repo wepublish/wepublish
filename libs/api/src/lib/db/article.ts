@@ -110,3 +110,17 @@ export type ArticleWithRevisions = PrismaArticle & {
   pending: ArticleRevisionWithRelations | null
   published: ArticleRevisionWithRelations | null
 }
+
+export const articleWithRevisionsToPublicArticle = ({
+  id,
+  shared,
+  published,
+  pending
+}: Omit<ArticleWithRevisions, 'draft'>): PublicArticle => {
+  const returnValue = {shared, ...(published || pending!), id}
+
+  return {
+    ...returnValue,
+    blocks: returnValue.blocks as ArticleBlock[]
+  }
+}

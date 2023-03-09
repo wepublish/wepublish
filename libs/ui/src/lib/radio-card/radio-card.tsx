@@ -1,8 +1,21 @@
-import {css, Radio, RadioProps, styled, Typography, useRadioGroup} from '@mui/material'
+import {
+  Box,
+  css,
+  Radio as MuiRadio,
+  RadioProps,
+  styled,
+  Typography,
+  useRadioGroup
+} from '@mui/material'
 import {ReactNode, forwardRef, PropsWithChildren} from 'react'
 
 const Card = styled('div')<{isChecked: boolean}>`
   display: grid;
+  grid-template-areas:
+    'title radio'
+    'children children';
+  grid-template-columns: auto min-content;
+  align-items: start;
   width: 100%;
   height: 100%;
   border: 1px solid ${({theme}) => theme.palette.grey[400]};
@@ -19,19 +32,19 @@ const Card = styled('div')<{isChecked: boolean}>`
     `}
 `
 
-const CardRadioWrapper = styled('div')`
-  display: grid;
-  grid-template-columns: auto min-content;
-  align-items: start;
-`
-
 const CardTitleWrapper = styled('div')`
   display: grid;
   align-items: start;
+  grid-area: title;
 `
 
-const CardSubLabel = styled(Typography)`
+const CardSubLabel = styled('span')`
   opacity: 0.75;
+`
+
+const Radio = styled(MuiRadio)`
+  padding: 0;
+  grid-area: radio;
 `
 
 export type RadioCardProps = PropsWithChildren<
@@ -45,19 +58,19 @@ export const RadioCard = forwardRef<HTMLButtonElement, RadioCardProps>(
 
     return (
       <Card isChecked={isChecked} className={className}>
-        <CardRadioWrapper>
-          <CardTitleWrapper>
-            <Typography variant="h6" component="span">
-              {label}
-            </Typography>
+        <CardTitleWrapper>
+          <Typography variant="h6" component="span">
+            {label}
+          </Typography>
 
-            <CardSubLabel variant="body1">{subLabel}</CardSubLabel>
-          </CardTitleWrapper>
+          <Typography variant="body1" component={CardSubLabel}>
+            {subLabel}
+          </Typography>
+        </CardTitleWrapper>
 
-          <Radio {...props} ref={ref} disableRipple={true} sx={{padding: 0}} />
-        </CardRadioWrapper>
+        <Radio {...props} ref={ref} disableRipple={true} sx={{padding: 0}} />
 
-        {children}
+        <Box sx={{gridArea: 'children'}}>{children}</Box>
       </Card>
     )
   }

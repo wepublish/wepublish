@@ -1,5 +1,4 @@
-import {Typography} from '@mui/material'
-import {forwardRef, HTMLAttributes, ForwardedRef} from 'react'
+import {ForwardedRef, forwardRef, HTMLAttributes} from 'react'
 
 export type UnorderedListProps = HTMLAttributes<HTMLUListElement> & {component?: React.ElementType}
 

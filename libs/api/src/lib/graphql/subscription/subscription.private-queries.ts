@@ -6,6 +6,7 @@ import {mapSubscriptionsAsCsv} from '../../utility'
 import {authorise} from '../permissions'
 import {CanGetSubscription, CanGetSubscriptions, CanGetUsers} from '@wepublish/permissions/api'
 import {createSubscriptionFilter, getSubscriptions} from './subscription.queries'
+import {format, lastDayOfMonth, startOfMonth, subMonths} from 'date-fns'
 
 export const getSubscriptionById = (
   id: string,
@@ -70,4 +71,43 @@ export const getSubscriptionsAsCSV = async (
   })
 
   return mapSubscriptionsAsCsv(subscriptions)
+}
+
+export const getNewSubscribersPerMonth = async (
+  authenticate: Context['authenticate'],
+  subscription: PrismaClient['subscription'],
+  monthsBack: number
+) => {
+  const {roles} = authenticate()
+  authorise(CanGetSubscriptions, roles)
+  const subscriptionCount = await subscription.findMany({
+    where: {
+      startsAt: {
+        gte: startOfMonth(subMonths(new Date(), monthsBack - 1))
+      },
+      AND: {
+        startsAt: {
+          lte: lastDayOfMonth(new Date())
+        }
+      }
+    }
+  })
+
+  return getSubscriberCount(subscriptionCount, monthsBack)
+}
+
+const getSubscriberCount = (subscribers, monthsBack) => {
+  const res = []
+  for (let i = monthsBack - 1; i >= 0; i--) {
+    const count = subscribers.filter(subsc => {
+      return (
+        subsc.startsAt > startOfMonth(subMonths(new Date(), i)) &&
+        subsc.startsAt < lastDayOfMonth(subMonths(new Date(), i))
+      )
+    }).length
+    const month = new Date()
+    month.setMonth(month.getMonth() - i)
+    res.push({month: format(month, 'MMM-yy'), subscriberCount: count})
+  }
+  return res
 }

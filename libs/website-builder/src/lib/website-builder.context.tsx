@@ -12,7 +12,7 @@ import {
   BuilderUnorderedListProps,
   BuilderListItemProps
 } from './lists.interface'
-import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richtext.interface'
+import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
 import {BuilderFooterProps} from './footer.interface'
 import {
   BuilderHTMLBlockProps,

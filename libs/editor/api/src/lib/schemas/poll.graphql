@@ -1,110 +1,134 @@
 fragment PollExternalVoteSource on PollExternalVoteSource {
+  id
+  source
+  voteAmounts {
     id
-    source
-    voteAmounts {
-        id
-        answerId
-        amount
-    }
+    answerId
+    amount
+  }
 }
 
 mutation CreatePoll($opensAt: DateTime, $closedAt: DateTime, $question: String) {
-    createPoll(opensAt: $opensAt, closedAt: $closedAt, question: $question) {
-        id
-        question
-        opensAt
-        closedAt
-        answers {
-            id
-            pollId
-            answer
-        }
+  createPoll(opensAt: $opensAt, closedAt: $closedAt, question: $question) {
+    id
+    question
+    opensAt
+    closedAt
+    answers {
+      id
+      pollId
+      answer
     }
+  }
 }
 
-mutation UpdatePoll($pollId: ID!, $opensAt: DateTime, $closedAt: DateTime, $question: String, $answers: [UpdatePollAnswer!], $externalVoteSources: [UpdatePollExternalVoteSources!]) {
-    updatePoll(pollId: $pollId, opensAt: $opensAt, closedAt: $closedAt, question: $question, answers: $answers, externalVoteSources: $externalVoteSources) {
-        id
-        question
-        opensAt
-        closedAt
-        answers {
-            id
-            pollId
-            answer
-            votes
-        }
-        externalVoteSources {
-            ...PollExternalVoteSource
-        }
+mutation UpdatePoll(
+  $pollId: ID!
+  $opensAt: DateTime
+  $closedAt: DateTime
+  $question: String
+  $infoText: RichText
+  $answers: [UpdatePollAnswer!]
+  $externalVoteSources: [UpdatePollExternalVoteSources!]
+) {
+  updatePoll(
+    pollId: $pollId
+    opensAt: $opensAt
+    closedAt: $closedAt
+    question: $question
+    infoText: $infoText
+    answers: $answers
+    externalVoteSources: $externalVoteSources
+  ) {
+    id
+    question
+    opensAt
+    closedAt
+    infoText
+    answers {
+      id
+      pollId
+      answer
+      votes
     }
+    externalVoteSources {
+      ...PollExternalVoteSource
+    }
+  }
 }
 
 mutation DeletePoll($deletePollId: ID!) {
-    deletePoll(id: $deletePollId) {
-        id
-    }
+  deletePoll(id: $deletePollId) {
+    id
+  }
 }
 
 mutation CreatePollAnswer($pollId: ID!, $answer: String) {
-    createPollAnswer(pollId: $pollId, answer: $answer) {
-        answer
-        id
-        pollId
-    }
+  createPollAnswer(pollId: $pollId, answer: $answer) {
+    answer
+    id
+    pollId
+  }
 }
 
 mutation DeletePollAnswer($deletePollAnswerId: ID!) {
-    deletePollAnswer(id: $deletePollAnswerId) {
-        id
-    }
+  deletePollAnswer(id: $deletePollAnswerId) {
+    id
+  }
 }
 
 mutation CreatePollExternalVoteSource($pollId: ID!, $source: String) {
-    createPollExternalVoteSource(pollId: $pollId, source: $source) {
-        ...PollExternalVoteSource
-    }
+  createPollExternalVoteSource(pollId: $pollId, source: $source) {
+    ...PollExternalVoteSource
+  }
 }
 
 mutation DeletePollExternalVoteSource($deletePollExternalVoteSourceId: ID!) {
-    deletePollExternalVoteSource(id: $deletePollExternalVoteSourceId) {
-        ...PollExternalVoteSource
-    }
+  deletePollExternalVoteSource(id: $deletePollExternalVoteSourceId) {
+    ...PollExternalVoteSource
+  }
 }
 
-
-query Polls($cursor: ID, $take: Int, $skip: Int, $filter: PollFilter, $sort: PollSort, $order: SortOrder) {
-    polls(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
-        nodes {
-            id
-            question
-            opensAt
-            closedAt
-        }
-        pageInfo {
-            startCursor
-            endCursor
-            hasNextPage
-            hasPreviousPage
-        }
-        totalCount
+query Polls(
+  $cursor: ID
+  $take: Int
+  $skip: Int
+  $filter: PollFilter
+  $sort: PollSort
+  $order: SortOrder
+) {
+  polls(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
+    nodes {
+      id
+      question
+      opensAt
+      closedAt
     }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
 }
 
 query Poll($pollId: ID) {
-    poll(id: $pollId) {
-        id
-        question
-        opensAt
-        closedAt
-        answers {
-            id
-            pollId
-            answer
-            votes
-        }
-        externalVoteSources {
-            ...PollExternalVoteSource
-        }
+  poll(id: $pollId) {
+    id
+    question
+    opensAt
+    closedAt
+    infoText
+    answers {
+      id
+      pollId
+      answer
+      votes
     }
+    externalVoteSources {
+      ...PollExternalVoteSource
+    }
+  }
 }

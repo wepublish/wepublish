@@ -1,9 +1,8 @@
 import styled from '@emotion/styled'
-import CommentIcon from '@rsuite/icons/legacy/Comment'
 import {AuthorRefFragment, CommentItemType, ImageRefFragment} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
-import {MdAutoFixHigh, MdListAlt, MdSettings, MdShare} from 'react-icons/md'
+import {MdAutoFixHigh, MdComment, MdListAlt, MdSettings, MdShare} from 'react-icons/md'
 import {
   Button,
   Drawer,
@@ -589,6 +588,11 @@ function ArticleMetadataPanel({
           <Item eventKey={MetaDataType.Properties} icon={<MdListAlt />}>
             {t('articleEditor.panels.properties')}
           </Item>
+          {articleID && (
+            <Item eventKey={MetaDataType.Comments} icon={<MdComment />}>
+              {t('articleEditor.panels.comments')}
+            </Item>
+          )}
         </Nav>
         {currentContent()}
       </Drawer.Body>

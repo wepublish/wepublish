@@ -15,7 +15,6 @@
     "src/**/*.spec.js",
     "src/**/*.test.jsx",
     "src/**/*.spec.jsx",
-    "src/**/*.d.ts",
-    "src/lib/navbar/navbar-container.spec.tsx"
+    "src/**/*.d.ts"
   ]
 }
