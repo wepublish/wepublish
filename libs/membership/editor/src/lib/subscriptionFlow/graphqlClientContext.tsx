@@ -2,6 +2,7 @@
 import {MutationFunctionOptions} from '@apollo/client'
 import {
   CreateSubscriptionIntervalMutation,
+  DeleteSubscriptionFlowMutation,
   DeleteSubscriptionIntervalMutation,
   Exact,
   SubscriptionIntervalCreateInput,
@@ -32,6 +33,14 @@ export const GraphqlClientContext = createContext({
     options: MutationFunctionOptions<
       DeleteSubscriptionIntervalMutation,
       Exact<{subscriptionInterval: SubscriptionIntervalDeleteInput}>
+    >
+  ): Promise<any> => {
+    throw new Error('Default context must be overriden!')
+  },
+  deleteSubscriptionFlow: (
+    options: MutationFunctionOptions<
+      DeleteSubscriptionFlowMutation,
+      Exact<{subscriptionFlowId: number}>
     >
   ): Promise<any> => {
     throw new Error('Default context must be overriden!')

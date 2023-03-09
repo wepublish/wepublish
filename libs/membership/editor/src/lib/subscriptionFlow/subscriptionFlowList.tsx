@@ -1,9 +1,5 @@
-import React, {createContext, useContext, useMemo, useRef, useState} from 'react'
-import {
-  ListViewActions,
-  ListViewContainer,
-  ListViewHeader
-} from '../../../../../../apps/editor/src/app/ui/listView'
+import React, {createContext, useMemo, useRef, useState} from 'react'
+import {ListViewContainer, ListViewHeader} from '../../../../../../apps/editor/src/app/ui/listView'
 import {
   styled,
   Table,
@@ -48,7 +44,6 @@ import {
   SubscriptionEvent,
   SubscriptionFlowFragment,
   SubscriptionInterval,
-  useCreateSubscriptionFlowMutation,
   useCreateSubscriptionIntervalMutation,
   useDeleteSubscriptionFlowMutation,
   useDeleteSubscriptionIntervalMutation,
@@ -176,11 +171,6 @@ export default function () {
     onError: showErrors
   })
 
-  const [createSubscriptionFlow] = useCreateSubscriptionFlowMutation({
-    client,
-    onError: showErrors
-  })
-
   const [createSubscriptionInterval] = useCreateSubscriptionIntervalMutation({
     client,
     onError: showErrors
@@ -197,7 +187,6 @@ export default function () {
     client,
     onError: showErrors
   })
-
   const [deleteSubscriptionFlow] = useDeleteSubscriptionFlowMutation({
     client,
     onError: showErrors
@@ -414,26 +403,6 @@ export default function () {
           </h2>
           <Typography variant="subtitle1">{t('subscriptionFlow.settingsDescription')}</Typography>
         </ListViewHeader>
-        <ListViewActions>
-          {!defaultFlowOnly && (
-            <Button
-              appearance="primary"
-              onClick={() =>
-                createSubscriptionFlow({
-                  variables: {
-                    subscriptionFlow: {
-                      memberPlanId: memberPlanId!,
-                      autoRenewal: [true, false],
-                      paymentMethodIds: [],
-                      periodicities: []
-                    }
-                  }
-                })
-              }>
-              <MdAdd /> {t('subscriptionFlow.addNew')}
-            </Button>
-          )}
-        </ListViewActions>
       </ListViewContainer>
       <TableContainer style={{marginTop: '16px'}}>
         <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>
@@ -441,7 +410,8 @@ export default function () {
             value={{
               createSubscriptionInterval,
               updateSubscriptionInterval,
-              deleteSubscriptionInterval
+              deleteSubscriptionInterval,
+              deleteSubscriptionFlow
             }}>
             <Table size="small">
               <TableHead>
@@ -537,6 +507,7 @@ export default function () {
                     <DndContext onDragEnd={event => intervalDragEnd(event)}>
                       {/************************************************** FILTERS **************************************************/}
                       <FilterBody
+                        memberPlan={memberPlan}
                         subscriptionFlow={subscriptionFlow}
                         defaultFlowOnly={defaultFlowOnly}
                       />
@@ -619,6 +590,15 @@ export default function () {
                   </SplitTableRow>
                 ))}
               </TableBody>
+
+              {/************************************************** CREATE NEW FLOW **************************************************/}
+              {!defaultFlowOnly && (
+                <TableBody>
+                  <SplitTableRow>
+                    <FilterBody memberPlan={memberPlan} createNewFlow />
+                  </SplitTableRow>
+                </TableBody>
+              )}
             </Table>
           </GraphqlClientContext.Provider>
         </MailTemplatesContext.Provider>

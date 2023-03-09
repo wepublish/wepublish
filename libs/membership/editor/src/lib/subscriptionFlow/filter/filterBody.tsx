@@ -1,26 +1,44 @@
-import React, {useMemo} from 'react'
+import React, {useMemo, useState} from 'react'
 import {TableCell} from '@mui/material'
-import {CheckPicker} from 'rsuite'
+import {CheckPicker, IconButton} from 'rsuite'
 import {
   PaymentPeriodicity,
-  SubscriptionFlowFragment,
   SubscriptionFlowModel,
+  SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
+  useCreateSubscriptionFlowMutation,
   useListPaymentMethodsQuery,
   useUpdateSubscriptionFlowMutation
 } from '@wepublish/editor/api-v2'
 import {ApolloClient, NormalizedCacheObject} from '@apollo/client'
 import {getApiClientV2} from '../../../../../../../apps/editor/src/app/utility'
 import {showErrors} from '../subscriptionFlowList'
+import {MdAdd} from 'react-icons/all'
+import {MemberPlan} from '@wepublish/api'
+import {FullMemberPlanFragment} from '@wepublish/editor/api'
 
 interface FilterBodyProps {
-  subscriptionFlow: SubscriptionFlowModel
+  memberPlan?: FullMemberPlanFragment
+  subscriptionFlow?: SubscriptionFlowModel
   defaultFlowOnly?: boolean
+  createNewFlow?: boolean
 }
-export default function ({subscriptionFlow, defaultFlowOnly}: FilterBodyProps) {
-  if (defaultFlowOnly) {
+export default function ({
+  subscriptionFlow,
+  defaultFlowOnly,
+  memberPlan,
+  createNewFlow
+}: FilterBodyProps) {
+  if (defaultFlowOnly || !memberPlan) {
     return null
   }
+
+  const [newFlow, setNewFlow] = useState<SubscriptionFlowModelCreateInput>({
+    autoRenewal: [],
+    periodicities: [],
+    paymentMethodIds: [],
+    memberPlanId: memberPlan.id
+  })
 
   /******************************************
    * API SERVICES
@@ -38,13 +56,43 @@ export default function ({subscriptionFlow, defaultFlowOnly}: FilterBodyProps) {
     onError: showErrors
   })
 
+  const [createSubscriptionFlow] = useCreateSubscriptionFlowMutation({
+    client,
+    onError: showErrors
+  })
+
   /******************************************
    * HELPER METHODS
    ******************************************/
-  const updateFlow = async function (
-    subscriptionFlow: SubscriptionFlowFragment,
-    payload: Partial<SubscriptionFlowModelUpdateInput>
-  ) {
+  async function createOrUpdateFlow(payload: Partial<SubscriptionFlowModelUpdateInput>) {
+    if (createNewFlow) {
+      updateNewFlow(payload)
+    } else {
+      await updateFlow(payload)
+    }
+  }
+
+  function updateNewFlow(payload: Partial<SubscriptionFlowModelUpdateInput>) {
+    setNewFlow({
+      memberPlanId: newFlow.memberPlanId,
+      paymentMethodIds: payload.paymentMethodIds || newFlow.paymentMethodIds,
+      periodicities: payload.periodicities || newFlow.periodicities,
+      autoRenewal: payload.autoRenewal || newFlow.autoRenewal
+    })
+  }
+
+  async function saveNewFlow() {
+    await createSubscriptionFlow({
+      variables: {
+        subscriptionFlow: newFlow
+      }
+    })
+  }
+
+  async function updateFlow(payload: Partial<SubscriptionFlowModelUpdateInput>) {
+    if (!subscriptionFlow) {
+      return
+    }
     const mutation: SubscriptionFlowModelUpdateInput = {
       id: subscriptionFlow.id,
       paymentMethodIds:
@@ -62,7 +110,7 @@ export default function ({subscriptionFlow, defaultFlowOnly}: FilterBodyProps) {
 
   return (
     <>
-      <TableCell align="center">{subscriptionFlow.memberPlan?.name}</TableCell>
+      <TableCell align="center">{!subscriptionFlow?.default && memberPlan.name}</TableCell>
       <TableCell align="center">
         {paymentMethods && paymentMethods.paymentMethods && (
           <CheckPicker
@@ -70,11 +118,11 @@ export default function ({subscriptionFlow, defaultFlowOnly}: FilterBodyProps) {
               label: method.name,
               value: method.id
             }))}
-            disabled={subscriptionFlow.default || loadingPaymentMethods}
+            disabled={subscriptionFlow?.default || loadingPaymentMethods}
             countable={false}
             cleanable={false}
-            defaultValue={subscriptionFlow.paymentMethods.map(m => m.id)}
-            onChange={v => updateFlow(subscriptionFlow, {paymentMethodIds: v})}
+            defaultValue={subscriptionFlow?.paymentMethods.map(m => m.id)}
+            onChange={v => createOrUpdateFlow({paymentMethodIds: v})}
           />
         )}
       </TableCell>
@@ -84,11 +132,11 @@ export default function ({subscriptionFlow, defaultFlowOnly}: FilterBodyProps) {
             label: item,
             value: item
           }))}
-          disabled={subscriptionFlow.default}
+          disabled={subscriptionFlow?.default}
           countable={false}
           cleanable={false}
-          defaultValue={subscriptionFlow.periodicities}
-          onChange={v => updateFlow(subscriptionFlow, {periodicities: v})}
+          defaultValue={subscriptionFlow?.periodicities || []}
+          onChange={v => createOrUpdateFlow({periodicities: v})}
         />
       </TableCell>
       <TableCell align="center">
@@ -97,13 +145,25 @@ export default function ({subscriptionFlow, defaultFlowOnly}: FilterBodyProps) {
             label: item.toString(),
             value: item
           }))}
-          disabled={subscriptionFlow.default}
+          disabled={subscriptionFlow?.default}
           countable={false}
           cleanable={false}
-          defaultValue={subscriptionFlow.autoRenewal}
-          onChange={v => updateFlow(subscriptionFlow, {autoRenewal: v})}
+          defaultValue={subscriptionFlow?.autoRenewal || []}
+          onChange={v => createOrUpdateFlow({autoRenewal: v})}
         />
       </TableCell>
+
+      {createNewFlow && (
+        <TableCell>
+          <IconButton
+            icon={<MdAdd />}
+            color={'green'}
+            appearance={'primary'}
+            onClick={() => saveNewFlow()}>
+            Neuen Flow hinzufügen
+          </IconButton>
+        </TableCell>
+      )}
     </>
   )
 }
