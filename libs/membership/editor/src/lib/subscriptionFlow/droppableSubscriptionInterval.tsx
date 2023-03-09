@@ -3,11 +3,9 @@ import {useDroppable} from '@dnd-kit/core'
 
 interface DropContainerSubscriptionIntervalProps {
   dayIndex: number
-  children: React.ReactNode
 }
-export default function DropContainerSubscriptionInterval({
-  dayIndex,
-  children
+export default function DroppableSubscriptionInterval({
+  dayIndex
 }: DropContainerSubscriptionIntervalProps) {
   const {isOver, setNodeRef, active} = useDroppable({
     id: `droppable-${dayIndex}`,
@@ -29,7 +27,7 @@ export default function DropContainerSubscriptionInterval({
 
   // not dragging
   if (!active) {
-    return <div style={{...defaultStyle}}>{children}</div>
+    return null
   }
 
   const activeStyle = {
@@ -44,7 +42,7 @@ export default function DropContainerSubscriptionInterval({
 
   return (
     <div ref={setNodeRef} style={{...defaultStyle, ...activeStyle, ...hoverStyle}}>
-      {children}
+      Hierhin verschieben
     </div>
   )
 }

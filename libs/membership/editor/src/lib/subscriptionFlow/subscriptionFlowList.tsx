@@ -1,4 +1,4 @@
-import React, {createContext, useMemo, useState} from 'react'
+import React, {createContext, useContext, useMemo, useState} from 'react'
 import {
   ListViewActions,
   ListViewContainer,
@@ -36,7 +36,6 @@ import {
   Message,
   Modal,
   Stack,
-  Tag,
   toaster
 } from 'rsuite'
 import {useMemberPlanListQuery} from '@wepublish/editor/api'
@@ -62,6 +61,9 @@ import {
 import {GraphqlClientContext} from './graphqlClientContext'
 import MailTemplateSelect from './mailTemplateSelect'
 import {TypeAttributes} from 'rsuite/esm/@types/common'
+import DraggableSubscriptionInterval from './draggableSubscriptionInterval'
+import {DndContext, DragEndEvent} from '@dnd-kit/core'
+import DroppableSubscriptionInterval from './droppableSubscriptionInterval'
 
 const MailTemplatesContext = createContext<FullMailTemplateFragment[]>([])
 
@@ -106,12 +108,6 @@ export interface UserActionInterval extends SubscriptionInterval {
 export interface NonUserActionInterval extends SubscriptionInterval {
   event: NonUserActionEvents
   daysAwayFromEnding: number
-}
-
-function isNonUserAction(
-  subscriptionInterval: SubscriptionInterval
-): subscriptionInterval is NonUserActionInterval {
-  return NON_USER_ACTION_EVENTS.includes(subscriptionInterval.event as NonUserActionEvents)
 }
 
 export function isNonUserEvent(event: SubscriptionEvent): event is NonUserActionEvents {
@@ -227,6 +223,23 @@ export default function () {
     await updateSubscriptionFlow({
       variables: {
         subscriptionFlow: mutation
+      }
+    })
+  }
+
+  async function intervalDragEnd(dragEvent: DragEndEvent) {
+    const interval: DecoratedSubscriptionInterval<NonUserActionInterval> = dragEvent.active.data
+      .current
+      ?.decoratedSubscriptionInterval as DecoratedSubscriptionInterval<NonUserActionInterval>
+    const daysAwayFromEnding = dragEvent.over?.data.current?.dayIndex
+
+    await updateSubscriptionInterval({
+      variables: {
+        subscriptionInterval: {
+          id: interval.object.id,
+          daysAwayFromEnding,
+          mailTemplateId: interval.object.mailTemplate?.id
+        }
       }
     })
   }
@@ -417,7 +430,6 @@ export default function () {
           )}
         </ListViewActions>
       </ListViewContainer>
-
       <TableContainer style={{marginTop: '16px'}}>
         <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>
           <GraphqlClientContext.Provider
@@ -498,136 +510,133 @@ export default function () {
               <TableBody>
                 {subscriptionFlows.subscriptionFlows.map(subscriptionFlow => (
                   <SplitTableRow key={subscriptionFlow.id}>
-                    {/************************************************** FILTERS **************************************************/}
-                    {!defaultFlowOnly && (
-                      <>
-                        <TableCell align="center">{subscriptionFlow.memberPlan?.name}</TableCell>
-                        <TableCell align="center">
-                          {paymentMethods && paymentMethods.paymentMethods && (
+                    <DndContext onDragEnd={event => intervalDragEnd(event)}>
+                      {/************************************************** FILTERS **************************************************/}
+                      {!defaultFlowOnly && (
+                        <>
+                          <TableCell align="center">{subscriptionFlow.memberPlan?.name}</TableCell>
+                          <TableCell align="center">
+                            {paymentMethods && paymentMethods.paymentMethods && (
+                              <CheckPicker
+                                data={paymentMethods.paymentMethods.map(method => ({
+                                  label: method.name,
+                                  value: method.id
+                                }))}
+                                disabled={subscriptionFlow.default}
+                                countable={false}
+                                cleanable={false}
+                                defaultValue={subscriptionFlow.paymentMethods.map(m => m.id)}
+                                onChange={v => updateFlow(subscriptionFlow, {paymentMethodIds: v})}
+                              />
+                            )}
+                          </TableCell>
+                          <TableCell align="center">
                             <CheckPicker
-                              data={paymentMethods.paymentMethods.map(method => ({
-                                label: method.name,
-                                value: method.id
+                              data={Object.values(PaymentPeriodicity).map(item => ({
+                                label: item,
+                                value: item
                               }))}
                               disabled={subscriptionFlow.default}
                               countable={false}
                               cleanable={false}
-                              defaultValue={subscriptionFlow.paymentMethods.map(m => m.id)}
-                              onChange={v => updateFlow(subscriptionFlow, {paymentMethodIds: v})}
+                              defaultValue={subscriptionFlow.periodicities}
+                              onChange={v => updateFlow(subscriptionFlow, {periodicities: v})}
+                            />
+                          </TableCell>
+                          <TableCell align="center">
+                            <CheckPicker
+                              data={[true, false].map(item => ({
+                                label: item.toString(),
+                                value: item
+                              }))}
+                              disabled={subscriptionFlow.default}
+                              countable={false}
+                              cleanable={false}
+                              defaultValue={subscriptionFlow.autoRenewal}
+                              onChange={v => updateFlow(subscriptionFlow, {autoRenewal: v})}
+                            />
+                          </TableCell>
+                        </>
+                      )}
+                      {/************************************************** USER ACTIONS **************************************************/}
+                      {userActionEvents.map(event => (
+                        <TableCell key={event.subscriptionEventKey} align="center">
+                          {mailTemplates && mailTemplates.mailTemplates && (
+                            <MailTemplateSelect
+                              mailTemplates={mailTemplates.mailTemplates}
+                              subscriptionInterval={userActionIntervalFor(
+                                subscriptionFlow,
+                                event.subscriptionEventKey
+                              )}
+                              subscriptionFlow={subscriptionFlow}
+                              event={event.subscriptionEventKey}
                             />
                           )}
                         </TableCell>
-                        <TableCell align="center">
-                          <CheckPicker
-                            data={Object.values(PaymentPeriodicity).map(item => ({
-                              label: item,
-                              value: item
-                            }))}
-                            disabled={subscriptionFlow.default}
-                            countable={false}
-                            cleanable={false}
-                            defaultValue={subscriptionFlow.periodicities}
-                            onChange={v => updateFlow(subscriptionFlow, {periodicities: v})}
-                          />
-                        </TableCell>
-                        <TableCell align="center">
-                          <CheckPicker
-                            data={[true, false].map(item => ({
-                              label: item.toString(),
-                              value: item
-                            }))}
-                            disabled={subscriptionFlow.default}
-                            countable={false}
-                            cleanable={false}
-                            defaultValue={subscriptionFlow.autoRenewal}
-                            onChange={v => updateFlow(subscriptionFlow, {autoRenewal: v})}
-                          />
-                        </TableCell>
-                      </>
-                    )}
-                    {/************************************************** USER ACTIONS **************************************************/}
-                    {userActionEvents.map(event => (
-                      <TableCell key={event.subscriptionEventKey} align="center">
-                        {mailTemplates && mailTemplates.mailTemplates && (
-                          <MailTemplateSelect
-                            mailTemplates={mailTemplates.mailTemplates}
-                            subscriptionInterval={userActionIntervalFor(
-                              subscriptionFlow,
-                              event.subscriptionEventKey
-                            )}
-                            subscriptionFlow={subscriptionFlow}
-                            event={event.subscriptionEventKey}
-                          />
-                        )}
-                      </TableCell>
-                    ))}
+                      ))}
 
-                    {/************************************************** TIMELINE **************************************************/}
-                    {days &&
-                      mailTemplates &&
-                      days.map(day => {
-                        const currentIntervals = nonUserActionIntervalsFor(subscriptionFlow, day!)
-                        if (currentIntervals.length === 0) {
+                      {/************************************************** TIMELINE **************************************************/}
+                      {days &&
+                        mailTemplates &&
+                        days.map(day => {
+                          const currentIntervals = nonUserActionIntervalsFor(subscriptionFlow, day!)
+                          if (currentIntervals.length === 0) {
+                            return (
+                              <TableCell
+                                key={`day-${day}`}
+                                align="center"
+                                style={day === 0 ? {backgroundColor: 'lightyellow'} : {}}>
+                                <MailTemplateSelect
+                                  mailTemplates={mailTemplates.mailTemplates}
+                                  subscriptionInterval={undefined}
+                                  subscriptionFlow={subscriptionFlow}
+                                  event={SubscriptionEvent.Custom}
+                                  newDaysAwayFromEnding={day as number}
+                                />
+                                {(day || day === 0) && (
+                                  <DroppableSubscriptionInterval dayIndex={day} />
+                                )}
+                              </TableCell>
+                            )
+                          }
                           return (
                             <TableCell
                               key={`day-${day}`}
                               align="center"
                               style={day === 0 ? {backgroundColor: 'lightyellow'} : {}}>
-                              <MailTemplateSelect
-                                mailTemplates={mailTemplates.mailTemplates}
-                                subscriptionInterval={undefined}
-                                subscriptionFlow={subscriptionFlow}
-                                newDaysAwayFromEnding={day as number}
-                                event={SubscriptionEvent.Custom}
-                              />
+                              {currentIntervals.map(currentInterval => (
+                                <Stack direction="column" spacing={6}>
+                                  <DraggableSubscriptionInterval
+                                    subscriptionInterval={currentInterval}
+                                    subscriptionFlow={subscriptionFlow}
+                                    mailTemplates={mailTemplates.mailTemplates}
+                                  />
+                                  {(day || day === 0) && (
+                                    <DroppableSubscriptionInterval dayIndex={day} />
+                                  )}
+                                </Stack>
+                              ))}
                             </TableCell>
                           )
-                        }
-                        return (
-                          <TableCell
-                            key={`day-${day}`}
-                            align="center"
-                            style={day === 0 ? {backgroundColor: 'lightyellow'} : {}}>
-                            {currentIntervals.map(currentInterval => (
-                              <Stack direction="column" spacing={6}>
-                                {currentInterval.object.event !== SubscriptionEvent.Custom && (
-                                  <Tag
-                                    style={{
-                                      color: currentInterval.color.fg
-                                    }}
-                                    color={currentInterval.color.bg}>
-                                    <span style={{marginRight: '5px'}}>{currentInterval.icon}</span>
-                                    {currentInterval.title}
-                                  </Tag>
-                                )}
-                                <MailTemplateSelect
-                                  mailTemplates={mailTemplates.mailTemplates}
-                                  subscriptionInterval={currentInterval}
-                                  subscriptionFlow={subscriptionFlow}
-                                  event={currentInterval.object.event}
-                                />
-                              </Stack>
-                            ))}
-                          </TableCell>
-                        )
-                      })}
+                        })}
 
-                    {/************************************************** ACTIONS **************************************************/}
-                    <TableCell align="center">
-                      <IconButton
-                        size="sm"
-                        color="red"
-                        circle
-                        appearance="primary"
-                        icon={<MdDelete />}
-                        disabled={subscriptionFlow.default}
-                        onClick={() =>
-                          deleteSubscriptionFlow({
-                            variables: {subscriptionFlowId: subscriptionFlow.id}
-                          })
-                        }
-                      />
-                    </TableCell>
+                      {/************************************************** ACTIONS **************************************************/}
+                      <TableCell align="center">
+                        <IconButton
+                          size="sm"
+                          color="red"
+                          circle
+                          appearance="primary"
+                          icon={<MdDelete />}
+                          disabled={subscriptionFlow.default}
+                          onClick={() =>
+                            deleteSubscriptionFlow({
+                              variables: {subscriptionFlowId: subscriptionFlow.id}
+                            })
+                          }
+                        />
+                      </TableCell>
+                    </DndContext>
                   </SplitTableRow>
                 ))}
               </TableBody>
