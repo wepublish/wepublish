@@ -234,7 +234,7 @@ async function applyWebsite() {
             {
               name: appName,
               image,
-              command: ['node', 'dist/apps/website-example/main.js'],
+              command: ['npx', 'next', 'start', 'dist/apps/gruppetto/', '-p', '8000'],
               env: [
                 {
                   name: 'NODE_ENV',
