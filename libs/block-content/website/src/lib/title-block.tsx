@@ -1,6 +1,6 @@
 import {styled} from '@mui/material'
 import {Block, TitleBlock as TitleBlockType} from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website-builder'
+import {BuilderTitleBlockProps, useWebsiteBuilder} from '@wepublish/website-builder'
 
 export const isTitleBlock = (block: Block): block is TitleBlockType =>
   block.__typename === 'TitleBlock'
@@ -10,7 +10,7 @@ export const TitleBlockWrapper = styled('div')`
   gap: ${({theme}) => theme.spacing(5)};
 `
 
-export const TitleBlock = ({title, lead, className}: TitleBlockType & {className?: string}) => {
+export const TitleBlock = ({title, lead, className}: BuilderTitleBlockProps) => {
   const {
     elements: {H3, H6}
   } = useWebsiteBuilder()

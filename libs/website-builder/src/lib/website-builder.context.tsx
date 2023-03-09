@@ -14,6 +14,15 @@ import {
 } from './lists.interface'
 import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richtext.interface'
 import {BuilderFooterProps} from './footer.interface'
+import {
+  BuilderHTMLBlockProps,
+  BuilderImageBlockProps,
+  BuilderQuoteBlockProps,
+  BuilderRichTextBlockProps,
+  BuilderTeaserGridFlexBlockProps,
+  BuilderTitleBlockProps
+} from './blocks.interface'
+import {BuilderArticleProps} from './article.interface'
 
 const NoComponent = () => null
 
@@ -24,6 +33,7 @@ export type WebsiteBuilderComponents = {
   MemberPlans: ComponentType<BuilderMemberPlansProps>
   Subscribe: ComponentType<BuilderSubscribeProps>
   Page: ComponentType<BuilderPageProps>
+  Article: ComponentType<BuilderArticleProps>
 
   elements: {
     Button: ComponentType<BuilderButtonProps>
@@ -44,6 +54,15 @@ export type WebsiteBuilderComponents = {
     RenderLeaf: ComponentType<BuilderRenderLeafProps>
     RenderElement: ComponentType<BuilderRenderElementProps>
   }
+
+  blocks: {
+    Title: ComponentType<BuilderTitleBlockProps>
+    Image: ComponentType<BuilderImageBlockProps>
+    Quote: ComponentType<BuilderQuoteBlockProps>
+    RichText: ComponentType<BuilderRichTextBlockProps>
+    HTML: ComponentType<BuilderHTMLBlockProps>
+    TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
+  }
 }
 
 const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
@@ -53,6 +72,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   MemberPlans: NoComponent,
   Subscribe: NoComponent,
   Page: NoComponent,
+  Article: NoComponent,
 
   elements: {
     Button: NoComponent,
@@ -72,6 +92,15 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   richtext: {
     RenderLeaf: NoComponent,
     RenderElement: NoComponent
+  },
+
+  blocks: {
+    Title: NoComponent,
+    Image: NoComponent,
+    Quote: NoComponent,
+    RichText: NoComponent,
+    HTML: NoComponent,
+    TeaserGridFlex: NoComponent
   }
 })
 

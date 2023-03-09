@@ -55,6 +55,14 @@ fragment FullPage on Page {
               preTitle
               lead
               url
+              blocks {
+                __typename
+
+                ... on TitleBlock {
+                  title
+                  lead
+                }
+              }
             }
           }
 
@@ -74,6 +82,14 @@ fragment FullPage on Page {
               title
               description
               url
+              blocks {
+                __typename
+
+                ... on TitleBlock {
+                  title
+                  lead
+                }
+              }
             }
           }
 

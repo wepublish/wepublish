@@ -19,11 +19,24 @@ import {MemberPlans, Subscribe} from '@wepublish/membership/website'
 import {memo, PropsWithChildren} from 'react'
 import {Navbar, Footer} from '@wepublish/navigation/website'
 import {IconContext} from 'react-icons'
+import {Article} from '@wepublish/article/website'
 import {Page} from '@wepublish/page/website'
 import {css, Global} from '@emotion/react'
 import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
+import {
+  HtmlBlock,
+  ImageBlock,
+  QuoteBlock,
+  RichTextBlock,
+  TitleBlock,
+  TeaserGridFlexBlock
+} from '@wepublish/block-content/website'
 
 const globalStyles = css`
+  body {
+    word-break: break-word;
+  }
+
   img {
     max-width: 100%;
     height: auto;
@@ -43,6 +56,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         MemberPlans={MemberPlans}
         Subscribe={Subscribe}
         Page={Page}
+        Article={Article}
         elements={{
           Button,
           H1,
@@ -56,6 +70,14 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           UnorderedList,
           OrderedList,
           ListItem
+        }}
+        blocks={{
+          Title: TitleBlock,
+          Image: ImageBlock,
+          Quote: QuoteBlock,
+          HTML: HtmlBlock,
+          RichText: RichTextBlock,
+          TeaserGridFlex: TeaserGridFlexBlock
         }}
         richtext={{RenderElement, RenderLeaf}}>
         {children}

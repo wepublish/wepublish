@@ -1,5 +1,5 @@
 import {styled} from '@mui/material'
-import {useWebsiteBuilder} from '@wepublish/website-builder'
+import {BuilderQuoteBlockProps, useWebsiteBuilder} from '@wepublish/website-builder'
 import {Block, QuoteBlock as QuoteBlockType} from '@wepublish/website/api'
 
 export const isQuoteBlock = (block: Block): block is QuoteBlockType =>
@@ -12,7 +12,7 @@ export const QuoteBlockWrapper = styled('blockquote')`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
-export const QuoteBlock = ({quote, author, className}: QuoteBlockType & {className?: string}) => {
+export const QuoteBlock = ({quote, author, className}: BuilderQuoteBlockProps) => {
   const {
     elements: {H4, Paragraph}
   } = useWebsiteBuilder()

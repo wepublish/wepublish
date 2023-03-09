@@ -1,6 +1,6 @@
 import {Typography} from '@mui/material'
 import {AnchorHTMLAttributes, forwardRef, HTMLAttributes} from 'react'
-import {Link as MuiLink} from '@mui/material'
+import {Link as MuiLink, LinkTypeMap} from '@mui/material'
 
 export type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {component?: React.ElementType}
 
@@ -62,11 +62,15 @@ export const Paragraph = forwardRef(({children, ...props}: ParagraphProps, ref) 
   )
 })
 
-export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {component?: React.ElementType}
+export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
+  component?: React.ElementType
+  underline?: LinkTypeMap['props']['underline']
+  color?: LinkTypeMap['props']['color']
+}
 
-export const Link = forwardRef(({children, ...props}: LinkProps, ref) => {
+export const Link = forwardRef(({children, underline, color, ...props}: LinkProps, ref) => {
   return (
-    <MuiLink {...props} ref={ref as any} variant="body1">
+    <MuiLink {...props} ref={ref as any} variant="body1" color={color} underline={underline}>
       {children}
     </MuiLink>
   )

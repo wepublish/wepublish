@@ -1,4 +1,4 @@
-import {Container, styled} from '@mui/material'
+import {Container, css, styled} from '@mui/material'
 import {BuilderFooterProps, useWebsiteBuilder} from '@wepublish/website-builder'
 import {NavigationQuery} from '@wepublish/website/api'
 import {TupleToUnion} from 'type-fest'
@@ -12,15 +12,31 @@ const FooterWrapper = styled('footer')`
 
 const FooterInnerWrapper = styled(Container)`
   display: grid;
-  grid-template-columns: 200px auto;
-  justify-content: space-between;
+  gap: ${({theme}) => theme.spacing(4)};
+  justify-content: center;
   align-items: center;
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('md')} {
+      justify-content: space-between;
+      grid-template-columns: 200px auto;
+    }
+  `}
 `
 
 const FooterLinks = styled('nav')`
   display: grid;
-  grid-auto-flow: column;
-  gap: ${({theme}) => theme.spacing(4)};
+  grid-template-columns: 1fr 1fr;
+  column-gap: ${({theme}) => theme.spacing(4)};
+  row-gap: ${({theme}) => theme.spacing(2)};
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('md')} {
+      grid-template-columns: initial;
+      grid-auto-flow: column;
+      grid-auto-rows: min-content;
+    }
+  `}
 `
 
 export type FooterProps = BuilderFooterProps
@@ -53,7 +69,7 @@ export function Footer({data, loading, error, children}: FooterProps) {
             const url = navigationLinkToUrl(link)
 
             return (
-              <Link href={url} key={index} color="inherit">
+              <Link href={url} key={index} color="inherit" underline="none">
                 {link.label}
               </Link>
             )

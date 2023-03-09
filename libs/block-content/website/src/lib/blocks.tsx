@@ -1,12 +1,11 @@
-import {styled} from '@mui/material'
-import {BuilderPageProps} from '@wepublish/website-builder'
+import {BuilderPageProps, useWebsiteBuilder} from '@wepublish/website-builder'
 import {Block as BlockType} from '@wepublish/website/api'
-import {HtmlBlock, isHtmlBlock} from './html-block'
-import {ImageBlock, isImageBlock} from './image-block'
-import {isQuoteBlock, QuoteBlock} from './quote-block'
-import {isRichTextBlock, RichTextBlock} from './richtext-block'
-import {isTeaserGridFlexBlock, TeaserGridFlexBlock} from './teaser-grid-flex-block'
-import {isTitleBlock, TitleBlock} from './title-block'
+import {isHtmlBlock} from './html-block'
+import {isImageBlock} from './image-block'
+import {isQuoteBlock} from './quote-block'
+import {isRichTextBlock} from './richtext-block'
+import {isTeaserGridFlexBlock} from './teaser-grid-flex-block'
+import {isTitleBlock} from './title-block'
 
 export type PageProps = BuilderPageProps
 
@@ -15,28 +14,30 @@ export type BlockProp = {
 }
 
 export const Block = ({block}: BlockProp) => {
+  const {blocks} = useWebsiteBuilder()
+
   if (isTitleBlock(block)) {
-    return <TitleBlock {...block} />
+    return <blocks.Title {...block} />
   }
 
   if (isImageBlock(block)) {
-    return <ImageBlock {...block} />
+    return <blocks.Image {...block} />
   }
 
   if (isQuoteBlock(block)) {
-    return <QuoteBlock {...block} />
+    return <blocks.Quote {...block} />
   }
 
   if (isRichTextBlock(block)) {
-    return <RichTextBlock {...block} />
+    return <blocks.RichText {...block} />
   }
 
   if (isHtmlBlock(block)) {
-    return <HtmlBlock {...block} />
+    return <blocks.HTML {...block} />
   }
 
   if (isTeaserGridFlexBlock(block)) {
-    return <TeaserGridFlexBlock {...block} />
+    return <blocks.TeaserGridFlex {...block} />
   }
 
   return null

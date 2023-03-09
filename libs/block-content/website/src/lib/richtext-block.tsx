@@ -1,6 +1,6 @@
 import {styled} from '@mui/material'
 import {BlockFormat} from '@wepublish/richtext/website'
-import {useWebsiteBuilder} from '@wepublish/website-builder'
+import {BuilderRichTextBlockProps, useWebsiteBuilder} from '@wepublish/website-builder'
 import {Block, RichTextBlock as RichTextBlockType} from '@wepublish/website/api'
 import {useMemo} from 'react'
 import {createEditor} from 'slate'
@@ -11,7 +11,7 @@ export const isRichTextBlock = (block: Block): block is RichTextBlockType =>
 
 const RichTextBlockWrapper = styled('div')``
 
-export const RichTextBlock = ({richText}: RichTextBlockType) => {
+export const RichTextBlock = ({className, richText}: BuilderRichTextBlockProps) => {
   const defaultValue = [{type: BlockFormat.Paragraph, children: [{text: ''}]}]
   const editor = useMemo(() => withReact(createEditor()), [])
   const {
@@ -19,7 +19,7 @@ export const RichTextBlock = ({richText}: RichTextBlockType) => {
   } = useWebsiteBuilder()
 
   return (
-    <RichTextBlockWrapper>
+    <RichTextBlockWrapper className={className}>
       <Slate editor={editor} value={richText ?? defaultValue} onChange={newValue => {}}>
         <Editable readOnly renderElement={RenderElement as any} renderLeaf={RenderLeaf as any} />
       </Slate>

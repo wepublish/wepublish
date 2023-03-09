@@ -3,11 +3,12 @@ import Head from 'next/head'
 import {WebsiteProvider} from '@wepublish/website'
 import {createWithV1ApiClient} from '@wepublish/website/api'
 import {Container, createTheme, CssBaseline, ThemeProvider, styled} from '@mui/material'
-import {WebsiteBuilderProvider} from '@wepublish/website-builder'
+import {BuilderLinkProps, WebsiteBuilderProvider} from '@wepublish/website-builder'
 import {Header} from '../src/header'
 import {FooterContainer} from '@wepublish/navigation/website'
 import {Logo} from '../src/logo'
-import {theme} from '@wepublish/ui'
+import {theme, Link as BuilderLink} from '@wepublish/ui'
+import Link from 'next/link'
 
 const gruppettoTheme = createTheme(theme, {
   palette: {
@@ -28,10 +29,20 @@ const Spacer = styled('div')`
   min-height: 100vh;
 `
 
+const NextLink = ({children, href, ...props}: BuilderLinkProps) => {
+  const hrefWithoutOrigin = href?.replace(location.origin, '') ?? ''
+
+  return (
+    <Link href={hrefWithoutOrigin} as={hrefWithoutOrigin} passHref legacyBehavior>
+      <BuilderLink {...props}>{children}</BuilderLink>
+    </Link>
+  )
+}
+
 function CustomApp({Component, pageProps}: AppProps) {
   return (
     <WebsiteProvider>
-      <WebsiteBuilderProvider Head={Head}>
+      <WebsiteBuilderProvider Head={Head} elements={{Link: NextLink}}>
         <ThemeProvider theme={gruppettoTheme}>
           <CssBaseline />
 

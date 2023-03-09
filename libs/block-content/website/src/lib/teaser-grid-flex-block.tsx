@@ -1,11 +1,13 @@
 import {css, styled} from '@mui/material'
-import {useWebsiteBuilder} from '@wepublish/website-builder'
+import {BuilderTeaserGridFlexBlockProps, useWebsiteBuilder} from '@wepublish/website-builder'
 import {
   Block,
   FlexAlignment,
   Teaser as TeaserType,
   TeaserGridFlexBlock as TeaserGridFlexBlockType
 } from '@wepublish/website/api'
+import {isImageBlock} from './image-block'
+import {isTitleBlock} from './title-block'
 
 export const isTeaserGridFlexBlock = (block: Block): block is TeaserGridFlexBlockType =>
   block.__typename === 'TeaserGridFlexBlock'
@@ -28,11 +30,6 @@ export const TeaserGridFlexBlockWrapper = styled('div')`
 `
 
 const TeaserWrapper = styled('article')<FlexAlignment>`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(1)};
-  grid-template-rows: auto;
-  grid-auto-rows: max-content;
-
   ${({theme, h, w, x, y}) => css`
     ${theme.breakpoints.up('md')} {
       grid-column-start: ${x + 1};
@@ -43,18 +40,25 @@ const TeaserWrapper = styled('article')<FlexAlignment>`
   `}
 `
 
-type TeaserProps = {
-  teaser?: TeaserType | null
-  alignment: FlexAlignment
-  className?: string
-}
+const TeaserInnerWrapper = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(1)};
+  grid-template-rows: auto;
+  grid-auto-rows: max-content;
+`
 
 const teaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
-    case 'PageTeaser':
-      return teaser.title ?? teaser.page?.title
-    case 'ArticleTeaser':
-      return teaser.title ?? teaser.article?.title
+    case 'PageTeaser': {
+      const titleBlock = teaser.page?.blocks.find(isTitleBlock)
+      return teaser.title || titleBlock?.title || teaser.page?.title
+    }
+
+    case 'ArticleTeaser': {
+      const titleBlock = teaser.article?.blocks.find(isTitleBlock)
+      return teaser.title || titleBlock?.title || teaser.article?.title
+    }
+
     case 'CustomTeaser':
       return teaser.title
   }
@@ -65,7 +69,7 @@ const teaserPreTitle = (teaser: TeaserType) => {
     case 'PageTeaser':
       return teaser.preTitle
     case 'ArticleTeaser':
-      return teaser.preTitle ?? teaser.article?.preTitle
+      return teaser.preTitle || teaser.article?.preTitle
     case 'CustomTeaser':
       return teaser.preTitle
   }
@@ -73,12 +77,50 @@ const teaserPreTitle = (teaser: TeaserType) => {
 
 const teaserLead = (teaser: TeaserType) => {
   switch (teaser.__typename) {
-    case 'PageTeaser':
-      return teaser.lead ?? teaser.page?.description
-    case 'ArticleTeaser':
-      return teaser.lead ?? teaser.article?.lead
+    case 'PageTeaser': {
+      const titleBlock = teaser.page?.blocks.find(isTitleBlock)
+      return teaser.lead || titleBlock?.lead || teaser.page?.description
+    }
+
+    case 'ArticleTeaser': {
+      const titleBlock = teaser.article?.blocks.find(isTitleBlock)
+      return teaser.lead || titleBlock?.lead || teaser.article?.lead
+    }
+
     case 'CustomTeaser':
       return teaser.lead
+  }
+}
+
+const teaserUrl = (teaser: TeaserType) => {
+  switch (teaser.__typename) {
+    case 'PageTeaser': {
+      return teaser.page?.url
+    }
+
+    case 'ArticleTeaser': {
+      return teaser.article?.url
+    }
+
+    case 'CustomTeaser':
+      return teaser.contentUrl
+  }
+}
+
+const teaserImage = (teaser: TeaserType) => {
+  switch (teaser.__typename) {
+    case 'PageTeaser': {
+      const imageBlock = teaser.page?.blocks.find(isImageBlock)
+      return teaser.image ?? imageBlock?.image
+    }
+
+    case 'ArticleTeaser': {
+      const imageBlock = teaser.article?.blocks.find(isImageBlock)
+      return teaser.image ?? imageBlock?.image
+    }
+
+    case 'CustomTeaser':
+      return teaser.image
   }
 }
 
@@ -89,36 +131,44 @@ const TeaserImage = styled('img')`
 
 const TeaserTitleWrapper = styled('header')``
 
-export const Teaser = ({teaser, alignment, className}: TeaserProps) => {
-  const title = (teaser && teaserTitle(teaser)) ?? ''
-  const preTitle = (teaser && teaserPreTitle(teaser)) ?? ''
-  const lead = (teaser && teaserLead(teaser)) ?? ''
+export type TeaserProps = {
+  teaser?: TeaserType | null
+  alignment: FlexAlignment
+  className?: string
+  showLead?: boolean
+}
+
+export const Teaser = ({teaser, alignment, className, showLead}: TeaserProps) => {
+  const title = teaser && teaserTitle(teaser)
+  const preTitle = teaser && teaserPreTitle(teaser)
+  const lead = teaser && teaserLead(teaser)
+  const href = (teaser && teaserUrl(teaser)) ?? ''
+  const image = teaser && teaserImage(teaser)
 
   const {
-    elements: {H5, H6}
+    elements: {H5, H6, Link}
   } = useWebsiteBuilder()
 
   return (
-    <TeaserWrapper {...alignment} className={className}>
-      {teaser?.image?.url && <TeaserImage src={teaser.image.url} />}
+    <TeaserWrapper {...alignment}>
+      <Link color="inherit" underline="none" href={href}>
+        <TeaserInnerWrapper className={className}>
+          {image?.url && <TeaserImage src={image.url} />}
 
-      <TeaserTitleWrapper>
-        <H5 component="h1">
-          {preTitle && `${preTitle}: `} {title}
-        </H5>
-      </TeaserTitleWrapper>
+          <TeaserTitleWrapper>
+            <H5 component="h1">
+              {preTitle && `${preTitle}: `} {title}
+            </H5>
+          </TeaserTitleWrapper>
 
-      <H6 component="p">{lead}</H6>
+          {showLead && <H6 component="p">{lead}</H6>}
+        </TeaserInnerWrapper>
+      </Link>
     </TeaserWrapper>
   )
 }
 
-export const TeaserGridFlexBlock = ({
-  flexTeasers,
-  className
-}: TeaserGridFlexBlockType & {className?: string}) => {
-  console.log(flexTeasers)
-
+export const TeaserGridFlexBlock = ({flexTeasers, className}: BuilderTeaserGridFlexBlockProps) => {
   return (
     <TeaserGridFlexBlockWrapper className={className}>
       {flexTeasers?.map((teaser, index) => (
