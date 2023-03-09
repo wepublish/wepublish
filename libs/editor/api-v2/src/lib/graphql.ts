@@ -75,6 +75,7 @@ export type Mutation = {
   syncTemplates: Scalars['Boolean'];
   updateSubscriptionFlow: Array<SubscriptionFlowModel>;
   updateSubscriptionInterval: Array<SubscriptionFlowModel>;
+  updateSubscriptionIntervals: Array<SubscriptionFlowModel>;
 };
 
 
@@ -105,6 +106,11 @@ export type MutationUpdateSubscriptionFlowArgs = {
 
 export type MutationUpdateSubscriptionIntervalArgs = {
   subscriptionInterval: SubscriptionIntervalUpdateInput;
+};
+
+
+export type MutationUpdateSubscriptionIntervalsArgs = {
+  subscriptionIntervals: Array<SubscriptionIntervalUpdateInput>;
 };
 
 export type PaymentMethodRef = {
@@ -313,6 +319,13 @@ export type CreateSubscriptionIntervalMutationVariables = Exact<{
 
 
 export type CreateSubscriptionIntervalMutation = { __typename?: 'Mutation', createSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: number, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: number, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null }> }> };
+
+export type UpdateSubscriptionIntervalsMutationVariables = Exact<{
+  subscriptionIntervals: Array<SubscriptionIntervalUpdateInput> | SubscriptionIntervalUpdateInput;
+}>;
+
+
+export type UpdateSubscriptionIntervalsMutation = { __typename?: 'Mutation', updateSubscriptionIntervals: Array<{ __typename?: 'SubscriptionFlowModel', id: number, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: number, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: number, name: string } | null }> }> };
 
 export type UpdateSubscriptionIntervalMutationVariables = Exact<{
   subscriptionInterval: SubscriptionIntervalUpdateInput;
@@ -650,6 +663,39 @@ export function useCreateSubscriptionIntervalMutation(baseOptions?: Apollo.Mutat
 export type CreateSubscriptionIntervalMutationHookResult = ReturnType<typeof useCreateSubscriptionIntervalMutation>;
 export type CreateSubscriptionIntervalMutationResult = Apollo.MutationResult<CreateSubscriptionIntervalMutation>;
 export type CreateSubscriptionIntervalMutationOptions = Apollo.BaseMutationOptions<CreateSubscriptionIntervalMutation, CreateSubscriptionIntervalMutationVariables>;
+export const UpdateSubscriptionIntervalsDocument = gql`
+    mutation UpdateSubscriptionIntervals($subscriptionIntervals: [SubscriptionIntervalUpdateInput!]!) {
+  updateSubscriptionIntervals(subscriptionIntervals: $subscriptionIntervals) {
+    ...SubscriptionFlow
+  }
+}
+    ${SubscriptionFlowFragmentDoc}`;
+export type UpdateSubscriptionIntervalsMutationFn = Apollo.MutationFunction<UpdateSubscriptionIntervalsMutation, UpdateSubscriptionIntervalsMutationVariables>;
+
+/**
+ * __useUpdateSubscriptionIntervalsMutation__
+ *
+ * To run a mutation, you first call `useUpdateSubscriptionIntervalsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSubscriptionIntervalsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSubscriptionIntervalsMutation, { data, loading, error }] = useUpdateSubscriptionIntervalsMutation({
+ *   variables: {
+ *      subscriptionIntervals: // value for 'subscriptionIntervals'
+ *   },
+ * });
+ */
+export function useUpdateSubscriptionIntervalsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubscriptionIntervalsMutation, UpdateSubscriptionIntervalsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSubscriptionIntervalsMutation, UpdateSubscriptionIntervalsMutationVariables>(UpdateSubscriptionIntervalsDocument, options);
+      }
+export type UpdateSubscriptionIntervalsMutationHookResult = ReturnType<typeof useUpdateSubscriptionIntervalsMutation>;
+export type UpdateSubscriptionIntervalsMutationResult = Apollo.MutationResult<UpdateSubscriptionIntervalsMutation>;
+export type UpdateSubscriptionIntervalsMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionIntervalsMutation, UpdateSubscriptionIntervalsMutationVariables>;
 export const UpdateSubscriptionIntervalDocument = gql`
     mutation UpdateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalUpdateInput!) {
   updateSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {

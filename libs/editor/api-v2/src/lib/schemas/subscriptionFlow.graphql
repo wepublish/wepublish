@@ -28,6 +28,12 @@ mutation CreateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalC
   }
 }
 
+mutation UpdateSubscriptionIntervals($subscriptionIntervals: [SubscriptionIntervalUpdateInput!]!) {
+updateSubscriptionIntervals(subscriptionIntervals: $subscriptionIntervals) {
+    ...SubscriptionFlow
+  }
+}
+
 mutation UpdateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalUpdateInput!) {
   updateSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
     ...SubscriptionFlow

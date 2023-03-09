@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useMemo, useState} from 'react'
+import React, {createContext, useContext, useMemo, useRef, useState} from 'react'
 import {
   ListViewActions,
   ListViewContainer,
@@ -18,7 +18,9 @@ import {
 import {
   MdAdd,
   MdAlarmOn,
+  MdCheck,
   MdDelete,
+  MdEdit,
   MdFilterAlt,
   MdMouse,
   MdOutlineClose,
@@ -27,7 +29,18 @@ import {
 } from 'react-icons/all'
 import {useTranslation} from 'react-i18next'
 import {useParams} from 'react-router-dom'
-import {Button, CheckPicker, IconButton, InputNumber, Loader, Message, Modal, toaster} from 'rsuite'
+import {
+  Button,
+  CheckPicker,
+  IconButton,
+  InputNumber,
+  Loader,
+  Message,
+  Modal,
+  Popover,
+  toaster,
+  Whisper
+} from 'rsuite'
 import {useMemberPlanListQuery} from '@wepublish/editor/api'
 import {ApolloClient, ApolloError, NormalizedCacheObject} from '@apollo/client'
 import {getApiClientV2} from 'apps/editor/src/app/utility'
@@ -46,7 +59,8 @@ import {
   useMailTemplateQuery,
   useSubscriptionFlowsQuery,
   useUpdateSubscriptionFlowMutation,
-  useUpdateSubscriptionIntervalMutation
+  useUpdateSubscriptionIntervalMutation,
+  useUpdateSubscriptionIntervalsMutation
 } from '@wepublish/editor/api-v2'
 import {GraphqlClientContext} from './graphqlClientContext'
 import MailTemplateSelect from './mailTemplateSelect'
@@ -136,6 +150,7 @@ export default function () {
     dayNumber: -3
   })
   const [newDay, setNewDay] = useState<number | undefined>(undefined)
+  const editDay = useRef<number | undefined>(undefined)
 
   /******************************************
    * API SERVICES
@@ -176,6 +191,10 @@ export default function () {
   })
 
   const [createSubscriptionInterval] = useCreateSubscriptionIntervalMutation({
+    client,
+    onError: showErrors
+  })
+  const [updateSubscriptionIntervals] = useUpdateSubscriptionIntervalsMutation({
     client,
     onError: showErrors
   })
@@ -237,6 +256,23 @@ export default function () {
     })
   }
 
+  async function updateTimelineDay(dayToUpdate: number) {
+    const intervalsToUpdate = intervals.filter(
+      interval => interval?.daysAwayFromEnding === dayToUpdate
+    )
+    await updateSubscriptionIntervals({
+      variables: {
+        subscriptionIntervals: intervalsToUpdate.map(intervalToUpdate => {
+          return {
+            id: intervalToUpdate.id,
+            mailTemplateId: intervalToUpdate.mailTemplate?.id,
+            daysAwayFromEnding: editDay.current
+          }
+        })
+      }
+    })
+  }
+
   const eventIcons: {[key: string]: JSX.Element} = {
     [SubscriptionEvent.InvoiceCreation]: <MdOutlineNoteAdd size={16} />,
     [SubscriptionEvent.DeactivationUnpaid]: <MdOutlineClose size={16} />
@@ -294,7 +330,7 @@ export default function () {
     }
   })
 
-  const intervals = useMemo(() => {
+  const intervals: SubscriptionInterval[] = useMemo(() => {
     if (!subscriptionFlows) {
       return []
     }
@@ -359,6 +395,10 @@ export default function () {
   }))
   const TableCellBottom = styled(TableCell)`
     vertical-align: bottom;
+  `
+  const EditDaysContainer = styled('div')`
+    display: flex;
+    min-width: 160px;
   `
   const DarkTableCell = styled(TableCell)(({theme}) => ({
     backgroundColor: theme.palette.common.black,
@@ -471,7 +511,6 @@ export default function () {
                     </>
                   )}
 
-                  {/* mail templates only TODO: extract */}
                   {userActionEvents.map(userActionEvent => (
                     <TableCell key={userActionEvent.subscriptionEventKey} align="center">
                       {userActionEvent.title}
@@ -484,7 +523,51 @@ export default function () {
                       key={`day-${day}`}
                       align="center"
                       style={day === 0 ? {backgroundColor: 'lightyellow'} : {}}>
-                      {t('subscriptionFlow.day', {day})}
+                      {!!day && (
+                        <div>
+                          <Whisper
+                            placement="bottom"
+                            trigger="click"
+                            speaker={
+                              <Popover>
+                                <EditDaysContainer>
+                                  <InputNumber
+                                    onChange={value => {
+                                      editDay.current =
+                                        typeof value === 'string' ? parseInt(value) : value
+                                    }}
+                                    size="sm"
+                                    defaultValue={day || 0}
+                                    step={1}
+                                    postfix={t('subscriptionFlow.days')}
+                                  />
+                                  <IconButton
+                                    icon={<MdCheck />}
+                                    color={'green'}
+                                    appearance={'primary'}
+                                    onClick={() => updateTimelineDay(day as number)}
+                                  />
+                                </EditDaysContainer>
+                              </Popover>
+                            }>
+                            <IconButton
+                              icon={<MdEdit />}
+                              size={'xs'}
+                              circle
+                              color={'blue'}
+                              appearance={'link'}
+                            />
+                          </Whisper>
+                          <IconButton
+                            icon={<MdDelete />}
+                            size={'xs'}
+                            circle
+                            color={'red'}
+                            appearance={'link'}
+                          />
+                        </div>
+                      )}
+                      <div>{t('subscriptionFlow.dayWithNumber', {day})}</div>
                     </TableCell>
                   ))}
 

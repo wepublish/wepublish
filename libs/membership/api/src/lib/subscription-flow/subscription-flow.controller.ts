@@ -223,6 +223,14 @@ export class SubscriptionFlowController {
     return this.getFlows(false)
   }
 
+  async updateIntervals(intervals: SubscriptionIntervalUpdateInput[]) {
+    let flows
+    for (const interval of intervals) {
+      flows = await this.updateInterval(interval)
+    }
+    return flows
+  }
+
   async updateInterval(interval: SubscriptionIntervalUpdateInput) {
     const eventToUpdate = await this.prismaService.subscriptionInterval.findUnique({
       where: {

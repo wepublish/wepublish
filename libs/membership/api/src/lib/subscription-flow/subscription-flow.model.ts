@@ -90,6 +90,15 @@ export class SubscriptionIntervalUpdateInput {
 }
 
 @InputType()
+export class SubscriptionIntervalsUpdateInput {
+  intervals: SubscriptionIntervalUpdateInput[]
+
+  constructor(intervals: SubscriptionIntervalUpdateInput[]) {
+    this.intervals = intervals
+  }
+}
+
+@InputType()
 export class SubscriptionIntervalDeleteInput {
   @Field(() => Int)
   id!: number
