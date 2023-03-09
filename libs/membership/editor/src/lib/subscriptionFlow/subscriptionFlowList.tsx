@@ -27,17 +27,7 @@ import {
 } from 'react-icons/all'
 import {useTranslation} from 'react-i18next'
 import {useParams} from 'react-router-dom'
-import {
-  Button,
-  CheckPicker,
-  IconButton,
-  InputNumber,
-  Loader,
-  Message,
-  Modal,
-  Stack,
-  toaster
-} from 'rsuite'
+import {Button, CheckPicker, IconButton, InputNumber, Loader, Message, Modal, toaster} from 'rsuite'
 import {useMemberPlanListQuery} from '@wepublish/editor/api'
 import {ApolloClient, ApolloError, NormalizedCacheObject} from '@apollo/client'
 import {getApiClientV2} from 'apps/editor/src/app/utility'
@@ -65,11 +55,14 @@ import DraggableSubscriptionInterval from './draggableSubscriptionInterval'
 import {DndContext, DragEndEvent} from '@dnd-kit/core'
 import DroppableSubscriptionInterval from './droppableSubscriptionInterval'
 
+/**
+ * CONTEXT
+ */
 const MailTemplatesContext = createContext<FullMailTemplateFragment[]>([])
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
-    <Message type="error" showIcon closable duration={3000}>
+    <Message type="error" showIcon closable duration={8000}>
       {error.message}
     </Message>
   )
@@ -364,7 +357,9 @@ export default function () {
       borderRight: `1px solid ${theme.palette.common.black}`
     }
   }))
-
+  const TableCellBottom = styled(TableCell)`
+    vertical-align: bottom;
+  `
   const DarkTableCell = styled(TableCell)(({theme}) => ({
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
@@ -580,43 +575,40 @@ export default function () {
                         mailTemplates &&
                         days.map(day => {
                           const currentIntervals = nonUserActionIntervalsFor(subscriptionFlow, day!)
+                          // no interval
                           if (currentIntervals.length === 0) {
                             return (
-                              <TableCell
+                              <TableCellBottom
                                 key={`day-${day}`}
                                 align="center"
                                 style={day === 0 ? {backgroundColor: 'lightyellow'} : {}}>
-                                <MailTemplateSelect
+                                <DraggableSubscriptionInterval
                                   mailTemplates={mailTemplates.mailTemplates}
                                   subscriptionInterval={undefined}
                                   subscriptionFlow={subscriptionFlow}
                                   event={SubscriptionEvent.Custom}
                                   newDaysAwayFromEnding={day as number}
                                 />
-                                {(day || day === 0) && (
-                                  <DroppableSubscriptionInterval dayIndex={day} />
-                                )}
-                              </TableCell>
+                                <DroppableSubscriptionInterval dayIndex={day || 0} />
+                              </TableCellBottom>
                             )
                           }
+                          // some intervals
                           return (
-                            <TableCell
+                            <TableCellBottom
                               key={`day-${day}`}
                               align="center"
                               style={day === 0 ? {backgroundColor: 'lightyellow'} : {}}>
                               {currentIntervals.map(currentInterval => (
-                                <Stack direction="column" spacing={6}>
-                                  <DraggableSubscriptionInterval
-                                    subscriptionInterval={currentInterval}
-                                    subscriptionFlow={subscriptionFlow}
-                                    mailTemplates={mailTemplates.mailTemplates}
-                                  />
-                                  {(day || day === 0) && (
-                                    <DroppableSubscriptionInterval dayIndex={day} />
-                                  )}
-                                </Stack>
+                                <DraggableSubscriptionInterval
+                                  subscriptionInterval={currentInterval}
+                                  subscriptionFlow={subscriptionFlow}
+                                  mailTemplates={mailTemplates.mailTemplates}
+                                />
                               ))}
-                            </TableCell>
+
+                              <DroppableSubscriptionInterval dayIndex={day || 0} />
+                            </TableCellBottom>
                           )
                         })}
 

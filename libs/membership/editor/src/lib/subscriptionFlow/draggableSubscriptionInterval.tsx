@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {Tag} from 'rsuite'
 import {DecoratedSubscriptionInterval} from './subscriptionFlowList'
 import {
@@ -11,9 +11,14 @@ import {MdDragIndicator} from 'react-icons/all'
 import {useDraggable} from '@dnd-kit/core'
 import styled from '@emotion/styled'
 
+const DraggableContainer = styled.div`
+  margin-bottom: 10px;
+`
+
 const EventTagContainer = styled.div`
   display: flex;
   justify-content: center;
+  min-width: 150px;
 `
 
 interface DraggableSubscriptionIntervalProps {
@@ -30,18 +35,6 @@ export default function ({
   mailTemplates,
   subscriptionFlow
 }: DraggableSubscriptionIntervalProps) {
-  if (subscriptionInterval?.object.event === SubscriptionEvent.Custom) {
-    return (
-      <MailTemplateSelect
-        mailTemplates={mailTemplates}
-        subscriptionInterval={subscriptionInterval}
-        subscriptionFlow={subscriptionFlow}
-        event={event || subscriptionInterval?.object?.event}
-        newDaysAwayFromEnding={newDaysAwayFromEnding}
-      />
-    )
-  }
-
   // draggable
   const {attributes, listeners, setNodeRef, transform} = useDraggable({
     id: `draggable-${subscriptionInterval?.object?.id}`,
@@ -49,18 +42,24 @@ export default function ({
       decoratedSubscriptionInterval: subscriptionInterval
     }
   })
-  const draggableStyle = transform
-    ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`
-      }
-    : undefined
+  const isCustom = useMemo(() => {
+    return subscriptionInterval?.object.event === SubscriptionEvent.Custom
+  }, [subscriptionInterval])
+
+  const draggableStyle = useMemo(() => {
+    return transform && !isCustom
+      ? {
+          transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`
+        }
+      : undefined
+  }, [isCustom, transform])
 
   return (
-    <div
+    <DraggableContainer
       style={{
         ...draggableStyle
       }}>
-      {subscriptionInterval && subscriptionInterval.object.event !== SubscriptionEvent.Custom && (
+      {subscriptionInterval && !isCustom && (
         <EventTagContainer>
           <div style={{cursor: 'move'}} ref={setNodeRef} {...listeners} {...attributes}>
             <MdDragIndicator size={20} />
@@ -83,6 +82,6 @@ export default function ({
         event={event || subscriptionInterval?.object?.event}
         newDaysAwayFromEnding={newDaysAwayFromEnding}
       />
-    </div>
+    </DraggableContainer>
   )
 }
