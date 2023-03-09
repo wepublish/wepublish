@@ -84,6 +84,7 @@ const Sidebar = styled(RSidebar)`
 
 const Sidenav = styled(RSidenav)`
   flex: 1 1 auto;
+  overflow-y: scroll;
 `
 
 const IconButton = styled(RIconButton)`
@@ -440,6 +441,31 @@ export function Base({children}: BaseProps) {
                         active={path === 'paymentmethods'}
                         icon={<MdCreditCard />}>
                         {t('navbar.paymentMethods')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_PAYMENT_METHODS',
+                        'CAN_GET_PAYMENT_METHOD',
+                        'CAN_CREATE_PAYMENT_METHOD',
+                        'CAN_DELETE_PAYMENT_METHOD'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/consents"
+                        active={path === 'consents'}
+                        icon={<MdCreditCard />}>
+                        {/* {t('navbar.paymentMethods')} */}
+                        Consents
+                      </Nav.Item>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/userConsents"
+                        active={path === 'userConsents'}
+                        icon={<MdCreditCard />}>
+                        {/* {t('navbar.paymentMethods')} */}
+                        User Consents
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>

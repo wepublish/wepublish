@@ -9,6 +9,12 @@ import {
   useRatingSystemLazyQuery,
   useUpdateRatingSystemMutation
 } from '@wepublish/editor/api'
+import {
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdOutlineSave, MdReplay} from 'react-icons/md'
@@ -26,7 +32,6 @@ import {
 
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
-import {ListViewActions, ListViewContainer, ListViewHeader, TableWrapper} from '../ui/listView'
 
 const Content = styled.div`
   margin-top: 2rem;

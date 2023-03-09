@@ -5,6 +5,13 @@ import {
   PeerArticle,
   usePeerArticleListQuery
 } from '@wepublish/editor/api'
+import {
+  ListFilters,
+  ListViewContainer,
+  ListViewHeader,
+  Table,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -19,7 +26,6 @@ import {
 import {RowDataType} from 'rsuite-table'
 
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
-import {ListFilters, ListViewContainer, ListViewHeader, Table, TableWrapper} from '../ui/listView'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,

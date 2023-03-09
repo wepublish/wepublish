@@ -1,5 +1,12 @@
 import {ApolloError} from '@apollo/client'
 import {Event, useEventListQuery} from '@wepublish/editor/api'
+import {
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  Table,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
@@ -8,13 +15,6 @@ import {IconButton, Message, Pagination, Table as RTable, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
-import {
-  ListViewActions,
-  ListViewContainer,
-  ListViewHeader,
-  Table,
-  TableWrapper
-} from '../../ui/listView'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
 import {DeleteEventModal} from './deleteEventModal'
 

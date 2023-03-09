@@ -2,6 +2,27 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Consent {
+  createdAt: DateTime!
+  defaultValue: ConsentValue!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+  slug: String!
+}
+
+input ConsentInput {
+  defaultValue: ConsentValue!
+  name: String!
+  slug: String!
+}
+
+enum ConsentValue {
+  Accepted
+  Rejected
+  Unset
+}
+
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -25,6 +46,50 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Mutation {
+  """
+  
+        Create a new Consent.
+      
+  """
+  createConsent(consent: ConsentInput!): Consent!
+
+  """
+  
+        Create a new UserConsent.
+      
+  """
+  createUserConsent(userConsent: UserConsentInput!): UserConsent!
+
+  """
+  
+        Deletes an existing Consent.
+      
+  """
+  deleteConsent(id: String!): Consent!
+
+  """
+  
+        Delete an existing UserConsent.
+      
+  """
+  deleteUserConsent(id: String!): UserConsent!
+
+  """
+  
+        Update an existing Consent.
+      
+  """
+  updateConsent(consent: ConsentInput!, id: String!): Consent!
+
+  """
+  
+        Update an existing UserConsent.
+      
+  """
+  updateUserConsent(id: String!, userConsent: UpdateUserConsentInput!): UserConsent!
+}
+
 enum PaymentPeriodicity {
   biannual
   monthly
@@ -40,6 +105,20 @@ type Query {
       
   """
   activeSubscribers: [DashboardSubscription!]!
+
+  """
+  
+        Returns Consent by id.
+      
+  """
+  consent(id: String!): Consent!
+
+  """
+  
+        Returns all Consents.
+      
+  """
+  consents: [Consent!]!
 
   """
   
@@ -79,6 +158,13 @@ type Query {
       
   """
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+
+  """
+  
+        Returns all userConsents.
+      
+  """
+  userConsents: [UserConsent!]!
   versionInformation: VersionInformation!
 }
 
@@ -86,6 +172,43 @@ enum SubscriptionDeactivationReason {
   invoiceNotPaid
   none
   userSelfDeactivated
+}
+
+input UpdateUserConsentInput {
+  value: ConsentValue!
+}
+
+type User {
+  active: Boolean!
+  createdAt: DateTime!
+  email: String!
+  emailVerifiedAt: DateTime
+  firstName: String
+  id: String!
+  lastLogin: DateTime
+  modifiedAt: DateTime!
+  name: String!
+  password: String!
+  preferredName: String
+  roleIDs: [String!]!
+  userImageID: String
+}
+
+type UserConsent {
+  consent: Consent!
+  consentId: String!
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  user: User!
+  userId: String!
+  value: ConsentValue!
+}
+
+input UserConsentInput {
+  consentId: String!
+  userId: String!
+  value: ConsentValue!
 }
 
 type VersionInformation {

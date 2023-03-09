@@ -2,6 +2,7 @@ import 'rsuite/styles/index.less'
 
 import {gql, useMutation} from '@apollo/client'
 import {css, Global} from '@emotion/react'
+import {ConsentList} from '@wepublish/consent/editor'
 import {TagType} from '@wepublish/editor/api'
 import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -20,6 +21,7 @@ import {AuthorList} from './routes/authorList'
 import {CommentRatingEditView} from './routes/commentRatingEditView'
 import {CommentEditView} from './routes/comments/commentEditView'
 import {CommentList} from './routes/comments/commentList'
+import {UserConsentListView} from './routes/consents/userConsentListView'
 import {EventCreateView} from './routes/events/eventCreateView'
 import {EventEditView} from './routes/events/eventEditView'
 import {EventListView} from './routes/events/eventListView'
@@ -42,6 +44,8 @@ import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
 import {LocalStorageKey} from './utility'
+import {ConsentCreateView} from './routes/consents/consentCreateView'
+import {ConsentEditView} from './routes/consents/consentEditView'
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -533,6 +537,43 @@ export function App() {
                 </Base>
               }
             />
+            {/* Consents Routes */}
+            <Route
+              path="consents"
+              element={
+                <Base>
+                  <ConsentList />
+                </Base>
+              }
+            />
+            <Route
+              path="consents/create"
+              element={
+                <Base>
+                  {/* todo <ConsentCreateView /> */}
+                  <ConsentCreateView />
+                </Base>
+              }
+            />
+            <Route
+              path="consents/edit/:id"
+              element={
+                <Base>
+                  {/* todo <ConsentEditView /> */}
+                  <ConsentEditView />
+                </Base>
+              }
+            />
+            {/* Consents Routes */}
+            <Route
+              path="userConsents"
+              element={
+                <Base>
+                  <UserConsentListView />
+                </Base>
+              }
+            />
+            {/* todo add userconsent edit/create views */}
             {/* Peering Routes */}
             <Route
               path="peering"

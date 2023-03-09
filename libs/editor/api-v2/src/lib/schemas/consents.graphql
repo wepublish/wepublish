@@ -1,0 +1,110 @@
+# Consents
+
+query Consents {
+  consents {
+    id
+    name
+    slug
+    defaultValue
+    createdAt
+    modifiedAt
+  }
+}
+
+query consent($id: String!) {
+  consent(id: $id) {
+    id
+    name
+    slug
+    defaultValue
+    createdAt
+    modifiedAt
+  }
+}
+
+mutation createConsent($consent: ConsentInput!) {
+  createConsent(consent: $consent) {
+    id
+    createdAt
+    modifiedAt
+    name
+    slug
+    defaultValue
+  }
+}
+
+mutation updateConsent($id: String!, $consent: ConsentInput!) {
+  updateConsent(id: $id, consent: $consent) {
+    id
+    createdAt
+    modifiedAt
+    name
+    slug
+    defaultValue
+  }
+}
+
+mutation deleteConsent($id: String!) {
+  deleteConsent(id: $id) {
+    id
+  }
+}
+
+# UserConsents
+query UserConsents {
+  userConsents {
+    id
+    userId
+    consentId
+    value
+    createdAt
+    modifiedAt
+    consent {
+      slug
+      id
+      name
+    }
+    user {
+      id
+      name
+      firstName
+      email
+    }
+  }
+}
+
+mutation createUserConsent($userConsent: UserConsentInput!) {
+  createUserConsent(userConsent: $userConsent) {
+    id
+    userId
+    value
+  }
+}
+
+mutation updateUserConsent($id: String!, $userConsent: UpdateUserConsentInput!) {
+  updateUserConsent(id: $id, userConsent: $userConsent) {
+    id
+    userId
+    consentId
+    value
+    createdAt
+    modifiedAt
+    consent {
+      slug
+      id
+      name
+    }
+    user {
+      id
+      name
+      firstName
+      email
+    }
+  }
+}
+
+mutation deleteUserConsent($id: String!) {
+  deleteUserConsent(id: $id) {
+    id
+  }
+}
