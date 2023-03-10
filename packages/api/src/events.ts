@@ -228,7 +228,7 @@ export const onInvoiceUpdate = (context: Context): Prisma.Middleware => async (p
         user,
         subscription
       },
-      today: new Date(2023, 2, 14, 3, 0)
+      today: new Date(2023, 2, 25, 3, 0)
     })
   }
 

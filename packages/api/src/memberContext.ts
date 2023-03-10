@@ -617,12 +617,11 @@ export class MemberContext implements MemberContext {
         })
 
         if (nextReminder > today) {
-          //console.log('next reminder greater than today, out')
+          // console.log('next reminder greater than today, out')
           continue // skip reminder if not enough days passed
         }
 
         if (deactivateSubscription < today) {
-          console.log('!!! deactivate subscription, out')
           const {items, ...invoiceData} = invoice
 
           await this.prisma.invoice.update({
@@ -639,6 +638,7 @@ export class MemberContext implements MemberContext {
             }
           })
 
+          console.log('!!!!!!!!!! deactivate subscription, out', subscription)
           await this.deactivateSubscriptionForUser({
             subscriptionID: subscription.id,
             deactivationDate: today,

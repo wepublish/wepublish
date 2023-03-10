@@ -442,8 +442,10 @@ export async function runServer() {
       }
     ).argv
 
-  const today = new Date(2023, 2, 14, 3, 0)
+  const today = new Date(2023, 2, 25, 3, 0)
 
+  await server.runJob(JobType.DailyInvoiceChecker, {today})
+  await server.runJob(JobType.DailyInvoiceCharger, {today})
   await server.runJob(JobType.DailyMembershipRenewal, {
     today
   })
@@ -453,6 +455,4 @@ export async function runServer() {
     sendEveryDays: 3,
     today
   })
-  await server.runJob(JobType.DailyInvoiceCharger, {today})
-  await server.runJob(JobType.DailyInvoiceChecker, {today})
 }
