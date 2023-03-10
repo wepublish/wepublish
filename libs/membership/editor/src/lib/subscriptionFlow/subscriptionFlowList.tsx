@@ -156,7 +156,11 @@ export default function () {
   }, [memberPlanId, memberPlans])
 
   // get subscriptions flows
-  const {data: subscriptionFlows, loading: loadingSubscriptionFlows} = useSubscriptionFlowsQuery({
+  const {
+    data: subscriptionFlows,
+    loading: loadingSubscriptionFlows,
+    refetch
+  } = useSubscriptionFlowsQuery({
     variables: {
       defaultFlowOnly,
       memberPlanId
@@ -572,19 +576,40 @@ export default function () {
 
                       {/************************************************** ACTIONS **************************************************/}
                       <TableCell align="center">
-                        <IconButton
-                          size="sm"
-                          color="red"
-                          circle
-                          appearance="primary"
-                          icon={<MdDelete />}
-                          disabled={subscriptionFlow.default}
-                          onClick={() =>
-                            deleteSubscriptionFlow({
-                              variables: {subscriptionFlowId: subscriptionFlow.id}
-                            })
-                          }
-                        />
+                        <Whisper
+                          placement="leftEnd"
+                          trigger="click"
+                          speaker={
+                            <Popover>
+                              <p>
+                                Wenn Du diesen Flow löscht, kann dies nicht rückgängig gemacht
+                                werden. Willst Du trotzdem weiterfahren?
+                              </p>
+                              <IconButton
+                                style={{marginTop: '5px'}}
+                                color="red"
+                                size="sm"
+                                appearance="primary"
+                                icon={<MdDelete />}
+                                onClick={async () => {
+                                  await deleteSubscriptionFlow({
+                                    variables: {subscriptionFlowId: subscriptionFlow.id}
+                                  })
+                                  await refetch()
+                                }}>
+                                Unwiderruflich Löschen
+                              </IconButton>
+                            </Popover>
+                          }>
+                          <IconButton
+                            size="sm"
+                            color="red"
+                            circle
+                            appearance="primary"
+                            icon={<MdDelete />}
+                            disabled={subscriptionFlow.default}
+                          />
+                        </Whisper>
                       </TableCell>
                     </DndContext>
                   </SplitTableRow>
@@ -595,7 +620,11 @@ export default function () {
               {!defaultFlowOnly && (
                 <TableBody>
                   <SplitTableRow>
-                    <FilterBody memberPlan={memberPlan} createNewFlow />
+                    <FilterBody
+                      memberPlan={memberPlan}
+                      createNewFlow
+                      onNewFlowCreated={() => refetch()}
+                    />
                   </SplitTableRow>
                 </TableBody>
               )}

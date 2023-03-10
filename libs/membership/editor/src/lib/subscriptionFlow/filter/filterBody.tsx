@@ -14,7 +14,6 @@ import {ApolloClient, NormalizedCacheObject} from '@apollo/client'
 import {getApiClientV2} from '../../../../../../../apps/editor/src/app/utility'
 import {showErrors} from '../subscriptionFlowList'
 import {MdAdd} from 'react-icons/all'
-import {MemberPlan} from '@wepublish/api'
 import {FullMemberPlanFragment} from '@wepublish/editor/api'
 
 interface FilterBodyProps {
@@ -22,12 +21,14 @@ interface FilterBodyProps {
   subscriptionFlow?: SubscriptionFlowModel
   defaultFlowOnly?: boolean
   createNewFlow?: boolean
+  onNewFlowCreated?: () => void
 }
 export default function ({
   subscriptionFlow,
   defaultFlowOnly,
   memberPlan,
-  createNewFlow
+  createNewFlow,
+  onNewFlowCreated
 }: FilterBodyProps) {
   if (defaultFlowOnly || !memberPlan) {
     return null
@@ -87,6 +88,7 @@ export default function ({
         subscriptionFlow: newFlow
       }
     })
+    onNewFlowCreated()
   }
 
   async function updateFlow(payload: Partial<SubscriptionFlowModelUpdateInput>) {
