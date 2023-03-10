@@ -53,7 +53,7 @@ export const createSubscription = async (
     }
   })
 
-  await memberContext.renewSubscriptionForUser({subscription})
+  await memberContext.renewSubscriptionForUser({subscription, today: new Date()})
 
   return subscription
 }
@@ -124,7 +124,7 @@ export const updateAdminSubscription = async (
 
   // cancel open invoices if subscription is deactivated
   if (deactivation !== null) {
-    await memberContext.cancelInvoicesForSubscription(id)
+    await memberContext.cancelInvoicesForSubscription(id, new Date())
   }
 
   return await memberContext.handleSubscriptionChange({

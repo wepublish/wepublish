@@ -179,55 +179,57 @@ export async function runServer() {
     })
   }
 
-  const paymentProviders = []
+  const paymentProviders: (
+    | PayrexxPaymentProvider
+    | StripeCheckoutPaymentProvider
+    | PayrexxSubscriptionPaymentProvider
+  )[] = []
 
-  if (
-    process.env.STRIPE_SECRET_KEY &&
-    process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET &&
-    process.env.STRIPE_WEBHOOK_SECRET
-  ) {
+  if (true) {
     paymentProviders.push(
       new StripeCheckoutPaymentProvider({
-        id: 'stripe_checkout',
+        id: 'stripe-checkout',
         name: 'Stripe Checkout',
         offSessionPayments: false,
-        secretKey: process.env.STRIPE_SECRET_KEY,
-        webhookEndpointSecret: process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET,
+        secretKey: '1234',
+        webhookEndpointSecret: '1234',
         incomingRequestHandler: bodyParser.raw({type: 'application/json'})
       }),
       new StripePaymentProvider({
         id: 'stripe',
         name: 'Stripe',
         offSessionPayments: true,
-        secretKey: process.env.STRIPE_SECRET_KEY,
-        webhookEndpointSecret: process.env.STRIPE_WEBHOOK_SECRET,
+        secretKey: '1234',
+        webhookEndpointSecret: '1234',
         incomingRequestHandler: bodyParser.raw({type: 'application/json'})
       })
     )
   }
 
-  if (
-    process.env.PAYREXX_INSTANCE_NAME &&
-    process.env.PAYREXX_API_SECRET &&
-    process.env.PAYREXX_WEBHOOK_SECRET
-  ) {
+  if (true) {
+    paymentProviders.push(
+      new PayrexxPaymentProvider({
+        id: 'payrexx-invoice-only',
+        name: 'Payrexx Invoice Only',
+        offSessionPayments: false,
+        instanceName: 'hauptstadt',
+        instanceAPISecret: '1234',
+        psp: [15],
+        pm: ['invoice'],
+        vatRate: 7.7,
+        incomingRequestHandler: bodyParser.json()
+      })
+    )
+
     paymentProviders.push(
       new PayrexxPaymentProvider({
         id: 'payrexx',
         name: 'Payrexx',
         offSessionPayments: false,
-        instanceName: process.env.PAYREXX_INSTANCE_NAME,
-        instanceAPISecret: process.env.PAYREXX_API_SECRET,
-        psp: [0, 15, 17, 2, 3, 36],
-        pm: [
-          'postfinance_card',
-          'postfinance_efinance',
-          // "mastercard",
-          // "visa",
-          'twint',
-          // "invoice",
-          'paypal'
-        ],
+        instanceName: 'hauptstadt',
+        instanceAPISecret: '1234',
+        psp: [44],
+        pm: ['twint'],
         vatRate: 7.7,
         incomingRequestHandler: bodyParser.json()
       })
@@ -237,10 +239,10 @@ export async function runServer() {
         id: 'payrexx-subscription',
         name: 'Payrexx Subscription',
         offSessionPayments: true,
-        instanceName: process.env.PAYREXX_INSTANCE_NAME,
-        instanceAPISecret: process.env.PAYREXX_API_SECRET,
+        instanceName: 'hauptstadt',
+        instanceAPISecret: '1234',
         incomingRequestHandler: bodyParser.json(),
-        webhookSecret: process.env.PAYREXX_WEBHOOK_SECRET,
+        webhookSecret: '1234',
         prisma
       })
     )
@@ -439,4 +441,18 @@ export async function runServer() {
         process.exit(0)
       }
     ).argv
+
+  const today = new Date(2023, 2, 14, 3, 0)
+
+  await server.runJob(JobType.DailyMembershipRenewal, {
+    today
+  })
+  await server.runJob(JobType.DailyInvoiceReminder, {
+    userPaymentURL: `${websiteURL}/user/invocies`,
+    replyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch',
+    sendEveryDays: 3,
+    today
+  })
+  await server.runJob(JobType.DailyInvoiceCharger, {today})
+  await server.runJob(JobType.DailyInvoiceChecker, {today})
 }

@@ -368,7 +368,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           data: {
             url: `${url}?jwt=${token}`,
             user
-          }
+          },
+          today: new Date()
         })
 
         return email
@@ -417,7 +418,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           data: {
             url: urlAdapter.getLoginURL(token),
             user
-          }
+          },
+          today: new Date()
         })
 
         return email

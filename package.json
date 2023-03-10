@@ -25,6 +25,7 @@
     "setup:api": "yarn workspace @wepublish/api setup",
     "clean:api": "yarn workspace @wepublish/api clean",
     "build:api": "yarn workspace @wepublish/api build",
+    "simulate:api": "run-p --print-label watch:api*",
     "watch:api": "yarn workspace @wepublish/api watch",
     "test:api": "yarn workspace @wepublish/api test",
     "setup:editor": "yarn workspace @wepublish/editor setup",

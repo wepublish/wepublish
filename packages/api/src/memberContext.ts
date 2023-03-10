@@ -36,10 +36,11 @@ export interface HandleSubscriptionChangeProps {
 
 export interface RenewSubscriptionForUserProps {
   subscription: SubscriptionWithRelations
+  today: Date
 }
 
 export interface RenewSubscriptionForUsersProps {
-  startDate?: Date // defaults to today
+  today: Date // defaults to today
   daysToLookAhead: number
 }
 
@@ -48,15 +49,18 @@ export interface ChargeInvoiceProps {
   invoice: InvoiceWithItems
   paymentMethodID: string
   customer: PaymentProviderCustomer
+  today: Date
 }
 
 export interface SendReminderForInvoiceProps {
   invoice: InvoiceWithItems
   replyToAddress: string
+  today: Date
 }
 
 export interface SendReminderForInvoicesProps {
   replyToAddress: string
+  today: Date
 }
 
 export interface CheckOpenInvoiceProps {
@@ -67,6 +71,7 @@ export interface DeactivateSubscriptionForUserProps {
   subscriptionID: string
   deactivationDate?: Date
   deactivationReason?: SubscriptionDeactivationReason
+  today: Date
 }
 
 export interface MemberContext {
@@ -86,7 +91,7 @@ export interface MemberContext {
   checkOpenInvoice(props: CheckOpenInvoiceProps): Promise<void>
 
   chargeInvoice(props: ChargeInvoiceProps): Promise<boolean | Payment>
-  chargeOpenInvoices(): Promise<void>
+  chargeOpenInvoices(today: Date): Promise<void>
 
   sendReminderForInvoice(props: SendReminderForInvoiceProps): Promise<void>
   sendReminderForInvoices(props: SendReminderForInvoicesProps): Promise<void>
@@ -242,7 +247,8 @@ export class MemberContext implements MemberContext {
 
       // renew user subscription
       await this.renewSubscriptionForUser({
-        subscription: finalUpdatedSubscription
+        subscription: finalUpdatedSubscription,
+        today: new Date()
       })
 
       return finalUpdatedSubscription
@@ -251,7 +257,8 @@ export class MemberContext implements MemberContext {
   }
 
   async renewSubscriptionForUser({
-    subscription
+    subscription,
+    today
   }: RenewSubscriptionForUserProps): Promise<InvoiceWithItems | null> {
     try {
       const {periods = [], paidUntil, deactivation} = subscription
@@ -293,9 +300,9 @@ export class MemberContext implements MemberContext {
       }
 
       const startDate = new Date(
-        paidUntil && paidUntil.getTime() > new Date().getTime() - ONE_MONTH_IN_MILLISECONDS
+        paidUntil && paidUntil.getTime() > today.getTime() - ONE_MONTH_IN_MILLISECONDS
           ? paidUntil.getTime() + ONE_DAY_IN_MILLISECONDS
-          : new Date().getTime()
+          : today.getTime()
       )
       const nextDate = getNextDateForPeriodicity(
         startDate,
@@ -364,13 +371,13 @@ export class MemberContext implements MemberContext {
   }
 
   async renewSubscriptionForUsers({
-    startDate = new Date(),
+    today,
     daysToLookAhead
   }: RenewSubscriptionForUsersProps): Promise<void> {
     if (daysToLookAhead < 1) {
       throw Error('Days to look ahead must not be lower than 1')
     }
-    const lookAheadDate = new Date(startDate.getTime() + daysToLookAhead * ONE_DAY_IN_MILLISECONDS)
+    const lookAheadDate = new Date(today.getTime() + daysToLookAhead * ONE_DAY_IN_MILLISECONDS)
 
     const subscriptionsPaidUntil: SubscriptionWithRelations[] = []
     // max batches is a security feature, which prevents in case of an auto-renew bug too many people are going to be charged unintentionally.
@@ -443,7 +450,7 @@ export class MemberContext implements MemberContext {
     }
 
     for (const subscription of [...subscriptionsPaidUntil, ...subscriptionPaidNull]) {
-      await this.renewSubscriptionForUser({subscription})
+      await this.renewSubscriptionForUser({subscription, today})
     }
   }
 
@@ -520,11 +527,11 @@ export class MemberContext implements MemberContext {
         //  event hooks to finish before we return data. Will be solved in WPC-498
         await new Promise(resolve => setTimeout(resolve, 100))
       } catch (error) {
-        logger('memberContext').error(
+        /* logger('memberContext').error(
           error as Error,
           'Checking Intent State for Payment %s failed',
           payment?.id
-        )
+        ) */
       }
     }
   }
@@ -569,10 +576,12 @@ export class MemberContext implements MemberContext {
     return openInvoices
   }
 
-  async chargeOpenInvoices(): Promise<void> {
-    const today = new Date()
+  async chargeOpenInvoices(today: Date): Promise<void> {
     const openInvoices = await this.getAllOpenInvoices()
     const offSessionPaymentProvidersID = this.getOffSessionPaymentProviderIDs()
+
+    console.log('open invoices', openInvoices.length)
+    // throw new Error('stop here')
 
     for (const invoice of openInvoices) {
       const subscription = await this.prisma.subscription.findUnique({
@@ -608,10 +617,12 @@ export class MemberContext implements MemberContext {
         })
 
         if (nextReminder > today) {
+          //console.log('next reminder greater than today, out')
           continue // skip reminder if not enough days passed
         }
 
         if (deactivateSubscription < today) {
+          console.log('!!! deactivate subscription, out')
           const {items, ...invoiceData} = invoice
 
           await this.prisma.invoice.update({
@@ -631,14 +642,16 @@ export class MemberContext implements MemberContext {
           await this.deactivateSubscriptionForUser({
             subscriptionID: subscription.id,
             deactivationDate: today,
-            deactivationReason: SubscriptionDeactivationReason.invoiceNotPaid
+            deactivationReason: SubscriptionDeactivationReason.invoiceNotPaid,
+            today
           })
           continue
         }
       }
 
       // do not charge, before we are allowed
-      if (invoice.dueAt > new Date()) {
+      if (invoice.dueAt > today) {
+        // console.log('invoice dueAt greater than today, out.')
         continue
       }
 
@@ -663,14 +676,17 @@ export class MemberContext implements MemberContext {
         continue
       }
 
+      // console.log('### before off session ', paymentMethod.paymentProviderID)
       if (offSessionPaymentProvidersID.includes(paymentMethod.paymentProviderID)) {
+        // console.log('### inside off session')
         const customer = user.paymentProviderCustomers.find(
           ppc => ppc.paymentProviderID === paymentMethod.paymentProviderID
         )
+        // console.log('### customer', customer)
         if (!customer) {
           // do not send any error message, before dueAt plus 2 days, because of Payrexx Subscription lag
           // (Payrexx Subscription is renewed during the day. Thus, a user would receive mail with payment error, even-though it would probably get paid during the day)
-          if (add(invoice.dueAt, {days: 2}) > new Date()) {
+          if (add(invoice.dueAt, {days: 2}) > today) {
             continue
           }
 
@@ -679,6 +695,7 @@ export class MemberContext implements MemberContext {
             paymentMethod.paymentProviderID,
             user.id
           )
+          console.log('### send reminder mail offsession')
           await this.mailContext.sendMail({
             type: SendMailType.MemberSubscriptionOffSessionFailed,
             recipient: invoice.mail,
@@ -689,17 +706,24 @@ export class MemberContext implements MemberContext {
               paymentProviderID: paymentMethod.paymentProviderID,
               errorCode: 'customer_missing',
               subscription
-            }
+            },
+            today
           })
           continue
         }
 
-        await this.chargeInvoice({
-          user,
-          invoice,
-          paymentMethodID: paymentMethod.id,
-          customer
-        })
+        console.log('######## charge invoice', invoice)
+        try {
+          await this.chargeInvoice({
+            user,
+            invoice,
+            paymentMethodID: paymentMethod.id,
+            customer,
+            today
+          })
+        } catch (e) {
+          console.log('charging done')
+        }
       }
     }
   }
@@ -708,7 +732,8 @@ export class MemberContext implements MemberContext {
     user,
     invoice,
     paymentMethodID,
-    customer
+    customer,
+    today
   }: ChargeInvoiceProps): Promise<boolean | Payment> {
     const offSessionPaymentProvidersID = this.getOffSessionPaymentProviderIDs()
     const paymentMethods = await this.prisma.paymentMethod.findMany()
@@ -780,7 +805,8 @@ export class MemberContext implements MemberContext {
           invoice,
           paymentProviderID: paymentProvider.id,
           errorCode: intent.errorCode
-        }
+        },
+        today
       })
 
       const {items, ...invoiceData} = invoice
@@ -795,7 +821,7 @@ export class MemberContext implements MemberContext {
             },
             create: items.map(({invoiceId, ...item}) => item)
           },
-          sentReminderAt: new Date()
+          sentReminderAt: today
         }
       })
       return updatedPayment
@@ -803,9 +829,10 @@ export class MemberContext implements MemberContext {
     return updatedPayment
   }
 
-  async sendReminderForInvoices({replyToAddress}: SendReminderForInvoicesProps): Promise<void> {
-    const today = new Date()
-
+  async sendReminderForInvoices({
+    replyToAddress,
+    today
+  }: SendReminderForInvoicesProps): Promise<void> {
     const openInvoices = await this.getAllOpenInvoices()
     if (openInvoices.length === 0) {
       logger('memberContext').info('No open invoices to remind')
@@ -868,7 +895,8 @@ export class MemberContext implements MemberContext {
           await this.deactivateSubscriptionForUser({
             subscriptionID: subscription.id,
             deactivationDate: today,
-            deactivationReason: SubscriptionDeactivationReason.invoiceNotPaid
+            deactivationReason: SubscriptionDeactivationReason.invoiceNotPaid,
+            today
           })
           continue
         }
@@ -892,7 +920,8 @@ export class MemberContext implements MemberContext {
       try {
         await this.sendReminderForInvoice({
           invoice,
-          replyToAddress
+          replyToAddress,
+          today
         })
       } catch (error) {
         logger('memberContext').error(error as Error, 'Error while sending reminder')
@@ -902,10 +931,9 @@ export class MemberContext implements MemberContext {
 
   async sendReminderForInvoice({
     invoice,
-    replyToAddress
+    replyToAddress,
+    today
   }: SendReminderForInvoiceProps): Promise<void> {
-    const today = new Date()
-
     if (!invoice.subscriptionID) {
       throw new NotFound('Invoice', invoice.id)
     }
@@ -950,7 +978,8 @@ export class MemberContext implements MemberContext {
             user,
             ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {}),
             subscription
-          }
+          },
+          today
         })
       } else {
         // system will try to bill every night and send error to user.
@@ -965,7 +994,8 @@ export class MemberContext implements MemberContext {
             user,
             ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {}),
             subscription
-          }
+          },
+          today
         })
       } else {
         await this.mailContext.sendMail({
@@ -976,7 +1006,8 @@ export class MemberContext implements MemberContext {
             user,
             ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {}),
             subscription
-          }
+          },
+          today
         })
       }
     }
@@ -998,7 +1029,7 @@ export class MemberContext implements MemberContext {
     })
   }
 
-  async cancelInvoicesForSubscription(subscriptionID: string) {
+  async cancelInvoicesForSubscription(subscriptionID: string, today: Date) {
     // Cancel invoices when subscription is canceled
     const invoices = await this.prisma.invoice.findMany({
       where: {
@@ -1013,7 +1044,7 @@ export class MemberContext implements MemberContext {
           id: invoice.id
         },
         data: {
-          canceledAt: new Date()
+          canceledAt: today
         }
       })
     }
@@ -1022,7 +1053,8 @@ export class MemberContext implements MemberContext {
   async deactivateSubscriptionForUser({
     subscriptionID,
     deactivationDate,
-    deactivationReason
+    deactivationReason,
+    today
   }: DeactivateSubscriptionForUserProps): Promise<void> {
     const subscription = await this.prisma.subscription.findUnique({
       where: {id: subscriptionID},
@@ -1038,7 +1070,7 @@ export class MemberContext implements MemberContext {
       return
     }
 
-    await this.cancelInvoicesForSubscription(subscriptionID)
+    await this.cancelInvoicesForSubscription(subscriptionID, today)
 
     await this.prisma.subscription.update({
       where: {id: subscriptionID},
@@ -1047,11 +1079,11 @@ export class MemberContext implements MemberContext {
         deactivation: {
           upsert: {
             create: {
-              date: deactivationDate ?? subscription.paidUntil ?? new Date(),
+              date: deactivationDate ?? subscription.paidUntil ?? today,
               reason: deactivationReason ?? SubscriptionDeactivationReason.none
             },
             update: {
-              date: deactivationDate ?? subscription.paidUntil ?? new Date(),
+              date: deactivationDate ?? subscription.paidUntil ?? today,
               reason: deactivationReason ?? SubscriptionDeactivationReason.none
             }
           }

@@ -14,37 +14,57 @@ async function dailyMembershipRenewal(context: Context, data: any): Promise<void
   logger('jobs').info('starting dailyMembershipRenewal')
 
   const daysToLookAhead = 10
-  const startDate = data?.startDate ? new Date(data?.startDate) : new Date()
+  const {today} = data
+  if (!today) {
+    throw new Error('today not given!')
+  }
   await context.memberContext.renewSubscriptionForUsers({
-    startDate,
+    today,
     daysToLookAhead
   })
   logger('jobs').info('finishing dailyMembershipRenewal')
 }
 
-async function dailyInvoiceChecker(context: Context): Promise<void> {
+async function dailyInvoiceChecker(context: Context, data: any): Promise<void> {
   logger('jobs').info('starting dailyInvoiceChecker')
+
+  const {today} = data
+  if (!today) {
+    throw new Error('Today not passed!!!!')
+  }
+
   await context.memberContext.checkOpenInvoices()
   logger('jobs').info('finishing dailyInvoiceChecker')
 }
 
-async function dailyInvoiceCharger(context: Context): Promise<void> {
+async function dailyInvoiceCharger(context: Context, data: any): Promise<void> {
   logger('jobs').info('starting dailyInvoiceCharger')
-  await context.memberContext.chargeOpenInvoices()
+
+  const {today} = data
+  if (!today) {
+    throw new Error('today not passed!')
+  }
+
+  await context.memberContext.chargeOpenInvoices(today)
   logger('jobs').info('finishing dailyInvoiceCharger')
 }
 
 async function dailyInvoiceReminder(context: Context, data: any): Promise<void> {
   logger('jobs').info('starting dailyInvoiceReminder')
 
-  const {replyToAddress} = data
+  const {replyToAddress, today} = data
 
   if (!replyToAddress) {
     throw new Error('No replyToAddress provided')
   }
 
+  if (!today) {
+    throw new Error('today not given!')
+  }
+
   await context.memberContext.sendReminderForInvoices({
-    replyToAddress
+    replyToAddress,
+    today
   })
   logger('jobs').info('finishing dailyInvoiceReminder')
 }
@@ -57,7 +77,8 @@ async function sendTestMail(context: Context, data: any): Promise<void> {
     recipient: recipient,
     data: {
       message
-    }
+    },
+    today: new Date()
   })
 }
 
@@ -67,7 +88,7 @@ export async function runJob(command: JobType, context: Context, data: any): Pro
       await dailyMembershipRenewal(context, data)
       break
     case JobType.DailyInvoiceChecker:
-      await dailyInvoiceChecker(context)
+      await dailyInvoiceChecker(context, data)
       break
     case JobType.SendTestMail:
       await sendTestMail(context, data)
@@ -76,7 +97,7 @@ export async function runJob(command: JobType, context: Context, data: any): Pro
       await dailyInvoiceReminder(context, data)
       break
     case JobType.DailyInvoiceCharger:
-      await dailyInvoiceCharger(context)
+      await dailyInvoiceCharger(context, data)
       break
   }
 }

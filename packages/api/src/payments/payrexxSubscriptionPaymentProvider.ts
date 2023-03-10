@@ -385,7 +385,8 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
         data: {
           user,
           subscription
-        }
+        },
+        today: new Date()
       })
       logger('payrexxSubscriptionPaymentProvider').info(
         `Subscription ${subscription.id} for user ${user.email} successfully renewed.`

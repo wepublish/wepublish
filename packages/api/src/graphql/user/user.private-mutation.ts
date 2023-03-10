@@ -112,7 +112,8 @@ export const resetUserPassword = async (
       recipient: user.email,
       data: {
         user
-      }
+      },
+      today: new Date()
     })
   }
 

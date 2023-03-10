@@ -75,7 +75,7 @@ export const updatePublicSubscription = async (
 
   // cancel open invoices if subscription is deactivated
   if (input.deactivation !== null) {
-    await memberContext.cancelInvoicesForSubscription(id)
+    await memberContext.cancelInvoicesForSubscription(id, new Date())
   }
 
   return await memberContext.handleSubscriptionChange({

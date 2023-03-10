@@ -397,7 +397,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         // Create Periods, Invoices and Payment
         const invoice = await memberContext.renewSubscriptionForUser({
-          subscription
+          subscription,
+          today: new Date()
         })
 
         if (!invoice) {
@@ -500,7 +501,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         // Create Periods, Invoices and Payment
         const invoice = await memberContext.renewSubscriptionForUser({
-          subscription
+          subscription,
+          today: new Date()
         })
 
         if (!invoice) {
@@ -589,7 +591,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         }
 
         const invoice = await memberContext.renewSubscriptionForUser({
-          subscription
+          subscription,
+          today: new Date()
         })
         if (!invoice) {
           logger('extendSubscription').error(
@@ -636,7 +639,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
               user,
               invoice,
               paymentMethodID: subscription.paymentMethodID,
-              customer
+              customer,
+              today: new Date()
             })
             if (payment) {
               return payment
@@ -715,7 +719,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           data: {
             url: urlAdapter.getLoginURL(token),
             user
-          }
+          },
+          today: new Date()
         })
 
         try {
@@ -840,7 +845,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         await memberContext.deactivateSubscriptionForUser({
           subscriptionID: subscription.id,
           deactivationDate,
-          deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated
+          deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated,
+          today: new Date()
         })
 
         const updatedSubscription = await prisma.subscription.findUnique({

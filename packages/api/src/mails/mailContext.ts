@@ -19,6 +19,7 @@ export interface SendEMailProps {
   readonly type: SendMailType
   readonly recipient: string
   readonly data: Record<string, any>
+  readonly today: Date
 }
 
 export interface MailTemplateMap {
@@ -84,7 +85,7 @@ export class MailContext implements MailContext {
     this.mailTemplateMaps = props.mailTemplateMaps ?? []
   }
 
-  async sendMail({type, recipient, data}: SendEMailProps): Promise<void> {
+  async sendMail({type, recipient, data, today}: SendEMailProps): Promise<void> {
     // const type = SendMailType.LoginLink
     const mailTemplate = this.mailTemplateMaps.find(template => template.type === type)
     if (!mailTemplate) {
@@ -103,7 +104,7 @@ export class MailContext implements MailContext {
         subject: mailView?.subject ?? mailTemplate.subject ?? 'N/A',
         recipient: recipient,
         mailProviderID: this.mailProvider?.id ?? 'N/A',
-        modifiedAt: new Date()
+        modifiedAt: today
       }
     })
 
