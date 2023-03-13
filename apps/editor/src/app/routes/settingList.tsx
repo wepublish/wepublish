@@ -250,7 +250,7 @@ function SettingList() {
         disabled={isDisabled}
         model={validationModel}
         formValue={formValue}
-        onSubmit={validationPassed => validationPassed && handleSettingListUpdate()}>
+        onSubmit={validationPassed => validationPassed && setShowWarning(true)}>
         <Form.Group>
           <h2>{t('settingList.settings')}</h2>
         </Form.Group>
