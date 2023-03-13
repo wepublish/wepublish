@@ -22,6 +22,7 @@ import {
   MdMouse,
   MdOutlineClose,
   MdOutlineNoteAdd,
+  MdRefresh,
   MdTune
 } from 'react-icons/all'
 import {useTranslation} from 'react-i18next'
@@ -32,8 +33,8 @@ import {
   InputNumber,
   Loader,
   Message,
-  Modal,
   Popover,
+  Tag,
   toaster,
   Whisper
 } from 'rsuite'
@@ -306,10 +307,11 @@ export default function () {
   }, [subscriptionFlows])
 
   const days = useMemo(() => {
-    // Take existing intervals, maybe insert new day, drop all empty days and sort ascending
+    // Take existing intervals, maybe insert new day, drop all empty days, always show zero day and sort ascending
     const days = intervals
       .map(i => i.daysAwayFromEnding)
       .concat([newDay])
+      .concat([0])
       .filter(i => i !== undefined && i !== null)
       .sort((a, b) => a! - b!)
     return days.filter((value, index, array) => array.indexOf(value) === index)
@@ -434,6 +436,16 @@ export default function () {
                       align="center"
                       style={day === 0 ? {backgroundColor: 'lightyellow'} : {}}>
                       {t('subscriptionFlow.dayWithNumber', {day})}
+                      {/* show badge on zero day */}
+                      {!day && (
+                        <>
+                          <br />
+                          <Tag color="cyan">
+                            <MdRefresh style={{marginRight: '5px'}} />
+                            Day of renewal / subscription end
+                          </Tag>
+                        </>
+                      )}
                       {!!day && (
                         <Whisper
                           placement="bottom"
