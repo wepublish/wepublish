@@ -83,7 +83,7 @@ export class PeriodicJobController {
                 `SEND MAIL TEMPLATE ${event.externalMailTemplate} and deactivate subscription`
               )
             } else if (event.type === SubscriptionEvent.INVOICE_CREATION) {
-              console.log(`SEND MAIL EMPLATE ${event.externalMailTemplate} and create new invoice`)
+              console.log(`SEND MAIL TEMPLATE ${event.externalMailTemplate} and create new invoice`)
             }
           }
         }

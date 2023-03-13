@@ -45,9 +45,9 @@ class SubscriptionController {
         deactivation: {
           is: null
         },
-        periods: {
+        invoices: {
           none: {
-            startsAt: {
+            dueAt: {
               gte: runDate
             }
           }
@@ -60,6 +60,40 @@ class SubscriptionController {
         user: true,
         paymentMethod: true,
         memberPlan: true
+      }
+    })
+  }
+
+  public async getInvoicesToCharge() {
+    return this.prismaService.invoice.findMany({
+      where: {
+        dueAt: {
+          lte: new Date()
+        },
+        canceledAt: null,
+        paidAt: null
+      },
+      include: {
+        subscription: true,
+        user: true,
+        subscriptionPeriods: true
+      }
+    })
+  }
+
+  public async getSubscriptionsToDeactivate() {
+    return this.prismaService.invoice.findMany({
+      where: {
+        paymentDeadline: {
+          lte: new Date()
+        },
+        canceledAt: null,
+        paidAt: null
+      },
+      include: {
+        subscription: true,
+        user: true,
+        subscriptionPeriods: true
       }
     })
   }
