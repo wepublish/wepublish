@@ -1,6 +1,7 @@
 import React, {createContext, useMemo, useRef, useState} from 'react'
 import {ListViewContainer, ListViewHeader} from '../../../../../../apps/editor/src/app/ui/listView'
 import {
+  css,
   styled,
   Table,
   TableBody,
@@ -137,12 +138,12 @@ export default function () {
 
   const defaultFlowOnly = memberPlanId === 'default'
 
-  const [createDayForm, setCreateDayForm] = useState<CreateDayFormType>({
+  const [newDay, setNewDay] = useState<number | undefined>(undefined)
+  const editDay = useRef<number | undefined>(undefined)
+  const createDayFrom = useRef<CreateDayFormType>({
     open: false,
     dayNumber: -3
   })
-  const [newDay, setNewDay] = useState<number | undefined>(undefined)
-  const editDay = useRef<number | undefined>(undefined)
 
   /******************************************
    * API SERVICES
@@ -316,16 +317,9 @@ export default function () {
 
   // Add a new day to timeline
   const addDayToTimeline = function () {
-    closeAddDayForm()
-    if (createDayForm.dayNumber !== null) {
-      setNewDay(Number(createDayForm.dayNumber))
+    if (createDayFrom.current.dayNumber !== null) {
+      setNewDay(Number(createDayFrom.current.dayNumber))
     }
-  }
-  const openAddDayForm = function () {
-    setCreateDayForm({...createDayForm, open: true})
-  }
-  const closeAddDayForm = function () {
-    setCreateDayForm({...createDayForm, open: false})
   }
 
   // Add a separation border after every table section (filters | user actions | timeline | actions)
@@ -359,10 +353,20 @@ export default function () {
   const TableCellBottom = styled(TableCell)`
     vertical-align: bottom;
   `
-  const EditDaysContainer = styled('div')`
+  const PopoverBody = styled('div')<{wrap?: boolean}>`
     display: flex;
-    min-width: 160px;
+    min-width: 170px;
+    justify-content: center;
+    ${props =>
+      props.wrap &&
+      css`
+        flex-wrap: wrap;
+      `}
   `
+  const FlexContainer = styled('div')`
+    display: flex;
+  `
+
   const DarkTableCell = styled(TableCell)(({theme}) => ({
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
@@ -375,28 +379,6 @@ export default function () {
 
   return (
     <>
-      <Modal open={createDayForm.open} onClose={closeAddDayForm}>
-        <Modal.Header>
-          <Modal.Title>New day</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Add a new column
-          <InputNumber
-            value={createDayForm.dayNumber}
-            onChange={v => setCreateDayForm({...createDayForm, dayNumber: v})}
-            step={1}
-          />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={addDayToTimeline} appearance="primary">
-            Add
-          </Button>
-          <Button onClick={closeAddDayForm} appearance="subtle">
-            Cancel
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
       <ListViewContainer>
         <ListViewHeader>
           <h2>
@@ -459,7 +441,7 @@ export default function () {
                           onClose={() => (editDay.current = undefined)}
                           speaker={
                             <Popover>
-                              <EditDaysContainer>
+                              <PopoverBody>
                                 <InputNumber
                                   onChange={value => {
                                     editDay.current =
@@ -474,9 +456,10 @@ export default function () {
                                   icon={<MdCheck />}
                                   color={'green'}
                                   appearance={'primary'}
+                                  style={{marginLeft: '5px'}}
                                   onClick={() => updateTimelineDay(day as number)}
                                 />
-                              </EditDaysContainer>
+                              </PopoverBody>
                             </Popover>
                           }>
                           <IconButton
@@ -493,13 +476,31 @@ export default function () {
 
                   {/* actions */}
                   <TableCell align="center">
-                    <IconButton
-                      icon={<MdAdd />}
-                      color="green"
-                      appearance="primary"
-                      circle
-                      onClick={openAddDayForm}
-                    />
+                    <Whisper
+                      placement="leftEnd"
+                      trigger="click"
+                      speaker={
+                        <Popover>
+                          <PopoverBody wrap>
+                            <h6>New day in timeline</h6>
+                            <FlexContainer style={{marginTop: '5px'}}>
+                              <InputNumber
+                                defaultValue={createDayFrom.current.dayNumber}
+                                onChange={v => (createDayFrom.current.dayNumber = v)}
+                                step={1}
+                              />
+                              <Button
+                                onClick={() => addDayToTimeline()}
+                                appearance="primary"
+                                style={{marginLeft: '5px'}}>
+                                Add
+                              </Button>
+                            </FlexContainer>
+                          </PopoverBody>
+                        </Popover>
+                      }>
+                      <IconButton icon={<MdAdd />} color="green" appearance="primary" circle />
+                    </Whisper>
                   </TableCell>
                 </SplitTableRow>
               </TableHead>
