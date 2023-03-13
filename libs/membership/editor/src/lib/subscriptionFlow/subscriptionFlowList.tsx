@@ -15,29 +15,16 @@ import {
 import {
   MdAdd,
   MdAlarmOn,
-  MdCheck,
   MdDelete,
-  MdEdit,
   MdFilterAlt,
   MdMouse,
   MdOutlineClose,
   MdOutlineNoteAdd,
-  MdRefresh,
   MdTune
 } from 'react-icons/all'
 import {TFunction, useTranslation} from 'react-i18next'
 import {useParams} from 'react-router-dom'
-import {
-  Button,
-  IconButton,
-  InputNumber,
-  Loader,
-  Message,
-  Popover,
-  Tag,
-  toaster,
-  Whisper
-} from 'rsuite'
+import {Button, IconButton, InputNumber, Loader, Message, Popover, toaster, Whisper} from 'rsuite'
 import {useMemberPlanListQuery} from '@wepublish/editor/api'
 import {ApolloClient, ApolloError, NormalizedCacheObject} from '@apollo/client'
 import {getApiClientV2} from 'apps/editor/src/app/utility'
@@ -62,6 +49,7 @@ import {DndContext, DragEndEvent} from '@dnd-kit/core'
 import DroppableSubscriptionInterval from './droppableSubscriptionInterval'
 import FilterBody from './filter/filterBody'
 import FilterHead from './filter/filterHead'
+import FlowHead from './flow/flowHead'
 
 /**
  * CONTEXT
@@ -148,7 +136,6 @@ export default function () {
   const defaultFlowOnly = memberPlanId === 'default'
 
   const [newDay, setNewDay] = useState<number | undefined>(undefined)
-  const editDay = useRef<number | undefined>(undefined)
   const createDayFrom = useRef<CreateDayFormType>({
     open: false,
     dayNumber: -3
@@ -227,26 +214,6 @@ export default function () {
           daysAwayFromEnding,
           mailTemplateId: interval.object.mailTemplate?.id
         }
-      }
-    })
-  }
-
-  async function updateTimelineDay(dayToUpdate: number) {
-    if (editDay.current === undefined) {
-      return
-    }
-    const intervalsToUpdate = intervals.filter(
-      interval => interval?.daysAwayFromEnding === dayToUpdate
-    )
-    await updateSubscriptionIntervals({
-      variables: {
-        subscriptionIntervals: intervalsToUpdate.map(intervalToUpdate => {
-          return {
-            id: intervalToUpdate.id,
-            mailTemplateId: intervalToUpdate.mailTemplate?.id,
-            daysAwayFromEnding: editDay.current
-          }
-        })
       }
     })
   }
@@ -411,6 +378,7 @@ export default function () {
             value={{
               createSubscriptionInterval,
               updateSubscriptionInterval,
+              updateSubscriptionIntervals,
               deleteSubscriptionInterval,
               deleteSubscriptionFlow
             }}>
@@ -434,8 +402,10 @@ export default function () {
                   <DarkTableCell align="center">Actions</DarkTableCell>
                 </TableRow>
                 <SplitTableRow>
+                  {/* filter */}
                   <FilterHead defaultFlowOnly={defaultFlowOnly} />
 
+                  {/* user actions */}
                   {userActionEvents.map(userActionEvent => (
                     <TableCell key={userActionEvent.subscriptionEventKey} align="center">
                       {userActionEvent.title}
@@ -443,61 +413,7 @@ export default function () {
                   ))}
 
                   {/* individual flow */}
-                  {days.map(day => (
-                    <TableCell
-                      key={`day-${day}`}
-                      align="center"
-                      style={day === 0 ? {backgroundColor: 'lightyellow'} : {}}>
-                      {t('subscriptionFlow.dayWithNumber', {day})}
-                      {/* show badge on zero day */}
-                      {!day && (
-                        <>
-                          <br />
-                          <Tag color="cyan">
-                            <MdRefresh style={{marginRight: '5px'}} />
-                            Day of renewal / subscription end
-                          </Tag>
-                        </>
-                      )}
-                      {!!day && (
-                        <Whisper
-                          placement="bottom"
-                          trigger="click"
-                          onClose={() => (editDay.current = undefined)}
-                          speaker={
-                            <Popover>
-                              <PopoverBody>
-                                <InputNumber
-                                  onChange={value => {
-                                    editDay.current =
-                                      typeof value === 'string' ? parseInt(value) : value
-                                  }}
-                                  size="sm"
-                                  defaultValue={day || 0}
-                                  step={1}
-                                  postfix={t('subscriptionFlow.days')}
-                                />
-                                <IconButton
-                                  icon={<MdCheck />}
-                                  color={'green'}
-                                  appearance={'primary'}
-                                  style={{marginLeft: '5px'}}
-                                  onClick={() => updateTimelineDay(day as number)}
-                                />
-                              </PopoverBody>
-                            </Popover>
-                          }>
-                          <IconButton
-                            icon={<MdEdit />}
-                            size={'sm'}
-                            circle
-                            color={'blue'}
-                            appearance={'link'}
-                          />
-                        </Whisper>
-                      )}
-                    </TableCell>
-                  ))}
+                  <FlowHead days={days} intervals={intervals} />
 
                   {/* actions */}
                   <TableCell align="center">

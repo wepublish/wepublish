@@ -8,7 +8,8 @@ import {
   SubscriptionIntervalCreateInput,
   SubscriptionIntervalDeleteInput,
   SubscriptionIntervalUpdateInput,
-  UpdateSubscriptionIntervalMutation
+  UpdateSubscriptionIntervalMutation,
+  UpdateSubscriptionIntervalsMutation
 } from '@wepublish/editor/api-v2'
 import {createContext} from 'react'
 
@@ -25,6 +26,16 @@ export const GraphqlClientContext = createContext({
     options: MutationFunctionOptions<
       UpdateSubscriptionIntervalMutation,
       Exact<{subscriptionInterval: SubscriptionIntervalUpdateInput}>
+    >
+  ): Promise<any> => {
+    throw new Error('Default context must be overriden!')
+  },
+  updateSubscriptionIntervals: (
+    options: MutationFunctionOptions<
+      UpdateSubscriptionIntervalsMutation,
+      Exact<{
+        subscriptionIntervals: SubscriptionIntervalUpdateInput | SubscriptionIntervalUpdateInput[]
+      }>
     >
   ): Promise<any> => {
     throw new Error('Default context must be overriden!')
