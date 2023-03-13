@@ -25,7 +25,7 @@ import {
   MdRefresh,
   MdTune
 } from 'react-icons/all'
-import {useTranslation} from 'react-i18next'
+import {TFunction, useTranslation} from 'react-i18next'
 import {useParams} from 'react-router-dom'
 import {
   Button,
@@ -72,6 +72,14 @@ export const showErrors = (error: ApolloError): void => {
   toaster.push(
     <Message type="error" showIcon closable duration={8000}>
       {error.message}
+    </Message>
+  )
+}
+
+export const showSavedToast = (t: TFunction): void => {
+  toaster.push(
+    <Message type="success" showIcon closable duration={3000}>
+      {t('subscriptionFlow.savedChange')}
     </Message>
   )
 }
@@ -179,23 +187,28 @@ export default function () {
 
   const [createSubscriptionInterval] = useCreateSubscriptionIntervalMutation({
     client,
-    onError: showErrors
+    onError: showErrors,
+    onCompleted: () => showSavedToast(t)
   })
   const [updateSubscriptionIntervals] = useUpdateSubscriptionIntervalsMutation({
     client,
-    onError: showErrors
+    onError: showErrors,
+    onCompleted: () => showSavedToast(t)
   })
   const [updateSubscriptionInterval] = useUpdateSubscriptionIntervalMutation({
     client,
-    onError: showErrors
+    onError: showErrors,
+    onCompleted: () => showSavedToast(t)
   })
   const [deleteSubscriptionInterval] = useDeleteSubscriptionIntervalMutation({
     client,
-    onError: showErrors
+    onError: showErrors,
+    onCompleted: () => showSavedToast(t)
   })
   const [deleteSubscriptionFlow] = useDeleteSubscriptionFlowMutation({
     client,
-    onError: showErrors
+    onError: showErrors,
+    onCompleted: () => showSavedToast(t)
   })
 
   /******************************************

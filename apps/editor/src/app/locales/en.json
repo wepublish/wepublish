@@ -1384,7 +1384,8 @@
       "settingsDescription": "You can overwrite these settings for every member plan.",
       "addNew": "Create new flow",
       "dayWithNumber": "day {{day}}",
-      "days": "days"
+      "days": "days",
+      "savedChange": "Change successfully saved"
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "No mailing"
