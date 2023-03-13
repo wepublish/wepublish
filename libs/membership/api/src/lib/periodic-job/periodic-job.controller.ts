@@ -97,30 +97,6 @@ export class PeriodicJobController {
     }
   }
 
-  public async getSubscriptionsForInvoiceCreation(generationDate: Date) {
-    this.prismaService.subscription.findMany({
-      where: {
-        paidUntil: {
-          lte: generationDate
-        },
-        deactivation: {
-          is: null
-        },
-        autoRenew: true
-      },
-      include: {
-        periods: {
-          where: {
-            startsAt: {
-              gte: generationDate
-            }
-          }
-        },
-        deactivation: true
-      }
-    })
-  }
-
   private async retryFailedJob(runDate: Date) {
     this.runningJob = await this.prismaService.periodicJob.update({
       where: {
