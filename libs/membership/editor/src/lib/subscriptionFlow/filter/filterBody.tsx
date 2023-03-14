@@ -15,6 +15,7 @@ import {getApiClientV2} from '../../../../../../../apps/editor/src/app/utility'
 import {showErrors} from '../subscriptionFlowList'
 import {MdAdd} from 'react-icons/all'
 import {FullMemberPlanFragment} from '@wepublish/editor/api'
+import {useTranslation} from 'react-i18next'
 
 interface FilterBodyProps {
   memberPlan?: FullMemberPlanFragment
@@ -34,6 +35,7 @@ export default function ({
     return null
   }
 
+  const {t} = useTranslation()
   const [newFlow, setNewFlow] = useState<SubscriptionFlowModelCreateInput>({
     autoRenewal: [],
     periodicities: [],
@@ -146,7 +148,7 @@ export default function ({
       <TableCell align="center">
         <CheckPicker
           data={[true, false].map(item => ({
-            label: item.toString(),
+            label: t(`subscriptionFlow.booleanFilter.${item}`),
             value: item
           }))}
           disabled={subscriptionFlow?.default}
@@ -164,7 +166,7 @@ export default function ({
             color={'green'}
             appearance={'primary'}
             onClick={() => saveNewFlow()}>
-            Neuen Flow hinzufügen
+            {t('subscriptionFlow.addNew')}
           </IconButton>
         </TableCell>
       )}

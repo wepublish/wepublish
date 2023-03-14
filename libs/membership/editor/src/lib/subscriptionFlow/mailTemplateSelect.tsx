@@ -13,7 +13,7 @@ import {
   UserActionInterval
 } from './subscriptionFlowList'
 import {useTranslation} from 'react-i18next'
-import {MdDoNotDisturb, MdUnsubscribe} from 'react-icons/all'
+import {MdUnsubscribe} from 'react-icons/all'
 
 interface MailTemplateSelectProps {
   mailTemplates: FullMailTemplateFragment[]

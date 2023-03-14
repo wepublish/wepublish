@@ -54,9 +54,9 @@ export default function ({days, intervals}: FlowHeadProps) {
           {!day && (
             <>
               <br />
-              <Tag color="cyan">
-                <MdRefresh style={{marginRight: '5px'}} />
-                Day of renewal / subscription end
+              <Tag color="blue">
+                <MdRefresh size={20} style={{marginRight: '5px'}} />
+                {t('subscriptionFlow.dayOfRenewal')}
               </Tag>
             </>
           )}

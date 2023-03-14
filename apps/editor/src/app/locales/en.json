@@ -1385,7 +1385,24 @@
       "addNew": "Create new flow",
       "dayWithNumber": "day {{day}}",
       "days": "days",
-      "savedChange": "Change successfully saved"
+      "savedChange": "Change successfully saved",
+      "add": "Add",
+      "memberplan": "Memberplan",
+      "paymentMethod": "Payment Method",
+      "periodicity": "Periodicity",
+      "autoRenewal": "Auto Renewal?",
+      "booleanFilter": {
+        "true": "Yes",
+        "false": "No"
+      },
+      "deleteFlowQuestion": "Deleting this flow is permanently and can't be undone. Do you want to proceed anyway?",
+      "deletePermanently": "Delete permanently",
+      "dropHere": "Drop here",
+      "filters": "Filters",
+      "subscriptionEvents": "Static Subscription Events",
+      "timeline": "Timeline",
+      "actions": "Actions",
+      "dayOfRenewal": "Day of renewal / subscription ends"
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "No mailing"

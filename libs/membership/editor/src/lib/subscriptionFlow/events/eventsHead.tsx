@@ -2,6 +2,7 @@ import React, {useRef} from 'react'
 import {Button, IconButton, InputNumber, Popover, Whisper} from 'rsuite'
 import {MdAdd} from 'react-icons/all'
 import {styled, TableCell} from '@mui/material'
+import {useTranslation} from 'react-i18next'
 
 interface CreateDayFormType {
   open: boolean
@@ -13,6 +14,7 @@ interface ActionsHeadProps {
 }
 
 export default function ({setNewDay}: ActionsHeadProps) {
+  const {t} = useTranslation()
   const createDayFrom = useRef<CreateDayFormType>({
     open: false,
     dayNumber: -3
@@ -54,6 +56,7 @@ export default function ({setNewDay}: ActionsHeadProps) {
                   onClick={() => addDayToTimeline()}
                   appearance="primary"
                   style={{marginLeft: '5px'}}>
+                  {t('subscriptionFlow.add')}
                   Add
                 </Button>
               </FlexContainer>

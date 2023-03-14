@@ -3,6 +3,7 @@ import {IconButton, Popover, Whisper} from 'rsuite'
 import {MdDelete} from 'react-icons/all'
 import {SubscriptionFlowFragment} from '@wepublish/editor/api-v2'
 import {GraphqlClientContext} from './graphqlClientContext'
+import {useTranslation} from 'react-i18next'
 
 interface DeleteSubscriptionFlowProps {
   subscriptionFlow: SubscriptionFlowFragment
@@ -12,6 +13,7 @@ export default function ({
   subscriptionFlow,
   onSubscriptionFlowDeleted
 }: DeleteSubscriptionFlowProps) {
+  const {t} = useTranslation()
   const client = useContext(GraphqlClientContext)
 
   return (
@@ -20,10 +22,7 @@ export default function ({
       trigger="click"
       speaker={
         <Popover>
-          <p>
-            Wenn Du diesen Flow löscht, kann dies nicht rückgängig gemacht werden. Willst Du
-            trotzdem weiterfahren?
-          </p>
+          <p>{t('subscriptionFlow.deleteFlowQuestion')}</p>
           <IconButton
             style={{marginTop: '5px'}}
             color="red"
@@ -38,7 +37,7 @@ export default function ({
                 onSubscriptionFlowDeleted()
               }
             }}>
-            Unwiderruflich Löschen
+            {t('subscriptionFlow.deletePermanently')}
           </IconButton>
         </Popover>
       }>

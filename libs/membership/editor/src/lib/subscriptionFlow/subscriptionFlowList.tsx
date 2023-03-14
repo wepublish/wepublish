@@ -11,14 +11,7 @@ import {
   TableRow,
   Typography
 } from '@mui/material'
-import {
-  MdAlarmOn,
-  MdFilterAlt,
-  MdMouse,
-  MdOutlineClose,
-  MdOutlineNoteAdd,
-  MdTune
-} from 'react-icons/all'
+import {MdOutlineClose, MdOutlineNoteAdd, MdTune} from 'react-icons/all'
 import {TFunction, useTranslation} from 'react-i18next'
 import {useParams} from 'react-router-dom'
 import {Loader, Message, toaster} from 'rsuite'
@@ -47,6 +40,7 @@ import ActionsHead from './events/eventsHead'
 import ActionsBody from './events/eventsBody'
 import TimelineBody from './timeline/timelineBody'
 import DeleteSubscriptionFlow from './deleteSubscriptionFlow'
+import SubscriptionFlowHeadline from './subscriptionFlowHeadline'
 
 /**
  * CONTEXT
@@ -288,12 +282,6 @@ export default function () {
     }
   }))
 
-  const DarkTableCell = styled(TableCell)(({theme}) => ({
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    borderRight: `1px solid ${theme.palette.common.white}`
-  }))
-
   if (loading || !subscriptionFlows) {
     return <Loader center />
   }
@@ -323,22 +311,14 @@ export default function () {
             }}>
             <Table size="small">
               <TableHead>
+                {/************************************************** TABLE HEADLINE **************************************************/}
                 <TableRow>
-                  {!defaultFlowOnly && (
-                    <DarkTableCell align="center" colSpan={filterCount}>
-                      <MdFilterAlt size={20} style={{marginRight: '5px'}} />
-                      Filters
-                    </DarkTableCell>
-                  )}
-                  <DarkTableCell align="center" colSpan={userActionCount}>
-                    <MdMouse size={20} style={{marginRight: '5px'}} />
-                    Static Subscription Events
-                  </DarkTableCell>
-                  <DarkTableCell align="center" colSpan={nonUserActionCount}>
-                    <MdAlarmOn size={20} style={{marginRight: '5px'}} />
-                    Timeline
-                  </DarkTableCell>
-                  <DarkTableCell align="center">Actions</DarkTableCell>
+                  <SubscriptionFlowHeadline
+                    defaultFlowOnly={defaultFlowOnly}
+                    userActionCount={userActionCount}
+                    filterCount={filterCount}
+                    nonUserActionCount={nonUserActionCount}
+                  />
                 </TableRow>
                 {/************************************************** TABLE HEAD **************************************************/}
                 <SplitTableRow>

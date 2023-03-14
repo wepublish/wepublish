@@ -1,5 +1,6 @@
 import React from 'react'
 import {useDroppable} from '@dnd-kit/core'
+import {useTranslation} from 'react-i18next'
 
 interface DropContainerSubscriptionIntervalProps {
   dayIndex: number
@@ -7,6 +8,7 @@ interface DropContainerSubscriptionIntervalProps {
 export default function DroppableSubscriptionInterval({
   dayIndex
 }: DropContainerSubscriptionIntervalProps) {
+  const {t} = useTranslation()
   const {isOver, setNodeRef, active} = useDroppable({
     id: `droppable-${dayIndex}`,
     data: {
@@ -42,7 +44,7 @@ export default function DroppableSubscriptionInterval({
 
   return (
     <div ref={setNodeRef} style={{...defaultStyle, ...activeStyle, ...hoverStyle}}>
-      Hierhin verschieben
+      {t('subscriptionFlow.dropHere')}
     </div>
   )
 }
