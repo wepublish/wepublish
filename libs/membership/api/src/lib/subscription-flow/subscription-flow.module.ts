@@ -3,6 +3,7 @@ import {OldContextService, PrismaService} from '@wepublish/api'
 import {SubscriptionFlowController} from './subscription-flow.controller'
 import {SubscriptionFlowResolver} from './subscription-flow.resolver'
 import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
+import {SubscriptionController} from '../subscription/subscription.controller'
 
 @Module({
   controllers: [],
@@ -11,7 +12,8 @@ import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
     PrismaService,
     SubscriptionFlowController,
     OldContextService,
-    PeriodicJobController
+    PeriodicJobController,
+    SubscriptionController
   ],
   exports: [],
   imports: []

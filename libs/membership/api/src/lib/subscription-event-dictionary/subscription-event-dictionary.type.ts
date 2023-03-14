@@ -27,6 +27,7 @@ export type StoreTimeline = {
 }
 export type Action = {
   type: SubscriptionEvent
+  daysAwayFromEnding: number | null
   externalMailTemplate: string | null
 }
 
@@ -42,4 +43,6 @@ export type LookupActionInput = {
   periodicity: PaymentPeriodicity
   autorenwal: boolean
   daysAwayFromEnding: number | null
+
+  event?: SubscriptionEvent
 }

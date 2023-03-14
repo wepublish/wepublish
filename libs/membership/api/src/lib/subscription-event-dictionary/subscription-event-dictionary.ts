@@ -7,6 +7,7 @@ import {
 } from './subscription-event-dictionary.type'
 import {PrismaService} from '@wepublish/api'
 import {startOfDay, subDays, subMinutes} from 'date-fns'
+import {SubscriptionEvent} from '@prisma/client'
 
 export class SubscriptionEventDictionary {
   private store: Store = {
@@ -16,8 +17,10 @@ export class SubscriptionEventDictionary {
     }
   }
   private storeIsBuild = false
-  private daysAwayFromEndingList: number[] = [0]
+  private daysAwayFromEndingCustomEventList: number[] = [0]
   private dateAwayFromEndingList: Date[] = []
+
+  private earliestInvoiceCreationDate: null | number = null
   constructor(private readonly prismaService: PrismaService) {}
 
   public async initialize() {
@@ -85,6 +88,7 @@ export class SubscriptionEventDictionary {
       if (!interval.daysAwayFromEnding) {
         storeTimeline.onUserAction.push({
           type: interval.event,
+          daysAwayFromEnding: interval.daysAwayFromEnding,
           externalMailTemplate: interval.externalMailTemplate
         })
         continue
@@ -94,26 +98,42 @@ export class SubscriptionEventDictionary {
       }
       storeTimeline[interval.daysAwayFromEnding].push({
         type: interval.event,
+        daysAwayFromEnding: interval.daysAwayFromEnding,
         externalMailTemplate: interval.externalMailTemplate
       })
 
-      if (!this.daysAwayFromEndingList.includes(interval.daysAwayFromEnding)) {
-        this.daysAwayFromEndingList.push(interval.daysAwayFromEnding)
+      // Store earliest invoice creation date
+      if (interval.event === SubscriptionEvent.INVOICE_CREATION) {
+        if (
+          !this.earliestInvoiceCreationDate ||
+          interval.daysAwayFromEnding < this.earliestInvoiceCreationDate
+        )
+          this.earliestInvoiceCreationDate = interval.daysAwayFromEnding
+      }
+
+      if (interval.event === SubscriptionEvent.CUSTOM) {
+        if (!this.daysAwayFromEndingCustomEventList.includes(interval.daysAwayFromEnding)) {
+          this.daysAwayFromEndingCustomEventList.push(interval.daysAwayFromEnding)
+        }
       }
     }
   }
-  public buildEventDateList(date: Date) {
+  public getEarliestInvoiceCreationDate(date: Date) {
+    if (!this.earliestInvoiceCreationDate) throw Error('No invoice cration date found!')
+    return subDays(this.normalizeDate(date), this.earliestInvoiceCreationDate)
+  }
+  public buildCustomEventDateList(date: Date) {
     if (!this.storeIsBuild) {
       throw Error('Tried to access store before it was successfully initialized!')
     }
     const normalizedDate = this.normalizeDate(date)
 
-    for (const daysAwayFromEnding of this.daysAwayFromEndingList) {
+    for (const daysAwayFromEnding of this.daysAwayFromEndingCustomEventList) {
       this.dateAwayFromEndingList.push(subDays(normalizedDate, daysAwayFromEnding))
     }
   }
 
-  public getDatesWithEvent(): Date[] {
+  public getDatesWithCustomEvent(): Date[] {
     if (this.dateAwayFromEndingList.length === 0) {
       throw Error('Tried to access eventDataList before it was successfully initialized!')
     }
@@ -133,7 +153,7 @@ export class SubscriptionEventDictionary {
     ]
     for (const pathElement of pathElements) {
       if (!(pathElement in path)) {
-        return this.getActionByDay(this.store.defaultFlow, query.daysAwayFromEnding)
+        return this.getActionByDay(this.store.defaultFlow, query.daysAwayFromEnding, query.event)
       }
       path = path[pathElement]
     }
@@ -141,10 +161,22 @@ export class SubscriptionEventDictionary {
       this.store.customFlow![query.memberplanId]![query.paymentmethodeId]![query.periodicity]![
         query.autorenwal.toString()
       ]
-    return this.getActionByDay(custom_path, query.daysAwayFromEnding)
+    return this.getActionByDay(custom_path, query.daysAwayFromEnding, query.event)
   }
 
-  private getActionByDay(timeline: StoreTimeline, daysAwayFromEnding: number | null): Action[] {
+  private getActionByDay(
+    timeline: StoreTimeline,
+    daysAwayFromEnding: number | null,
+    event: SubscriptionEvent | undefined
+  ): Action[] {
+    if (event) {
+      let events: Action[] = []
+      let k: keyof typeof timeline
+      for (k in timeline) {
+        events = events.concat(timeline[k].filter(e => e.type === event))
+      }
+      return events
+    }
     // Return user actions for null and 0!
     if (!daysAwayFromEnding) {
       return timeline.onUserAction

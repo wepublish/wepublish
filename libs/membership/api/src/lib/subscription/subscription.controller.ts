@@ -6,26 +6,22 @@ import {
   User,
   PaymentMethod,
   MemberPlan,
-  PaymentPeriodicity
+  PaymentPeriodicity,
+  SubscriptionEvent
 } from '@prisma/client'
-import {add} from 'date-fns'
+import {add, addDays} from 'date-fns'
+import {Injectable} from '@nestjs/common'
+import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 
 export type SubscriptionControllerConfig = {
   subscription: Subscription
 }
 
-class SubscriptionController {
-  constructor(
-    private readonly prismaService: PrismaService,
-    private readonly oldContextService: OldContextService,
-    private readonly config: SubscriptionControllerConfig
-  ) {}
+@Injectable()
+export class SubscriptionController {
+  constructor(private readonly prismaService: PrismaService) {}
 
-  public async createInvoices() {
-    this.config.subscription
-  }
-
-  private async getSubscriptionsForInvoiceCreation(
+  public async getSubscriptionsForInvoiceCreation(
     runDate: Date,
     closestRenewalDate: Date
   ): Promise<
@@ -64,11 +60,11 @@ class SubscriptionController {
     })
   }
 
-  public async getInvoicesToCharge() {
+  public async getInvoicesToCharge(runDate: Date) {
     return this.prismaService.invoice.findMany({
       where: {
         dueAt: {
-          lte: new Date()
+          lte: runDate
         },
         canceledAt: null,
         paidAt: null
@@ -81,11 +77,11 @@ class SubscriptionController {
     })
   }
 
-  public async getSubscriptionsToDeactivate() {
+  public async getSubscriptionsToDeactivate(runDate: Date) {
     return this.prismaService.invoice.findMany({
       where: {
         paymentDeadline: {
-          lte: new Date()
+          lte: runDate
         },
         canceledAt: null,
         paidAt: null
@@ -113,21 +109,39 @@ class SubscriptionController {
     }
   }
 
-  private createInvoice(
+  private getPeriodStarEnd(periods: SubscriptionPeriod[], periodicity: PaymentPeriodicity) {
+    if (periods.length === 0) {
+      return {
+        startsAt: add(new Date(), {days: 1}),
+        endsAt: add(new Date(), {months: this.getMonthCount(periodicity)})
+      }
+    }
+    const latestPeriod = periods.reduce(function (prev, current) {
+      return prev.endsAt > current.endsAt ? prev : current
+    })
+    return {
+      startsAt: add(latestPeriod.endsAt, {days: 1}),
+      endsAt: add(latestPeriod.endsAt, {months: this.getMonthCount(periodicity)})
+    }
+  }
+
+  public async createInvoice(
     subscription: Subscription & {
       periods: SubscriptionPeriod[]
       deactivation: SubscriptionDeactivation | null
       user: User
       paymentMethod: PaymentMethod
       memberPlan: MemberPlan
-    }
+    },
+    paymentDeadline: Action
   ) {
     const amount = subscription.monthlyAmount * this.getMonthCount(subscription.paymentPeriodicity)
     const description = `Renewal of subscription ${subscription.memberPlan.name} for ${subscription.paymentPeriodicity}`
+
     return this.prismaService.invoice.create({
       data: {
         mail: subscription.user.email,
-        dueAt: subscription.paidUntil || '',
+        dueAt: subscription.paidUntil || new Date(),
         description,
         items: {
           create: {
@@ -137,17 +151,19 @@ class SubscriptionController {
             amount
           }
         },
+        paymentDeadline: add(subscription.paidUntil || new Date(), {
+          days: paymentDeadline.daysAwayFromEnding || undefined
+        }),
         subscriptionPeriods: {
           create: {
-            startsAt: new Date(),
-            endsAt: new Date(),
             paymentPeriodicity: subscription.paymentPeriodicity,
             amount,
             subscription: {
               connect: {
                 id: subscription.id
               }
-            }
+            },
+            ...this.getPeriodStarEnd(subscription.periods, subscription.paymentPeriodicity)
           }
         },
         subscription: {
