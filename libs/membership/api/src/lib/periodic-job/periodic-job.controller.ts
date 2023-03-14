@@ -129,6 +129,7 @@ export class PeriodicJobController {
         const subscriptionsToDeactivateInvoice =
           await this.subscriptionController.getSubscriptionsToDeactivate(periodicJobRunObject.date)
         for (const subscriptionToDeactivateInvoice of subscriptionsToDeactivateInvoice) {
+          await this.subscriptionController.deactivateSubscription(subscriptionToDeactivateInvoice)
           console.log('CODE FOR DEACTIVATE SUBSCRIPTION')
         }
 

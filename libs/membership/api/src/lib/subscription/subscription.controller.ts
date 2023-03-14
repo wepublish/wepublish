@@ -1,5 +1,6 @@
 import {OldContextService, PrismaService} from '@wepublish/api'
 import {
+  Invoice,
   Subscription,
   SubscriptionDeactivation,
   SubscriptionPeriod,
@@ -7,7 +8,8 @@ import {
   PaymentMethod,
   MemberPlan,
   PaymentPeriodicity,
-  SubscriptionEvent
+  SubscriptionEvent,
+  SubscriptionDeactivationReason
 } from '@prisma/client'
 import {add, addDays} from 'date-fns'
 import {Injectable} from '@nestjs/common'
@@ -179,7 +181,7 @@ export class SubscriptionController {
       }
     })
   }
-  private async markInvoiceAsPaid(
+  public async markInvoiceAsPaid(
     subscription: Subscription & {
       periods: SubscriptionPeriod[]
       deactivation: SubscriptionDeactivation | null
@@ -206,6 +208,31 @@ export class SubscriptionController {
         },
         data: {
           paidAt: new Date()
+        }
+      })
+    ])
+  }
+  public async deactivateSubscription(
+    invoice: Invoice & {
+      user: User | null
+      subscription: Subscription | null
+      subscriptionPeriods: SubscriptionPeriod[]
+    }
+  ) {
+    this.prismaService.$transaction([
+      this.prismaService.subscriptionDeactivation.create({
+        data: {
+          subscriptionID: invoice.subscriptionID!,
+          date: new Date(),
+          reason: SubscriptionDeactivationReason.invoiceNotPaid
+        }
+      }),
+      this.prismaService.invoice.update({
+        where: {
+          id: invoice.id
+        },
+        data: {
+          canceledAt: new Date()
         }
       })
     ])
