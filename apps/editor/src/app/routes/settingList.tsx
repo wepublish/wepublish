@@ -8,12 +8,13 @@ import {
 } from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdInfo, MdWarning, MdSave, MdCancel} from 'react-icons/md'
+import {MdCancel, MdInfo, MdSave, MdWarning} from 'react-icons/md'
 import {
   Button,
   Col,
   Form,
   Grid,
+  IconButton,
   InputGroup,
   InputNumber,
   Modal,
@@ -24,18 +25,19 @@ import {
   toaster,
   Toggle,
   Tooltip,
-  Whisper,
-  IconButton
+  Whisper
 } from 'rsuite'
 import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon'
 import {TypeAttributes} from 'rsuite/esm/@types/common'
 import FormControl from 'rsuite/FormControl'
-import {ListViewContainer, ListViewHeader, ListViewActions} from '../ui/listView'
+
 import {
   createCheckedPermissionComponent,
   PermissionControl,
   useAuthorisation
 } from '../atoms/permissionControl'
+import {ListViewActions, ListViewContainer, ListViewHeader} from '../ui/listView'
+import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 
 const Panel = styled(RPanel)`
   margin-bottom: 10px;
@@ -79,7 +81,7 @@ function SettingList() {
 
   const [hasChanged, setChanged] = useState(false)
 
-  // const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
+  const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
 
   const {
     data: settingListData,
@@ -181,6 +183,12 @@ function SettingList() {
   const [updateSettings, {error: updateSettingError}] = useUpdateSettingListMutation({
     fetchPolicy: 'network-only'
   })
+
+  useEffect(() => {
+    return () => {
+      unsavedChangesDialog()
+    }
+  }, [hasChanged])
 
   async function handleSettingListUpdate() {
     setShowWarning(false)
