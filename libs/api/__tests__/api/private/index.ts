@@ -23,6 +23,8 @@ export type Scalars = {
   VoteValue: number;
 };
 
+export type Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction;
+
 export type AllowedSettingVals = {
   __typename?: 'AllowedSettingVals';
   boolChoice?: Maybe<Scalars['Boolean']>;
@@ -46,6 +48,12 @@ export type ArticleConnection = {
   nodes: Array<Article>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type ArticleCreatedAction = {
+  __typename?: 'ArticleCreatedAction';
+  article: Article;
+  date: Scalars['DateTime'];
 };
 
 export type ArticleFilter = {
@@ -172,6 +180,12 @@ export type AuthorConnection = {
   nodes: Array<Author>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type AuthorCreatedAction = {
+  __typename?: 'AuthorCreatedAction';
+  author: Author;
+  date: Scalars['DateTime'];
 };
 
 export type AuthorFilter = {
@@ -315,6 +329,12 @@ export type CommentConnection = {
   nodes: Array<Comment>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type CommentCreatedAction = {
+  __typename?: 'CommentCreatedAction';
+  comment: Comment;
+  date: Scalars['DateTime'];
 };
 
 export type CommentFilter = {
@@ -483,6 +503,12 @@ export type EventConnection = {
   nodes: Array<Event>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type EventCreatedAction = {
+  __typename?: 'EventCreatedAction';
+  date: Scalars['DateTime'];
+  event: Event;
 };
 
 export type EventFilter = {
@@ -1449,6 +1475,12 @@ export type PageConnection = {
   totalCount: Scalars['Int'];
 };
 
+export type PageCreatedAction = {
+  __typename?: 'PageCreatedAction';
+  date: Scalars['DateTime'];
+  page: Page;
+};
+
 export type PageFilter = {
   description?: InputMaybe<Scalars['String']>;
   draft?: InputMaybe<Scalars['Boolean']>;
@@ -1784,6 +1816,12 @@ export enum PollSort {
   OpensAt = 'OPENS_AT'
 }
 
+export type PollStartedAction = {
+  __typename?: 'PollStartedAction';
+  date: Scalars['DateTime'];
+  poll: Poll;
+};
+
 export type PollWithAnswers = {
   __typename?: 'PollWithAnswers';
   answers?: Maybe<Array<PollAnswer>>;
@@ -1808,6 +1846,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
+  actions: Array<Action>;
   article?: Maybe<Article>;
   articlePreviewLink?: Maybe<Scalars['String']>;
   articles: ArticleConnection;
@@ -1828,6 +1867,7 @@ export type Query = {
   memberPlans: MemberPlanConnection;
   navigation?: Maybe<Navigation>;
   navigations: Array<Navigation>;
+  newSubscribersPerMonth?: Maybe<Array<Maybe<SubscribersPerMonth>>>;
   page?: Maybe<Page>;
   pagePreviewLink?: Maybe<Scalars['String']>;
   pages: PageConnection;
@@ -1988,6 +2028,11 @@ export type QueryMemberPlansArgs = {
 export type QueryNavigationArgs = {
   id?: InputMaybe<Scalars['ID']>;
   key?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryNewSubscribersPerMonthArgs = {
+  monthsBack?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -2222,6 +2267,12 @@ export type SoundCloudTrackBlockInput = {
   trackID: Scalars['String'];
 };
 
+export type SubscribersPerMonth = {
+  __typename?: 'SubscribersPerMonth';
+  month: Scalars['String'];
+  subscriberCount: Scalars['Int'];
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   autoRenew: Scalars['Boolean'];
@@ -2244,6 +2295,12 @@ export type SubscriptionConnection = {
   nodes: Array<Subscription>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type SubscriptionCreatedAction = {
+  __typename?: 'SubscriptionCreatedAction';
+  date: Scalars['DateTime'];
+  subscription: Subscription;
 };
 
 export type SubscriptionDeactivation = {
@@ -2529,6 +2586,12 @@ export type UserConnection = {
   nodes: Array<User>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type UserCreatedAction = {
+  __typename?: 'UserCreatedAction';
+  date: Scalars['DateTime'];
+  user: User;
 };
 
 export type UserFilter = {
