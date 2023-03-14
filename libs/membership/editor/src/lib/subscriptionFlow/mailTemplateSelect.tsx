@@ -67,7 +67,6 @@ export default function MailTemplateSelect({
 
   const deleteMailTemplate = async () => {
     if (!subscriptionInterval) {
-      // TODO: show error; this should never happen, because clearing only works when value was selected before (and therefore, an interval existed)
       return
     }
     await client.deleteSubscriptionInterval({

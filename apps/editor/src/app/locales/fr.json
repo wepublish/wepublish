@@ -1048,7 +1048,7 @@
       "commentTags": "Tags",
       "imageLibrary": "Bibliothèque d'images",
       "logout": "Déconnection",
-      "memberPlans": "Plans membres",
+      "memberPlans": "Plans d'abonnement",
       "navigations": "Menus",
       "pages": "Pages",
       "paymentMethods": "Méthodes de paiement",
@@ -1056,14 +1056,15 @@
       "tokens": "Tokens",
       "userRoles": "Rôles d'utilisateur/utilisatrice",
       "users": "Utilisateur/Utilisatrices",
-      "usersAndMembers": "Utilisateur/Utilisatrices et membres",
+      "usersAndMembers": "Utilisateur & Abonnements",
       "myPeerInfo": "Mon profil de pair",
       "peers": "Peers",
       "settings": "Paramètres",
       "peerArticles": "Articles pairables",
       "subscriptions": "Abonnements",
-      "subscriptionSettings": "Réglages",
-      "mailTemplates": "Modèles de courriels"
+      "subscriptionSettings": "Mailing d'abonnement",
+      "mailTemplates": "Modèles de courriels",
+      "subscriptionPlans": "Plans d'abonnement"
     },
     "navigation": {
       "overview": {

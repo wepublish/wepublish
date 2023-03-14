@@ -16,6 +16,10 @@ import {useTranslation} from 'react-i18next'
 import {MdCheck, MdSync, MdWarning} from 'react-icons/all'
 import {Button, Message, Stack, toaster} from 'rsuite'
 import styles from './mailTemplate.module.css'
+import {
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../../../../../../apps/editor/src/app/atoms/permissionControl'
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
@@ -58,10 +62,14 @@ export function MailTemplateList() {
             </Typography>
           </ListViewHeader>
         </ListViewContainer>
-        <Button appearance="primary" onClick={() => syncTemplates()}>
-          <MdSync className={mutationLoading ? styles.iconSpin : ''} />{' '}
-          {t('mailTemplates.synchronize')}
-        </Button>
+        <PermissionControl
+          showRejectionMessage={false}
+          qualifyingPermissions={['CAN_SYNC_MAILTEMPLATES']}>
+          <Button appearance="primary" onClick={() => syncTemplates()}>
+            <MdSync className={mutationLoading ? styles.iconSpin : ''} />{' '}
+            {t('mailTemplates.synchronize')}
+          </Button>
+        </PermissionControl>
       </Stack>
 
       <TableContainer style={{marginTop: '16px'}}>

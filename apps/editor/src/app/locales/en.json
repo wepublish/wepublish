@@ -730,7 +730,7 @@
         "selectNewLanguage": "Select new language"
       },
       "logout": "Logout",
-      "memberPlans": "Member Plans",
+      "memberPlans": "Subscription Plans",
       "navigations": "Navigations",
       "pages": "Pages",
       "paymentMethods": "Payment Methods",
@@ -742,9 +742,10 @@
       "subscriptions": "Subscriptions",
       "userRoles": "User Roles",
       "users": "Users",
-      "usersAndMembers": "Users & Members",
-      "subscriptionSettings": "Settings",
-      "mailTemplates": "E-Mail Templates"
+      "usersAndMembers": "Users & Subscriptions",
+      "subscriptionSettings": "Subscription Mailing",
+      "mailTemplates": "E-Mail Templates",
+      "subscriptionPlans": "Subscription Plans"
     },
     "navigation": {
       "overview": {

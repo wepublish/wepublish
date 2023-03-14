@@ -19,6 +19,7 @@ import {
   MdLocationPin,
   MdLogout,
   MdMail,
+  MdOutgoingMail,
   MdOutlineGridView,
   MdPersonAddAlt1,
   MdPhoto,
@@ -362,14 +363,7 @@ export function Base({children}: BaseProps) {
                     'CAN_CREATE_SUBSCRIPTION',
                     'CAN_GET_SUBSCRIPTIONS',
                     'CAN_GET_SUBSCRIPTION',
-                    'CAN_DELETE_SUBSCRIPTION',
-                    'CAN_GET_MEMBER_PLAN',
-                    'CAN_GET_MEMBER_PLANS',
-                    'CAN_CREATE_MEMBER_PLAN',
-                    'CAN_DELETE_MEMBER_PLAN',
-                    'CAN_CREATE_PAYMENT_METHOD',
-                    'CAN_GET_PAYMENT_METHODS',
-                    'CAN_DELETE_PAYMENT_METHOD'
+                    'CAN_DELETE_SUBSCRIPTION'
                   ]}>
                   <Nav.Menu
                     eventKey={'usersAndMembers'}
@@ -382,22 +376,6 @@ export function Base({children}: BaseProps) {
                       icon={<MdAccountCircle />}>
                       {t('navbar.users')}
                     </Nav.Item>
-
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        'CAN_GET_USER_ROLES',
-                        'CAN_GET_USER_ROLE',
-                        'CAN_CREATE_USER_ROLE',
-                        'CAN_DELETE_USER_ROLE'
-                      ]}>
-                      <Nav.Item
-                        as={NavLink}
-                        href="/userroles"
-                        active={path === 'userroles'}
-                        icon={<MdBadge />}>
-                        {t('navbar.userRoles')}
-                      </Nav.Item>
-                    </PermissionControl>
 
                     <PermissionControl
                       qualifyingPermissions={[
@@ -414,7 +392,27 @@ export function Base({children}: BaseProps) {
                         {t('navbar.subscriptions')}
                       </Nav.Item>
                     </PermissionControl>
+                  </Nav.Menu>
+                </PermissionControl>
 
+                <PermissionControl
+                  qualifyingPermissions={[
+                    'CAN_GET_MEMBER_PLANS',
+                    'CAN_GET_MEMBER_PLAN',
+                    'CAN_CREATE_MEMBER_PLAN',
+                    'CAN_DELETE_MEMBER_PLAN',
+                    'CAN_GET_PAYMENT_METHODS',
+                    'CAN_GET_PAYMENT_METHOD',
+                    'CAN_CREATE_PAYMENT_METHOD',
+                    'CAN_DELETE_PAYMENT_METHOD',
+                    'CAN_GET_SUBSCRIPTION_SETTINGS',
+                    'CAN_UPDATE_SUBSCRIPTION_SETTINGS'
+                  ]}>
+                  <Nav.Menu
+                    eventKey={'usersAndSubscriptions'}
+                    title={t('navbar.subscriptionPlans')}
+                    icon={<MdBadge />}>
+                    {/* SUBSCRIPTION PLANS */}
                     <PermissionControl
                       qualifyingPermissions={[
                         'CAN_GET_MEMBER_PLANS',
@@ -431,6 +429,7 @@ export function Base({children}: BaseProps) {
                       </Nav.Item>
                     </PermissionControl>
 
+                    {/* PAYMENT METHODS */}
                     <PermissionControl
                       qualifyingPermissions={[
                         'CAN_GET_PAYMENT_METHODS',
@@ -447,6 +446,7 @@ export function Base({children}: BaseProps) {
                       </Nav.Item>
                     </PermissionControl>
 
+                    {/* SUBSCRIPTION MAILING */}
                     <PermissionControl
                       qualifyingPermissions={[
                         'CAN_GET_SUBSCRIPTION_SETTINGS',
@@ -456,15 +456,8 @@ export function Base({children}: BaseProps) {
                         as={NavLink}
                         href="/communicationflows/edit/default"
                         active={path === 'communicationflows/edit/default'}
-                        icon={<MdTune />}>
+                        icon={<MdOutgoingMail />}>
                         {t('navbar.subscriptionSettings')}
-                      </Nav.Item>
-                      <Nav.Item
-                        as={NavLink}
-                        href="/mailTemplates"
-                        active={path === 'mailTemplates'}
-                        icon={<MdMail />}>
-                        {t('navbar.mailTemplates')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>
@@ -501,15 +494,56 @@ export function Base({children}: BaseProps) {
                     </PermissionControl>
                   </Nav.Menu>
                 </PermissionControl>
+
+                {/* SETTINGS */}
                 <PermissionControl
-                  qualifyingPermissions={['CAN_GET_SETTINGS', 'CAN_UPDATE_SETTINGS']}>
-                  <Nav.Item
-                    as={NavLink}
-                    href="/settings"
-                    active={path === 'settings'}
-                    icon={<MdSettings />}>
-                    {t('navbar.settings')}
-                  </Nav.Item>
+                  qualifyingPermissions={[
+                    'CAN_GET_SETTINGS',
+                    'CAN_UPDATE_SETTINGS',
+                    'CAN_GET_USER_ROLES',
+                    'CAN_GET_USER_ROLE',
+                    'CAN_CREATE_USER_ROLE',
+                    'CAN_DELETE_USER_ROLE'
+                  ]}>
+                  <Nav.Menu icon={<MdSettings />} title={t('navbar.settings')}>
+                    {/* DIVERSE SETTINGS */}
+                    <PermissionControl
+                      qualifyingPermissions={['CAN_GET_SETTINGS', 'CAN_UPDATE_SETTINGS']}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/settings"
+                        active={path === 'settings'}
+                        icon={<MdSettings />}>
+                        {t('navbar.settings')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    {/* MAIL TEMPLATE SYNC */}
+                    <Nav.Item
+                      as={NavLink}
+                      href="/mailTemplates"
+                      active={path === 'mailTemplates'}
+                      icon={<MdMail />}>
+                      {t('navbar.mailTemplates')}
+                    </Nav.Item>
+
+                    {/* USER ROLES */}
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_USER_ROLES',
+                        'CAN_GET_USER_ROLE',
+                        'CAN_CREATE_USER_ROLE',
+                        'CAN_DELETE_USER_ROLE'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/userroles"
+                        active={path === 'userroles'}
+                        icon={<MdBadge />}>
+                        {t('navbar.userRoles')}
+                      </Nav.Item>
+                    </PermissionControl>
+                  </Nav.Menu>
                 </PermissionControl>
                 <Version />
               </Navigation>

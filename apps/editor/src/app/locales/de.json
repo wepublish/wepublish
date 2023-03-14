@@ -728,21 +728,22 @@
         "selectNewLanguage": "Neue Sprache auswählen"
       },
       "logout": "Logout",
-      "memberPlans": "Memberpläne",
+      "memberPlans": "Abo Pläne",
       "navigations": "Navigationen",
       "pages": "Seiten",
       "paymentMethods": "Zahlungsmethoden",
       "peering": "Peering",
       "userRoles": "Userrollen",
       "users": "User",
-      "usersAndMembers": "User & Member",
+      "usersAndMembers": "User & Abos",
       "tokens": "Tokens",
       "myPeerInfo": "Meine Peer Infos",
       "peers": "Peers",
       "subscriptions": "Abonnements",
       "peerArticles": "Peerbare Artikel",
-      "subscriptionSettings": "Einstellungen",
-      "mailTemplates": "E-Mail-Vorlagen"
+      "subscriptionSettings": "Abo Mailing",
+      "mailTemplates": "E-Mail-Vorlagen",
+      "subscriptionPlans": "Abo Pläne"
     },
     "navigation": {
       "overview": {
