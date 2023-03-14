@@ -29,7 +29,7 @@ const showErrors = (error: ApolloError): void => {
   )
 }
 
-export function MailTemplateList() {
+function MailTemplateList() {
   const {t} = useTranslation()
 
   /**
@@ -64,7 +64,7 @@ export function MailTemplateList() {
         </ListViewContainer>
         <PermissionControl
           showRejectionMessage={false}
-          qualifyingPermissions={['CAN_SYNC_MAILTEMPLATES']}>
+          qualifyingPermissions={['CAN_SYNC_MAIL-TEMPLATES']}>
           <Button appearance="primary" onClick={() => syncTemplates()}>
             <MdSync className={mutationLoading ? styles.iconSpin : ''} />{' '}
             {t('mailTemplates.synchronize')}
@@ -126,3 +126,9 @@ export function MailTemplateList() {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_MAIL-TEMPLATES',
+  'CAN_SYNC_MAIL-TEMPLATES'
+])(MailTemplateList)
+export {CheckedPermissionComponent as MailTemplateList}

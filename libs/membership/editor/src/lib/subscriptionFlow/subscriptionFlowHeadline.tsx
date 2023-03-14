@@ -2,6 +2,7 @@ import React from 'react'
 import {MdAlarmOn, MdCelebration, MdFilterAlt, MdMouse} from 'react-icons/all'
 import {styled, TableCell} from '@mui/material'
 import {useTranslation} from 'react-i18next'
+import {PermissionControl} from '../../../../../../apps/editor/src/app/atoms/permissionControl'
 
 interface SubscriptionFlowHeadlineProps {
   defaultFlowOnly?: boolean
@@ -39,7 +40,10 @@ export default function ({
         <MdAlarmOn size={20} style={{marginRight: '5px'}} />
         {t('subscriptionFlow.timeline')}
       </DarkTableCell>
-      <DarkTableCell align="center">{t('subscriptionFlow.actions')}</DarkTableCell>
+      <PermissionControl
+        qualifyingPermissions={['CAN_UPDATE_SUBSCRIPTION_FLOW', 'CAN_DELETE_SUBSCRIPTION_FLOW']}>
+        <DarkTableCell align="center">{t('subscriptionFlow.actions')}</DarkTableCell>
+      </PermissionControl>
     </>
   )
 }

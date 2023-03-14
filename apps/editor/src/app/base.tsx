@@ -405,8 +405,7 @@ export function Base({children}: BaseProps) {
                     'CAN_GET_PAYMENT_METHOD',
                     'CAN_CREATE_PAYMENT_METHOD',
                     'CAN_DELETE_PAYMENT_METHOD',
-                    'CAN_GET_SUBSCRIPTION_SETTINGS',
-                    'CAN_UPDATE_SUBSCRIPTION_SETTINGS'
+                    'CAN_GET_SUBSCRIPTION_FLOWS'
                   ]}>
                   <Nav.Menu
                     eventKey={'usersAndSubscriptions'}
@@ -447,11 +446,7 @@ export function Base({children}: BaseProps) {
                     </PermissionControl>
 
                     {/* SUBSCRIPTION MAILING */}
-                    <PermissionControl
-                      qualifyingPermissions={[
-                        'CAN_GET_SUBSCRIPTION_SETTINGS',
-                        'CAN_UPDATE_SUBSCRIPTION_SETTINGS'
-                      ]}>
+                    <PermissionControl qualifyingPermissions={['CAN_GET_SUBSCRIPTION_FLOWS']}>
                       <Nav.Item
                         as={NavLink}
                         href="/communicationflows/edit/default"
@@ -500,6 +495,8 @@ export function Base({children}: BaseProps) {
                   qualifyingPermissions={[
                     'CAN_GET_SETTINGS',
                     'CAN_UPDATE_SETTINGS',
+                    'CAN_GET_MAIL-TEMPLATES',
+                    'CAN_SYNC_MAIL-TEMPLATES',
                     'CAN_GET_USER_ROLES',
                     'CAN_GET_USER_ROLE',
                     'CAN_CREATE_USER_ROLE',
@@ -519,13 +516,16 @@ export function Base({children}: BaseProps) {
                     </PermissionControl>
 
                     {/* MAIL TEMPLATE SYNC */}
-                    <Nav.Item
-                      as={NavLink}
-                      href="/mailTemplates"
-                      active={path === 'mailTemplates'}
-                      icon={<MdMail />}>
-                      {t('navbar.mailTemplates')}
-                    </Nav.Item>
+                    <PermissionControl
+                      qualifyingPermissions={['CAN_GET_MAIL-TEMPLATES', 'CAN_SYNC_MAIL-TEMPLATES']}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/mailTemplates"
+                        active={path === 'mailTemplates'}
+                        icon={<MdMail />}>
+                        {t('navbar.mailTemplates')}
+                      </Nav.Item>
+                    </PermissionControl>
 
                     {/* USER ROLES */}
                     <PermissionControl

@@ -41,6 +41,10 @@ import ActionsBody from './events/eventsBody'
 import TimelineBody from './timeline/timelineBody'
 import DeleteSubscriptionFlow from './deleteSubscriptionFlow'
 import SubscriptionFlowHeadline from './subscriptionFlowHeadline'
+import {
+  createCheckedPermissionComponent,
+  PermissionControl
+} from '../../../../../../apps/editor/src/app/atoms/permissionControl'
 
 /**
  * CONTEXT
@@ -119,7 +123,7 @@ export interface DecoratedSubscriptionInterval<T extends SubscriptionInterval> {
  * COMPONENT
  */
 
-export default function () {
+function SubscriptionFlowList() {
   const {t} = useTranslation()
 
   const params = useParams()
@@ -381,15 +385,19 @@ export default function () {
 
               {/************************************************** CREATE NEW FLOW **************************************************/}
               {!defaultFlowOnly && (
-                <TableBody>
-                  <SplitTableRow>
-                    <FilterBody
-                      memberPlan={memberPlan}
-                      createNewFlow
-                      onNewFlowCreated={() => refetch()}
-                    />
-                  </SplitTableRow>
-                </TableBody>
+                <PermissionControl
+                  showRejectionMessage={false}
+                  qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION_FLOW']}>
+                  <TableBody>
+                    <SplitTableRow>
+                      <FilterBody
+                        memberPlan={memberPlan}
+                        createNewFlow
+                        onNewFlowCreated={() => refetch()}
+                      />
+                    </SplitTableRow>
+                  </TableBody>
+                </PermissionControl>
               )}
             </Table>
           </GraphqlClientContext.Provider>
@@ -398,3 +406,11 @@ export default function () {
     </>
   )
 }
+
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_SUBSCRIPTION_FLOWS',
+  'CAN_UPDATE_SUBSCRIPTION_FLOW',
+  'CAN_CREATE_SUBSCRIPTION_FLOW',
+  'CAN_DELETE_SUBSCRIPTION_FLOW'
+])(SubscriptionFlowList)
+export {CheckedPermissionComponent as SubscriptionFlowList}

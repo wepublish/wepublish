@@ -14,6 +14,7 @@ import {
 } from './subscriptionFlowList'
 import {useTranslation} from 'react-i18next'
 import {MdUnsubscribe} from 'react-icons/all'
+import {useAuthorisation} from '../../../../../../apps/editor/src/app/atoms/permissionControl'
 
 interface MailTemplateSelectProps {
   mailTemplates: FullMailTemplateFragment[]
@@ -31,6 +32,7 @@ export default function MailTemplateSelect({
   event
 }: MailTemplateSelectProps) {
   const {t} = useTranslation()
+  const canUpdateSubscriptionFlow = useAuthorisation('CAN_UPDATE_SUBSCRIPTION_FLOW')
   const inactiveMailTemplates = useMemo(
     () => mailTemplates.filter(mailTemplate => mailTemplate.remoteMissing),
     [mailTemplates]
@@ -85,6 +87,7 @@ export default function MailTemplateSelect({
         label: `${mailTemplate.remoteMissing ? '⚠' : ''} ${mailTemplate.name}`,
         value: mailTemplate.id
       }))}
+      disabled={!canUpdateSubscriptionFlow}
       disabledItemValues={inactiveMailTemplates.map(mailTemplate => mailTemplate.id)}
       defaultValue={subscriptionInterval?.object.mailTemplate?.id}
       onSelect={updateMailTemplate}

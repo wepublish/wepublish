@@ -10,6 +10,7 @@ import MailTemplateSelect from './mailTemplateSelect'
 import {MdDragIndicator} from 'react-icons/all'
 import {useDraggable} from '@dnd-kit/core'
 import styled from '@emotion/styled'
+import {useAuthorisation} from '../../../../../../apps/editor/src/app/atoms/permissionControl'
 
 const DraggableContainer = styled.div`
   margin-bottom: 10px;
@@ -42,6 +43,7 @@ export default function ({
       decoratedSubscriptionInterval: subscriptionInterval
     }
   })
+  const canUpdateSubscriptionFlow = useAuthorisation('CAN_UPDATE_SUBSCRIPTION_FLOW')
   const isCustom = useMemo(() => {
     return subscriptionInterval?.object.event === SubscriptionEvent.Custom
   }, [subscriptionInterval])
@@ -61,9 +63,11 @@ export default function ({
       }}>
       {subscriptionInterval && !isCustom && (
         <EventTagContainer>
-          <div style={{cursor: 'move'}} ref={setNodeRef} {...listeners} {...attributes}>
-            <MdDragIndicator size={20} />
-          </div>
+          {canUpdateSubscriptionFlow && (
+            <div style={{cursor: 'move'}} ref={setNodeRef} {...listeners} {...attributes}>
+              <MdDragIndicator size={20} />
+            </div>
+          )}
           <Tag
             style={{
               color: subscriptionInterval.color.fg,

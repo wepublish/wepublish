@@ -3,6 +3,7 @@ import {Button, IconButton, InputNumber, Popover, Whisper} from 'rsuite'
 import {MdAdd} from 'react-icons/all'
 import {styled, TableCell} from '@mui/material'
 import {useTranslation} from 'react-i18next'
+import {PermissionControl} from '../../../../../../../apps/editor/src/app/atoms/permissionControl'
 
 interface CreateDayFormType {
   open: boolean
@@ -38,33 +39,35 @@ export default function ({setNewDay}: ActionsHeadProps) {
   `
 
   return (
-    <TableCell align="center">
-      <Whisper
-        placement="leftEnd"
-        trigger="click"
-        speaker={
-          <Popover>
-            <PopoverBody>
-              <h6>New day in timeline</h6>
-              <FlexContainer style={{marginTop: '5px'}}>
-                <InputNumber
-                  defaultValue={createDayFrom.current.dayNumber}
-                  onChange={v => (createDayFrom.current.dayNumber = v)}
-                  step={1}
-                />
-                <Button
-                  onClick={() => addDayToTimeline()}
-                  appearance="primary"
-                  style={{marginLeft: '5px'}}>
-                  {t('subscriptionFlow.add')}
-                  Add
-                </Button>
-              </FlexContainer>
-            </PopoverBody>
-          </Popover>
-        }>
-        <IconButton icon={<MdAdd />} color="green" appearance="primary" circle />
-      </Whisper>
-    </TableCell>
+    <PermissionControl qualifyingPermissions={['CAN_UPDATE_SUBSCRIPTION_FLOW']}>
+      <TableCell align="center">
+        <Whisper
+          placement="leftEnd"
+          trigger="click"
+          speaker={
+            <Popover>
+              <PopoverBody>
+                <h6>New day in timeline</h6>
+                <FlexContainer style={{marginTop: '5px'}}>
+                  <InputNumber
+                    defaultValue={createDayFrom.current.dayNumber}
+                    onChange={v => (createDayFrom.current.dayNumber = v)}
+                    step={1}
+                  />
+                  <Button
+                    onClick={() => addDayToTimeline()}
+                    appearance="primary"
+                    style={{marginLeft: '5px'}}>
+                    {t('subscriptionFlow.add')}
+                    Add
+                  </Button>
+                </FlexContainer>
+              </PopoverBody>
+            </Popover>
+          }>
+          <IconButton icon={<MdAdd />} color="green" appearance="primary" circle />
+        </Whisper>
+      </TableCell>
+    </PermissionControl>
   )
 }

@@ -5,6 +5,7 @@ import {MdCheck, MdEdit, MdRefresh} from 'react-icons/all'
 import {useTranslation} from 'react-i18next'
 import {SubscriptionInterval} from '@wepublish/editor/api-v2'
 import {GraphqlClientContext} from '../graphqlClientContext'
+import {useAuthorisation} from '../../../../../../../apps/editor/src/app/atoms/permissionControl'
 
 interface FlowHeadProps {
   days: (number | null | undefined)[]
@@ -19,6 +20,7 @@ const PopoverBody = styled('div')<{wrap?: boolean}>`
 
 export default function ({days, intervals}: FlowHeadProps) {
   const {t} = useTranslation()
+  const canUpdateSubscriptionFlow = useAuthorisation('CAN_UPDATE_SUBSCRIPTION_FLOW')
   const editDay = useRef<number | undefined>(undefined)
 
   const client = useContext(GraphqlClientContext)
@@ -60,7 +62,7 @@ export default function ({days, intervals}: FlowHeadProps) {
               </Tag>
             </>
           )}
-          {!!day && (
+          {!!day && canUpdateSubscriptionFlow && (
             <Whisper
               placement="bottom"
               trigger="click"

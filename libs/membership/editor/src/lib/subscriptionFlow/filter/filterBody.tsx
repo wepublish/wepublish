@@ -16,6 +16,7 @@ import {showErrors} from '../subscriptionFlowList'
 import {MdAdd} from 'react-icons/all'
 import {FullMemberPlanFragment} from '@wepublish/editor/api'
 import {useTranslation} from 'react-i18next'
+import {useAuthorisation} from '../../../../../../../apps/editor/src/app/atoms/permissionControl'
 
 interface FilterBodyProps {
   memberPlan?: FullMemberPlanFragment
@@ -36,6 +37,7 @@ export default function ({
   }
 
   const {t} = useTranslation()
+  const canUpdateSubscriptionFlow = useAuthorisation('CAN_UPDATE_SUBSCRIPTION_FLOW')
   const [newFlow, setNewFlow] = useState<SubscriptionFlowModelCreateInput>({
     autoRenewal: [],
     periodicities: [],
@@ -124,7 +126,9 @@ export default function ({
               label: method.name,
               value: method.id
             }))}
-            disabled={subscriptionFlow?.default || loadingPaymentMethods}
+            disabled={
+              subscriptionFlow?.default || loadingPaymentMethods || !canUpdateSubscriptionFlow
+            }
             countable={false}
             cleanable={false}
             defaultValue={subscriptionFlow?.paymentMethods.map(m => m.id)}
@@ -138,7 +142,7 @@ export default function ({
             label: item,
             value: item
           }))}
-          disabled={subscriptionFlow?.default}
+          disabled={subscriptionFlow?.default || !canUpdateSubscriptionFlow}
           countable={false}
           cleanable={false}
           defaultValue={subscriptionFlow?.periodicities || []}
@@ -151,7 +155,7 @@ export default function ({
             label: t(`subscriptionFlow.booleanFilter.${item}`),
             value: item
           }))}
-          disabled={subscriptionFlow?.default}
+          disabled={subscriptionFlow?.default || !canUpdateSubscriptionFlow}
           countable={false}
           cleanable={false}
           defaultValue={subscriptionFlow?.autoRenewal || []}

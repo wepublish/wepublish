@@ -112,7 +112,7 @@ function MemberPlanList() {
             <HeaderCell>{t('memberPlanList.editFlowShort')}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<FullMemberPlanFragment>) => (
-                <PermissionControl qualifyingPermissions={['CAN_DELETE_MEMBER_PLAN']}>
+                <PermissionControl qualifyingPermissions={['CAN_GET_SUBSCRIPTION_FLOWS']}>
                   <IconButtonTooltip caption={t('delete')}>
                     <Link to={`/communicationflows/edit/${rowData.id}`}>
                       {t('memberPlanList.editFlow')}

@@ -594,15 +594,42 @@ export const CanDeleteEvent: Permission = {
 /**
  * Subscription Settings
  */
-export const CanGetSubscriptionSettings: Permission = {
-  id: 'CAN_GET_SUBSCRIPTION_SETTINGS',
-  description: 'Allows to get subscription renewal settings.',
+export const CanGetSubscriptionFlows: Permission = {
+  id: 'CAN_GET_SUBSCRIPTION_FLOWS',
+  description: 'Allows to get subscription flows.',
   deprecated: false
 }
 
-export const CanUpdateSubscriptionSettings: Permission = {
-  id: 'CAN_UPDATE_SUBSCRIPTION_SETTINGS',
-  description: 'Allows to update subscription settings.',
+export const CanUpdateSubscriptionFlow: Permission = {
+  id: 'CAN_UPDATE_SUBSCRIPTION_FLOW',
+  description: 'Allows to update subscription flow.',
+  deprecated: false
+}
+
+export const CanCreateSubscriptionFlow: Permission = {
+  id: 'CAN_CREATE_SUBSCRIPTION_FLOW',
+  description: 'Allows to create a new subscription flow.',
+  deprecated: false
+}
+
+export const CanDeleteSubscriptionFlow: Permission = {
+  id: 'CAN_DELETE_SUBSCRIPTION_FLOW',
+  description: 'Allows to delete a subscription flow.',
+  deprecated: false
+}
+
+/**
+ * Mail templates
+ */
+export const CanGetMailTemplates: Permission = {
+  id: 'CAN_GET_MAIL-TEMPLATES',
+  description: 'Allows to get mail templates.',
+  deprecated: false
+}
+
+export const CanSyncMailTemplates: Permission = {
+  id: 'CAN_SYNC_MAIL-TEMPLATES',
+  description: 'Allowed to synchronize mail templates from mail provider.',
   deprecated: false
 }
 
@@ -698,8 +725,12 @@ export const AllPermissions: Permission[] = [
   CanUpdateEvent,
   CanDeleteEvent,
   CanCreateEvent,
-  CanGetSubscriptionSettings,
-  CanUpdateSubscriptionSettings
+  CanGetSubscriptionFlows,
+  CanUpdateSubscriptionFlow,
+  CanCreateSubscriptionFlow,
+  CanDeleteSubscriptionFlow,
+  CanGetMailTemplates,
+  CanSyncMailTemplates
 ]
 
 export const EditorPermissions: Permission[] = [
@@ -742,7 +773,9 @@ export const EditorPermissions: Permission[] = [
   CanGetEvent,
   CanUpdateEvent,
   CanDeleteEvent,
-  CanCreateEvent
+  CanCreateEvent,
+  CanGetSubscriptionFlows,
+  CanGetMailTemplates
 ]
 
 export const PeerPermissions: Permission[] = [
