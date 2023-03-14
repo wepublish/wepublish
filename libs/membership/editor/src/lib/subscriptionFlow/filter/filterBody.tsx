@@ -88,7 +88,9 @@ export default function ({
         subscriptionFlow: newFlow
       }
     })
-    onNewFlowCreated()
+    if (onNewFlowCreated) {
+      onNewFlowCreated()
+    }
   }
 
   async function updateFlow(payload: Partial<SubscriptionFlowModelUpdateInput>) {

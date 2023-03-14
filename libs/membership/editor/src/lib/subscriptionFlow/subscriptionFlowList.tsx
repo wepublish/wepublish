@@ -1,7 +1,6 @@
-import React, {createContext, useMemo, useRef, useState} from 'react'
+import React, {createContext, useMemo, useState} from 'react'
 import {ListViewContainer, ListViewHeader} from '../../../../../../apps/editor/src/app/ui/listView'
 import {
-  css,
   styled,
   Table,
   TableBody,
@@ -13,9 +12,7 @@ import {
   Typography
 } from '@mui/material'
 import {
-  MdAdd,
   MdAlarmOn,
-  MdDelete,
   MdFilterAlt,
   MdMouse,
   MdOutlineClose,
@@ -24,14 +21,13 @@ import {
 } from 'react-icons/all'
 import {TFunction, useTranslation} from 'react-i18next'
 import {useParams} from 'react-router-dom'
-import {Button, IconButton, InputNumber, Loader, Message, Popover, toaster, Whisper} from 'rsuite'
+import {Loader, Message, toaster} from 'rsuite'
 import {useMemberPlanListQuery} from '@wepublish/editor/api'
 import {ApolloClient, ApolloError, NormalizedCacheObject} from '@apollo/client'
 import {getApiClientV2} from 'apps/editor/src/app/utility'
 import {
   FullMailTemplateFragment,
   SubscriptionEvent,
-  SubscriptionFlowFragment,
   SubscriptionInterval,
   useCreateSubscriptionIntervalMutation,
   useDeleteSubscriptionFlowMutation,
@@ -42,19 +38,20 @@ import {
   useUpdateSubscriptionIntervalsMutation
 } from '@wepublish/editor/api-v2'
 import {GraphqlClientContext} from './graphqlClientContext'
-import MailTemplateSelect from './mailTemplateSelect'
 import {TypeAttributes} from 'rsuite/esm/@types/common'
-import DraggableSubscriptionInterval from './draggableSubscriptionInterval'
 import {DndContext, DragEndEvent} from '@dnd-kit/core'
-import DroppableSubscriptionInterval from './droppableSubscriptionInterval'
 import FilterBody from './filter/filterBody'
 import FilterHead from './filter/filterHead'
-import FlowHead from './flow/flowHead'
+import FlowHead from './timeline/timelineHead'
+import ActionsHead from './events/eventsHead'
+import ActionsBody from './events/eventsBody'
+import TimelineBody from './timeline/timelineBody'
+import DeleteSubscriptionFlow from './deleteSubscriptionFlow'
 
 /**
  * CONTEXT
  */
-const MailTemplatesContext = createContext<FullMailTemplateFragment[]>([])
+export const MailTemplatesContext = createContext<FullMailTemplateFragment[]>([])
 
 export const showErrors = (error: ApolloError): void => {
   toaster.push(
@@ -76,11 +73,6 @@ export const showSavedToast = (t: TFunction): void => {
  * TYPES
  */
 
-interface CreateDayFormType {
-  open: boolean
-  dayNumber: string | number
-}
-
 const USER_ACTION_EVENTS = [
   SubscriptionEvent.Subscribe,
   SubscriptionEvent.RenewalSuccess,
@@ -97,6 +89,12 @@ const NON_USER_ACTION_EVENTS = [
 ] as const
 type NonUserActionEvents = typeof NON_USER_ACTION_EVENTS[number]
 
+export interface UserActionEvent {
+  title: string
+  description: string
+  subscriptionEventKey: UserActionEvents
+}
+
 export interface UserActionInterval extends SubscriptionInterval {
   event: UserActionEvents
   daysAwayFromEnding: null
@@ -111,7 +109,7 @@ export function isNonUserEvent(event: SubscriptionEvent): event is NonUserAction
   return NON_USER_ACTION_EVENTS.includes(event as NonUserActionEvents)
 }
 
-interface IntervalColoring {
+export interface IntervalColoring {
   bg: TypeAttributes.Color
   fg: TypeAttributes.Color | string
 }
@@ -136,10 +134,6 @@ export default function () {
   const defaultFlowOnly = memberPlanId === 'default'
 
   const [newDay, setNewDay] = useState<number | undefined>(undefined)
-  const createDayFrom = useRef<CreateDayFormType>({
-    open: false,
-    dayNumber: -3
-  })
 
   /******************************************
    * API SERVICES
@@ -228,52 +222,20 @@ export default function () {
     [SubscriptionEvent.DeactivationUnpaid]: {bg: 'orange', fg: 'white'}
   }
 
-  const userActionIntervalFor = function (
-    subscriptionFlow: SubscriptionFlowFragment,
-    eventName: string
-  ): DecoratedSubscriptionInterval<NonUserActionInterval> | undefined {
-    const withTitle = subscriptionFlow.intervals.map(i => {
-      return {
-        title: t(`subscriptionFlow.${i.event.toLowerCase()}`),
-        subscriptionFlowId: subscriptionFlow.id,
-        object: i,
-        icon: eventIcons[i.event.toUpperCase()],
-        color: eventColors[i.event.toUpperCase()]
-      }
-    })
-    return withTitle.find(
-      i => i.object.event === eventName
-    ) as DecoratedSubscriptionInterval<NonUserActionInterval>
-  }
-
-  const nonUserActionIntervalsFor = function (
-    subscriptionFlow: SubscriptionFlowFragment,
-    days: number
-  ): DecoratedSubscriptionInterval<NonUserActionInterval>[] {
-    const intervals = subscriptionFlow.intervals.filter(i => i.daysAwayFromEnding === days)
-    return intervals.map(i => {
-      return {
-        title: t(`subscriptionFlow.${i.event.toLowerCase()}`),
-        subscriptionFlowId: subscriptionFlow.id,
-        object: i,
-        icon: eventIcons[i.event.toUpperCase()],
-        color: eventColors[i.event.toUpperCase()]
-      }
-    }) as DecoratedSubscriptionInterval<NonUserActionInterval>[]
-  }
-
   const loading: boolean = useMemo(
     () => loadingSubscriptionFlows || loadingMailTemplates,
     [loadingSubscriptionFlows, loadingMailTemplates]
   )
 
-  const userActionEvents = USER_ACTION_EVENTS.map(eventName => {
-    return {
-      title: t(`subscriptionFlow.${eventName.toLowerCase()}`),
-      description: t(`subscriptionFlow.${eventName.toLowerCase()}Description`),
-      subscriptionEventKey: eventName
-    }
-  })
+  const userActionEvents: UserActionEvent[] = useMemo(() => {
+    return USER_ACTION_EVENTS.map(eventName => {
+      return {
+        title: t(`subscriptionFlow.${eventName.toLowerCase()}`),
+        description: t(`subscriptionFlow.${eventName.toLowerCase()}Description`),
+        subscriptionEventKey: eventName
+      }
+    })
+  }, [USER_ACTION_EVENTS])
 
   const intervals: SubscriptionInterval[] = useMemo(() => {
     if (!subscriptionFlows) {
@@ -296,13 +258,6 @@ export default function () {
       .sort((a, b) => a! - b!)
     return days.filter((value, index, array) => array.indexOf(value) === index)
   }, [intervals, newDay])
-
-  // Add a new day to timeline
-  const addDayToTimeline = function () {
-    if (createDayFrom.current.dayNumber !== null) {
-      setNewDay(Number(createDayFrom.current.dayNumber))
-    }
-  }
 
   // Add a separation border after every table section (filters | user actions | timeline | actions)
   const filterCount = defaultFlowOnly ? 0 : 4
@@ -332,22 +287,6 @@ export default function () {
       borderRight: `1px solid ${theme.palette.common.black}`
     }
   }))
-  const TableCellBottom = styled(TableCell)`
-    vertical-align: bottom;
-  `
-  const PopoverBody = styled('div')<{wrap?: boolean}>`
-    display: flex;
-    min-width: 170px;
-    justify-content: center;
-    ${props =>
-      props.wrap &&
-      css`
-        flex-wrap: wrap;
-      `}
-  `
-  const FlexContainer = styled('div')`
-    display: flex;
-  `
 
   const DarkTableCell = styled(TableCell)(({theme}) => ({
     backgroundColor: theme.palette.common.black,
@@ -393,7 +332,7 @@ export default function () {
                   )}
                   <DarkTableCell align="center" colSpan={userActionCount}>
                     <MdMouse size={20} style={{marginRight: '5px'}} />
-                    User Actions
+                    Static Subscription Events
                   </DarkTableCell>
                   <DarkTableCell align="center" colSpan={nonUserActionCount}>
                     <MdAlarmOn size={20} style={{marginRight: '5px'}} />
@@ -401,48 +340,23 @@ export default function () {
                   </DarkTableCell>
                   <DarkTableCell align="center">Actions</DarkTableCell>
                 </TableRow>
+                {/************************************************** TABLE HEAD **************************************************/}
                 <SplitTableRow>
-                  {/* filter */}
+                  {/************************************************** FILTERS **************************************************/}
                   <FilterHead defaultFlowOnly={defaultFlowOnly} />
 
-                  {/* user actions */}
+                  {/************************************************** EVENTS **************************************************/}
                   {userActionEvents.map(userActionEvent => (
                     <TableCell key={userActionEvent.subscriptionEventKey} align="center">
                       {userActionEvent.title}
                     </TableCell>
                   ))}
 
-                  {/* individual flow */}
+                  {/************************************************** TIMELINE **************************************************/}
                   <FlowHead days={days} intervals={intervals} />
 
-                  {/* actions */}
-                  <TableCell align="center">
-                    <Whisper
-                      placement="leftEnd"
-                      trigger="click"
-                      speaker={
-                        <Popover>
-                          <PopoverBody wrap>
-                            <h6>New day in timeline</h6>
-                            <FlexContainer style={{marginTop: '5px'}}>
-                              <InputNumber
-                                defaultValue={createDayFrom.current.dayNumber}
-                                onChange={v => (createDayFrom.current.dayNumber = v)}
-                                step={1}
-                              />
-                              <Button
-                                onClick={() => addDayToTimeline()}
-                                appearance="primary"
-                                style={{marginLeft: '5px'}}>
-                                Add
-                              </Button>
-                            </FlexContainer>
-                          </PopoverBody>
-                        </Popover>
-                      }>
-                      <IconButton icon={<MdAdd />} color="green" appearance="primary" circle />
-                    </Whisper>
-                  </TableCell>
+                  {/************************************************** ACTIONS **************************************************/}
+                  <ActionsHead setNewDay={setNewDay} />
                 </SplitTableRow>
               </TableHead>
 
@@ -457,101 +371,28 @@ export default function () {
                         subscriptionFlow={subscriptionFlow}
                         defaultFlowOnly={defaultFlowOnly}
                       />
-                      {/************************************************** USER ACTIONS **************************************************/}
-                      {userActionEvents.map(event => (
-                        <TableCell key={event.subscriptionEventKey} align="center">
-                          {mailTemplates && mailTemplates.mailTemplates && (
-                            <MailTemplateSelect
-                              mailTemplates={mailTemplates.mailTemplates}
-                              subscriptionInterval={userActionIntervalFor(
-                                subscriptionFlow,
-                                event.subscriptionEventKey
-                              )}
-                              subscriptionFlow={subscriptionFlow}
-                              event={event.subscriptionEventKey}
-                            />
-                          )}
-                        </TableCell>
-                      ))}
+                      {/************************************************** EVENTS **************************************************/}
+                      <ActionsBody
+                        subscriptionFlow={subscriptionFlow}
+                        userActionEvents={userActionEvents}
+                        eventIcons={eventIcons}
+                        eventColors={eventColors}
+                      />
 
                       {/************************************************** TIMELINE **************************************************/}
-                      {days &&
-                        mailTemplates &&
-                        days.map(day => {
-                          const currentIntervals = nonUserActionIntervalsFor(subscriptionFlow, day!)
-                          // no interval
-                          if (currentIntervals.length === 0) {
-                            return (
-                              <TableCellBottom
-                                key={`day-${day}`}
-                                align="center"
-                                style={day === 0 ? {backgroundColor: 'lightyellow'} : {}}>
-                                <DraggableSubscriptionInterval
-                                  mailTemplates={mailTemplates.mailTemplates}
-                                  subscriptionInterval={undefined}
-                                  subscriptionFlow={subscriptionFlow}
-                                  event={SubscriptionEvent.Custom}
-                                  newDaysAwayFromEnding={day as number}
-                                />
-                                <DroppableSubscriptionInterval dayIndex={day || 0} />
-                              </TableCellBottom>
-                            )
-                          }
-                          // some intervals
-                          return (
-                            <TableCellBottom
-                              key={`day-${day}`}
-                              align="center"
-                              style={day === 0 ? {backgroundColor: 'lightyellow'} : {}}>
-                              {currentIntervals.map(currentInterval => (
-                                <DraggableSubscriptionInterval
-                                  subscriptionInterval={currentInterval}
-                                  subscriptionFlow={subscriptionFlow}
-                                  mailTemplates={mailTemplates.mailTemplates}
-                                />
-                              ))}
-
-                              <DroppableSubscriptionInterval dayIndex={day || 0} />
-                            </TableCellBottom>
-                          )
-                        })}
+                      <TimelineBody
+                        subscriptionFlow={subscriptionFlow}
+                        days={days}
+                        eventIcons={eventIcons}
+                        eventColors={eventColors}
+                      />
 
                       {/************************************************** ACTIONS **************************************************/}
                       <TableCell align="center">
-                        <Whisper
-                          placement="leftEnd"
-                          trigger="click"
-                          speaker={
-                            <Popover>
-                              <p>
-                                Wenn Du diesen Flow löscht, kann dies nicht rückgängig gemacht
-                                werden. Willst Du trotzdem weiterfahren?
-                              </p>
-                              <IconButton
-                                style={{marginTop: '5px'}}
-                                color="red"
-                                size="sm"
-                                appearance="primary"
-                                icon={<MdDelete />}
-                                onClick={async () => {
-                                  await deleteSubscriptionFlow({
-                                    variables: {subscriptionFlowId: subscriptionFlow.id}
-                                  })
-                                  await refetch()
-                                }}>
-                                Unwiderruflich Löschen
-                              </IconButton>
-                            </Popover>
-                          }>
-                          <IconButton
-                            size="sm"
-                            color="red"
-                            circle
-                            appearance="primary"
-                            icon={<MdDelete />}
-                            disabled={subscriptionFlow.default}
-                          />
-                        </Whisper>
+                        <DeleteSubscriptionFlow
+                          subscriptionFlow={subscriptionFlow}
+                          onSubscriptionFlowDeleted={refetch}
+                        />
                       </TableCell>
                     </DndContext>
                   </SplitTableRow>
