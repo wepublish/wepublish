@@ -467,7 +467,7 @@ function SettingList() {
                           onChange={(value: number) =>
                             setSetting({
                               ...settings[SettingName.SendLoginJwtExpiresMin],
-                              value
+                              value: +value
                             })
                           }
                         />
@@ -488,7 +488,10 @@ function SettingList() {
                           accepter={InputNumber}
                           value={settings[SettingName.ResetPasswordJwtExpiresMin].value}
                           onChange={(value: number) => {
-                            setSetting({...settings[SettingName.ResetPasswordJwtExpiresMin], value})
+                            setSetting({
+                              ...settings[SettingName.ResetPasswordJwtExpiresMin],
+                              value: +value
+                            })
                           }}
                         />
 
@@ -518,7 +521,7 @@ function SettingList() {
                           onChange={(value: number) => {
                             setSetting({
                               ...settings[SettingName.PeeringTimeoutMs],
-                              value
+                              value: +value
                             })
                           }}
                         />
@@ -548,7 +551,7 @@ function SettingList() {
                           onChange={(value: number) =>
                             setSetting({
                               ...settings[SettingName.InvoiceReminderFreq],
-                              value
+                              value: +value
                             })
                           }
                         />
