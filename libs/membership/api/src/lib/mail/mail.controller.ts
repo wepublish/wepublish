@@ -1,7 +1,6 @@
 import {MailTemplateMap, OldContextService, PrismaService} from '@wepublish/api'
 import {Injectable} from '@nestjs/common'
-import {User} from '@wepublish/editor/api'
-import {MailTemplate, MailLogState} from '@prisma/client'
+import {MailTemplate, MailLogState, User} from '@prisma/client'
 
 export enum mailLogType {
   SubscriptionFlow,
@@ -10,10 +9,10 @@ export enum mailLogType {
 
 export type MailControllerConfig = {
   daysAwayFromEnding: number | null
-  mailTemplate: MailTemplate
+  externalMailTemplateId: string
   recipient: User
   isRetry: boolean
-  data: Record<string, any>
+  optionalData: Record<string, any>
   mailType: mailLogType
 }
 
@@ -30,7 +29,7 @@ export class MailController {
   private generateMailIdentifier() {
     return `${this.config.mailType}-${this.sendDate.toISOString()}-${
       this.config.daysAwayFromEnding
-    }-${this.config.mailTemplate.externalMailTemplateId}-${this.config.recipient}`
+    }-${this.config.externalMailTemplateId}-${this.config.recipient}`
   }
 
   private async checkIfMailIsSent(): Promise<number> {
@@ -41,6 +40,17 @@ export class MailController {
     })
   }
 
+  private buildData() {
+    return {
+      user: this.config.recipient,
+      optional: this.config.optionalData,
+      jwt: this.oldContextService.context.generateJWT({
+        id: this.generateMailIdentifier(),
+        expiresInMinutes: 3600
+      })
+    }
+  }
+
   public async sendMail() {
     if (this.config.isRetry && (await this.checkIfMailIsSent())) {
       console.log(`Mail with id <${this.generateMailIdentifier()}> is already sent skipping...`)
@@ -48,9 +58,9 @@ export class MailController {
     }
     await oldContext.mailContext.sendRemoteTemplate({
       mailLogID: this.generateMailIdentifier(),
-      remoteTemplate: this.config.mailTemplate.externalMailTemplateId,
+      remoteTemplate: this.config.externalMailTemplateId,
       recipient: this.config.recipient.email,
-      data: this.config.data
+      data: this.buildData()
     })
     await this.prismaService.mailLog.create({
       data: {
@@ -62,12 +72,14 @@ export class MailController {
         mailProviderID: oldContext.mailContext.mailProvider!.id || '',
         mailIdentifier: this.generateMailIdentifier(),
         mailTemplate: {
-          connect: this.config.mailTemplate
+          connect: {
+            externalMailTemplateId: this.config.externalMailTemplateId
+          }
         }
       }
     })
     console.log(
-      `Sent template ${this.config.mailTemplate.externalMailTemplateId} to ${this.config.recipient.email}`
+      `Sent template ${this.config.externalMailTemplateId} to ${this.config.recipient.email}`
     )
   }
 }

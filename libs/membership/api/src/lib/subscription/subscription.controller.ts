@@ -17,6 +17,7 @@ import {
 import {add, addDays} from 'date-fns'
 import {Injectable} from '@nestjs/common'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
+import {MailController} from '../mail/mail.controller'
 
 export type SubscriptionControllerConfig = {
   subscription: Subscription
@@ -197,15 +198,7 @@ export class SubscriptionController {
       }
     })
   }
-  public async markInvoiceAsPaid(
-    subscription: Subscription & {
-      periods: SubscriptionPeriod[]
-      deactivation: SubscriptionDeactivation | null
-      user: User
-      paymentMethod: PaymentMethod
-      memberPlan: MemberPlan
-    }
-  ) {
+  public async markInvoiceAsPaid(subscription: Subscription) {
     const newPaidUntil = add(subscription.paidUntil || subscription.createdAt, {
       months: this.getMonthCount(subscription.paymentPeriodicity)
     })
@@ -272,10 +265,15 @@ export class SubscriptionController {
       )
     }
     if (paymentProvider.offSessionPayments) {
-      await this.offSessionPayment(invoice, paymentProvider, mailActions)
       console.log('Initiate offsession payment')
+
+      return await this.offSessionPayment(invoice, paymentProvider, mailActions)
     } else {
-      console.log('Remind user to pay invoice')
+      console.log('No action if payment provider not offsession')
+    }
+    return {
+      action: undefined,
+      errorCode: ''
     }
   }
 
@@ -298,7 +296,10 @@ export class SubscriptionController {
     }
     if (!customer) {
       console.log('Send error mail because off session customer not found')
-      return
+      return {
+        action: renewalFailedAction,
+        errorCode: 'customer-not-found'
+      }
     }
 
     const payment = await this.prismaService.payment.create({
@@ -329,13 +330,23 @@ export class SubscriptionController {
       }
     })
 
-    if (intent.state === PaymentState.requiresUserAction) {
-      console.log('Send mail MemberSubscriptionOffSessionFailed')
-    } else {
+    if (intent.state === PaymentState.paid) {
       const renewalSuccessAction = mailActions.find(
         ma => ma.type === SubscriptionEvent.RENEWAL_SUCCESS
       )
+
       console.log('Sent mail MemberSubscriptionOffSessionSuccess')
+      await this.markInvoiceAsPaid(invoice.subscription)
+      return {
+        action: renewalSuccessAction,
+        errorCode: ''
+      }
+    } else {
+      console.log('Send mail MemberSubscriptionOffSessionFailed')
+      return {
+        action: renewalFailedAction,
+        errorCode: 'user-action-required'
+      }
     }
   }
 }
