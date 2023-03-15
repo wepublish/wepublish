@@ -1,11 +1,11 @@
-import {Context, OldContextService, PrismaService} from '@wepublish/api'
+import {OldContextService, PrismaService} from '@wepublish/api'
 import {add, addDays, differenceInDays, endOfDay, set, sub, subMinutes} from 'date-fns'
 import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subscription-event-dictionary'
 import {PeriodicJob, SubscriptionEvent} from '@prisma/client'
 import {PeriodicJobRunObject} from './periodic-job.type'
 import {Injectable} from '@nestjs/common'
 import {SubscriptionController} from '../subscription/subscription.controller'
-import {MailController} from '../mail/mail.controller'
+import {MailController, mailLogType} from '../mail/mail.controller'
 
 @Injectable()
 export class PeriodicJobController {
@@ -51,19 +51,30 @@ export class PeriodicJobController {
           }
         })
         for (const subscriptionsWithEvent of subscriptionsWithEvents) {
+          const daysAwayFromEnding = differenceInDays(
+            periodicJobRunObject.date,
+            this.getStartOfDay(subscriptionsWithEvent.paidUntil!)
+          )
           const subscriptionDictionary = this.subscriptionEventDictionary.getActionFromStore({
             memberplanId: subscriptionsWithEvent.memberPlanID,
             paymentmethodeId: subscriptionsWithEvent.paymentMethodID,
             periodicity: subscriptionsWithEvent.paymentPeriodicity,
             autorenwal: subscriptionsWithEvent.autoRenew,
-            daysAwayFromEnding: differenceInDays(
-              periodicJobRunObject.date,
-              this.getStartOfDay(subscriptionsWithEvent.paidUntil!)
-            )
+            daysAwayFromEnding: daysAwayFromEnding
           })
 
           for (const event of subscriptionDictionary) {
             if (event.type === SubscriptionEvent.CUSTOM) {
+              if (event && event.externalMailTemplate) {
+                await new MailController(this.prismaService, this.oldContextService, {
+                  daysAwayFromEnding,
+                  externalMailTemplateId: event.externalMailTemplate,
+                  recipient: subscriptionsWithEvent.user,
+                  isRetry: periodicJobRunObject.isRetry,
+                  optionalData: subscriptionsWithEvent,
+                  mailType: mailLogType.SubscriptionFlow
+                }).sendMail()
+              }
               console.log(`SEND MAIL TEMPLATE ${event.externalMailTemplate}`)
             }
           }
@@ -96,25 +107,26 @@ export class PeriodicJobController {
             add(subscriptionToCreateInvoice.paidUntil, {
               days: eventInvoiceCreation[0].daysAwayFromEnding!
             }) >= periodicJobRunObject.date
-          )
+          ) {
             continue
-
-          const eventDeactivationUnpaid = this.subscriptionEventDictionary.getActionFromStore({
-            memberplanId: subscriptionToCreateInvoice.memberPlanID,
-            paymentmethodeId: subscriptionToCreateInvoice.paymentMethodID,
-            periodicity: subscriptionToCreateInvoice.paymentPeriodicity,
-            autorenwal: subscriptionToCreateInvoice.autoRenew,
-            events: [SubscriptionEvent.DEACTIVATION_UNPAID]
-          })
-          if (!eventDeactivationUnpaid[0]) {
-            throw Error('No subscription deactivation found!')
           }
 
           await this.subscriptionController.createInvoice(
             subscriptionToCreateInvoice,
-            eventDeactivationUnpaid[0]
+            eventInvoiceCreation[0]
           )
-          console.log(subscriptionToCreateInvoice)
+
+          if (eventInvoiceCreation[0].externalMailTemplate) {
+            await new MailController(this.prismaService, this.oldContextService, {
+              daysAwayFromEnding: eventInvoiceCreation[0].daysAwayFromEnding,
+              externalMailTemplateId: eventInvoiceCreation[0].externalMailTemplate,
+              recipient: subscriptionToCreateInvoice.user,
+              isRetry: periodicJobRunObject.isRetry,
+              optionalData: subscriptionToCreateInvoice,
+              mailType: mailLogType.SubscriptionFlow
+            }).sendMail()
+          }
+
           console.log('CODE FOR CREATE INVOICE')
         }
 
@@ -124,10 +136,9 @@ export class PeriodicJobController {
         const subscriptionsToChargeInvoice = await this.subscriptionController.getInvoicesToCharge(
           this.getEndOfDay(periodicJobRunObject.date)
         )
-        console.log(subscriptionsToChargeInvoice)
         for (const subscriptionToChargeInvoice of subscriptionsToChargeInvoice) {
           if (!subscriptionToChargeInvoice.subscription) {
-            throw Error('XXXXX')
+            throw Error(`Invoice ${subscriptionToChargeInvoice.id} has no subscription assigned!`)
           }
 
           const eventsRenewal = this.subscriptionEventDictionary.getActionFromStore({
@@ -137,12 +148,30 @@ export class PeriodicJobController {
             autorenwal: subscriptionToChargeInvoice.subscription.autoRenew,
             events: [SubscriptionEvent.RENEWAL_SUCCESS, SubscriptionEvent.RENEWAL_FAILED]
           })
-          console.log(eventsRenewal)
 
-          await this.subscriptionController.chargeInvoice(
+          const mailAction = await this.subscriptionController.chargeInvoice(
             subscriptionToChargeInvoice,
             eventsRenewal
           )
+          if (
+            mailAction.action &&
+            mailAction.action.externalMailTemplate &&
+            subscriptionToChargeInvoice.user
+          ) {
+            const {paymentProviderCustomers, ...user} = subscriptionToChargeInvoice.user
+            await new MailController(this.prismaService, this.oldContextService, {
+              daysAwayFromEnding: mailAction.action.daysAwayFromEnding,
+              externalMailTemplateId: mailAction.action.externalMailTemplate,
+              recipient: user,
+              isRetry: periodicJobRunObject.isRetry,
+              optionalData: {
+                errorCode: mailAction.errorCode,
+                ...subscriptionToChargeInvoice
+              },
+              mailType: mailLogType.SubscriptionFlow
+            }).sendMail()
+          }
+
           console.log('CODE FOR CHARGE SUBSCRIPTION')
         }
 
@@ -152,9 +181,40 @@ export class PeriodicJobController {
         const subscriptionsToDeactivateInvoice =
           await this.subscriptionController.getSubscriptionsToDeactivate(periodicJobRunObject.date)
         for (const subscriptionToDeactivateInvoice of subscriptionsToDeactivateInvoice) {
+          if (!subscriptionToDeactivateInvoice.subscription) {
+            throw Error(
+              `Invoice ${subscriptionToDeactivateInvoice.id} has no subscription assigned!`
+            )
+          }
+          const eventDeactivationUnpaid = this.subscriptionEventDictionary.getActionFromStore({
+            memberplanId: subscriptionToDeactivateInvoice.subscription.memberPlanID,
+            paymentmethodeId: subscriptionToDeactivateInvoice.subscription.paymentMethodID,
+            periodicity: subscriptionToDeactivateInvoice.subscription.paymentPeriodicity,
+            autorenwal: subscriptionToDeactivateInvoice.subscription.autoRenew,
+            events: [SubscriptionEvent.DEACTIVATION_UNPAID]
+          })
+          if (!eventDeactivationUnpaid[0]) {
+            throw Error('No subscription deactivation found!')
+          }
           await this.subscriptionController.deactivateSubscription(subscriptionToDeactivateInvoice)
+          if (
+            eventDeactivationUnpaid[0].externalMailTemplate &&
+            subscriptionToDeactivateInvoice.user
+          ) {
+            await new MailController(this.prismaService, this.oldContextService, {
+              daysAwayFromEnding: eventDeactivationUnpaid[0].daysAwayFromEnding,
+              externalMailTemplateId: eventDeactivationUnpaid[0].externalMailTemplate,
+              recipient: subscriptionToDeactivateInvoice.user,
+              isRetry: periodicJobRunObject.isRetry,
+              optionalData: subscriptionToDeactivateInvoice,
+              mailType: mailLogType.SubscriptionFlow
+            }).sendMail()
+          }
+
           console.log('CODE FOR DEACTIVATE SUBSCRIPTION')
         }
+
+        throw Error('dasdasdas')
       } catch (e) {
         await this.markJobFailed((e as Error).toString())
         throw e
