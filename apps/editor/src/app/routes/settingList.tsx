@@ -464,7 +464,7 @@ function SettingList() {
                           name={SettingName.SendLoginJwtExpiresMin}
                           accepter={InputNumber}
                           value={settings[SettingName.SendLoginJwtExpiresMin].value}
-                          onChange={(value: number) =>
+                          onChange={(value: string) =>
                             setSetting({
                               ...settings[SettingName.SendLoginJwtExpiresMin],
                               value: +value
@@ -487,7 +487,7 @@ function SettingList() {
                           name={SettingName.ResetPasswordJwtExpiresMin}
                           accepter={InputNumber}
                           value={settings[SettingName.ResetPasswordJwtExpiresMin].value}
-                          onChange={(value: number) => {
+                          onChange={(value: string) => {
                             setSetting({
                               ...settings[SettingName.ResetPasswordJwtExpiresMin],
                               value: +value
@@ -518,7 +518,7 @@ function SettingList() {
                           name={SettingName.PeeringTimeoutMs}
                           accepter={InputNumber}
                           value={settings[SettingName.PeeringTimeoutMs].value}
-                          onChange={(value: number) => {
+                          onChange={(value: string) => {
                             setSetting({
                               ...settings[SettingName.PeeringTimeoutMs],
                               value: +value
@@ -548,7 +548,7 @@ function SettingList() {
                           name={SettingName.InvoiceReminderFreq}
                           accepter={InputNumber}
                           value={settings[SettingName.InvoiceReminderFreq].value}
-                          onChange={(value: number) =>
+                          onChange={(value: string) =>
                             setSetting({
                               ...settings[SettingName.InvoiceReminderFreq],
                               value: +value
