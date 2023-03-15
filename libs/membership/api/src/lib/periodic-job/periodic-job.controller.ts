@@ -155,8 +155,6 @@ export class PeriodicJobController {
           await this.subscriptionController.deactivateSubscription(subscriptionToDeactivateInvoice)
           console.log('CODE FOR DEACTIVATE SUBSCRIPTION')
         }
-
-        throw Error('dasdasdas')
       } catch (e) {
         await this.markJobFailed((e as Error).toString())
         throw e
