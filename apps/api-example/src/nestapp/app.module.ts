@@ -2,10 +2,13 @@ import {Module} from '@nestjs/common'
 import {ApiModule} from '@wepublish/nest-modules'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
-import {DashboardModule} from '@wepublish/membership/api'
-import {ConsentModule} from '@wepublish/consent/api'
-import {AuthenticationModule} from '@wepublish/authentication/api'
-import {PermissionModule} from '@wepublish/permissions/api'
+import {
+  SettingModule,
+  DashboardModule,
+  AuthenticationModule,
+  PermissionModule,
+  ConsentModule
+} from '@wepublish/api'
 
 @Module({
   imports: [
@@ -23,7 +26,8 @@ import {PermissionModule} from '@wepublish/permissions/api'
     DashboardModule,
     AuthenticationModule,
     PermissionModule,
-    ConsentModule
+    ConsentModule,
+    SettingModule
   ],
   controllers: [],
   providers: []

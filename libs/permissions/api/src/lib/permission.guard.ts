@@ -12,12 +12,12 @@ export class PermissionsGuard implements CanActivate {
   public canActivate(context: ExecutionContext): boolean {
     const ctx = GqlExecutionContext.create(context)
 
-    const permissions = this.reflector.get<Permission[]>(
-      PERMISSIONS_METADATA_KEY,
-      context.getHandler()
-    )
+    const permissions = this.reflector.getAllAndMerge<Permission[]>(PERMISSIONS_METADATA_KEY, [
+      context.getHandler(),
+      context.getClass()
+    ])
 
-    if (!permissions?.length) {
+    if (!permissions.length) {
       return true
     }
 

@@ -5,7 +5,16 @@ import {PERMISSIONS_METADATA_KEY} from './permission.decorator'
 import {GqlExecutionContext} from '@nestjs/graphql'
 import {Permission} from './permissions'
 
-jest.mock('@nestjs/graphql')
+jest.mock('@nestjs/graphql', () => {
+  const original = jest.requireActual('@nestjs/graphql')
+
+  return {
+    ...original,
+    GqlExecutionContext: {
+      create: jest.fn()
+    }
+  }
+})
 
 const mockPermission: Permission = {
   id: 'Foo',
@@ -40,36 +49,27 @@ describe('PermissionsGuard', () => {
   })
 
   it('should return true if no permissions are set', () => {
-    const spy = jest.spyOn(reflector, 'get').mockReturnValue(undefined)
+    const spy = jest.spyOn(reflector, 'getAllAndMerge').mockReturnValue([])
     const mockContext = {
-      getHandler: () => ({})
+      getHandler: () => ({}),
+      getClass: () => ({})
     } as any
 
     const result = guard.canActivate(mockContext)
     expect(result).toBeTruthy()
-    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, {})
-  })
-
-  it('should return true if an empty array of permissions is set', () => {
-    const spy = jest.spyOn(reflector, 'get').mockReturnValue([])
-    const mockContext = {
-      getHandler: () => ({})
-    } as any
-
-    const result = guard.canActivate(mockContext)
-    expect(result).toBeTruthy()
-    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, {})
+    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, [{}, {}])
   })
 
   it('should return true if the user has the required permissions', () => {
-    const spy = jest.spyOn(reflector, 'get').mockReturnValue([mockPermission])
+    const spy = jest.spyOn(reflector, 'getAllAndMerge').mockReturnValue([mockPermission])
     const mockContext = {
-      getHandler: () => ({})
+      getHandler: () => ({}),
+      getClass: () => ({})
     } as any
 
     const result = guard.canActivate(mockContext)
     expect(result).toBeTruthy()
-    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, {})
+    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, [{}, {}])
   })
 
   it('should return false if the user is not logged in', () => {
@@ -82,19 +82,20 @@ describe('PermissionsGuard', () => {
     }))
     GqlExecutionContext.create = mockedCreate
 
-    const spy = jest.spyOn(reflector, 'get').mockReturnValue([mockPermission])
+    const spy = jest.spyOn(reflector, 'getAllAndMerge').mockReturnValue([mockPermission])
 
     const mockContext = {
-      getHandler: () => ({})
+      getHandler: () => ({}),
+      getClass: () => ({})
     } as any
 
     const result = guard.canActivate(mockContext)
     expect(result).toBeFalsy()
-    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, {})
+    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, [{}, {}])
   })
 
   it('should return false if the user does not have the required permissions', () => {
-    const spy = jest.spyOn(reflector, 'get').mockReturnValue([
+    const spy = jest.spyOn(reflector, 'getAllAndMerge').mockReturnValue([
       {
         id: 'Bar',
         description: 'Barfoo',
@@ -103,11 +104,12 @@ describe('PermissionsGuard', () => {
     ])
 
     const mockContext = {
-      getHandler: () => ({})
+      getHandler: () => ({}),
+      getClass: () => ({})
     } as any
 
     const result = guard.canActivate(mockContext)
     expect(result).toBeFalsy()
-    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, {})
+    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, [{}, {}])
   })
 })

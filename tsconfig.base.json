@@ -30,6 +30,7 @@
       "@wepublish/navigation/website": ["libs/navigation/website/src/index.ts"],
       "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"],
       "@wepublish/permissions/api": ["libs/permissions/api/src/index.ts"],
+      "@wepublish/settings/api": ["libs/settings/api/src/index.ts"],
       "@wepublish/ui": ["libs/ui/src/index.ts"],
       "@wepublish/ui/editor": ["libs/ui/editor/src/index.ts"],
       "@wepublish/user/api": ["libs/user/api/src/index.ts"],
