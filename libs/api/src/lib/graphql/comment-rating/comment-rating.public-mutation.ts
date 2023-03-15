@@ -5,7 +5,7 @@ import {
   InvalidStarRatingValueError,
   NotFound
 } from '../../error'
-import {SettingName} from '../../db/setting'
+import {SettingName} from '@wepublish/settings/api'
 
 export const validateCommentRatingValue = (type: RatingSystemType, value: number) => {
   switch (type) {

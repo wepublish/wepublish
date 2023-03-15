@@ -7,7 +7,7 @@ import {
   PrismaClient
 } from '@prisma/client'
 import {Context} from '../../context'
-import {SettingName} from '../../db/setting'
+import {SettingName} from '@wepublish/settings/api'
 import {
   AnonymousCommentError,
   AnonymousCommentsDisabledError,

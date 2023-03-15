@@ -1,5 +1,6 @@
 import {PrismaClient} from '@prisma/client'
-import {SettingName} from '../src/lib/db/setting'
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import {SettingName} from '../../settings/api/src/lib/setting'
 
 const seedSettings = (prisma: PrismaClient) => [
   prisma.setting.upsert({
@@ -88,6 +89,72 @@ const seedSettings = (prisma: PrismaClient) => [
       name: SettingName.INVOICE_REMINDER_MAX_TRIES,
       value: 5,
       settingRestriction: {minValue: 0, maxValue: 10}
+    }
+  }),
+  prisma.setting.upsert({
+    where: {
+      name: SettingName.MAKE_NEW_SUBSCRIBERS_API_PUBLIC
+    },
+    update: {},
+    create: {
+      name: SettingName.MAKE_NEW_SUBSCRIBERS_API_PUBLIC,
+      value: false,
+      settingRestriction: {allowedValues: {boolChoice: true}}
+    }
+  }),
+  prisma.setting.upsert({
+    where: {
+      name: SettingName.MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC
+    },
+    update: {},
+    create: {
+      name: SettingName.MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC,
+      value: false,
+      settingRestriction: {allowedValues: {boolChoice: true}}
+    }
+  }),
+  prisma.setting.upsert({
+    where: {
+      name: SettingName.MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC
+    },
+    update: {},
+    create: {
+      name: SettingName.MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC,
+      value: false,
+      settingRestriction: {allowedValues: {boolChoice: true}}
+    }
+  }),
+  prisma.setting.upsert({
+    where: {
+      name: SettingName.MAKE_NEW_DEACTIVATIONS_API_PUBLIC
+    },
+    update: {},
+    create: {
+      name: SettingName.MAKE_NEW_DEACTIVATIONS_API_PUBLIC,
+      value: false,
+      settingRestriction: {allowedValues: {boolChoice: true}}
+    }
+  }),
+  prisma.setting.upsert({
+    where: {
+      name: SettingName.MAKE_EXPECTED_REVENUE_API_PUBLIC
+    },
+    update: {},
+    create: {
+      name: SettingName.MAKE_EXPECTED_REVENUE_API_PUBLIC,
+      value: false,
+      settingRestriction: {allowedValues: {boolChoice: true}}
+    }
+  }),
+  prisma.setting.upsert({
+    where: {
+      name: SettingName.MAKE_REVENUE_API_PUBLIC
+    },
+    update: {},
+    create: {
+      name: SettingName.MAKE_REVENUE_API_PUBLIC,
+      value: false,
+      settingRestriction: {allowedValues: {boolChoice: true}}
     }
   })
 ]

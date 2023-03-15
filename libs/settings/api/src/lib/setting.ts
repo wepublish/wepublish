@@ -13,7 +13,15 @@ export enum SettingName {
   RESET_PASSWORD_JWT_EXPIRES_MIN = 'resetPasswordJwtExpiresMin',
   PEERING_TIMEOUT_MS = 'peeringTimeoutInMs',
   INVOICE_REMINDER_FREQ = 'invoiceFreqReminder',
-  INVOICE_REMINDER_MAX_TRIES = 'invoiceReminderMaxTries'
+  INVOICE_REMINDER_MAX_TRIES = 'invoiceReminderMaxTries',
+
+  MAKE_NEW_SUBSCRIBERS_API_PUBLIC = 'makeNewSubscribersApiPublic',
+  MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC = 'makeActiveSubscribersApiPublic',
+  MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC = 'makeRenewingSubscribersApiPublic',
+  MAKE_NEW_DEACTIVATIONS_API_PUBLIC = 'makeNewDeactivationsApiPublic',
+
+  MAKE_EXPECTED_REVENUE_API_PUBLIC = 'makeExpectedRevenueApiPublic',
+  MAKE_REVENUE_API_PUBLIC = 'makeRevenueApiPublic'
 }
 
 export type SettingInput<T = unknown> = Pick<Setting<T>, 'value'>
