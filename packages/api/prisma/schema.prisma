@@ -195,7 +195,7 @@ model Image {
   Newsroom    Newsroom[]
   Comment     Comment[]
 
-  newsroomId String ? @db.Uuid
+  newsroomId String? @db.Uuid
 
   articleRevisionSocialMediaImages ArticleRevision[] @relation("articleRevisionSocialMediaImage")
   articleRevisionImages            ArticleRevision[] @relation("articleRevisionImage")
@@ -613,9 +613,9 @@ model Newsroom {
    modifiedAt DateTime @updatedAt @default(now())
 
     name       String
-    slug       String ?
-    hostURL    String ?
-    token      String ?
+    slug       String?
+    hostURL    String?
+    token      String?
     isDisabled Boolean @default(false)
 
       themeColor           String? @default("#000000")
