@@ -1,4 +1,3 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import {PrismaClient} from '@prisma/client'
 import {seed as rootSeed} from '../../../libs/api/prisma/seed'
 import {hashPassword} from '../../../libs/api/src/lib/db/user'

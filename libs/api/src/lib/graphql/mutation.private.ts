@@ -10,7 +10,7 @@ import {
 import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../context'
 import {Block, BlockMap, BlockType} from '../db/block'
-import {SettingName} from '../db/setting'
+import {SettingName} from '@wepublish/settings/api'
 import {unselectPassword} from '@wepublish/user/api'
 import {NotFound} from '../error'
 import {SendMailType} from '../mails/mailContext'
