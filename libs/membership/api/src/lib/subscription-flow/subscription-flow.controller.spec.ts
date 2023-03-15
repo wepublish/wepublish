@@ -2,14 +2,17 @@ import {Test, TestingModule} from '@nestjs/testing'
 import {SubscriptionFlowController} from './subscription-flow.controller'
 import {clearDatabase} from '../../prisma-utils'
 import {PrismaModule} from '@wepublish/nest-modules'
-import {PrismaService} from '@wepublish/api'
+import {OldContextService, PrismaService} from '@wepublish/api'
 import {
   MailTemplate,
   MemberPlan,
   PaymentPeriodicity,
   PrismaClient,
+  SubscriptionEvent,
   SubscriptionFlow
 } from '@prisma/client'
+import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
+import {SubscriptionController} from '../subscription/subscription.controller'
 
 describe('SubscriptionFlowController', () => {
   let controller: SubscriptionFlowController
@@ -54,8 +57,18 @@ describe('SubscriptionFlowController', () => {
         paymentMethods: undefined,
         periodicities: options.periodicities || [],
         autoRenewal: [],
-        subscribeMailTemplate: {connect: {id: options.mailTemplateId}},
-        renewalFailedMailTemplate: {connect: {id: options.mailTemplateId}}
+        intervals: {
+          create: [
+            {
+              event: SubscriptionEvent.SUBSCRIBE,
+              mailTemplate: {connect: {id: options.mailTemplateId}}
+            },
+            {
+              event: SubscriptionEvent.RENEWAL_FAILED,
+              mailTemplate: {connect: {id: options.mailTemplateId}}
+            }
+          ]
+        }
       }
     })
   }
@@ -63,7 +76,13 @@ describe('SubscriptionFlowController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [PrismaModule.forTest(prismaClient)],
-      providers: [PrismaService, SubscriptionFlowController]
+      providers: [
+        PrismaService,
+        SubscriptionFlowController,
+        PeriodicJobController,
+        OldContextService,
+        SubscriptionController
+      ]
     }).compile()
 
     controller = module.get<SubscriptionFlowController>(SubscriptionFlowController)
@@ -98,7 +117,7 @@ describe('SubscriptionFlowController', () => {
       mailTemplateId: template.id
     })
 
-    const result = await controller.getFlow(true)
+    const result = await controller.getFlows(true)
     expect(result.length).toEqual(1)
     expect(result[0].default).toEqual(true)
     expect(result[0].id).toEqual(defaultFlow.id)
@@ -118,7 +137,7 @@ describe('SubscriptionFlowController', () => {
       mailTemplateId: template.id
     })
 
-    const result = await controller.getFlow(false)
+    const result = await controller.getFlows(false)
     expect(result.length).toEqual(2)
     expect(result[0].default).toEqual(true)
     expect(result[0].id).toEqual(defaultFlow.id)
@@ -127,29 +146,20 @@ describe('SubscriptionFlowController', () => {
   })
 
   it('creates a flow', async () => {
-    const template = await createTemplate(prismaClient)
     const plan = await createPlan(prismaClient)
 
     await controller.createFlow({
-      memberPlan: {id: plan.id},
-      paymentMethods: [],
-      periodicities: [],
-      autoRenewal: [],
-      subscribeMailTemplate: {id: template.id},
-      invoiceCreationMailTemplate: {daysAwayFromEnding: 3, mailTemplate: {id: template.id}},
-      renewalSuccessMailTemplate: {id: template.id},
-      renewalFailedMailTemplate: {id: template.id},
-      deactivationUnpaidMailTemplate: {daysAwayFromEnding: 3, mailTemplate: {id: template.id}},
-      deactivationByUserMailTemplate: {id: template.id},
-      reactivationMailTemplate: {id: template.id},
-      additionalIntervals: []
+      memberPlanId: plan.id,
+      paymentMethodIds: ['aabbccdd'],
+      periodicities: [PaymentPeriodicity.monthly],
+      autoRenewal: [true]
     })
 
-    const flows = await prismaClient.subscriptionFlow.findMany()
+    const flows = await prismaClient.subscriptionFlow.findMany({include: {intervals: true}})
     expect(flows.length).toEqual(1)
     expect(flows[0].default).toEqual(false)
     expect(flows[0].memberPlanId).toEqual(plan.id)
-    expect(flows[0].subscribeMailTemplateId).toEqual(template.id)
+    expect(flows[0].intervals.length).toEqual(0)
   })
 
   it('prevents creation of equal flows', async () => {
@@ -163,11 +173,10 @@ describe('SubscriptionFlowController', () => {
 
     await expect(
       controller.createFlow({
-        memberPlan: {id: plan.id},
-        paymentMethods: [],
+        memberPlanId: plan.id,
+        paymentMethodIds: [],
         periodicities: [],
-        autoRenewal: [],
-        additionalIntervals: []
+        autoRenewal: []
       })
     ).rejects.toThrowError()
 
@@ -188,11 +197,10 @@ describe('SubscriptionFlowController', () => {
 
     await expect(
       controller.createFlow({
-        memberPlan: {id: plan.id},
-        paymentMethods: [],
+        memberPlanId: plan.id,
+        paymentMethodIds: [],
         periodicities: ['monthly'],
-        autoRenewal: [],
-        additionalIntervals: []
+        autoRenewal: []
       })
     ).rejects.toThrowError()
 
@@ -212,11 +220,10 @@ describe('SubscriptionFlowController', () => {
     })
 
     await controller.createFlow({
-      memberPlan: {id: plan.id},
-      paymentMethods: [],
+      memberPlanId: plan.id,
+      paymentMethodIds: [],
       periodicities: ['yearly'],
-      autoRenewal: [],
-      additionalIntervals: []
+      autoRenewal: []
     })
 
     const flows = await prismaClient.subscriptionFlow.findMany()
@@ -227,7 +234,7 @@ describe('SubscriptionFlowController', () => {
     expect(flows[1].id).not.toEqual(existingFlow.id)
   })
 
-  it('updates a flow', async () => {
+  it('updates intervals of a flow', async () => {
     const template = await createTemplate(prismaClient)
     const plan = await createPlan(prismaClient)
     const flow = await createFlow(prismaClient, {
@@ -236,20 +243,25 @@ describe('SubscriptionFlowController', () => {
     })
     const template2 = await createTemplate(prismaClient)
 
-    const createdFlow = await prismaClient.subscriptionFlow.findFirst({where: {id: flow.id}})
-    expect(createdFlow?.subscribeMailTemplateId).toEqual(template.id)
+    const createdFlow = await prismaClient.subscriptionFlow.findFirst({
+      where: {id: flow.id},
+      include: {intervals: true}
+    })
+    const existingInterval = createdFlow?.intervals.find(
+      i => i.event === SubscriptionEvent.SUBSCRIBE
+    )
+    expect(existingInterval?.mailTemplateId).toEqual(template.id)
 
-    await controller.updateFlow({
-      id: flow.id,
-      paymentMethods: [],
-      periodicities: [],
-      autoRenewal: [],
-      subscribeMailTemplate: {id: template2.id},
-      renewalFailedMailTemplate: {id: template2.id},
-      additionalIntervals: []
+    await controller.updateInterval({
+      id: existingInterval!.id,
+      mailTemplateId: template2.id
     })
 
-    const updatedFlow = await prismaClient.subscriptionFlow.findFirst({where: {id: flow.id}})
-    expect(updatedFlow?.subscribeMailTemplateId).toEqual(template2.id)
+    const updatedFlow = await prismaClient.subscriptionFlow.findFirst({
+      where: {id: flow.id},
+      include: {intervals: true}
+    })
+    const newInterval = updatedFlow?.intervals.find(i => i.event === SubscriptionEvent.SUBSCRIBE)
+    expect(newInterval?.mailTemplateId).toEqual(template2.id)
   })
 })
