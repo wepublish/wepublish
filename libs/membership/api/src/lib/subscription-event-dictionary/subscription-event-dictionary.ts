@@ -153,7 +153,7 @@ export class SubscriptionEventDictionary {
     ]
     for (const pathElement of pathElements) {
       if (!(pathElement in path)) {
-        return this.getActionByDay(this.store.defaultFlow, query.daysAwayFromEnding, query.event)
+        return this.getActionByDay(this.store.defaultFlow, query.daysAwayFromEnding, query.events)
       }
       path = path[pathElement]
     }
@@ -161,19 +161,19 @@ export class SubscriptionEventDictionary {
       this.store.customFlow![query.memberplanId]![query.paymentmethodeId]![query.periodicity]![
         query.autorenwal.toString()
       ]
-    return this.getActionByDay(custom_path, query.daysAwayFromEnding, query.event)
+    return this.getActionByDay(custom_path, query.daysAwayFromEnding, query.events)
   }
 
   private getActionByDay(
     timeline: StoreTimeline,
-    daysAwayFromEnding: number | null,
-    event: SubscriptionEvent | undefined
+    daysAwayFromEnding: number | undefined,
+    lookupEvents: SubscriptionEvent[] | undefined
   ): Action[] {
-    if (event) {
+    if (lookupEvents) {
       let events: Action[] = []
       let k: keyof typeof timeline
       for (k in timeline) {
-        events = events.concat(timeline[k].filter(e => e.type === event))
+        events = events.concat(timeline[k].filter(e => lookupEvents.includes(e.type)))
       }
       return events
     }

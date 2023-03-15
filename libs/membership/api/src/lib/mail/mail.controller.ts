@@ -18,7 +18,7 @@ export type MailControllerConfig = {
 }
 
 @Injectable()
-class MailController {
+export class MailController {
   private sendDate: Date
   constructor(
     private readonly prismaService: PrismaService,

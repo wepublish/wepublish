@@ -1,10 +1,11 @@
 import {Context, OldContextService, PrismaService} from '@wepublish/api'
-import {add, addDays, differenceInDays, set, sub, subMinutes} from 'date-fns'
+import {add, addDays, differenceInDays, endOfDay, set, sub, subMinutes} from 'date-fns'
 import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subscription-event-dictionary'
 import {PeriodicJob, SubscriptionEvent} from '@prisma/client'
 import {PeriodicJobRunObject} from './periodic-job.type'
 import {Injectable} from '@nestjs/common'
 import {SubscriptionController} from '../subscription/subscription.controller'
+import {MailController} from '../mail/mail.controller'
 
 @Injectable()
 export class PeriodicJobController {
@@ -27,7 +28,9 @@ export class PeriodicJobController {
         await this.markJobStarted(periodicJobRunObject.date)
       }
       try {
-        // Process Custom Events
+        //
+        // Sent Custom Mails
+        //
         this.subscriptionEventDictionary.buildCustomEventDateList(periodicJobRunObject.date)
         const subscriptionsWithEvents = await this.prismaService.subscription.findMany({
           where: {
@@ -47,7 +50,6 @@ export class PeriodicJobController {
             memberPlan: true
           }
         })
-
         for (const subscriptionsWithEvent of subscriptionsWithEvents) {
           const subscriptionDictionary = this.subscriptionEventDictionary.getActionFromStore({
             memberplanId: subscriptionsWithEvent.memberPlanID,
@@ -56,11 +58,10 @@ export class PeriodicJobController {
             autorenwal: subscriptionsWithEvent.autoRenew,
             daysAwayFromEnding: differenceInDays(
               periodicJobRunObject.date,
-              this.setDateMidnight(subscriptionsWithEvent.paidUntil!)
+              this.getStartOfDay(subscriptionsWithEvent.paidUntil!)
             )
           })
 
-          // HERE DO OTHER ACTIONS
           for (const event of subscriptionDictionary) {
             if (event.type === SubscriptionEvent.CUSTOM) {
               console.log(`SEND MAIL TEMPLATE ${event.externalMailTemplate}`)
@@ -68,7 +69,9 @@ export class PeriodicJobController {
           }
         }
 
-        // Creating invoice
+        //
+        // Creating invoices which need to get created
+        //
         const subscriptionsToCreateInvoice =
           await this.subscriptionController.getSubscriptionsForInvoiceCreation(
             periodicJobRunObject.date,
@@ -82,8 +85,7 @@ export class PeriodicJobController {
             paymentmethodeId: subscriptionToCreateInvoice.paymentMethodID,
             periodicity: subscriptionToCreateInvoice.paymentPeriodicity,
             autorenwal: subscriptionToCreateInvoice.autoRenew,
-            daysAwayFromEnding: null,
-            event: SubscriptionEvent.INVOICE_CREATION
+            events: [SubscriptionEvent.INVOICE_CREATION]
           })
           if (!eventInvoiceCreation[0]) {
             throw Error('No invoice creation found!')
@@ -102,8 +104,7 @@ export class PeriodicJobController {
             paymentmethodeId: subscriptionToCreateInvoice.paymentMethodID,
             periodicity: subscriptionToCreateInvoice.paymentPeriodicity,
             autorenwal: subscriptionToCreateInvoice.autoRenew,
-            daysAwayFromEnding: null,
-            event: SubscriptionEvent.DEACTIVATION_UNPAID
+            events: [SubscriptionEvent.DEACTIVATION_UNPAID]
           })
           if (!eventDeactivationUnpaid[0]) {
             throw Error('No subscription deactivation found!')
@@ -117,15 +118,37 @@ export class PeriodicJobController {
           console.log('CODE FOR CREATE INVOICE')
         }
 
+        //
         // Charging Invoices which are due
+        //
         const subscriptionsToChargeInvoice = await this.subscriptionController.getInvoicesToCharge(
-          periodicJobRunObject.date
+          this.getEndOfDay(periodicJobRunObject.date)
         )
+        console.log(subscriptionsToChargeInvoice)
         for (const subscriptionToChargeInvoice of subscriptionsToChargeInvoice) {
+          if (!subscriptionToChargeInvoice.subscription) {
+            throw Error('XXXXX')
+          }
+
+          const eventsRenewal = this.subscriptionEventDictionary.getActionFromStore({
+            memberplanId: subscriptionToChargeInvoice.subscription.memberPlanID,
+            paymentmethodeId: subscriptionToChargeInvoice.subscription.paymentMethodID,
+            periodicity: subscriptionToChargeInvoice.subscription.paymentPeriodicity,
+            autorenwal: subscriptionToChargeInvoice.subscription.autoRenew,
+            events: [SubscriptionEvent.RENEWAL_SUCCESS, SubscriptionEvent.RENEWAL_FAILED]
+          })
+          console.log(eventsRenewal)
+
+          await this.subscriptionController.chargeInvoice(
+            subscriptionToChargeInvoice,
+            eventsRenewal
+          )
           console.log('CODE FOR CHARGE SUBSCRIPTION')
         }
 
-        // Deactivate Subscriptions which are overdue
+        //
+        // Deactivate Subscriptions which have invoices who are overdue
+        //
         const subscriptionsToDeactivateInvoice =
           await this.subscriptionController.getSubscriptionsToDeactivate(periodicJobRunObject.date)
         for (const subscriptionToDeactivateInvoice of subscriptionsToDeactivateInvoice) {
@@ -210,19 +233,19 @@ export class PeriodicJobController {
     })
     if (!latestRun) {
       console.log('First Run')
-      return [{isRetry: false, date: this.setDateMidnight(today)}]
+      return [{isRetry: false, date: this.getStartOfDay(today)}]
     }
     if (latestRun.finishedWithError && !latestRun.successfullyFinished) {
       console.log('Last run had errors retrying....')
-      runDates.push({isRetry: true, date: this.setDateMidnight(new Date(latestRun.date))})
+      runDates.push({isRetry: true, date: this.getStartOfDay(new Date(latestRun.date))})
     }
     return runDates.concat(this.generateDateArray(latestRun.date, today))
   }
 
   private generateDateArray(startDate: Date, endDate: Date) {
     const dateArray = []
-    const lastDate = this.setDateMidnight(endDate)
-    let inputDate = this.setDateMidnight(startDate)
+    const lastDate = this.getStartOfDay(endDate)
+    let inputDate = this.getStartOfDay(startDate)
     while (inputDate < lastDate) {
       inputDate = addDays(inputDate, 1)
       dateArray.push({isRetry: false, date: inputDate})
@@ -230,10 +253,13 @@ export class PeriodicJobController {
     return dateArray
   }
 
-  private setDateMidnight(date: Date): Date {
+  private getStartOfDay(date: Date): Date {
     return subMinutes(
       set(date, {hours: 0, minutes: 0, seconds: 0, milliseconds: 0}),
       date.getTimezoneOffset()
     )
+  }
+  private getEndOfDay(date: Date): Date {
+    return sub(endOfDay(date), {minutes: date.getTimezoneOffset()})
   }
 }

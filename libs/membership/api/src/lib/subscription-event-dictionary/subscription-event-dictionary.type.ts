@@ -42,7 +42,7 @@ export type LookupActionInput = {
   paymentmethodeId: string
   periodicity: PaymentPeriodicity
   autorenwal: boolean
-  daysAwayFromEnding: number | null
+  daysAwayFromEnding?: number
 
-  event?: SubscriptionEvent
+  events?: SubscriptionEvent[]
 }

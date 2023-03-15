@@ -1,4 +1,4 @@
-import {OldContextService, PrismaService} from '@wepublish/api'
+import {OldContextService, PaymentProvider, PrismaService, SendMailType} from '@wepublish/api'
 import {
   Invoice,
   Subscription,
@@ -9,7 +9,10 @@ import {
   MemberPlan,
   PaymentPeriodicity,
   SubscriptionEvent,
-  SubscriptionDeactivationReason
+  SubscriptionDeactivationReason,
+  PaymentProviderCustomer,
+  PaymentState,
+  InvoiceItem
 } from '@prisma/client'
 import {add, addDays} from 'date-fns'
 import {Injectable} from '@nestjs/common'
@@ -21,7 +24,10 @@ export type SubscriptionControllerConfig = {
 
 @Injectable()
 export class SubscriptionController {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly oldContextService: OldContextService
+  ) {}
 
   public async getSubscriptionsForInvoiceCreation(
     runDate: Date,
@@ -72,9 +78,19 @@ export class SubscriptionController {
         paidAt: null
       },
       include: {
-        subscription: true,
-        user: true,
-        subscriptionPeriods: true
+        subscription: {
+          include: {
+            paymentMethod: true,
+            memberPlan: true
+          }
+        },
+        user: {
+          include: {
+            paymentProviderCustomers: true
+          }
+        },
+        subscriptionPeriods: true,
+        items: true
       }
     })
   }
@@ -236,5 +252,90 @@ export class SubscriptionController {
         }
       })
     ])
+  }
+
+  public async chargeInvoice(
+    invoice: Invoice & {
+      subscription: (Subscription & {paymentMethod: PaymentMethod; memberPlan: MemberPlan}) | null
+      items: InvoiceItem[]
+      user: (User & {paymentProviderCustomers: PaymentProviderCustomer[]}) | null
+      subscriptionPeriods: SubscriptionPeriod[]
+    },
+    mailActions: Action[]
+  ) {
+    const paymentProvider = this.oldContextService.context.paymentProviders.find(
+      pp => pp.id === invoice.subscription?.paymentMethod.paymentProviderID
+    )
+    if (!paymentProvider) {
+      throw Error(
+        `Payment Provider ${invoice.subscription?.paymentMethod.paymentProviderID} not found!`
+      )
+    }
+    if (paymentProvider.offSessionPayments) {
+      await this.offSessionPayment(invoice, paymentProvider, mailActions)
+      console.log('Initiate offsession payment')
+    } else {
+      console.log('Remind user to pay invoice')
+    }
+  }
+
+  public async offSessionPayment(
+    invoice: Invoice & {
+      subscription: (Subscription & {paymentMethod: PaymentMethod; memberPlan: MemberPlan}) | null
+      items: InvoiceItem[]
+      user: (User & {paymentProviderCustomers: PaymentProviderCustomer[]}) | null
+      subscriptionPeriods: SubscriptionPeriod[]
+    },
+    paymentProvider: PaymentProvider,
+    mailActions: Action[]
+  ) {
+    const customer = invoice.user?.paymentProviderCustomers.find(
+      ppc => ppc.paymentProviderID === invoice.subscription?.paymentMethod.paymentProviderID
+    )
+    const renewalFailedAction = mailActions.find(ma => ma.type === SubscriptionEvent.RENEWAL_FAILED)
+    if (!invoice.subscription) {
+      throw Error('Subscription not found!')
+    }
+    if (!customer) {
+      console.log('Send error mail because off session customer not found')
+      return
+    }
+
+    const payment = await this.prismaService.payment.create({
+      data: {
+        paymentMethodID: invoice.subscription.paymentMethod.id,
+        invoiceID: invoice.id,
+        state: PaymentState.created
+      }
+    })
+
+    const intent = await paymentProvider.createIntent({
+      paymentID: payment.id,
+      invoice,
+      saveCustomer: false,
+      customerID: customer.customerID
+    })
+
+    await this.prismaService.payment.update({
+      where: {id: payment.id},
+      data: {
+        state: intent.state,
+        intentID: intent.intentID,
+        intentData: intent.intentData,
+        intentSecret: intent.intentSecret,
+        paymentData: intent.paymentData,
+        paymentMethodID: payment.paymentMethodID,
+        invoiceID: payment.invoiceID
+      }
+    })
+
+    if (intent.state === PaymentState.requiresUserAction) {
+      console.log('Send mail MemberSubscriptionOffSessionFailed')
+    } else {
+      const renewalSuccessAction = mailActions.find(
+        ma => ma.type === SubscriptionEvent.RENEWAL_SUCCESS
+      )
+      console.log('Sent mail MemberSubscriptionOffSessionSuccess')
+    }
   }
 }
