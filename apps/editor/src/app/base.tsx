@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {de, enUS, fr} from 'date-fns/locale'
 import {forwardRef, ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -7,7 +8,9 @@ import {
   MdBadge,
   MdBookOnline,
   MdChat,
+  MdFactCheck,
   MdChevronLeft,
+  MdApproval,
   MdChevronRight,
   MdCreditCard,
   MdDashboard,
@@ -21,14 +24,14 @@ import {
   MdOutlineGridView,
   MdPersonAddAlt1,
   MdPhoto,
+  MdPieChartOutline,
   MdQueryStats,
   MdSell,
   MdSettings,
   MdSettingsInputAntenna,
   MdStar,
   MdTranslate,
-  MdVpnKey,
-  MdPieChartOutline
+  MdVpnKey
 } from 'react-icons/md'
 import {Link, useLocation} from 'react-router-dom'
 import {
@@ -42,7 +45,6 @@ import {
 
 import {PermissionControl} from './atoms/permissionControl'
 import Version from './atoms/version'
-import {fr, de, enUS} from 'date-fns/locale'
 
 export interface BaseProps {
   children?: ReactNode
@@ -465,17 +467,15 @@ export function Base({children}: BaseProps) {
                         as={NavLink}
                         href="/consents"
                         active={path === 'consents'}
-                        icon={<MdCreditCard />}>
-                        {/* {t('navbar.paymentMethods')} */}
-                        Consents
+                        icon={<MdApproval />}>
+                        {t('navbar.consents')}
                       </Nav.Item>
                       <Nav.Item
                         as={NavLink}
                         href="/userConsents"
                         active={path === 'userConsents'}
-                        icon={<MdCreditCard />}>
-                        {/* {t('navbar.paymentMethods')} */}
-                        User Consents
+                        icon={<MdFactCheck />}>
+                        {t('navbar.userConsents')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>

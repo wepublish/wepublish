@@ -1,6 +1,5 @@
 import {Injectable} from '@nestjs/common'
-import {ConsentValue, PrismaClient} from '@prisma/client'
-// import {ok} from 'assert'
+import {PrismaClient} from '@prisma/client'
 import {Consent, ConsentInput} from './consent.model'
 
 @Injectable()
@@ -27,7 +26,6 @@ export class ConsentService {
     })
 
     if (!data) {
-      // logger('events').warn(`Could not update Subscription.`)
       throw Error(`Consent with id ${id} not found`)
     }
 

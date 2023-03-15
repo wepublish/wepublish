@@ -19,6 +19,28 @@ export type Scalars = {
   DateTime: string
 }
 
+export type Consent = {
+  __typename?: 'Consent'
+  createdAt: Scalars['DateTime']
+  defaultValue: ConsentValue
+  id: Scalars['String']
+  modifiedAt: Scalars['DateTime']
+  name: Scalars['String']
+  slug: Scalars['String']
+}
+
+export type ConsentInput = {
+  defaultValue: ConsentValue
+  name: Scalars['String']
+  slug: Scalars['String']
+}
+
+export enum ConsentValue {
+  Accepted = 'Accepted',
+  Rejected = 'Rejected',
+  Unset = 'Unset'
+}
+
 export type DashboardInvoice = {
   __typename?: 'DashboardInvoice'
   amount: Scalars['Int']
@@ -39,6 +61,48 @@ export type DashboardSubscription = {
   startsAt: Scalars['DateTime']
 }
 
+export type Mutation = {
+  __typename?: 'Mutation'
+  /** Create a new Consent. */
+  createConsent: Consent
+  /** Create a new UserConsent. */
+  createUserConsent: UserConsent
+  /** Deletes an existing Consent. */
+  deleteConsent: Consent
+  /** Delete an existing UserConsent. */
+  deleteUserConsent: UserConsent
+  /** Update an existing Consent. */
+  updateConsent: Consent
+  /** Update an existing UserConsent. */
+  updateUserConsent: UserConsent
+}
+
+export type MutationCreateConsentArgs = {
+  consent: ConsentInput
+}
+
+export type MutationCreateUserConsentArgs = {
+  userConsent: UserConsentInput
+}
+
+export type MutationDeleteConsentArgs = {
+  id: Scalars['String']
+}
+
+export type MutationDeleteUserConsentArgs = {
+  id: Scalars['String']
+}
+
+export type MutationUpdateConsentArgs = {
+  consent: ConsentInput
+  id: Scalars['String']
+}
+
+export type MutationUpdateUserConsentArgs = {
+  id: Scalars['String']
+  userConsent: UpdateUserConsentInput
+}
+
 export enum PaymentPeriodicity {
   Biannual = 'biannual',
   Monthly = 'monthly',
@@ -53,6 +117,10 @@ export type Query = {
    * Includes subscribers with a cancelled but not run out subscription.
    */
   activeSubscribers: Array<DashboardSubscription>
+  /** Returns Consent by id. */
+  consent: Consent
+  /** Returns all Consents. */
+  consents: Array<Consent>
   /**
    * Returns the expected revenue for the time period given.
    * Excludes cancelled or manually set as paid invoices.
@@ -75,7 +143,15 @@ export type Query = {
    * Only includes paid invoices that have not been manually paid.
    */
   revenue: Array<DashboardInvoice>
+  /** Returns userConsent by id. */
+  userConsent: UserConsent
+  /** Returns all userConsents. */
+  userConsents: Array<UserConsent>
   versionInformation: VersionInformation
+}
+
+export type QueryConsentArgs = {
+  id: Scalars['String']
 }
 
 export type QueryExpectedRevenueArgs = {
@@ -103,10 +179,53 @@ export type QueryRevenueArgs = {
   start: Scalars['DateTime']
 }
 
+export type QueryUserConsentArgs = {
+  id: Scalars['String']
+}
+
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'invoiceNotPaid',
   None = 'none',
   UserSelfDeactivated = 'userSelfDeactivated'
+}
+
+export type UpdateUserConsentInput = {
+  value: ConsentValue
+}
+
+export type User = {
+  __typename?: 'User'
+  active: Scalars['Boolean']
+  createdAt: Scalars['DateTime']
+  email: Scalars['String']
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>
+  firstName?: Maybe<Scalars['String']>
+  id: Scalars['String']
+  lastLogin?: Maybe<Scalars['DateTime']>
+  modifiedAt: Scalars['DateTime']
+  name: Scalars['String']
+  password: Scalars['String']
+  preferredName?: Maybe<Scalars['String']>
+  roleIDs: Array<Scalars['String']>
+  userImageID?: Maybe<Scalars['String']>
+}
+
+export type UserConsent = {
+  __typename?: 'UserConsent'
+  consent: Consent
+  consentId: Scalars['String']
+  createdAt: Scalars['DateTime']
+  id: Scalars['String']
+  modifiedAt: Scalars['DateTime']
+  user: User
+  userId: Scalars['String']
+  value: ConsentValue
+}
+
+export type UserConsentInput = {
+  consentId: Scalars['String']
+  userId: Scalars['String']
+  value: ConsentValue
 }
 
 export type VersionInformation = {

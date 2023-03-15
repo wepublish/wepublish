@@ -73,6 +73,28 @@ query UserConsents {
   }
 }
 
+query userConsent($id: String!) {
+  userConsent(id: $id) {
+    id
+    userId
+    consentId
+    value
+    createdAt
+    modifiedAt
+    consent {
+      slug
+      id
+      name
+    }
+    user {
+      id
+      name
+      firstName
+      email
+    }
+  }
+}
+
 mutation createUserConsent($userConsent: UserConsentInput!) {
   createUserConsent(userConsent: $userConsent) {
     id

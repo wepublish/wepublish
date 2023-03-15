@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common'
-import {ConsentValue, PrismaClient} from '@prisma/client'
+import {PrismaClient} from '@prisma/client'
 import {UserConsent, UserConsentInput, UpdateUserConsentInput} from './userConsent.model'
 
 // todo extract
@@ -25,6 +25,24 @@ export class UserConsentService {
         consent: true
       }
     })
+    return data
+  }
+
+  async userConsent(id: string): Promise<UserConsent> {
+    const data = await this.prisma.userConsent.findUnique({
+      where: {
+        id
+      },
+      include: {
+        user: true,
+        consent: true
+      }
+    })
+
+    if (!data) {
+      throw Error(`UserConsent with id ${id} not found`)
+    }
+
     return data
   }
 

@@ -2,7 +2,14 @@ import 'rsuite/styles/index.less'
 
 import {gql, useMutation} from '@apollo/client'
 import {css, Global} from '@emotion/react'
-import {ConsentList} from '@wepublish/consent/editor'
+import {
+  ConsentCreateView,
+  ConsentEditView,
+  ConsentList,
+  UserConsentCreateView,
+  UserConsentEditView,
+  UserConsentList
+} from '@wepublish/consent/editor'
 import {TagType} from '@wepublish/editor/api'
 import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -21,7 +28,6 @@ import {AuthorList} from './routes/authorList'
 import {CommentRatingEditView} from './routes/commentRatingEditView'
 import {CommentEditView} from './routes/comments/commentEditView'
 import {CommentList} from './routes/comments/commentList'
-import {UserConsentListView} from './routes/consents/userConsentListView'
 import {Dashboard} from './routes/dashboard'
 import {EventCreateView} from './routes/events/eventCreateView'
 import {EventEditView} from './routes/events/eventEditView'
@@ -45,8 +51,6 @@ import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
 import {LocalStorageKey} from './utility'
-import {ConsentCreateView} from './routes/consents/consentCreateView'
-import {ConsentEditView} from './routes/consents/consentEditView'
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -560,7 +564,6 @@ export function App() {
               path="consents/create"
               element={
                 <Base>
-                  {/* todo <ConsentCreateView /> */}
                   <ConsentCreateView />
                 </Base>
               }
@@ -569,7 +572,6 @@ export function App() {
               path="consents/edit/:id"
               element={
                 <Base>
-                  {/* todo <ConsentEditView /> */}
                   <ConsentEditView />
                 </Base>
               }
@@ -579,11 +581,26 @@ export function App() {
               path="userConsents"
               element={
                 <Base>
-                  <UserConsentListView />
+                  <UserConsentList />
                 </Base>
               }
             />
-            {/* todo add userconsent edit/create views */}
+            <Route
+              path="userConsents/create"
+              element={
+                <Base>
+                  <UserConsentCreateView />
+                </Base>
+              }
+            />
+            <Route
+              path="userConsents/edit/:id"
+              element={
+                <Base>
+                  <UserConsentEditView />
+                </Base>
+              }
+            />
             {/* Peering Routes */}
             <Route
               path="peering"

@@ -1011,12 +1011,13 @@ model UserConsent {
   modifiedAt DateTime @updatedAt
 
   consent   Consent @relation(fields: [consentId], references: [id], onDelete: Cascade)
-  consentId String @db.Uuid
+  consentId String  @db.Uuid
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   value ConsentValue
 
+  @@unique([userId, consentId])
   @@map("user-consents")
 }

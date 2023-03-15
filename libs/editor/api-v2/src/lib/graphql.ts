@@ -149,6 +149,8 @@ export type Query = {
    * Only includes paid invoices that have not been manually paid.
    */
   revenue: Array<DashboardInvoice>;
+  /** Returns userConsent by id. */
+  userConsent: UserConsent;
   /** Returns all userConsents. */
   userConsents: Array<UserConsent>;
   versionInformation: VersionInformation;
@@ -187,6 +189,11 @@ export type QueryRenewingSubscribersArgs = {
 export type QueryRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+
+export type QueryUserConsentArgs = {
+  id: Scalars['String'];
 };
 
 export enum SubscriptionDeactivationReason {
@@ -277,6 +284,13 @@ export type UserConsentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserConsentsQuery = { __typename?: 'Query', userConsents: Array<{ __typename?: 'UserConsent', id: string, userId: string, consentId: string, value: ConsentValue, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', slug: string, id: string, name: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } }> };
+
+export type UserConsentQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type UserConsentQuery = { __typename?: 'Query', userConsent: { __typename?: 'UserConsent', id: string, userId: string, consentId: string, value: ConsentValue, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', slug: string, id: string, name: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
 
 export type CreateUserConsentMutationVariables = Exact<{
   userConsent: UserConsentInput;
@@ -545,6 +559,57 @@ export function useUserConsentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type UserConsentsQueryHookResult = ReturnType<typeof useUserConsentsQuery>;
 export type UserConsentsLazyQueryHookResult = ReturnType<typeof useUserConsentsLazyQuery>;
 export type UserConsentsQueryResult = Apollo.QueryResult<UserConsentsQuery, UserConsentsQueryVariables>;
+export const UserConsentDocument = gql`
+    query userConsent($id: String!) {
+  userConsent(id: $id) {
+    id
+    userId
+    consentId
+    value
+    createdAt
+    modifiedAt
+    consent {
+      slug
+      id
+      name
+    }
+    user {
+      id
+      name
+      firstName
+      email
+    }
+  }
+}
+    `;
+
+/**
+ * __useUserConsentQuery__
+ *
+ * To run a query within a React component, call `useUserConsentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserConsentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserConsentQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUserConsentQuery(baseOptions: Apollo.QueryHookOptions<UserConsentQuery, UserConsentQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserConsentQuery, UserConsentQueryVariables>(UserConsentDocument, options);
+      }
+export function useUserConsentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserConsentQuery, UserConsentQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserConsentQuery, UserConsentQueryVariables>(UserConsentDocument, options);
+        }
+export type UserConsentQueryHookResult = ReturnType<typeof useUserConsentQuery>;
+export type UserConsentLazyQueryHookResult = ReturnType<typeof useUserConsentLazyQuery>;
+export type UserConsentQueryResult = Apollo.QueryResult<UserConsentQuery, UserConsentQueryVariables>;
 export const CreateUserConsentDocument = gql`
     mutation createUserConsent($userConsent: UserConsentInput!) {
   createUserConsent(userConsent: $userConsent) {

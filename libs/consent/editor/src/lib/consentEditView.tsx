@@ -1,35 +1,36 @@
-import {ApolloClient, ApolloError, HttpLink, InMemoryCache} from '@apollo/client'
-// import {
-//   ImageRefFragment,
-//   MutationCreateEventArgs,
-//   useCreateEventMutation
-// } from '@wepublish/editor/api'
+import {ApolloError} from '@apollo/client'
+import {stripTypename} from '@wepublish/editor/api'
 import {
   ConsentValue,
+  MutationUpdateConsentArgs,
   useConsentQuery,
-  useCreateConsentMutation,
-  useDeleteConsentMutation,
-  MutationUpdateConsentArgs
+  useUpdateConsentMutation
 } from '@wepublish/editor/api-v2'
 import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Form, Message, Schema, toaster} from 'rsuite'
 
-import {ModelTitle} from '../../atoms/modelTitle'
+import {ModelTitle} from '@wepublish/ui/editor'
 import {ConsentForm} from './consentForm'
-import {EventForm} from './eventForm'
+import {getApiClientV2} from '../apiClientv2'
 
-export function getApiClientV2() {
-  const apiURL = 'http://localhost:4000'
-  const link = new HttpLink({uri: `${apiURL}/v2`})
-  return new ApolloClient({
-    link,
-    cache: new InMemoryCache()
-  })
-}
+const mapApiDataToInput = (consent: any): MutationUpdateConsentArgs['consent'] => ({
+  ...stripTypename(consent),
+  name: consent.name,
+  slug: consent.slug,
+  defaultValue: consent.defaultValue
+})
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: ApolloError, slug?: string) => {
+  if (error.message.includes('Unique constraint')) {
+    toaster.push(
+      <Message type="error" showIcon closable duration={3000}>
+        {`A consent with slug '${slug}' already exists. Please choose a different slug.`}
+      </Message>
+    )
+    return
+  }
   toaster.push(
     <Message type="error" showIcon closable duration={3000}>
       {error.message}
@@ -47,10 +48,12 @@ export const ConsentEditView = () => {
 
   const closePath = '/consents'
   const [consent, setConsent] = useState({
-    id: consentId
-  } as MutationUpdateConsentArgs['consent'])
+    defaultValue: '' as ConsentValue,
+    name: '',
+    slug: ''
+  })
 
-  const [shouldClose, setShouldClose] = useState(false)
+  const [shouldClose, setShouldClose] = useState<boolean>(false)
 
   const {loading: dataLoading} = useConsentQuery({
     client,
@@ -60,39 +63,38 @@ export const ConsentEditView = () => {
     onError: onErrorToast,
     onCompleted: data => {
       if (data.consent) {
-        // setConsent(mapApiDataToInput(data.event))
-        setConsent(consent)
+        setConsent(mapApiDataToInput(data.consent))
       }
     }
   })
 
-  const [createConsent, {loading}] = useCreateConsentMutation({
+  const [updateConsent, {loading: updateLoading}] = useUpdateConsentMutation({
     client,
-    onError: onErrorToast,
-    onCompleted: consent => {
+    onError: error => onErrorToast(error, consent.slug),
+    onCompleted: data => {
       if (shouldClose) {
         navigate(closePath)
-      } else {
-        navigate(`/consents/edit/${consent.createConsent?.id}`)
+      }
+      if (data.updateConsent) {
+        setConsent(mapApiDataToInput(data.updateConsent))
       }
     }
   })
 
-  // const onSubmit = () => {
-  //   const {image, ...eventWithoutImage} = event
-  //   createEvent({variables: eventWithoutImage})
-  // }
-
-  const onSubmit = async () => {
-    const {data: newConsentData, errors} = await createConsent({
+  const onSubmit = () => {
+    updateConsent({
       variables: {
-        consent
+        id: consentId,
+        consent: {
+          name: consent.name,
+          slug: consent.slug,
+          defaultValue: consent.defaultValue
+        }
       }
     })
-    console.log('errors', errors)
-    console.log('newConsentData', newConsentData)
-    // refetch()
   }
+
+  const loading = dataLoading || updateLoading
 
   const {StringType} = Schema.Types
   const validationModel = Schema.Model({
@@ -110,19 +112,13 @@ export const ConsentEditView = () => {
       onSubmit={validationPassed => validationPassed && onSubmit()}>
       <ModelTitle
         loading={loading}
-        title={t('event.create.title')}
-        loadingTitle={t('event.create.title')}
+        title={t('consents.titleEdit')}
+        loadingTitle={t('consents.titleEdit')}
         saveBtnTitle={t('save')}
         saveAndCloseBtnTitle={t('saveAndClose')}
         closePath={closePath}
         setCloseFn={setShouldClose}
       />
-
-      {/* <EventForm
-        event={event}
-        create
-        onChange={changes => setEvent(oldEvent => ({...oldEvent, ...(changes as any)}))}
-      /> */}
 
       <ConsentForm
         consent={consent}
@@ -132,4 +128,3 @@ export const ConsentEditView = () => {
     </Form>
   )
 }
-// todo finish

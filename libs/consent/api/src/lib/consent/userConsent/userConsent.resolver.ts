@@ -22,15 +22,15 @@ export class UserConsentResolver {
     return this.userConsents.userConsentList()
   }
 
-  // @Query(returns => UserConsent, {
-  //   name: 'userConsent',
-  //   description: `
-  //     Returns userConsent by id.
-  //   `
-  // })
-  // userConsent(id) {
-  //   return this.userConsents.userConsent(id)
-  // }
+  @Query(returns => UserConsent, {
+    name: 'userConsent',
+    description: `
+      Returns userConsent by id.
+    `
+  })
+  userConsent(@Args('id') id: string) {
+    return this.userConsents.userConsent(id)
+  }
 
   /*
   Mutations

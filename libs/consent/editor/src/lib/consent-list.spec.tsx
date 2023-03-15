@@ -1,10 +1,10 @@
 import {render} from '@testing-library/react'
 
-import MembershipEditor from './membership-editor'
+import ConsentList from './consent-list'
 
-describe('MembershipEditor', () => {
+describe('ConsentList', () => {
   it('should render successfully', () => {
-    const {baseElement} = render(<MembershipEditor />)
+    const {baseElement} = render(<ConsentList />)
     expect(baseElement).toBeTruthy()
   })
 })
