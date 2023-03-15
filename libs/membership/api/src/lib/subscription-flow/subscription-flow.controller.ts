@@ -12,7 +12,7 @@ import {
   subscriptionFlowNonUniqueEvents,
   subscriptionFlowRequiredEvents
 } from './subscription-flow.type'
-import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
+import {SubscriptionEvent} from '@prisma/client'
 import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
 // import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subscription-event-dictionary'
 const SUBSCRIPTION_EVEN_MAX_DAYS_BEFORE = -25
@@ -326,12 +326,13 @@ export class SubscriptionFlowController {
       const existingAr = new Set(flow.autoRenewal)
       const newAr = new Set(newFlow.autoRenewal)
 
-      // find filter values that are distinct from the existing values
-      const pmDifference = new Set([...newPM].filter(x => !existingPM.has(x)))
-      const peDifference = new Set([...newPe].filter(x => !existingPe.has(x)))
-      const arDifference = new Set([...newAr].filter(x => !existingAr.has(x)))
+      // find filter values that are the same as the existing filter values
+      const pmIntersection = new Set([...newPM].filter(x => existingPM.has(x)))
+      const peIntersection = new Set([...newPe].filter(x => existingPe.has(x)))
+      const arIntersection = new Set([...newAr].filter(x => existingAr.has(x)))
 
-      if (pmDifference.size === 0 && peDifference.size === 0 && arDifference.size === 0) {
+      // if any of the filter intersection are not empty, means that the filter combination exists already.
+      if (pmIntersection.size !== 0 && peIntersection.size !== 0 && arIntersection.size !== 0) {
         return true
       }
     }
