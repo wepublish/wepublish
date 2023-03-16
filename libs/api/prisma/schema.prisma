@@ -3,6 +3,10 @@ generator client {
   previewFeatures = ["fullTextSearch"]
 }
 
+generator fabbrica {
+  provider = "prisma-fabbrica"
+}
+
 datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
