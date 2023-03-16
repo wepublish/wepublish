@@ -70,6 +70,6 @@ describe('SubscriptionFlowController', () => {
       include: {intervals: {include: {mailTemplate: true}}}
     })
 
-    expect(flow!.intervals[0].mailTemplate).toBe(template.id)
+    expect(flow!.intervals[0].mailTemplate?.id).toBe(template.id)
   })
 })
