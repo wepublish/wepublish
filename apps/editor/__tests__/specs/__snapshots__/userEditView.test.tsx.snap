@@ -606,7 +606,7 @@ exports[`User edit view should render 1`] = `
     class="rs-form rs-form-vertical rs-form-fluid"
   >
     <div
-      class="css-11639om-FlexGrid e1j9na1z7 rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
+      class="css-b9g7s rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
     >
       <div
         class="rs-flex-box-grid-item rs-flex-box-grid-item-12"
@@ -615,19 +615,19 @@ exports[`User edit view should render 1`] = `
           class="rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
         >
           <div
-            class="css-1jfkkb5-FlexRow e1j9na1z2 rs-row"
+            class="css-1sg2lsz rs-row"
             role="row"
           >
             <div
-              class="css-1b4ksfg-PaddedCol e1j9na1z3 rs-col rs-col-xs-29"
+              class="css-b1st3c rs-col rs-col-xs-29"
               role="gridcell"
             >
               <a
-                class="css-7k4eh7-FlexLink e1j9na1z1"
+                class="css-ov1ktg"
                 href="/users"
               >
                 <svg
-                  class="css-1rhrlcg-ChevronLeft e1j9na1z8"
+                  class="css-11o64f7"
                   fill="currentColor"
                   height="1em"
                   stroke="currentColor"
@@ -646,7 +646,7 @@ exports[`User edit view should render 1`] = `
                 </svg>
               </a>
               <h1
-                class="css-1tkx6fb-Heading e1j9na1z0"
+                class="css-uzijeq"
               >
                 userCreateOrEditView.createNewUser
               </h1>
@@ -664,10 +664,10 @@ exports[`User edit view should render 1`] = `
             class="rs-flex-box-grid-item rs-flex-box-grid-item-0"
           />
           <div
-            class="css-89u6l2-FlexboxItem e1j9na1z6 rs-flex-box-grid-item rs-flex-box-grid-item-0"
+            class="css-yt3qgg rs-flex-box-grid-item rs-flex-box-grid-item-0"
           >
             <button
-              class="css-1gxmgc9-SaveButton e1j9na1z4 rs-btn rs-btn-ghost"
+              class="css-12frltk rs-btn rs-btn-ghost"
               data-testid="saveButton"
               type="submit"
             >
@@ -1353,7 +1353,7 @@ exports[`User edit view should render with ID 1`] = `
     class="rs-form rs-form-vertical rs-form-fluid"
   >
     <div
-      class="css-11639om-FlexGrid e1j9na1z7 rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
+      class="css-b9g7s rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
     >
       <div
         class="rs-flex-box-grid-item rs-flex-box-grid-item-12"
@@ -1362,19 +1362,19 @@ exports[`User edit view should render with ID 1`] = `
           class="rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
         >
           <div
-            class="css-1jfkkb5-FlexRow e1j9na1z2 rs-row"
+            class="css-1sg2lsz rs-row"
             role="row"
           >
             <div
-              class="css-1b4ksfg-PaddedCol e1j9na1z3 rs-col rs-col-xs-29"
+              class="css-b1st3c rs-col rs-col-xs-29"
               role="gridcell"
             >
               <a
-                class="css-7k4eh7-FlexLink e1j9na1z1"
+                class="css-ov1ktg"
                 href="/users"
               >
                 <svg
-                  class="css-1rhrlcg-ChevronLeft e1j9na1z8"
+                  class="css-11o64f7"
                   fill="currentColor"
                   height="1em"
                   stroke="currentColor"
@@ -1393,7 +1393,7 @@ exports[`User edit view should render with ID 1`] = `
                 </svg>
               </a>
               <h1
-                class="css-1tkx6fb-Heading e1j9na1z0"
+                class="css-uzijeq"
               >
                 userCreateOrEditView.createNewUser
               </h1>
@@ -1411,10 +1411,10 @@ exports[`User edit view should render with ID 1`] = `
             class="rs-flex-box-grid-item rs-flex-box-grid-item-0"
           />
           <div
-            class="css-89u6l2-FlexboxItem e1j9na1z6 rs-flex-box-grid-item rs-flex-box-grid-item-0"
+            class="css-yt3qgg rs-flex-box-grid-item rs-flex-box-grid-item-0"
           >
             <button
-              class="css-1gxmgc9-SaveButton e1j9na1z4 rs-btn rs-btn-ghost"
+              class="css-12frltk rs-btn rs-btn-ghost"
               data-testid="saveButton"
               type="submit"
             >
