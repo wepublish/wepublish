@@ -1,4 +1,4 @@
-import {PrismaClient} from '@prisma/client'
+import {PrismaClient, Subscription} from '@prisma/client'
 import {Context} from '../../context'
 import {SubscriptionFilter, SubscriptionSort} from '../../db/subscription'
 import {unselectPassword} from '@wepublish/user/api'
@@ -96,7 +96,7 @@ export const getNewSubscribersPerMonth = async (
   return getSubscriberCount(subscriptionCount, monthsBack)
 }
 
-const getSubscriberCount = (subscribers, monthsBack) => {
+const getSubscriberCount = (subscribers: Subscription[], monthsBack: number) => {
   const res = []
   for (let i = monthsBack - 1; i >= 0; i--) {
     const count = subscribers.filter(subsc => {

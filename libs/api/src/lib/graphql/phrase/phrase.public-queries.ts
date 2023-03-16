@@ -1,5 +1,5 @@
 import {PrismaClient} from '@prisma/client'
-import {articleWithRevisionsToPublicArticle} from '../../db/article'
+import {articleWithRevisionsToPublicArticle, PublicArticle} from '../../db/article'
 import {pageWithRevisionsToPublicPage} from '../../db/page'
 import {Context} from '../../context'
 
@@ -60,6 +60,13 @@ export const queryPhrase = async (
             authors: true,
             socialMediaAuthors: true
           }
+        },
+        pending: {
+          include: {
+            properties: true,
+            authors: true,
+            socialMediaAuthors: true
+          }
         }
       }
     }),
@@ -82,6 +89,11 @@ export const queryPhrase = async (
       },
       include: {
         published: {
+          include: {
+            properties: true
+          }
+        },
+        pending: {
           include: {
             properties: true
           }
