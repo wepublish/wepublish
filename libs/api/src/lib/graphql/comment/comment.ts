@@ -24,7 +24,7 @@ import {
   CommentSort,
   PublicCommentSort
 } from '../../db/comment'
-import {unselectPassword} from '../../db/user'
+import {unselectPassword} from '@wepublish/user/api'
 import {createProxyingResolver} from '../../utility'
 import {CalculatedRating, getPublicChildrenCommentsByParentId} from './comment.public-queries'
 import {GraphQLPageInfo} from '../common'

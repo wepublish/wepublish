@@ -1,5 +1,6 @@
 import {Context} from '../../context'
-import {authorise, CanDeleteAuthor, CanCreateAuthor} from '../permissions'
+import {CanDeleteAuthor, CanCreateAuthor} from '@wepublish/permissions/api'
+import {authorise} from '../permissions'
 import {PrismaClient, Prisma} from '@prisma/client'
 
 export const deleteAuthorById = (

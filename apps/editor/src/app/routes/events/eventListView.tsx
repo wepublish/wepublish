@@ -118,6 +118,8 @@ function EventListView() {
               {(event: RowDataType<Event>) => (
                 <IconButton
                   icon={<MdDelete />}
+                  color="red"
+                  appearance="ghost"
                   circle
                   size="sm"
                   onClick={() => setEventDelete(event as Event)}

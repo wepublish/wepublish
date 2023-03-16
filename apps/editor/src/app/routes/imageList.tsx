@@ -152,7 +152,7 @@ function ImageList() {
           <Column width={160} align="left" resizable>
             <HeaderCell>{t('images.overview.image')}</HeaderCell>
             <RCell>
-              {(rowData: ImageRefFragment) => (
+              {(rowData: RowDataType<ImageRefFragment>) => (
                 <Link to={`/images/edit/${rowData.id}`}>
                   <Img src={rowData.thumbURL || ''} />
                 </Link>
@@ -191,18 +191,16 @@ function ImageList() {
             </RCell>
           </Column>
 
-          <Column width={160} align="center" resizable>
+          <Column width={100} align="center" resizable fixed="right">
             <HeaderCell>{t('images.overview.actions')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<ImageRefFragment>) => (
                 <>
                   <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
                     <IconButtonTooltip caption={t('images.overview.edit')}>
-                      <>
-                        <Link to={`/images/edit/${rowData.id}`}>
-                          <IconButton icon={<MdEdit />} circle size="sm" />
-                        </Link>
-                      </>
+                      <Link to={`/images/edit/${rowData.id}`}>
+                        <IconButton icon={<MdEdit />} circle size="sm" />
+                      </Link>
                     </IconButtonTooltip>
                   </PermissionControl>
                   <PermissionControl qualifyingPermissions={['CAN_DELETE_IMAGE']}>

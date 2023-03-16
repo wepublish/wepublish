@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DashboardInvoiceService should get the expected revenue of a month 1`] = `
+Array [
+  Object {
+    "amount": 150,
+    "dueAt": "2023-01-19T12:27:23.265Z",
+    "memberPlan": "Foo Subscription",
+    "paidAt": undefined,
+  },
+  Object {
+    "amount": 200,
+    "dueAt": "2023-01-19T12:33:55.859Z",
+    "memberPlan": "Foo Subscription",
+    "paidAt": "2023-01-19T12:34:01.944Z",
+  },
+  Object {
+    "amount": 1000,
+    "dueAt": "2023-01-19T12:41:05.640Z",
+    "memberPlan": "Foo Subscription",
+    "paidAt": "2023-01-19T12:48:13.188Z",
+  },
+]
+`;
+
+exports[`DashboardInvoiceService should get the expected revenue of a month 2`] = `
+Object {
+  "include": Object {
+    "items": true,
+    "subscription": Object {
+      "select": Object {
+        "memberPlan": Object {
+          "select": Object {
+            "name": true,
+          },
+        },
+      },
+    },
+  },
+  "orderBy": Object {
+    "dueAt": "desc",
+  },
+  "where": Object {
+    "OR": Array [
+      Object {
+        "dueAt": Object {
+          "gte": 2023-01-01T00:00:00.000Z,
+          "lt": 2023-02-01T00:00:00.000Z,
+        },
+      },
+      Object {
+        "paidAt": Object {
+          "gte": 2023-01-01T00:00:00.000Z,
+          "lt": 2023-02-01T00:00:00.000Z,
+        },
+      },
+    ],
+    "canceledAt": null,
+    "manuallySetAsPaidByUserId": null,
+  },
+}
+`;
+
+exports[`DashboardInvoiceService should get the revenue of a month 1`] = `
+Array [
+  Object {
+    "amount": 150,
+    "dueAt": "2023-01-19T12:41:05.640Z",
+    "memberPlan": "Foo Subscription",
+    "paidAt": "2023-01-19T12:48:13.188Z",
+  },
+  Object {
+    "amount": 200,
+    "dueAt": "2023-01-19T12:33:55.859Z",
+    "memberPlan": "Foo Subscription",
+    "paidAt": "2023-01-19T12:34:01.944Z",
+  },
+]
+`;
+
+exports[`DashboardInvoiceService should get the revenue of a month 2`] = `
+Object {
+  "include": Object {
+    "items": Object {
+      "select": Object {
+        "amount": true,
+        "quantity": true,
+      },
+    },
+    "subscription": Object {
+      "select": Object {
+        "memberPlan": Object {
+          "select": Object {
+            "name": true,
+          },
+        },
+      },
+    },
+  },
+  "orderBy": Object {
+    "paidAt": "desc",
+  },
+  "where": Object {
+    "manuallySetAsPaidByUserId": null,
+    "paidAt": Object {
+      "gte": 2023-01-01T00:00:00.000Z,
+      "lt": 2023-02-01T00:00:00.000Z,
+    },
+  },
+}
+`;

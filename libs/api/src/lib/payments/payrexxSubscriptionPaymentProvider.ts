@@ -92,7 +92,7 @@ async function findSubscriptionByExternalId(
       memberPlan: true,
       periods: {
         include: {
-          Invoice: true
+          invoice: true
         }
       }
     }
@@ -190,7 +190,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
       const deactivation = params.args.data.deactivation
       // Disable Subscription (deactivation.upsert is defined if a deactivation is added)
-      if (deactivation.upsert || !subscription.autoRenew) {
+      if (deactivation?.upsert || ('autoRenew' in subscription && !subscription.autoRenew)) {
         await this.cancelRemoteSubscription(parseInt(isPayrexxExt.value, 10))
 
         // Rewrite properties
@@ -222,7 +222,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
         }
 
         // Update subscription
-      } else {
+      } else if (params?.args?.data?.monthlyAmount) {
         const amount = subscription.monthlyAmount * getMonths(subscription.paymentPeriodicity)
         await this.updateRemoteSubscription(parseInt(isPayrexxExt.value, 10), amount.toString())
       }
@@ -266,7 +266,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       // Find last paid period in array
       let longestPeriod
       for (const period of subscription.periods) {
-        if (period.Invoice.paidAt && (!longestPeriod || period.endsAt > longestPeriod.endsAt)) {
+        if (period.invoice.paidAt && (!longestPeriod || period.endsAt > longestPeriod.endsAt)) {
           longestPeriod = period
         }
       }

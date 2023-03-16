@@ -17,11 +17,18 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@wepublish/analytics": ["libs/analytics/src/index.ts"],
       "@wepublish/api": ["libs/api/src/index.ts"],
       "@wepublish/api/seed": ["libs/api/prisma/seed.ts"],
-      "@wepublish/editor/api": ["libs/editor/api/src/index.ts"],
+      "@wepublish/authentication/api": ["libs/authentication/api/src/index.ts"],
       "@wepublish/editor/api-v2": ["libs/editor/api-v2/src/index.ts"],
-      "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"]
+      "@wepublish/editor/api": ["libs/editor/api/src/index.ts"],
+      "@wepublish/membership/api": ["libs/membership/api/src/index.ts"],
+      "@wepublish/membership/editor": ["libs/membership/editor/src/index.ts"],
+      "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"],
+      "@wepublish/permissions/api": ["libs/permissions/api/src/index.ts"],
+      "@wepublish/ui": ["libs/ui/src/index.ts"],
+      "@wepublish/user/api": ["libs/user/api/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

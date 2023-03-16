@@ -1,10 +1,12 @@
 import {Prisma, PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
-import {hashPassword, unselectPassword} from '../../db/user'
+import {hashPassword} from '../../db/user'
+import {unselectPassword} from '@wepublish/user/api'
 import {EmailAlreadyInUseError} from '../../error'
 import {SendMailType} from '../../mails/mailContext'
 import {Validator} from '../../validator'
-import {authorise, CanCreateUser, CanDeleteUser, CanResetUserPassword} from '../permissions'
+import {authorise} from '../permissions'
+import {CanCreateUser, CanDeleteUser, CanResetUserPassword} from '@wepublish/permissions/api'
 import {createUser, CreateUserInput} from './user.mutation'
 
 export const deleteUserById = (

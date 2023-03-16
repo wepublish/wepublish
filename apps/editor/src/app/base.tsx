@@ -101,14 +101,12 @@ const IconButton = styled(RIconButton)`
 
 const FloatingButton = styled(RIconButton)`
   display: block;
-  opacity: 0;
-  width: 32px;
-  height: 32px;
+  padding: 6px;
   position: absolute;
   top: 5vh;
   transition: transform 0.2s ease-in, opacity 0.15s ease-in-out;
   z-index: 100;
-  transform: translateX(${props => (props.isExpanded ? '243px' : '38px')});
+  transform: translateX(${props => (props.isExpanded ? '241px' : '37px')});
 
   .rs-sidebar:hover & {
     opacity: 1;
@@ -148,9 +146,9 @@ export function Base({children}: BaseProps) {
                 isExpanded={isExpanded}
                 appearance="primary"
                 circle
-                size="xs"
+                size="sm"
                 onClick={() => setIsExpanded(!isExpanded)}
-                icon={isExpanded ? <MdChevronLeft /> : <MdChevronRight />}
+                icon={isExpanded ? <MdChevronLeft size="22px" /> : <MdChevronRight size="22px" />}
               />
 
               <Navigation>

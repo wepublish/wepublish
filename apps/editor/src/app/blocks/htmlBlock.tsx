@@ -45,6 +45,13 @@ export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValu
     }
   }, [])
 
+  const correctScript = () => {
+    if (value.html.includes('/>')) {
+      return value.html.replace('/>', '></script>')
+    }
+    return value.html
+  }
+
   return (
     <>
       <Panel isEmpty={isEmpty} bodyFill bordered>
@@ -57,7 +64,7 @@ export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValu
                 </IconButton>
               </IconWrapper>
               <InnerHtmlWrapper>
-                <InnerHTML html={value.html} />
+                <InnerHTML html={correctScript()} />
               </InnerHtmlWrapper>
             </Wrapper>
           )}

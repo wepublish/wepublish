@@ -13,7 +13,7 @@ import {AuthorSort} from '../db/author'
 import {SortOrder} from '../db/common'
 import {MemberPlanSort} from '../db/memberPlan'
 import {PageSort, PublicPage} from '../db/page'
-import {SessionType} from '../db/session'
+import {AuthSessionType} from '@wepublish/authentication/api'
 import {NotFound} from '../error'
 import {logger} from '../server'
 import {delegateToPeerSchema} from '../utility'
@@ -339,7 +339,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLPublicUser,
       description: 'This query returns the user.',
       resolve(root, args, {session}) {
-        return session?.type === SessionType.User ? session.user : null
+        return session?.type === AuthSessionType.User ? session.user : null
       }
     },
 

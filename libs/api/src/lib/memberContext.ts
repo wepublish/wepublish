@@ -18,7 +18,7 @@ import {InvoiceWithItems} from './db/invoice'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {SettingName} from './db/setting'
 import {SubscriptionWithRelations} from './db/subscription'
-import {unselectPassword} from './db/user'
+import {unselectPassword} from '@wepublish/user/api'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
 import {MailContext, SendMailType} from './mails/mailContext'
 import {PaymentProvider} from './payments/paymentProvider'
@@ -28,6 +28,7 @@ import {
   ONE_HOUR_IN_MILLISECONDS,
   ONE_MONTH_IN_MILLISECONDS
 } from './utility'
+import {add} from 'date-fns'
 
 export interface HandleSubscriptionChangeProps {
   subscription: SubscriptionWithRelations
@@ -635,6 +636,11 @@ export class MemberContext implements MemberContext {
         }
       }
 
+      // do not charge, before we are allowed
+      if (invoice.dueAt > new Date()) {
+        continue
+      }
+
       const user = await this.prisma.user.findUnique({
         where: {id: subscription.userID},
         select: unselectPassword
@@ -661,6 +667,12 @@ export class MemberContext implements MemberContext {
           ppc => ppc.paymentProviderID === paymentMethod.paymentProviderID
         )
         if (!customer) {
+          // do not send any error message, before dueAt plus 2 days, because of Payrexx Subscription lag
+          // (Payrexx Subscription is renewed during the day. Thus, a user would receive mail with payment error, even-though it would probably get paid during the day)
+          if (add(invoice.dueAt, {days: 2}) > new Date()) {
+            continue
+          }
+
           logger('memberContext').warn(
             'PaymentCustomer %s on user %s not found',
             paymentMethod.paymentProviderID,

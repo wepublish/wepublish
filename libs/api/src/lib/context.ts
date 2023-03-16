@@ -11,6 +11,13 @@ import {
   User,
   UserRole
 } from '@prisma/client'
+import {
+  AuthenticationService,
+  AuthSession,
+  AuthSessionType,
+  TokenSession,
+  UserSession
+} from '@wepublish/authentication/api'
 import AbortController from 'abort-controller'
 import {AuthenticationError} from 'apollo-server-express'
 import crypto from 'crypto'
@@ -39,10 +46,9 @@ import {InvoiceWithItems} from './db/invoice'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {NavigationWithLinks} from './db/navigation'
 import {PageWithRevisions, pageWithRevisionsToPublicPage, PublicPage} from './db/page'
-import {Session, SessionType, TokenSession, UserSession} from './db/session'
 import {SettingName} from './db/setting'
-import {unselectPassword} from './db/user'
 import {TokenExpiredError} from './error'
+import {getEvent} from './graphql/event/event.query'
 import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
 import {Hooks} from './hooks'
 import {MailContext, MailContextOptions} from './mails/mailContext'
@@ -52,25 +58,17 @@ import {MemberContext} from './memberContext'
 import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
 import {URLAdapter} from './urlAdapter'
-import {getEvent} from './graphql/event/event.query'
 
 /**
  * Peered article cache configuration and setup
  */
-const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000
+const ONE_HOUR_IN_SEC = 60 * 60
+const ONE_MIN_IN_SEC = 60
 const fetcherCache = new NodeCache({
-  stdTTL: 1800,
-  checkperiod: 60,
-  deleteOnExpire: false,
-  useClones: false
-})
-fetcherCache.on('expired', async function (key: string, value: PeerCacheValue) {
-  // Refresh cache only if last use of cached entry is less than 24h ago
-  if (value.queryParams.lastQueried > new Date().getTime() - ONE_DAY_IN_MS) {
-    await loadFreshData(value.queryParams)
-  } else {
-    fetcherCache.del(key)
-  }
+  stdTTL: ONE_HOUR_IN_SEC,
+  checkperiod: ONE_MIN_IN_SEC,
+  deleteOnExpire: true,
+  useClones: true
 })
 
 export interface DataLoaderContext {
@@ -125,7 +123,7 @@ export interface Context {
   readonly sessionTTL: number
   readonly hashCostFactor: number
 
-  readonly session: Session | null
+  readonly session: AuthSession | null
   readonly loaders: DataLoaderContext
 
   readonly mailContext: MailContext
@@ -141,7 +139,7 @@ export interface Context {
 
   getOauth2Clients(): Promise<OAuth2Clients[]>
 
-  authenticate(): Session
+  authenticate(): AuthSession
   authenticateToken(): TokenSession
   authenticateUser(): UserSession
   optionalAuthenticateUser(): UserSession | null
@@ -163,7 +161,6 @@ export interface Oauth2Provider {
 
 interface PeerQueryParams {
   cacheKey: string
-  lastQueried: number
   readonly hostURL: string
   readonly variables: {[p: string]: any} | undefined
   readonly query: string
@@ -227,70 +224,6 @@ const createOptionalsArray = <Data, Attribute extends keyof Data, Key extends Da
   return keys.map(id => dataMap[id] ?? null)
 }
 
-const getSessionByToken = async (
-  token: string,
-  sessionClient: PrismaClient['session'],
-  tokenClient: PrismaClient['token'],
-  userClient: PrismaClient['user'],
-  userRoleClient: PrismaClient['userRole']
-): Promise<Session | null> => {
-  const [tokenMatch, session] = await Promise.all([
-    tokenClient.findFirst({
-      where: {
-        token
-      }
-    }),
-    sessionClient.findFirst({
-      where: {
-        token
-      }
-    })
-  ])
-
-  if (tokenMatch) {
-    return {
-      type: SessionType.Token,
-      id: tokenMatch.id,
-      name: tokenMatch.name,
-      token: tokenMatch.token,
-      roles: await userRoleClient.findMany({
-        where: {
-          id: {
-            in: tokenMatch.roleIDs
-          }
-        }
-      })
-    }
-  } else if (session) {
-    const user = await userClient.findUnique({
-      where: {
-        id: session.userID
-      },
-      select: unselectPassword
-    })
-
-    if (!user) return null
-
-    return {
-      type: SessionType.User,
-      id: session.id,
-      token: session.token,
-      createdAt: session.createdAt,
-      expiresAt: session.expiresAt,
-      user,
-      roles: await userRoleClient.findMany({
-        where: {
-          id: {
-            in: user.roleIDs
-          }
-        }
-      })
-    }
-  }
-
-  return null
-}
-
 export async function contextFromRequest(
   req: IncomingMessage | null,
   {
@@ -309,15 +242,11 @@ export async function contextFromRequest(
     hashCostFactor
   }: ContextOptions
 ): Promise<Context> {
+  const authService = new AuthenticationService(prisma)
+
   const token = tokenFromRequest(req)
-  const session = token
-    ? await getSessionByToken(token, prisma.session, prisma.token, prisma.user, prisma.userRole)
-    : null
-  const isSessionValid = session
-    ? session.type === SessionType.User
-      ? session.expiresAt! > new Date()
-      : true
-    : false
+  const session = token ? await authService.getSessionByToken(token) : null
+  const isSessionValid = authService.isSessionValid(session)
 
   const peerDataLoader = new DataLoader(async ids =>
     createOptionalsArray(
@@ -673,7 +602,7 @@ export async function contextFromRequest(
                 })
               )?.value as number) ||
               parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
-              3000
+              10 * 1000 // 10 Seconds timeout in  ms
             const fetcher = createFetcher(peer.hostURL, peer.token, peerTimeout)
 
             return makeRemoteExecutableSchema({
@@ -707,7 +636,7 @@ export async function contextFromRequest(
                 })
               )?.value as number) ||
               parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
-              3000
+              10 * 1000 // 10 Seconds timeout in  ms
             const fetcher = createFetcher(
               url.resolve(peer.hostURL, 'admin'),
               peer.token,
@@ -943,7 +872,7 @@ export async function contextFromRequest(
     },
 
     authenticateUser() {
-      if (!session || session.type !== SessionType.User) {
+      if (!session || session.type !== AuthSessionType.User) {
         throw new AuthenticationError('Invalid user session!')
       }
 
@@ -955,14 +884,14 @@ export async function contextFromRequest(
     },
 
     optionalAuthenticateUser() {
-      if (!session || session.type !== SessionType.User || !isSessionValid) {
+      if (!session || session.type !== AuthSessionType.User || !isSessionValid) {
         return null
       }
       return session
     },
 
     authenticateToken() {
-      if (!session || session.type !== SessionType.Token) {
+      if (!session || session.type !== AuthSessionType.Token) {
         throw new AuthenticationError('Invalid token session!')
       }
 
@@ -1074,10 +1003,10 @@ async function loadFreshData(params: PeerQueryParams) {
   try {
     const abortController = new AbortController()
 
-    const peerTimeOUT = params.timeout ? params.timeout : 3000
+    const peerTimeOut = params.timeout ? params.timeout : 10 * 1000 // 10 Seconds timeout in  ms
 
     // Since we use auto refresh cache we can safely set the timeout to 3sec
-    setTimeout(() => abortController.abort(), peerTimeOUT)
+    setTimeout(() => abortController.abort(), peerTimeOut)
 
     const fetchResult = await fetch(params.hostURL, {
       method: 'POST',
@@ -1095,7 +1024,6 @@ async function loadFreshData(params: PeerQueryParams) {
         errors: [new GraphQLError(`Peer responded with invalid status: ${fetchResult?.status}`)]
       }
     }
-    params.lastQueried = params.lastQueried ? params.lastQueried : new Date().getTime()
     const cacheValue: PeerCacheValue = {
       data: res,
       queryParams: params
@@ -1113,43 +1041,36 @@ async function loadFreshData(params: PeerQueryParams) {
 }
 
 export function createFetcher(hostURL: string, token: string, peerTimeOut: number): Fetcher {
-  const data = new DataLoader<
-    {query: string} & Omit<IFetcherOperation, 'query' | 'context'>,
-    any,
-    string
-  >(async queries => {
-    const results = await Promise.all(
-      queries.map(async ({query, variables, operationName}) => {
-        // Initialize and prepare caching
-        const fetchParams: PeerQueryParams = {
-          hostURL,
-          variables,
-          query,
-          operationName,
-          token,
-          cacheKey: '',
-          lastQueried: 0,
-          timeout: peerTimeOut
-        }
-        fetchParams.cacheKey = generateCacheKey(fetchParams)
-        const cachedData: PeerCacheValue | undefined = fetcherCache.get(fetchParams.cacheKey)
+  const loadData = async ({
+    query,
+    variables,
+    operationName
+  }: {query: string} & Omit<IFetcherOperation, 'query' | 'context'>) => {
+    // Initialize and prepare caching
+    const fetchParams: PeerQueryParams = {
+      hostURL,
+      variables,
+      query,
+      operationName,
+      token,
+      cacheKey: '',
+      timeout: peerTimeOut
+    }
 
-        // On initial query add data to cache queue
-        if (!cachedData) {
-          return await loadFreshData(fetchParams)
-        }
+    fetchParams.cacheKey = generateCacheKey(fetchParams)
+    const cachedData = fetcherCache.get<PeerCacheValue>(fetchParams.cacheKey)
 
-        // Serve cached entries direct
-        cachedData.queryParams.lastQueried = new Date().getTime()
-        return cachedData.data
-      })
-    )
+    if (cachedData) {
+      // Serve cached entries direct
+      return cachedData.data
+    }
 
-    return results
-  })
+    return await loadFreshData(fetchParams)
+  }
 
   return async ({query: queryDocument, variables, operationName}) => {
     const query = print(queryDocument)
-    return data.load({query, variables, operationName})
+
+    return loadData({query, variables, operationName})
   }
 }

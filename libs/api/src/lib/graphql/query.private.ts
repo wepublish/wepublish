@@ -1,4 +1,9 @@
 import {
+  CanGetPaymentProviders,
+  CanGetPeerArticle,
+  CanLoginAsOtherUser
+} from '@wepublish/permissions/api'
+import {
   GraphQLID,
   GraphQLInt,
   GraphQLList,
@@ -102,12 +107,7 @@ import {
 } from './peer-profile/peer-profile.private-queries'
 import {getPeerById, getPeers} from './peer/peer.private-queries'
 import {getPermissions} from './permission/permission.private-queries'
-import {
-  authorise,
-  CanGetPaymentProviders,
-  CanGetPeerArticle,
-  CanLoginAsOtherUser
-} from './permissions'
+import {authorise} from './permissions'
 import {
   GraphQLFullPoll,
   GraphQLPollConnection,
@@ -133,7 +133,7 @@ import {
   getSubscriptionsAsCSV
 } from './subscription/subscription.private-queries'
 import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
-import {getAdminTags} from './tag/tag.private-query'
+import {getTags} from './tag/tag.private-query'
 import {TagSort} from './tag/tag.query'
 import {GraphQLToken} from './token'
 import {getTokens} from './token/token.private-queries'
@@ -499,14 +499,28 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       args: {
         cursors: {type: GraphQLString},
         take: {type: GraphQLInt, defaultValue: 10},
+        // Backwards compatability
+        first: {type: GraphQLInt},
+        skip: {type: GraphQLInt, defaultValue: 0},
         sort: {type: GraphQLArticleSort, defaultValue: ArticleSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending},
         peerFilter: {type: GraphQLString},
         filter: {type: GraphQLArticleFilter}
       },
 
-      resolve: (root, {filter, sort, order, after, peerFilter}, context, info) =>
-        getAdminPeerArticles(filter, sort, order, peerFilter, after, context, info)
+      resolve: (root, {filter, sort, order, after, peerFilter, take, skip, first}, context, info) =>
+        getAdminPeerArticles(
+          filter,
+          sort,
+          order,
+          peerFilter,
+          after,
+          context,
+          info,
+          take,
+          skip,
+          first
+        )
     },
 
     articlePreviewLink: {
@@ -698,7 +712,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       resolve: (root, {filter, sort, order, cursor, take, skip}, {authenticate, prisma}) =>
-        getAdminTags(filter, sort, order, cursor, skip, take, authenticate, prisma.tag)
+        getTags(filter, sort, order, cursor, skip, take, authenticate, prisma.tag)
     },
 
     // Polls

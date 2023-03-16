@@ -11,7 +11,7 @@ import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../context'
 import {Block, BlockMap, BlockType} from '../db/block'
 import {SettingName} from '../db/setting'
-import {unselectPassword} from '../db/user'
+import {unselectPassword} from '@wepublish/user/api'
 import {NotFound} from '../error'
 import {SendMailType} from '../mails/mailContext'
 import {Validator} from '../validator'
@@ -94,7 +94,7 @@ import {
 } from './peer'
 import {upsertPeerProfile} from './peer-profile/peer-profile.private-mutation'
 import {createPeer, deletePeerById, updatePeer} from './peer/peer.private-mutation'
-import {authorise, CanSendJWTLogin} from './permissions'
+import {authorise} from './permissions'
 import {
   GraphQLFullPoll,
   GraphQLPollAnswer,
@@ -155,6 +155,7 @@ import {
   updateEvent,
   UpdateOrCreateEventInput
 } from './event/event.private-mutation'
+import {CanSendJWTLogin} from '@wepublish/permissions/api'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -1090,6 +1091,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         opensAt: {type: GraphQLDateTime},
         closedAt: {type: GraphQLDateTime},
         question: {type: GraphQLString},
+        infoText: {type: GraphQLRichText},
         answers: {type: GraphQLList(GraphQLNonNull(GraphQLUpdatePollAnswer))},
         externalVoteSources: {
           type: GraphQLList(GraphQLNonNull(GraphQLUpdatePollExternalVoteSources))

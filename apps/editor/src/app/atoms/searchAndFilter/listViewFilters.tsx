@@ -3,14 +3,18 @@ import {
   ArticleFilter,
   AuthorRefFragment,
   DateFilterComparison,
+  FullUserRoleFragment,
   PageFilter,
-  usePeerListLazyQuery
+  usePeerListLazyQuery,
+  UserFilter,
+  useUserRoleListLazyQuery
 } from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose} from 'react-icons/md'
 import {
   Button,
+  CheckPicker,
   DateRangePicker,
   Form as RForm,
   Input,
@@ -45,6 +49,10 @@ const FormGroup = styled(Group)`
   width: 100%;
 `
 
+const WideInput = styled(Input)`
+  width: 400px;
+`
+
 const formInputStyle = {
   marginRight: '15px',
   marginTop: '0',
@@ -62,14 +70,18 @@ type Field =
   | 'authors'
   | 'peer'
   | 'publicationDate'
+  | 'userRole'
+  | 'text'
 
 export interface ListViewFiltersProps {
   fields: Field[]
-  filter: Partial<ArticleFilter & PageFilter>
+  filter: Partial<ArticleFilter & PageFilter & UserFilter>
   isLoading: boolean
-  onSetFilter(filter: ArticleFilter & PageFilter): void
-  setPeerFilter?(value: string): void
+  onSetFilter(filter: ArticleFilter & PageFilter & UserFilter): void
   className?: string
+
+  // optional setters for filters
+  setPeerFilter?(value: string): void
 }
 
 export function ListViewFilters({
@@ -81,6 +93,15 @@ export function ListViewFilters({
 }: ListViewFiltersProps) {
   const {t} = useTranslation()
   const [resetFilterKey, setResetFilterkey] = useState<string>(new Date().getTime().toString())
+  const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
+  const isUserRoleFilter = fields.includes('userRole')
+
+  const [userRoleFetch, {data: userRoleData}] = useUserRoleListLazyQuery({
+    fetchPolicy: 'network-only',
+    variables: {
+      take: 200
+    }
+  })
 
   const isPeerFilter = fields.includes('peer') && !!setPeerFilter
 
@@ -93,6 +114,21 @@ export function ListViewFilters({
       peerListFetch()
     }
   }, [isPeerFilter, peerListFetch])
+
+  useEffect(() => {
+    if (isUserRoleFilter) {
+      userRoleFetch()
+    }
+  }, [isUserRoleFilter, userRoleFetch])
+
+  /**
+   * Setup user roles, whenever user role data object changes
+   */
+  useEffect(() => {
+    if (userRoleData?.userRoles?.nodes) {
+      setUserRoles(userRoleData.userRoles.nodes)
+    }
+  }, [userRoleData?.userRoles])
 
   const allPeers = peerListData?.peers
 
@@ -111,10 +147,14 @@ export function ListViewFilters({
     setResetFilterkey(new Date().getTime().toString())
   }
 
-  const updateFilter = (value: Partial<ArticleFilter & PageFilter>) => {
+  const updateFilter = (value: Partial<ArticleFilter & PageFilter & UserFilter>) => {
     if (value.authors && !value.authors.length) {
       value = {authors: null}
     }
+    if (value.userRole && !value.userRole.length) {
+      value = {userRole: null}
+    }
+
     const newFilter = {
       ...filter,
       ...value
@@ -141,10 +181,45 @@ export function ListViewFilters({
   }
 
   const authorsData = filter?.authors?.map(author => ({id: author})) || []
-
   return (
     <>
       <Form className={className}>
+        {fields.includes('text') && (
+          <Group style={formInputStyle}>
+            <WideInput
+              value={filter.text || ''}
+              placeholder={t('subscriptionList.filter.searchPlaceholder')}
+              onChange={value => updateFilter({text: value})}
+            />
+          </Group>
+        )}
+
+        {fields.includes('userRole') && (
+          <Group style={formInputStyle}>
+            <CheckPicker
+              data-testid="userRole-combobox"
+              name="userRoles"
+              block
+              value={filter?.userRole || []}
+              data={userRoles.map(userRole => ({
+                value: userRole.id,
+                label: userRole.name
+              }))}
+              placement="auto"
+              onChange={value => {
+                updateFilter({
+                  userRole:
+                    userRoles.filter(userRole => value.includes(userRole.id)).map(r => r.id) || null
+                })
+              }}
+              onClean={() => {
+                onSetFilter({userRole: []})
+              }}
+              placeholder={t('userCreateOrEditView.userRoles')}
+            />
+          </Group>
+        )}
+
         {fields.includes('title') && (
           <Group style={formInputStyle}>
             <Input
@@ -190,7 +265,6 @@ export function ListViewFilters({
             <AuthorCheckPicker
               list={authorsData as AuthorRefFragment[]}
               onChange={value => {
-                console.log('value123', value)
                 return updateFilter({authors: value ? value.map(author => author.id) : []})
               }}
             />
