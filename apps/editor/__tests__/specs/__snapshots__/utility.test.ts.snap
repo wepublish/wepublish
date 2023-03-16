@@ -68,4 +68,4 @@ exports[`slugify should transform text with special y like ÝŶŸỲỴỶỸ co
 
 exports[`slugify should transform text with special z like ŹŻŽ correctly 1`] = `"text-with-special-z-like-zzz"`;
 
-exports[`slugify should transform text with umlaute like ä ö and ü correctly 1`] = `"text-with-umlaute-like-a-o-and-u"`;
+exports[`slugify should transform text with umlaute like ä ö and ü correctly 1`] = `"text-with-umlaute-like-ae-oe-and-ue"`;
