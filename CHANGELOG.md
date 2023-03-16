@@ -1,5 +1,34 @@
 # Change Log
 
+## 9.1.0 (2023-03-16)
+
+#### :bug: Bug Fix
+* [#875](https://github.com/wepublish/wepublish/pull/875) fix(editor): user filter being wrong after graphql changes ([@Itrulia](https://github.com/Itrulia))
+* [#873](https://github.com/wepublish/wepublish/pull/873) fix(api): add onDelete cascade for authors and revisions ([@Itrulia](https://github.com/Itrulia))
+* [#868](https://github.com/wepublish/wepublish/pull/868) bugfix for tables disappearing in richtext block ([@penk85](https://github.com/penk85))
+* [#862](https://github.com/wepublish/wepublish/pull/862) Translation fix on event toast ([@penk85](https://github.com/penk85))
+* [#828](https://github.com/wepublish/wepublish/pull/828) B/wep 942 peering timeouts on production ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#833](https://github.com/wepublish/wepublish/pull/833) Fix pages and articles views ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### :memo: Documentation
+* [#841](https://github.com/wepublish/wepublish/pull/841) docs(*): Add deployment docs ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### :house: Internal
+* [#870](https://github.com/wepublish/wepublish/pull/870) fix: master broken from 9.0.0 merge ([@Itrulia](https://github.com/Itrulia))
+* [#842](https://github.com/wepublish/wepublish/pull/842) chore: Do not publish demo docker images ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#837](https://github.com/wepublish/wepublish/pull/837) add onDelete relation to session ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#838](https://github.com/wepublish/wepublish/pull/838) Rework update helm chart (prepare for nx, consolidate and simplify) ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#827](https://github.com/wepublish/wepublish/pull/827) chore: add no unused imports eslint rule ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 6
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Lukas Diener ([@LukasSkywalker](https://github.com/LukasSkywalker))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+
+
 ## v9.0.0
 
 #### :boom: Breaking Change
