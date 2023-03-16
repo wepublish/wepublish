@@ -213,16 +213,6 @@ function MemberPlanEdit() {
             setMemberPlan={setMemberPlan}
             setAvailablePaymentMethods={setAvailablePaymentMethods}
           />
-
-          <Row>
-            <Col xs={24}>
-              <Panel bordered header={t('subscriptionFlow.settings')}>
-                <Link to={`/communicationflows/edit/${memberPlanId}`}>
-                  {t('subscriptionFlow.edit')}
-                </Link>
-              </Panel>
-            </Col>
-          </Row>
         </SingleViewContent>
       </Form>
     </SingleView>
