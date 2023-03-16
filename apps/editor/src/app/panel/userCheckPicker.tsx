@@ -15,8 +15,8 @@ export function UserCheckPicker({list, onChange}: UserCheckPickerProps) {
   const usersVariables = {
     filter:
       {
-        text: usersFilter
-      } || undefined,
+        text: usersFilter || undefined
+      },
     take: 10
   }
   const {data} = useUserListQuery({
