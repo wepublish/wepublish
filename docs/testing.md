@@ -30,8 +30,18 @@ This code sets up a test database called `wepublish_test` and resets it each tim
 To run tests, you need to ensure that all your changes to the `schema.prisma` file are reflected in a migration. 
 You can do this by running `prisma migrate dev --name name_of_my_migration`. Otherwise, your test database may 
 rely on an incomplete schema.
+Also, make sure, you have a database up and running. You may want run `docker-compose up database`
 
 Once you have done this, you should be able to run a single test using the command `npx jest -t 'my test'`
+
+### Writing Tests with Fabbrica
+When it comes to writing tests, we highly recommend using [Fabbrica](https://github.com/Quramy/prisma-fabbrica).
+With Fabbrica, you can easily generate database entries using the `.create()` method or model instances using
+the `.build()` method, saving you time and effort.
+
+For examples of how to use Fabbrica in your tests, check out the `subscription-flow.controller.spec.ts` file 
+located at `libs/membership/api/src/lib/subscription-flow`. It's a great resource to help you get started with writing
+tests that utilize Fabbrica.
 
 ### ! Do not forget adding tests to the pipeline !
 In order to run your tests within the pipeline, you have to add an entry in the `package.json` in the root folder.
