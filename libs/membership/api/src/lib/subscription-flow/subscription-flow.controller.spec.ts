@@ -126,7 +126,7 @@ describe('SubscriptionFlowController', () => {
     expect(flows[0].intervals.length).toEqual(2)
   })
 
-  it('prevents creation of equal flows', async () => {
+  it('prevents creation of a second default flow', async () => {
     const plan = await MemberPlanFactory.create()
     const defaultFlow = await SubscriptionFlowFactory.create({
       default: true
@@ -148,17 +148,20 @@ describe('SubscriptionFlowController', () => {
   })
 
   it('prevents creation of flows with filter subset', async () => {
+    const paymentMethod = await PaymentMethodFactory.create()
     const plan = await MemberPlanFactory.create()
     const existingFlow = await SubscriptionFlowFactory.create({
-      periodicities: ['monthly', 'yearly']
+      paymentMethods: {connect: [{id: paymentMethod.id}]},
+      periodicities: ['monthly', 'yearly'],
+      autoRenewal: [true, false]
     })
 
     await expect(
       controller.createFlow({
         memberPlanId: plan.id,
-        paymentMethodIds: [],
+        paymentMethodIds: [paymentMethod.id],
         periodicities: ['monthly'],
-        autoRenewal: []
+        autoRenewal: [true, false]
       })
     ).rejects.toThrowError()
 
