@@ -24,7 +24,8 @@ const prismaServiceMock = {
 const mailProviderServiceMock = {
   name: 'MockProvider',
   getProvider: jest.fn().mockReturnThis(),
-  getTemplateUrl: jest.fn((): string => 'https://example.com/template.html')
+  getTemplateUrl: jest.fn((): string => 'https://example.com/template.html'),
+  getUsedTemplateIdentifiers: jest.fn((): string[] => [])
 }
 
 describe('MailTemplatesResolver', () => {

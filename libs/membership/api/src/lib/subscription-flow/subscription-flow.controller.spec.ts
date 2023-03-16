@@ -3,75 +3,31 @@ import {SubscriptionFlowController} from './subscription-flow.controller'
 import {clearDatabase} from '../../prisma-utils'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {OldContextService, PrismaService} from '@wepublish/api'
-import {
-  MailTemplate,
-  MemberPlan,
-  PaymentPeriodicity,
-  PrismaClient,
-  SubscriptionEvent,
-  SubscriptionFlow
-} from '@prisma/client'
+import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
 import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
 import {SubscriptionController} from '../subscription/subscription.controller'
+import {
+  initialize,
+  defineMemberPlanFactory,
+  defineMailTemplateFactory,
+  defineSubscriptionFlowFactory,
+  definePaymentMethodFactory
+} from '../../../../../api/src/__generated__/fabbrica'
 
 describe('SubscriptionFlowController', () => {
   let controller: SubscriptionFlowController
   const prismaClient = new PrismaClient()
+  initialize({prisma: prismaClient})
 
-  const createPlan = async (prismaClient: PrismaClient): Promise<MemberPlan> => {
-    return prismaClient.memberPlan.create({
-      data: {
-        name: 'Test Plan',
-        slug: 'test-plan-' + Math.random().toString(),
-        tags: [],
-        description: {},
-        active: true,
-        amountPerMonthMin: 1
-      }
-    })
-  }
-
-  const createTemplate = async (prismaClient: PrismaClient): Promise<MailTemplate> => {
-    return prismaClient.mailTemplate.create({
-      data: {
-        name: 'Test Plan',
-        externalMailTemplateId: Math.random().toString(),
-        remoteMissing: false
-      }
-    })
-  }
-
-  const createFlow = async (
-    prismaClient: PrismaClient,
-    options: {
-      isDefault?: boolean
-      memberPlanId: string
-      mailTemplateId: number
-      periodicities?: PaymentPeriodicity[]
+  const MemberPlanFactory = defineMemberPlanFactory()
+  const MailTemplateFactory = defineMailTemplateFactory()
+  const PaymentMethodFactory = definePaymentMethodFactory()
+  const SubscriptionFlowFactory = defineSubscriptionFlowFactory({
+    defaultData: {
+      memberPlan: MemberPlanFactory,
+      intervals: {connect: []}
     }
-  ): Promise<SubscriptionFlow> => {
-    return prismaClient.subscriptionFlow.create({
-      data: {
-        default: options.isDefault || false,
-        memberPlan: {connect: {id: options.memberPlanId}},
-        paymentMethods: undefined,
-        periodicities: options.periodicities || [],
-        autoRenewal: [],
-        intervals: {
-          create: [
-            {
-              event: SubscriptionEvent.SUBSCRIBE,
-              mailTemplate: {connect: {id: options.mailTemplateId}}
-            },
-            {
-              event: SubscriptionEvent.RENEWAL_FAILED,
-              mailTemplate: {connect: {id: options.mailTemplateId}}
-            }
-          ]
-        }
-      }
-    })
-  }
+  })
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -89,6 +45,7 @@ describe('SubscriptionFlowController', () => {
 
     await clearDatabase(prismaClient, [
       'subscription_communication_flows',
+      'payment.methods',
       'member.plans',
       'subscriptions.intervals',
       'mail_templates'
@@ -104,17 +61,30 @@ describe('SubscriptionFlowController', () => {
   })
 
   it('returns only default flow', async () => {
-    const template = await createTemplate(prismaClient)
-    const plan = await createPlan(prismaClient)
-    const customFlow = await createFlow(prismaClient, {
-      memberPlanId: plan.id,
-      mailTemplateId: template.id
+    const template = await MailTemplateFactory.createForConnect()
+    const customFlow = await SubscriptionFlowFactory.create({
+      intervals: {
+        create: [
+          {
+            event: SubscriptionEvent.INVOICE_CREATION,
+            mailTemplateId: template.id,
+            daysAwayFromEnding: null
+          }
+        ]
+      }
     })
     expect(customFlow.default).toEqual(false)
-    const defaultFlow = await createFlow(prismaClient, {
-      isDefault: true,
-      memberPlanId: plan.id,
-      mailTemplateId: template.id
+    const defaultFlow = await SubscriptionFlowFactory.create({
+      default: true,
+      intervals: {
+        create: [
+          {
+            event: SubscriptionEvent.INVOICE_CREATION,
+            mailTemplateId: template.id,
+            daysAwayFromEnding: null
+          }
+        ]
+      }
     })
 
     const result = await controller.getFlows(true)
@@ -124,17 +94,10 @@ describe('SubscriptionFlowController', () => {
   })
 
   it('returns all flows with default first', async () => {
-    const template = await createTemplate(prismaClient)
-    const plan = await createPlan(prismaClient)
-    const customFlow = await createFlow(prismaClient, {
-      memberPlanId: plan.id,
-      mailTemplateId: template.id
-    })
+    const customFlow = await SubscriptionFlowFactory.create()
     expect(customFlow.default).toEqual(false)
-    const defaultFlow = await createFlow(prismaClient, {
-      isDefault: true,
-      memberPlanId: plan.id,
-      mailTemplateId: template.id
+    const defaultFlow = await SubscriptionFlowFactory.create({
+      default: true
     })
 
     const result = await controller.getFlows(false)
@@ -146,11 +109,12 @@ describe('SubscriptionFlowController', () => {
   })
 
   it('creates a flow', async () => {
-    const plan = await createPlan(prismaClient)
+    const plan = await MemberPlanFactory.create()
+    const paymentMethod = await PaymentMethodFactory.create()
 
     await controller.createFlow({
       memberPlanId: plan.id,
-      paymentMethodIds: ['aabbccdd'],
+      paymentMethodIds: [paymentMethod.id],
       periodicities: [PaymentPeriodicity.monthly],
       autoRenewal: [true]
     })
@@ -159,16 +123,13 @@ describe('SubscriptionFlowController', () => {
     expect(flows.length).toEqual(1)
     expect(flows[0].default).toEqual(false)
     expect(flows[0].memberPlanId).toEqual(plan.id)
-    expect(flows[0].intervals.length).toEqual(0)
+    expect(flows[0].intervals.length).toEqual(2)
   })
 
   it('prevents creation of equal flows', async () => {
-    const template = await createTemplate(prismaClient)
-    const plan = await createPlan(prismaClient)
-    const defaultFlow = await createFlow(prismaClient, {
-      isDefault: true,
-      memberPlanId: plan.id,
-      mailTemplateId: template.id
+    const plan = await MemberPlanFactory.create()
+    const defaultFlow = await SubscriptionFlowFactory.create({
+      default: true
     })
 
     await expect(
@@ -187,12 +148,9 @@ describe('SubscriptionFlowController', () => {
   })
 
   it('prevents creation of flows with filter subset', async () => {
-    const template = await createTemplate(prismaClient)
-    const plan = await createPlan(prismaClient)
-    const existingFlow = await createFlow(prismaClient, {
-      memberPlanId: plan.id,
-      periodicities: ['monthly', 'yearly'],
-      mailTemplateId: template.id
+    const plan = await MemberPlanFactory.create()
+    const existingFlow = await SubscriptionFlowFactory.create({
+      periodicities: ['monthly', 'yearly']
     })
 
     await expect(
@@ -211,19 +169,19 @@ describe('SubscriptionFlowController', () => {
   })
 
   it('allows creation of flows with different filters', async () => {
-    const template = await createTemplate(prismaClient)
-    const plan = await createPlan(prismaClient)
-    const existingFlow = await createFlow(prismaClient, {
-      memberPlanId: plan.id,
+    const method = await PaymentMethodFactory.createForConnect()
+    const plan = await MemberPlanFactory.create()
+    const existingFlow = await SubscriptionFlowFactory.create({
       periodicities: ['monthly'],
-      mailTemplateId: template.id
+      autoRenewal: [true],
+      paymentMethods: {connect: [{id: method.id}]}
     })
 
     await controller.createFlow({
       memberPlanId: plan.id,
-      paymentMethodIds: [],
+      paymentMethodIds: [method.id],
       periodicities: ['yearly'],
-      autoRenewal: []
+      autoRenewal: [true]
     })
 
     const flows = await prismaClient.subscriptionFlow.findMany()
@@ -235,22 +193,30 @@ describe('SubscriptionFlowController', () => {
   })
 
   it('updates intervals of a flow', async () => {
-    const template = await createTemplate(prismaClient)
-    const plan = await createPlan(prismaClient)
-    const flow = await createFlow(prismaClient, {
-      memberPlanId: plan.id,
-      mailTemplateId: template.id
+    const template = await MailTemplateFactory.create()
+    const template2 = await MailTemplateFactory.create()
+
+    const flow = await SubscriptionFlowFactory.create({
+      intervals: {
+        create: [
+          {
+            event: SubscriptionEvent.INVOICE_CREATION,
+            mailTemplateId: template.id,
+            daysAwayFromEnding: null
+          }
+        ]
+      }
     })
-    const template2 = await createTemplate(prismaClient)
 
     const createdFlow = await prismaClient.subscriptionFlow.findFirst({
       where: {id: flow.id},
       include: {intervals: true}
     })
     const existingInterval = createdFlow?.intervals.find(
-      i => i.event === SubscriptionEvent.SUBSCRIBE
+      i => i.event === SubscriptionEvent.INVOICE_CREATION
     )
     expect(existingInterval?.mailTemplateId).toEqual(template.id)
+    expect(existingInterval?.daysAwayFromEnding).toEqual(null)
 
     await controller.updateInterval({
       id: existingInterval!.id,
@@ -261,7 +227,9 @@ describe('SubscriptionFlowController', () => {
       where: {id: flow.id},
       include: {intervals: true}
     })
-    const newInterval = updatedFlow?.intervals.find(i => i.event === SubscriptionEvent.SUBSCRIBE)
+    const newInterval = updatedFlow?.intervals.find(
+      i => i.event === SubscriptionEvent.INVOICE_CREATION
+    )
     expect(newInterval?.mailTemplateId).toEqual(template2.id)
   })
 })

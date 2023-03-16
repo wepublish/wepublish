@@ -56,7 +56,7 @@ export class SubscriptionFlowController {
         })
     )
      **/
-    await this.periodicJobController.execute()
+    // TODO: readd if needed: await this.periodicJobController.execute()
 
     return await this.prismaService.subscriptionFlow.findMany({
       where,
