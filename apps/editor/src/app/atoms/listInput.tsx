@@ -57,11 +57,11 @@ export interface ListItemProps<T = any> {
   readonly children: (props: FieldProps<T>) => JSX.Element
 }
 
-const DragHandle = SortableHandle(({disabled}: {disabled?: boolean}) => (
+const DragHandle = SortableHandle<{disabled?: boolean}>(({disabled}: {disabled?: boolean}) => (
   <IconButton icon={<MdDragIndicator />} disabled={disabled} />
 ))
 
-const ListItem = SortableElement(
+const ListItem = SortableElement<ListItemProps>(
   ({value, itemIndex, itemDisabled, onChange, onRemove, children}: ListItemProps) => {
     function handleValueChange(fieldValue: React.SetStateAction<any>) {
       onChange(itemIndex, value => ({
@@ -92,7 +92,7 @@ const ListItem = SortableElement(
   }
 )
 
-const SortableList = SortableContainer(
+const SortableList = SortableContainer<ListFieldProps>(
   ({value, defaultValue, disabled, children, onChange}: ListFieldProps) => {
     function handleItemChange(itemIndex: number, itemValue: React.SetStateAction<ListValue>) {
       onChange(value =>

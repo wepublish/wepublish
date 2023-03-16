@@ -23,6 +23,7 @@ import {
   toaster
 } from 'rsuite'
 import FormControl from 'rsuite/FormControl'
+import {RowDataType} from 'rsuite-table'
 
 const Row = styled(RRow)`
   margin-top: 20px;
@@ -81,7 +82,7 @@ export function ExternalVoteTable({
       <Table.Column key={answer.id} width={150}>
         <Table.HeaderCell>{answer.answer}</Table.HeaderCell>
         <Table.Cell>
-          {(externalVoteSource: PollExternalVoteSource) => (
+          {(externalVoteSource: RowDataType<PollExternalVoteSource>) => (
             <InputNumber
               value={
                 externalVoteSource.voteAmounts?.find(
@@ -89,7 +90,7 @@ export function ExternalVoteTable({
                 )?.amount || 0
               }
               onChange={(newValue: string | number) => {
-                changeSource(answer, externalVoteSource, newValue)
+                changeSource(answer, externalVoteSource as PollExternalVoteSource, newValue)
               }}
             />
           )}
@@ -110,8 +111,11 @@ export function ExternalVoteTable({
       <Table.Column>
         <Table.HeaderCell>{t('delete')}</Table.HeaderCell>
         <Table.Cell>
-          {(voteSource: PollExternalVoteSource) => (
-            <IconButton icon={<MdDelete />} onClick={() => onClickDeleteBtn(voteSource)} />
+          {(voteSource: RowDataType<PollExternalVoteSource>) => (
+            <IconButton
+              icon={<MdDelete />}
+              onClick={() => onClickDeleteBtn(voteSource as PollExternalVoteSource)}
+            />
           )}
         </Table.Cell>
       </Table.Column>
@@ -119,12 +123,13 @@ export function ExternalVoteTable({
   )
 }
 
-interface addSourceProps {
+interface AddSourceProps {
   poll: FullPoll | undefined
   setLoading(loading: boolean): void
   onPollChange(poll: FullPoll): void
 }
-export function AddSource({poll, setLoading, onPollChange}: addSourceProps) {
+
+export function AddSource({poll, setLoading, onPollChange}: AddSourceProps) {
   const {t} = useTranslation()
   const [newSource, setNewSource] = useState<string | undefined>(undefined)
 

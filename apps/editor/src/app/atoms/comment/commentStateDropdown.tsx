@@ -5,7 +5,6 @@ import {useTranslation} from 'react-i18next'
 import {MdArrowDropDown} from 'react-icons/md'
 import {
   Badge,
-  Button,
   ButtonGroup,
   Dropdown,
   IconButton as RIconButton,
@@ -106,14 +105,14 @@ export function CommentStateDropdown({comment, size, onStateChanged}: CommentSta
       )}
       <div>
         <ButtonGroup>
-          <Button
+          <IconButton
             appearance="ghost"
             icon={<MdArrowDropDown />}
             placement="left"
             color={mapCommentStateToColor(comment.state)}
             size={size || 'md'}>
             {t(humanReadableCommentState(comment.state))}
-          </Button>
+          </IconButton>
           <Whisper placement="bottomEnd" trigger="click" speaker={renderMenu}>
             <IconButton
               size={size || 'md'}
