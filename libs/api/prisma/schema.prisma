@@ -5,6 +5,7 @@ generator client {
 
 generator fabbrica {
   provider = "prisma-fabbrica"
+  noTranspile = true
 }
 
 datasource db {
