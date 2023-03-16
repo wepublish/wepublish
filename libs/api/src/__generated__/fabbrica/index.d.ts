@@ -2119,6 +2119,7 @@ declare type PollFactoryDefineInput = {
   opensAt?: Date
   closedAt?: Date | null
   question?: string | null
+  infoText?: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue
   answers?: Prisma.PollAnswerCreateNestedManyWithoutPollInput
   votes?: Prisma.PollVoteCreateNestedManyWithoutPollInput
   externalVoteSources?: Prisma.PollExternalVoteSourceCreateNestedManyWithoutPollInput

@@ -12,7 +12,7 @@ import {
 } from 'graphql'
 
 import {Context} from '../context'
-import {Setting, SettingName} from '../db/setting'
+import {Setting, SettingName} from '@wepublish/settings/api'
 
 export const GraphQLSettingValueType = new GraphQLScalarType({
   name: 'Value',
@@ -31,7 +31,13 @@ export const GraphQLSettingName = new GraphQLEnumType({
     RESET_PASSWORD_JWT_EXPIRES_MIN: {value: SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN},
     PEERING_TIMEOUT_MS: {value: SettingName.PEERING_TIMEOUT_MS},
     INVOICE_REMINDER_FREQ: {value: SettingName.INVOICE_REMINDER_FREQ},
-    INVOICE_REMINDER_MAX_TRIES: {value: SettingName.INVOICE_REMINDER_MAX_TRIES}
+    INVOICE_REMINDER_MAX_TRIES: {value: SettingName.INVOICE_REMINDER_MAX_TRIES},
+    MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC: {value: SettingName.MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC},
+    MAKE_NEW_SUBSCRIBERS_API_PUBLIC: {value: SettingName.MAKE_NEW_SUBSCRIBERS_API_PUBLIC},
+    MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC: {value: SettingName.MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC},
+    MAKE_NEW_DEACTIVATIONS_API_PUBLIC: {value: SettingName.MAKE_NEW_DEACTIVATIONS_API_PUBLIC},
+    MAKE_EXPECTED_REVENUE_API_PUBLIC: {value: SettingName.MAKE_EXPECTED_REVENUE_API_PUBLIC},
+    MAKE_REVENUE_API_PUBLIC: {value: SettingName.MAKE_REVENUE_API_PUBLIC}
   }
 })
 

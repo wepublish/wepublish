@@ -2,7 +2,8 @@ import {PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 import {UserRoleFilter, UserRoleSort} from '../../db/userRole'
 import {UserInputError} from '../../error'
-import {CanGetUserRole, CanGetUserRoles, authorise} from '../permissions'
+import {authorise} from '../permissions'
+import {CanGetUserRole, CanGetUserRoles} from '@wepublish/permissions/api'
 import {getUserRoles} from './user-role.queries'
 
 export const getUserRoleById = (

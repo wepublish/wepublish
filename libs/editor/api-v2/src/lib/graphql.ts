@@ -29,6 +29,7 @@ export type DashboardInvoice = {
 
 export type DashboardSubscription = {
   __typename?: 'DashboardSubscription';
+  deactivationDate?: Maybe<Scalars['DateTime']>;
   endsAt?: Maybe<Scalars['DateTime']>;
   memberPlan: Scalars['String'];
   monthlyAmount: Scalars['Int'];

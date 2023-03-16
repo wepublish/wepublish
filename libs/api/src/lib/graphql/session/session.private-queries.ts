@@ -1,6 +1,6 @@
 import {Context} from '../../context'
 import {PrismaClient} from '@prisma/client'
-import {SessionType} from '../../db/session'
+import {AuthSessionType} from '@wepublish/authentication/api'
 
 export const getSessionsForUser = async (
   authenticateUser: Context['authenticateUser'],
@@ -26,7 +26,7 @@ export const getSessionsForUser = async (
 
   return sessions.map(session => ({
     ...session,
-    type: SessionType.User,
+    type: AuthSessionType.User,
     user,
     roles
   }))

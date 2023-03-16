@@ -76,10 +76,10 @@ model ArticleRevision {
 }
 
 model ArticleRevisionAuthor {
-  revision   ArticleRevision @relation(fields: [revisionId], references: [id])
+  revision   ArticleRevision @relation(fields: [revisionId], references: [id], onDelete: Cascade)
   revisionId String
 
-  author   Author @relation(fields: [authorId], references: [id])
+  author   Author @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId String
 
   @@id([revisionId, authorId])
@@ -87,10 +87,10 @@ model ArticleRevisionAuthor {
 }
 
 model ArticleRevisionSocialMediaAuthor {
-  revision   ArticleRevision @relation(fields: [revisionId], references: [id])
+  revision   ArticleRevision @relation(fields: [revisionId], references: [id], onDelete: Cascade)
   revisionId String
 
-  author   Author @relation(fields: [authorId], references: [id])
+  author   Author @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId String
 
   @@id([revisionId, authorId])
@@ -880,6 +880,7 @@ model Poll {
   closedAt DateTime?
 
   question String?
+  infoText Json?
 
   answers             PollAnswer[]
   votes               PollVote[]

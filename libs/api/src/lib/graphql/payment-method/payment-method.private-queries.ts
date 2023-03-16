@@ -1,5 +1,6 @@
 import {Context} from '../../context'
-import {authorise, CanGetPaymentMethod, CanGetPaymentMethods} from '../permissions'
+import {authorise} from '../permissions'
+import {CanGetPaymentMethod, CanGetPaymentMethods} from '@wepublish/permissions/api'
 import {PrismaClient} from '@prisma/client'
 
 export const getPaymentMethodById = (

@@ -1,7 +1,8 @@
 import {Context} from '../../context'
-import {authorise, CanCreateSubscription, CanDeleteSubscription} from '../permissions'
+import {authorise} from '../permissions'
+import {CanCreateSubscription, CanDeleteSubscription} from '@wepublish/permissions/api'
 import {Prisma, PrismaClient} from '@prisma/client'
-import {unselectPassword} from '../../db/user'
+import {unselectPassword} from '@wepublish/user/api'
 import {NotFound} from '../../error'
 
 export const deleteSubscriptionById = (

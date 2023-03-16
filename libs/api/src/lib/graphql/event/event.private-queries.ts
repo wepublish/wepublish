@@ -1,7 +1,8 @@
 import {PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
-import {authorise, CanGetEvent} from '../permissions'
-import {EventFilter, EventSort, getEvents} from './event.queries'
+import {authorise} from '../permissions'
+import {CanGetEvent} from '@wepublish/permissions/api'
+import {EventFilter, EventSort, getEvents} from './event.query'
 
 export const getAdminEvents = async (
   filter: Partial<EventFilter>,

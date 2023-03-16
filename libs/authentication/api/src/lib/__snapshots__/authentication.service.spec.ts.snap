@@ -1,0 +1,138 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AuthenticationService should return a token session 1`] = `
+Object {
+  "id": "1234-1234",
+  "name": "Foo Token",
+  "roles": Array [],
+  "token": "1234",
+  "type": "token",
+}
+`;
+
+exports[`AuthenticationService should return a token session 2`] = `
+Array [
+  Object {
+    "where": Object {
+      "token": "1234",
+    },
+  },
+]
+`;
+
+exports[`AuthenticationService should return a token session 3`] = `
+Array [
+  Object {
+    "where": Object {
+      "token": "1234",
+    },
+  },
+]
+`;
+
+exports[`AuthenticationService should return a token session 4`] = `
+Array [
+  Object {
+    "where": Object {
+      "id": Object {
+        "in": Array [
+          "1234",
+          "12345",
+        ],
+      },
+    },
+  },
+]
+`;
+
+exports[`AuthenticationService should return a user session 1`] = `
+Object {
+  "createdAt": undefined,
+  "expiresAt": undefined,
+  "id": undefined,
+  "roles": Array [],
+  "token": undefined,
+  "type": "user",
+  "user": Object {
+    "roleIDs": Array [
+      "1111",
+      "2222",
+    ],
+  },
+}
+`;
+
+exports[`AuthenticationService should return a user session 2`] = `
+Array [
+  Object {
+    "where": Object {
+      "token": "1234",
+    },
+  },
+]
+`;
+
+exports[`AuthenticationService should return a user session 3`] = `
+Array [
+  Object {
+    "where": Object {
+      "token": "1234",
+    },
+  },
+]
+`;
+
+exports[`AuthenticationService should return a user session 4`] = `
+Array [
+  Object {
+    "where": Object {
+      "id": Object {
+        "in": Array [
+          "1111",
+          "2222",
+        ],
+      },
+    },
+  },
+]
+`;
+
+exports[`AuthenticationService should return a user session 5`] = `
+Object {
+  "select": Any<Object>,
+  "where": Object {
+    "id": "12345",
+  },
+}
+`;
+
+exports[`AuthenticationService should return null if user can't be found 1`] = `
+Array [
+  Object {
+    "where": Object {
+      "token": "1234",
+    },
+  },
+]
+`;
+
+exports[`AuthenticationService should return null if user can't be found 2`] = `
+Array [
+  Object {
+    "where": Object {
+      "token": "1234",
+    },
+  },
+]
+`;
+
+exports[`AuthenticationService should return null if user can't be found 3`] = `undefined`;
+
+exports[`AuthenticationService should return null if user can't be found 4`] = `
+Object {
+  "select": Any<Object>,
+  "where": Object {
+    "id": "12345",
+  },
+}
+`;

@@ -18,6 +18,9 @@ export class DashboardSubscription {
   endsAt?: Date
 
   @Field({nullable: true})
+  deactivationDate?: Date
+
+  @Field({nullable: true})
   renewsAt?: Date
 
   @Field()

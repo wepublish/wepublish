@@ -1,5 +1,7 @@
 # ui
 
+This library was generated with [Nx](https://nx.dev).
+
 ## Re-usable ui components
 ### Single View
 This is a common view to display a single data model. That might be a user, a subscription etc.

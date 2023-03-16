@@ -681,6 +681,7 @@
       "opensAtLabel": "Startet am",
       "closesAtLabel": "Schliesst am",
       "pollExternalVotesPanelHeader": "Externe Abstimmungsquellen",
+      "infoText": "Info-Text",
       "defaultAnswer": "Standardantwort"
     },
     "pollAnswer": {
@@ -709,6 +710,7 @@
       "waiting": "Umfrage wartet auf Öffnung am {{date, ccc PP p}}"
     },
     "navbar": {
+      "dashboard": "Dashboard",
       "events": "Events",
       "eventTags": "Tags",
       "articles": "Artikel",
@@ -1365,6 +1367,32 @@
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "Kein Mailversand"
+    },
+    "general": {
+      "deletedSuccess": "Erfolgreich gelöscht",
+      "created": "Erfolgreich erstellt",
+      "updated": "Erfolgreich aktualisiert",
+      "errorOnUpdate": "Fehler, bitte nochmal versuchen"
+    },
+    "dashboard": {
+      "dashboard": "Dashboard",
+      "greeting": "Hallo, {{name}}!",
+      "yearlySubscribers": "Neue Abonnent:innen im letzten Jahr",
+      "activity": "Letzte Aktivitäten",
+      "event": "Event",
+      "summary": "Zusammenfassung",
+      "noData": "Keine aktuellen Abo-Daten",
+      "newArticle": "Neuer <0>Artikel</0> erstellt",
+      "newPage": "Neue <0>Seite</0> erstellt",
+      "newComment": "Neuer <0>Kommentar</0>",
+      "newPoll": "Neue <0>Umfrage</0>",
+      "newSubscription": "Neues <0>Abo</0>",
+      "newAuthor": "Neuer <0>Author</0> erstellt",
+      "newUser": "Neuer <0>User</0> erstellt",
+      "newEvent": "Neues <0>event</0>",
+      "createdBy": " von {{creator}}",
+      "user": "Benutzer",
+      "memberPlan": "Memberplan: {{plan}}"
     }
   }
 }

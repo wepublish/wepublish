@@ -2,10 +2,11 @@ import {PrismaClient} from '@prisma/client'
 import {GraphQLResolveInfo} from 'graphql'
 import {delegateToSchema, introspectSchema, makeRemoteExecutableSchema} from 'graphql-tools'
 import {Context, createFetcher} from '../../context'
-import {SettingName} from '../../db/setting'
+import {SettingName} from '@wepublish/settings/api'
 import {PeerTokenInvalidError} from '../../error'
 import {markResultAsProxied} from '../../utility'
-import {authorise, CanCreatePeer, CanGetPeerProfile} from '../permissions'
+import {authorise} from '../permissions'
+import {CanCreatePeer, CanGetPeerProfile} from '@wepublish/permissions/api'
 import {getPeerProfile} from './peer-profile.queries'
 
 export const getAdminPeerProfile = async (

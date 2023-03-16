@@ -1,7 +1,7 @@
 import {PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 import {ArticleFilter, ArticleSort, PublicArticle} from '../../db/article'
-import {SessionType} from '../../db/session'
+import {AuthSessionType} from '@wepublish/authentication/api'
 import {logger} from '../../server'
 import {getArticles} from './article.queries'
 
@@ -115,7 +115,7 @@ export const getPublishedArticleByIdOrSlug = async (
     }
   }
 
-  if (session?.type === SessionType.Token) {
+  if (session?.type === AuthSessionType.Token) {
     return article?.shared ? article : null
   }
 

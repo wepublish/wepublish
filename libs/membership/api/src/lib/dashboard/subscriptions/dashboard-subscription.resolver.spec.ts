@@ -126,7 +126,7 @@ describe('DashboardSubscriptionResolver', () => {
               amountPerMonthMin: 10,
               name: 'Foo',
               slug: 'foo',
-              description: {}
+              description: []
             }
           }
         },
@@ -167,7 +167,7 @@ describe('DashboardSubscriptionResolver', () => {
               amountPerMonthMin: 10,
               name: 'Bar',
               slug: 'bar',
-              description: {}
+              description: []
             }
           }
         },
@@ -198,9 +198,7 @@ describe('DashboardSubscriptionResolver', () => {
       }
     ]
 
-    // Create first two records before the third
-    await Promise.all(mockData.slice(0, 1).map(data => prisma.subscription.create({data})))
-    await prisma.subscription.create({data: mockData[2]})
+    await Promise.all(mockData.map(data => prisma.subscription.create({data})))
 
     await request(app.getHttpServer())
       .post('')
@@ -246,7 +244,7 @@ describe('DashboardSubscriptionResolver', () => {
               amountPerMonthMin: 10,
               name: 'Foo',
               slug: 'foo',
-              description: {}
+              description: []
             }
           }
         },
@@ -287,7 +285,7 @@ describe('DashboardSubscriptionResolver', () => {
               amountPerMonthMin: 10,
               name: 'Bar',
               slug: 'bar',
-              description: {}
+              description: []
             }
           }
         },
@@ -364,7 +362,7 @@ describe('DashboardSubscriptionResolver', () => {
               amountPerMonthMin: 10,
               name: 'Foo',
               slug: 'foo',
-              description: {}
+              description: []
             }
           }
         },
@@ -425,7 +423,7 @@ describe('DashboardSubscriptionResolver', () => {
               amountPerMonthMin: 10,
               name: 'Bar',
               slug: 'bar',
-              description: {}
+              description: []
             }
           }
         },
@@ -510,7 +508,7 @@ describe('DashboardSubscriptionResolver', () => {
               amountPerMonthMin: 10,
               name: 'Foo',
               slug: 'foo',
-              description: {}
+              description: []
             }
           }
         },

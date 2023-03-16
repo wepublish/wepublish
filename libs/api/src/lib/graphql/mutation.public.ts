@@ -10,8 +10,8 @@ import {
   GraphQLString
 } from 'graphql'
 import {Context} from '../context'
-import {SettingName} from '../db/setting'
-import {unselectPassword} from '../db/user'
+import {SettingName} from '@wepublish/settings/api'
+import {unselectPassword} from '@wepublish/user/api'
 import {
   AlreadyUnpaidInvoices,
   CommentAuthenticationError,

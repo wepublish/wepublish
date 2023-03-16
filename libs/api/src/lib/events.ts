@@ -1,9 +1,9 @@
 import {Invoice, Prisma, SubscriptionPeriod, PrismaClient} from '@prisma/client'
 import {Context} from './context'
-import {SettingName} from './db/setting'
-import {unselectPassword} from './db/user'
+import {unselectPassword} from '@wepublish/user/api'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
+import {SettingName} from '@wepublish/settings/api'
 
 // @TODO: move into cron job
 export const onFindArticle =

@@ -2,7 +2,8 @@ import {Prisma, PrismaClient} from '@prisma/client'
 import {GraphQLError} from 'graphql'
 import {Context} from '../../context'
 import {NotFound} from '../../error'
-import {authorise, CanCreatePoll, CanDeletePoll, CanUpdatePoll} from '../permissions'
+import {authorise} from '../permissions'
+import {CanCreatePoll, CanDeletePoll, CanUpdatePoll} from '@wepublish/permissions/api'
 
 export const deletePoll = (
   pollId: string,
@@ -30,7 +31,7 @@ export const deletePoll = (
 }
 
 export const createPoll = (
-  input: Pick<Prisma.PollUncheckedCreateInput, 'question' | 'opensAt' | 'closedAt'>,
+  input: Pick<Prisma.PollUncheckedCreateInput, 'question' | 'opensAt' | 'closedAt' | 'infoText'>,
   authenticate: Context['authenticate'],
   poll: PrismaClient['poll']
 ) => {

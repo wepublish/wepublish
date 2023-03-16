@@ -51,7 +51,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                     type=\\"text\\"
                     value=\\"\\"
                   />
-@@ -208,12 +211,13 @@
+@@ -207,12 +210,13 @@
                   >
                     <div
                       class=\\"css-1ax8cc3-DragHandleWrapper e1g7b9o11\\"
@@ -67,7 +67,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                         <svg
                           fill=\\"currentColor\\"
                           height=\\"1em\\"
-@@ -311,12 +315,13 @@
+@@ -310,12 +314,13 @@
                     </div>
                     <div
                       class=\\"css-1qpz4yt-IconButtonWrapper e1g7b9o14\\"
@@ -83,7 +83,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                         <svg
                           fill=\\"currentColor\\"
                           height=\\"1em\\"
-@@ -343,13 +348,14 @@
+@@ -342,13 +347,14 @@
                         </span>
                       </button>
                     </div>
@@ -100,7 +100,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                     <svg
                       fill=\\"currentColor\\"
                       height=\\"1em\\"
-@@ -736,15 +742,18 @@
+@@ -735,15 +741,18 @@
                       </button>
                     </div>
                   </div>
@@ -128,7 +128,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
 - First value
 + Second value
 
-@@ -259,11 +259,11 @@
+@@ -258,11 +258,11 @@
                               <input
                                 class=\\"rs-input\\"
                                 name=\\"title\\"
@@ -141,7 +141,7 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                             <div
                               class=\\"rs-form-group\\"
                               role=\\"group\\"
-@@ -732,12 +732,17 @@
+@@ -731,12 +731,17 @@
                               d=\\"M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z\\"
                             />
                           </svg>
@@ -308,15 +308,14 @@ exports[`Author Edit Panel should render 1`] = `
             role="region"
           >
             <div
-              class="rs-panel"
-              style="display: grid; height: 100%;"
+              class="css-obwoy8-Panel e1opz8xd0 rs-panel"
             >
               <div
                 class="rs-panel-body rs-panel-body-fill"
                 role="region"
               >
                 <div
-                  class="css-1pvlote-PlaceholderInputWrapper e1tn6rau0"
+                  class="css-ikjsbz-PlaceholderInputWrapper e1tn6rau0"
                 >
                   <button
                     class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"
@@ -566,7 +565,7 @@ exports[`Author Edit Panel should render 1`] = `
                   class="css-bbx743-ToolbarInner e1qk45871"
                 >
                   <div
-                    class="css-rlh556-ChildrenWrapper e1qk45872"
+                    class="css-6r14s0-ChildrenWrapper e1qk45872"
                   >
                     <button
                       class="css-hkh9id-ToolbarButtonElement e1qk45873"
@@ -1085,15 +1084,14 @@ exports[`Author Edit Panel should render with ID 1`] = `
             role="region"
           >
             <div
-              class="rs-panel"
-              style="display: grid; height: 100%;"
+              class="css-obwoy8-Panel e1opz8xd0 rs-panel"
             >
               <div
                 class="rs-panel-body rs-panel-body-fill"
                 role="region"
               >
                 <div
-                  class="css-1pvlote-PlaceholderInputWrapper e1tn6rau0"
+                  class="css-ikjsbz-PlaceholderInputWrapper e1tn6rau0"
                 >
                   <button
                     class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"
@@ -1202,7 +1200,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                   class="css-bbx743-ToolbarInner e1qk45871"
                 >
                   <div
-                    class="css-rlh556-ChildrenWrapper e1qk45872"
+                    class="css-6r14s0-ChildrenWrapper e1qk45872"
                   >
                     <button
                       class="css-hkh9id-ToolbarButtonElement e1qk45873"

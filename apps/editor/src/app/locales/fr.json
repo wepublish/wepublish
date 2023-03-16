@@ -1006,6 +1006,7 @@
       "opensAtLabel": "Commence le",
       "closesAtLabel": "Clôture à",
       "pollExternalVotesPanelHeader": "Soruces de vote externes",
+      "infoText": "Texte d'information",
       "defaultAnswer": "Réponse standard"
     },
     "pollAnswer": {
@@ -1034,6 +1035,7 @@
       "waiting": "Sondage en attente d'ouverture le {{date, ccc PP p}}"
     },
     "navbar": {
+      "dashboard": "Dashboard",
       "events": "Events",
       "eventTags": "Tags",
       "languageSwitch": {
@@ -1338,6 +1340,32 @@
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "pas d'envoi mail"
+    },
+    "general": {
+      "deletedSuccess": "Supprimé avec succès",
+      "created": "Créé avec succès",
+      "updated": "Actualisé avec succès",
+      "errorOnUpdate": "Il y a eu une erreur - veuillez réessayer"
+    },
+    "dashboard": {
+      "dashboard": "Dashboard",
+      "greeting": "Salut, {{name}}!",
+      "yearlySubscribers": "Nouveaux abonné:es au cours de l'année écoulée",
+      "activity": "Dernière activité",
+      "event": "Événement",
+      "summary": "Résumé",
+      "noData": "Pas de données actuelles sur les abonnés",
+      "newArticle": "Nouvel <0>article</0> créé",
+      "newPage": "Nouvelle <0>page</0> créée",
+      "newComment": "Nouveau <0>commentaire</0> ajouté",
+      "newPoll": "Nouveau <0>sondage</0> créé",
+      "newSubscription": "Nouvel <0>abonnement</0>",
+      "newAuthor": "Nouvel <0>auteur</0> ajouté",
+      "newEvent": "Nouvel <0>event</0> ajouté",
+      "newUser": "Nouvel <0>utilisateur</0> ajouté",
+      "createdBy": " de {{creator}}",
+      "user": "Utilisateur",
+      "memberPlan": "Plan membre: {{plan}}"
     }
   }
 }
