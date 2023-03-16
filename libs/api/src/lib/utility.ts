@@ -4,7 +4,7 @@ import {GraphQLFieldResolver, GraphQLIsTypeOfFn, GraphQLObjectType} from 'graphq
 import {delegateToSchema, ExecutionResult, IDelegateToSchemaOptions, Transform} from 'graphql-tools'
 import {Context} from './context'
 import {TeaserStyle} from './db/block'
-import {SettingRestriction} from './db/setting'
+import {SettingRestriction} from '@wepublish/settings/api'
 import {SubscriptionWithRelations} from './db/subscription'
 import {UserWithRelations} from './db/user'
 import {InvalidSettingValueError} from './error'

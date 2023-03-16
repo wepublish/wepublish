@@ -15,12 +15,104 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
+  DateTime: string;
 };
+
+export type DashboardInvoice = {
+  __typename?: 'DashboardInvoice';
+  amount: Scalars['Int'];
+  dueAt: Scalars['DateTime'];
+  memberPlan?: Maybe<Scalars['String']>;
+  paidAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type DashboardSubscription = {
+  __typename?: 'DashboardSubscription';
+  deactivationDate?: Maybe<Scalars['DateTime']>;
+  endsAt?: Maybe<Scalars['DateTime']>;
+  memberPlan: Scalars['String'];
+  monthlyAmount: Scalars['Int'];
+  paymentPeriodicity: PaymentPeriodicity;
+  reasonForDeactivation?: Maybe<SubscriptionDeactivationReason>;
+  renewsAt?: Maybe<Scalars['DateTime']>;
+  startsAt: Scalars['DateTime'];
+};
+
+export enum PaymentPeriodicity {
+  Biannual = 'biannual',
+  Monthly = 'monthly',
+  Quarterly = 'quarterly',
+  Yearly = 'yearly'
+}
 
 export type Query = {
   __typename?: 'Query';
+  /**
+   * Returns all active subscribers.
+   * Includes subscribers with a cancelled but not run out subscription.
+   */
+  activeSubscribers: Array<DashboardSubscription>;
+  /**
+   * Returns the expected revenue for the time period given.
+   * Excludes cancelled or manually set as paid invoices.
+   */
+  expectedRevenue: Array<DashboardInvoice>;
+  /**
+   * Returns all new deactivations in a given timeframe.
+   * This considers the time the deactivation was made, not when the subscription runs out.
+   */
+  newDeactivations: Array<DashboardSubscription>;
+  /**
+   * Returns all new subscribers in a given timeframe.
+   * Includes already deactivated ones.
+   */
+  newSubscribers: Array<DashboardSubscription>;
+  /** Returns all renewing subscribers in a given timeframe. */
+  renewingSubscribers: Array<DashboardSubscription>;
+  /**
+   * Returns the revenue generated for the time period given.
+   * Only includes paid invoices that have not been manually paid.
+   */
+  revenue: Array<DashboardInvoice>;
   versionInformation: VersionInformation;
 };
+
+
+export type QueryExpectedRevenueArgs = {
+  end?: InputMaybe<Scalars['DateTime']>;
+  start: Scalars['DateTime'];
+};
+
+
+export type QueryNewDeactivationsArgs = {
+  end?: InputMaybe<Scalars['DateTime']>;
+  start: Scalars['DateTime'];
+};
+
+
+export type QueryNewSubscribersArgs = {
+  end?: InputMaybe<Scalars['DateTime']>;
+  start: Scalars['DateTime'];
+};
+
+
+export type QueryRenewingSubscribersArgs = {
+  end?: InputMaybe<Scalars['DateTime']>;
+  start: Scalars['DateTime'];
+};
+
+
+export type QueryRevenueArgs = {
+  end?: InputMaybe<Scalars['DateTime']>;
+  start: Scalars['DateTime'];
+};
+
+export enum SubscriptionDeactivationReason {
+  InvoiceNotPaid = 'invoiceNotPaid',
+  None = 'none',
+  UserSelfDeactivated = 'userSelfDeactivated'
+}
 
 export type VersionInformation = {
   __typename?: 'VersionInformation';

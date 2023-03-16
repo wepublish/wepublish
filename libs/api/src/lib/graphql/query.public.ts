@@ -1,3 +1,4 @@
+import {AuthSessionType} from '@wepublish/authentication/api'
 import {UserInputError} from 'apollo-server-express'
 import {
   GraphQLID,
@@ -13,7 +14,6 @@ import {AuthorSort} from '../db/author'
 import {SortOrder} from '../db/common'
 import {MemberPlanSort} from '../db/memberPlan'
 import {PageSort, PublicPage} from '../db/page'
-import {SessionType} from '../db/session'
 import {NotFound} from '../error'
 import {logger} from '../server'
 import {delegateToPeerSchema} from '../utility'
@@ -35,7 +35,16 @@ import {getPublicAuthors} from './author/author.public-queries'
 import {GraphQLChallenge} from './challenge'
 import {GraphQLCommentRating, GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
 import {getRatingSystem, userCommentRating} from './comment-rating/comment-rating.public-queries'
+import {GraphQLPublicComment, GraphQLPublicCommentSort} from './comment/comment'
+import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 import {GraphQLSortOrder} from './common'
+import {
+  GraphQLEvent,
+  GraphQLEventConnection,
+  GraphQLEventFilter,
+  GraphQLEventSort
+} from './event/event'
+import {EventSort, getEvent, getEvents} from './event/event.query'
 import {GraphQLPublicInvoice} from './invoice'
 import {getPublicInvoices} from './invoice/invoice.public-queries'
 import {getActiveMemberPlans} from './member-plan/member-plan.public-queries'
@@ -46,6 +55,7 @@ import {
   GraphQLPublicMemberPlanConnection
 } from './memberPlan'
 import {GraphQLPublicNavigation} from './navigation'
+import {getNavigations} from './navigation/navigation.public-queries'
 import {
   GraphQLPublicPage,
   GraphQLPublicPageConnection,
@@ -56,22 +66,15 @@ import {getPublishedPages} from './page/page.public-queries'
 import {GraphQLPeer, GraphQLPeerProfile} from './peer'
 import {getPublicPeerProfile} from './peer-profile/peer-profile.public-queries'
 import {getPeerByIdOrSlug} from './peer/peer.public-queries'
+import {GraphQLPublicPhrase} from './phrase/phrase'
+import {queryPhrase} from './phrase/phrase.public-queries'
 import {GraphQLFullPoll} from './poll/poll'
 import {getPoll, userPollVote} from './poll/poll.public-queries'
 import {GraphQLSlug} from './slug'
 import {GraphQLPublicSubscription} from './subscription'
+import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
+import {getTags, TagSort} from './tag/tag.query'
 import {GraphQLPublicUser} from './user'
-import {GraphQLPublicComment, GraphQLPublicCommentSort} from './comment/comment'
-import {getPublicCommentsForItemById} from './comment/comment.public-queries'
-import {queryPhrase} from './phrase/phrase.public-queries'
-import {GraphQLPublicPhrase} from './phrase/phrase'
-import {EventSort, getEvent, getEvents} from './event/event.queries'
-import {
-  GraphQLEvent,
-  GraphQLEventConnection,
-  GraphQLEventFilter,
-  GraphQLEventSort
-} from './event/event'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -108,6 +111,12 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
         return id ? loaders.navigationByID.load(id) : loaders.navigationByKey.load(key)
       }
+    },
+
+    navigations: {
+      type: GraphQLList(GraphQLNonNull(GraphQLPublicNavigation)),
+      description: 'This query returns all navigations.',
+      resolve: (root, _, {prisma: {navigation}}) => getNavigations(navigation)
     },
 
     // Author
@@ -337,7 +346,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLPublicUser,
       description: 'This query returns the user.',
       resolve(root, args, {session}) {
-        return session?.type === SessionType.User ? session.user : null
+        return session?.type === AuthSessionType.User ? session.user : null
       }
     },
 
@@ -555,6 +564,24 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {prisma: {event}}) => getEvent(id, event)
+    },
+
+    // Tag
+    // ==========
+
+    tags: {
+      type: GraphQLTagConnection,
+      description: 'This query returns a list of tags',
+      args: {
+        cursor: {type: GraphQLID},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
+        filter: {type: GraphQLTagFilter},
+        sort: {type: GraphQLTagSort, defaultValue: TagSort.CreatedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve: (root, {filter, sort, order, cursor, take, skip}, {prisma}) =>
+        getTags(filter, sort, order, cursor, skip, take, prisma.tag)
     },
 
     // Phrase

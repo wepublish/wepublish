@@ -6,6 +6,7 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
+        "@typescript-eslint/no-unused-vars": "off",
         "unused-imports/no-unused-imports": "error",
         "object-shorthand": "warn",
         "@nrwl/nx/enforce-module-boundaries": [

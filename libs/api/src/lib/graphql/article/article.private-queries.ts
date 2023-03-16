@@ -1,16 +1,16 @@
 import {PrismaClient} from '@prisma/client'
-import {Context} from '../../context'
-import {ArticleFilter, ArticleSort, ArticleWithRevisions} from '../../db/article'
-import {NotAuthorisedError, NotFound, UserInputError} from '../../error'
 import {
-  authorise,
   CanGetArticle,
   CanGetArticlePreviewLink,
   CanGetArticles,
   CanGetSharedArticle,
   CanGetSharedArticles,
-  isAuthorised
-} from '../permissions'
+  hasPermission
+} from '@wepublish/permissions/api'
+import {Context} from '../../context'
+import {ArticleFilter, ArticleSort, ArticleWithRevisions} from '../../db/article'
+import {NotAuthorisedError, NotFound, UserInputError} from '../../error'
+import {authorise} from '../permissions'
 import {getArticles} from './article.queries'
 
 export const getArticleById = async (
@@ -20,8 +20,8 @@ export const getArticleById = async (
 ): Promise<ArticleWithRevisions | null> => {
   const {roles} = authenticate()
 
-  const canGetArticle = isAuthorised(CanGetArticle, roles)
-  const canGetSharedArticle = isAuthorised(CanGetSharedArticle, roles)
+  const canGetArticle = hasPermission(CanGetArticle, roles)
+  const canGetSharedArticle = hasPermission(CanGetSharedArticle, roles)
 
   if (canGetArticle || canGetSharedArticle) {
     const article = await articleLoader.load(id)
@@ -73,8 +73,8 @@ export const getAdminArticles = async (
 ) => {
   const {roles} = authenticate()
 
-  const canGetArticles = isAuthorised(CanGetArticles, roles)
-  const canGetSharedArticles = isAuthorised(CanGetSharedArticles, roles)
+  const canGetArticles = hasPermission(CanGetArticles, roles)
+  const canGetSharedArticles = hasPermission(CanGetSharedArticles, roles)
 
   if (canGetArticles || canGetSharedArticles) {
     return getArticles(

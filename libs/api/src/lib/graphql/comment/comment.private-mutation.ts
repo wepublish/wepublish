@@ -8,12 +8,12 @@ import {
 import {Context} from '../../context'
 import {NotFound} from '../../error'
 import {validateCommentRatingValue} from '../comment-rating/comment-rating.public-mutation'
+import {authorise} from '../permissions'
 import {
-  authorise,
   CanDeleteComments,
   CanTakeActionOnComment,
   CanUpdateComments
-} from '../permissions'
+} from '@wepublish/permissions/api'
 import {RichTextNode} from '../richText'
 
 export const takeActionOnComment = (

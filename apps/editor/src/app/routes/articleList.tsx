@@ -15,7 +15,7 @@ import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdComment, MdContentCopy, MdDelete, MdPreview, MdUnpublished} from 'react-icons/md'
 import {Link, useNavigate} from 'react-router-dom'
-import {Button, IconButton, Message, Modal, Pagination, Table as RTable, Table} from 'rsuite'
+import {Button, IconButton, Message, Modal, Pagination, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -29,6 +29,7 @@ import {
   ListViewContainer,
   ListViewHeader,
   StatusBadge,
+  Table,
   TableWrapper
 } from '../ui/listView'
 import {
@@ -414,7 +415,7 @@ function ArticleList() {
 
         <Modal.Footer>
           <Button
-            color={'red'}
+            appearance="primary"
             disabled={isUnpublishing || isDeleting || isDuplicating}
             onClick={async () => {
               if (!currentArticle) return

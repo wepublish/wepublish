@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {ReactNode, useEffect, useState} from 'react'
+import {forwardRef, ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
   MdAccountCircle,
@@ -27,7 +27,8 @@ import {
   MdSettingsInputAntenna,
   MdStar,
   MdTranslate,
-  MdVpnKey
+  MdVpnKey,
+  MdPieChartOutline
 } from 'react-icons/md'
 import {Link, useLocation} from 'react-router-dom'
 import {
@@ -41,21 +42,22 @@ import {
 
 import {PermissionControl} from './atoms/permissionControl'
 import Version from './atoms/version'
+import {fr, de, enUS} from 'date-fns/locale'
 
 export interface BaseProps {
   children?: ReactNode
 }
 
-const NavLink = React.forwardRef<HTMLAnchorElement, any>(({href, children, ...rest}, ref) => (
+const NavLink = forwardRef<HTMLAnchorElement, any>(({href, children, ...rest}, ref) => (
   <Link ref={ref} to={href} {...rest}>
     {children}
   </Link>
 ))
 
-const AVAILABLE_LANG = [
-  {id: 'en', lang: 'en_US', name: 'English'},
-  {id: 'fr', lang: 'fr_FR', name: 'Français'},
-  {id: 'de', lang: 'de_CH', name: 'Deutsch'}
+export const AVAILABLE_LANG = [
+  {id: 'en', lang: 'en_US', name: 'English', locale: enUS},
+  {id: 'fr', lang: 'fr_FR', name: 'Français', locale: fr},
+  {id: 'de', lang: 'de_CH', name: 'Deutsch', locale: de}
 ]
 
 function useStickyState(defaultValue: string, key: string) {
@@ -101,14 +103,12 @@ const IconButton = styled(RIconButton)`
 
 const FloatingButton = styled(RIconButton)`
   display: block;
-  opacity: 0;
-  width: 32px;
-  height: 32px;
+  padding: 6px;
   position: absolute;
   top: 5vh;
   transition: transform 0.2s ease-in, opacity 0.15s ease-in-out;
   z-index: 100;
-  transform: translateX(${props => (props.isExpanded ? '243px' : '38px')});
+  transform: translateX(${props => (props.isExpanded ? '241px' : '37px')});
 
   .rs-sidebar:hover & {
     opacity: 1;
@@ -148,12 +148,20 @@ export function Base({children}: BaseProps) {
                 isExpanded={isExpanded}
                 appearance="primary"
                 circle
-                size="xs"
+                size="sm"
                 onClick={() => setIsExpanded(!isExpanded)}
-                icon={isExpanded ? <MdChevronLeft /> : <MdChevronRight />}
+                icon={isExpanded ? <MdChevronLeft size="22px" /> : <MdChevronRight size="22px" />}
               />
 
               <Navigation>
+                <Nav.Item
+                  as={NavLink}
+                  href="/dashboard"
+                  icon={<MdPieChartOutline />}
+                  active={path === 'dashboard' || path === ''}>
+                  {t('navbar.dashboard')}
+                </Nav.Item>
+
                 <PermissionControl
                   qualifyingPermissions={[
                     'CAN_GET_ARTICLES',

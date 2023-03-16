@@ -1,5 +1,6 @@
 import {Prisma, PrismaClient} from '@prisma/client'
-import {hashPassword, unselectPassword} from '../../db/user'
+import {hashPassword} from '../../db/user'
+import {unselectPassword} from '@wepublish/user/api'
 import {Context} from '../../context'
 import {Validator} from '../../validator'
 

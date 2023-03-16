@@ -306,7 +306,7 @@ function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
           removeImage={() => setImage(undefined)}
         />
 
-        <Panel>
+        <Panel header={t('settingList.payment')}>
           <ListInput
             value={availablePaymentMethods}
             disabled={isDisabled}

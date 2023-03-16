@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {
+import {
   createContext,
   forwardRef,
   ReactEventHandler,
@@ -68,6 +68,7 @@ const ToolbarButtonElement = styled.button<{active: boolean}>`
 
 const ChildrenWrapper = styled.div<{fadeOut: boolean}>`
   display: flex;
+  flex-wrap: wrap;
   transition-property: opacity;
   transition-duration: 100ms;
   opacity: ${({fadeOut}) => (fadeOut ? 0.5 : 1)};

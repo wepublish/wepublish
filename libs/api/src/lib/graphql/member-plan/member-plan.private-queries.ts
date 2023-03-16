@@ -2,7 +2,8 @@ import {PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 import {MemberPlanFilter, MemberPlanSort} from '../../db/memberPlan'
 import {UserInputError} from '../../error'
-import {authorise, CanGetMemberPlan, CanGetMemberPlans} from '../permissions'
+import {authorise} from '../permissions'
+import {CanGetMemberPlan, CanGetMemberPlans} from '@wepublish/permissions/api'
 import {getMemberPlans} from './member-plan.queries'
 
 export const getMemberPlanByIdOrSlug = (

@@ -5,7 +5,15 @@
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e", "browser", "server"],
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e",
+          "browser",
+          "server",
+          "build-storybook"
+        ],
         "accessToken": "YmQxYTg2ZDgtNDBlNS00MmM1LWI4MjAtZmJkMWUxM2Y1ZTJkfHJlYWQtd3JpdGU="
       }
     }
@@ -23,6 +31,9 @@
     },
     "test": {
       "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
+    },
+    "build-storybook": {
+      "inputs": ["default", "^production", "{workspaceRoot}/.storybook/**/*"]
     }
   },
   "namedInputs": {
@@ -32,7 +43,9 @@
       "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
-      "!{projectRoot}/jest.config.[jt]s"
+      "!{projectRoot}/jest.config.[jt]s",
+      "!{projectRoot}/.storybook/**/*",
+      "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)"
     ],
     "sharedGlobals": ["{workspaceRoot}/babel.config.json"]
   },
@@ -48,6 +61,12 @@
         "style": "@emotion/styled"
       },
       "library": {
+        "style": "@emotion/styled",
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/next": {
+      "application": {
         "style": "@emotion/styled",
         "linter": "eslint"
       }

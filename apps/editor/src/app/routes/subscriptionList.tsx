@@ -8,9 +8,17 @@ import {
 } from '@wepublish/editor/api'
 import React, {useEffect, useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete} from 'react-icons/md'
-import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
-import {Button, Drawer, IconButton as RIconButton, Modal, Pagination, Table as RTable} from 'rsuite'
+import {MdAdd, MdDelete, MdInfo} from 'react-icons/md'
+import {Link} from 'react-router-dom'
+import {
+  Button,
+  IconButton as RIconButton,
+  Message,
+  Modal,
+  Pagination,
+  Table as RTable,
+  toaster
+} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -22,7 +30,6 @@ import {
 } from '../atoms/permissionControl'
 import {SubscriptionListFilter} from '../atoms/searchAndFilter/subscriptionListFilter'
 import {ExportSubscriptionsAsCsv} from '../panel/ExportSubscriptionsAsCsv'
-import {SubscriptionEditPanel} from '../panel/subscriptionEditPanel'
 import {
   ListViewActions,
   ListViewContainer,
@@ -48,6 +55,21 @@ const IconButton = styled(RIconButton)`
   margin-left: 20px;
 `
 
+const Info = styled.div`
+  position: relative;
+`
+
+const Actions = styled(ListViewActions)`
+  grid-column: 3;
+`
+
+const DeactivationIcon = styled(MdInfo)<{deactivated: boolean}>`
+  margin-left: 10px;
+  font-size: 16px;
+  visibility: ${({deactivated}) => (deactivated ? 'visible' : 'hidden')};
+  color: #3498ff;
+`
+
 function mapColumFieldToGraphQLField(columnField: string): SubscriptionSort | null {
   switch (columnField) {
     case 'createdAt':
@@ -61,14 +83,17 @@ function mapColumFieldToGraphQLField(columnField: string): SubscriptionSort | nu
 
 export const NewSubscriptionButton = ({
   isLoading,
-  t
+  t,
+  userId
 }: {
   isLoading?: boolean
   t: TFunction<'translation'>
+  userId?: string
 }) => {
   const canCreate = useAuthorisation('CAN_CREATE_SUBSCRIPTION')
+  const urlToRedirect = `/subscriptions/create${userId ? `${`?userId=${userId}`}` : ''}`
   return (
-    <Link to="/subscriptions/create">
+    <Link to={urlToRedirect}>
       <IconButton appearance="primary" disabled={isLoading || !canCreate}>
         <MdAdd />
         {t('subscriptionList.overview.newSubscription')}
@@ -78,17 +103,6 @@ export const NewSubscriptionButton = ({
 }
 
 function SubscriptionList() {
-  const location = useLocation()
-  const params = useParams()
-  const navigate = useNavigate()
-  const {id} = params
-
-  const isCreateRoute = location.pathname.includes('create')
-  const isEditRoute = location.pathname.includes('edit')
-
-  const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute || isCreateRoute)
-  const [editID, setEditID] = useState<string | undefined>(isEditRoute ? id : undefined)
-
   const [filter, setFilter] = useState({} as SubscriptionFilter)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentSubscription, setCurrentSubscription] = useState<FullSubscriptionFragment>()
@@ -135,18 +149,6 @@ function SubscriptionList() {
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (isCreateRoute) {
-      setEditID(undefined)
-      setEditModalOpen(true)
-    }
-
-    if (isEditRoute) {
-      setEditID(id)
-      setEditModalOpen(true)
-    }
-  }, [location])
-
-  useEffect(() => {
     if (data?.subscriptions?.nodes) {
       setSubscriptions(data.subscriptions.nodes)
       if (data.subscriptions.totalCount + 9 < page * limit) {
@@ -180,10 +182,10 @@ function SubscriptionList() {
           <h2>{t('subscriptionList.overview.subscription')}</h2>
         </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}>
-          <ListViewActions>
+          <Actions>
             <ExportSubscriptionsAsCsv filter={filter} />
             {NewSubscriptionButton({isLoading, t})}
-          </ListViewActions>
+          </Actions>
         </PermissionControl>
         <ListViewFilterArea>
           <SubscriptionListFilter
@@ -204,9 +206,6 @@ function SubscriptionList() {
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType ?? 'asc')
             setSortField(sortColumn)
-          }}
-          onRowClick={data => {
-            navigate(`/subscriptions/edit/${data.id}`)
           }}>
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('subscriptionList.overview.createdAt')}</HeaderCell>
@@ -231,7 +230,7 @@ function SubscriptionList() {
             <HeaderCell>{t('subscriptionList.overview.memberPlan')}</HeaderCell>
             <RCell dataKey={'subscription'}>
               {(rowData: RowDataType<FullSubscriptionFragment>) => (
-                <Link to={`/subscription/edit/${rowData.id}`}>{rowData.memberPlan.name}</Link>
+                <Link to={`/subscriptions/edit/${rowData.id}`}>{rowData.memberPlan.name}</Link>
               )}
             </RCell>
           </Column>
@@ -258,19 +257,28 @@ function SubscriptionList() {
             <HeaderCell>{t('action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<FullSubscriptionFragment>) => (
-                <IconButtonTooltip caption={t('delete')}>
-                  <IconButtonSmallMargin
-                    circle
-                    size="sm"
-                    appearance="ghost"
-                    color="red"
-                    icon={<MdDelete />}
-                    onClick={() => {
-                      setCurrentSubscription(rowData as FullSubscriptionFragment)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                </IconButtonTooltip>
+                <>
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButtonSmallMargin
+                      circle
+                      size="sm"
+                      appearance="ghost"
+                      color="red"
+                      icon={<MdDelete />}
+                      onClick={e => {
+                        e.preventDefault()
+                        setCurrentSubscription(rowData as FullSubscriptionFragment)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+                  </IconButtonTooltip>
+
+                  <IconButtonTooltip caption={t('deactivated')}>
+                    <Info>
+                      <DeactivationIcon deactivated={rowData.deactivation} />
+                    </Info>
+                  </IconButtonTooltip>
+                </>
               )}
             </PaddedCell>
           </Column>
@@ -294,27 +302,6 @@ function SubscriptionList() {
         />
       </TableWrapper>
 
-      <Drawer
-        open={isEditModalOpen}
-        size="sm"
-        onClose={() => {
-          setEditModalOpen(false)
-          navigate('/subscriptions')
-        }}>
-        <SubscriptionEditPanel
-          id={editID!}
-          onClose={() => {
-            setEditModalOpen(false)
-            navigate('/subscriptions')
-          }}
-          onSave={() => {
-            setEditModalOpen(false)
-            refetch()
-            navigate('/subscriptions')
-          }}
-        />
-      </Drawer>
-
       <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('subscriptionList.panels.deleteSubscription')}</Modal.Title>
@@ -331,17 +318,21 @@ function SubscriptionList() {
         <Modal.Footer>
           <Button
             disabled={isDeleting}
+            appearance="primary"
             onClick={async () => {
               if (!currentSubscription) return
 
               await deleteSubscription({
                 variables: {id: currentSubscription.id}
               })
-
+              toaster.push(
+                <Message type="success" showIcon closable duration={2000}>
+                  {t('toast.deletedSuccess')}
+                </Message>
+              )
               setConfirmationDialogOpen(false)
               refetch()
-            }}
-            color="red">
+            }}>
             {t('subscriptionList.panels.confirm')}
           </Button>
           <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">

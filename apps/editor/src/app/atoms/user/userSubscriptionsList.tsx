@@ -75,9 +75,10 @@ const FlexItemMLeft = styled(FlexboxGrid.Item)`
 
 interface UserSubscriptionsProps {
   subscriptions?: UserSubscriptionFragment[] | null
+  userId?: string
 }
 
-function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
+function UserSubscriptionsList({subscriptions, userId}: UserSubscriptionsProps) {
   const {t} = useTranslation()
 
   /**
@@ -186,7 +187,7 @@ function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
             </FlexItemAlignSelf>
             {/* edit subscription */}
             <FlexItemAlignRight colspan={6}>
-              <Link to={`/subscriptions/edit/${subscription.id}`}>
+              <Link to={`/subscriptions/edit/${subscription.id}?userId=${userId}`}>
                 <Button appearance="ghost">
                   <MdEdit /> {t('userSubscriptionList.editSubscription')}
                 </Button>
@@ -294,7 +295,9 @@ function UserSubscriptionsList({subscriptions}: UserSubscriptionsProps) {
         </div>
       ))}
 
-      <NewSubscriptionButtonWrapper>{NewSubscriptionButton({t})}</NewSubscriptionButtonWrapper>
+      <NewSubscriptionButtonWrapper>
+        {NewSubscriptionButton({t, userId})}
+      </NewSubscriptionButtonWrapper>
     </>
   )
 }

@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api",
-  "version": "8.1.1",
+  "version": "9.1.0",
   "description": "API core for we.publish.",
   "keywords": [
     "api",
@@ -29,5 +29,11 @@
   },
   "publishConfig": {
     "directory": "../../dist/libs/api"
+  },
+  "devDependencies": {
+    "prisma": "^3.14.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.14.0"
   }
 }

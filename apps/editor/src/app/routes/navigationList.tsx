@@ -126,7 +126,7 @@ function NavigationList() {
                       appearance="ghost"
                       color="red"
                       onClick={() => {
-                        setCurrentNavigation(rowData)
+                        setCurrentNavigation(rowData as FullNavigationFragment)
                         setConfirmationDialogOpen(true)
                       }}
                     />

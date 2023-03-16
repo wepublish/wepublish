@@ -6,12 +6,9 @@ import {createWriteStream} from 'pino-sentry'
 import pinoStackdriver from 'pino-stackdriver'
 import * as process from 'process'
 import {URL} from 'url'
-import yargs from 'yargs'
-import {hideBin} from 'yargs/helpers'
 import {AlgebraicCaptchaChallenge} from './lib/challenges/algebraicCaptchaChallenge'
 import {WepublishServer} from './lib/server'
 import {SendMailType} from './lib/mails/mailContext'
-import {JobType} from './lib/jobs'
 import {StripePaymentProvider} from './lib/payments/stripePaymentProvider'
 import {StripeCheckoutPaymentProvider} from './lib/payments/stripeCheckoutPaymentProvider'
 import {MailgunMailProvider} from './lib/mails/MailgunMailProvider'
@@ -23,6 +20,7 @@ import {PublicPage} from './lib/db/page'
 import {Author} from './lib/db/author'
 import {PublicComment} from './lib/db/comment'
 import {KarmaMediaAdapter} from './lib/media/karmaMediaAdapter'
+import {PayrexxSubscriptionPaymentProvider} from './lib/payments/payrexxSubscriptionPaymentProvider'
 
 interface WepublishURLAdapterProps {
   websiteURL: string
@@ -202,6 +200,18 @@ export async function runServer() {
         incomingRequestHandler: bodyParser.json()
       })
     )
+    paymentProviders.push(
+      new PayrexxSubscriptionPaymentProvider({
+        id: 'payrexx-subscription',
+        name: 'Payrexx Subscription',
+        offSessionPayments: true,
+        instanceName: process.env.PAYREXX_INSTANCE_NAME,
+        instanceAPISecret: process.env.PAYREXX_API_SECRET,
+        incomingRequestHandler: bodyParser.json(),
+        webhookSecret: process.env.PAYREXX_WEBHOOK_SECRET,
+        prisma
+      })
+    )
   }
 
   const prettyStream = pinoMultiStream.prettyStream()
@@ -312,69 +322,6 @@ export async function runServer() {
     logger,
     challenge
   })
-
-  // eslint-disable-next-line no-unused-expressions
-  yargs(hideBin(process.argv))
-    .command(
-      ['listen', '$0'],
-      'start the server',
-      () => {
-        /* do nothing */
-      },
-      async argv => {
-        await server.listen(port, address)
-      }
-    )
-    .command(
-      'dmr',
-      'Renew Memberships',
-      () => {
-        /* do nothing */
-      },
-      async argv => {
-        await server.runJob(JobType.DailyMembershipRenewal, {
-          startDate: new Date()
-        })
-        process.exit(0)
-      }
-    )
-    .command(
-      'dir',
-      'Remind open invoices',
-      () => {
-        /* do nothing */
-      },
-      async () => {
-        await server.runJob(JobType.DailyInvoiceReminder, {
-          userPaymentURL: `${websiteURL}/user/invocies`,
-          replyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch',
-          sendEveryDays: 3
-        })
-        process.exit(0)
-      }
-    )
-    .command(
-      'dic',
-      'charge open invoices',
-      () => {
-        /* do nothing */
-      },
-      async () => {
-        await server.runJob(JobType.DailyInvoiceCharger, {})
-        process.exit(0)
-      }
-    )
-    .command(
-      'checkdic',
-      'check open invoices',
-      () => {
-        /* do nothing */
-      },
-      async () => {
-        await server.runJob(JobType.DailyInvoiceChecker, {})
-        process.exit(0)
-      }
-    ).argv
 }
 
 runServer().catch(err => {

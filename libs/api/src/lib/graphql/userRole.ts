@@ -8,7 +8,7 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
-import {AllPermissions, EditorPermissions, PeerPermissions} from './permissions'
+import {AllPermissions, EditorPermissions, PeerPermissions} from '@wepublish/permissions/api'
 import {GraphQLPageInfo} from './common'
 import {Context} from '../context'
 import {UserRoleSort} from '../db/userRole'

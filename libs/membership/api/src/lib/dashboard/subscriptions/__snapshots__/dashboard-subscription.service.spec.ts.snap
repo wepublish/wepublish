@@ -1,0 +1,188 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DashboardSubscriptionService should get all active subscribers 1`] = `
+Array [
+  Object {
+    "deactivationDate": undefined,
+    "endsAt": undefined,
+    "memberPlan": "foo",
+    "monthlyAmount": 500,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": undefined,
+    "renewsAt": undefined,
+    "startsAt": "2023-02-03T00:00:00.000Z",
+  },
+  Object {
+    "deactivationDate": "2023-01-20T14:12:34.832Z",
+    "endsAt": "2023-02-03T00:00:00.000Z",
+    "memberPlan": "Bar",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": "invoiceNotPaid",
+    "renewsAt": undefined,
+    "startsAt": "2023-02-02T00:00:00.000Z",
+  },
+  Object {
+    "deactivationDate": undefined,
+    "endsAt": "2023-02-01T00:00:00.000Z",
+    "memberPlan": "foo",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": undefined,
+    "renewsAt": "2023-02-01T00:00:00.000Z",
+    "startsAt": "2023-01-01T00:00:00.000Z",
+  },
+]
+`;
+
+exports[`DashboardSubscriptionService should get all active subscribers 2`] = `
+Object {
+  "include": Object {
+    "deactivation": true,
+    "memberPlan": Object {
+      "select": Object {
+        "name": true,
+      },
+    },
+  },
+  "orderBy": Object {
+    "startsAt": "desc",
+  },
+  "where": Object {
+    "OR": Array [
+      Object {
+        "deactivation": null,
+      },
+      Object {
+        "deactivation": Object {
+          "date": Object {
+            "gte": 2023-01-01T00:00:00.000Z,
+          },
+        },
+      },
+    ],
+  },
+}
+`;
+
+exports[`DashboardSubscriptionService should get the new deactivations 1`] = `
+Array [
+  Object {
+    "deactivationDate": "2023-01-01T00:00:00.000Z",
+    "endsAt": "2023-02-03T00:00:00.000Z",
+    "memberPlan": "foo",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": "invoiceNotPaid",
+    "startsAt": "2023-01-01T00:00:00.000Z",
+  },
+]
+`;
+
+exports[`DashboardSubscriptionService should get the new deactivations 2`] = `
+Object {
+  "include": Object {
+    "deactivation": true,
+    "memberPlan": Object {
+      "select": Object {
+        "name": true,
+      },
+    },
+  },
+  "orderBy": Object {
+    "deactivation": Object {
+      "createdAt": "desc",
+    },
+  },
+  "where": Object {
+    "deactivation": Object {
+      "createdAt": Object {
+        "gte": 2023-01-01T00:00:00.000Z,
+        "lt": 2023-02-01T00:00:00.000Z,
+      },
+    },
+  },
+}
+`;
+
+exports[`DashboardSubscriptionService should get the new subscribers 1`] = `
+Array [
+  Object {
+    "deactivationDate": "2023-01-20T14:11:26.283Z",
+    "endsAt": "2023-02-02T00:00:00.000Z",
+    "memberPlan": "Bar",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": "invoiceNotPaid",
+    "renewsAt": undefined,
+    "startsAt": "2023-01-02T00:00:00.000Z",
+  },
+  Object {
+    "deactivationDate": undefined,
+    "endsAt": "2023-02-01T00:00:00.000Z",
+    "memberPlan": "foo",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": undefined,
+    "renewsAt": "2023-02-01T00:00:00.000Z",
+    "startsAt": "2023-01-01T00:00:00.000Z",
+  },
+]
+`;
+
+exports[`DashboardSubscriptionService should get the new subscribers 2`] = `
+Object {
+  "include": Object {
+    "deactivation": true,
+    "memberPlan": Object {
+      "select": Object {
+        "name": true,
+      },
+    },
+  },
+  "orderBy": Object {
+    "startsAt": "desc",
+  },
+  "where": Object {
+    "startsAt": Object {
+      "gte": 2023-01-01T00:00:00.000Z,
+      "lt": 2023-02-01T00:00:00.000Z,
+    },
+  },
+}
+`;
+
+exports[`DashboardSubscriptionService should get the renewing subscribers 1`] = `
+Array [
+  Object {
+    "memberPlan": "foo",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "renewsAt": "2023-01-29T00:00:00.000Z",
+    "startsAt": "2023-01-01T00:00:00.000Z",
+  },
+]
+`;
+
+exports[`DashboardSubscriptionService should get the renewing subscribers 2`] = `
+Object {
+  "include": Object {
+    "memberPlan": Object {
+      "select": Object {
+        "name": true,
+      },
+    },
+  },
+  "orderBy": Object {
+    "paidUntil": "desc",
+  },
+  "where": Object {
+    "autoRenew": true,
+    "deactivation": null,
+    "paidUntil": Object {
+      "gte": 2023-01-01T00:00:00.000Z,
+      "lt": 2023-02-01T00:00:00.000Z,
+    },
+  },
+}
+`;
