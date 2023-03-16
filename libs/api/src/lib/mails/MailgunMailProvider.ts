@@ -29,6 +29,12 @@ interface VerifyWebhookSignatureProps {
   signature: string
 }
 
+interface MailgunApiError {
+  status: number
+  details: string
+  type: string
+}
+
 function mapMailgunEventToMailLogState(event: string): MailLogState | null {
   switch (event) {
     case 'accepted':
@@ -148,12 +154,16 @@ export class MailgunMailProvider extends BaseMailProvider {
       })
       return templates
     } catch (e: unknown) {
-      if (e instanceof Error) {
-        return new MailProviderError(e.message)
+      if (this.isMailgunApiError(e)) {
+        return new MailProviderError(e.details)
       } else {
         return new MailProviderError(String(e))
       }
     }
+  }
+
+  isMailgunApiError(error: unknown): error is MailgunApiError {
+    return (error as MailgunApiError).type === 'MailgunAPIError'
   }
 
   getTemplateUrl(template: WithExternalId): string {
