@@ -89,7 +89,7 @@ const Status = styled.div`
   flex-shrink: 0;
 `
 
-const GridItem = SortableElement((props: TeaserBlockProps) => {
+const GridItem = SortableElement<TeaserBlockProps>((props: TeaserBlockProps) => {
   return <TeaserBlock {...props} />
 })
 
@@ -98,7 +98,7 @@ interface GridProps {
   children?: ReactNode
 }
 
-const Grid = SortableContainer(({children, numColumns}: GridProps) => {
+const Grid = SortableContainer<GridProps>(({children, numColumns}: GridProps) => {
   return <SortableContainerComponent numColumns={numColumns}>{children}</SortableContainerComponent>
 })
 

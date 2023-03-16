@@ -3,6 +3,7 @@ import {
   ArticleFilter,
   ArticleSort,
   PageFilter,
+  PeerArticle,
   SortOrder,
   TeaserStyle,
   useArticleListQuery,
@@ -43,7 +44,6 @@ import {generateID} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {previewForTeaser, TeaserMetadataProperty} from './teaserEditPanel'
-import {PeerArticle} from '@wepublish/api'
 
 const List = styled(RList)`
   box-shadow: none;
@@ -167,12 +167,14 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
         skip: skipPeer * take
       },
       updateQuery: (prev, {fetchMoreResult}) => {
-        if (!fetchMoreResult?.peerArticles?.nodes) return {peerArticles: undefined}
+        if (!fetchMoreResult?.peerArticles?.nodes) {
+          return fetchMoreResult
+        }
 
         return {
           peerArticles: {
             ...fetchMoreResult.peerArticles,
-            nodes: [...fetchMoreResult.peerArticles.nodes]
+            nodes: [...(fetchMoreResult.peerArticles.nodes as PeerArticle[])]
           }
         }
       }
@@ -180,7 +182,10 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   }
 
   useEffect(() => {
-    setPeerArticles([...peerArticles, ...(peerArticleListData?.peerArticles?.nodes || [])])
+    setPeerArticles([
+      ...peerArticles,
+      ...((peerArticleListData?.peerArticles?.nodes as PeerArticle[]) || [])
+    ])
   }, [peerArticleListData?.peerArticles])
 
   /**
