@@ -6,7 +6,6 @@ registerEnumType(ConsentValue, {
   name: 'ConsentValue'
 })
 
-// how to do it better?
 @ObjectType()
 class User {
   @Field()
@@ -80,4 +79,16 @@ export class UserConsentInput {
 export class UpdateUserConsentInput {
   @Field(type => ConsentValue)
   value!: ConsentValue
+}
+
+@InputType()
+export class UserConsentFilter {
+  @Field({nullable: true})
+  name?: string
+
+  @Field({nullable: true})
+  slug?: string
+
+  @Field(type => ConsentValue, {nullable: true})
+  defaultValue?: ConsentValue
 }

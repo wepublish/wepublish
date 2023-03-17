@@ -9,6 +9,7 @@ import {
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Form, Loader, Message, Panel, SelectPicker, toaster} from 'rsuite'
+import {getApiClientV2} from '../apiClientv2'
 
 const consentValues = [
   {
@@ -33,15 +34,6 @@ type UserConsentFormProps = {
   isEdit?: boolean
   userConsent: UserConsentFormData
   onChange: (changes: Partial<UserConsentFormData>) => void
-}
-
-export function getApiClientV2() {
-  const apiURL = 'http://localhost:4000'
-  const link = new HttpLink({uri: `${apiURL}/v2`})
-  return new ApolloClient({
-    link,
-    cache: new InMemoryCache()
-  })
 }
 
 const onErrorToast = (error: ApolloError) => {

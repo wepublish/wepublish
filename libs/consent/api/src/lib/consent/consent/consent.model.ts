@@ -37,3 +37,15 @@ export class ConsentInput {
   @Field(type => ConsentValue)
   defaultValue!: ConsentValue
 }
+
+@InputType()
+export class ConsentFilter {
+  @Field({nullable: true})
+  name?: string
+
+  @Field({nullable: true})
+  slug?: string
+
+  @Field(type => ConsentValue, {nullable: true})
+  defaultValue?: ConsentValue
+}

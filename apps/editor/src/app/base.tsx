@@ -458,10 +458,9 @@ export function Base({children}: BaseProps) {
 
                     <PermissionControl
                       qualifyingPermissions={[
-                        'CAN_GET_PAYMENT_METHODS',
-                        'CAN_GET_PAYMENT_METHOD',
-                        'CAN_CREATE_PAYMENT_METHOD',
-                        'CAN_DELETE_PAYMENT_METHOD'
+                        'CAN_CREATE_CONSENT',
+                        'CAN_UPDATE_CONSENT',
+                        'CAN_DELETE_CONSENT'
                       ]}>
                       <Nav.Item
                         as={NavLink}

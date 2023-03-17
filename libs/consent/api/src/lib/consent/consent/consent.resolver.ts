@@ -1,6 +1,11 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
-// import {CanGetSubscriptions, Permissions} from '@wepublish/permissions/api'
-import {Consent, ConsentInput} from './consent.model'
+import {
+  CanCreateConsent,
+  CanUpdateConsent,
+  CanDeleteConsent,
+  Permissions
+} from '@wepublish/permissions/api'
+import {Consent, ConsentInput, ConsentFilter} from './consent.model'
 import {ConsentService} from './consent.service'
 
 @Resolver()
@@ -10,15 +15,14 @@ export class ConsentResolver {
   /*
   Queries
  */
-  // @Permissions(CanGetSubscriptions)
   @Query(returns => [Consent], {
     name: 'consents',
     description: `
       Returns all Consents.
     `
   })
-  consentList() {
-    return this.consents.consentList()
+  consentList(@Args('filter', {nullable: true}) filter: ConsentFilter) {
+    return this.consents.consentList(filter)
   }
 
   @Query(returns => Consent, {
@@ -40,6 +44,7 @@ export class ConsentResolver {
       Create a new Consent.
     `
   })
+  @Permissions(CanCreateConsent)
   createConsent(@Args('consent') consent: ConsentInput) {
     return this.consents.createConsent(consent)
   }
@@ -50,6 +55,7 @@ export class ConsentResolver {
       Update an existing Consent.
     `
   })
+  @Permissions(CanUpdateConsent)
   updateConsent(@Args('id') id: string, @Args('consent') consent: ConsentInput) {
     return this.consents.updateConsent({id, consent})
   }
@@ -60,48 +66,8 @@ export class ConsentResolver {
       Deletes an existing Consent.
     `
   })
+  @Permissions(CanDeleteConsent)
   deleteConsent(@Args('id') id: string) {
     return this.consents.deleteConsent(id)
   }
-
-  // @Permissions(CanGetSubscriptions)
-  // @Query(returns => [DashboardSubscription], {
-  //   name: 'activeSubscribers',
-  //   description: `
-  //     Returns all active subscribers.
-  //     Includes subscribers with a cancelled but not run out subscription.
-  //   `
-  // })
-  // activeSubscribers() {
-  //   return this.subscriptions.activeSubscribers()
-  // }
-
-  // @Permissions(CanGetSubscriptions)
-  // @Query(returns => [DashboardSubscription], {
-  //   name: 'renewingSubscribers',
-  //   description: `
-  //     Returns all renewing subscribers in a given timeframe.
-  //   `
-  // })
-  // renewingSubscribers(
-  //   @Args('start') start: Date,
-  //   @Args('end', {nullable: true, type: () => Date}) end: Date | null
-  // ) {
-  //   return this.subscriptions.renewingSubscribers(start, end ?? new Date())
-  // }
-
-  // @Permissions(CanGetSubscriptions)
-  // @Query(returns => [DashboardSubscription], {
-  //   name: 'newDeactivations',
-  //   description: `
-  //     Returns all new deactivations in a given timeframe.
-  //     This considers the time the deactivation was made, not when the subscription runs out.
-  //   `
-  // })
-  // newDeactivations(
-  //   @Args('start') start: Date,
-  //   @Args('end', {nullable: true, type: () => Date}) end: Date | null
-  // ) {
-  //   return this.subscriptions.newDeactivations(start, end ?? new Date())
-  // }
 }

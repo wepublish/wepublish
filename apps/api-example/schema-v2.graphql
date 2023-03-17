@@ -11,6 +11,12 @@ type Consent {
   slug: String!
 }
 
+input ConsentFilter {
+  defaultValue: ConsentValue
+  name: String
+  slug: String
+}
+
 input ConsentInput {
   defaultValue: ConsentValue!
   name: String!
@@ -118,7 +124,7 @@ type Query {
         Returns all Consents.
       
   """
-  consents: [Consent!]!
+  consents(filter: ConsentFilter): [Consent!]!
 
   """
   
@@ -171,7 +177,7 @@ type Query {
         Returns all userConsents.
       
   """
-  userConsents: [UserConsent!]!
+  userConsents(filter: UserConsentFilter): [UserConsent!]!
   versionInformation: VersionInformation!
 }
 
@@ -210,6 +216,12 @@ type UserConsent {
   user: User!
   userId: String!
   value: ConsentValue!
+}
+
+input UserConsentFilter {
+  defaultValue: ConsentValue
+  name: String
+  slug: String
 }
 
 input UserConsentInput {

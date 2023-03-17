@@ -1,22 +1,27 @@
-import {Injectable} from '@nestjs/common'
+import {Injectable, Scope} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
-import {UserConsent, UserConsentInput, UpdateUserConsentInput} from './userConsent.model'
+import {UserSession} from '@wepublish/authentication/api'
+import {
+  UserConsent,
+  UserConsentInput,
+  UpdateUserConsentInput,
+  UserConsentFilter
+} from './userConsent.model'
 
-// todo extract
-// export type AtLeast<T, K extends keyof T> = Partial<T> & Pick<T, K>
-export type RequireAtLeastOne<T> = {
-  [K in keyof T]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<keyof T, K>>>
-}[keyof T]
-
-@Injectable()
+@Injectable({scope: Scope.REQUEST})
 export class UserConsentService {
   constructor(private prisma: PrismaClient) {}
 
   /*
   Queries
  */
-  async userConsentList(): Promise<UserConsent[]> {
+  async userConsentList(filter?: UserConsentFilter): Promise<UserConsent[]> {
     const data = await this.prisma.userConsent.findMany({
+      where: {
+        consent: {
+          ...filter
+        }
+      },
       orderBy: {
         createdAt: 'desc'
       },
@@ -49,7 +54,12 @@ export class UserConsentService {
   /*
   Mutations
  */
-  async createUserConsent(userConsent: UserConsentInput): Promise<UserConsent> {
+  async createUserConsent(userConsent: UserConsentInput, user: UserSession): Promise<UserConsent> {
+    // only allow creating for admin or affected user
+    if (!user.user.roleIDs.includes('admin') && user.user.id !== userConsent.userId) {
+      throw Error(`Unauthorized`)
+    }
+
     const created = await this.prisma.userConsent.create({
       data: userConsent,
       include: {user: true, consent: true}
@@ -60,11 +70,23 @@ export class UserConsentService {
 
   async updateUserConsent({
     id,
-    userConsent
+    userConsent,
+    user
   }: {
     id: string
     userConsent: UpdateUserConsentInput
+    user: UserSession
   }): Promise<UserConsent> {
+    const toUpdate = await this.prisma.userConsent.findFirst({
+      where: {id},
+      include: {user: true}
+    })
+
+    // only allow updating for admin or affected user
+    if (!user.user.roleIDs.includes('admin') && user.user.id !== toUpdate?.user.id) {
+      throw Error(`Unauthorized`)
+    }
+
     const updated = await this.prisma.userConsent.update({
       where: {id},
       data: {
@@ -75,7 +97,17 @@ export class UserConsentService {
     return updated
   }
 
-  async deleteUserConsent(id: string): Promise<UserConsent> {
+  async deleteUserConsent(id: string, user: UserSession): Promise<UserConsent> {
+    const toDelete = await this.prisma.userConsent.findFirst({
+      where: {id},
+      include: {user: true}
+    })
+
+    // only allow deleting for admin or affected user
+    if (!user.user.roleIDs.includes('admin') && user.user.id !== toDelete?.user.id) {
+      throw Error(`Unauthorized`)
+    }
+
     const deleted = await this.prisma.userConsent.delete({
       where: {id},
       include: {user: true, consent: true}

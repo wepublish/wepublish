@@ -1,8 +1,16 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
-import {ConsentValue} from '@prisma/client'
-// import {CanGetSubscriptions, Permissions} from '@wepublish/permissions/api'
-import {UserConsent, UserConsentInput, UpdateUserConsentInput} from './userConsent.model'
+import {
+  UserConsent,
+  UserConsentInput,
+  UpdateUserConsentInput,
+  UserConsentFilter
+} from './userConsent.model'
 import {UserConsentService} from './userConsent.service'
+
+import {UseGuards} from '@nestjs/common'
+import {GqlAuthGuard} from '../auth.guard'
+import {CurrentUser} from '../user.decorator.graphql'
+import {UserSession} from '@wepublish/authentication/api'
 
 @Resolver()
 export class UserConsentResolver {
@@ -11,15 +19,14 @@ export class UserConsentResolver {
   /*
   Queries
  */
-  // @Permissions(CanGetSubscriptions)
   @Query(returns => [UserConsent], {
     name: 'userConsents',
     description: `
       Returns all userConsents.
     `
   })
-  userConsentList() {
-    return this.userConsents.userConsentList()
+  userConsentList(@Args('filter', {nullable: true}) filter: UserConsentFilter) {
+    return this.userConsents.userConsentList(filter)
   }
 
   @Query(returns => UserConsent, {
@@ -41,8 +48,12 @@ export class UserConsentResolver {
       Create a new UserConsent.
     `
   })
-  createUserConsent(@Args('userConsent') userConsent: UserConsentInput) {
-    return this.userConsents.createUserConsent(userConsent)
+  @UseGuards(GqlAuthGuard)
+  createUserConsent(
+    @CurrentUser() user: UserSession,
+    @Args('userConsent') userConsent: UserConsentInput
+  ) {
+    return this.userConsents.createUserConsent(userConsent, user)
   }
 
   @Mutation(returns => UserConsent, {
@@ -51,11 +62,13 @@ export class UserConsentResolver {
       Update an existing UserConsent.
     `
   })
+  @UseGuards(GqlAuthGuard)
   updateUserConsent(
+    @CurrentUser() user: UserSession,
     @Args('id') id: string,
     @Args('userConsent') userConsent: UpdateUserConsentInput
   ) {
-    return this.userConsents.updateUserConsent({id, userConsent})
+    return this.userConsents.updateUserConsent({id, userConsent, user})
   }
 
   @Mutation(returns => UserConsent, {
@@ -64,7 +77,8 @@ export class UserConsentResolver {
       Delete an existing UserConsent.
     `
   })
-  deleteUserConsent(@Args('id') id: string) {
-    return this.userConsents.deleteUserConsent(id)
+  @UseGuards(GqlAuthGuard)
+  deleteUserConsent(@Args('id') id: string, @CurrentUser() user: UserSession) {
+    return this.userConsents.deleteUserConsent(id, user)
   }
 }

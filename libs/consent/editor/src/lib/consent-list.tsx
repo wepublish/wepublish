@@ -17,15 +17,6 @@ import {getApiClientV2} from '../apiClientv2'
 
 const {Column, HeaderCell, Cell} = RTable
 
-// export function getApiClientV2() {
-//   const apiURL = 'http://localhost:4000'
-//   const link = new HttpLink({uri: `${apiURL}/v2`})
-//   return new ApolloClient({
-//     link,
-//     cache: new InMemoryCache()
-//   })
-// }
-
 const onErrorToast = (error: ApolloError) => {
   toaster.push(
     <Message type="error" showIcon closable duration={3000}>
