@@ -1275,6 +1275,8 @@
       "newDeactivationsApiPublic": "Make the new deactivations API accessible by the public",
       "expectedRevenueApiPublic": "Make the expected revenue API accessible by the public",
       "revenueApiPublic": "Make the revenue API accessible by the public",
+      "enabled": "enabled",
+      "disabled": "disabled",
       "warnings": {
         "guestCommenting": "Allow guest visitors (not logged in) to write and publish comments to articles.",
         "guestCommentRating": "Allow guest visitors (not logged in) to rate other people's comments.",
