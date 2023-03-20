@@ -34,7 +34,6 @@ export * from './lib/db/invoice'
 export * from './lib/db/payment'
 export * from './lib/db/mailLog'
 export * from './lib/db/subscription'
-export * from '@wepublish/settings/api'
 
 export * from './lib/media/mediaAdapter'
 export * from './lib/media/karmaMediaAdapter'
@@ -59,3 +58,8 @@ export * from './lib/challenges/algebraicCaptchaChallenge'
 export * from './lib/payments/payrexxSubscriptionPaymentProvider'
 
 export {getUserForCredentials} from './lib/graphql/user/user.queries'
+
+export * from '@wepublish/settings/api'
+export * from '@wepublish/membership/api'
+export * from '@wepublish/authentication/api'
+export * from '@wepublish/permissions/api'

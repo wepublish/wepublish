@@ -2,7 +2,7 @@ import {Args, Query, Resolver} from '@nestjs/graphql'
 import {CanGetInvoices, Permissions} from '@wepublish/permissions/api'
 import {DashboardInvoice} from './dashboard-invoice.model'
 import {DashboardInvoiceService} from './dashboard-invoice.service'
-import {Settings, SettingName} from '@wepublish/settings/api'
+import {SettingName, Settings} from '@wepublish/settings/api'
 
 @Resolver()
 export class DashboardInvoiceResolver {
@@ -16,7 +16,7 @@ export class DashboardInvoiceResolver {
     `
   })
   @Permissions(CanGetInvoices)
-  @Settings(SettingName.ALLOW_GUEST_COMMENTING)
+  @Settings(SettingName.MAKE_EXPECTED_REVENUE_API_PUBLIC)
   expectedRevenue(
     @Args('start') start: Date,
     @Args('end', {nullable: true, type: () => Date}) end: Date | null
@@ -32,6 +32,7 @@ export class DashboardInvoiceResolver {
     `
   })
   @Permissions(CanGetInvoices)
+  @Settings(SettingName.MAKE_REVENUE_API_PUBLIC)
   revenue(
     @Args('start') start: Date,
     @Args('end', {nullable: true, type: () => Date}) end: Date | null

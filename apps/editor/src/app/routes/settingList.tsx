@@ -2,11 +2,10 @@ import styled from '@emotion/styled'
 import {
   Setting,
   SettingName,
-  UpdateSettingArgs,
   useSettingListQuery,
   useUpdateSettingListMutation
 } from '@wepublish/editor/api'
-import {useEffect, useState} from 'react'
+import {useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdInfo, MdWarning} from 'react-icons/md'
 import {
@@ -27,7 +26,6 @@ import {
   Whisper
 } from 'rsuite'
 import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon'
-import {TypeAttributes} from 'rsuite/esm/@types/common'
 import FormControl from 'rsuite/FormControl'
 
 import {
@@ -57,19 +55,19 @@ const WarningIcon = styled(MdWarning)`
 
 type SettingInfoProps = {
   text: string
-  placement?: string
 }
 
-const SettingInfo = ({text, placement = 'right'}: SettingInfoProps) => (
-  <Whisper
-    trigger="hover"
-    speaker={<Tooltip>{text}</Tooltip>}
-    placement={placement as TypeAttributes.Placement}>
+const SettingInfo = ({text}: SettingInfoProps) => (
+  <Whisper trigger="hover" speaker={<Tooltip>{text}</Tooltip>} placement="top">
     <Info>
       <MdInfo />
     </Info>
   </Whisper>
 )
+
+function settingsReducer(settings: Record<SettingName, Setting>, changedSetting: Setting) {
+  return {...settings, [changedSetting.name]: changedSetting}
+}
 
 function SettingList() {
   const [showWarning, setShowWarning] = useState<boolean>(false)
@@ -88,93 +86,72 @@ function SettingList() {
   })
 
   const isDisabled = loading || !settingListData || !isAuthorized
-  const [allowGuestComment, setAllowGuestComment] = useState<Setting>({
-    id: '',
-    value: false,
-    name: SettingName.AllowGuestCommenting
-  })
-  const [allowGuestCommentRating, setAllowGuestCommentRating] = useState<Setting>({
-    id: '',
-    value: false,
-    name: SettingName.AllowGuestCommentRating
-  })
-  const [allowGuestPollVoting, setAllowGuestPollVoting] = useState<Setting>({
-    id: '',
-    value: false,
-    name: SettingName.AllowGuestPollVoting
-  })
-  const [sendLoginJwtExpiresMin, setSendLoginJwtExpiresMin] = useState<Setting>({
-    id: '',
-    value: 0,
-    name: SettingName.SendLoginJwtExpiresMin
-  })
 
-  const [resetPwdJwtExpiresMin, setResetPwdJwtExpiresMin] = useState<Setting>({
-    id: '',
-    value: 0,
-    name: SettingName.ResetPasswordJwtExpiresMin
-  })
-
-  const [peeringTimeoutMs, setPeeringTimeoutMs] = useState<Setting>({
-    id: '',
-    value: 0,
-    name: SettingName.PeeringTimeoutMs
-  })
-
-  const [invoiceReminderTries, setInvoiceReminderTries] = useState<Setting>({
-    id: '',
-    value: 0,
-    name: SettingName.PeeringTimeoutMs
-  })
-
-  const [invoiceReminderFreq, setInvoiceReminderFreq] = useState<Setting>({
-    id: '',
-    value: 0,
-    name: SettingName.InvoiceReminderFreq
-  })
+  const [settings, setSetting] = useReducer(settingsReducer, {
+    [SettingName.AllowGuestCommenting]: {
+      value: false,
+      name: SettingName.AllowGuestCommenting
+    },
+    [SettingName.AllowGuestPollVoting]: {
+      value: false,
+      name: SettingName.AllowGuestPollVoting
+    },
+    [SettingName.AllowGuestCommentRating]: {
+      value: false,
+      name: SettingName.AllowGuestCommentRating
+    },
+    [SettingName.SendLoginJwtExpiresMin]: {
+      value: 0,
+      name: SettingName.SendLoginJwtExpiresMin
+    },
+    [SettingName.ResetPasswordJwtExpiresMin]: {
+      value: 0,
+      name: SettingName.ResetPasswordJwtExpiresMin
+    },
+    [SettingName.PeeringTimeoutMs]: {
+      value: 0,
+      name: SettingName.PeeringTimeoutMs
+    },
+    [SettingName.PeeringTimeoutMs]: {
+      value: 0,
+      name: SettingName.PeeringTimeoutMs
+    },
+    [SettingName.InvoiceReminderFreq]: {
+      value: 0,
+      name: SettingName.InvoiceReminderFreq
+    },
+    [SettingName.InvoiceReminderMaxTries]: {
+      value: 0,
+      name: SettingName.InvoiceReminderMaxTries
+    },
+    [SettingName.MakeActiveSubscribersApiPublic]: {
+      value: false,
+      name: SettingName.MakeActiveSubscribersApiPublic
+    },
+    [SettingName.MakeNewSubscribersApiPublic]: {
+      value: false,
+      name: SettingName.MakeNewSubscribersApiPublic
+    },
+    [SettingName.MakeRenewingSubscribersApiPublic]: {
+      value: false,
+      name: SettingName.MakeRenewingSubscribersApiPublic
+    },
+    [SettingName.MakeNewDeactivationsApiPublic]: {
+      value: false,
+      name: SettingName.MakeNewDeactivationsApiPublic
+    },
+    [SettingName.MakeExpectedRevenueApiPublic]: {
+      value: false,
+      name: SettingName.MakeExpectedRevenueApiPublic
+    },
+    [SettingName.MakeRevenueApiPublic]: {
+      value: false,
+      name: SettingName.MakeRevenueApiPublic
+    }
+  } as Record<SettingName, Setting>)
 
   useEffect(() => {
-    if (settingListData?.settings) {
-      const allowGuestCommentSetting = settingListData?.settings?.find(
-        setting => setting.name === SettingName.AllowGuestCommenting
-      )
-      if (allowGuestCommentSetting) setAllowGuestComment(allowGuestCommentSetting)
-
-      const allowGuestCommentRatingSetting = settingListData?.settings?.find(
-        setting => setting.name === SettingName.AllowGuestCommentRating
-      )
-      if (allowGuestCommentRatingSetting) setAllowGuestCommentRating(allowGuestCommentRatingSetting)
-
-      const allowGuestPollVotingSetting = settingListData?.settings?.find(
-        setting => setting.name === SettingName.AllowGuestPollVoting
-      )
-      if (allowGuestPollVotingSetting) setAllowGuestPollVoting(allowGuestPollVotingSetting)
-
-      const peeringTimeoutMsSetting = settingListData?.settings?.find(
-        setting => setting.name === SettingName.PeeringTimeoutMs
-      )
-      if (peeringTimeoutMsSetting) setPeeringTimeoutMs(peeringTimeoutMsSetting)
-
-      const sendLoginJwtExpiresSetting = settingListData?.settings?.find(
-        setting => setting.name === SettingName.SendLoginJwtExpiresMin
-      )
-      if (sendLoginJwtExpiresSetting) setSendLoginJwtExpiresMin(sendLoginJwtExpiresSetting)
-
-      const resetPwdJwtExpiresSetting = settingListData?.settings?.find(
-        setting => setting.name === SettingName.ResetPasswordJwtExpiresMin
-      )
-      if (resetPwdJwtExpiresSetting) setResetPwdJwtExpiresMin(resetPwdJwtExpiresSetting)
-
-      const invoiceRetries = settingListData?.settings?.find(
-        setting => setting.name === SettingName.InvoiceReminderMaxTries
-      )
-      if (invoiceRetries) setInvoiceReminderTries(invoiceRetries)
-
-      const invoiceFreq = settingListData?.settings?.find(
-        setting => setting.name === SettingName.InvoiceReminderFreq
-      )
-      if (invoiceFreq) setInvoiceReminderFreq(invoiceFreq)
-    }
+    settingListData?.settings.forEach(setSetting)
   }, [settingListData])
 
   const [updateSettings, {error: updateSettingError}] = useUpdateSettingListMutation({
@@ -183,18 +160,9 @@ function SettingList() {
 
   async function handleSettingListUpdate() {
     setShowWarning(false)
-
-    const allSettings: UpdateSettingArgs[] = [
-      {name: SettingName.AllowGuestCommenting, value: allowGuestComment.value},
-      {name: SettingName.AllowGuestCommentRating, value: allowGuestCommentRating.value},
-      {name: SettingName.AllowGuestPollVoting, value: allowGuestPollVoting.value},
-      {name: SettingName.SendLoginJwtExpiresMin, value: parseInt(sendLoginJwtExpiresMin?.value)},
-      {name: SettingName.ResetPasswordJwtExpiresMin, value: parseInt(resetPwdJwtExpiresMin.value)},
-      {name: SettingName.PeeringTimeoutMs, value: parseInt(peeringTimeoutMs.value)},
-      {name: SettingName.InvoiceReminderMaxTries, value: parseInt(invoiceReminderTries.value)},
-      {name: SettingName.InvoiceReminderFreq, value: parseInt(invoiceReminderFreq.value)}
-    ]
-    await updateSettings({variables: {input: allSettings}})
+    await updateSettings({
+      variables: {input: Object.values(settings).map(({name, value}) => ({name, value}))}
+    })
 
     toaster.push(
       <Notification header={t('settingList.successTitle')} type="success" duration={2000}>
@@ -212,81 +180,83 @@ function SettingList() {
           {error.message.toString()}
         </Notification>
       )
-  }, [fetchError, updateSettingError])
+  }, [fetchError, t, updateSettingError])
 
   const {NumberType} = Schema.Types
 
   const validationModel = Schema.Model({
-    loginToken: NumberType()
+    [SettingName.SendLoginJwtExpiresMin]: NumberType()
       .isRequired(t('errorMessages.required'))
       .range(
-        sendLoginJwtExpiresMin?.settingRestriction?.minValue ?? 1,
-        sendLoginJwtExpiresMin?.settingRestriction?.maxValue ?? 10080,
+        settings[SettingName.SendLoginJwtExpiresMin].settingRestriction?.minValue ?? 1,
+        settings[SettingName.SendLoginJwtExpiresMin].settingRestriction?.maxValue ?? 10080,
         t('errorMessages.invalidRange', {
-          min: sendLoginJwtExpiresMin?.settingRestriction?.minValue ?? 1,
-          max: sendLoginJwtExpiresMin?.settingRestriction?.maxValue ?? 10080
+          min: settings[SettingName.SendLoginJwtExpiresMin].settingRestriction?.minValue ?? 1,
+          max: settings[SettingName.SendLoginJwtExpiresMin].settingRestriction?.maxValue ?? 10080
         })
       ),
-    passwordExpire: NumberType()
+    [SettingName.ResetPasswordJwtExpiresMin]: NumberType()
       .isRequired(t('errorMessages.required'))
       .range(
-        resetPwdJwtExpiresMin.settingRestriction?.minValue ?? 10,
-        resetPwdJwtExpiresMin.settingRestriction?.maxValue ?? 10080,
+        settings[SettingName.ResetPasswordJwtExpiresMin].settingRestriction?.minValue ?? 10,
+        settings[SettingName.ResetPasswordJwtExpiresMin].settingRestriction?.maxValue ?? 10080,
         t('errorMessages.invalidRange', {
-          min: resetPwdJwtExpiresMin.settingRestriction?.minValue ?? 10,
-          max: resetPwdJwtExpiresMin.settingRestriction?.maxValue ?? 10080
+          min: settings[SettingName.ResetPasswordJwtExpiresMin].settingRestriction?.minValue ?? 10,
+          max:
+            settings[SettingName.ResetPasswordJwtExpiresMin].settingRestriction?.maxValue ?? 10080
         })
       ),
-    peeringTimeout: NumberType()
+    [SettingName.PeeringTimeoutMs]: NumberType()
       .isRequired(t('errorMessages.required'))
       .range(
-        peeringTimeoutMs.settingRestriction?.minValue ?? 1000,
-        peeringTimeoutMs.settingRestriction?.maxValue ?? 10000,
+        settings[SettingName.PeeringTimeoutMs].settingRestriction?.minValue ?? 1000,
+        settings[SettingName.PeeringTimeoutMs].settingRestriction?.maxValue ?? 10000,
         t('errorMessages.invalidRange', {
-          min: peeringTimeoutMs.settingRestriction?.minValue ?? 1000,
-          max: peeringTimeoutMs.settingRestriction?.maxValue ?? 10000
+          min: settings[SettingName.PeeringTimeoutMs].settingRestriction?.minValue ?? 1000,
+          max: settings[SettingName.PeeringTimeoutMs].settingRestriction?.maxValue ?? 10000
         })
       ),
-    invoiceTries: NumberType()
+    [SettingName.InvoiceReminderMaxTries]: NumberType()
       .isRequired(t('errorMessages.required'))
       .range(
-        invoiceReminderTries.settingRestriction?.minValue ?? 0,
-        invoiceReminderTries.settingRestriction?.maxValue ?? 10,
+        settings[SettingName.InvoiceReminderMaxTries].settingRestriction?.minValue ?? 0,
+        settings[SettingName.InvoiceReminderMaxTries].settingRestriction?.maxValue ?? 10,
         t('errorMessages.invalidRange', {
-          min: invoiceReminderTries.settingRestriction?.minValue ?? 0,
-          max: invoiceReminderTries.settingRestriction?.maxValue ?? 10
+          min: settings[SettingName.InvoiceReminderMaxTries].settingRestriction?.minValue ?? 0,
+          max: settings[SettingName.InvoiceReminderMaxTries].settingRestriction?.maxValue ?? 10
         })
       ),
-    invoiceFrequency: NumberType()
+    [SettingName.InvoiceReminderFreq]: NumberType()
       .isRequired(t('errorMessages.required'))
       .range(
-        invoiceReminderFreq.settingRestriction?.minValue ?? 0,
-        invoiceReminderFreq.settingRestriction?.maxValue ?? 30,
+        settings[SettingName.InvoiceReminderFreq].settingRestriction?.minValue ?? 0,
+        settings[SettingName.InvoiceReminderFreq].settingRestriction?.maxValue ?? 30,
         t('errorMessages.invalidRange', {
-          min: invoiceReminderFreq.settingRestriction?.minValue ?? 0,
-          max: invoiceReminderFreq.settingRestriction?.maxValue ?? 30
+          min: settings[SettingName.InvoiceReminderFreq].settingRestriction?.minValue ?? 0,
+          max: settings[SettingName.InvoiceReminderFreq].settingRestriction?.maxValue ?? 30
         })
       )
   })
+
+  const formValue = Object.values(settings).reduce(
+    (values, setting) => ({
+      ...values,
+      [setting.name]: setting.value
+    }),
+    {} as Record<SettingName, unknown>
+  )
 
   return (
     <>
       <Form
         disabled={isDisabled}
         model={validationModel}
-        formValue={{
-          loginToken: sendLoginJwtExpiresMin.value,
-          passwordExpire: resetPwdJwtExpiresMin.value,
-          peeringTimeout: peeringTimeoutMs.value,
-          invoiceTries: invoiceReminderTries.value,
-          invoiceFrequency: invoiceReminderFreq.value
-        }}
-        onSubmit={async validationPassed => {
-          validationPassed && (await setShowWarning(true))
-        }}>
+        formValue={formValue}
+        onSubmit={validationPassed => validationPassed && setShowWarning(true)}>
         <Form.Group>
           <h2>{t('settingList.settings')}</h2>
         </Form.Group>
+
         <Grid fluid>
           <Row>
             {/* first column */}
@@ -295,34 +265,37 @@ function SettingList() {
                 {/* comments */}
                 <Col xs={24}>
                   <Panel bordered header={t('settingList.comments')}>
-                    <Form.Group controlId="guestCommenting">
+                    <Form.Group controlId={SettingName.AllowGuestCommenting}>
                       <Form.ControlLabel>
                         {t('settingList.guestCommenting')}
                         <SettingInfo text={t('settingList.warnings.guestCommenting')} />
                       </Form.ControlLabel>
+
                       <Toggle
                         disabled={isDisabled}
-                        checked={allowGuestComment?.value}
+                        checked={settings[SettingName.AllowGuestCommenting].value}
                         onChange={checked =>
-                          setAllowGuestComment({
-                            ...allowGuestComment,
+                          setSetting({
+                            ...settings[SettingName.AllowGuestCommenting],
                             value: checked
                           })
                         }
                       />
                     </Form.Group>
+
                     {/* Allow guest rating of a comment */}
-                    <Form.Group controlId="guestCommentRating">
+                    <Form.Group controlId={SettingName.AllowGuestCommentRating}>
                       <Form.ControlLabel>
                         {t('settingList.allowGuestCommentRating')}
                         <SettingInfo text={t('settingList.warnings.guestCommentRating')} />
                       </Form.ControlLabel>
+
                       <Toggle
                         disabled={isDisabled}
-                        checked={allowGuestCommentRating?.value}
+                        checked={settings[SettingName.AllowGuestCommentRating].value}
                         onChange={checked =>
-                          setAllowGuestCommentRating({
-                            ...allowGuestCommentRating,
+                          setSetting({
+                            ...settings[SettingName.AllowGuestCommentRating],
                             value: checked
                           })
                         }
@@ -330,6 +303,7 @@ function SettingList() {
                     </Form.Group>
                   </Panel>
                 </Col>
+
                 {/* polls */}
                 <Col xs={24}>
                   <Panel
@@ -344,10 +318,127 @@ function SettingList() {
                       <Form.ControlLabel>{t('settingList.guestPollVote')}</Form.ControlLabel>
                       <Toggle
                         disabled={isDisabled}
-                        checked={allowGuestPollVoting?.value}
+                        checked={settings[SettingName.AllowGuestPollVoting].value}
                         onChange={checked =>
-                          setAllowGuestPollVoting({
-                            ...allowGuestPollVoting,
+                          setSetting({
+                            ...settings[SettingName.AllowGuestPollVoting],
+                            value: checked
+                          })
+                        }
+                      />
+                    </Form.Group>
+                  </Panel>
+                </Col>
+
+                {/* Memberships */}
+                <Col xs={24}>
+                  <Panel bordered header={t('settingList.memberships')}>
+                    <Form.Group controlId={SettingName.MakeNewSubscribersApiPublic}>
+                      <Form.ControlLabel>
+                        {t('settingList.newSubscriptionsApiPublic')}
+                        <SettingInfo text={t('settingList.warnings.newSubscriptionsApiPublic')} />
+                      </Form.ControlLabel>
+
+                      <Toggle
+                        disabled={isDisabled}
+                        checked={settings[SettingName.MakeNewSubscribersApiPublic].value}
+                        onChange={checked =>
+                          setSetting({
+                            ...settings[SettingName.MakeNewSubscribersApiPublic],
+                            value: checked
+                          })
+                        }
+                      />
+                    </Form.Group>
+
+                    <Form.Group controlId={SettingName.MakeActiveSubscribersApiPublic}>
+                      <Form.ControlLabel>
+                        {t('settingList.activeSubscriptionsApiPublic')}
+                        <SettingInfo
+                          text={t('settingList.warnings.activeSubscriptionsApiPublic')}
+                        />
+                      </Form.ControlLabel>
+
+                      <Toggle
+                        disabled={isDisabled}
+                        checked={settings[SettingName.MakeActiveSubscribersApiPublic].value}
+                        onChange={checked =>
+                          setSetting({
+                            ...settings[SettingName.MakeActiveSubscribersApiPublic],
+                            value: checked
+                          })
+                        }
+                      />
+                    </Form.Group>
+
+                    <Form.Group controlId={SettingName.MakeRenewingSubscribersApiPublic}>
+                      <Form.ControlLabel>
+                        {t('settingList.renewingSubscriptionsApiPublic')}
+                        <SettingInfo
+                          text={t('settingList.warnings.renewingSubscriptionsApiPublic')}
+                        />
+                      </Form.ControlLabel>
+
+                      <Toggle
+                        disabled={isDisabled}
+                        checked={settings[SettingName.MakeRenewingSubscribersApiPublic].value}
+                        onChange={checked =>
+                          setSetting({
+                            ...settings[SettingName.MakeRenewingSubscribersApiPublic],
+                            value: checked
+                          })
+                        }
+                      />
+                    </Form.Group>
+
+                    <Form.Group controlId={SettingName.MakeNewDeactivationsApiPublic}>
+                      <Form.ControlLabel>
+                        {t('settingList.newDeactivationsApiPublic')}
+                        <SettingInfo text={t('settingList.warnings.newDeactivationsApiPublic')} />
+                      </Form.ControlLabel>
+
+                      <Toggle
+                        disabled={isDisabled}
+                        checked={settings[SettingName.MakeNewDeactivationsApiPublic].value}
+                        onChange={checked =>
+                          setSetting({
+                            ...settings[SettingName.MakeNewDeactivationsApiPublic],
+                            value: checked
+                          })
+                        }
+                      />
+                    </Form.Group>
+
+                    <Form.Group controlId={SettingName.MakeExpectedRevenueApiPublic}>
+                      <Form.ControlLabel>
+                        {t('settingList.expectedRevenueApiPublic')}
+                        <SettingInfo text={t('settingList.warnings.expectedRevenueApiPublic')} />
+                      </Form.ControlLabel>
+
+                      <Toggle
+                        disabled={isDisabled}
+                        checked={settings[SettingName.MakeExpectedRevenueApiPublic].value}
+                        onChange={checked =>
+                          setSetting({
+                            ...settings[SettingName.MakeExpectedRevenueApiPublic],
+                            value: checked
+                          })
+                        }
+                      />
+                    </Form.Group>
+
+                    <Form.Group controlId={SettingName.MakeRevenueApiPublic}>
+                      <Form.ControlLabel>
+                        {t('settingList.revenueApiPublic')}
+                        <SettingInfo text={t('settingList.warnings.revenueApiPublic')} />
+                      </Form.ControlLabel>
+
+                      <Toggle
+                        disabled={isDisabled}
+                        checked={settings[SettingName.MakeRevenueApiPublic].value}
+                        onChange={checked =>
+                          setSetting({
+                            ...settings[SettingName.MakeRevenueApiPublic],
                             value: checked
                           })
                         }
@@ -357,57 +448,61 @@ function SettingList() {
                 </Col>
               </Row>
             </Col>
+
             {/* second column */}
             <Col xs={12}>
               <Row>
                 {/* login */}
                 <Col xs={24}>
                   <Panel bordered header={t('settingList.login')}>
-                    <Form.Group controlId="loginMinutes">
+                    <Form.Group controlId={SettingName.SendLoginJwtExpiresMin}>
                       <Form.ControlLabel>
                         {t('settingList.loginMinutes')}
-                        <SettingInfo
-                          placement="left"
-                          text={t('settingList.warnings.loginMinutes')}
-                        />
+                        <SettingInfo text={t('settingList.warnings.loginMinutes')} />
                       </Form.ControlLabel>
+
                       <InputGroup>
                         <FormControl
-                          name="loginToken"
+                          name={SettingName.SendLoginJwtExpiresMin}
                           accepter={InputNumber}
-                          value={sendLoginJwtExpiresMin.value}
-                          onChange={(value: number) =>
-                            setSendLoginJwtExpiresMin({
-                              ...sendLoginJwtExpiresMin,
-                              value
+                          value={settings[SettingName.SendLoginJwtExpiresMin].value}
+                          onChange={(value: string) =>
+                            setSetting({
+                              ...settings[SettingName.SendLoginJwtExpiresMin],
+                              value: +value
                             })
                           }
                         />
+
                         <InputGroupAddon>{t('settingList.minutes')}</InputGroupAddon>
                       </InputGroup>
                     </Form.Group>
-                    <Form.Group controlId="passwordToken">
+
+                    <Form.Group controlId={SettingName.ResetPasswordJwtExpiresMin}>
                       <Form.ControlLabel>
                         {t('settingList.passwordToken')}
-                        <SettingInfo
-                          placement="left"
-                          text={t('settingList.warnings.passwordToken')}
-                        />
+                        <SettingInfo text={t('settingList.warnings.passwordToken')} />
                       </Form.ControlLabel>
+
                       <InputGroup>
                         <Form.Control
-                          name="passwordExpire"
+                          name={SettingName.ResetPasswordJwtExpiresMin}
                           accepter={InputNumber}
-                          value={resetPwdJwtExpiresMin.value}
-                          onChange={(value: number) => {
-                            setResetPwdJwtExpiresMin({...resetPwdJwtExpiresMin, value})
+                          value={settings[SettingName.ResetPasswordJwtExpiresMin].value}
+                          onChange={(value: string) => {
+                            setSetting({
+                              ...settings[SettingName.ResetPasswordJwtExpiresMin],
+                              value: +value
+                            })
                           }}
                         />
+
                         <InputGroupAddon>{t('settingList.minutes')}</InputGroupAddon>
                       </InputGroup>
                     </Form.Group>
                   </Panel>
                 </Col>
+
                 {/* peering */}
                 <Col xs={24}>
                   <Panel
@@ -418,17 +513,17 @@ function SettingList() {
                         <SettingInfo text={t('settingList.warnings.peerToken')} />
                       </>
                     }>
-                    <Form.Group controlId="peerToken">
+                    <Form.Group controlId={SettingName.PeeringTimeoutMs}>
                       <Form.ControlLabel>{t('settingList.peerToken')}</Form.ControlLabel>
                       <InputGroup>
                         <Form.Control
-                          name="peeringTimeout"
+                          name={SettingName.PeeringTimeoutMs}
                           accepter={InputNumber}
-                          value={peeringTimeoutMs.value}
-                          onChange={(value: number) => {
-                            setPeeringTimeoutMs({
-                              ...peeringTimeoutMs,
-                              value
+                          value={settings[SettingName.PeeringTimeoutMs].value}
+                          onChange={(value: string) => {
+                            setSetting({
+                              ...settings[SettingName.PeeringTimeoutMs],
+                              value: +value
                             })
                           }}
                         />
@@ -437,6 +532,7 @@ function SettingList() {
                     </Form.Group>
                   </Panel>
                 </Col>
+
                 {/* payment */}
                 <Col xs={24}>
                   <Panel
@@ -447,17 +543,17 @@ function SettingList() {
                         <SettingInfo text={t('settingList.warnings.invoiceReminders')} />
                       </>
                     }>
-                    <Form.Group controlId="invoiceReminders">
+                    <Form.Group controlId={SettingName.InvoiceReminderFreq}>
                       <Form.ControlLabel>{t('settingList.invoiceReminders')}</Form.ControlLabel>
                       <InputGroup>
                         <Form.Control
-                          name="invoiceFrequency"
+                          name={SettingName.InvoiceReminderFreq}
                           accepter={InputNumber}
-                          value={invoiceReminderFreq.value}
-                          onChange={(value: number) =>
-                            setInvoiceReminderFreq({
-                              ...invoiceReminderFreq,
-                              value
+                          value={settings[SettingName.InvoiceReminderFreq].value}
+                          onChange={(value: string) =>
+                            setSetting({
+                              ...settings[SettingName.InvoiceReminderFreq],
+                              value: +value
                             })
                           }
                         />
@@ -481,16 +577,17 @@ function SettingList() {
 
       <Modal open={showWarning} backdrop="static" size="xs" onClose={() => setShowWarning(false)}>
         <Modal.Title>
-          <>
-            {t('invoice.areYouSure')}
-            <WarningIcon />
-          </>
+          {t('invoice.areYouSure')}
+          <WarningIcon />
         </Modal.Title>
+
         <Modal.Body>{t('settingList.warnings.askOperators')}</Modal.Body>
+
         <Modal.Footer>
           <Button appearance="primary" onClick={handleSettingListUpdate}>
             {t('confirm')}
           </Button>
+
           <Button appearance="subtle" onClick={() => setShowWarning(false)}>
             {t('cancel')}
           </Button>

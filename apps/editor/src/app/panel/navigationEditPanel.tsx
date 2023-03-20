@@ -296,8 +296,9 @@ function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
                   value={value.type}
                   data={linkTypes}
                   onChange={type => {
-                    if (!type) return
-                    onChange({...value, type})
+                    if (type) {
+                      onChange({...value, type: type as string})
+                    }
                   }}
                 />
                 {value.type === 'PageNavigationLink' || value.type === 'ArticleNavigationLink' ? (

@@ -14,7 +14,7 @@ export class SettingsGuard implements CanActivate {
       context.getClass()
     ])
 
-    if (!settings?.length) {
+    if (!settings.length) {
       return true
     }
 
@@ -26,8 +26,6 @@ export class SettingsGuard implements CanActivate {
       }
     })
 
-    console.log(settingList)
-
-    return settingList.length && settingList.some(setting => !!setting.value)
+    return Boolean(settingList.length) && settingList.some(setting => !!setting.value)
   }
 }

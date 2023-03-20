@@ -1,113 +1,117 @@
-import {PermissionsGuard} from './permission.guard'
-import {TestingModule, Test} from '@nestjs/testing'
 import {Reflector} from '@nestjs/core'
-import {PERMISSIONS_METADATA_KEY} from './settings.decorator'
-import {GqlExecutionContext} from '@nestjs/graphql'
-import {Permission} from './permissions'
+import {Test, TestingModule} from '@nestjs/testing'
+import {PrismaClient, Prisma} from '@prisma/client'
+import {PrismaModule} from '@wepublish/nest-modules'
+import {Setting, SettingName} from './setting'
+import {SETTINGS_METADATA_KEY} from './settings.decorator'
+import {SettingsGuard} from './settings.guard'
 
-jest.mock('@nestjs/graphql')
-
-const mockPermission: Permission = {
+const mockTrueSetting: Setting = {
   id: 'Foo',
-  description: 'Foobar',
-  deprecated: false
+  name: SettingName.MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC,
+  value: true
 }
 
-describe('PermissionsGuard', () => {
+const mockFalseSetting: Setting = {
+  id: 'bar',
+  name: SettingName.MAKE_NEW_SUBSCRIBERS_API_PUBLIC,
+  value: false
+}
+
+describe('SettingsGuard', () => {
   let reflector: Reflector
-  let guard: PermissionsGuard
+  let guard: SettingsGuard
+  let prisma: PrismaClient
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [],
-      providers: [PermissionsGuard]
+      imports: [PrismaModule],
+      providers: [SettingsGuard]
     }).compile()
 
-    guard = module.get<PermissionsGuard>(PermissionsGuard)
+    guard = module.get<SettingsGuard>(SettingsGuard)
     reflector = module.get<Reflector>(Reflector)
+    prisma = module.get<PrismaClient>(PrismaClient)
 
-    const mockedCreate = jest.fn().mockImplementation(() => ({
-      getContext: jest.fn().mockReturnValue({
-        req: {
-          user: {
-            roles: [{permissionIDs: [mockPermission.id]}]
-          }
-        }
-      })
-    }))
+    jest.spyOn(prisma.setting, 'findMany').mockImplementation((args): any => {
+      const settings = ((args?.where?.name as Prisma.StringFilter).in as SettingName[]) ?? []
 
-    GqlExecutionContext.create = mockedCreate
+      return Promise.resolve(
+        settings
+          .map(settingName => {
+            switch (settingName) {
+              case mockTrueSetting.name:
+                return mockTrueSetting
+              case mockFalseSetting.name:
+                return mockFalseSetting
+            }
+          })
+          .filter(Boolean)
+      )
+    })
   })
 
-  it('should return true if no permissions are set', () => {
-    const spy = jest.spyOn(reflector, 'get').mockReturnValue(undefined)
+  it('should return true if no settings are set', async () => {
+    const reflectorSpy = jest.spyOn(reflector, 'getAllAndMerge').mockReturnValue([])
     const mockContext = {
-      getHandler: () => ({})
+      getHandler: () => ({}),
+      getClass: () => ({})
     } as any
 
-    const result = guard.canActivate(mockContext)
+    const result = await guard.canActivate(mockContext)
     expect(result).toBeTruthy()
-    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, {})
+    expect(reflectorSpy).toHaveBeenCalledWith(SETTINGS_METADATA_KEY, [{}, {}])
   })
 
-  it('should return true if an empty array of permissions is set', () => {
-    const spy = jest.spyOn(reflector, 'get').mockReturnValue([])
+  it('should return true if the setting is set to true', async () => {
+    const spy = jest.spyOn(reflector, 'getAllAndMerge').mockReturnValue([mockTrueSetting.name])
     const mockContext = {
-      getHandler: () => ({})
+      getHandler: () => ({}),
+      getClass: () => ({})
     } as any
 
-    const result = guard.canActivate(mockContext)
+    const result = await guard.canActivate(mockContext)
     expect(result).toBeTruthy()
-    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, {})
+    expect(spy).toHaveBeenCalledWith(SETTINGS_METADATA_KEY, [{}, {}])
   })
 
-  it('should return true if the user has the required permissions', () => {
-    const spy = jest.spyOn(reflector, 'get').mockReturnValue([mockPermission])
+  it('should return true if one of the settings is set to true', async () => {
+    const spy = jest
+      .spyOn(reflector, 'getAllAndMerge')
+      .mockReturnValue([mockFalseSetting.name, mockTrueSetting.name])
     const mockContext = {
-      getHandler: () => ({})
+      getHandler: () => ({}),
+      getClass: () => ({})
     } as any
 
-    const result = guard.canActivate(mockContext)
+    const result = await guard.canActivate(mockContext)
     expect(result).toBeTruthy()
-    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, {})
+    expect(spy).toHaveBeenCalledWith(SETTINGS_METADATA_KEY, [{}, {}])
   })
 
-  it('should return false if the user is not logged in', () => {
-    const mockedCreate = jest.fn().mockImplementation(() => ({
-      getContext: jest.fn().mockReturnValue({
-        req: {
-          user: undefined
-        }
-      })
-    }))
-    GqlExecutionContext.create = mockedCreate
-
-    const spy = jest.spyOn(reflector, 'get').mockReturnValue([mockPermission])
+  it('should return false if no settings can be found', async () => {
+    const spy = jest.spyOn(reflector, 'getAllAndMerge').mockReturnValue(['Foobar'])
 
     const mockContext = {
-      getHandler: () => ({})
+      getHandler: () => ({}),
+      getClass: () => ({})
     } as any
 
-    const result = guard.canActivate(mockContext)
+    const result = await guard.canActivate(mockContext)
     expect(result).toBeFalsy()
-    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, {})
+    expect(spy).toHaveBeenCalledWith(SETTINGS_METADATA_KEY, [{}, {}])
   })
 
-  it('should return false if the user does not have the required permissions', () => {
-    const spy = jest.spyOn(reflector, 'get').mockReturnValue([
-      {
-        id: 'Bar',
-        description: 'Barfoo',
-        deprecated: false
-      }
-    ])
+  it('should return false if the setting is set to false', async () => {
+    const spy = jest.spyOn(reflector, 'getAllAndMerge').mockReturnValue([mockFalseSetting.name])
 
     const mockContext = {
-      getHandler: () => ({})
+      getHandler: () => ({}),
+      getClass: () => ({})
     } as any
 
-    const result = guard.canActivate(mockContext)
+    const result = await guard.canActivate(mockContext)
     expect(result).toBeFalsy()
-    expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, {})
+    expect(spy).toHaveBeenCalledWith(SETTINGS_METADATA_KEY, [{}, {}])
   })
 })

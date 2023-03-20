@@ -48,7 +48,6 @@ import {InvoiceWithItems} from './db/invoice'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {NavigationWithLinks} from './db/navigation'
 import {PageWithRevisions, pageWithRevisionsToPublicPage, PublicPage} from './db/page'
-import {SettingName} from '@wepublish/settings/api'
 import {TokenExpiredError} from './error'
 import {getEvent} from './graphql/event/event.query'
 import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
@@ -60,6 +59,7 @@ import {MemberContext} from './memberContext'
 import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
 import {URLAdapter} from './urlAdapter'
+import {SettingName} from '@wepublish/settings/api'
 
 /**
  * Peered article cache configuration and setup
