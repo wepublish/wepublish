@@ -4,6 +4,17 @@
   "sourceRoot": "libs/consent/api/src",
   "projectType": "library",
   "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/consent/api",
+        "tsConfig": "libs/consent/api/tsconfig.lib.json",
+        "packageJson": "libs/consent/api/package.json",
+        "main": "libs/consent/api/src/index.ts",
+        "assets": ["libs/consent/api/*.md"]
+      }
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
