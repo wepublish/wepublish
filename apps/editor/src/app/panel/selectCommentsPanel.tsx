@@ -184,7 +184,7 @@ export function SelectCommentPanel({
             <Table.Column width={36}>
               <Table.HeaderCell>{}</Table.HeaderCell>
               <TableCellNoPadding>
-                {(rowData: FullCommentFragment) => (
+                {(rowData: RowDataType<FullCommentFragment>) => (
                   <CheckboxWrapper>
                     <Checkbox
                       defaultChecked={commentFilter?.includes(rowData.id) ?? false}
@@ -236,7 +236,7 @@ export function SelectCommentPanel({
           <Table.Column width={150} align="center" fixed="right">
             <Table.HeaderCell>{t('comments.overview.edit')}</Table.HeaderCell>
             <PermissionControlWrapper>
-              {(rowData: FullCommentFragment) => (
+              {(rowData: RowDataType<FullCommentFragment>) => (
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
                   <IconButtonTooltip caption={t('comments.overview.edit')}>
                     <Link target="_blank" to={`/comments/edit/${rowData.id}`}>

@@ -27,7 +27,9 @@ export function UserSearch({
   } = useUserListQuery({
     variables: {
       take: 100,
-      filter: userSearch
+      filter: {
+        text: userSearch
+      }
     },
     fetchPolicy: 'network-only'
   })

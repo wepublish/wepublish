@@ -72,7 +72,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
       if (input) {
         const parser = new DOMParser()
         const element = parser.parseFromString(input, 'text/html')
-        const [iframe] = element.getElementsByTagName('iframe')
+        const iframe = element.getElementsByTagName('iframe')[0]
 
         if (iframe) {
           const soundCloudMatch = iframe.src.match(/api.soundcloud.com\/tracks\/([0-9]+)/)
