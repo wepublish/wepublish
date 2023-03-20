@@ -1,14 +1,15 @@
 import {Chip, css, styled} from '@mui/material'
-import {ReactNode} from 'react'
+import {memo, ReactNode} from 'react'
 
 export type PelotonPinProps = {
-  milestone: {x: number}
+  x: number
   text: ReactNode
+  subText: ReactNode
 }
 
-const PelotonPinWrapper = styled('div')<Pick<PelotonPinProps, 'milestone'>>`
+const PelotonPinWrapper = styled('div')<Pick<PelotonPinProps, 'x'>>`
   position: absolute;
-  left: ${({milestone}) => milestone.x * 100}%;
+  left: ${({x}) => x * 100}%;
   top: -250px;
   bottom: 0;
   transform: translateX(-50%);
@@ -71,15 +72,18 @@ const TextWrapper = styled('div')`
 const Text = styled('strong')``
 const SubText = styled('small')``
 
-export const PelotonPin = ({milestone, text}: PelotonPinProps) => (
-  <PelotonPinWrapper milestone={milestone}>
+const PelotonPin = ({x, text, subText}: PelotonPinProps) => (
+  <PelotonPinWrapper x={x}>
     <PelotonPinInnerWrapper>
       <Pill label="Peloton" color="secondary" size="small"></Pill>
 
       <TextWrapper>
         <Text>{text}</Text>
-        <SubText>635 Fahrer:innen</SubText>
+        <SubText>{subText}</SubText>
       </TextWrapper>
     </PelotonPinInnerWrapper>
   </PelotonPinWrapper>
 )
+
+const ConnectedPelotonPin = memo(PelotonPin)
+export {ConnectedPelotonPin as PelotonPin}

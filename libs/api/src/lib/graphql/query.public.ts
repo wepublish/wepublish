@@ -352,7 +352,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     invoices: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicInvoice))),
-      description: 'This query returns the invoices  of the authenticated user.',
+      description: 'This query returns the invoices of the authenticated user.',
       resolve: (root, _, {authenticateUser, prisma: {subscription, invoice}}) =>
         getPublicInvoices(authenticateUser, subscription, invoice)
     },
@@ -412,7 +412,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)}
       },
       description:
-        'This mutation will check the invoice status and update with information from the paymentProvider',
+        'This query will check the invoice status and update with information from the paymentProvider',
       async resolve(root, {id}, context) {
         const {authenticateUser, prisma, paymentProviders} = context
         const {user} = authenticateUser()

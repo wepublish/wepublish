@@ -149,13 +149,13 @@ export async function runServer(app?: Application | undefined) {
         instanceAPISecret: process.env.PAYREXX_API_SECRET,
         psp: [0, 15, 17, 2, 3, 36],
         pm: [
-          'postfinance_card',
-          'postfinance_efinance',
+          // 'postfinance_card',
+          // 'postfinance_efinance',
           // "mastercard",
           // "visa",
-          'twint',
+          'twint'
           // "invoice",
-          'paypal'
+          // 'paypal'
         ],
         vatRate: 7.7,
         incomingRequestHandler: bodyParser.json()

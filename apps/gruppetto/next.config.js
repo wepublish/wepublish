@@ -12,8 +12,10 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false
   },
-  env: {
-    API_URL: 'https://api.gruppettost.wepublish.dev'
+  publicRuntimeConfig: {
+    env: {
+      API_URL: process.env.API_URL || ''
+    }
   }
 }
 

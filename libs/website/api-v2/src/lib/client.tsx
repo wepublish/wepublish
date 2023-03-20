@@ -1,20 +1,27 @@
 import {
   ApolloClient,
-  HttpLink,
   InMemoryCache,
   ApolloProvider,
   ApolloLink,
   NormalizedCacheObject
 } from '@apollo/client'
 import {ComponentType, memo, useMemo} from 'react'
+import {BatchHttpLink} from '@apollo/client/link/batch-http'
 
 export const getV2ApiClient = (
   apiUrl: string,
   links: ApolloLink[],
   cache?: NormalizedCacheObject
 ) => {
-  const httpLink = new HttpLink({uri: `${apiUrl}/v2`})
-  const link = links?.reduce((links, link) => links.concat(link), httpLink)
+  const httpLink = new BatchHttpLink({
+    uri: `${apiUrl}/v2`,
+    batchMax: 5,
+    batchInterval: 20
+  })
+  const link = [...links, httpLink].reduce(
+    (links: ApolloLink | undefined, link) => (links ? links.concat(link) : link),
+    undefined
+  )
 
   return new ApolloClient({
     link,

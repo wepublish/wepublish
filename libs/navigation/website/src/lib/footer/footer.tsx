@@ -1,7 +1,6 @@
 import {Container, css, styled} from '@mui/material'
 import {BuilderFooterProps, useWebsiteBuilder} from '@wepublish/website-builder'
 import {NavigationQuery} from '@wepublish/website/api'
-import {TupleToUnion} from 'type-fest'
 
 const FooterWrapper = styled('footer')`
   align-self: flex-end;
@@ -42,7 +41,7 @@ const FooterLinks = styled('nav')`
 export type FooterProps = BuilderFooterProps
 
 const navigationLinkToUrl = <T extends NonNullable<NavigationQuery['navigation']>>(
-  link: TupleToUnion<T['links']>
+  link: T['links'][number]
 ): string | undefined => {
   switch (link.__typename) {
     case 'ArticleNavigationLink':
@@ -54,13 +53,13 @@ const navigationLinkToUrl = <T extends NonNullable<NavigationQuery['navigation']
   }
 }
 
-export function Footer({data, loading, error, children}: FooterProps) {
+export function Footer({className, data, loading, error, children}: FooterProps) {
   const {
     elements: {Link}
   } = useWebsiteBuilder()
 
   return (
-    <FooterWrapper>
+    <FooterWrapper className={className}>
       <FooterInnerWrapper>
         {children}
 

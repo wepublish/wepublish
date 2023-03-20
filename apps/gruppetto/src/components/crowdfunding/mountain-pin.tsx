@@ -1,19 +1,20 @@
 import {Chip, css, styled} from '@mui/material'
-import {ReactNode} from 'react'
+import {memo, ReactNode} from 'react'
 
 export type MountainTopPinProps = {
-  milestone: {x: number; y: number}
+  x: number
+  y: number
   pill: ReactNode
   text: ReactNode
 }
 
-const MountainTopPinWrapper = styled('div')<Pick<MountainTopPinProps, 'milestone'>>`
+const MountainTopPinWrapper = styled('div')<Pick<MountainTopPinProps, 'x' | 'y'>>`
   font-size: 14px;
   position: absolute;
   margin-top: -120px;
-  left: ${({milestone}) => milestone.x * 100}%;
+  left: ${({x}) => x * 100}%;
   top: 0;
-  bottom: ${({milestone}) => milestone.y * 100}%;
+  bottom: ${({y}) => y * 100}%;
   transform: translateX(-50%);
   color: ${({theme}) => theme.palette.primary.main};
 
@@ -70,11 +71,14 @@ const Text = styled('div')`
   `}
 `
 
-export const MountainTopPin = ({milestone, pill, text}: MountainTopPinProps) => (
-  <MountainTopPinWrapper milestone={milestone}>
+const MountainTopPin = ({x, y, pill, text}: MountainTopPinProps) => (
+  <MountainTopPinWrapper x={x} y={y}>
     <MountainTopPinInnerWrapper>
       <Pill label={pill} color="primary" size="small"></Pill>
       <Text>{text}</Text>
     </MountainTopPinInnerWrapper>
   </MountainTopPinWrapper>
 )
+
+const ConnectedMountainTopPin = memo(MountainTopPin)
+export {ConnectedMountainTopPin as MountainTopPin}

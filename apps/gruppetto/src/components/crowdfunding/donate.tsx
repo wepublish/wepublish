@@ -1,4 +1,6 @@
 import {
+  Alert,
+  CircularProgress,
   css,
   FormControlLabel,
   RadioGroup,
@@ -7,22 +9,27 @@ import {
   TextField,
   Typography
 } from '@mui/material'
-import {SubscribeContainer} from '@wepublish/membership/website'
+import {PayInvoicesContainer, SubscribeContainer} from '@wepublish/membership/website'
 import {RadioCard as WepRadioCard} from '@wepublish/ui'
 import {
+  BuilderPayInvoicesProps,
   BuilderSubscribeProps,
   useWebsiteBuilder,
   WebsiteBuilderProvider
 } from '@wepublish/website-builder'
 import {PaymentPeriodicity} from '@wepublish/website/api'
-import {useEffect, useState} from 'react'
+import {memo, useEffect, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 
-const formatChf = (value: number) => {
+export const formatChf = (value: number) => {
   const formatter = new Intl.NumberFormat('ch-DE', {style: 'currency', currency: 'CHF'})
   const result = formatter.format(value)
 
-  return result.replace('.00', '.-')
+  if (result.endsWith('.00')) {
+    return result.replace('.00', '.-')
+  }
+
+  return result
 }
 
 const InputForm = styled('div')`
@@ -87,6 +94,7 @@ const RadioCard = styled(WepRadioCard)`
     'radio children'
     '. title';
   grid-template-columns: min-content auto;
+  grid-auto-rows: min-content;
   border: 0;
   align-items: center;
 `
@@ -107,13 +115,18 @@ const ChallengeWrapper = styled('div')`
   justify-content: flex-start;
 `
 
-const CustomSubscribe = ({challenge, memberPlans, onSubmit: submit}: BuilderSubscribeProps) => {
+const CustomSubscribe = ({
+  challenge,
+  memberPlans,
+  subscribe,
+  onSubmit: submit
+}: BuilderSubscribeProps) => {
   const {
     elements: {Button},
     blocks: {RichText}
   } = useWebsiteBuilder()
 
-  const {handleSubmit, control, setValue} = useForm({
+  const {handleSubmit, control, setValue, watch} = useForm({
     defaultValues: {
       monthlyAmount: 0,
       name: '',
@@ -148,20 +161,27 @@ const CustomSubscribe = ({challenge, memberPlans, onSubmit: submit}: BuilderSubs
           country,
           city
         },
-        paymentPeriodicity: PaymentPeriodicity.Monthly,
         challengeAnswer: {
           challengeID: challenge.data!.challenge.challengeID!,
           challengeSolution
         },
         memberPlanID: selectedMemberplan?.id,
-        paymentMethodID: selectedMemberplan?.availablePaymentMethods[0]?.paymentMethods[0]?.id
+        paymentMethodID: selectedMemberplan?.availablePaymentMethods[0]?.paymentMethods[0]?.id,
+        paymentPeriodicity: PaymentPeriodicity.Monthly,
+        autoRenew: false,
+        successURL: `${location.origin}/payment/success`,
+        failureURL: `${location.origin}/payment/fail`
       })
     }
   )
 
   useEffect(() => {
-    setValue('monthlyAmount', selectedMemberplan?.amountPerMonthMin || 100)
+    setValue('monthlyAmount', selectedMemberplan?.amountPerMonthMin || 5000)
   }, [setValue, selectedMemberplan])
+
+  useEffect(() => {
+    setValue('challengeSolution', '')
+  }, [setValue, challenge])
 
   return (
     <div>
@@ -228,6 +248,10 @@ const CustomSubscribe = ({challenge, memberPlans, onSubmit: submit}: BuilderSubs
               )}
             />
           </SliderWrapper>
+
+          <Typography variant="h5" component="h2" marginBottom={3}>
+            Deine Personalien
+          </Typography>
 
           <InputForm>
             <Controller
@@ -381,16 +405,87 @@ const CustomSubscribe = ({challenge, memberPlans, onSubmit: submit}: BuilderSubs
             />
           </ChallengeWrapper>
 
-          <Button onClick={onSubmit}>Submit</Button>
+          <Typography variant="h6" component="p" marginBottom={3}>
+            <strong>Deine Bezahlmethode kannst du im nächsten Schritt wählen.</strong>
+          </Typography>
+
+          {subscribe.error?.message && (
+            <Alert severity="error" sx={{marginBottom: 1}}>
+              {subscribe.error?.message}
+            </Alert>
+          )}
+
+          <Button onClick={() => !subscribe.loading && onSubmit()}>
+            Weiter Mit {formatChf(watch('monthlyAmount') / 100)}
+          </Button>
         </>
       )}
     </div>
   )
 }
 
+const ProgressWrapper = styled('div')`
+  display: flex;
+  justify-content: center;
+`
+
+const PayInvoicesWrapper = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(2)};
+  text-align: center;
+`
+
+const CustomPayInvoices = ({invoices, onSubmit, pay}: BuilderPayInvoicesProps) => {
+  const {
+    elements: {H3, Button}
+  } = useWebsiteBuilder()
+
+  if (!invoices) {
+    return (
+      <ProgressWrapper>
+        <CircularProgress />
+      </ProgressWrapper>
+    )
+  }
+
+  if (!invoices.length) {
+    return (
+      <PayInvoicesWrapper>
+        <H3 component="p">Danke für deine Unterstützung!</H3>
+      </PayInvoicesWrapper>
+    )
+  }
+
+  return (
+    <PayInvoicesWrapper>
+      {pay.error?.message && <Alert severity="error">{pay.error?.message}</Alert>}
+
+      {invoices.map(({invoice, paymentMethod}) => (
+        <Button
+          key={invoice.id}
+          onClick={() =>
+            !pay.loading &&
+            onSubmit({
+              successURL: `${location.origin}/payment/success`,
+              failureURL: `${location.origin}/payment/fail`,
+              invoiceID: invoice.id,
+              paymentMethodID: paymentMethod.id
+            })
+          }>
+          Rechnung für {formatChf(invoice.total / 100)} bezahlen
+        </Button>
+      ))}
+    </PayInvoicesWrapper>
+  )
+}
+
+const PayInvoices = memo(CustomPayInvoices)
+const Subscribe = memo(CustomSubscribe)
+
 export function Donate() {
   return (
-    <WebsiteBuilderProvider Subscribe={CustomSubscribe}>
+    <WebsiteBuilderProvider Subscribe={Subscribe} PayInvoices={PayInvoices}>
+      <PayInvoicesContainer />
       <SubscribeContainer />
     </WebsiteBuilderProvider>
   )

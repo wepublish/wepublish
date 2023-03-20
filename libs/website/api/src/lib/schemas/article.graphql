@@ -62,6 +62,13 @@ fragment FullArticle on Article {
                   title
                   lead
                 }
+
+                ... on ImageBlock {
+                  caption
+                  image {
+                    ...FullImage
+                  }
+                }
               }
             }
           }
@@ -88,6 +95,13 @@ fragment FullArticle on Article {
                 ... on TitleBlock {
                   title
                   lead
+                }
+
+                ... on ImageBlock {
+                  caption
+                  image {
+                    ...FullImage
+                  }
                 }
               }
             }

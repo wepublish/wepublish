@@ -1,4 +1,5 @@
 import {styled} from '@mui/material'
+import {Link} from './link'
 import {Logo} from './logo'
 
 const HeaderWrapper = styled('div')`
@@ -10,6 +11,8 @@ const HeaderWrapper = styled('div')`
 
 export const Header = () => (
   <HeaderWrapper>
-    <Logo />
+    <Link href="/">
+      <Logo />
+    </Link>
   </HeaderWrapper>
 )

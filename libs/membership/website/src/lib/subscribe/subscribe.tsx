@@ -7,9 +7,9 @@ const StyledSubscribe = styled.div`
   color: pink;
 `
 
-export function Subscribe({challenge}: SubscribeProps) {
+export function Subscribe({className, challenge}: SubscribeProps) {
   return (
-    <StyledSubscribe>
+    <StyledSubscribe className={className}>
       <h1>Welcome to Subscribe!</h1>
     </StyledSubscribe>
   )

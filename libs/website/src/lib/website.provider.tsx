@@ -15,7 +15,7 @@ import {
   ListItem
 } from '@wepublish/ui'
 import {WebsiteBuilderProvider} from '@wepublish/website-builder'
-import {MemberPlans, Subscribe} from '@wepublish/membership/website'
+import {MemberPlans, PayInvoices, Subscribe} from '@wepublish/membership/website'
 import {memo, PropsWithChildren} from 'react'
 import {Navbar, Footer} from '@wepublish/navigation/website'
 import {IconContext} from 'react-icons'
@@ -55,6 +55,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         Footer={Footer}
         MemberPlans={MemberPlans}
         Subscribe={Subscribe}
+        PayInvoices={PayInvoices}
         Page={Page}
         Article={Article}
         elements={{

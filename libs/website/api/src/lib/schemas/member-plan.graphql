@@ -75,6 +75,7 @@ mutation Subscribe(
   ) {
     payment {
       id
+      intentSecret
     }
 
     user {
@@ -83,6 +84,58 @@ mutation Subscribe(
 
     session {
       token
+      expiresAt
+      createdAt
     }
+  }
+}
+
+mutation Pay(
+  $invoiceID: String!
+  $paymentMethodID: ID
+  $paymentMethodSlug: Slug
+  $successURL: String
+  $failureURL: String
+) {
+  createPaymentFromInvoice(
+    input: {
+      invoiceID: $invoiceID
+      paymentMethodID: $paymentMethodID
+      paymentMethodSlug: $paymentMethodSlug
+      successURL: $successURL
+      failureURL: $failureURL
+    }
+  ) {
+    id
+    intentSecret
+  }
+}
+
+query Invoices {
+  invoices {
+    id
+    canceledAt
+    paidAt
+    total
+    subscriptionID
+  }
+}
+
+query Subscriptions {
+  subscriptions {
+    id
+    paymentMethod {
+      id
+    }
+  }
+}
+
+query CheckInvoiceStatus($id: ID!) {
+  checkInvoiceStatus(id: $id) {
+    id
+    canceledAt
+    paidAt
+    total
+    subscriptionID
   }
 }

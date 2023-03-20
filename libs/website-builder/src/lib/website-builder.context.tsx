@@ -23,6 +23,7 @@ import {
   BuilderTitleBlockProps
 } from './blocks.interface'
 import {BuilderArticleProps} from './article.interface'
+import {BuilderPayInvoicesProps} from './pay-invoices.interface'
 
 const NoComponent = () => null
 
@@ -32,6 +33,7 @@ export type WebsiteBuilderComponents = {
   Footer: ComponentType<BuilderFooterProps>
   MemberPlans: ComponentType<BuilderMemberPlansProps>
   Subscribe: ComponentType<BuilderSubscribeProps>
+  PayInvoices: ComponentType<BuilderPayInvoicesProps>
   Page: ComponentType<BuilderPageProps>
   Article: ComponentType<BuilderArticleProps>
 
@@ -71,6 +73,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   Footer: NoComponent,
   MemberPlans: NoComponent,
   Subscribe: NoComponent,
+  PayInvoices: NoComponent,
   Page: NoComponent,
   Article: NoComponent,
 

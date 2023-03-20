@@ -1,11 +1,15 @@
-import {css, styled, useTheme} from '@mui/material'
+import {css, styled, useMediaQuery, useTheme} from '@mui/material'
+import {createWithV2ApiClient, useRevenueQuery} from '@wepublish/website/api-v2'
+import getConfig from 'next/config'
+import {ComponentProps, memo, useMemo} from 'react'
 import {Area, ComposedChart, ResponsiveContainer, XAxis, YAxis} from 'recharts'
+import {formatChf} from './donate'
+import {DustBus} from './dust-bus'
 import {FinishPin} from './finish-pin'
 import {GruppettoPin} from './gruppetto-pin'
+import {MountainName} from './mountain-name'
 import {MountainTopPin} from './mountain-pin'
 import {PelotonPin} from './peloton-pin'
-import {DustBus} from './dust-bus'
-import {MountainName} from './mountain-name'
 
 const data = [
   {
@@ -92,6 +96,10 @@ const calculationPosition = (money: number): number => {
   const keys = Object.keys(milestones) as `${keyof typeof milestones}`[]
   const vales = Object.values(milestones)
 
+  if (!money) {
+    return 0
+  }
+
   for (let i = 0; i < keys.length - 1; i++) {
     const key = +keys[i]
     const prevKey = +keys[i - 1]
@@ -105,13 +113,11 @@ const calculationPosition = (money: number): number => {
 }
 
 const CrowdfundingChartWrapper = styled('div')`
-  padding: ${({theme}) => theme.spacing(1)};
-
-  ${({theme}) => css`
-    ${theme.breakpoints.up('sm')} {
-      padding: ${theme.spacing(2)};
-    }
-  `}
+  padding: ${({theme}) => theme.spacing(2)};
+  // enable hardware acceleration to fix performance issues on mobile
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000;
 `
 
 const CrowdfundingChartInnerWrapper = styled('div')`
@@ -128,20 +134,28 @@ const CrowdfundingChartInnerWrapper = styled('div')`
   `}
 `
 
-export const CrowdfundingChart = () => {
+const CrowdfundingChart = (props: ComponentProps<typeof CrowdfundingChartWrapper>) => {
   const theme = useTheme()
+  const enableAnimations = useMediaQuery(theme.breakpoints.up('lg'))
+  const {data: revenueData} = useRevenueQuery({
+    variables: {
+      start: new Date('2023-01-01').toISOString()
+    }
+  })
 
-  const m = 30000
-  const position = calculationPosition(m)
+  const money = revenueData?.revenue.reduce((sum, invoice) => (sum += invoice.amount), 0) ?? 0
+  const amountSupporters = revenueData?.revenue.length ?? 0
+  const position = calculationPosition(money)
   const gradientOffset = `${position * 100}%`
   const gruppettoOffset = Math.max(0.1, position * 0.4)
   const dustBusOffset = Math.max(0.25, position * 0.5)
+  const margin = useMemo(() => ({top: 0, bottom: 0, left: 0, right: 0}), [])
 
   return (
-    <CrowdfundingChartWrapper>
+    <CrowdfundingChartWrapper {...props}>
       <CrowdfundingChartInnerWrapper>
         <ResponsiveContainer width="100%" height={195}>
-          <ComposedChart data={data as any} margin={{top: 0, bottom: 0, left: 0, right: 0}}>
+          <ComposedChart data={data as any} margin={margin}>
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
               <linearGradient id="gradient">
                 <stop offset={gradientOffset} stopColor={theme.palette.primary.main} />
@@ -158,25 +172,34 @@ export const CrowdfundingChart = () => {
               fill={`url(#gradient)`}
               fillOpacity={1}
               stroke="transparent"
+              isAnimationActive={enableAnimations}
             />
           </ComposedChart>
         </ResponsiveContainer>
 
-        <PelotonPin milestone={{x: position}} text="CHF 50'000.-" />
-        {position > milestones[15000].x && (
-          <GruppettoPin milestone={{x: position - gruppettoOffset}} />
-        )}
-        {position > milestones[15000].x && <DustBus milestone={{x: position - dustBusOffset}} />}
+        <PelotonPin
+          x={position}
+          text={formatChf(money / 100)}
+          subText={`${amountSupporters} Fahrer:innen`}
+        />
+        {position > milestones[15000].x && <GruppettoPin x={position - gruppettoOffset} />}
+        {position > milestones[15000].x && <DustBus x={position - dustBusOffset} />}
 
-        <MountainTopPin milestone={milestones[15000]} pill="2" text="CHF 15'000.-" />
-        <MountainTopPin milestone={milestones[30000]} pill="1" text="CHF 30'000.-" />
-        <MountainTopPin milestone={milestones[50000]} pill="HC" text="CHF 50'000.-" />
-        <FinishPin milestone={milestones[60000]} />
+        <MountainTopPin {...milestones[15000]} pill="2" text={formatChf(15000)} />
+        <MountainTopPin {...milestones[30000]} pill="1" text={formatChf(30000)} />
+        <MountainTopPin {...milestones[50000]} pill="HC" text={formatChf(50000)} />
+        <FinishPin {...milestones[60000]} />
 
-        <MountainName milestone={milestones[15000]} name={'Gempen'} />
-        <MountainName milestone={milestones[30000]} name={'Ibergeregg'} />
-        <MountainName milestone={milestones[50000]} name={'Umbrailpass'} />
+        <MountainName {...milestones[15000]} name={'Gempen'} />
+        <MountainName {...milestones[30000]} name={'Ibergeregg'} />
+        <MountainName {...milestones[50000]} name={'Umbrailpass'} />
       </CrowdfundingChartInnerWrapper>
     </CrowdfundingChartWrapper>
   )
 }
+
+const {publicRuntimeConfig} = getConfig()
+const ConnectedCrowdfundingChart = memo(
+  createWithV2ApiClient(publicRuntimeConfig.env.API_URL!)(CrowdfundingChart)
+)
+export {ConnectedCrowdfundingChart as CrowdfundingChart}

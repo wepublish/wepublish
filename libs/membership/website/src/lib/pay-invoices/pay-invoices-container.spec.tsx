@@ -1,12 +1,13 @@
 import {render} from '@testing-library/react'
-import {NavigationContainer} from './navigation-container'
+
+import {PayInvoicesContainer} from './pay-invoices-container'
 import {MockedProvider} from '@apollo/client/testing'
 
-describe('NavigationContainer', () => {
+describe('PayInvoicesContainer', () => {
   it('should render successfully', () => {
     const {baseElement} = render(
       <MockedProvider addTypename={false}>
-        <NavigationContainer />
+        <PayInvoicesContainer />
       </MockedProvider>
     )
 

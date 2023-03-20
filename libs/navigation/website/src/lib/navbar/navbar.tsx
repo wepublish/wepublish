@@ -15,13 +15,13 @@ const Title = styled.div`
 
 export type NavbarProps = BuilderNavbarProps
 
-export function Navbar({data, loading, error}: NavbarProps) {
+export function Navbar({className, data, loading, error}: NavbarProps) {
   const {
     elements: {Button}
   } = useWebsiteBuilder()
 
   return (
-    <NavbarWrapper>
+    <NavbarWrapper className={className}>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component={Title}>

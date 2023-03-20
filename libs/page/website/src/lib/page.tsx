@@ -10,9 +10,9 @@ const PageWrapper = styled('div')`
   gap: ${({theme}) => theme.spacing(3)};
 `
 
-export function Page({data, loading, error}: PageProps) {
+export function Page({className, data, loading, error}: PageProps) {
   return (
-    <PageWrapper>
+    <PageWrapper className={className}>
       <Blocks blocks={(data?.page?.blocks as Block[]) ?? []} />
     </PageWrapper>
   )

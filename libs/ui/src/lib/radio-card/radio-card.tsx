@@ -70,7 +70,7 @@ export const RadioCard = forwardRef<HTMLButtonElement, RadioCardProps>(
 
         <Radio {...props} ref={ref} disableRipple={true} sx={{padding: 0}} />
 
-        <Box sx={{gridArea: 'children'}}>{children}</Box>
+        <Box gridArea="children">{children}</Box>
       </Card>
     )
   }

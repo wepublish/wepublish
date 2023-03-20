@@ -153,7 +153,14 @@ export const Teaser = ({teaser, alignment, className, showLead}: TeaserProps) =>
     <TeaserWrapper {...alignment}>
       <Link color="inherit" underline="none" href={href}>
         <TeaserInnerWrapper className={className}>
-          {image?.url && <TeaserImage src={image.url} />}
+          {image?.url && (
+            <TeaserImage
+              src={image.url}
+              width={image.width}
+              height={image.height}
+              alt={image.description ?? ''}
+            />
+          )}
 
           <TeaserTitleWrapper>
             <H5 component="h1">

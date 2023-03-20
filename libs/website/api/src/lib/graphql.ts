@@ -330,7 +330,9 @@ export type EventConnection = {
 }
 
 export type EventFilter = {
+  from?: InputMaybe<Scalars['DateTime']>
   tags?: InputMaybe<Array<Scalars['ID']>>
+  to?: InputMaybe<Scalars['DateTime']>
   upcomingOnly?: InputMaybe<Scalars['Boolean']>
 }
 
@@ -387,6 +389,7 @@ export type FullPoll = {
   closedAt?: Maybe<Scalars['DateTime']>
   externalVoteSources?: Maybe<Array<PollExternalVoteSource>>
   id: Scalars['ID']
+  infoText?: Maybe<Scalars['RichText']>
   opensAt: Scalars['DateTime']
   question?: Maybe<Scalars['String']>
 }
@@ -867,6 +870,12 @@ export type PeerProfile = {
   websiteURL: Scalars['String']
 }
 
+export type Phrase = {
+  __typename?: 'Phrase'
+  articles: Array<Article>
+  pages: Array<Page>
+}
+
 export type Point = {
   __typename?: 'Point'
   x: Scalars['Float']
@@ -946,7 +955,7 @@ export type Query = {
   authors: AuthorConnection
   /** This query generates a challenge which can be used to access protected endpoints. */
   challenge: Challenge
-  /** This mutation will check the invoice status and update with information from the paymentProvider */
+  /** This query will check the invoice status and update with information from the paymentProvider */
   checkInvoiceStatus?: Maybe<Invoice>
   /** This query returns the comments of an item. */
   comments: Array<Comment>
@@ -954,7 +963,7 @@ export type Query = {
   event: Event
   /** This query returns a list of events */
   events?: Maybe<EventConnection>
-  /** This query returns the invoices  of the authenticated user. */
+  /** This query returns the invoices of the authenticated user. */
   invoices: Array<Invoice>
   /** This query returns the user. */
   me?: Maybe<User>
@@ -976,11 +985,15 @@ export type Query = {
   peerArticle?: Maybe<Article>
   /** This query returns the peer profile. */
   peerProfile: PeerProfile
+  /** This query performs a fulltext search on titles and blocks of articles/pages and returns all matching ones. */
+  phrase?: Maybe<Phrase>
   /** This query returns a poll with all the needed data */
   poll: FullPoll
   ratingSystem: FullCommentRatingSystem
   /** This query returns the subscriptions of the authenticated user. */
   subscriptions: Array<Subscription>
+  /** This query returns a list of tags */
+  tags?: Maybe<TagConnection>
   /** This query returns the value of a comments answer rating if the user has already rated it. */
   userCommentRatings: Array<Maybe<CommentRating>>
   /** This query returns the answerId of a poll if the user has already voted on it. */
@@ -1088,8 +1101,21 @@ export type QueryPeerArticleArgs = {
   peerSlug?: InputMaybe<Scalars['Slug']>
 }
 
+export type QueryPhraseArgs = {
+  query: Scalars['String']
+}
+
 export type QueryPollArgs = {
   id: Scalars['ID']
+}
+
+export type QueryTagsArgs = {
+  cursor?: InputMaybe<Scalars['ID']>
+  filter?: InputMaybe<TagFilter>
+  order?: InputMaybe<SortOrder>
+  skip?: InputMaybe<Scalars['Int']>
+  sort?: InputMaybe<TagSort>
+  take?: InputMaybe<Scalars['Int']>
 }
 
 export type QueryUserCommentRatingsArgs = {
@@ -1186,6 +1212,24 @@ export type Tag = {
   id: Scalars['ID']
   tag?: Maybe<Scalars['String']>
   type?: Maybe<TagType>
+}
+
+export type TagConnection = {
+  __typename?: 'TagConnection'
+  nodes: Array<Tag>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type TagFilter = {
+  tag?: InputMaybe<Scalars['String']>
+  type?: InputMaybe<TagType>
+}
+
+export enum TagSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  Tag = 'TAG'
 }
 
 export enum TagType {
@@ -1400,7 +1444,36 @@ export type FullArticleFragment = {
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'HTMLBlock'}
-                    | {__typename: 'ImageBlock'}
+                    | {
+                        __typename: 'ImageBlock'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          title?: string | null
+                          url?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          thumbURL?: string | null
+                          squareURL?: string | null
+                          previewURL?: string | null
+                          column1URL?: string | null
+                          column6URL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }
                     | {__typename: 'ImageGalleryBlock'}
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
@@ -1484,7 +1557,36 @@ export type FullArticleFragment = {
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'HTMLBlock'}
-                    | {__typename: 'ImageBlock'}
+                    | {
+                        __typename: 'ImageBlock'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          title?: string | null
+                          url?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          thumbURL?: string | null
+                          squareURL?: string | null
+                          previewURL?: string | null
+                          column1URL?: string | null
+                          column6URL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }
                     | {__typename: 'ImageGalleryBlock'}
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
@@ -1617,7 +1719,36 @@ export type ArticleQuery = {
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
                       | {__typename: 'HTMLBlock'}
-                      | {__typename: 'ImageBlock'}
+                      | {
+                          __typename: 'ImageBlock'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            title?: string | null
+                            url?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            thumbURL?: string | null
+                            squareURL?: string | null
+                            previewURL?: string | null
+                            column1URL?: string | null
+                            column6URL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }
                       | {__typename: 'ImageGalleryBlock'}
                       | {__typename: 'InstagramPostBlock'}
                       | {__typename: 'LinkPageBreakBlock'}
@@ -1701,7 +1832,36 @@ export type ArticleQuery = {
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
                       | {__typename: 'HTMLBlock'}
-                      | {__typename: 'ImageBlock'}
+                      | {
+                          __typename: 'ImageBlock'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            title?: string | null
+                            url?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            thumbURL?: string | null
+                            squareURL?: string | null
+                            previewURL?: string | null
+                            column1URL?: string | null
+                            column6URL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }
                       | {__typename: 'ImageGalleryBlock'}
                       | {__typename: 'InstagramPostBlock'}
                       | {__typename: 'LinkPageBreakBlock'}
@@ -1889,10 +2049,68 @@ export type SubscribeMutation = {
   __typename?: 'Mutation'
   registerMemberAndReceivePayment: {
     __typename?: 'RegistrationAndPayment'
-    payment: {__typename?: 'Payment'; id: string}
+    payment: {__typename?: 'Payment'; id: string; intentSecret?: string | null}
     user: {__typename?: 'User'; id: string}
-    session: {__typename?: 'UserSession'; token: string}
+    session: {__typename?: 'UserSession'; token: string; expiresAt: string; createdAt: string}
   }
+}
+
+export type PayMutationVariables = Exact<{
+  invoiceID: Scalars['String']
+  paymentMethodID?: InputMaybe<Scalars['ID']>
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']>
+  successURL?: InputMaybe<Scalars['String']>
+  failureURL?: InputMaybe<Scalars['String']>
+}>
+
+export type PayMutation = {
+  __typename?: 'Mutation'
+  createPaymentFromInvoice?: {
+    __typename?: 'Payment'
+    id: string
+    intentSecret?: string | null
+  } | null
+}
+
+export type InvoicesQueryVariables = Exact<{[key: string]: never}>
+
+export type InvoicesQuery = {
+  __typename?: 'Query'
+  invoices: Array<{
+    __typename?: 'Invoice'
+    id: string
+    canceledAt?: string | null
+    paidAt?: string | null
+    total: number
+    subscriptionID: string
+  }>
+}
+
+export type SubscriptionsQueryVariables = Exact<{[key: string]: never}>
+
+export type SubscriptionsQuery = {
+  __typename?: 'Query'
+  subscriptions: Array<{
+    __typename?: 'Subscription'
+    id: string
+    paymentMethod: {__typename?: 'PaymentMethod'; id: string}
+  }>
+}
+
+export type CheckInvoiceStatusQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type CheckInvoiceStatusQuery = {
+  __typename?: 'Query'
+  checkInvoiceStatus?: {
+    __typename?: 'Invoice'
+    id: string
+    canceledAt?: string | null
+    paidAt?: string | null
+    total: number
+    subscriptionID: string
+  } | null
 }
 
 export type FullNavigationFragment = {
@@ -2061,7 +2279,36 @@ export type FullPageFragment = {
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'HTMLBlock'}
-                    | {__typename: 'ImageBlock'}
+                    | {
+                        __typename: 'ImageBlock'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          title?: string | null
+                          url?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          thumbURL?: string | null
+                          squareURL?: string | null
+                          previewURL?: string | null
+                          column1URL?: string | null
+                          column6URL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }
                     | {__typename: 'ImageGalleryBlock'}
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
@@ -2145,7 +2392,36 @@ export type FullPageFragment = {
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'HTMLBlock'}
-                    | {__typename: 'ImageBlock'}
+                    | {
+                        __typename: 'ImageBlock'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          title?: string | null
+                          url?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          thumbURL?: string | null
+                          squareURL?: string | null
+                          previewURL?: string | null
+                          column1URL?: string | null
+                          column6URL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }
                     | {__typename: 'ImageGalleryBlock'}
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
@@ -2278,7 +2554,36 @@ export type PageQuery = {
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
                       | {__typename: 'HTMLBlock'}
-                      | {__typename: 'ImageBlock'}
+                      | {
+                          __typename: 'ImageBlock'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            title?: string | null
+                            url?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            thumbURL?: string | null
+                            squareURL?: string | null
+                            previewURL?: string | null
+                            column1URL?: string | null
+                            column6URL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }
                       | {__typename: 'ImageGalleryBlock'}
                       | {__typename: 'InstagramPostBlock'}
                       | {__typename: 'LinkPageBreakBlock'}
@@ -2362,7 +2667,36 @@ export type PageQuery = {
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
                       | {__typename: 'HTMLBlock'}
-                      | {__typename: 'ImageBlock'}
+                      | {
+                          __typename: 'ImageBlock'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            title?: string | null
+                            url?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            thumbURL?: string | null
+                            squareURL?: string | null
+                            previewURL?: string | null
+                            column1URL?: string | null
+                            column6URL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }
                       | {__typename: 'ImageGalleryBlock'}
                       | {__typename: 'InstagramPostBlock'}
                       | {__typename: 'LinkPageBreakBlock'}
@@ -2497,6 +2831,12 @@ export const FullArticleFragmentDoc = gql`
                     title
                     lead
                   }
+                  ... on ImageBlock {
+                    caption
+                    image {
+                      ...FullImage
+                    }
+                  }
                 }
               }
             }
@@ -2518,6 +2858,12 @@ export const FullArticleFragmentDoc = gql`
                   ... on TitleBlock {
                     title
                     lead
+                  }
+                  ... on ImageBlock {
+                    caption
+                    image {
+                      ...FullImage
+                    }
                   }
                 }
               }
@@ -2623,6 +2969,12 @@ export const FullPageFragmentDoc = gql`
                     title
                     lead
                   }
+                  ... on ImageBlock {
+                    caption
+                    image {
+                      ...FullImage
+                    }
+                  }
                 }
               }
             }
@@ -2644,6 +2996,12 @@ export const FullPageFragmentDoc = gql`
                   ... on TitleBlock {
                     title
                     lead
+                  }
+                  ... on ImageBlock {
+                    caption
+                    image {
+                      ...FullImage
+                    }
                   }
                 }
               }
@@ -2954,12 +3312,15 @@ export const SubscribeDocument = gql`
     ) {
       payment {
         id
+        intentSecret
       }
       user {
         id
       }
       session {
         token
+        expiresAt
+        createdAt
       }
     }
   }
@@ -3016,6 +3377,209 @@ export type SubscribeMutationResult = Apollo.MutationResult<SubscribeMutation>
 export type SubscribeMutationOptions = Apollo.BaseMutationOptions<
   SubscribeMutation,
   SubscribeMutationVariables
+>
+export const PayDocument = gql`
+  mutation Pay(
+    $invoiceID: String!
+    $paymentMethodID: ID
+    $paymentMethodSlug: Slug
+    $successURL: String
+    $failureURL: String
+  ) {
+    createPaymentFromInvoice(
+      input: {
+        invoiceID: $invoiceID
+        paymentMethodID: $paymentMethodID
+        paymentMethodSlug: $paymentMethodSlug
+        successURL: $successURL
+        failureURL: $failureURL
+      }
+    ) {
+      id
+      intentSecret
+    }
+  }
+`
+export type PayMutationFn = Apollo.MutationFunction<PayMutation, PayMutationVariables>
+
+/**
+ * __usePayMutation__
+ *
+ * To run a mutation, you first call `usePayMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePayMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [payMutation, { data, loading, error }] = usePayMutation({
+ *   variables: {
+ *      invoiceID: // value for 'invoiceID'
+ *      paymentMethodID: // value for 'paymentMethodID'
+ *      paymentMethodSlug: // value for 'paymentMethodSlug'
+ *      successURL: // value for 'successURL'
+ *      failureURL: // value for 'failureURL'
+ *   },
+ * });
+ */
+export function usePayMutation(
+  baseOptions?: Apollo.MutationHookOptions<PayMutation, PayMutationVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useMutation<PayMutation, PayMutationVariables>(PayDocument, options)
+}
+export type PayMutationHookResult = ReturnType<typeof usePayMutation>
+export type PayMutationResult = Apollo.MutationResult<PayMutation>
+export type PayMutationOptions = Apollo.BaseMutationOptions<PayMutation, PayMutationVariables>
+export const InvoicesDocument = gql`
+  query Invoices {
+    invoices {
+      id
+      canceledAt
+      paidAt
+      total
+      subscriptionID
+    }
+  }
+`
+
+/**
+ * __useInvoicesQuery__
+ *
+ * To run a query within a React component, call `useInvoicesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useInvoicesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useInvoicesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useInvoicesQuery(
+  baseOptions?: Apollo.QueryHookOptions<InvoicesQuery, InvoicesQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<InvoicesQuery, InvoicesQueryVariables>(InvoicesDocument, options)
+}
+export function useInvoicesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<InvoicesQuery, InvoicesQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<InvoicesQuery, InvoicesQueryVariables>(InvoicesDocument, options)
+}
+export type InvoicesQueryHookResult = ReturnType<typeof useInvoicesQuery>
+export type InvoicesLazyQueryHookResult = ReturnType<typeof useInvoicesLazyQuery>
+export type InvoicesQueryResult = Apollo.QueryResult<InvoicesQuery, InvoicesQueryVariables>
+export const SubscriptionsDocument = gql`
+  query Subscriptions {
+    subscriptions {
+      id
+      paymentMethod {
+        id
+      }
+    }
+  }
+`
+
+/**
+ * __useSubscriptionsQuery__
+ *
+ * To run a query within a React component, call `useSubscriptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSubscriptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubscriptionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSubscriptionsQuery(
+  baseOptions?: Apollo.QueryHookOptions<SubscriptionsQuery, SubscriptionsQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<SubscriptionsQuery, SubscriptionsQueryVariables>(
+    SubscriptionsDocument,
+    options
+  )
+}
+export function useSubscriptionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<SubscriptionsQuery, SubscriptionsQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<SubscriptionsQuery, SubscriptionsQueryVariables>(
+    SubscriptionsDocument,
+    options
+  )
+}
+export type SubscriptionsQueryHookResult = ReturnType<typeof useSubscriptionsQuery>
+export type SubscriptionsLazyQueryHookResult = ReturnType<typeof useSubscriptionsLazyQuery>
+export type SubscriptionsQueryResult = Apollo.QueryResult<
+  SubscriptionsQuery,
+  SubscriptionsQueryVariables
+>
+export const CheckInvoiceStatusDocument = gql`
+  query CheckInvoiceStatus($id: ID!) {
+    checkInvoiceStatus(id: $id) {
+      id
+      canceledAt
+      paidAt
+      total
+      subscriptionID
+    }
+  }
+`
+
+/**
+ * __useCheckInvoiceStatusQuery__
+ *
+ * To run a query within a React component, call `useCheckInvoiceStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCheckInvoiceStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCheckInvoiceStatusQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCheckInvoiceStatusQuery(
+  baseOptions: Apollo.QueryHookOptions<CheckInvoiceStatusQuery, CheckInvoiceStatusQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<CheckInvoiceStatusQuery, CheckInvoiceStatusQueryVariables>(
+    CheckInvoiceStatusDocument,
+    options
+  )
+}
+export function useCheckInvoiceStatusLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    CheckInvoiceStatusQuery,
+    CheckInvoiceStatusQueryVariables
+  >
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<CheckInvoiceStatusQuery, CheckInvoiceStatusQueryVariables>(
+    CheckInvoiceStatusDocument,
+    options
+  )
+}
+export type CheckInvoiceStatusQueryHookResult = ReturnType<typeof useCheckInvoiceStatusQuery>
+export type CheckInvoiceStatusLazyQueryHookResult = ReturnType<
+  typeof useCheckInvoiceStatusLazyQuery
+>
+export type CheckInvoiceStatusQueryResult = Apollo.QueryResult<
+  CheckInvoiceStatusQuery,
+  CheckInvoiceStatusQueryVariables
 >
 export const NavigationListDocument = gql`
   query NavigationList {

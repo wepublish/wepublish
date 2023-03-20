@@ -1,20 +1,21 @@
 import {styled} from '@mui/material'
+import {memo} from 'react'
 
 export type DustBusProps = {
-  milestone: {x: number}
+  x: number
 }
 
-const DustBusWrapper = styled('div')<Pick<DustBusProps, 'milestone'>>`
+const DustBusWrapper = styled('div')<Pick<DustBusProps, 'x'>>`
   position: absolute;
-  left: ${({milestone}) => milestone.x * 100}%;
+  left: ${({x}) => x * 100}%;
   bottom: -10px;
   transform: translateX(-50%);
   display: grid;
   grid-template-columns: 50px;
 `
 
-export const DustBus = ({milestone}: DustBusProps) => (
-  <DustBusWrapper milestone={milestone}>
+const DustBus = ({x}: DustBusProps) => (
+  <DustBusWrapper x={x}>
     <svg viewBox="0 0 70 50" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M8.53833 42.1788L8.53833 17.4131"
@@ -54,3 +55,6 @@ export const DustBus = ({milestone}: DustBusProps) => (
     </svg>
   </DustBusWrapper>
 )
+
+const ConnectedDustBus = memo(DustBus)
+export {ConnectedDustBus as DustBus}

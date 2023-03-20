@@ -62,6 +62,13 @@ fragment FullPage on Page {
                   title
                   lead
                 }
+
+                ... on ImageBlock {
+                  caption
+                  image {
+                    ...FullImage
+                  }
+                }
               }
             }
           }
@@ -88,6 +95,13 @@ fragment FullPage on Page {
                 ... on TitleBlock {
                   title
                   lead
+                }
+
+                ... on ImageBlock {
+                  caption
+                  image {
+                    ...FullImage
+                  }
                 }
               }
             }

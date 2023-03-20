@@ -1,13 +1,14 @@
 import {css, styled} from '@mui/material'
-import {Logo} from './logo'
+import {memo} from 'react'
+import {Logo} from '../logo'
 
 export type GruppettoPinProps = {
-  milestone: {x: number}
+  x: number
 }
 
-const GruppettoPinWrapper = styled('div')<Pick<GruppettoPinProps, 'milestone'>>`
+const GruppettoPinWrapper = styled('div')<Pick<GruppettoPinProps, 'x'>>`
   position: absolute;
-  left: ${({milestone}) => milestone.x * 100}%;
+  left: ${({x}) => x * 100}%;
   top: -291px;
   bottom: 0;
   transform: translateX(-50%);
@@ -48,10 +49,13 @@ const GruppettoPinInnerWrapper = styled('div')`
   `}
 `
 
-export const GruppettoPin = ({milestone}: GruppettoPinProps) => (
-  <GruppettoPinWrapper milestone={milestone}>
+const GruppettoPin = ({x}: GruppettoPinProps) => (
+  <GruppettoPinWrapper x={x}>
     <GruppettoPinInnerWrapper>
       <Logo />
     </GruppettoPinInnerWrapper>
   </GruppettoPinWrapper>
 )
+
+const ConnectedGruppettoPin = memo(GruppettoPin)
+export {ConnectedGruppettoPin as GruppettoPin}

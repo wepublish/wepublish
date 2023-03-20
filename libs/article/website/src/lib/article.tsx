@@ -10,9 +10,9 @@ const ArticleWrapper = styled('div')`
   gap: ${({theme}) => theme.spacing(3)};
 `
 
-export function Article({data, loading, error}: ArticleProps) {
+export function Article({className, data, loading, error}: ArticleProps) {
   return (
-    <ArticleWrapper>
+    <ArticleWrapper className={className}>
       <Blocks blocks={(data?.article?.blocks as Block[]) ?? []} />
     </ArticleWrapper>
   )
