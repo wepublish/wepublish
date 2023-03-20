@@ -56,6 +56,10 @@ const WarningIcon = styled(MdWarning)`
   margin-left: 20px;
 `
 
+const DescriptionListItemWrapper = styled(DescriptionListItem)`
+  min-width: 100px;
+`
+
 type SettingInfoProps = {
   text: string
 }
@@ -662,9 +666,9 @@ function SettingList() {
         <Modal.Body>
           <DescriptionList>
             {changedSetting.map(setting => (
-              <DescriptionListItem label={t(settings[setting.name].label)}>
+              <DescriptionListItemWrapper label={t(settings[setting.name].label)}>
                 <s>{valueText(setting.value)}</s> {valueText(settings[setting.name].value)}
-              </DescriptionListItem>
+              </DescriptionListItemWrapper>
             ))}
           </DescriptionList>
         </Modal.Body>
