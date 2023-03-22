@@ -1,22 +1,18 @@
-import React, {useMemo, useState} from 'react'
+import React, {useContext, useState} from 'react'
 import {TableCell} from '@mui/material'
 import {CheckPicker, IconButton} from 'rsuite'
 import {
+  ListPaymentMethodsQuery,
   PaymentPeriodicity,
   SubscriptionFlowModel,
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
-  useCreateSubscriptionFlowMutation,
-  useListPaymentMethodsQuery,
-  useUpdateSubscriptionFlowMutation
 } from '@wepublish/editor/api-v2'
-import {ApolloClient, NormalizedCacheObject} from '@apollo/client'
-import {getApiClientV2} from '../../../../../../../apps/editor/src/app/utility'
-import {showErrors} from '../subscriptionFlowList'
 import {MdAdd} from 'react-icons/all'
 import {FullMemberPlanFragment} from '@wepublish/editor/api'
 import {useTranslation} from 'react-i18next'
 import {useAuthorisation} from '../../../../../../../apps/editor/src/app/atoms/permissionControl'
+import { GraphqlClientContext } from '../graphqlClientContext'
 
 interface FilterBodyProps {
   memberPlan?: FullMemberPlanFragment
@@ -24,13 +20,15 @@ interface FilterBodyProps {
   defaultFlowOnly?: boolean
   createNewFlow?: boolean
   onNewFlowCreated?: () => void
+  paymentMethods: ListPaymentMethodsQuery | undefined
 }
 export default function ({
   subscriptionFlow,
   defaultFlowOnly,
   memberPlan,
   createNewFlow,
-  onNewFlowCreated
+  onNewFlowCreated,
+  paymentMethods
 }: FilterBodyProps) {
   if (defaultFlowOnly || !memberPlan) {
     return null
@@ -48,23 +46,8 @@ export default function ({
   /******************************************
    * API SERVICES
    ******************************************/
-  const client: ApolloClient<NormalizedCacheObject> = useMemo(() => getApiClientV2(), [])
 
-  // get payment methods
-  const {data: paymentMethods, loading: loadingPaymentMethods} = useListPaymentMethodsQuery({
-    client,
-    onError: showErrors
-  })
-
-  const [updateSubscriptionFlow] = useUpdateSubscriptionFlowMutation({
-    client,
-    onError: showErrors
-  })
-
-  const [createSubscriptionFlow] = useCreateSubscriptionFlowMutation({
-    client,
-    onError: showErrors
-  })
+  const client = useContext(GraphqlClientContext)
 
   /******************************************
    * HELPER METHODS
@@ -87,7 +70,7 @@ export default function ({
   }
 
   async function saveNewFlow() {
-    await createSubscriptionFlow({
+    await client.createSubscriptionFlow({
       variables: {
         subscriptionFlow: newFlow
       }
@@ -109,7 +92,7 @@ export default function ({
       autoRenewal: payload.autoRenewal || subscriptionFlow.autoRenewal
     }
 
-    await updateSubscriptionFlow({
+    await client.updateSubscriptionFlow({
       variables: {
         subscriptionFlow: mutation
       }
@@ -127,7 +110,7 @@ export default function ({
               value: method.id
             }))}
             disabled={
-              subscriptionFlow?.default || loadingPaymentMethods || !canUpdateSubscriptionFlow
+              subscriptionFlow?.default || paymentMethods.paymentMethods.length === 0 || !canUpdateSubscriptionFlow
             }
             countable={false}
             cleanable={false}

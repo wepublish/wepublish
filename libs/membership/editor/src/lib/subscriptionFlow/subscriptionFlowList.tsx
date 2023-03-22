@@ -22,11 +22,14 @@ import {
   FullMailTemplateFragment,
   SubscriptionEvent,
   SubscriptionInterval,
+  useCreateSubscriptionFlowMutation,
   useCreateSubscriptionIntervalMutation,
   useDeleteSubscriptionFlowMutation,
   useDeleteSubscriptionIntervalMutation,
+  useListPaymentMethodsQuery,
   useMailTemplateQuery,
   useSubscriptionFlowsQuery,
+  useUpdateSubscriptionFlowMutation,
   useUpdateSubscriptionIntervalMutation,
   useUpdateSubscriptionIntervalsMutation
 } from '@wepublish/editor/api-v2'
@@ -184,10 +187,24 @@ function SubscriptionFlowList() {
     onError: showErrors,
     onCompleted: () => showSavedToast(t)
   })
+  const [createSubscriptionFlow] = useCreateSubscriptionFlowMutation({
+    client,
+    onError: showErrors,
+    onCompleted: () => showSavedToast(t)
+  })
+  const [updateSubscriptionFlow] = useUpdateSubscriptionFlowMutation({
+    client,
+    onError: showErrors,
+    onCompleted: () => showSavedToast(t)
+  })
   const [deleteSubscriptionFlow] = useDeleteSubscriptionFlowMutation({
     client,
     onError: showErrors,
     onCompleted: () => showSavedToast(t)
+  })
+  const {data: paymentMethods} = useListPaymentMethodsQuery({
+    client,
+    onError: showErrors
   })
 
   /******************************************
@@ -311,6 +328,8 @@ function SubscriptionFlowList() {
               updateSubscriptionInterval,
               updateSubscriptionIntervals,
               deleteSubscriptionInterval,
+              createSubscriptionFlow,
+              updateSubscriptionFlow,
               deleteSubscriptionFlow
             }}>
             <Table size="small">
@@ -354,6 +373,7 @@ function SubscriptionFlowList() {
                         memberPlan={memberPlan}
                         subscriptionFlow={subscriptionFlow}
                         defaultFlowOnly={defaultFlowOnly}
+                        paymentMethods={paymentMethods}
                       />
                       {/************************************************** EVENTS **************************************************/}
                       <ActionsBody
@@ -394,6 +414,7 @@ function SubscriptionFlowList() {
                         memberPlan={memberPlan}
                         createNewFlow
                         onNewFlowCreated={() => refetch()}
+                        paymentMethods={paymentMethods}
                       />
                     </SplitTableRow>
                   </TableBody>

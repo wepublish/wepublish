@@ -18,7 +18,7 @@ export default function ({
   const client = useContext(GraphqlClientContext)
 
   if(subscriptionFlow.default) {
-    return
+    return <></>
   }
 
   return (
