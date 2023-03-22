@@ -59,7 +59,6 @@ export default function ({setNewDay}: ActionsHeadProps) {
                     appearance="primary"
                     style={{marginLeft: '5px'}}>
                     {t('subscriptionFlow.add')}
-                    Add
                   </Button>
                 </FlexContainer>
               </PopoverBody>
