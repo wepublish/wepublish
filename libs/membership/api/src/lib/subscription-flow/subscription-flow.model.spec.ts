@@ -27,7 +27,11 @@ describe('SubscriptionFlowController', () => {
       intervals: {connect: []}
     }
   })
-  const SubscriptionIntervalFactory = defineSubscriptionIntervalFactory()
+  const SubscriptionIntervalFactory = defineSubscriptionIntervalFactory({
+    defaultData: {
+      subscriptionFlow: SubscriptionFlowFactory
+    }
+  })
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

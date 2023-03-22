@@ -66,6 +66,7 @@ fragment SubscriptionFlow on SubscriptionFlowModel {
   intervals {
     ...SubscriptionInterval
   }
+  numberOfSubscriptions
 }
 
 fragment SubscriptionInterval on SubscriptionInterval {

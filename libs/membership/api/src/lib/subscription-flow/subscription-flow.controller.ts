@@ -12,7 +12,7 @@ import {
   subscriptionFlowNonUniqueEvents,
   subscriptionFlowRequiredEvents
 } from './subscription-flow.type'
-import {SubscriptionEvent} from '@prisma/client'
+import {SubscriptionEvent, SubscriptionFlow} from '@prisma/client'
 import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
 const SUBSCRIPTION_EVEN_MAX_DAYS_BEFORE = -25
 const SUBSCRIPTION_EVEN_MAX_DAYS_AFTER = 90
@@ -223,11 +223,10 @@ export class SubscriptionFlowController {
   }
 
   async updateIntervals(intervals: SubscriptionIntervalUpdateInput[]) {
-    let flows
     for (const interval of intervals) {
-      flows = await this.updateInterval(interval)
+      await this.updateInterval(interval)
     }
-    return flows
+    return this.getFlows(false)
   }
 
   async updateInterval(interval: SubscriptionIntervalUpdateInput) {

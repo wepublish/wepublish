@@ -63,6 +63,8 @@ export class SubscriptionFlowModel {
   autoRenewal!: boolean[]
   @Field(type => [SubscriptionInterval])
   intervals!: SubscriptionInterval[]
+  @Field(() => Int)
+  numberOfSubscriptions!: number
 }
 
 // Input

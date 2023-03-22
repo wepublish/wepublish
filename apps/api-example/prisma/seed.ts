@@ -13,7 +13,7 @@ async function seed() {
     throw new Error('@wepublish/api seeding has not been done')
   }
 
-  await prisma.user.upsert({
+  const dev = await prisma.user.upsert({
     where: {
       email: 'dev@wepublish.ch'
     },
@@ -28,7 +28,7 @@ async function seed() {
     }
   })
 
-  await prisma.user.upsert({
+  const editor = await prisma.user.upsert({
     where: {
       email: 'editor@wepublish.ch'
     },
@@ -86,6 +86,40 @@ async function seed() {
       description: {},
       active: true,
       amountPerMonthMin: 1
+    }
+  })
+
+  await prisma.subscription.upsert({
+    where: {
+      id: '1'
+    },
+    update: {},
+    create: {
+      id: '1',
+      paymentPeriodicity: PaymentPeriodicity.biannual,
+      paymentMethod: { connect: { id: paymentMethod.id } },
+      memberPlan: { connect: { id: memberPlan.id } },
+      monthlyAmount: 3,
+      autoRenew: true,
+      startsAt: new Date().toISOString(),
+      user: { connect: { id: editor.id }}
+    }
+  })
+
+  await prisma.subscription.upsert({
+    where: {
+      id: '2'
+    },
+    update: {},
+    create: {
+      id: '2',
+      paymentPeriodicity: PaymentPeriodicity.biannual,
+      paymentMethod: { connect: { id: paymentMethod.id } },
+      memberPlan: { connect: { id: memberPlan.id } },
+      monthlyAmount: 3,
+      autoRenew: false,
+      startsAt: new Date().toISOString(),
+      user: { connect: { id: dev.id }}
     }
   })
 

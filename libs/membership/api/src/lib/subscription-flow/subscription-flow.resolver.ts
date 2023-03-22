@@ -9,42 +9,53 @@ import {
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
 import {SubscriptionFlowController} from './subscription-flow.controller'
+import { SubscriptionFlow } from '@prisma/client'
+import { PrismaService } from '@wepublish/api'
+import { SubscriptionFlowHelper, SubscriptionFlowWithPaymentMethod } from './subscription-flow.helper'
+
+type WithNumberOfSubscriptions<T> = T & {
+  numberOfSubscriptions: number
+}
 
 @Resolver(() => [SubscriptionFlowResolver])
 export class SubscriptionFlowResolver {
-  constructor(private readonly controller: SubscriptionFlowController) {}
+  constructor(
+    private readonly controller: SubscriptionFlowController,
+    private readonly prismaService: PrismaService,
+    private readonly flowHelper: SubscriptionFlowHelper
+  ) {}
 
   // Subscription Flow
-  @Query(returns => [SubscriptionFlowModel], {name: 'subscriptionFlows'})
+  @Query(() => [SubscriptionFlowModel], {name: 'subscriptionFlows'})
   async subscriptionFlows(
     @Args('defaultFlowOnly') defaultFlowOnly: boolean,
     @Args('memberPlanId', {nullable: true}) memberPlanId?: string
   ) {
-    return await this.controller.getFlows(defaultFlowOnly, memberPlanId)
+    return this.decorate(await this.controller.getFlows(defaultFlowOnly, memberPlanId))
   }
 
-  @Mutation(returns => [SubscriptionFlowModel], {name: 'createSubscriptionFlow'})
+  @Mutation(() => [SubscriptionFlowModel], {name: 'createSubscriptionFlow'})
   async createSubscriptionFlow(@Args('subscriptionFlow') flow: SubscriptionFlowModelCreateInput) {
-    return await this.controller.createFlow(flow)
+    return this.decorate(await this.controller.createFlow(flow))
   }
 
-  @Mutation(returns => [SubscriptionFlowModel], {name: 'updateSubscriptionFlow'})
+  @Mutation(() => [SubscriptionFlowModel], {name: 'updateSubscriptionFlow'})
   async updateSubscriptionFlow(@Args('subscriptionFlow') flow: SubscriptionFlowModelUpdateInput) {
-    return await this.controller.updateFlow(flow)
+    return this.decorate(await this.controller.updateFlow(flow))
   }
 
-  @Mutation(returns => [SubscriptionFlowModel], {name: 'deleteSubscriptionFlow'})
+  @Mutation(() => [SubscriptionFlowModel], {name: 'deleteSubscriptionFlow'})
   async deleteSubscriptionFlow(
     @Args('subscriptionFlowId', {type: () => Int}) subscriptionFlowId: number
   ) {
-    return await this.controller.deleteFlow(subscriptionFlowId)
+    return this.decorate(await this.controller.deleteFlow(subscriptionFlowId))
   }
 
   @Mutation(() => [SubscriptionFlowModel], {name: 'createSubscriptionInterval'})
   async createSubscriptionInterval(
     @Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalCreateInput
   ) {
-    return this.controller.createInterval(subscriptionInterval)
+    return this.decorate(await this.controller.createInterval(subscriptionInterval))
   }
 
   @Mutation(() => [SubscriptionFlowModel], {name: 'updateSubscriptionIntervals'})
@@ -52,25 +63,38 @@ export class SubscriptionFlowResolver {
     @Args({name: 'subscriptionIntervals', type: () => [SubscriptionIntervalUpdateInput]})
     subscriptionIntervals: SubscriptionIntervalUpdateInput[]
   ) {
-    return this.controller.updateIntervals(subscriptionIntervals)
+    return this.decorate(await this.controller.updateIntervals(subscriptionIntervals))
   }
 
   @Mutation(() => [SubscriptionFlowModel], {name: 'updateSubscriptionInterval'})
   async updateSubscriptionInterval(
     @Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalUpdateInput
   ) {
-    return this.controller.updateInterval(subscriptionInterval)
+    return this.decorate(await this.controller.updateInterval(subscriptionInterval))
   }
 
   @Mutation(() => [SubscriptionFlowModel], {name: 'deleteSubscriptionInterval'})
   async deleteSubscriptionInterval(
     @Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalDeleteInput
   ) {
-    return this.controller.deleteInterval(subscriptionInterval)
+    return this.decorate(await this.controller.deleteInterval(subscriptionInterval))
   }
 
   @Query(() => [PaymentMethodRef])
   async paymentMethods() {
     return this.controller.paymentMethods()
+  }
+
+  private async decorate(flows: SubscriptionFlowWithPaymentMethod[]): Promise<WithNumberOfSubscriptions<SubscriptionFlow>[]> {
+    const subscriptionCounts = await this.flowHelper.numberOfSubscriptionsFor(flows)
+
+    return flows.map(f => {
+      const count = subscriptionCounts.find(c => c.subscriptionFlowId === f.id)
+
+      return {
+        ...f,
+        numberOfSubscriptions: count && count.subscriptionCount || 0
+      }
+    })
   }
 }

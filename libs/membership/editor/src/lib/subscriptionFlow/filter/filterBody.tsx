@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react'
 import {TableCell} from '@mui/material'
-import {CheckPicker, IconButton} from 'rsuite'
+import {CheckPicker, IconButton, Tag} from 'rsuite'
 import {
   ListPaymentMethodsQuery,
   PaymentPeriodicity,
@@ -96,7 +96,10 @@ export default function ({
 
   return (
     <>
-      <TableCell align="center">{!subscriptionFlow?.default && memberPlan.name}</TableCell>
+      <TableCell align="center">
+        {!subscriptionFlow?.default && memberPlan.name}
+        {subscriptionFlow &&  <Tag>{subscriptionFlow?.numberOfSubscriptions} subscriptions</Tag>}
+      </TableCell>
       <TableCell align="center">
         {paymentMethods && paymentMethods.paymentMethods && (
           <CheckPicker

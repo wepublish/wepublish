@@ -149,6 +149,7 @@ type SubscriptionFlowModel {
   id: Int!
   intervals: [SubscriptionInterval!]!
   memberPlan: MemberPlanRef
+  numberOfSubscriptions: Int!
   paymentMethods: [PaymentMethodRef!]!
   periodicities: [PaymentPeriodicity!]!
 }
