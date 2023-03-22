@@ -3,9 +3,9 @@ import {
   MailchimpMailProvider,
   MailgunMailProvider,
   MailProvider,
-  PrismaService,
-  SettingName
+  PrismaService
 } from '@wepublish/api'
+import { SettingName } from '@wepublish/settings/api'
 
 @Injectable()
 export class MailProviderService {
