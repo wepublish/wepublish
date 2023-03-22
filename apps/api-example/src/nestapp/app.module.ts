@@ -1,16 +1,12 @@
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
 import {Module} from '@nestjs/common'
 import {GraphQLModule} from '@nestjs/graphql'
-import {MembershipModule} from '@wepublish/membership/api'
+import {DashboardModule, MembershipModule} from '@wepublish/membership/api'
 import {ApiModule} from '@wepublish/nest-modules'
-import {
-  SettingModule,
-  DashboardModule,
-  AuthenticationModule,
-  PermissionModule,
-  OldContextService,
-  PrismaService
-} from '@wepublish/api'
+import {OldContextService, PrismaService} from '@wepublish/api'
+import {AuthenticationModule} from '@wepublish/authentication/api'
+import {PermissionModule} from '@wepublish/permissions/api'
+import {SettingModule} from '@wepublish/settings/api'
 
 @Module({
   imports: [
