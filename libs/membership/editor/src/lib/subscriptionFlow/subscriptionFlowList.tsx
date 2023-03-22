@@ -161,51 +161,30 @@ function SubscriptionFlowList() {
     onError: showErrors
   })
 
-  // get mail templates
   const {data: mailTemplates, loading: loadingMailTemplates} = useMailTemplateQuery({
     client,
     onError: showErrors
   })
 
-  const [createSubscriptionInterval] = useCreateSubscriptionIntervalMutation({
-    client,
-    onError: showErrors,
-    onCompleted: () => showSavedToast(t)
-  })
-  const [updateSubscriptionIntervals] = useUpdateSubscriptionIntervalsMutation({
-    client,
-    onError: showErrors,
-    onCompleted: () => showSavedToast(t)
-  })
-  const [updateSubscriptionInterval] = useUpdateSubscriptionIntervalMutation({
-    client,
-    onError: showErrors,
-    onCompleted: () => showSavedToast(t)
-  })
-  const [deleteSubscriptionInterval] = useDeleteSubscriptionIntervalMutation({
-    client,
-    onError: showErrors,
-    onCompleted: () => showSavedToast(t)
-  })
-  const [createSubscriptionFlow] = useCreateSubscriptionFlowMutation({
-    client,
-    onError: showErrors,
-    onCompleted: () => showSavedToast(t)
-  })
-  const [updateSubscriptionFlow] = useUpdateSubscriptionFlowMutation({
-    client,
-    onError: showErrors,
-    onCompleted: () => showSavedToast(t)
-  })
-  const [deleteSubscriptionFlow] = useDeleteSubscriptionFlowMutation({
-    client,
-    onError: showErrors,
-    onCompleted: () => showSavedToast(t)
-  })
   const {data: paymentMethods} = useListPaymentMethodsQuery({
     client,
     onError: showErrors
   })
+
+  const defaultClientOptions = {
+    client,
+    onError: showErrors,
+    onCompleted: () => showSavedToast(t)
+  }
+
+  // Mutation methods are later passed to the GraphqlClientContext, so they can reuse the same client everywhere. This makes the GraphQL cache work across all requests.
+  const [createSubscriptionInterval] = useCreateSubscriptionIntervalMutation(defaultClientOptions)
+  const [updateSubscriptionIntervals] = useUpdateSubscriptionIntervalsMutation(defaultClientOptions)
+  const [updateSubscriptionInterval] = useUpdateSubscriptionIntervalMutation(defaultClientOptions)
+  const [deleteSubscriptionInterval] = useDeleteSubscriptionIntervalMutation(defaultClientOptions)
+  const [createSubscriptionFlow] = useCreateSubscriptionFlowMutation({ ...defaultClientOptions, onCompleted: () => { refetch() } })
+  const [updateSubscriptionFlow] = useUpdateSubscriptionFlowMutation(defaultClientOptions)
+  const [deleteSubscriptionFlow] = useDeleteSubscriptionFlowMutation({ ...defaultClientOptions, onCompleted: () => { refetch() } })
 
   /******************************************
    * HELPER METHODS
@@ -395,7 +374,6 @@ function SubscriptionFlowList() {
                       <TableCell align="center">
                         <DeleteSubscriptionFlow
                           subscriptionFlow={subscriptionFlow}
-                          onSubscriptionFlowDeleted={refetch}
                         />
                       </TableCell>
                     </DndContext>
@@ -413,7 +391,6 @@ function SubscriptionFlowList() {
                       <FilterBody
                         memberPlan={memberPlan}
                         createNewFlow
-                        onNewFlowCreated={() => refetch()}
                         paymentMethods={paymentMethods}
                       />
                     </SplitTableRow>

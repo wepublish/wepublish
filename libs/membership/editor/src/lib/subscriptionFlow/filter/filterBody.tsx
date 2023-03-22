@@ -19,7 +19,6 @@ interface FilterBodyProps {
   subscriptionFlow?: SubscriptionFlowModel
   defaultFlowOnly?: boolean
   createNewFlow?: boolean
-  onNewFlowCreated?: () => void
   paymentMethods: ListPaymentMethodsQuery | undefined
 }
 export default function ({
@@ -27,7 +26,6 @@ export default function ({
   defaultFlowOnly,
   memberPlan,
   createNewFlow,
-  onNewFlowCreated,
   paymentMethods
 }: FilterBodyProps) {
   if (defaultFlowOnly || !memberPlan) {
@@ -75,9 +73,6 @@ export default function ({
         subscriptionFlow: newFlow
       }
     })
-    if (onNewFlowCreated) {
-      onNewFlowCreated()
-    }
   }
 
   async function updateFlow(payload: Partial<SubscriptionFlowModelUpdateInput>) {
