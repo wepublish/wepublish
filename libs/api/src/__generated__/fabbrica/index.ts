@@ -6027,21 +6027,30 @@ type SubscriptionIntervalmailTemplateFactory = {
     build: () => PromiseLike<Prisma.MailTemplateCreateNestedOneWithoutSubscriptionIntervalsInput["create"]>;
 };
 
+type SubscriptionIntervalsubscriptionFlowFactory = {
+    _factoryFor: "SubscriptionFlow";
+    build: () => PromiseLike<Prisma.SubscriptionFlowCreateNestedOneWithoutIntervalsInput["create"]>;
+};
+
 type SubscriptionIntervalFactoryDefineInput = {
     createdAt?: Date;
     modifiedAt?: Date;
     event?: SubscriptionEvent;
     daysAwayFromEnding?: number | null;
     mailTemplate?: SubscriptionIntervalmailTemplateFactory | Prisma.MailTemplateCreateNestedOneWithoutSubscriptionIntervalsInput;
-    subscriptionFlow?: Prisma.SubscriptionFlowCreateNestedManyWithoutIntervalsInput;
+    subscriptionFlow: SubscriptionIntervalsubscriptionFlowFactory | Prisma.SubscriptionFlowCreateNestedOneWithoutIntervalsInput;
 };
 
 type SubscriptionIntervalFactoryDefineOptions = {
-    defaultData?: Resolver<SubscriptionIntervalFactoryDefineInput, BuildDataOptions>;
+    defaultData: Resolver<SubscriptionIntervalFactoryDefineInput, BuildDataOptions>;
 };
 
 function isSubscriptionIntervalmailTemplateFactory(x: SubscriptionIntervalmailTemplateFactory | Prisma.MailTemplateCreateNestedOneWithoutSubscriptionIntervalsInput | undefined): x is SubscriptionIntervalmailTemplateFactory {
     return (x as any)?._factoryFor === "MailTemplate";
+}
+
+function isSubscriptionIntervalsubscriptionFlowFactory(x: SubscriptionIntervalsubscriptionFlowFactory | Prisma.SubscriptionFlowCreateNestedOneWithoutIntervalsInput | undefined): x is SubscriptionIntervalsubscriptionFlowFactory {
+    return (x as any)?._factoryFor === "SubscriptionFlow";
 }
 
 export interface SubscriptionIntervalFactoryInterface {
@@ -6075,7 +6084,10 @@ function defineSubscriptionIntervalFactoryInternal({ defaultData: defaultDataRes
         const defaultAssociations = {
             mailTemplate: isSubscriptionIntervalmailTemplateFactory(defaultData.mailTemplate) ? {
                 create: await defaultData.mailTemplate.build()
-            } : defaultData.mailTemplate
+            } : defaultData.mailTemplate,
+            subscriptionFlow: isSubscriptionIntervalsubscriptionFlowFactory(defaultData.subscriptionFlow) ? {
+                create: await defaultData.subscriptionFlow.build()
+            } : defaultData.subscriptionFlow
         };
         const data: Prisma.SubscriptionIntervalCreateInput = { ...requiredScalarData, ...defaultData, ...defaultAssociations, ...inputData };
         return data;
@@ -6108,7 +6120,7 @@ function defineSubscriptionIntervalFactoryInternal({ defaultData: defaultDataRes
  * @param options
  * @returns factory {@link SubscriptionIntervalFactoryInterface}
  */
-export function defineSubscriptionIntervalFactory(options: SubscriptionIntervalFactoryDefineOptions = {}): SubscriptionIntervalFactoryInterface {
+export function defineSubscriptionIntervalFactory(options: SubscriptionIntervalFactoryDefineOptions): SubscriptionIntervalFactoryInterface {
     return defineSubscriptionIntervalFactoryInternal(options);
 }
 

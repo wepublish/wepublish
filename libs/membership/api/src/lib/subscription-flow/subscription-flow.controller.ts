@@ -357,9 +357,7 @@ export class SubscriptionFlowController {
       const dbIntervals = await this.prismaService.subscriptionInterval.findMany({
         where: {
           subscriptionFlow: {
-            every: {
-              id: interval.subscriptionFlowId
-            }
+            id: interval.subscriptionFlowId
           }
         }
       })

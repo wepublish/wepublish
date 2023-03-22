@@ -59,6 +59,7 @@ CREATE TABLE "subscriptions.intervals" (
     "event" "SubscriptionEvent" NOT NULL,
     "daysAwayFromEnding" SMALLINT,
     "mailTemplateId" INTEGER,
+    "subscriptionFlowId" INTEGER NOT NULL,
 
     CONSTRAINT "subscriptions.intervals_pkey" PRIMARY KEY ("id")
 );
@@ -97,12 +98,6 @@ CREATE TABLE "_PaymentMethodToSubscriptionFlow" (
     "B" INTEGER NOT NULL
 );
 
--- CreateTable
-CREATE TABLE "_SubscriptionFlowToSubscriptionInterval" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "user_communication_flows_accountCreationMailTemplateId_key" ON "user_communication_flows"("accountCreationMailTemplateId");
 
@@ -123,12 +118,6 @@ CREATE UNIQUE INDEX "_PaymentMethodToSubscriptionFlow_AB_unique" ON "_PaymentMet
 
 -- CreateIndex
 CREATE INDEX "_PaymentMethodToSubscriptionFlow_B_index" ON "_PaymentMethodToSubscriptionFlow"("B");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_SubscriptionFlowToSubscriptionInterval_AB_unique" ON "_SubscriptionFlowToSubscriptionInterval"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_SubscriptionFlowToSubscriptionInterval_B_index" ON "_SubscriptionFlowToSubscriptionInterval"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "mail.log_mailIdentifier_key" ON "mail.log"("mailIdentifier");
@@ -155,6 +144,9 @@ ALTER TABLE "user_communication_flows" ADD CONSTRAINT "user_communication_flows_
 ALTER TABLE "subscription_communication_flows" ADD CONSTRAINT "subscription_communication_flows_memberPlanId_fkey" FOREIGN KEY ("memberPlanId") REFERENCES "member.plans"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "subscriptions.intervals" ADD CONSTRAINT "subscriptions.intervals_subscriptionFlowId_fkey" FOREIGN KEY ("subscriptionFlowId") REFERENCES "subscription_communication_flows"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "subscriptions.intervals" ADD CONSTRAINT "subscriptions.intervals_mailTemplateId_fkey" FOREIGN KEY ("mailTemplateId") REFERENCES "mail_templates"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -162,9 +154,3 @@ ALTER TABLE "_PaymentMethodToSubscriptionFlow" ADD CONSTRAINT "_PaymentMethodToS
 
 -- AddForeignKey
 ALTER TABLE "_PaymentMethodToSubscriptionFlow" ADD CONSTRAINT "_PaymentMethodToSubscriptionFlow_B_fkey" FOREIGN KEY ("B") REFERENCES "subscription_communication_flows"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_SubscriptionFlowToSubscriptionInterval" ADD CONSTRAINT "_SubscriptionFlowToSubscriptionInterval_A_fkey" FOREIGN KEY ("A") REFERENCES "subscription_communication_flows"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_SubscriptionFlowToSubscriptionInterval" ADD CONSTRAINT "_SubscriptionFlowToSubscriptionInterval_B_fkey" FOREIGN KEY ("B") REFERENCES "subscriptions.intervals"("id") ON DELETE CASCADE ON UPDATE CASCADE;
