@@ -303,7 +303,7 @@ function SubscriptionFlowList() {
           <Typography variant="subtitle1">{t('subscriptionFlow.settingsDescription')}</Typography>
         </ListViewHeader>
       </ListViewContainer>
-      <TableContainer style={{marginTop: '16px', overflow: 'hidden'}}>
+      <TableContainer style={{marginTop: '16px', overflow: 'hidden', overflowAnchor: 'none'}}>
         <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>
           <GraphqlClientContext.Provider
             value={{
