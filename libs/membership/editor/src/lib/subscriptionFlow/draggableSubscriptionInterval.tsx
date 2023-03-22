@@ -13,7 +13,9 @@ import styled from '@emotion/styled'
 import {useAuthorisation} from 'app/atoms/permissionControl'
 
 const DraggableContainer = styled.div`
-  margin-bottom: 10px;
+  margin: 3px;
+  border-radius: 5px;
+  position: relative;
 `
 
 const EventTagContainer = styled.div`
@@ -59,24 +61,31 @@ export default function ({
   return (
     <DraggableContainer
       style={{
-        ...draggableStyle
+        ...draggableStyle,
+        border: `3px solid ${subscriptionInterval?.color?.bg}`
       }}>
       {subscriptionInterval && !isCustom && (
         <EventTagContainer>
           {canUpdateSubscriptionFlow && (
-            <div style={{cursor: 'move'}} ref={setNodeRef} {...listeners} {...attributes}>
-              <MdDragIndicator size={20} />
+            <div
+              style={{cursor: 'move', position: 'absolute', left: 0, top: 0}}
+              ref={setNodeRef}
+              {...listeners}
+              {...attributes}>
+              <MdDragIndicator color={subscriptionInterval.color.fg} size={20} />
             </div>
           )}
-          <Tag
+          <div
             style={{
+              width: '100%',
+              backgroundColor: subscriptionInterval.color.bg,
               color: subscriptionInterval.color.fg,
-              marginBottom: '5px'
-            }}
-            color={subscriptionInterval.color.bg}>
-            <span style={{marginRight: '5px'}}>{subscriptionInterval.icon}</span>
+              fontSize: '0.9em'
+            }}>
+            <span>{subscriptionInterval.icon}</span>
+            <br />
             {subscriptionInterval.title}
-          </Tag>
+          </div>
         </EventTagContainer>
       )}
       <MailTemplateSelect

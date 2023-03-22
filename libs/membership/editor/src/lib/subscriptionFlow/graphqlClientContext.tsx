@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {MutationFunctionOptions} from '@apollo/client'
 import {
+  CreateSubscriptionFlowMutation,
   CreateSubscriptionIntervalMutation,
   DeleteSubscriptionFlowMutation,
   DeleteSubscriptionIntervalMutation,
   Exact,
+  SubscriptionFlowModelCreateInput,
+  SubscriptionFlowModelUpdateInput,
   SubscriptionIntervalCreateInput,
   SubscriptionIntervalDeleteInput,
   SubscriptionIntervalUpdateInput,
+  UpdateSubscriptionFlowMutation,
   UpdateSubscriptionIntervalMutation,
   UpdateSubscriptionIntervalsMutation
 } from '@wepublish/editor/api-v2'
@@ -44,6 +48,22 @@ export const GraphqlClientContext = createContext({
     options: MutationFunctionOptions<
       DeleteSubscriptionIntervalMutation,
       Exact<{subscriptionInterval: SubscriptionIntervalDeleteInput}>
+    >
+  ): Promise<any> => {
+    throw new Error('Default context must be overriden!')
+  },
+  createSubscriptionFlow: (
+    options: MutationFunctionOptions<
+      CreateSubscriptionFlowMutation,
+      Exact<{subscriptionFlow: SubscriptionFlowModelCreateInput}>
+    >
+  ): Promise<any> => {
+    throw new Error('Default context must be overriden!')
+  },
+  updateSubscriptionFlow: (
+    options: MutationFunctionOptions<
+      UpdateSubscriptionFlowMutation,
+      Exact<{subscriptionFlow: SubscriptionFlowModelUpdateInput}>
     >
   ): Promise<any> => {
     throw new Error('Default context must be overriden!')

@@ -17,6 +17,10 @@ export default function ({
   const {t} = useTranslation()
   const client = useContext(GraphqlClientContext)
 
+  if (subscriptionFlow.default) {
+    return <></>
+  }
+
   return (
     <PermissionControl qualifyingPermissions={['CAN_DELETE_SUBSCRIPTION_FLOW']}>
       <Whisper

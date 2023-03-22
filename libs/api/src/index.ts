@@ -62,7 +62,7 @@ export {OldContextService} from './lib/oldContext.service'
 
 export {getUserForCredentials} from './lib/graphql/user/user.queries'
 
-export * from '@wepublish/settings/api'
+/* export * from '@wepublish/settings/api'
 export * from '@wepublish/membership/api'
 export * from '@wepublish/authentication/api'
-export * from '@wepublish/permissions/api'
+export * from '@wepublish/permissions/api' */

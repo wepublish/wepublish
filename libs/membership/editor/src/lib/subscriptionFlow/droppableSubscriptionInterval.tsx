@@ -4,9 +4,11 @@ import {useTranslation} from 'react-i18next'
 
 interface DropContainerSubscriptionIntervalProps {
   dayIndex: number
+  children: React.ReactNode
 }
 export default function DroppableSubscriptionInterval({
-  dayIndex
+  dayIndex,
+  children
 }: DropContainerSubscriptionIntervalProps) {
   const {t} = useTranslation()
   const {isOver, setNodeRef, active} = useDroppable({
@@ -29,7 +31,7 @@ export default function DroppableSubscriptionInterval({
 
   // not dragging
   if (!active) {
-    return null
+    return <div style={{...defaultStyle}}>{children}</div>
   }
 
   const activeStyle = {
@@ -45,6 +47,8 @@ export default function DroppableSubscriptionInterval({
   return (
     <div ref={setNodeRef} style={{...defaultStyle, ...activeStyle, ...hoverStyle}}>
       {t('subscriptionFlow.dropHere')}
+
+      {children}
     </div>
   )
 }

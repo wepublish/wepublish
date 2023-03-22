@@ -266,7 +266,7 @@ async function seed() {
       subscriptionFlow: {connect: {id: 3}}
     },
     {
-      id: 18,
+      id: 17,
       event: SubscriptionEvent.DEACTIVATION_UNPAID,
       daysAwayFromEnding: 10,
       mailTemplate: {connect: {id: 5}},

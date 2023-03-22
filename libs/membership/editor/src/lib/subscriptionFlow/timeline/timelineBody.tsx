@@ -55,14 +55,15 @@ export default function ({days, subscriptionFlow, eventIcons, eventColors}: Time
                 key={`day-${day}`}
                 align="center"
                 style={day === 0 ? {backgroundColor: 'lightyellow'} : {}}>
-                <DraggableSubscriptionInterval
-                  mailTemplates={mailTemplates}
-                  subscriptionInterval={undefined}
-                  subscriptionFlow={subscriptionFlow}
-                  event={SubscriptionEvent.Custom}
-                  newDaysAwayFromEnding={day as number}
-                />
-                <DroppableSubscriptionInterval dayIndex={day || 0} />
+                <DroppableSubscriptionInterval dayIndex={day || 0}>
+                  <DraggableSubscriptionInterval
+                    mailTemplates={mailTemplates}
+                    subscriptionInterval={undefined}
+                    subscriptionFlow={subscriptionFlow}
+                    event={SubscriptionEvent.Custom}
+                    newDaysAwayFromEnding={day as number}
+                  />
+                </DroppableSubscriptionInterval>
               </TableCellBottom>
             )
           }
@@ -72,14 +73,15 @@ export default function ({days, subscriptionFlow, eventIcons, eventColors}: Time
               key={`day-${day}`}
               align="center"
               style={day === 0 ? {backgroundColor: 'lightyellow'} : {}}>
-              {currentIntervals.map(currentInterval => (
-                <DraggableSubscriptionInterval
-                  subscriptionInterval={currentInterval}
-                  subscriptionFlow={subscriptionFlow}
-                  mailTemplates={mailTemplates}
-                />
-              ))}
-              <DroppableSubscriptionInterval dayIndex={day || 0} />
+              <DroppableSubscriptionInterval dayIndex={day || 0}>
+                {currentIntervals.map(currentInterval => (
+                  <DraggableSubscriptionInterval
+                    subscriptionInterval={currentInterval}
+                    subscriptionFlow={subscriptionFlow}
+                    mailTemplates={mailTemplates}
+                  />
+                ))}
+              </DroppableSubscriptionInterval>
             </TableCellBottom>
           )
         })}
