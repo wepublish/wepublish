@@ -8,11 +8,9 @@ import {PermissionControl} from 'app/atoms/permissionControl'
 
 interface DeleteSubscriptionFlowProps {
   subscriptionFlow: SubscriptionFlowFragment
-  onSubscriptionFlowDeleted?: () => void
 }
 export default function ({
-  subscriptionFlow,
-  onSubscriptionFlowDeleted
+  subscriptionFlow
 }: DeleteSubscriptionFlowProps) {
   const {t} = useTranslation()
   const client = useContext(GraphqlClientContext)
@@ -39,9 +37,6 @@ export default function ({
                 await client.deleteSubscriptionFlow({
                   variables: {subscriptionFlowId: subscriptionFlow.id}
                 })
-                if (onSubscriptionFlowDeleted) {
-                  onSubscriptionFlowDeleted()
-                }
               }}>
               {t('subscriptionFlow.deletePermanently')}
             </IconButton>

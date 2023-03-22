@@ -1056,7 +1056,7 @@ model SubscriptionInterval {
 	mailTemplate            MailTemplate? @relation(fields: [mailTemplateId], references: [id])
 	mailTemplateId          Int?
 
-	subscriptionFlow   SubscriptionFlow @relation(fields: [subscriptionFlowId], references: [id])
+	subscriptionFlow   SubscriptionFlow @relation(fields: [subscriptionFlowId], references: [id], onDelete: Cascade)
   subscriptionFlowId Int
 
   @@map("subscriptions.intervals")
