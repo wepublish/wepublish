@@ -134,11 +134,8 @@ function SettingList() {
     [SettingName.InvoiceReminderFreq]: {
       value: 0,
       name: SettingName.InvoiceReminderFreq,
-      label: 'settingList.invoiceReminders'
+      label: 'settingList.invoiceFrequency'
     },
-
-    // TODO Add to form
-    //
     [SettingName.InvoiceReminderMaxTries]: {
       value: 0,
       name: SettingName.InvoiceReminderMaxTries,
@@ -190,15 +187,7 @@ function SettingList() {
   )
 
   const unsavedChangesDialog = useUnsavedChangesDialog(changedSetting.length > 0)
-
-  // const nav = Navigate({to: '/', replace: true})
-
-  useEffect(() => {
-    // unsavedChangesDialog()
-    return () => {
-      // if (!unsavedChangesDialog()) console.log('false')
-    }
-  }, [changedSetting, unsavedChangesDialog])
+  console.log(unsavedChangesDialog)
 
   async function handleSettingListUpdate() {
     setShowWarning(false)
@@ -211,7 +200,6 @@ function SettingList() {
         {t('settingList.successMessage')}
       </Notification>
     )
-    // setChanged(false)
     await refetch()
   }
 
@@ -628,10 +616,30 @@ function SettingList() {
                 {/* payment */}
                 <Col xs={24}>
                   <Panel bordered header={t('settingList.payment')}>
+                    <Form.Group controlId={SettingName.InvoiceReminderMaxTries}>
+                      <Form.ControlLabel>
+                        {t(settings[SettingName.InvoiceReminderMaxTries].label)}{' '}
+                        <SettingInfo text={t('settingList.warnings.invoiceReminders')} />
+                      </Form.ControlLabel>
+                      <InputGroup>
+                        <Form.Control
+                          name={SettingName.InvoiceReminderMaxTries}
+                          accepter={InputNumber}
+                          value={settings[SettingName.InvoiceReminderMaxTries].value}
+                          onChange={(value: string) =>
+                            setSetting({
+                              ...settings[SettingName.InvoiceReminderMaxTries],
+                              value: +value
+                            })
+                          }
+                        />
+                      </InputGroup>
+                    </Form.Group>
+
                     <Form.Group controlId={SettingName.InvoiceReminderFreq}>
                       <Form.ControlLabel>
                         {t(settings[SettingName.InvoiceReminderFreq].label)}{' '}
-                        <SettingInfo text={t('settingList.warnings.invoiceReminders')} />
+                        <SettingInfo text={t('settingList.warnings.invoiceFrequency')} />
                       </Form.ControlLabel>
                       <InputGroup>
                         <Form.Control
