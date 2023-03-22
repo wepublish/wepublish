@@ -3,10 +3,12 @@ import {INestApplication, Module} from '@nestjs/common'
 import request from 'supertest'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
-import {PrismaClient, Prisma} from '@prisma/client'
+import {PrismaClient, Prisma, ConsentValue, UserConsent} from '@prisma/client'
 import {PrismaModule} from '@wepublish/nest-modules'
-import {DashboardSubscriptionResolver} from './dashboard-subscription.resolver'
-import {DashboardSubscriptionService} from './userConsent.service'
+import {UserConsentResolver} from './userConsent.resolver'
+import {UserConsentService} from './userConsent.service'
+import {AuthenticationModule, AuthenticationGuard} from '@wepublish/authentication/api'
+import {generateRandomString} from '../consent/consent.resolver.spec'
 
 @Module({
   imports: [
@@ -15,558 +17,273 @@ import {DashboardSubscriptionService} from './userConsent.service'
       autoSchemaFile: true,
       path: '/'
     }),
-    PrismaModule
+    PrismaModule,
+    AuthenticationModule
   ],
-  providers: [DashboardSubscriptionResolver, DashboardSubscriptionService]
+  providers: [UserConsentResolver, UserConsentService]
 })
 export class AppModule {}
 
-const newSubscribersQuery = `
-  query Dashboard($end:DateTime!, $start:DateTime!) {
-    newSubscribers(start:$start, end:$end) {
-      endsAt
-      memberPlan
-      monthlyAmount
-      renewsAt
-      startsAt
-      paymentPeriodicity
-      reasonForDeactivation
+const userConsentQuery = `
+  query userConsent($id: String!) {
+    userConsent(id: $id) {
+      id
+      userId
+      consentId
+      value
+      createdAt
+      modifiedAt
+      consent {
+        slug
+        id
+        name
+      }
+      user {
+        id
+        name
+        firstName
+        email
+      }
     }
   }
 `
 
-const activeSubscribersQuery = `
-  query Dashboard {
-    activeSubscribers {
-      endsAt
-      memberPlan
-      monthlyAmount
-      renewsAt
-      startsAt
-      paymentPeriodicity
-      reasonForDeactivation
+const createUserConsentMutation = `
+  mutation createUserConsent($userConsent: UserConsentInput!) {
+    createUserConsent(userConsent: $userConsent) {
+      id
+      userId
+      value
     }
   }
 `
 
-const renewingSubscribersQuery = `
-  query Dashboard($end:DateTime!, $start:DateTime!) {
-    renewingSubscribers(start:$start, end:$end) {
-      memberPlan
-      monthlyAmount
-      renewsAt
-      startsAt
-      paymentPeriodicity
-      reasonForDeactivation
+const updateUserConsentMutation = `
+  mutation updateUserConsent($id: String!, $userConsent: UpdateUserConsentInput!) {
+    updateUserConsent(id: $id, userConsent: $userConsent) {
+      id
+      userId
+      consentId
+      value
+      createdAt
+      modifiedAt
+      consent {
+        slug
+        id
+        name
+      }
+      user {
+        id
+        name
+        firstName
+        email
+      }
     }
   }
 `
 
-const newDeactivationsQuery = `
-  query Dashboard($end:DateTime!, $start:DateTime!) {
-    newDeactivations(start:$start, end:$end) {
-      endsAt
-      memberPlan
-      monthlyAmount
-      startsAt
-      paymentPeriodicity
-      reasonForDeactivation
+const deleteUserConsentMutation = `
+  mutation deleteUserConsent($id: String!) {
+    deleteUserConsent(id: $id) {
+      id
     }
   }
 `
 
-describe('DashboardSubscriptionResolver', () => {
+const mockSlug1 = generateRandomString()
+
+export const mockUserConsents: Prisma.UserConsentCreateInput[] = [
+  {
+    consent: {
+      connectOrCreate: {
+        where: {id: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd'},
+        create: {
+          name: 'some-name',
+          slug: mockSlug1,
+          defaultValue: 'Accepted'
+        }
+      }
+    },
+    value: 'Accepted',
+    user: {
+      connectOrCreate: {
+        where: {id: 'some-id'},
+        create: {
+          name: 'some-name',
+          email: `${generateRandomString()}@wepublish.ch`,
+          password: 'some-password',
+          active: true
+        }
+      }
+    }
+  }
+]
+
+const mockUser = {
+  type: 'user',
+  id: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
+  token: 'some-token',
+  user: {roleIDs: [{}], id: 'clf870cla0719q1rx6vg0y2rj'},
+  roles: [{}]
+}
+
+class MockAuthenticationGuard extends AuthenticationGuard {
+  public override handleRequest(): any {
+    return mockUser
+  }
+}
+
+describe('UserConsentResolver', () => {
   let app: INestApplication
   let prisma: PrismaClient
+  let userConsents: UserConsent[] = []
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [AppModule]
-    }).compile()
+    })
+      .overrideGuard(AuthenticationGuard)
+      .useClass(MockAuthenticationGuard)
+      .compile()
 
     prisma = module.get<PrismaClient>(PrismaClient)
     app = module.createNestApplication()
-    await app.init()
-  })
 
-  beforeEach(async () => {
-    await prisma.subscription.deleteMany({})
+    await app.init()
+
+    userConsents = await Promise.all(
+      mockUserConsents.map(data => prisma.userConsent.create({data}))
+    )
   })
 
   afterAll(async () => {
     await app.close()
   })
 
-  test('newSubscribers', async () => {
-    const paymentMethod = {
-      active: true,
-      description: '',
-      name: '',
-      paymentProviderID: '',
-      slug: ''
-    }
-
-    const mockData: Prisma.SubscriptionCreateInput[] = [
-      {
-        autoRenew: true,
-        monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-02-01'),
-        paymentMethod: {
-          create: paymentMethod
-        },
-        memberPlan: {
-          connectOrCreate: {
-            where: {
-              slug: 'foo'
-            },
-            create: {
-              active: true,
-              amountPerMonthMin: 10,
-              name: 'Foo',
-              slug: 'foo',
-              description: []
-            }
-          }
-        },
-        user: {
-          connectOrCreate: {
-            where: {email: 'foo@wepublish.ch'},
-            create: {
-              active: true,
-              email: 'foo@wepublish.ch',
-              name: 'Foo',
-              password: ''
-            }
-          }
-        }
-      },
-      {
-        autoRenew: false,
-        monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-01-02'),
-        paidUntil: new Date('2023-02-01'),
-        deactivation: {
-          create: {
-            date: new Date('2023-02-02'),
-            reason: 'invoiceNotPaid'
-          }
-        },
-        paymentMethod: {
-          create: paymentMethod
-        },
-        memberPlan: {
-          connectOrCreate: {
-            where: {
-              slug: 'bar'
-            },
-            create: {
-              active: true,
-              amountPerMonthMin: 10,
-              name: 'Bar',
-              slug: 'bar',
-              description: []
-            }
-          }
-        },
-        user: {
-          connect: {
-            email: 'foo@wepublish.ch'
-          }
-        }
-      },
-      {
-        autoRenew: false,
-        monthlyAmount: 500,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-02-01'),
-        paymentMethod: {
-          create: paymentMethod
-        },
-        memberPlan: {
-          connect: {
-            slug: 'foo'
-          }
-        },
-        user: {
-          connect: {
-            email: 'foo@wepublish.ch'
-          }
-        }
-      }
-    ]
-
-    await Promise.all(mockData.map(data => prisma.subscription.create({data})))
+  test('user consent query', async () => {
+    const idToGet = userConsents[0].id
 
     await request(app.getHttpServer())
       .post('')
       .send({
-        query: newSubscribersQuery,
+        query: userConsentQuery,
         variables: {
-          start: new Date('2023-01-01').toISOString(),
-          end: new Date('2023-02-01').toISOString()
+          id: idToGet
         }
       })
       .expect(200)
       .expect(res => {
-        expect(res.body.data.newSubscribers).toMatchSnapshot()
+        expect(res.body.data.userConsent).toMatchObject({
+          id: expect.any(String),
+          consent: expect.any(Object),
+          value: ConsentValue.Accepted,
+          user: expect.any(Object)
+        })
       })
   })
 
-  test('activeSubscribers', async () => {
-    const paymentMethod = {
-      active: true,
-      description: '',
-      name: '',
-      paymentProviderID: '',
-      slug: ''
-    }
-
-    const mockData: Prisma.SubscriptionCreateInput[] = [
-      {
-        autoRenew: true,
-        monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-02-01'),
-        paymentMethod: {
-          create: paymentMethod
-        },
-        memberPlan: {
-          connectOrCreate: {
-            where: {
-              slug: 'foo'
-            },
-            create: {
-              active: true,
-              amountPerMonthMin: 10,
-              name: 'Foo',
-              slug: 'foo',
-              description: []
-            }
-          }
-        },
-        user: {
-          connectOrCreate: {
-            where: {email: 'foo@wepublish.ch'},
-            create: {
-              active: true,
-              email: 'foo@wepublish.ch',
-              name: 'Foo',
-              password: ''
-            }
-          }
-        }
-      },
-      {
-        autoRenew: false,
-        monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-02-02'),
-        paidUntil: new Date('2023-02-02'),
-        deactivation: {
-          create: {
-            date: new Date('2023-02-03'),
-            reason: 'invoiceNotPaid'
-          }
-        },
-        paymentMethod: {
-          create: paymentMethod
-        },
-        memberPlan: {
-          connectOrCreate: {
-            where: {
-              slug: 'bar'
-            },
-            create: {
-              active: true,
-              amountPerMonthMin: 10,
-              name: 'Bar',
-              slug: 'bar',
-              description: []
-            }
-          }
-        },
-        user: {
-          connect: {
-            email: 'foo@wepublish.ch'
-          }
-        }
-      },
-      {
-        autoRenew: false,
-        monthlyAmount: 500,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-02-03'),
-        paymentMethod: {
-          create: paymentMethod
-        },
-        memberPlan: {
-          connect: {
-            slug: 'foo'
-          }
-        },
-        user: {
-          connect: {
-            email: 'foo@wepublish.ch'
-          }
-        }
+  test('create user consent mutation', async () => {
+    const createdUser = await prisma.user.create({
+      data: {
+        name: 'some-name3',
+        email: generateRandomString(),
+        password: 'some-password3',
+        active: true
       }
-    ]
+    })
 
-    await Promise.all(mockData.map(data => prisma.subscription.create({data})))
+    const createdConsent = await prisma.consent.create({
+      data: {
+        name: 'some-name3',
+        slug: generateRandomString(),
+        defaultValue: 'Accepted'
+      }
+    })
+
+    mockUser.user.id = createdUser.id
 
     await request(app.getHttpServer())
-      .post('')
+      .post('/')
       .send({
-        query: activeSubscribersQuery,
+        query: createUserConsentMutation,
         variables: {
-          start: new Date('2023-01-01').toISOString(),
-          end: new Date('2023-02-01').toISOString()
+          userConsent: {
+            consentId: createdConsent.id,
+            userId: createdUser.id,
+            value: 'Accepted'
+          }
         }
       })
       .expect(200)
       .expect(res => {
-        expect(res.body.data.activeSubscribers).toMatchSnapshot()
+        expect(res.body.data.createUserConsent).toMatchObject({
+          id: expect.any(String),
+          userId: createdUser.id
+        })
       })
   })
 
-  test('renewingSubscribers', async () => {
-    const paymentMethod = {
-      active: true,
-      description: '',
-      name: '',
-      paymentProviderID: '',
-      slug: ''
-    }
-
-    const mockData: Prisma.SubscriptionCreateInput[] = [
-      {
-        autoRenew: true,
-        monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-01-29'),
-        paymentMethod: {
-          create: paymentMethod
-        },
-        memberPlan: {
-          connectOrCreate: {
-            where: {
-              slug: 'foo'
-            },
-            create: {
-              active: true,
-              amountPerMonthMin: 10,
-              name: 'Foo',
-              slug: 'foo',
-              description: []
-            }
-          }
-        },
-        user: {
-          connectOrCreate: {
-            where: {email: 'foo@wepublish.ch'},
-            create: {
-              active: true,
-              email: 'foo@wepublish.ch',
-              name: 'Foo',
-              password: ''
-            }
-          }
-        }
-      },
-      {
-        autoRenew: true,
-        monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-02-01'),
-        paymentMethod: {
-          create: paymentMethod
-        },
-        memberPlan: {
-          connect: {
-            slug: 'foo'
-          }
-        },
-        user: {
-          connect: {
-            email: 'foo@wepublish.ch'
-          }
-        }
-      },
-      {
-        autoRenew: true,
-        monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-01-02'),
-        deactivation: {
-          create: {
-            date: new Date('2023-02-03'),
-            reason: 'invoiceNotPaid'
-          }
-        },
-        paymentMethod: {
-          create: paymentMethod
-        },
-        memberPlan: {
-          connectOrCreate: {
-            where: {
-              slug: 'bar'
-            },
-            create: {
-              active: true,
-              amountPerMonthMin: 10,
-              name: 'Bar',
-              slug: 'bar',
-              description: []
-            }
-          }
-        },
-        user: {
-          connect: {
-            email: 'foo@wepublish.ch'
-          }
-        }
-      },
-      {
-        autoRenew: false,
-        monthlyAmount: 500,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-01-28'),
-        paymentMethod: {
-          create: paymentMethod
-        },
-        memberPlan: {
-          connect: {
-            slug: 'foo'
-          }
-        },
-        user: {
-          connect: {
-            email: 'foo@wepublish.ch'
-          }
-        }
-      }
-    ]
-
-    await Promise.all(mockData.map(data => prisma.subscription.create({data})))
+  test('update user consent mutation', async () => {
+    const idToUpdate = userConsents[0].id
+    mockUser.user.id = userConsents[0].userId
 
     await request(app.getHttpServer())
-      .post('')
+      .post('/')
       .send({
-        query: renewingSubscribersQuery,
+        query: updateUserConsentMutation,
         variables: {
-          start: new Date('2023-01-01').toISOString(),
-          end: new Date('2023-02-01').toISOString()
+          id: idToUpdate,
+          userConsent: {
+            value: 'Rejected'
+          }
         }
       })
       .expect(200)
       .expect(res => {
-        expect(res.body.data.renewingSubscribers).toMatchSnapshot()
+        expect(res.body.data.updateUserConsent).toMatchObject({
+          id: expect.any(String),
+          userId: userConsents[0].userId
+        })
       })
   })
 
-  test('newDeactivations', async () => {
-    const paymentMethod = {
-      active: true,
-      description: '',
-      name: '',
-      paymentProviderID: '',
-      slug: ''
-    }
-
-    const mockData: Prisma.SubscriptionCreateInput[] = [
-      {
-        autoRenew: true,
-        monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-02-01'),
-        deactivation: {
-          create: {
-            createdAt: new Date('2023-01-01'),
-            date: new Date('2023-02-03'),
-            reason: 'invoiceNotPaid'
-          }
-        },
-        paymentMethod: {
-          create: paymentMethod
-        },
-        memberPlan: {
-          connectOrCreate: {
-            where: {
-              slug: 'foo'
-            },
-            create: {
-              active: true,
-              amountPerMonthMin: 10,
-              name: 'Foo',
-              slug: 'foo',
-              description: []
-            }
-          }
-        },
-        user: {
-          connectOrCreate: {
-            where: {email: 'foo@wepublish.ch'},
-            create: {
-              active: true,
-              email: 'foo@wepublish.ch',
-              name: 'Foo',
-              password: ''
-            }
-          }
-        }
-      },
-      {
-        autoRenew: true,
-        monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-02-01'),
-        deactivation: {
-          create: {
-            createdAt: new Date('2023-02-01'),
-            date: new Date('2023-02-03'),
-            reason: 'invoiceNotPaid'
-          }
-        },
-        paymentMethod: {
-          create: paymentMethod
-        },
-        memberPlan: {
-          connect: {
-            slug: 'foo'
-          }
-        },
-        user: {
-          connect: {
-            email: 'foo@wepublish.ch'
-          }
-        }
-      }
-    ]
-
-    await Promise.all(mockData.map(data => prisma.subscription.create({data})))
+  test('delete user consent mutation', async () => {
+    const idToDelete = userConsents[0].id
+    mockUser.user.id = userConsents[0].userId
 
     await request(app.getHttpServer())
-      .post('')
+      .post('/')
       .send({
-        query: newDeactivationsQuery,
+        query: deleteUserConsentMutation,
         variables: {
-          start: new Date('2023-01-01').toISOString(),
-          end: new Date('2023-02-01').toISOString()
+          id: idToDelete
         }
       })
       .expect(200)
       .expect(res => {
-        expect(res.body.data.newDeactivations).toMatchSnapshot()
+        expect(res.body.data.deleteUserConsent).toMatchObject({
+          id: userConsents[0].id
+        })
+      })
+  })
+
+  test('only allow updating consent for the authorized user', async () => {
+    const idToUpdate = userConsents[0].id
+
+    await request(app.getHttpServer())
+      .post('/')
+      .send({
+        query: updateUserConsentMutation,
+        variables: {
+          id: idToUpdate,
+          userConsent: {
+            value: 'Rejected'
+          }
+        }
+      })
+      .expect(200)
+      .expect(res => {
+        expect(res.body.errors[0].message).toBe('Unauthorized')
       })
   })
 })

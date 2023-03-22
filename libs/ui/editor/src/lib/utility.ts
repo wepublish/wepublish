@@ -205,29 +205,6 @@ export function flattenDOMTokenList(list: DOMTokenList) {
   return string.substring(1)
 }
 
-// export function getSettings(): ClientSettings {
-//   const defaultSettings = {
-//     apiURL: 'http://localhost:4000',
-//     peerByDefault: false,
-//     imgMinSizeToCompress: 10
-//   }
-
-//   const settingsJson = document.getElementById(ElementID.Settings)
-
-//   return settingsJson
-//     ? JSON.parse(document.getElementById(ElementID.Settings)!.textContent!)
-//     : defaultSettings
-// }
-
-// export function getApiClientV2() {
-//   const {apiURL} = getSettings()
-//   const link = new HttpLink({uri: `${apiURL}/v2`})
-//   return new ApolloClient({
-//     link,
-//     cache: new InMemoryCache()
-//   })
-// }
-
 /**
  * Helper function to read env variable IMG_MIN_SIZE_TO_COMPRESS
  */

@@ -1,15 +1,15 @@
 import {render} from '@testing-library/react'
-import ConsentList from './consent-list'
-import {BrowserRouter} from 'react-router-dom'
 
+import {ConsentCreateView} from './consentCreateView'
+import {BrowserRouter} from 'react-router-dom'
 import fetch from 'jest-fetch-mock'
 jest.setMock('node-fetch', fetch)
 
-describe('ConsentList', () => {
+describe('ConsentCreateView', () => {
   it('should render successfully', () => {
     const {baseElement} = render(
       <BrowserRouter>
-        <ConsentList />
+        <ConsentCreateView />
       </BrowserRouter>
     )
     expect(baseElement).toBeTruthy()

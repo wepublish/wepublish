@@ -8,9 +8,8 @@ import {
 import {UserConsentService} from './userConsent.service'
 
 import {UseGuards} from '@nestjs/common'
-import {GqlAuthGuard} from '../auth.guard'
 import {CurrentUser} from '../user.decorator.graphql'
-import {UserSession} from '@wepublish/authentication/api'
+import {UserSession, AuthenticationGuard} from '@wepublish/authentication/api'
 
 @Resolver()
 export class UserConsentResolver {
@@ -48,7 +47,7 @@ export class UserConsentResolver {
       Create a new UserConsent.
     `
   })
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(AuthenticationGuard)
   createUserConsent(
     @CurrentUser() user: UserSession,
     @Args('userConsent') userConsent: UserConsentInput
@@ -62,7 +61,7 @@ export class UserConsentResolver {
       Update an existing UserConsent.
     `
   })
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(AuthenticationGuard)
   updateUserConsent(
     @CurrentUser() user: UserSession,
     @Args('id') id: string,
@@ -77,7 +76,7 @@ export class UserConsentResolver {
       Delete an existing UserConsent.
     `
   })
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(AuthenticationGuard)
   deleteUserConsent(@Args('id') id: string, @CurrentUser() user: UserSession) {
     return this.userConsents.deleteUserConsent(id, user)
   }

@@ -1,207 +1,257 @@
 import {Test, TestingModule} from '@nestjs/testing'
-import {DashboardSubscriptionService} from './userConsent.service'
+import {UserConsentService} from './userConsent.service'
 import {PrismaModule} from '@wepublish/nest-modules'
-import {PrismaClient} from '@prisma/client'
+import {ConsentValue, PrismaClient} from '@prisma/client'
+import {UserSession} from '@wepublish/authentication/api'
+import {mockUserConsents} from './userConsent.resolver.spec'
 
-describe('DashboardSubscriptionService', () => {
-  let service: DashboardSubscriptionService
+describe('UserConsentService', () => {
+  let service: UserConsentService
   let prisma: PrismaClient
 
-  beforeAll(() => {
-    jest.useFakeTimers()
-    jest.setSystemTime(new Date('2023-01-01'))
-  })
-
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [PrismaModule],
-      providers: [DashboardSubscriptionService]
+      providers: [UserConsentService]
     }).compile()
 
     prisma = module.get<PrismaClient>(PrismaClient)
-    service = module.get<DashboardSubscriptionService>(DashboardSubscriptionService)
+    service = module.get<UserConsentService>(UserConsentService)
   })
 
   test('should be defined', () => {
     expect(service).toBeDefined()
   })
 
-  test('should get the new subscribers', async () => {
+  test('should get user consents', async () => {
     const mockValue = Promise.resolve([
       {
-        id: 'cld4loaff0008sepx1x3ebj3w',
-        createdAt: '2023-01-20T14:11:26.283Z',
-        modifiedAt: '2023-01-20T14:11:26.284Z',
-        paymentPeriodicity: 'monthly',
-        monthlyAmount: 50,
-        autoRenew: false,
-        startsAt: '2023-01-02T00:00:00.000Z',
-        paidUntil: '2023-02-01T00:00:00.000Z',
-        paymentMethodID: 'cld4loaff0015sepxhvpl4rco',
-        memberPlanID: 'cld4k0qaa0017depxbiveealk',
-        userID: 'cld4ign5c00104hpx1gkx0n2q',
-        deactivation: {
-          id: 'cld4loaff0010sepxnup35t78',
-          createdAt: '2023-01-20T14:11:26.283Z',
-          modifiedAt: '2023-01-20T14:11:26.284Z',
-          date: '2023-02-02T00:00:00.000Z',
-          reason: 'invoiceNotPaid',
-          subscriptionID: 'cld4loaff0008sepx1x3ebj3w'
+        id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
+        userId: 'clfb7nce50264cvrxlliyxung',
+        consentId: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
+        value: 'Accepted',
+        createdAt: '2023-03-17T12:08:17.277Z',
+        modifiedAt: '2023-03-17T12:08:17.278Z',
+        consent: {
+          slug: 'newsletter-aaa',
+          id: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
+          name: 'Newsletter'
         },
-        memberPlan: {name: 'Bar'}
+        user: {
+          id: 'clfb7nce50264cvrxlliyxung',
+          name: 'ssss',
+          firstName: null,
+          email: 'asdf@asdf.pl'
+        }
       },
       {
-        id: 'cld4loaff0007sepxszmvhvca',
-        createdAt: '2023-01-20T14:11:26.283Z',
-        modifiedAt: '2023-01-20T14:11:26.284Z',
-        paymentPeriodicity: 'monthly',
-        monthlyAmount: 50,
-        autoRenew: true,
-        startsAt: '2023-01-01T00:00:00.000Z',
-        paidUntil: '2023-02-01T00:00:00.000Z',
-        paymentMethodID: 'cld4loaff0009sepx0iu4n8n5',
-        memberPlanID: 'cld4ign5c00084hpxwqncmpjk',
-        userID: 'cld4ign5c00104hpx1gkx0n2q',
-        deactivation: null,
-        memberPlan: {name: 'foo'}
+        id: '216d312d-f26f-4692-ad51-1591ca425d97',
+        userId: 'clesor2a50105kgrxh0kyxmxy',
+        consentId: '4e70d86a-e3d9-4487-9d98-6ea8e665ee46',
+        value: 'Rejected',
+        createdAt: '2023-03-17T11:00:48.580Z',
+        modifiedAt: '2023-03-17T11:40:21.092Z',
+        consent: {
+          slug: 'new slug 2',
+          id: '4e70d86a-e3d9-4487-9d98-6ea8e665ee46',
+          name: 'new 2'
+        },
+        user: {
+          id: 'clesor2a50105kgrxh0kyxmxy',
+          name: 'Editor User',
+          firstName: null,
+          email: 'editor@wepublish.ch'
+        }
       }
     ])
-    const start = new Date('2023-01-01')
-    const end = new Date('2023-02-01')
+
     const mockFunction = jest
-      .spyOn(prisma.subscription, 'findMany')
+      .spyOn(prisma.userConsent, 'findMany')
       .mockReturnValue(mockValue as any)
 
-    const result = await service.newSubscribers(start, end)
+    const result = await service.userConsentList()
     expect(result).toMatchSnapshot()
     expect(mockFunction.mock.calls[0][0]).toMatchSnapshot()
   })
 
-  test('should get all active subscribers', async () => {
+  test('should filter user consents', async () => {
     const mockValue = Promise.resolve([
       {
-        id: 'cld4lprbk0073vjpx0kk8f8hu',
-        createdAt: '2023-01-20T14:12:34.832Z',
-        modifiedAt: '2023-01-20T14:12:34.832Z',
-        paymentPeriodicity: 'monthly',
-        monthlyAmount: 500,
-        autoRenew: false,
-        startsAt: '2023-02-03T00:00:00.000Z',
-        paidUntil: null,
-        paymentMethodID: 'cld4lprbk0075vjpxarv1c5r9',
-        memberPlanID: 'cld4ign5c00084hpxwqncmpjk',
-        userID: 'cld4ign5c00104hpx1gkx0n2q',
-        deactivation: null,
-        memberPlan: {name: 'foo'}
-      },
-      {
-        id: 'cld4lprbk0071vjpxf33kh4ax',
-        createdAt: '2023-01-20T14:12:34.832Z',
-        modifiedAt: '2023-01-20T14:12:34.832Z',
-        paymentPeriodicity: 'monthly',
-        monthlyAmount: 50,
-        autoRenew: false,
-        startsAt: '2023-02-02T00:00:00.000Z',
-        paidUntil: '2023-02-02T00:00:00.000Z',
-        paymentMethodID: 'cld4lprbk0080vjpxvabbr8gz',
-        memberPlanID: 'cld4k0qaa0017depxbiveealk',
-        userID: 'cld4ign5c00104hpx1gkx0n2q',
-        deactivation: {
-          id: 'cld4lprbk0074vjpxniv9piwb',
-          createdAt: '2023-01-20T14:12:34.832Z',
-          modifiedAt: '2023-01-20T14:12:34.832Z',
-          date: '2023-02-03T00:00:00.000Z',
-          reason: 'invoiceNotPaid',
-          subscriptionID: 'cld4lprbk0071vjpxf33kh4ax'
+        id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
+        userId: 'clfb7nce50264cvrxlliyxung',
+        consentId: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
+        value: 'Accepted',
+        createdAt: '2023-03-17T12:08:17.277Z',
+        modifiedAt: '2023-03-17T12:08:17.278Z',
+        consent: {
+          slug: 'newsletter-aaa',
+          id: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
+          name: 'Newsletter'
         },
-        memberPlan: {name: 'Bar'}
+        user: {
+          id: 'clfb7nce50264cvrxlliyxung',
+          name: 'ssss',
+          firstName: null,
+          email: 'asdf@asdf.pl'
+        }
       },
       {
-        id: 'cld4lprbk0072vjpxohwln37y',
-        createdAt: '2023-01-20T14:12:34.832Z',
-        modifiedAt: '2023-01-20T14:12:34.832Z',
-        paymentPeriodicity: 'monthly',
-        monthlyAmount: 50,
-        autoRenew: true,
-        startsAt: '2023-01-01T00:00:00.000Z',
-        paidUntil: '2023-02-01T00:00:00.000Z',
-        paymentMethodID: 'cld4lprbk0076vjpxvdfs0vmv',
-        memberPlanID: 'cld4ign5c00084hpxwqncmpjk',
-        userID: 'cld4ign5c00104hpx1gkx0n2q',
-        deactivation: null,
-        memberPlan: {name: 'foo'}
+        id: '216d312d-f26f-4692-ad51-1591ca425d97',
+        userId: 'clesor2a50105kgrxh0kyxmxy',
+        consentId: '4e70d86a-e3d9-4487-9d98-6ea8e665ee46',
+        value: 'Rejected',
+        createdAt: '2023-03-17T11:00:48.580Z',
+        modifiedAt: '2023-03-17T11:40:21.092Z',
+        consent: {
+          slug: 'new slug 2',
+          id: '4e70d86a-e3d9-4487-9d98-6ea8e665ee46',
+          name: 'new 2'
+        },
+        user: {
+          id: 'clesor2a50105kgrxh0kyxmxy',
+          name: 'Editor User',
+          firstName: null,
+          email: 'editor@wepublish.ch'
+        }
       }
     ])
+
     const mockFunction = jest
-      .spyOn(prisma.subscription, 'findMany')
+      .spyOn(prisma.userConsent, 'findMany')
       .mockReturnValue(mockValue as any)
 
-    const result = await service.activeSubscribers()
+    const filter = {
+      slug: 'new slug 2'
+    }
+    const result = await service.userConsentList(filter)
     expect(result).toMatchSnapshot()
     expect(mockFunction.mock.calls[0][0]).toMatchSnapshot()
   })
 
-  test('should get the renewing subscribers', async () => {
+  test('should get a single user consent by id', async () => {
     const mockValue = Promise.resolve([
       {
-        id: 'cld4lqqyd0144yopxgx80v9pk',
-        createdAt: '2023-01-20T14:13:21.013Z',
-        modifiedAt: '2023-01-20T14:13:21.014Z',
-        paymentPeriodicity: 'monthly',
-        monthlyAmount: 50,
-        autoRenew: true,
-        startsAt: '2023-01-01T00:00:00.000Z',
-        paidUntil: '2023-01-29T00:00:00.000Z',
-        paymentMethodID: 'cld4lqqyd0151yopxt3wk1l3d',
-        memberPlanID: 'cld4ign5c00084hpxwqncmpjk',
-        userID: 'cld4ign5c00104hpx1gkx0n2q',
-        memberPlan: {name: 'foo'}
+        id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
+        userId: 'clfb7nce50264cvrxlliyxung',
+        consentId: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
+        value: 'Accepted',
+        createdAt: '2023-03-17T12:08:17.277Z',
+        modifiedAt: '2023-03-17T12:08:17.278Z',
+        consent: {
+          slug: 'newsletter-aaa',
+          id: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
+          name: 'Newsletter'
+        },
+        user: {
+          id: 'clfb7nce50264cvrxlliyxung',
+          name: 'ssss',
+          firstName: null,
+          email: 'asdf@asdf.pl'
+        }
       }
     ])
-    const start = new Date('2023-01-01')
-    const end = new Date('2023-02-01')
+
     const mockFunction = jest
-      .spyOn(prisma.subscription, 'findMany')
+      .spyOn(prisma.userConsent, 'findUnique')
       .mockReturnValue(mockValue as any)
 
-    const result = await service.renewingSubscribers(start, end)
+    const id = '1572bbfc-a03e-4586-b6a5-e9dab21d54d3'
+    const result = await service.userConsent(id)
     expect(result).toMatchSnapshot()
     expect(mockFunction.mock.calls[0][0]).toMatchSnapshot()
   })
 
-  test('should get the new deactivations', async () => {
+  test('should create a user consent', async () => {
     const mockValue = Promise.resolve([
       {
-        id: 'cld4lrmbf02270gpx8ktw6mz1',
-        createdAt: '2023-01-20T14:14:01.659Z',
-        modifiedAt: '2023-01-20T14:14:01.660Z',
-        paymentPeriodicity: 'monthly',
-        monthlyAmount: 50,
-        autoRenew: true,
-        startsAt: '2023-01-01T00:00:00.000Z',
-        paidUntil: '2023-02-01T00:00:00.000Z',
-        paymentMethodID: 'cld4lrmbf02340gpxs45cwwjn',
-        memberPlanID: 'cld4ign5c00084hpxwqncmpjk',
-        userID: 'cld4ign5c00104hpx1gkx0n2q',
-        deactivation: {
-          id: 'cld4lrmbf02300gpxz8rf1o5u',
-          createdAt: '2023-01-01T00:00:00.000Z',
-          modifiedAt: '2023-01-20T14:14:01.660Z',
-          date: '2023-02-03T00:00:00.000Z',
-          reason: 'invoiceNotPaid',
-          subscriptionID: 'cld4lrmbf02270gpx8ktw6mz1'
-        },
-        memberPlan: {name: 'foo'}
+        id: '0c6e7727-711b-40ee-b8b8-22170a085c51',
+        userId: 'clf870cla0719q1rx6vg0y2rj',
+        value: 'Accepted'
       }
     ])
-    const start = new Date('2023-01-01')
-    const end = new Date('2023-02-01')
-    const mockFunction = jest
-      .spyOn(prisma.subscription, 'findMany')
-      .mockReturnValue(mockValue as any)
 
-    const result = await service.newDeactivations(start, end)
+    const mockFunction = jest.spyOn(prisma.userConsent, 'create').mockReturnValue(mockValue as any)
+
+    const userConsent = {
+      consentId: '2152b9c8-438b-4f4a-a066-ebe85f98f607',
+      userId: 'clf870cla0719q1rx6vg0y2rj',
+      value: ConsentValue.Accepted
+    }
+
+    const user = {user: {roleIDs: ['admin']}} as UserSession
+
+    const result = await service.createUserConsent(userConsent, user)
     expect(result).toMatchSnapshot()
     expect(mockFunction.mock.calls[0][0]).toMatchSnapshot()
+  })
+
+  test('should update a user consent', async () => {
+    const userConsents = await Promise.all(
+      mockUserConsents.map(data => prisma.userConsent.create({data}))
+    )
+
+    const idToUpdate = userConsents[0].id
+
+    const mockValue = Promise.resolve([
+      {
+        id: idToUpdate,
+        userConsent: {
+          value: ConsentValue.Rejected
+        }
+      }
+    ])
+
+    const mockFunction = jest.spyOn(prisma.userConsent, 'update').mockReturnValue(mockValue as any)
+
+    const userConsent = {
+      value: ConsentValue.Rejected
+    }
+
+    const user = {user: {roleIDs: ['admin']}} as UserSession
+
+    const result = await service.updateUserConsent({id: idToUpdate, userConsent, user})
+    expect(result).toMatchObject([
+      {
+        id: idToUpdate,
+        userConsent: {
+          value: 'Rejected'
+        }
+      }
+    ])
+    expect(mockFunction.mock.calls[0][0]).toMatchObject({
+      where: {
+        id: idToUpdate
+      }
+    })
+  })
+
+  test('should delete a user consent', async () => {
+    const userConsents = await Promise.all(
+      mockUserConsents.map(data => prisma.userConsent.create({data}))
+    )
+
+    const idToDelete = userConsents[0].id
+
+    const mockValue = Promise.resolve([
+      {
+        id: idToDelete
+      }
+    ])
+
+    const mockFunction = jest.spyOn(prisma.userConsent, 'delete').mockReturnValue(mockValue as any)
+
+    const user = {user: {roleIDs: ['admin']}} as UserSession
+
+    const result = await service.deleteUserConsent(idToDelete, user)
+    expect(result).toMatchObject([
+      {
+        id: idToDelete
+      }
+    ])
+    expect(mockFunction.mock.calls[0][0]).toMatchObject({
+      where: {
+        id: idToDelete
+      }
+    })
   })
 })

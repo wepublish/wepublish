@@ -1,4 +1,4 @@
-import {Injectable, Scope} from '@nestjs/common'
+import {Injectable} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
 import {UserSession} from '@wepublish/authentication/api'
 import {
@@ -8,7 +8,7 @@ import {
   UserConsentFilter
 } from './userConsent.model'
 
-@Injectable({scope: Scope.REQUEST})
+@Injectable()
 export class UserConsentService {
   constructor(private prisma: PrismaClient) {}
 
@@ -59,7 +59,6 @@ export class UserConsentService {
     if (!user.user.roleIDs.includes('admin') && user.user.id !== userConsent.userId) {
       throw Error(`Unauthorized`)
     }
-
     const created = await this.prisma.userConsent.create({
       data: userConsent,
       include: {user: true, consent: true}
