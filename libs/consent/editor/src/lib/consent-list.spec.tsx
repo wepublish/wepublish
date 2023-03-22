@@ -1,3 +1,4 @@
+import React from 'react'
 import {render} from '@testing-library/react'
 import ConsentList from './consent-list'
 import {BrowserRouter} from 'react-router-dom'

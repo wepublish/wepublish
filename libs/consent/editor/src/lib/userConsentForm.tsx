@@ -1,4 +1,4 @@
-import {ApolloClient, ApolloError, HttpLink, InMemoryCache} from '@apollo/client'
+import {ApolloError} from '@apollo/client'
 import {useUserListQuery} from '@wepublish/editor/api'
 import {
   ConsentValue,

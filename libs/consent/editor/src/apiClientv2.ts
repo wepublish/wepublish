@@ -1,5 +1,8 @@
 import {ApolloClient, ApolloLink, createHttpLink, InMemoryCache} from '@apollo/client'
-import {LocalStorageKey} from 'libs/ui/editor/src/lib/utility'
+
+export enum LocalStorageKey {
+  SessionToken = 'sessionToken'
+}
 
 const authLink = new ApolloLink((operation, forward) => {
   const token = localStorage.getItem(LocalStorageKey.SessionToken)
