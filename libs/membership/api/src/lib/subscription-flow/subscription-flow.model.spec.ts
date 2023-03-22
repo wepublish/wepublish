@@ -3,7 +3,7 @@ import {SubscriptionFlowController} from './subscription-flow.controller'
 import {clearDatabase} from '../../prisma-utils'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {OldContextService, PrismaService} from '@wepublish/api'
-import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
+import {PrismaClient} from '@prisma/client'
 import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
 import {SubscriptionController} from '../subscription/subscription.controller'
 import {
@@ -11,8 +11,7 @@ import {
   defineMemberPlanFactory,
   defineMailTemplateFactory,
   defineSubscriptionFlowFactory,
-  defineSubscriptionIntervalFactory,
-  definePaymentMethodFactory
+  defineSubscriptionIntervalFactory
 } from '../../../../../api/src/__generated__/fabbrica'
 
 describe('SubscriptionFlowController', () => {

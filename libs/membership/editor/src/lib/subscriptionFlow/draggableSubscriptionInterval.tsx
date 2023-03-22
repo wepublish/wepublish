@@ -10,7 +10,7 @@ import MailTemplateSelect from './mailTemplateSelect'
 import {MdDragIndicator} from 'react-icons/all'
 import {useDraggable} from '@dnd-kit/core'
 import styled from '@emotion/styled'
-import {useAuthorisation} from '../../../../../../apps/editor/src/app/atoms/permissionControl'
+import {useAuthorisation} from 'app/atoms/permissionControl'
 
 const DraggableContainer = styled.div`
   margin-bottom: 10px;

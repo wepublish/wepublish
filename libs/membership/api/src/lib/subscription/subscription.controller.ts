@@ -1,4 +1,4 @@
-import {OldContextService, PaymentProvider, PrismaService, SendMailType} from '@wepublish/api'
+import {OldContextService, PaymentProvider, PrismaService} from '@wepublish/api'
 import {
   Invoice,
   Subscription,
@@ -14,10 +14,9 @@ import {
   PaymentState,
   InvoiceItem
 } from '@prisma/client'
-import {add, addDays} from 'date-fns'
+import {add} from 'date-fns'
 import {Injectable} from '@nestjs/common'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
-import {MailController} from '../mail/mail.controller'
 
 export type SubscriptionControllerConfig = {
   subscription: Subscription

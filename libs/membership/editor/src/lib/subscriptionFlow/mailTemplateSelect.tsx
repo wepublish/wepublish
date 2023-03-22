@@ -14,7 +14,7 @@ import {
 } from './subscriptionFlowList'
 import {useTranslation} from 'react-i18next'
 import {MdUnsubscribe} from 'react-icons/all'
-import {useAuthorisation} from '../../../../../../apps/editor/src/app/atoms/permissionControl'
+import {useAuthorisation} from 'app/atoms/permissionControl'
 
 interface MailTemplateSelectProps {
   mailTemplates: FullMailTemplateFragment[]

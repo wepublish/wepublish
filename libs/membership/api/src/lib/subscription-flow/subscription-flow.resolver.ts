@@ -6,7 +6,6 @@ import {
   SubscriptionFlowModelUpdateInput,
   SubscriptionIntervalCreateInput,
   SubscriptionIntervalDeleteInput,
-  SubscriptionIntervalsUpdateInput,
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
 import {SubscriptionFlowController} from './subscription-flow.controller'

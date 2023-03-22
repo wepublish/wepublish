@@ -1,6 +1,6 @@
-import {MailTemplateMap, OldContextService, PrismaService} from '@wepublish/api'
+import {OldContextService, PrismaService} from '@wepublish/api'
 import {Injectable} from '@nestjs/common'
-import {MailTemplate, MailLogState, User} from '@prisma/client'
+import {MailLogState, User} from '@prisma/client'
 
 export enum mailLogType {
   SubscriptionFlow,

@@ -14,7 +14,6 @@ import {
 } from './subscription-flow.type'
 import {SubscriptionEvent} from '@prisma/client'
 import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
-// import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subscription-event-dictionary'
 const SUBSCRIPTION_EVEN_MAX_DAYS_BEFORE = -25
 const SUBSCRIPTION_EVEN_MAX_DAYS_AFTER = 90
 @Injectable()

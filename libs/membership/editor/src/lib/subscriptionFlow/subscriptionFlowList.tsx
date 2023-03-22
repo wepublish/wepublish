@@ -1,5 +1,5 @@
 import React, {createContext, useMemo, useState} from 'react'
-import {ListViewContainer, ListViewHeader} from '../../../../../../apps/editor/src/app/ui/listView'
+import {ListViewContainer, ListViewHeader} from 'app/ui/listView'
 import {
   styled,
   Table,
@@ -41,10 +41,7 @@ import ActionsBody from './events/eventsBody'
 import TimelineBody from './timeline/timelineBody'
 import DeleteSubscriptionFlow from './deleteSubscriptionFlow'
 import SubscriptionFlowHeadline from './subscriptionFlowHeadline'
-import {
-  createCheckedPermissionComponent,
-  PermissionControl
-} from '../../../../../../apps/editor/src/app/atoms/permissionControl'
+import {createCheckedPermissionComponent, PermissionControl} from 'app/atoms/permissionControl'
 
 /**
  * CONTEXT

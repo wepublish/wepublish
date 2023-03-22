@@ -1,8 +1,8 @@
 import React from 'react'
-import {MdAlarmOn, MdCelebration, MdFilterAlt, MdMouse} from 'react-icons/all'
+import {MdAlarmOn, MdCelebration, MdFilterAlt} from 'react-icons/all'
 import {styled, TableCell} from '@mui/material'
 import {useTranslation} from 'react-i18next'
-import {PermissionControl} from '../../../../../../apps/editor/src/app/atoms/permissionControl'
+import {PermissionControl} from 'app/atoms/permissionControl'
 
 interface SubscriptionFlowHeadlineProps {
   defaultFlowOnly?: boolean

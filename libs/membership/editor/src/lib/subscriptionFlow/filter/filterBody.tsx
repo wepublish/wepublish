@@ -11,12 +11,12 @@ import {
   useUpdateSubscriptionFlowMutation
 } from '@wepublish/editor/api-v2'
 import {ApolloClient, NormalizedCacheObject} from '@apollo/client'
-import {getApiClientV2} from '../../../../../../../apps/editor/src/app/utility'
+import {getApiClientV2} from 'app/utility'
 import {showErrors} from '../subscriptionFlowList'
 import {MdAdd} from 'react-icons/all'
 import {FullMemberPlanFragment} from '@wepublish/editor/api'
 import {useTranslation} from 'react-i18next'
-import {useAuthorisation} from '../../../../../../../apps/editor/src/app/atoms/permissionControl'
+import {useAuthorisation} from 'app/atoms/permissionControl'
 
 interface FilterBodyProps {
   memberPlan?: FullMemberPlanFragment

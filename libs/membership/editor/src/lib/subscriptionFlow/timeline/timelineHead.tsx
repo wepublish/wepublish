@@ -5,7 +5,7 @@ import {MdCheck, MdEdit, MdRefresh} from 'react-icons/all'
 import {useTranslation} from 'react-i18next'
 import {SubscriptionInterval} from '@wepublish/editor/api-v2'
 import {GraphqlClientContext} from '../graphqlClientContext'
-import {useAuthorisation} from '../../../../../../../apps/editor/src/app/atoms/permissionControl'
+import {useAuthorisation} from 'app/atoms/permissionControl'
 
 interface FlowHeadProps {
   days: (number | null | undefined)[]

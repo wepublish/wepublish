@@ -4,7 +4,7 @@ import {MdDelete} from 'react-icons/all'
 import {SubscriptionFlowFragment} from '@wepublish/editor/api-v2'
 import {GraphqlClientContext} from './graphqlClientContext'
 import {useTranslation} from 'react-i18next'
-import {PermissionControl} from '../../../../../../apps/editor/src/app/atoms/permissionControl'
+import {PermissionControl} from 'app/atoms/permissionControl'
 
 interface DeleteSubscriptionFlowProps {
   subscriptionFlow: SubscriptionFlowFragment

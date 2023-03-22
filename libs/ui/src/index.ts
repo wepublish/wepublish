@@ -1,2 +1,5 @@
 export * from './lib/button/button'
 export * from './lib/theme'
+export * from './lib/singleView/singleView'
+export * from './lib/singleView/singleViewTitle'
+export * from './lib/singleView/singleViewContent'

@@ -1,10 +1,8 @@
 import React, {useEffect, useMemo, useState} from 'react'
-import {SingleView} from '../../../../../ui/src/lib/singleView/singleView'
-import {SingleViewTitle} from '../../../../../ui/src/lib/singleView/singleViewTitle'
-import {SingleViewContent} from '../../../../../ui/src/lib/singleView/singleViewContent'
-import {Link, useNavigate, useParams} from 'react-router-dom'
+import {SingleView, SingleViewTitle, SingleViewContent} from '@wepublish/ui'
+import {useNavigate, useParams} from 'react-router-dom'
 import {useTranslation} from 'react-i18next'
-import {createCheckedPermissionComponent} from '../../../../../../apps/editor/src/app/atoms/permissionControl'
+import {createCheckedPermissionComponent} from 'app/atoms/permissionControl'
 import {
   AvailablePaymentMethod,
   FullMemberPlanFragment,
@@ -15,9 +13,9 @@ import {
   usePaymentMethodListQuery,
   useUpdateMemberPlanMutation
 } from '@wepublish/editor/api'
-import {Col, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
-import {generateID} from '../../../../../../apps/editor/src/app/utility'
-import {ListValue} from '../../../../../../apps/editor/src/app/atoms/listInput'
+import {Form, Message, Schema, toaster} from 'rsuite'
+import {generateID} from 'app/utility'
+import {ListValue} from 'app/atoms/listInput'
 import MemberPlanForm from './memberPlanForm'
 import {ApolloError} from '@apollo/client'
 

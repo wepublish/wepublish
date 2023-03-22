@@ -16,10 +16,7 @@ import {useTranslation} from 'react-i18next'
 import {MdCheck, MdSync, MdWarning} from 'react-icons/all'
 import {Button, Message, Stack, toaster} from 'rsuite'
 import styles from './mailTemplate.module.css'
-import {
-  createCheckedPermissionComponent,
-  PermissionControl
-} from '../../../../../../apps/editor/src/app/atoms/permissionControl'
+import {createCheckedPermissionComponent, PermissionControl} from 'app/atoms/permissionControl'
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(

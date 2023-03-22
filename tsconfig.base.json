@@ -35,7 +35,10 @@
       "@wepublish/website-builder": ["libs/website-builder/src/index.ts"],
       "@wepublish/website": ["libs/website/src/index.ts"],
       "@wepublish/website/api-v2": ["libs/website/api-v2/src/index.ts"],
-      "@wepublish/website/api": ["libs/website/api/src/index.ts"]
+      "@wepublish/website/api": ["libs/website/api/src/index.ts"],
+      // temporary as long as nx refactoring is not finished
+      // https://stackoverflow.com/questions/67643569/eslint-rule-nrwl-nx-enforce-module-boundaries-fails
+      "app/*": ["apps/editor/src/app/*"],
     }
   },
   "exclude": ["node_modules", "tmp"]
