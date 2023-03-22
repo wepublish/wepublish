@@ -144,7 +144,7 @@ ALTER TABLE "user_communication_flows" ADD CONSTRAINT "user_communication_flows_
 ALTER TABLE "subscription_communication_flows" ADD CONSTRAINT "subscription_communication_flows_memberPlanId_fkey" FOREIGN KEY ("memberPlanId") REFERENCES "member.plans"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "subscriptions.intervals" ADD CONSTRAINT "subscriptions.intervals_subscriptionFlowId_fkey" FOREIGN KEY ("subscriptionFlowId") REFERENCES "subscription_communication_flows"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "subscriptions.intervals" ADD CONSTRAINT "subscriptions.intervals_subscriptionFlowId_fkey" FOREIGN KEY ("subscriptionFlowId") REFERENCES "subscription_communication_flows"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "subscriptions.intervals" ADD CONSTRAINT "subscriptions.intervals_mailTemplateId_fkey" FOREIGN KEY ("mailTemplateId") REFERENCES "mail_templates"("id") ON DELETE SET NULL ON UPDATE CASCADE;
