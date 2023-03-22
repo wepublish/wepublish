@@ -56,6 +56,7 @@ export * from './lib/mails/mailContext'
 export * from './lib/challenges/challengeProvider'
 export * from './lib/challenges/algebraicCaptchaChallenge'
 export * from './lib/payments/payrexxSubscriptionPaymentProvider'
+export * from './__generated__/fabbrica'
 
 export {PrismaService} from './lib/prisma.service'
 export {OldContextService} from './lib/oldContext.service'
