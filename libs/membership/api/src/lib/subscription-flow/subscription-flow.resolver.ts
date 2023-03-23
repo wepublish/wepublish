@@ -9,13 +9,14 @@ import {
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
 import {SubscriptionFlowController} from './subscription-flow.controller'
-import { SubscriptionFlow } from '@prisma/client'
-import { PrismaService } from '@wepublish/api'
-import { SubscriptionFlowHelper, SubscriptionFlowWithPaymentMethod } from './subscription-flow.helper'
+import {SubscriptionFlow} from '@prisma/client'
+import {PrismaService} from '@wepublish/api'
+import {SubscriptionFlowHelper, SubscriptionFlowWithPaymentMethod} from './subscription-flow.helper'
 
 type WithNumberOfSubscriptions<T> = T & {
   numberOfSubscriptions: number
 }
+import {CanGetSubscriptionFlows, Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => [SubscriptionFlowResolver])
 export class SubscriptionFlowResolver {
@@ -25,7 +26,7 @@ export class SubscriptionFlowResolver {
     private readonly flowHelper: SubscriptionFlowHelper
   ) {}
 
-  // Subscription Flow
+  @Permissions(CanGetSubscriptionFlows)
   @Query(() => [SubscriptionFlowModel], {name: 'subscriptionFlows'})
   async subscriptionFlows(
     @Args('defaultFlowOnly') defaultFlowOnly: boolean,
@@ -85,7 +86,9 @@ export class SubscriptionFlowResolver {
     return this.controller.paymentMethods()
   }
 
-  private async decorate(flows: SubscriptionFlowWithPaymentMethod[]): Promise<WithNumberOfSubscriptions<SubscriptionFlow>[]> {
+  private async decorate(
+    flows: SubscriptionFlowWithPaymentMethod[]
+  ): Promise<WithNumberOfSubscriptions<SubscriptionFlow>[]> {
     const subscriptionCounts = await this.flowHelper.numberOfSubscriptionsFor(flows)
 
     return flows.map(f => {
@@ -93,7 +96,7 @@ export class SubscriptionFlowResolver {
 
       return {
         ...f,
-        numberOfSubscriptions: count && count.subscriptionCount || 0
+        numberOfSubscriptions: (count && count.subscriptionCount) || 0
       }
     })
   }
