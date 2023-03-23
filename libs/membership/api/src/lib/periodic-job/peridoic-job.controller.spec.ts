@@ -185,15 +185,17 @@ describe('PeriodicJobController', () => {
   })
 
   it('create invoice', async () => {
+    const mail = 'dev-mail@test.wepublish.com'
     const renewalDate = add(new Date(), {days: 13})
     const invoice = await InvoiceFactory.create({
       dueAt: sub(renewalDate, {months: 12}),
       paidAt: sub(renewalDate, {months: 12}),
-      mail: 'dev-mail@test.wepublish.com',
+      mail: mail,
       paymentDeadline: sub(renewalDate, {months: 11, days: 20})
     })
 
     const testUserAndData = await UserFactory.create({
+      email: mail,
       Subscription: {
         create: {
           paymentPeriodicity: PaymentPeriodicity.yearly,
@@ -221,7 +223,7 @@ describe('PeriodicJobController', () => {
               startsAt: sub(renewalDate, {months: 12}),
               endsAt: renewalDate,
               paymentPeriodicity: PaymentPeriodicity.yearly,
-              amount: 2400,
+              amount: 2300,
               invoice: {
                 connect: {
                   id: invoice.id
@@ -239,17 +241,56 @@ describe('PeriodicJobController', () => {
       },
       include: {
         deactivation: true,
-        invoices: true,
+        invoices: {
+          include: {
+            items: true
+          }
+        },
         periods: true
       }
     })
+
+    // Test subscription
     expect(subscriptions.length).toEqual(1)
     const subscription = subscriptions[0]
     expect(subscription.invoices.length).toEqual(2)
+
+    // Test new created invoice
     const newInvoice = subscription.invoices.find(invoice => invoice.dueAt >= new Date())
     expect(newInvoice).toBeDefined()
     if (!newInvoice) throw Error('New Invoice not found!')
-    expect(newInvoice.dueAt.getTime()).toBeGreaterThan(new Date().getTime())
+    expect(newInvoice.dueAt.getTime()).toBeGreaterThan(
+      add(newInvoice.createdAt, {days: 12}).getTime()
+    )
+    expect(newInvoice.paymentDeadline!.getTime()).toBeGreaterThan(
+      add(newInvoice.dueAt, {days: 4}).getTime()
+    )
+    expect(newInvoice.mail).toEqual(mail)
+    expect(newInvoice.description).toEqual('Renewal of subscription yearly for yearly')
+    expect(newInvoice.paidAt).toBeNull()
+    expect(newInvoice.canceledAt).toBeNull()
+    expect(newInvoice.manuallySetAsPaidByUserId).toBeNull()
+
+    // Test invoice items
+    expect(newInvoice.items.length).toEqual(1)
+    const item = newInvoice.items[0]
+    expect(item.name).toEqual('yearly')
+    expect(item.description).toEqual('Renewal of subscription yearly for yearly')
+    expect(item.quantity).toEqual(1)
+    expect(item.amount).toEqual(2400)
+    expect(item.invoiceId).not.toBeNull()
+
+    // Test Periods
+    expect(subscription.periods.length).toEqual(2)
+    const newPeriod = subscription.periods.find(period => period.startsAt >= new Date())
+    expect(newPeriod).toBeDefined()
+    if (!newPeriod) throw Error('New Period not found!')
+    expect(newPeriod.startsAt.getTime()).toEqual(add(newInvoice.dueAt, {days: 1}).getTime())
+    expect(newPeriod.endsAt.getTime()).toEqual(add(newInvoice.dueAt, {years: 1}).getTime())
+    expect(newPeriod.paymentPeriodicity).toEqual('yearly')
+    expect(newPeriod.amount).toEqual(2400)
+    expect(newPeriod.subscriptionId).not.toBeNull()
+    expect(newPeriod.invoiceID).not.toBeNull()
 
     // Check that subscription is no canceled
     expect((await prismaClient.subscriptionDeactivation.findMany()).length).toEqual(0)
