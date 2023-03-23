@@ -77,6 +77,7 @@ export type Mutation = {
   updateSubscriptionFlow: Array<SubscriptionFlowModel>;
   updateSubscriptionInterval: Array<SubscriptionFlowModel>;
   updateSubscriptionIntervals: Array<SubscriptionFlowModel>;
+  updateSystemMail: Array<SystemMailModel>;
 };
 
 
@@ -114,6 +115,11 @@ export type MutationUpdateSubscriptionIntervalsArgs = {
   subscriptionIntervals: Array<SubscriptionIntervalUpdateInput>;
 };
 
+
+export type MutationUpdateSystemMailArgs = {
+  systemMail: SystemMailUpdateInput;
+};
+
 export type PaymentMethodRef = {
   __typename?: 'PaymentMethodRef';
   id: Scalars['String'];
@@ -139,6 +145,7 @@ export type Query = {
    * Excludes cancelled or manually set as paid invoices.
    */
   expectedRevenue: Array<DashboardInvoice>;
+  getSystemMails: Array<SystemMailModel>;
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /**
    * Returns all new deactivations in a given timeframe.
@@ -267,6 +274,17 @@ export type SubscriptionIntervalUpdateInput = {
   mailTemplateId?: InputMaybe<Scalars['Int']>;
 };
 
+export type SystemMailModel = {
+  __typename?: 'SystemMailModel';
+  event: Scalars['String'];
+  mailTemplate: MailTemplateRef;
+};
+
+export type SystemMailUpdateInput = {
+  event: Scalars['String'];
+  mailTemplateId: Scalars['Int'];
+};
+
 export type VersionInformation = {
   __typename?: 'VersionInformation';
   version: Scalars['String'];
@@ -358,6 +376,20 @@ export type MemberPlanRefFragment = { __typename?: 'MemberPlanRef', id: string, 
 
 export type PaymentMethodRefFragment = { __typename?: 'PaymentMethodRef', id: string, name: string };
 
+export type GetSystemMailsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetSystemMailsQuery = { __typename?: 'Query', getSystemMails: Array<{ __typename?: 'SystemMailModel', event: string, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } }> };
+
+export type UpdateSystemMailMutationVariables = Exact<{
+  systemMail: SystemMailUpdateInput;
+}>;
+
+
+export type UpdateSystemMailMutation = { __typename?: 'Mutation', updateSystemMail: Array<{ __typename?: 'SystemMailModel', event: string, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } }> };
+
+export type SystemMailFragment = { __typename?: 'SystemMailModel', event: string, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } };
+
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -427,6 +459,14 @@ export const SubscriptionFlowFragmentDoc = gql`
     ${MemberPlanRefFragmentDoc}
 ${PaymentMethodRefFragmentDoc}
 ${SubscriptionIntervalFragmentDoc}`;
+export const SystemMailFragmentDoc = gql`
+    fragment SystemMail on SystemMailModel {
+  event
+  mailTemplate {
+    ...MailTemplateRef
+  }
+}
+    ${MailTemplateRefFragmentDoc}`;
 export const MailTemplateDocument = gql`
     query MailTemplate {
   mailTemplates {
@@ -799,6 +839,73 @@ export function useListPaymentMethodsLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type ListPaymentMethodsQueryHookResult = ReturnType<typeof useListPaymentMethodsQuery>;
 export type ListPaymentMethodsLazyQueryHookResult = ReturnType<typeof useListPaymentMethodsLazyQuery>;
 export type ListPaymentMethodsQueryResult = Apollo.QueryResult<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>;
+export const GetSystemMailsDocument = gql`
+    query GetSystemMails {
+  getSystemMails {
+    ...SystemMail
+  }
+}
+    ${SystemMailFragmentDoc}`;
+
+/**
+ * __useGetSystemMailsQuery__
+ *
+ * To run a query within a React component, call `useGetSystemMailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSystemMailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSystemMailsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetSystemMailsQuery(baseOptions?: Apollo.QueryHookOptions<GetSystemMailsQuery, GetSystemMailsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSystemMailsQuery, GetSystemMailsQueryVariables>(GetSystemMailsDocument, options);
+      }
+export function useGetSystemMailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSystemMailsQuery, GetSystemMailsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSystemMailsQuery, GetSystemMailsQueryVariables>(GetSystemMailsDocument, options);
+        }
+export type GetSystemMailsQueryHookResult = ReturnType<typeof useGetSystemMailsQuery>;
+export type GetSystemMailsLazyQueryHookResult = ReturnType<typeof useGetSystemMailsLazyQuery>;
+export type GetSystemMailsQueryResult = Apollo.QueryResult<GetSystemMailsQuery, GetSystemMailsQueryVariables>;
+export const UpdateSystemMailDocument = gql`
+    mutation UpdateSystemMail($systemMail: SystemMailUpdateInput!) {
+  updateSystemMail(systemMail: $systemMail) {
+    ...SystemMail
+  }
+}
+    ${SystemMailFragmentDoc}`;
+export type UpdateSystemMailMutationFn = Apollo.MutationFunction<UpdateSystemMailMutation, UpdateSystemMailMutationVariables>;
+
+/**
+ * __useUpdateSystemMailMutation__
+ *
+ * To run a mutation, you first call `useUpdateSystemMailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSystemMailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSystemMailMutation, { data, loading, error }] = useUpdateSystemMailMutation({
+ *   variables: {
+ *      systemMail: // value for 'systemMail'
+ *   },
+ * });
+ */
+export function useUpdateSystemMailMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSystemMailMutation, UpdateSystemMailMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSystemMailMutation, UpdateSystemMailMutationVariables>(UpdateSystemMailDocument, options);
+      }
+export type UpdateSystemMailMutationHookResult = ReturnType<typeof useUpdateSystemMailMutation>;
+export type UpdateSystemMailMutationResult = Apollo.MutationResult<UpdateSystemMailMutation>;
+export type UpdateSystemMailMutationOptions = Apollo.BaseMutationOptions<UpdateSystemMailMutation, UpdateSystemMailMutationVariables>;
 export const VersionInformationDocument = gql`
     query VersionInformation {
   versionInformation {

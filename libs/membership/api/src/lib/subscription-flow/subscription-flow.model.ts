@@ -12,7 +12,7 @@ registerEnumType(SubscriptionEvent, {
 // Output
 
 @ObjectType()
-class MailTemplateRef {
+export class MailTemplateRef {
   @Field(() => Int)
   id!: number
   @Field()

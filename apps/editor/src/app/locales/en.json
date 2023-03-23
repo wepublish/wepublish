@@ -747,7 +747,8 @@
       "usersAndMembers": "Users & Subscriptions",
       "subscriptionSettings": "Subscription Mailing",
       "mailTemplates": "E-Mail Templates",
-      "subscriptionPlans": "Subscription Plans"
+      "subscriptionPlans": "Subscription Plans",
+      "systemMails": "System Mails"
     },
     "navigation": {
       "overview": {
@@ -1419,6 +1420,12 @@
       "timeline": "Timeline",
       "actions": "Actions",
       "dayOfRenewal": "Day of renewal / subscription ends"
+    },
+    "systemMails": {
+      "title": "System Mails",
+      "event": "Event",
+      "template": "Mail template",
+      "test": "Send test mail"
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "No mailing"

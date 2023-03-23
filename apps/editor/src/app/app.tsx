@@ -46,6 +46,7 @@ import {LocalStorageKey} from './utility'
 import {MemberPlanEdit} from '../../../../libs/membership/editor/src/lib/memberPlan/memberPlanEdit'
 import {MailTemplateList} from '../../../../libs/membership/editor/src/lib/mailTemplate/mailTemplateList'
 import {SubscriptionFlowList} from '../../../../libs/membership/editor/src/lib/subscriptionFlow/subscriptionFlowList'
+import {SystemMailList} from '../../../../libs/membership/editor/src/lib/systemMail/systemMailList'
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -559,6 +560,14 @@ export function App() {
               element={
                 <Base>
                   <MailTemplateList />
+                </Base>
+              }
+            />
+            <Route
+              path="systemmails"
+              element={
+                <Base>
+                  <SystemMailList />
                 </Base>
               }
             />

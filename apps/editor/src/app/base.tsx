@@ -535,6 +535,18 @@ export function Base({children}: BaseProps) {
                       </Nav.Item>
                     </PermissionControl>
 
+                    {/* SYSTEM MAILS */}
+                    <PermissionControl
+                      qualifyingPermissions={['CAN_GET_SYSTEM_MAILS', 'CAN_UPDATE_SYSTEM_MAILS']}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/systemmails"
+                        active={path === 'systemmails'}
+                        icon={<MdMail />}>
+                        {t('navbar.systemMails')}
+                      </Nav.Item>
+                    </PermissionControl>
+
                     {/* USER ROLES */}
                     <PermissionControl
                       qualifyingPermissions={[
