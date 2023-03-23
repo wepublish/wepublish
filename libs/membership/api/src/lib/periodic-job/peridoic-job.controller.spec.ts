@@ -217,5 +217,6 @@ describe('PeriodicJobController', () => {
         }
       }
     })
+    await controller.execute()
   })
 })
