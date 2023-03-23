@@ -13,7 +13,8 @@ import {
   defineSubscriptionFlowFactory,
   definePaymentMethodFactory,
   defineUserFactory,
-  defineSubscriptionIntervalFactory
+  defineSubscriptionIntervalFactory,
+  defineInvoiceFactory
 } from '@wepublish/api'
 import {add, sub} from 'date-fns'
 import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
@@ -34,6 +35,7 @@ describe('PeriodicJobController', () => {
     }
   })
   const UserFactory = defineUserFactory()
+  const InvoiceFactory = defineInvoiceFactory()
   const SubscriptionIntervalFactory = defineSubscriptionIntervalFactory({
     defaultData: {
       subscriptionFlow: SubscriptionFlowFactory
@@ -184,7 +186,14 @@ describe('PeriodicJobController', () => {
 
   it('create invoice', async () => {
     const renewalDate = add(new Date(), {days: 13})
-    await UserFactory.create({
+    const invoice = await InvoiceFactory.create({
+      dueAt: sub(renewalDate, {months: 12}),
+      paidAt: sub(renewalDate, {months: 12}),
+      mail: 'dev-mail@test.wepublish.com',
+      paymentDeadline: sub(renewalDate, {months: 11, days: 20})
+    })
+
+    const testUserAndData = await UserFactory.create({
       Subscription: {
         create: {
           paymentPeriodicity: PaymentPeriodicity.yearly,
@@ -202,6 +211,11 @@ describe('PeriodicJobController', () => {
               slug: 'yearly'
             }
           },
+          invoices: {
+            connect: {
+              id: invoice.id
+            }
+          },
           periods: {
             create: {
               startsAt: sub(renewalDate, {months: 12}),
@@ -209,9 +223,8 @@ describe('PeriodicJobController', () => {
               paymentPeriodicity: PaymentPeriodicity.yearly,
               amount: 2400,
               invoice: {
-                create: {
-                  dueAt: sub(renewalDate, {months: 12}),
-                  mail: 'dev-mail@test.wepublish.com'
+                connect: {
+                  id: invoice.id
                 }
               }
             }
@@ -220,5 +233,25 @@ describe('PeriodicJobController', () => {
       }
     })
     await controller.execute()
+    const subscriptions = await prismaClient.subscription.findMany({
+      where: {
+        userID: testUserAndData.id
+      },
+      include: {
+        deactivation: true,
+        invoices: true,
+        periods: true
+      }
+    })
+    expect(subscriptions.length).toEqual(1)
+    const subscription = subscriptions[0]
+    expect(subscription.invoices.length).toEqual(2)
+    const newInvoice = subscription.invoices.find(invoice => invoice.dueAt >= new Date())
+    expect(newInvoice).toBeDefined()
+    if (!newInvoice) throw Error('New Invoice not found!')
+    expect(newInvoice.dueAt.getTime()).toBeGreaterThan(new Date().getTime())
+
+    // Check that subscription is no canceled
+    expect((await prismaClient.subscriptionDeactivation.findMany()).length).toEqual(0)
   })
 })

@@ -66,7 +66,9 @@ export class MailController {
     await this.prismaService.mailLog.create({
       data: {
         recipient: {
-          connect: this.config.recipient
+          connect: {
+            id: this.config.recipient.id
+          }
         },
         state: MailLogState.submitted,
         sentDate: this.sendDate,
