@@ -1,4 +1,4 @@
-import {MailLogState, PrismaClient} from '@prisma/client'
+import {MailLogState, PrismaClient, UserEvent} from '@prisma/client'
 import Email from 'email-templates'
 import {logger} from '../server'
 import {BaseMailProvider} from './mailProvider'
@@ -17,6 +17,11 @@ export enum SendMailType {
 
 export interface SendEMailProps {
   readonly type: SendMailType
+  readonly recipient: string
+  readonly data: Record<string, any>
+}
+export interface SendNewEMailProps {
+  readonly event: UserEvent
   readonly recipient: string
   readonly data: Record<string, any>
 }
@@ -102,6 +107,38 @@ export class MailContext implements MailContext {
     }
   }
 
+  async sendMailNew({event, recipient, data}: SendNewEMailProps) {
+    const userFlowMail = await this.prisma.userFlowMail.findUnique({
+      where: {
+        event
+      },
+      include: {
+        mailTemplate: true
+      }
+    })
+
+    if (!userFlowMail) {
+      logger('mailContext').warn(`Template for event: ${event} not found`)
+      return
+    }
+
+    if (this.mailProvider) {
+      await this.mailProvider.sendMail({
+        mailLogID: '1',
+        recipient,
+        replyToAddress: this.defaultReplyToAddress ?? this.defaultFromAddress,
+        subject: '',
+        message: undefined,
+        messageHtml: undefined,
+        template: userFlowMail.mailTemplate.externalMailTemplateId,
+        templateData: data
+      })
+    }
+  }
+
+  /**
+   * @deprecated use sendNewMail instead
+   */
   async sendMail({type, recipient, data}: SendEMailProps): Promise<void> {
     // const type = SendMailType.LoginLink
     const mailTemplate = this.mailTemplateMaps.find(template => template.type === type)

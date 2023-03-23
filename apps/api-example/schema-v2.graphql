@@ -195,13 +195,20 @@ input SubscriptionIntervalUpdateInput {
 }
 
 type SystemMailModel {
-  event: String!
+  event: UserEvent!
   mailTemplate: MailTemplateRef!
 }
 
 input SystemMailUpdateInput {
-  event: String!
+  event: UserEvent!
   mailTemplateId: Int!
+}
+
+enum UserEvent {
+  ACCOUNT_CREATION
+  LOGIN_LINK
+  PASSWORD_RESET
+  TEST_MAIL
 }
 
 type VersionInformation {

@@ -262,13 +262,20 @@ export type SubscriptionIntervalUpdateInput = {
 
 export type SystemMailModel = {
   __typename?: 'SystemMailModel'
-  event: Scalars['String']
+  event: UserEvent
   mailTemplate: MailTemplateRef
 }
 
 export type SystemMailUpdateInput = {
-  event: Scalars['String']
+  event: UserEvent
   mailTemplateId: Scalars['Int']
+}
+
+export enum UserEvent {
+  AccountCreation = 'ACCOUNT_CREATION',
+  LoginLink = 'LOGIN_LINK',
+  PasswordReset = 'PASSWORD_RESET',
+  TestMail = 'TEST_MAIL'
 }
 
 export type VersionInformation = {

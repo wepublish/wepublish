@@ -10,6 +10,9 @@
 
 */
 -- CreateEnum
+CREATE TYPE "UserEvent" AS ENUM ('ACCOUNT_CREATION', 'PASSWORD_RESET', 'LOGIN_LINK', 'TEST_MAIL');
+
+-- CreateEnum
 CREATE TYPE "SubscriptionEvent" AS ENUM ('SUBSCRIBE', 'INVOICE_CREATION', 'RENEWAL_SUCCESS', 'RENEWAL_FAILED', 'DEACTIVATION_UNPAID', 'DEACTIVATION_BY_USER', 'REACTIVATION', 'CUSTOM');
 
 -- DropIndex
@@ -31,9 +34,8 @@ CREATE TABLE "user_communication_flows" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "modifiedAt" TIMESTAMP(3) NOT NULL,
-    "accountCreationMailTemplateId" INTEGER,
-    "passwordResetMailTemplateId" INTEGER,
-    "loginLinkMailTemplateId" INTEGER,
+    "event" "UserEvent" NOT NULL,
+    "mailTemplateId" INTEGER NOT NULL,
 
     CONSTRAINT "user_communication_flows_pkey" PRIMARY KEY ("id")
 );
@@ -99,13 +101,7 @@ CREATE TABLE "_PaymentMethodToSubscriptionFlow" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_communication_flows_accountCreationMailTemplateId_key" ON "user_communication_flows"("accountCreationMailTemplateId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "user_communication_flows_passwordResetMailTemplateId_key" ON "user_communication_flows"("passwordResetMailTemplateId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "user_communication_flows_loginLinkMailTemplateId_key" ON "user_communication_flows"("loginLinkMailTemplateId");
+CREATE UNIQUE INDEX "user_communication_flows_event_key" ON "user_communication_flows"("event");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "mail_templates_externalMailTemplateId_key" ON "mail_templates"("externalMailTemplateId");
@@ -132,13 +128,7 @@ ALTER TABLE "mail.log" ADD CONSTRAINT "mail.log_recipientID_fkey" FOREIGN KEY ("
 ALTER TABLE "mail.log" ADD CONSTRAINT "mail.log_mailTemplateId_fkey" FOREIGN KEY ("mailTemplateId") REFERENCES "mail_templates"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "user_communication_flows" ADD CONSTRAINT "user_communication_flows_accountCreationMailTemplateId_fkey" FOREIGN KEY ("accountCreationMailTemplateId") REFERENCES "mail_templates"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "user_communication_flows" ADD CONSTRAINT "user_communication_flows_passwordResetMailTemplateId_fkey" FOREIGN KEY ("passwordResetMailTemplateId") REFERENCES "mail_templates"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "user_communication_flows" ADD CONSTRAINT "user_communication_flows_loginLinkMailTemplateId_fkey" FOREIGN KEY ("loginLinkMailTemplateId") REFERENCES "mail_templates"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "user_communication_flows" ADD CONSTRAINT "user_communication_flows_mailTemplateId_fkey" FOREIGN KEY ("mailTemplateId") REFERENCES "mail_templates"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "subscription_communication_flows" ADD CONSTRAINT "subscription_communication_flows_memberPlanId_fkey" FOREIGN KEY ("memberPlanId") REFERENCES "member.plans"("id") ON DELETE SET NULL ON UPDATE CASCADE;

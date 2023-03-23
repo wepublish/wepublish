@@ -1,6 +1,6 @@
 import {Context} from './context'
 import {logger} from './server'
-import {SendMailType} from './mails/mailContext'
+import {UserEvent} from '@prisma/client'
 
 export enum JobType {
   DailyMembershipRenewal = 'dailyMembershipRenewal',
@@ -52,8 +52,8 @@ async function dailyInvoiceReminder(context: Context, data: any): Promise<void> 
 async function sendTestMail(context: Context, data: any): Promise<void> {
   const {recipient = 'fake@fake.com', message = 'This is a test message'} = data
 
-  await context.mailContext.sendMail({
-    type: SendMailType.TestMail,
+  await context.mailContext.sendMailNew({
+    event: UserEvent.TEST_MAIL,
     recipient,
     data: {
       message

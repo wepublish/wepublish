@@ -1423,9 +1423,16 @@
     },
     "systemMails": {
       "title": "System Mails",
+      "explanation": "You can view the available templates in the 'Mail templates' settings entry.",
       "event": "Event",
       "template": "Mail template",
-      "test": "Send test mail"
+      "test": "Send test mail",
+      "events": {
+        "login_link": "Login Link",
+        "account_creation": "Registration",
+        "password_reset": "Password reset",
+        "test_mail": "Test mail"
+      }
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "No mailing"

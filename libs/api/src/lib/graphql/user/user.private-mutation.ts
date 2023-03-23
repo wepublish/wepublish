@@ -1,9 +1,8 @@
-import {Prisma, PrismaClient} from '@prisma/client'
+import {Prisma, PrismaClient, UserEvent} from '@prisma/client'
 import {Context} from '../../context'
 import {hashPassword} from '../../db/user'
 import {unselectPassword} from '@wepublish/user/api'
 import {EmailAlreadyInUseError} from '../../error'
-import {SendMailType} from '../../mails/mailContext'
 import {Validator} from '../../validator'
 import {authorise} from '../permissions'
 import {CanCreateUser, CanDeleteUser, CanResetUserPassword} from '@wepublish/permissions/api'
@@ -109,12 +108,10 @@ export const resetUserPassword = async (
   })
 
   if (sendMail && user) {
-    await mailContext.sendMail({
-      type: SendMailType.PasswordReset,
+    await mailContext.sendMailNew({
+      event: UserEvent.PASSWORD_RESET,
       recipient: user.email,
-      data: {
-        user
-      }
+      data: {user}
     })
   }
 

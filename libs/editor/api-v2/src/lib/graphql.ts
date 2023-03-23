@@ -276,14 +276,21 @@ export type SubscriptionIntervalUpdateInput = {
 
 export type SystemMailModel = {
   __typename?: 'SystemMailModel';
-  event: Scalars['String'];
+  event: UserEvent;
   mailTemplate: MailTemplateRef;
 };
 
 export type SystemMailUpdateInput = {
-  event: Scalars['String'];
+  event: UserEvent;
   mailTemplateId: Scalars['Int'];
 };
+
+export enum UserEvent {
+  AccountCreation = 'ACCOUNT_CREATION',
+  LoginLink = 'LOGIN_LINK',
+  PasswordReset = 'PASSWORD_RESET',
+  TestMail = 'TEST_MAIL'
+}
 
 export type VersionInformation = {
   __typename?: 'VersionInformation';
@@ -379,16 +386,16 @@ export type PaymentMethodRefFragment = { __typename?: 'PaymentMethodRef', id: st
 export type GetSystemMailsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetSystemMailsQuery = { __typename?: 'Query', getSystemMails: Array<{ __typename?: 'SystemMailModel', event: string, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } }> };
+export type GetSystemMailsQuery = { __typename?: 'Query', getSystemMails: Array<{ __typename?: 'SystemMailModel', event: UserEvent, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } }> };
 
 export type UpdateSystemMailMutationVariables = Exact<{
   systemMail: SystemMailUpdateInput;
 }>;
 
 
-export type UpdateSystemMailMutation = { __typename?: 'Mutation', updateSystemMail: Array<{ __typename?: 'SystemMailModel', event: string, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } }> };
+export type UpdateSystemMailMutation = { __typename?: 'Mutation', updateSystemMail: Array<{ __typename?: 'SystemMailModel', event: UserEvent, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } }> };
 
-export type SystemMailFragment = { __typename?: 'SystemMailModel', event: string, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } };
+export type SystemMailFragment = { __typename?: 'SystemMailModel', event: UserEvent, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } };
 
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 

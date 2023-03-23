@@ -8,23 +8,40 @@ export class SystemMailResolver {
 
   @Query(() => [SystemMailModel])
   async getSystemMails() {
-    return this.allSystemMails()
+    return this.prismaService.userFlowMail.findMany({
+      include: {
+        mailTemplate: true
+      },
+      orderBy: [{id: 'asc'}]
+    })
   }
 
   @Mutation(() => [SystemMailModel])
   async updateSystemMail(@Args('systemMail') systemMail: SystemMailUpdateInput) {
-    return this.allSystemMails()
-  }
-
-  private async allSystemMails() {
-    return [
-      {
-        event: 'bla',
-        mailTemplate: {
-          name: 'x',
-          id: 3
-        }
+    const userMail = await this.prismaService.userFlowMail.findUnique({
+      where: {
+        event: systemMail.event
       }
-    ]
+    })
+
+    if (!userMail) {
+      throw new Error('There is no userflow present in the database.')
+    }
+
+    await this.prismaService.userFlowMail.update({
+      where: {
+        id: userMail.id
+      },
+      data: {
+        mailTemplate: {connect: {id: systemMail.mailTemplateId}}
+      }
+    })
+
+    return this.prismaService.userFlowMail.findMany({
+      include: {
+        mailTemplate: true
+      },
+      orderBy: [{id: 'asc'}]
+    })
   }
 }
