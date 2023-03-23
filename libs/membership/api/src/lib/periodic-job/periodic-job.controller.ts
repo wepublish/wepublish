@@ -96,16 +96,25 @@ export class PeriodicJobController {
             paymentmethodeId: subscriptionToCreateInvoice.paymentMethodID,
             periodicity: subscriptionToCreateInvoice.paymentPeriodicity,
             autorenwal: subscriptionToCreateInvoice.autoRenew,
-            events: [SubscriptionEvent.INVOICE_CREATION]
+            events: [SubscriptionEvent.INVOICE_CREATION, SubscriptionEvent.DEACTIVATION_UNPAID]
           })
-          if (!eventInvoiceCreation[0]) {
+          const creationEvent = eventInvoiceCreation.find(
+            e => e.type === SubscriptionEvent.INVOICE_CREATION
+          )
+          if (!creationEvent) {
             throw Error('No invoice creation found!')
+          }
+          const deactivationEvent = eventInvoiceCreation.find(
+            e => e.type === SubscriptionEvent.DEACTIVATION_UNPAID
+          )
+          if (!deactivationEvent) {
+            throw Error('No invoice deactivation event found!')
           }
 
           if (
             subscriptionToCreateInvoice.paidUntil &&
             add(subscriptionToCreateInvoice.paidUntil, {
-              days: eventInvoiceCreation[0].daysAwayFromEnding!
+              days: creationEvent.daysAwayFromEnding!
             }) >= periodicJobRunObject.date
           ) {
             continue
@@ -113,7 +122,7 @@ export class PeriodicJobController {
 
           await this.subscriptionController.createInvoice(
             subscriptionToCreateInvoice,
-            eventInvoiceCreation[0]
+            deactivationEvent
           )
 
           if (eventInvoiceCreation[0].externalMailTemplate) {
@@ -156,9 +165,10 @@ export class PeriodicJobController {
           if (
             mailAction.action &&
             mailAction.action.externalMailTemplate &&
-            subscriptionToChargeInvoice.user
+            subscriptionToChargeInvoice.subscription.user
           ) {
-            const {paymentProviderCustomers, ...user} = subscriptionToChargeInvoice.user
+            const {paymentProviderCustomers, ...user} =
+              subscriptionToChargeInvoice.subscription.user
             await new MailController(this.prismaService, this.oldContextService, {
               daysAwayFromEnding: mailAction.action.daysAwayFromEnding,
               externalMailTemplateId: mailAction.action.externalMailTemplate,
@@ -213,8 +223,6 @@ export class PeriodicJobController {
 
           console.log('CODE FOR DEACTIVATE SUBSCRIPTION')
         }
-
-        throw Error('dasdasdas')
       } catch (e) {
         await this.markJobFailed((e as Error).toString())
         throw e

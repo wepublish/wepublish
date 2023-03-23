@@ -94,10 +94,15 @@ export class MailContext implements MailContext {
 
     this.mailTemplateMaps = props.mailTemplateMaps ?? []
   }
-  async sendRemoteTemplate({remoteTemplate, recipient, data}: SendRemoteEMailProps): Promise<void> {
+  async sendRemoteTemplate({
+    remoteTemplate,
+    recipient,
+    data,
+    mailLogID
+  }: SendRemoteEMailProps): Promise<void> {
     if (this.mailProvider) {
       await this.mailProvider.sendMail({
-        mailLogID: '1',
+        mailLogID,
         recipient,
         replyToAddress: this.defaultReplyToAddress ?? this.defaultFromAddress,
         subject: '',
