@@ -25,7 +25,7 @@ declare global {
 let serverLogger: pino.Logger
 
 export function logger(moduleName: string): pino.Logger {
-  return serverLogger.child({module: moduleName})
+  return (serverLogger || pino({name: 'we.publish'})).child({module: moduleName})
 }
 
 export interface WepublishServerOpts extends ContextOptions {

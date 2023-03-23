@@ -41,9 +41,30 @@ describe('PeriodicJobController', () => {
       subscriptionFlow: SubscriptionFlowFactory
     }
   })
+
+  let stripGetCustomers: nock.Scope
+  let stripPostPaymentIntent: nock.Scope
+
   beforeAll(() => {
+    // nock.recorder.rec()
+    stripGetCustomers = nock('https://api.stripe.com')
+      .persist()
+      .get('/v1/customers/testId')
+      .replyWithFile(200, __dirname + '/__fixtures__/stripGetCustomers.json', {
+        'Content-Type': 'application/json'
+      })
+
+    stripPostPaymentIntent = nock('https://api.stripe.com')
+      .persist()
+      .post('/v1/payment_intents')
+      .replyWithFile(200, __dirname + '/__fixtures__/stripePostPaymentIntent.json', {
+        'Content-Type': 'application/json'
+      })
+    /**
+    stripPostPaymentIntent.on('replied', () => {
+      nock.recorder.rec()
+    })**/
     nock.disableNetConnect()
-    nock.recorder.rec()
   })
 
   beforeEach(async () => {
@@ -302,7 +323,14 @@ describe('PeriodicJobController', () => {
     const invoice = await InvoiceFactory.create({
       dueAt: renewalDate,
       mail: mail,
-      paymentDeadline: sub(renewalDate, {months: 11, days: 20})
+      paymentDeadline: sub(renewalDate, {months: 11, days: 20}),
+      items: {
+        create: {
+          amount: 2400,
+          quantity: 1,
+          name: 'Yearly Sub'
+        }
+      }
     })
 
     const testUserAndData = await UserFactory.create({
@@ -340,7 +368,7 @@ describe('PeriodicJobController', () => {
               startsAt: sub(renewalDate, {months: 12}),
               endsAt: renewalDate,
               paymentPeriodicity: PaymentPeriodicity.yearly,
-              amount: 2300,
+              amount: 2400,
               invoice: {
                 connect: {
                   id: invoice.id
@@ -352,5 +380,31 @@ describe('PeriodicJobController', () => {
       }
     })
     await controller.execute()
+    const invoices = await prismaClient.invoice.findMany({
+      include: {
+        subscription: true,
+        subscriptionPeriods: true
+      }
+    })
+
+    // Test invoice
+    expect(invoices.length).toEqual(1)
+    const paidInvoice = invoices[0]
+    expect(paidInvoice.mail).toEqual(mail)
+    expect(paidInvoice.paidAt).not.toBeNull()
+    expect(paidInvoice.canceledAt).toBeNull()
+    expect(paidInvoice.manuallySetAsPaidByUserId).toBeNull()
+
+    // Test payment
+    const payments = await prismaClient.payment.findMany({})
+    expect(payments.length).toEqual(1)
+    const payment = payments[0]
+    expect(payment.state).toEqual('paid')
+    expect(payment.intentID).toEqual('pi_xxxxxxxxxxxxxxxxxxxx')
+    expect(payment.intentSecret).toEqual('pi_xxxxxxxxxxxxxxxxxxxx_secret_xxxxxxxxxxxxxxxxxxxx')
+    expect(payment.intentData).not.toBeNull()
+
+    // Check that subscription is no canceled
+    expect((await prismaClient.subscriptionDeactivation.findMany()).length).toEqual(0)
   })
 })

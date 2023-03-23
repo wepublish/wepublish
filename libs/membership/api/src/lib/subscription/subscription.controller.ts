@@ -197,14 +197,18 @@ export class SubscriptionController {
       }
     })
   }
-  public async markInvoiceAsPaid(subscription: Subscription) {
-    const newPaidUntil = add(subscription.paidUntil || subscription.createdAt, {
-      months: this.getMonthCount(subscription.paymentPeriodicity)
+  public async markInvoiceAsPaid(
+    invoice: Invoice & {
+      subscription: Subscription | null
+    }
+  ) {
+    const newPaidUntil = add(invoice.subscription!.paidUntil || invoice.subscription!.createdAt, {
+      months: this.getMonthCount(invoice.subscription!.paymentPeriodicity)
     })
     await this.prismaService.$transaction([
       this.prismaService.subscription.update({
         where: {
-          id: subscription.id
+          id: invoice.subscription!.id
         },
         data: {
           paidUntil: newPaidUntil
@@ -212,7 +216,7 @@ export class SubscriptionController {
       }),
       this.prismaService.invoice.update({
         where: {
-          id: subscription.id
+          id: invoice.id
         },
         data: {
           paidAt: new Date()
@@ -345,7 +349,7 @@ export class SubscriptionController {
       )
 
       console.log('Sent mail MemberSubscriptionOffSessionSuccess')
-      await this.markInvoiceAsPaid(invoice.subscription)
+      await this.markInvoiceAsPaid(invoice)
       return {
         action: renewalSuccessAction,
         errorCode: ''
