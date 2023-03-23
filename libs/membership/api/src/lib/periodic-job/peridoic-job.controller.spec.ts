@@ -2,7 +2,7 @@ import {Test, TestingModule} from '@nestjs/testing'
 import nock from 'nock'
 import {clearDatabase} from '../../prisma-utils'
 import {PrismaModule} from '@wepublish/nest-modules'
-import {OldContextService, PrismaService} from '@wepublish/api'
+import {contextFromRequest, OldContextService, PrismaService} from '@wepublish/api'
 import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
 import {PeriodicJobController} from './periodic-job.controller'
 import {SubscriptionController} from '../subscription/subscription.controller'
@@ -18,6 +18,7 @@ import {
 import {add, sub} from 'date-fns'
 import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
 import {forwardRef} from '@nestjs/common'
+import {initOldContextForTest} from '../../oldcontext-utils'
 
 describe('PeriodicJobController', () => {
   let controller: PeriodicJobController
@@ -44,6 +45,7 @@ describe('PeriodicJobController', () => {
   })
 
   beforeEach(async () => {
+    await initOldContextForTest(prismaClient)
     const module: TestingModule = await Test.createTestingModule({
       imports: [forwardRef(() => PrismaModule.forTest(prismaClient))],
       providers: [
