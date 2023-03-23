@@ -12,7 +12,7 @@ import {
   defineMailTemplateFactory,
   defineSubscriptionFlowFactory,
   defineSubscriptionIntervalFactory
-} from '../../../../../api/src/__generated__/fabbrica'
+} from '@wepublish/api'
 
 describe('SubscriptionFlowController', () => {
   let controller: SubscriptionFlowController

@@ -4,6 +4,7 @@ import {MailTemplateStatus, PrismaService, WithUrlAndStatus} from '@wepublish/ap
 import {MailProviderService} from './mail-provider.service'
 import {MailTemplateSyncService} from './mail-template-sync.service'
 import {MailProviderModel, MailTemplateWithUrlAndStatusModel} from './mail-template.model'
+import {CanGetMailTemplates, CanSyncMailTemplates, Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => MailTemplateWithUrlAndStatusModel)
 export class MailTemplatesResolver {
@@ -13,6 +14,7 @@ export class MailTemplatesResolver {
     private mailProviderService: MailProviderService
   ) {}
 
+  @Permissions(CanGetMailTemplates)
   @Query(() => [MailTemplateWithUrlAndStatusModel])
   async mailTemplates() {
     const templates = await this.prismaService.mailTemplate.findMany({
@@ -21,12 +23,14 @@ export class MailTemplatesResolver {
     return this.decorate(templates)
   }
 
+  @Permissions(CanGetMailTemplates)
   @Query(() => MailProviderModel)
   async provider() {
     const provider = await this.mailProviderService.getProvider()
     return {name: provider.name}
   }
 
+  @Permissions(CanSyncMailTemplates)
   @Mutation(() => Boolean)
   async syncTemplates() {
     await this.syncService.synchronizeTemplates()

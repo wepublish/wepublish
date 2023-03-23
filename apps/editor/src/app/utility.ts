@@ -1,4 +1,4 @@
-import {ApolloClient, HttpLink, InMemoryCache} from '@apollo/client'
+import {ApolloClient, ApolloLink, createHttpLink, HttpLink, InMemoryCache} from '@apollo/client'
 import {PaymentPeriodicity, SortOrder} from '@wepublish/editor/api'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import nanoid from 'nanoid'
@@ -180,11 +180,25 @@ export function getSettings(): ClientSettings {
     : defaultSettings
 }
 
+const authLink = new ApolloLink((operation, forward) => {
+  const token = localStorage.getItem(LocalStorageKey.SessionToken)
+  const context = operation.getContext()
+
+  operation.setContext({
+    headers: {
+      authorization: token ? `Bearer ${token}` : '',
+      ...context.headers
+    },
+    credentials: 'include',
+    ...context
+  })
+  return forward(operation)
+})
+
 export function getApiClientV2() {
   const {apiURL} = getSettings()
-  const link = new HttpLink({uri: `${apiURL}/v2`})
   return new ApolloClient({
-    link,
+    link: authLink.concat(createHttpLink({uri: `${apiURL}/v2`, fetch})),
     cache: new InMemoryCache()
   })
 }

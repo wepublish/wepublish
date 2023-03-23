@@ -4,6 +4,33 @@ import {PrismaService} from '@wepublish/api'
 import {MailProviderService} from './mail-provider.service'
 import {MailTemplateSyncService} from './mail-template-sync.service'
 import {MailTemplatesResolver} from './mail-template.resolver'
+import {INestApplication, Module} from '@nestjs/common'
+import {GraphQLModule} from '@nestjs/graphql'
+import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
+import {PrismaModule} from '@wepublish/nest-modules'
+import {APP_GUARD} from '@nestjs/core'
+import {PermissionsGuard} from '@wepublish/permissions/api'
+import request from 'supertest'
+
+const mailTemplatesQuery = `
+  query MailTemplates {
+    mailTemplates {
+      id
+    }
+  }
+`
+const providerQuery = `
+  query Provider {
+    provider {
+      name
+    }
+  }
+`
+const syncTemplatesMutation = `
+  mutation Mutation {
+    syncTemplates
+  }
+`
 
 const mockTemplate: MailTemplate = {
   id: 1,
@@ -28,8 +55,39 @@ const mailProviderServiceMock = {
   getUsedTemplateIdentifiers: jest.fn((): string[] => [])
 }
 
+@Module({
+  imports: [
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: true,
+      path: '/'
+    }),
+    PrismaModule
+  ],
+  providers: [
+    PrismaService,
+    MailProviderService,
+    MailTemplatesResolver,
+    MailTemplateSyncService,
+    {
+      provide: APP_GUARD,
+      useClass: PermissionsGuard
+    }
+  ]
+})
+export class AppModule {}
+
 describe('MailTemplatesResolver', () => {
   let resolver: MailTemplatesResolver
+  let app: INestApplication
+
+  beforeAll(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [AppModule]
+    }).compile()
+    app = module.createNestApplication()
+    await app.init()
+  })
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -42,6 +100,10 @@ describe('MailTemplatesResolver', () => {
     }).compile()
 
     resolver = module.get<MailTemplatesResolver>(MailTemplatesResolver)
+  })
+
+  afterAll(async () => {
+    await app.close()
   })
 
   it('is defined', () => {
@@ -63,5 +125,53 @@ describe('MailTemplatesResolver', () => {
   it('resolves the provider', async () => {
     const result = await resolver.provider()
     expect(result.name).toEqual('MockProvider')
+  })
+
+  /**
+   * Test if endpoints are not exposed to public
+   */
+  it('mailTemplates is not public', () => {
+    return request(app.getHttpServer())
+      .post('')
+      .send({
+        query: mailTemplatesQuery
+      })
+      .expect(200)
+      .expect(({body}) => {
+        expect(!!body.errors.find((error: any) => error.message === 'Forbidden resource')).toEqual(
+          true
+        )
+        expect(body.data).toBeNull()
+      })
+  })
+
+  it('provider is not public', () => {
+    return request(app.getHttpServer())
+      .post('')
+      .send({
+        query: providerQuery
+      })
+      .expect(200)
+      .expect(({body}) => {
+        expect(!!body.errors.find((error: any) => error.message === 'Forbidden resource')).toEqual(
+          true
+        )
+        expect(body.data).toBeNull()
+      })
+  })
+
+  it('syncMailTemplates is not public', () => {
+    return request(app.getHttpServer())
+      .post('')
+      .send({
+        query: syncTemplatesMutation
+      })
+      .expect(200)
+      .expect(({body}) => {
+        expect(!!body.errors.find((error: any) => error.message === 'Forbidden resource')).toEqual(
+          true
+        )
+        expect(body.data).toBeNull()
+      })
   })
 })
