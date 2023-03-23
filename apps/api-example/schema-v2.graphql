@@ -58,6 +58,7 @@ type Mutation {
   updateSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelUpdateInput!): [SubscriptionFlowModel!]!
   updateSubscriptionInterval(subscriptionInterval: SubscriptionIntervalUpdateInput!): [SubscriptionFlowModel!]!
   updateSubscriptionIntervals(subscriptionIntervals: [SubscriptionIntervalUpdateInput!]!): [SubscriptionFlowModel!]!
+  updateSystemMail(systemMail: SystemMailUpdateInput!): [SystemMailModel!]!
 }
 
 type PaymentMethodRef {
@@ -88,6 +89,7 @@ type Query {
       
   """
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+  getSystemMails: [SystemMailModel!]!
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
 
   """
@@ -190,6 +192,23 @@ input SubscriptionIntervalUpdateInput {
   daysAwayFromEnding: Int
   id: Int!
   mailTemplateId: Int
+}
+
+type SystemMailModel {
+  event: UserEvent!
+  mailTemplate: MailTemplateRef!
+}
+
+input SystemMailUpdateInput {
+  event: UserEvent!
+  mailTemplateId: Int!
+}
+
+enum UserEvent {
+  ACCOUNT_CREATION
+  LOGIN_LINK
+  PASSWORD_RESET
+  TEST_MAIL
 }
 
 type VersionInformation {

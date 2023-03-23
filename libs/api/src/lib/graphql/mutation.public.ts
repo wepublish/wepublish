@@ -1,4 +1,4 @@
-import {SubscriptionDeactivationReason} from '@prisma/client'
+import {SubscriptionDeactivationReason, UserEvent} from '@prisma/client'
 import * as crypto from 'crypto'
 import {
   GraphQLBoolean,
@@ -24,7 +24,6 @@ import {
   UserInputError,
   UserSubscriptionAlreadyDeactivated
 } from '../error'
-import {SendMailType} from '../mails/mailContext'
 import {logger} from '../server'
 import {FIFTEEN_MINUTES_IN_MILLISECONDS, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '../utility'
 import {Validator} from '../validator'
@@ -709,8 +708,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           expiresInMinutes: resetPwd
         })
 
-        await mailContext.sendMail({
-          type: SendMailType.LoginLink,
+        await mailContext.sendMailNew({
+          event: UserEvent.LOGIN_LINK,
           recipient: user.email,
           data: {
             url: urlAdapter.getLoginURL(token),

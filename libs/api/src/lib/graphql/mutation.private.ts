@@ -1,4 +1,4 @@
-import {CommentState, Prisma, RatingSystemType} from '@prisma/client'
+import {CommentState, Prisma, RatingSystemType, UserEvent} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLID,
@@ -13,7 +13,6 @@ import {Block, BlockMap, BlockType} from '../db/block'
 import {SettingName} from '@wepublish/settings/api'
 import {unselectPassword} from '@wepublish/user/api'
 import {NotFound} from '../error'
-import {SendMailType} from '../mails/mailContext'
 import {Validator} from '../validator'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
 import {
@@ -371,8 +370,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           expiresInMinutes: jwtExpires
         })
 
-        await mailContext.sendMail({
-          type: SendMailType.LoginLink,
+        await mailContext.sendMailNew({
+          event: UserEvent.LOGIN_LINK,
           recipient: email,
           data: {
             url: `${url}?jwt=${token}`,
@@ -420,8 +419,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           expiresInMinutes: jwtExpires
         })
 
-        await mailContext.sendMail({
-          type: SendMailType.LoginLink,
+        await mailContext.sendMailNew({
+          event: UserEvent.LOGIN_LINK,
           recipient: email,
           data: {
             url: urlAdapter.getLoginURL(token),

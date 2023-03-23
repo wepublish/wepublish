@@ -1,5 +1,5 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
+import {PaymentPeriodicity, PrismaClient, SubscriptionEvent, UserEvent} from '@prisma/client'
 import {seed as rootSeed} from '../../../libs/api/prisma/seed'
 import {hashPassword} from '../../../libs/api/src/lib/db/user'
 
@@ -97,12 +97,12 @@ async function seed() {
     create: {
       id: '1',
       paymentPeriodicity: PaymentPeriodicity.biannual,
-      paymentMethod: { connect: { id: paymentMethod.id } },
-      memberPlan: { connect: { id: memberPlan.id } },
+      paymentMethod: {connect: {id: paymentMethod.id}},
+      memberPlan: {connect: {id: memberPlan.id}},
       monthlyAmount: 3,
       autoRenew: true,
       startsAt: new Date().toISOString(),
-      user: { connect: { id: editor.id }}
+      user: {connect: {id: editor.id}}
     }
   })
 
@@ -114,12 +114,12 @@ async function seed() {
     create: {
       id: '2',
       paymentPeriodicity: PaymentPeriodicity.biannual,
-      paymentMethod: { connect: { id: paymentMethod.id } },
-      memberPlan: { connect: { id: memberPlan.id } },
+      paymentMethod: {connect: {id: paymentMethod.id}},
+      memberPlan: {connect: {id: memberPlan.id}},
       monthlyAmount: 3,
       autoRenew: false,
       startsAt: new Date().toISOString(),
-      user: { connect: { id: dev.id }}
+      user: {connect: {id: dev.id}}
     }
   })
 
@@ -317,6 +317,21 @@ async function seed() {
       update: {},
       create: createObj
     })
+  }
+
+  let eventId = 1
+  for (const event in UserEvent) {
+    await prisma.userFlowMail.upsert({
+      where: {
+        id: eventId
+      },
+      update: {},
+      create: {
+        event: UserEvent[event],
+        mailTemplate: {connect: {id: mailTemplates[eventId % 5].id}}
+      }
+    })
+    eventId++
   }
 
   await prisma.$disconnect()

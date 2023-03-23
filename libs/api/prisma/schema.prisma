@@ -999,19 +999,22 @@ model TaggedEvents {
   @@map("events.tagged-events")
 }
 
-model UserFlow {
+enum UserEvent {
+  ACCOUNT_CREATION
+  PASSWORD_RESET
+  LOGIN_LINK
+  TEST_MAIL
+}
+
+model UserFlowMail {
   id                    Int @id @default(autoincrement())
 	createdAt             DateTime @default(now())
 	modifiedAt            DateTime @updatedAt
 
-  accountCreationMailTemplate       MailTemplate? @relation("accountCreationMailTemplate", fields: [accountCreationMailTemplateId], references: [id]) // user creates a new account
-	accountCreationMailTemplateId     Int? @unique
+  event                 UserEvent @unique
 
-  passwordResetMailTemplate         MailTemplate? @relation("passwordResetMailTemplate", fields: [passwordResetMailTemplateId], references: [id]) // inform user, password was reset
-	passwordResetMailTemplateId       Int? @unique
-
-  loginLinkMailTemplate             MailTemplate? @relation("loginLinkMailTemplate", fields: [loginLinkMailTemplateId], references: [id])  // user receives login link
-	loginLinkMailTemplateId           Int? @unique
+  mailTemplate       MailTemplate @relation(fields: [mailTemplateId], references: [id]) // user creates a new account
+	mailTemplateId     Int
 
   @@map("user_communication_flows")
 }
@@ -1073,9 +1076,7 @@ model MailTemplate {
 
 	subscriptionIntervals       SubscriptionInterval[]
 
-	accountCreations            UserFlow? @relation("accountCreationMailTemplate")
-	passwordResets              UserFlow? @relation("passwordResetMailTemplate")
-	loginLinks                  UserFlow? @relation("loginLinkMailTemplate")
+	userFlowMails               UserFlowMail[]
 
 	mailLog                     MailLog[]
 
