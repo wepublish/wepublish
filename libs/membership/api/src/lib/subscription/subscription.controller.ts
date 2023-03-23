@@ -155,7 +155,6 @@ export class SubscriptionController {
   ) {
     const amount = subscription.monthlyAmount * this.getMonthCount(subscription.paymentPeriodicity)
     const description = `Renewal of subscription ${subscription.memberPlan.name} for ${subscription.paymentPeriodicity}`
-
     return this.prismaService.invoice.create({
       data: {
         mail: subscription.user.email,

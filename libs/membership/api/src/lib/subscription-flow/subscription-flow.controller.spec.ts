@@ -13,6 +13,7 @@ import {
   defineSubscriptionFlowFactory,
   definePaymentMethodFactory
 } from '@wepublish/api'
+import {initOldContextForTest} from '../../oldcontext-utils'
 
 describe('SubscriptionFlowController', () => {
   let controller: SubscriptionFlowController
@@ -30,6 +31,7 @@ describe('SubscriptionFlowController', () => {
   })
 
   beforeEach(async () => {
+    await initOldContextForTest(prismaClient)
     const module: TestingModule = await Test.createTestingModule({
       imports: [PrismaModule.forTest(prismaClient)],
       providers: [

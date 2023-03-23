@@ -56,7 +56,8 @@ export class MailController {
       console.log(`Mail with id <${this.generateMailIdentifier()}> is already sent skipping...`)
       return
     }
-    await oldContext.mailContext.sendRemoteTemplate({
+
+    await this.oldContextService.context.mailContext.sendRemoteTemplate({
       mailLogID: this.generateMailIdentifier(),
       remoteTemplate: this.config.externalMailTemplateId,
       recipient: this.config.recipient.email,
@@ -65,7 +66,9 @@ export class MailController {
     await this.prismaService.mailLog.create({
       data: {
         recipient: {
-          connect: this.config.recipient
+          connect: {
+            id: this.config.recipient.id
+          }
         },
         state: MailLogState.submitted,
         sentDate: this.sendDate,
