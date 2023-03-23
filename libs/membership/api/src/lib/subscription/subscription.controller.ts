@@ -17,6 +17,7 @@ import {
 import {add} from 'date-fns'
 import {Injectable} from '@nestjs/common'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
+import {JSONDefinition} from 'graphql-scalars'
 
 export type SubscriptionControllerConfig = {
   subscription: Subscription
@@ -81,12 +82,12 @@ export class SubscriptionController {
         subscription: {
           include: {
             paymentMethod: true,
-            memberPlan: true
-          }
-        },
-        user: {
-          include: {
-            paymentProviderCustomers: true
+            memberPlan: true,
+            user: {
+              include: {
+                paymentProviderCustomers: true
+              }
+            }
           }
         },
         subscriptionPeriods: true,
@@ -247,9 +248,14 @@ export class SubscriptionController {
 
   public async chargeInvoice(
     invoice: Invoice & {
-      subscription: (Subscription & {paymentMethod: PaymentMethod; memberPlan: MemberPlan}) | null
+      subscription:
+        | (Subscription & {
+            paymentMethod: PaymentMethod
+            memberPlan: MemberPlan
+            user: (User & {paymentProviderCustomers: PaymentProviderCustomer[]}) | null
+          })
+        | null
       items: InvoiceItem[]
-      user: (User & {paymentProviderCustomers: PaymentProviderCustomer[]}) | null
       subscriptionPeriods: SubscriptionPeriod[]
     },
     mailActions: Action[]
@@ -277,15 +283,20 @@ export class SubscriptionController {
 
   public async offSessionPayment(
     invoice: Invoice & {
-      subscription: (Subscription & {paymentMethod: PaymentMethod; memberPlan: MemberPlan}) | null
+      subscription:
+        | (Subscription & {
+            paymentMethod: PaymentMethod
+            memberPlan: MemberPlan
+            user: (User & {paymentProviderCustomers: PaymentProviderCustomer[]}) | null
+          })
+        | null
       items: InvoiceItem[]
-      user: (User & {paymentProviderCustomers: PaymentProviderCustomer[]}) | null
       subscriptionPeriods: SubscriptionPeriod[]
     },
     paymentProvider: PaymentProvider,
     mailActions: Action[]
   ) {
-    const customer = invoice.user?.paymentProviderCustomers.find(
+    const customer = invoice.subscription?.user?.paymentProviderCustomers.find(
       ppc => ppc.paymentProviderID === invoice.subscription?.paymentMethod.paymentProviderID
     )
     const renewalFailedAction = mailActions.find(ma => ma.type === SubscriptionEvent.RENEWAL_FAILED)

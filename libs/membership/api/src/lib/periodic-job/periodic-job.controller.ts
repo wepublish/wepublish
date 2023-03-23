@@ -165,9 +165,10 @@ export class PeriodicJobController {
           if (
             mailAction.action &&
             mailAction.action.externalMailTemplate &&
-            subscriptionToChargeInvoice.user
+            subscriptionToChargeInvoice.subscription.user
           ) {
-            const {paymentProviderCustomers, ...user} = subscriptionToChargeInvoice.user
+            const {paymentProviderCustomers, ...user} =
+              subscriptionToChargeInvoice.subscription.user
             await new MailController(this.prismaService, this.oldContextService, {
               daysAwayFromEnding: mailAction.action.daysAwayFromEnding,
               externalMailTemplateId: mailAction.action.externalMailTemplate,

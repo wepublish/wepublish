@@ -295,4 +295,62 @@ describe('PeriodicJobController', () => {
     // Check that subscription is no canceled
     expect((await prismaClient.subscriptionDeactivation.findMany()).length).toEqual(0)
   })
+
+  it('charge invoice', async () => {
+    const mail = 'dev-mail@test.wepublish.com'
+    const renewalDate = new Date()
+    const invoice = await InvoiceFactory.create({
+      dueAt: renewalDate,
+      mail: mail,
+      paymentDeadline: sub(renewalDate, {months: 11, days: 20})
+    })
+
+    const testUserAndData = await UserFactory.create({
+      email: mail,
+      paymentProviderCustomers: {
+        create: {
+          paymentProviderID: 'stripe',
+          customerID: 'testId'
+        }
+      },
+      Subscription: {
+        create: {
+          paymentPeriodicity: PaymentPeriodicity.yearly,
+          paidUntil: renewalDate,
+          autoRenew: true,
+          monthlyAmount: 200,
+          startsAt: sub(renewalDate, {months: 12}),
+          paymentMethod: {
+            connect: {
+              id: 'stripe'
+            }
+          },
+          memberPlan: {
+            connect: {
+              slug: 'yearly'
+            }
+          },
+          invoices: {
+            connect: {
+              id: invoice.id
+            }
+          },
+          periods: {
+            create: {
+              startsAt: sub(renewalDate, {months: 12}),
+              endsAt: renewalDate,
+              paymentPeriodicity: PaymentPeriodicity.yearly,
+              amount: 2300,
+              invoice: {
+                connect: {
+                  id: invoice.id
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+    await controller.execute()
+  })
 })
