@@ -352,7 +352,7 @@ describe('PeriodicJobController', () => {
       }
     })
 
-    const testUserAndData = await UserFactory.create({
+    await UserFactory.create({
       email: mail,
       paymentProviderCustomers: {
         create: {
@@ -462,7 +462,7 @@ describe('PeriodicJobController', () => {
       }
     })
 
-    const testUserAndData = await UserFactory.create({
+    await UserFactory.create({
       email: mail,
       Subscription: {
         create: {
@@ -542,7 +542,7 @@ describe('PeriodicJobController', () => {
       }
     })
 
-    const testUserAndData = await UserFactory.create({
+    await UserFactory.create({
       email: mail,
       Subscription: {
         create: {
