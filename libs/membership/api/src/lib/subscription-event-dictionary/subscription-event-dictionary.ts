@@ -121,7 +121,7 @@ export class SubscriptionEventDictionary {
     }
   }
   public getEarliestInvoiceCreationDate(date: Date) {
-    if (!this.earliestInvoiceCreationDate) throw new Error('No invoice cration date found!')
+    if (!this.earliestInvoiceCreationDate) throw new Error('No invoice creation date found!')
     return subDays(this.normalizeDate(date), this.earliestInvoiceCreationDate)
   }
   public buildCustomEventDateList(date: Date) {

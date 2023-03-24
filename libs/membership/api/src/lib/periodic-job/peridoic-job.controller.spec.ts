@@ -675,7 +675,61 @@ describe('PeriodicJobController', () => {
         event: SubscriptionEvent.INVOICE_CREATION
       }
     })
+    try {
+      await controller.execute()
+    } catch (e) {
+      expect((e as Error).toString()).toEqual('Error: No invoice creation date found!')
+    }
+    try {
+      await controller.execute()
+    } catch (e) {
+      expect((e as Error).toString()).toEqual('Error: No invoice creation date found!')
+    }
+    try {
+      await controller.execute()
+    } catch (e) {
+      expect((e as Error).toString()).toEqual('Error: No invoice creation date found!')
+    }
+    let periodicJobs = await prismaClient.periodicJob.findMany()
+    expect(periodicJobs.length).toEqual(2)
+    const failedJob = periodicJobs.find(pj => pj.tries === 3)
+    expect(failedJob).not.toBeNull()
+    expect(failedJob!.tries).toEqual(3)
+    expect(failedJob!.successfullyFinished).toBeNull()
+    expect(failedJob!.finishedWithError).not.toBeNull()
+    expect(failedJob!.error).not.toBeNull()
 
+    const defaultFlow = await prismaClient.subscriptionFlow.findFirst({
+      where: {
+        default: true
+      }
+    })
+
+    await SubscriptionIntervalFactory.create({
+      subscriptionFlow: {
+        connect: {
+          id: defaultFlow!.id
+        }
+      },
+      event: SubscriptionEvent.INVOICE_CREATION,
+      daysAwayFromEnding: -14,
+      mailTemplate: {
+        connect: {
+          externalMailTemplateId: 'default-INVOICE_CREATION'
+        }
+      }
+    })
     await controller.execute()
+    periodicJobs = await prismaClient.periodicJob.findMany()
+    expect(periodicJobs.length).toEqual(2)
+    const retriedJob = periodicJobs.find(pj => pj.tries === 4)
+    expect(retriedJob).not.toBeNull()
+    expect(retriedJob!.tries).toEqual(4)
+    expect(retriedJob!.successfullyFinished).not.toBeNull()
+    expect(retriedJob!.finishedWithError).not.toBeNull()
+    expect(retriedJob!.error).not.toBeNull()
+    expect(retriedJob!.successfullyFinished!.getTime()).toBeGreaterThan(
+      retriedJob!.finishedWithError!.getTime()
+    )
   })
 })
