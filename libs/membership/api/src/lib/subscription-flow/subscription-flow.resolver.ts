@@ -9,13 +9,21 @@ import {
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
 import {SubscriptionFlowController} from './subscription-flow.controller'
-import { SubscriptionFlow } from '@prisma/client'
-import { PrismaService } from '@wepublish/api'
-import { SubscriptionFlowHelper, SubscriptionFlowWithPaymentMethod } from './subscription-flow.helper'
+import {SubscriptionFlow} from '@prisma/client'
+import {PrismaService} from '@wepublish/api'
+import {SubscriptionFlowHelper, SubscriptionFlowWithPaymentMethod} from './subscription-flow.helper'
 
 type WithNumberOfSubscriptions<T> = T & {
   numberOfSubscriptions: number
 }
+import {
+  CanCreateSubscriptionFlow,
+  CanDeleteSubscriptionFlow,
+  CanGetPaymentMethods,
+  CanGetSubscriptionFlows,
+  CanUpdateSubscriptionFlow,
+  Permissions
+} from '@wepublish/permissions/api'
 
 @Resolver(() => [SubscriptionFlowResolver])
 export class SubscriptionFlowResolver {
@@ -25,7 +33,7 @@ export class SubscriptionFlowResolver {
     private readonly flowHelper: SubscriptionFlowHelper
   ) {}
 
-  // Subscription Flow
+  @Permissions(CanGetSubscriptionFlows)
   @Query(() => [SubscriptionFlowModel], {name: 'subscriptionFlows'})
   async subscriptionFlows(
     @Args('defaultFlowOnly') defaultFlowOnly: boolean,
@@ -34,16 +42,19 @@ export class SubscriptionFlowResolver {
     return this.decorate(await this.controller.getFlows(defaultFlowOnly, memberPlanId))
   }
 
+  @Permissions(CanCreateSubscriptionFlow)
   @Mutation(() => [SubscriptionFlowModel], {name: 'createSubscriptionFlow'})
   async createSubscriptionFlow(@Args('subscriptionFlow') flow: SubscriptionFlowModelCreateInput) {
     return this.decorate(await this.controller.createFlow(flow))
   }
 
+  @Permissions(CanUpdateSubscriptionFlow)
   @Mutation(() => [SubscriptionFlowModel], {name: 'updateSubscriptionFlow'})
   async updateSubscriptionFlow(@Args('subscriptionFlow') flow: SubscriptionFlowModelUpdateInput) {
     return this.decorate(await this.controller.updateFlow(flow))
   }
 
+  @Permissions(CanDeleteSubscriptionFlow)
   @Mutation(() => [SubscriptionFlowModel], {name: 'deleteSubscriptionFlow'})
   async deleteSubscriptionFlow(
     @Args('subscriptionFlowId', {type: () => Int}) subscriptionFlowId: number
@@ -51,6 +62,7 @@ export class SubscriptionFlowResolver {
     return this.decorate(await this.controller.deleteFlow(subscriptionFlowId))
   }
 
+  @Permissions(CanCreateSubscriptionFlow, CanUpdateSubscriptionFlow)
   @Mutation(() => [SubscriptionFlowModel], {name: 'createSubscriptionInterval'})
   async createSubscriptionInterval(
     @Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalCreateInput
@@ -58,6 +70,7 @@ export class SubscriptionFlowResolver {
     return this.decorate(await this.controller.createInterval(subscriptionInterval))
   }
 
+  @Permissions(CanUpdateSubscriptionFlow)
   @Mutation(() => [SubscriptionFlowModel], {name: 'updateSubscriptionIntervals'})
   async updateSubscriptionIntervals(
     @Args({name: 'subscriptionIntervals', type: () => [SubscriptionIntervalUpdateInput]})
@@ -66,6 +79,7 @@ export class SubscriptionFlowResolver {
     return this.decorate(await this.controller.updateIntervals(subscriptionIntervals))
   }
 
+  @Permissions(CanUpdateSubscriptionFlow)
   @Mutation(() => [SubscriptionFlowModel], {name: 'updateSubscriptionInterval'})
   async updateSubscriptionInterval(
     @Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalUpdateInput
@@ -73,6 +87,7 @@ export class SubscriptionFlowResolver {
     return this.decorate(await this.controller.updateInterval(subscriptionInterval))
   }
 
+  @Permissions(CanUpdateSubscriptionFlow)
   @Mutation(() => [SubscriptionFlowModel], {name: 'deleteSubscriptionInterval'})
   async deleteSubscriptionInterval(
     @Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalDeleteInput
@@ -80,12 +95,15 @@ export class SubscriptionFlowResolver {
     return this.decorate(await this.controller.deleteInterval(subscriptionInterval))
   }
 
+  @Permissions(CanGetPaymentMethods)
   @Query(() => [PaymentMethodRef])
   async paymentMethods() {
     return this.controller.paymentMethods()
   }
 
-  private async decorate(flows: SubscriptionFlowWithPaymentMethod[]): Promise<WithNumberOfSubscriptions<SubscriptionFlow>[]> {
+  private async decorate(
+    flows: SubscriptionFlowWithPaymentMethod[]
+  ): Promise<WithNumberOfSubscriptions<SubscriptionFlow>[]> {
     const subscriptionCounts = await this.flowHelper.numberOfSubscriptionsFor(flows)
 
     return flows.map(f => {
@@ -93,7 +111,7 @@ export class SubscriptionFlowResolver {
 
       return {
         ...f,
-        numberOfSubscriptions: count && count.subscriptionCount || 0
+        numberOfSubscriptions: (count && count.subscriptionCount) || 0
       }
     })
   }
