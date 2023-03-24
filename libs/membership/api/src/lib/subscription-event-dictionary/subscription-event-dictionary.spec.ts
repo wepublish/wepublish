@@ -558,6 +558,134 @@ describe('PeriodicJobController', () => {
   })
 
   it('custom event date list', async () => {
-    console.log('xxxx')
+    const subscriptionFLowIntervals: SubscriptionFlowInterval[] = [
+      {
+        subscriptionFlowId: customMemberPlanFlow1.id,
+        mailTemplateName: 'custom1-CUSTOM1',
+        event: SubscriptionEvent.CUSTOM,
+        daysAwayFromEnding: -90
+      },
+      {
+        subscriptionFlowId: customMemberPlanFlow2.id,
+        mailTemplateName: 'custom2-CUSTOM1',
+        event: SubscriptionEvent.CUSTOM,
+        daysAwayFromEnding: -40
+      },
+      {
+        subscriptionFlowId: customMemberPlanFlow1.id,
+        mailTemplateName: 'custom1-CUSTOM2',
+        event: SubscriptionEvent.CUSTOM,
+        daysAwayFromEnding: -40
+      },
+      {
+        subscriptionFlowId: customMemberPlanFlow2.id,
+        mailTemplateName: 'custom2-CUSTOM2',
+        event: SubscriptionEvent.CUSTOM,
+        daysAwayFromEnding: 0
+      },
+      {
+        subscriptionFlowId: customMemberPlanFlow1.id,
+        mailTemplateName: 'custom1-CUSTOM3',
+        event: SubscriptionEvent.CUSTOM,
+        daysAwayFromEnding: 10
+      },
+      {
+        subscriptionFlowId: customMemberPlanFlow2.id,
+        mailTemplateName: 'custom2-CUSTOM3',
+        event: SubscriptionEvent.CUSTOM,
+        daysAwayFromEnding: 40
+      },
+      {
+        subscriptionFlowId: customMemberPlanFlow1.id,
+        mailTemplateName: 'custom1-CUSTOM4',
+        event: SubscriptionEvent.CUSTOM,
+        daysAwayFromEnding: 90
+      }
+    ]
+    const intervalList: SubscriptionInterval[] = []
+    for (const sfi of subscriptionFLowIntervals) {
+      intervalList.push(await createSubscriptionInterval(sfi))
+    }
+    const sed = new SubscriptionEventDictionary(prismaClient)
+
+    let testDate = new Date()
+    await sed.initialize()
+    await sed.buildCustomEventDateList(testDate)
+    let res = sed.getDatesWithCustomEvent()
+    let dateRes = res.map(r => {
+      return format(r, 'dd-MM-yyyy')
+    })
+    expect(
+      dateRes.find(d => d === format(sub(testDate, {days: -90}), 'dd-MM-yyyy'))
+    ).not.toBeUndefined()
+    expect(
+      dateRes.find(d => d === format(sub(testDate, {days: -40}), 'dd-MM-yyyy'))
+    ).not.toBeUndefined()
+    expect(
+      dateRes.find(d => d === format(sub(testDate, {days: -15}), 'dd-MM-yyyy'))
+    ).not.toBeUndefined()
+    expect(
+      dateRes.find(d => d === format(sub(testDate, {days: 0}), 'dd-MM-yyyy'))
+    ).not.toBeUndefined()
+    expect(
+      dateRes.find(d => d === format(sub(testDate, {days: 10}), 'dd-MM-yyyy'))
+    ).not.toBeUndefined()
+    expect(
+      dateRes.find(d => d === format(sub(testDate, {days: 40}), 'dd-MM-yyyy'))
+    ).not.toBeUndefined()
+    expect(
+      dateRes.find(d => d === format(sub(testDate, {days: 90}), 'dd-MM-yyyy'))
+    ).not.toBeUndefined()
+    expect(dateRes.find(d => d === format(sub(testDate, {days: 15}), 'dd-MM-yyyy'))).toBeUndefined()
+    expect(dateRes.find(d => d === format(sub(testDate, {days: 7}), 'dd-MM-yyyy'))).toBeUndefined()
+
+    testDate = sub(new Date(), {days: 12})
+    await sed.initialize()
+    await sed.buildCustomEventDateList(testDate)
+    res = sed.getDatesWithCustomEvent()
+    dateRes = res.map(r => {
+      return format(r, 'dd-MM-yyyy')
+    })
+    expect(
+      dateRes.find(d => d === format(sub(testDate, {days: -90}), 'dd-MM-yyyy'))
+    ).not.toBeUndefined()
+    expect(
+      dateRes.find(d => d === format(sub(testDate, {days: -40}), 'dd-MM-yyyy'))
+    ).not.toBeUndefined()
+    expect(
+      dateRes.find(d => d === format(sub(testDate, {days: -15}), 'dd-MM-yyyy'))
+    ).not.toBeUndefined()
+    expect(
+      dateRes.find(d => d === format(sub(testDate, {days: 0}), 'dd-MM-yyyy'))
+    ).not.toBeUndefined()
+    expect(
+      dateRes.find(d => d === format(sub(testDate, {days: 10}), 'dd-MM-yyyy'))
+    ).not.toBeUndefined()
+    expect(
+      dateRes.find(d => d === format(sub(testDate, {days: 40}), 'dd-MM-yyyy'))
+    ).not.toBeUndefined()
+    expect(
+      dateRes.find(d => d === format(sub(testDate, {days: 90}), 'dd-MM-yyyy'))
+    ).not.toBeUndefined()
+    expect(dateRes.find(d => d === format(sub(testDate, {days: 15}), 'dd-MM-yyyy'))).toBeUndefined()
+    expect(dateRes.find(d => d === format(sub(testDate, {days: 7}), 'dd-MM-yyyy'))).toBeUndefined()
+
+    try {
+      const evd = new SubscriptionEventDictionary(prismaClient)
+      evd.buildCustomEventDateList(new Date())
+    } catch (e) {
+      expect((e as Error).toString()).toEqual(
+        'Error: Tried to access store before it was successfully initialized!'
+      )
+    }
+
+    try {
+      const evd = new SubscriptionEventDictionary(prismaClient)
+      evd.getDatesWithCustomEvent()
+    } catch (e) {
+      expect((e as Error).toString()).toEqual(
+        'Error: Tried to access eventDataList before it was successfully initialized!'
+      )
+    }
   })
 })
