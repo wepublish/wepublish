@@ -1,6 +1,6 @@
 import {OldContextService, PrismaService} from '@wepublish/api'
 import {Injectable} from '@nestjs/common'
-import {MailLogState, User} from '@prisma/client'
+import {MailLogState, PrismaClient, User} from '@prisma/client'
 
 export enum mailLogType {
   SubscriptionFlow,
@@ -20,7 +20,7 @@ export type MailControllerConfig = {
 export class MailController {
   private sendDate: Date
   constructor(
-    private readonly prismaService: PrismaService,
+    private readonly prismaService: PrismaClient,
     private readonly oldContextService: OldContextService,
     private readonly config: MailControllerConfig
   ) {
@@ -41,6 +41,9 @@ export class MailController {
   }
 
   private buildData() {
+    this.config.recipient.password = 'hidden'
+    this.config.recipient.roleIDs = ['hidden']
+
     return {
       user: this.config.recipient,
       optional: this.config.optionalData,
