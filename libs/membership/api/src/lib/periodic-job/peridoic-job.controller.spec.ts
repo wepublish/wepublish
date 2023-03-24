@@ -44,24 +44,9 @@ describe('PeriodicJobController', () => {
     }
   })
 
-  let stripGetCustomers: nock.Scope
-  let stripPostPaymentIntent: nock.Scope
-
   beforeAll(() => {
     // nock.recorder.rec()
-    stripGetCustomers = nock('https://api.stripe.com')
-      .persist()
-      .get('/v1/customers/testId')
-      .replyWithFile(200, __dirname + '/__fixtures__/stripGetCustomers.json', {
-        'Content-Type': 'application/json'
-      })
 
-    stripPostPaymentIntent = nock('https://api.stripe.com')
-      .persist()
-      .post('/v1/payment_intents')
-      .replyWithFile(200, __dirname + '/__fixtures__/stripePostPaymentIntent.json', {
-        'Content-Type': 'application/json'
-      })
     /**
     stripPostPaymentIntent.on('replied', () => {
       nock.recorder.rec()
@@ -334,6 +319,17 @@ describe('PeriodicJobController', () => {
   })
 
   it('charge invoice', async () => {
+    const stripGetCustomers = nock('https://api.stripe.com')
+      .get('/v1/customers/testId')
+      .replyWithFile(200, __dirname + '/__fixtures__/stripGetCustomers.json', {
+        'Content-Type': 'application/json'
+      })
+
+    const stripPostPaymentIntent = nock('https://api.stripe.com')
+      .post('/v1/payment_intents')
+      .replyWithFile(200, __dirname + '/__fixtures__/stripePostPaymentIntent.json', {
+        'Content-Type': 'application/json'
+      })
     const mandrillNockScope = nock('https://mandrillapp.com:443')
       .post('/api/1.0/messages/send-template', matches({template_name: 'default-RENEWAL_SUCCESS'}))
       .reply(500)
@@ -431,6 +427,8 @@ describe('PeriodicJobController', () => {
     expect(payment.intentData).not.toBeNull()
 
     expect(mandrillNockScope.isDone()).toBeTruthy()
+    expect(stripGetCustomers.isDone()).toBeTruthy()
+    expect(stripPostPaymentIntent.isDone()).toBeTruthy()
 
     // Check that subscription is no canceled
     expect((await prismaClient.subscriptionDeactivation.findMany()).length).toEqual(0)
