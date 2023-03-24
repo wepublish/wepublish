@@ -185,7 +185,7 @@ describe('PeriodicJobController', () => {
         subscriptionFlowId: defaultFlow.id,
         mailTemplateName: 'default-CUSTOM1',
         event: SubscriptionEvent.CUSTOM,
-        daysAwayFromEnding: 15
+        daysAwayFromEnding: -15
       }
     ]
 
@@ -520,5 +520,69 @@ describe('PeriodicJobController', () => {
     expect(updatedInvoice.canceledAt).not.toBeNull()
     expect(mandrillNockScopeFailedCharging.isDone()).toBeTruthy()
     expect(mandrillNockScopeDeactiationUnpaid.isDone()).toBeTruthy()
+  })
+
+  it('send custom email', async () => {
+    const mandrillNockScopeCustomMessage = nock('https://mandrillapp.com:443')
+      .post('/api/1.0/messages/send-template', matches({template_name: 'default-CUSTOM1'}))
+      .reply(500)
+
+    const mail = 'dev-mail@test.wepublish.com'
+    const renewalDate = add(new Date(), {days: 15})
+    const invoice = await InvoiceFactory.create({
+      dueAt: renewalDate,
+      mail: mail,
+      paymentDeadline: add(renewalDate, {days: 5}),
+      items: {
+        create: {
+          amount: 2400,
+          quantity: 1,
+          name: 'Yearly Sub'
+        }
+      }
+    })
+
+    const testUserAndData = await UserFactory.create({
+      email: mail,
+      Subscription: {
+        create: {
+          paymentPeriodicity: PaymentPeriodicity.yearly,
+          paidUntil: renewalDate,
+          autoRenew: true,
+          monthlyAmount: 200,
+          startsAt: sub(renewalDate, {months: 12}),
+          paymentMethod: {
+            connect: {
+              id: 'payrexx-subscription'
+            }
+          },
+          memberPlan: {
+            connect: {
+              slug: 'yearly'
+            }
+          },
+          invoices: {
+            connect: {
+              id: invoice.id
+            }
+          },
+          periods: {
+            create: {
+              startsAt: sub(renewalDate, {months: 12}),
+              endsAt: renewalDate,
+              paymentPeriodicity: PaymentPeriodicity.yearly,
+              amount: 2400,
+              invoice: {
+                connect: {
+                  id: invoice.id
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+    await controller.execute()
+    expect(mandrillNockScopeCustomMessage.isDone()).toBeTruthy()
   })
 })
