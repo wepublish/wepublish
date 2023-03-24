@@ -21,7 +21,6 @@ import {add, sub} from 'date-fns'
 import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
 import {forwardRef} from '@nestjs/common'
 import {initOldContextForTest} from '../../oldcontext-utils'
-import {inspect} from 'util'
 
 describe('PeriodicJobController', () => {
   let controller: PeriodicJobController
