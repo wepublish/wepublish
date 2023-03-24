@@ -29,7 +29,7 @@ export class MailController {
   private generateMailIdentifier() {
     return `${this.config.mailType}-${this.sendDate.toISOString()}-${
       this.config.daysAwayFromEnding
-    }-${this.config.externalMailTemplateId}-${this.config.recipient}`
+    }-${this.config.externalMailTemplateId}-${this.config.recipient.id}`
   }
 
   private async checkIfMailIsSent(): Promise<number> {
