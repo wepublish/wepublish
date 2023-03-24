@@ -5,9 +5,8 @@ import {
   StoreInterval,
   StoreTimeline
 } from './subscription-event-dictionary.type'
-import {PrismaService} from '@wepublish/api'
 import {startOfDay, subDays, subMinutes} from 'date-fns'
-import {SubscriptionEvent} from '@prisma/client'
+import {PrismaClient, SubscriptionEvent} from '@prisma/client'
 
 export class SubscriptionEventDictionary {
   private store: Store = {
@@ -21,7 +20,7 @@ export class SubscriptionEventDictionary {
   private dateAwayFromEndingList: Date[] = []
 
   private earliestInvoiceCreationDate: null | number = null
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaClient) {}
 
   public async initialize() {
     let defaultFlowInitialized = false
@@ -146,6 +145,12 @@ export class SubscriptionEventDictionary {
     if (!this.storeIsBuild) {
       throw new Error('Tried to access store before it was successfully initialized!')
     }
+    if (query.daysAwayFromEnding && query.events) {
+      throw new Error(
+        'Its not supported to query for daysAwayFromEnding combined with an event list'
+      )
+    }
+
     let path = this.store.customFlow
     const pathElements = [
       query.memberplanId,
