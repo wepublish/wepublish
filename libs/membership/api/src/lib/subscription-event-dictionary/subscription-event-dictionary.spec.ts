@@ -1,8 +1,4 @@
-import {Test, TestingModule} from '@nestjs/testing'
-import nock from 'nock'
 import {clearDatabase} from '../../prisma-utils'
-import {PrismaModule} from '@wepublish/nest-modules'
-import {contextFromRequest, OldContextService, PrismaService} from '@wepublish/api'
 import {
   MemberPlan,
   PaymentPeriodicity,
@@ -11,23 +7,14 @@ import {
   SubscriptionFlow,
   SubscriptionInterval
 } from '@prisma/client'
-
-import {SubscriptionController} from '../subscription/subscription.controller'
-import {matches} from 'lodash'
 import {
   initialize,
   defineMemberPlanFactory,
-  defineMailTemplateFactory,
   defineSubscriptionFlowFactory,
   definePaymentMethodFactory,
-  defineUserFactory,
-  defineSubscriptionIntervalFactory,
-  defineInvoiceFactory,
-  definePeriodicJobFactory
+  defineSubscriptionIntervalFactory
 } from '@wepublish/api'
 import {add, format, parseISO, sub} from 'date-fns'
-import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
-import {forwardRef} from '@nestjs/common'
 import {initOldContextForTest} from '../../oldcontext-utils'
 import {SubscriptionEventDictionary} from './subscription-event-dictionary'
 
@@ -90,14 +77,14 @@ describe('PeriodicJobController', () => {
     ])
 
     // Base data
-    const payrexx = await PaymentMethodFactory.create({
+    await PaymentMethodFactory.create({
       id: 'payrexx',
       name: 'payrexx',
       paymentProviderID: 'payrexx',
       slug: 'payrexx',
       active: true
     })
-    const payrexxSubscription = await PaymentMethodFactory.create({
+    await PaymentMethodFactory.create({
       id: 'payrexx-subscription',
       name: 'payrexx-subscription',
       paymentProviderID: 'payrexx-subscription',
@@ -105,7 +92,7 @@ describe('PeriodicJobController', () => {
       active: true
     })
 
-    const stripe = await PaymentMethodFactory.create({
+    await PaymentMethodFactory.create({
       id: 'stripe',
       name: 'stripe',
       paymentProviderID: 'stripe',
@@ -113,7 +100,7 @@ describe('PeriodicJobController', () => {
       active: true
     })
 
-    const yearlyMemberPlan = await MemberPlanFactory.create({
+    await MemberPlanFactory.create({
       name: 'yearly',
       slug: 'yearly'
     })
