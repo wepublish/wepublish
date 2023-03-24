@@ -127,7 +127,7 @@ export class SubscriptionController {
       case PaymentPeriodicity.yearly:
         return 12
       default:
-        throw Error(`Enum for PaymentPeriodicity ${periodicity} not defined!`)
+        throw new Error(`Enum for PaymentPeriodicity ${periodicity} not defined!`)
     }
   }
 
@@ -270,7 +270,7 @@ export class SubscriptionController {
       pp => pp.id === invoice.subscription?.paymentMethod.paymentProviderID
     )
     if (!paymentProvider) {
-      throw Error(
+      throw new Error(
         `Payment Provider ${invoice.subscription?.paymentMethod.paymentProviderID} not found!`
       )
     }
@@ -307,7 +307,7 @@ export class SubscriptionController {
     )
     const renewalFailedAction = mailActions.find(ma => ma.type === SubscriptionEvent.RENEWAL_FAILED)
     if (!invoice.subscription) {
-      throw Error('Subscription not found!')
+      throw new Error('Subscription not found!')
     }
     if (!customer) {
       console.log('Send error mail because off session customer not found')

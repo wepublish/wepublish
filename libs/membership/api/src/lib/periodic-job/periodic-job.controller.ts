@@ -102,13 +102,13 @@ export class PeriodicJobController {
             e => e.type === SubscriptionEvent.INVOICE_CREATION
           )
           if (!creationEvent) {
-            throw Error('No invoice creation found!')
+            throw new Error('No invoice creation found!')
           }
           const deactivationEvent = eventInvoiceCreation.find(
             e => e.type === SubscriptionEvent.DEACTIVATION_UNPAID
           )
           if (!deactivationEvent) {
-            throw Error('No invoice deactivation event found!')
+            throw new Error('No invoice deactivation event found!')
           }
 
           if (
@@ -147,7 +147,9 @@ export class PeriodicJobController {
         )
         for (const subscriptionToChargeInvoice of subscriptionsToChargeInvoice) {
           if (!subscriptionToChargeInvoice.subscription) {
-            throw Error(`Invoice ${subscriptionToChargeInvoice.id} has no subscription assigned!`)
+            throw new Error(
+              `Invoice ${subscriptionToChargeInvoice.id} has no subscription assigned!`
+            )
           }
 
           const eventsRenewal = this.subscriptionEventDictionary.getActionFromStore({
@@ -192,7 +194,7 @@ export class PeriodicJobController {
           await this.subscriptionController.getSubscriptionsToDeactivate(periodicJobRunObject.date)
         for (const subscriptionToDeactivateInvoice of subscriptionsToDeactivateInvoice) {
           if (!subscriptionToDeactivateInvoice.subscription) {
-            throw Error(
+            throw new Error(
               `Invoice ${subscriptionToDeactivateInvoice.id} has no subscription assigned!`
             )
           }
@@ -204,7 +206,7 @@ export class PeriodicJobController {
             events: [SubscriptionEvent.DEACTIVATION_UNPAID]
           })
           if (!eventDeactivationUnpaid[0]) {
-            throw Error('No subscription deactivation found!')
+            throw new Error('No subscription deactivation found!')
           }
           await this.subscriptionController.deactivateSubscription(subscriptionToDeactivateInvoice)
           if (
@@ -254,7 +256,7 @@ export class PeriodicJobController {
 
   private async markJobSuccessful() {
     if (!this.runningJob) {
-      throw Error('Try to make a job as running while none is running!')
+      throw new Error('Try to make a job as running while none is running!')
     }
     await this.prismaService.periodicJob.update({
       where: {
@@ -270,7 +272,7 @@ export class PeriodicJobController {
 
   private async markJobFailed(error: string) {
     if (!this.runningJob) {
-      throw Error('Try to make a job as running while none is running!')
+      throw new Error('Try to make a job as running while none is running!')
     }
     await this.prismaService.periodicJob.update({
       where: {

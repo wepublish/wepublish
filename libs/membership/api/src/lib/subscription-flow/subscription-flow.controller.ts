@@ -125,7 +125,7 @@ export class SubscriptionFlowController {
         paymentMethods: true
       }
     })
-    if (!originalFlow) throw Error('The given filter is not found!')
+    if (!originalFlow) throw new Error('The given filter is not found!')
 
     if (await this.filterHasOverlap(originalFlow.memberPlanId, flow)) {
       throw new Error('You cant update this flow because there is a filter overlap!')
@@ -164,9 +164,9 @@ export class SubscriptionFlowController {
         intervals: true
       }
     })
-    if (!originalFlow) throw Error('The given filter is not found!')
+    if (!originalFlow) throw new Error('The given filter is not found!')
 
-    if (originalFlow.default) throw Error('Its not allowed to delete default flow!')
+    if (originalFlow.default) throw new Error('Its not allowed to delete default flow!')
 
     await this.prismaService.$transaction([
       this.prismaService.subscriptionFlow.delete({
@@ -222,7 +222,7 @@ export class SubscriptionFlowController {
       }
     })
     if (!eventToUpdate) {
-      throw Error('The given interval not found!')
+      throw new Error('The given interval not found!')
     }
     await this.isIntervalValid({event: eventToUpdate.event, ...interval}, false)
 
@@ -257,11 +257,11 @@ export class SubscriptionFlowController {
       }
     })
     if (!intervalToDelete) {
-      throw Error('The given interval not found!')
+      throw new Error('The given interval not found!')
     }
 
     if (subscriptionFlowRequiredEvents.includes(intervalToDelete.event)) {
-      throw Error(`Its not allowed to delete a required ${intervalToDelete.event} event! `)
+      throw new Error(`Its not allowed to delete a required ${intervalToDelete.event} event! `)
     }
 
     await this.prismaService.subscriptionInterval.delete({
@@ -329,11 +329,11 @@ export class SubscriptionFlowController {
   ) {
     if (interval.daysAwayFromEnding === null) {
       if (!subscriptionFlowDaysAwayFromEndingNeedToBeNull.includes(interval.event)) {
-        throw Error(`For event ${interval.event} daysAwayFromEnding can not be null!`)
+        throw new Error(`For event ${interval.event} daysAwayFromEnding can not be null!`)
       }
     } else {
       if (subscriptionFlowDaysAwayFromEndingNeedToBeNull.includes(interval.event)) {
-        throw Error(`For event ${interval.event} daysAwayFromEnding needs to be null!`)
+        throw new Error(`For event ${interval.event} daysAwayFromEnding needs to be null!`)
       }
     }
 
@@ -347,7 +347,7 @@ export class SubscriptionFlowController {
       })
       for (const dbInterval of dbIntervals) {
         if (dbInterval.event === interval.event) {
-          throw Error(
+          throw new Error(
             `For each subscription flow its not allowed to have more than one events of the type ${interval.event}`
           )
         }
@@ -360,7 +360,7 @@ export class SubscriptionFlowController {
       (interval.daysAwayFromEnding < SUBSCRIPTION_EVEN_MAX_DAYS_BEFORE ||
         interval.daysAwayFromEnding > SUBSCRIPTION_EVEN_MAX_DAYS_AFTER)
     ) {
-      throw Error(
+      throw new Error(
         `daysAwayFromEnding is not in allowed range ${SUBSCRIPTION_EVEN_MAX_DAYS_BEFORE} to ${SUBSCRIPTION_EVEN_MAX_DAYS_AFTER}: ${interval.daysAwayFromEnding}`
       )
     }
@@ -368,14 +368,14 @@ export class SubscriptionFlowController {
     // check for special daysAwayFromEnding event constraints
     if (interval.event === SubscriptionEvent.INVOICE_CREATION) {
       if (!!interval.daysAwayFromEnding && interval.daysAwayFromEnding > 0) {
-        throw Error(
+        throw new Error(
           `Its not possible to set event ${interval.event} to a date later as the subscription is renewed`
         )
       }
     }
     if (interval.event === SubscriptionEvent.DEACTIVATION_UNPAID) {
       if (!!interval.daysAwayFromEnding && interval.daysAwayFromEnding < 0) {
-        throw Error(
+        throw new Error(
           `Its not possible to set event ${interval.event} to a date before as the subscription is renewed`
         )
       }

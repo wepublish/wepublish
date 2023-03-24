@@ -166,7 +166,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       })
 
       if (!subscriptionObject) {
-        throw Error('Payrexx subscription: Subscription not found!')
+        throw new Error('Payrexx subscription: Subscription not found!')
       }
 
       // Get paymentProviderName
@@ -185,7 +185,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       const properties: MetadataProperty[] = subscriptionObject.properties
       const isPayrexxExt = properties.find(sub => sub.key === 'payrexx_external_id')
       if (!isPayrexxExt) {
-        throw Error("It's not supported to reactivate a deactivated Payrexx subscription!")
+        throw new Error("It's not supported to reactivate a deactivated Payrexx subscription!")
       }
 
       const deactivation = params.args.data.deactivation
@@ -272,7 +272,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       }
 
       // If no period is found throw error
-      if (!longestPeriod) throw Error(`No period found in subscription ${subscriptionId}`)
+      if (!longestPeriod) throw new Error(`No period found in subscription ${subscriptionId}`)
 
       // Skip if subscription is already renewed
       if (maxSubscriptionExtensionLength <= startOfDay(longestPeriod.endsAt)) {
@@ -298,11 +298,11 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
           id: subscription.userID
         }
       })
-      if (!user) throw Error('User in subscription not found!')
+      if (!user) throw new Error('User in subscription not found!')
 
       // Get member plan
       const memberPlan = subscription.memberPlan
-      if (!memberPlan) throw Error('Member Plan in subscription not found!')
+      if (!memberPlan) throw new Error('Member Plan in subscription not found!')
 
       const payedAmount = rawSubscription.invoice.amount
       const minPayment =
@@ -341,7 +341,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
           amount: payedAmount
         }
       })
-      if (!invoice) throw Error('Cant create Invoice')
+      if (!invoice) throw new Error('Cant create Invoice')
 
       // Add subscription Period
 
@@ -355,7 +355,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
           invoiceID: invoice.id
         }
       })
-      if (!subscriptionPeriod) throw Error('Cant create subscription period')
+      if (!subscriptionPeriod) throw new Error('Cant create subscription period')
 
       // Create Payment
       const payment = await paymentClient.create({
@@ -365,7 +365,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
           invoiceID: invoice.id
         }
       })
-      if (!payment) throw Error('Cant create Payment')
+      if (!payment) throw new Error('Cant create Payment')
 
       // Update subscription
       await subscriptionClient.update({

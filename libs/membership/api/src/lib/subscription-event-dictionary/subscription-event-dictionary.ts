@@ -76,13 +76,15 @@ export class SubscriptionEventDictionary {
       }
     }
     if (!defaultFlowInitialized) {
-      throw Error('Default user subscription flow not found!')
+      throw new Error('Default user subscription flow not found!')
     }
     this.storeIsBuild = true
   }
   private assignActions(storeTimeline: StoreTimeline | undefined, intervals: StoreInterval[]) {
     if (!storeTimeline) {
-      throw Error('StoreTimeline is undefined, this should not happen! You should never see this')
+      throw new Error(
+        'StoreTimeline is undefined, this should not happen! You should never see this'
+      )
     }
     for (const interval of intervals) {
       if (!interval.daysAwayFromEnding) {
@@ -119,12 +121,12 @@ export class SubscriptionEventDictionary {
     }
   }
   public getEarliestInvoiceCreationDate(date: Date) {
-    if (!this.earliestInvoiceCreationDate) throw Error('No invoice cration date found!')
+    if (!this.earliestInvoiceCreationDate) throw new Error('No invoice cration date found!')
     return subDays(this.normalizeDate(date), this.earliestInvoiceCreationDate)
   }
   public buildCustomEventDateList(date: Date) {
     if (!this.storeIsBuild) {
-      throw Error('Tried to access store before it was successfully initialized!')
+      throw new Error('Tried to access store before it was successfully initialized!')
     }
     const normalizedDate = this.normalizeDate(date)
 
@@ -135,14 +137,14 @@ export class SubscriptionEventDictionary {
 
   public getDatesWithCustomEvent(): Date[] {
     if (this.dateAwayFromEndingList.length === 0) {
-      throw Error('Tried to access eventDataList before it was successfully initialized!')
+      throw new Error('Tried to access eventDataList before it was successfully initialized!')
     }
     return this.dateAwayFromEndingList
   }
 
   public getActionFromStore(query: LookupActionInput): Action[] {
     if (!this.storeIsBuild) {
-      throw Error('Tried to access store before it was successfully initialized!')
+      throw new Error('Tried to access store before it was successfully initialized!')
     }
     let path = this.store.customFlow
     const pathElements = [

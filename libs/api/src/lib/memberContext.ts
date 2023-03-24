@@ -368,7 +368,7 @@ export class MemberContext implements MemberContext {
     daysToLookAhead
   }: RenewSubscriptionForUsersProps): Promise<void> {
     if (daysToLookAhead < 1) {
-      throw Error('Days to look ahead must not be lower than 1')
+      throw new Error('Days to look ahead must not be lower than 1')
     }
     const lookAheadDate = new Date(startDate.getTime() + daysToLookAhead * ONE_DAY_IN_MILLISECONDS)
 

@@ -279,7 +279,7 @@ describe('PeriodicJobController', () => {
     // Test new created invoice
     const newInvoice = subscription.invoices.find(invoice => invoice.dueAt >= new Date())
     expect(newInvoice).toBeDefined()
-    if (!newInvoice) throw Error('New Invoice not found!')
+    if (!newInvoice) throw new Error('New Invoice not found!')
     expect(newInvoice.dueAt.getTime()).toBeGreaterThan(
       add(newInvoice.createdAt, {days: 12}).getTime()
     )
@@ -305,7 +305,7 @@ describe('PeriodicJobController', () => {
     expect(subscription.periods.length).toEqual(2)
     const newPeriod = subscription.periods.find(period => period.startsAt >= new Date())
     expect(newPeriod).toBeDefined()
-    if (!newPeriod) throw Error('New Period not found!')
+    if (!newPeriod) throw new Error('New Period not found!')
     expect(newPeriod.startsAt.getTime()).toEqual(add(newInvoice.dueAt, {days: 1}).getTime())
     expect(newPeriod.endsAt.getTime()).toEqual(add(newInvoice.dueAt, {years: 1}).getTime())
     expect(newPeriod.paymentPeriodicity).toEqual('yearly')
@@ -610,5 +610,72 @@ describe('PeriodicJobController', () => {
     expect(nextDayJob!.successfullyFinished).not.toBeNull()
     expect(nextDayJob!.finishedWithError).toBeNull()
     expect(nextDayJob!.error).toBeNull()
+  })
+
+  it('Test failing periodic job with recovery', async () => {
+    const today = new Date()
+    await PeriodicJobFactory.create({
+      date: sub(today, {days: 1}),
+      executionTime: sub(today, {days: 1}),
+      successfullyFinished: sub(today, {days: 1}),
+      tries: 1
+    })
+
+    const mail = 'dev-mail@test.wepublish.com'
+    const renewalDate = add(new Date(), {days: 13})
+    const invoice = await InvoiceFactory.create({
+      dueAt: sub(renewalDate, {months: 12}),
+      paidAt: sub(renewalDate, {months: 12}),
+      mail: mail,
+      paymentDeadline: sub(renewalDate, {months: 11, days: 20})
+    })
+    await UserFactory.create({
+      email: mail,
+      Subscription: {
+        create: {
+          paymentPeriodicity: PaymentPeriodicity.yearly,
+          paidUntil: renewalDate,
+          autoRenew: true,
+          monthlyAmount: 200,
+          startsAt: sub(renewalDate, {months: 12}),
+          paymentMethod: {
+            connect: {
+              id: 'stripe'
+            }
+          },
+          memberPlan: {
+            connect: {
+              slug: 'yearly'
+            }
+          },
+          invoices: {
+            connect: {
+              id: invoice.id
+            }
+          },
+          periods: {
+            create: {
+              startsAt: sub(renewalDate, {months: 12}),
+              endsAt: renewalDate,
+              paymentPeriodicity: PaymentPeriodicity.yearly,
+              amount: 2300,
+              invoice: {
+                connect: {
+                  id: invoice.id
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+
+    await prismaClient.subscriptionInterval.deleteMany({
+      where: {
+        event: SubscriptionEvent.INVOICE_CREATION
+      }
+    })
+
+    await controller.execute()
   })
 })
