@@ -125,10 +125,10 @@ export class PeriodicJobController {
             deactivationEvent
           )
 
-          if (eventInvoiceCreation[0].externalMailTemplate) {
+          if (creationEvent.externalMailTemplate) {
             await new MailController(this.prismaService, this.oldContextService, {
-              daysAwayFromEnding: eventInvoiceCreation[0].daysAwayFromEnding,
-              externalMailTemplateId: eventInvoiceCreation[0].externalMailTemplate,
+              daysAwayFromEnding: creationEvent.daysAwayFromEnding,
+              externalMailTemplateId: creationEvent.externalMailTemplate,
               recipient: subscriptionToCreateInvoice.user,
               isRetry: periodicJobRunObject.isRetry,
               optionalData: subscriptionToCreateInvoice,
@@ -191,7 +191,6 @@ export class PeriodicJobController {
         const subscriptionsToDeactivateInvoice =
           await this.subscriptionController.getSubscriptionsToDeactivate(periodicJobRunObject.date)
         for (const subscriptionToDeactivateInvoice of subscriptionsToDeactivateInvoice) {
-          console.log(JSON.stringify(subscriptionToDeactivateInvoice))
           if (!subscriptionToDeactivateInvoice.subscription) {
             throw Error(
               `Invoice ${subscriptionToDeactivateInvoice.id} has no subscription assigned!`
@@ -210,12 +209,12 @@ export class PeriodicJobController {
           await this.subscriptionController.deactivateSubscription(subscriptionToDeactivateInvoice)
           if (
             eventDeactivationUnpaid[0].externalMailTemplate &&
-            subscriptionToDeactivateInvoice.user
+            subscriptionToDeactivateInvoice.subscription.user
           ) {
             await new MailController(this.prismaService, this.oldContextService, {
               daysAwayFromEnding: eventDeactivationUnpaid[0].daysAwayFromEnding,
               externalMailTemplateId: eventDeactivationUnpaid[0].externalMailTemplate,
-              recipient: subscriptionToDeactivateInvoice.user,
+              recipient: subscriptionToDeactivateInvoice.subscription.user,
               isRetry: periodicJobRunObject.isRetry,
               optionalData: subscriptionToDeactivateInvoice,
               mailType: mailLogType.SubscriptionFlow

@@ -6,6 +6,7 @@ import {contextFromRequest, OldContextService, PrismaService} from '@wepublish/a
 import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
 import {PeriodicJobController} from './periodic-job.controller'
 import {SubscriptionController} from '../subscription/subscription.controller'
+import {matches} from 'lodash'
 import {
   initialize,
   defineMemberPlanFactory,
@@ -20,6 +21,7 @@ import {add, sub} from 'date-fns'
 import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
 import {forwardRef} from '@nestjs/common'
 import {initOldContextForTest} from '../../oldcontext-utils'
+import {inspect} from 'util'
 
 describe('PeriodicJobController', () => {
   let controller: PeriodicJobController
@@ -64,6 +66,7 @@ describe('PeriodicJobController', () => {
     stripPostPaymentIntent.on('replied', () => {
       nock.recorder.rec()
     })**/
+    // nock.recorder.rec()
     nock.disableNetConnect()
   })
 
@@ -214,6 +217,9 @@ describe('PeriodicJobController', () => {
   })
 
   it('create invoice', async () => {
+    const mandrillNockScope = nock('https://mandrillapp.com:443')
+      .post('/api/1.0/messages/send-template', matches({template_name: 'default-INVOICE_CREATION'}))
+      .reply(500)
     const mail = 'dev-mail@test.wepublish.com'
     const renewalDate = add(new Date(), {days: 13})
     const invoice = await InvoiceFactory.create({
@@ -321,11 +327,16 @@ describe('PeriodicJobController', () => {
     expect(newPeriod.subscriptionId).not.toBeNull()
     expect(newPeriod.invoiceID).not.toBeNull()
 
+    expect(mandrillNockScope.isDone()).toBeTruthy()
+
     // Check that subscription is no canceled
     expect((await prismaClient.subscriptionDeactivation.findMany()).length).toEqual(0)
   })
 
   it('charge invoice', async () => {
+    const mandrillNockScope = nock('https://mandrillapp.com:443')
+      .post('/api/1.0/messages/send-template', matches({template_name: 'default-RENEWAL_SUCCESS'}))
+      .reply(500)
     const mail = 'dev-mail@test.wepublish.com'
     const renewalDate = new Date()
     const invoice = await InvoiceFactory.create({
@@ -419,11 +430,22 @@ describe('PeriodicJobController', () => {
     expect(payment.intentSecret).toEqual('pi_xxxxxxxxxxxxxxxxxxxx_secret_xxxxxxxxxxxxxxxxxxxx')
     expect(payment.intentData).not.toBeNull()
 
+    expect(mandrillNockScope.isDone()).toBeTruthy()
+
     // Check that subscription is no canceled
     expect((await prismaClient.subscriptionDeactivation.findMany()).length).toEqual(0)
   })
 
   it('disable subscription', async () => {
+    const mandrillNockScopeFailedCharging = nock('https://mandrillapp.com:443')
+      .post('/api/1.0/messages/send-template', matches({template_name: 'default-RENEWAL_FAILED'}))
+      .reply(500)
+    const mandrillNockScopeDeactiationUnpaid = nock('https://mandrillapp.com:443')
+      .post(
+        '/api/1.0/messages/send-template',
+        matches({template_name: 'default-DEACTIVATION_UNPAID'})
+      )
+      .reply(500)
     const mail = 'dev-mail@test.wepublish.com'
     const renewalDate = sub(new Date(), {days: 1})
     const subscriptionValidUntil = sub(renewalDate, {days: 5})
@@ -496,5 +518,7 @@ describe('PeriodicJobController', () => {
     const updatedInvoice = updatedSubscription!.invoices[0]
     expect(updatedInvoice.paidAt).toBeNull()
     expect(updatedInvoice.canceledAt).not.toBeNull()
+    expect(mandrillNockScopeFailedCharging.isDone()).toBeTruthy()
+    expect(mandrillNockScopeDeactiationUnpaid.isDone()).toBeTruthy()
   })
 })

@@ -106,8 +106,11 @@ export class SubscriptionController {
         paidAt: null
       },
       include: {
-        subscription: true,
-        user: true,
+        subscription: {
+          include: {
+            user: true
+          }
+        },
         subscriptionPeriods: true
       }
     })
@@ -226,7 +229,6 @@ export class SubscriptionController {
   }
   public async deactivateSubscription(
     invoice: Invoice & {
-      user: User | null
       subscription: Subscription | null
       subscriptionPeriods: SubscriptionPeriod[]
     }
