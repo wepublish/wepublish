@@ -15,7 +15,8 @@ import {
   definePaymentMethodFactory,
   defineUserFactory,
   defineSubscriptionIntervalFactory,
-  defineInvoiceFactory
+  defineInvoiceFactory,
+  definePeriodicJobFactory
 } from '@wepublish/api'
 import {add, sub} from 'date-fns'
 import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
@@ -42,6 +43,7 @@ describe('PeriodicJobController', () => {
       subscriptionFlow: SubscriptionFlowFactory
     }
   })
+  const PeriodicJobFactory = definePeriodicJobFactory()
 
   beforeAll(() => {
     // nock.recorder.rec()
@@ -581,5 +583,32 @@ describe('PeriodicJobController', () => {
     })
     await controller.execute()
     expect(mandrillNockScopeCustomMessage.isDone()).toBeTruthy()
+  })
+
+  it('Periodic after error rerun', async () => {
+    const today = new Date()
+    await PeriodicJobFactory.create({
+      date: sub(today, {days: 1}),
+      executionTime: sub(today, {days: 1}),
+      finishedWithError: sub(today, {days: 1}),
+      tries: 1,
+      error: 'error Message'
+    })
+    await controller.execute()
+    const periodicJobs = await prismaClient.periodicJob.findMany()
+    expect(periodicJobs.length).toEqual(2)
+    const retryJob = periodicJobs.find(pj => pj.error !== null)
+    expect(retryJob).not.toBeNull()
+    expect(retryJob!.tries).toEqual(2)
+    expect(retryJob!.successfullyFinished).not.toBeNull()
+    expect(retryJob!.finishedWithError).not.toBeNull()
+    expect(retryJob!.error).not.toBeNull()
+
+    const nextDayJob = periodicJobs.find(pj => pj.error === null)
+    expect(nextDayJob).not.toBeNull()
+    expect(nextDayJob!.tries).toEqual(1)
+    expect(nextDayJob!.successfullyFinished).not.toBeNull()
+    expect(nextDayJob!.finishedWithError).toBeNull()
+    expect(nextDayJob!.error).toBeNull()
   })
 })
