@@ -3,7 +3,14 @@ import nock from 'nock'
 import {clearDatabase} from '../../prisma-utils'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {contextFromRequest, OldContextService, PrismaService} from '@wepublish/api'
-import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
+import {
+  MemberPlan,
+  PaymentPeriodicity,
+  PrismaClient,
+  SubscriptionEvent,
+  SubscriptionFlow,
+  SubscriptionInterval
+} from '@prisma/client'
 
 import {SubscriptionController} from '../subscription/subscription.controller'
 import {matches} from 'lodash'
@@ -18,7 +25,7 @@ import {
   defineInvoiceFactory,
   definePeriodicJobFactory
 } from '@wepublish/api'
-import {add, sub} from 'date-fns'
+import {add, format, parseISO, sub} from 'date-fns'
 import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
 import {forwardRef} from '@nestjs/common'
 import {initOldContextForTest} from '../../oldcontext-utils'
@@ -49,7 +56,7 @@ describe('PeriodicJobController', () => {
     }
   })
   const createSubscriptionInterval = async function (sfi: SubscriptionFlowInterval) {
-    await SubscriptionIntervalFactory.create({
+    return await SubscriptionIntervalFactory.create({
       subscriptionFlow: {
         connect: {
           id: sfi.subscriptionFlowId
@@ -65,6 +72,11 @@ describe('PeriodicJobController', () => {
       }
     })
   }
+  let customMemberPlan1: MemberPlan
+  let customMemberPlan2: MemberPlan
+  let customMemberPlanFlow1: SubscriptionFlow
+  let customMemberPlanFlow2: SubscriptionFlow
+  let defaultFlow: SubscriptionFlow
 
   beforeEach(async () => {
     await initOldContextForTest(prismaClient)
@@ -106,12 +118,64 @@ describe('PeriodicJobController', () => {
       slug: 'yearly'
     })
 
-    const defaultFlow = await SubscriptionFlowFactory.create({
+    defaultFlow = await SubscriptionFlowFactory.create({
       default: true,
       memberPlan: {},
       autoRenewal: [],
       periodicities: [],
       paymentMethods: {}
+    })
+
+    customMemberPlan1 = await MemberPlanFactory.create({
+      name: 'custom1',
+      slug: 'custom1'
+    })
+    customMemberPlan2 = await MemberPlanFactory.create({
+      name: 'custom2',
+      slug: 'custom2'
+    })
+
+    customMemberPlanFlow1 = await SubscriptionFlowFactory.create({
+      default: false,
+      memberPlan: {
+        connect: {
+          id: customMemberPlan1.id
+        }
+      },
+      autoRenewal: [true, false],
+      periodicities: [PaymentPeriodicity.yearly],
+      paymentMethods: {
+        connect: {
+          id: 'stripe'
+        }
+      }
+    })
+    customMemberPlanFlow2 = await SubscriptionFlowFactory.create({
+      default: false,
+      memberPlan: {
+        connect: {
+          id: customMemberPlan1.id
+        }
+      },
+      autoRenewal: [true, false],
+      periodicities: [PaymentPeriodicity.monthly],
+      paymentMethods: {
+        connect: {
+          id: 'stripe'
+        }
+      }
+    })
+    await prismaClient.subscriptionFlow.update({
+      where: {
+        id: customMemberPlanFlow2.id
+      },
+      data: {
+        paymentMethods: {
+          connect: {
+            id: 'payrexx'
+          }
+        }
+      }
     })
 
     const subscriptionFLowIntervals: SubscriptionFlowInterval[] = [
@@ -175,54 +239,6 @@ describe('PeriodicJobController', () => {
   })
 
   it('get action from store custom and default flow basic', async () => {
-    const customMemberPlan1 = await MemberPlanFactory.create({
-      name: 'custom1',
-      slug: 'custom1'
-    })
-
-    const customMemberPlanFlow1 = await SubscriptionFlowFactory.create({
-      default: false,
-      memberPlan: {
-        connect: {
-          id: customMemberPlan1.id
-        }
-      },
-      autoRenewal: [true, false],
-      periodicities: [PaymentPeriodicity.yearly],
-      paymentMethods: {
-        connect: {
-          id: 'stripe'
-        }
-      }
-    })
-    const customMemberPlanFlow2 = await SubscriptionFlowFactory.create({
-      default: false,
-      memberPlan: {
-        connect: {
-          id: customMemberPlan1.id
-        }
-      },
-      autoRenewal: [true, false],
-      periodicities: [PaymentPeriodicity.monthly],
-      paymentMethods: {
-        connect: {
-          id: 'stripe'
-        }
-      }
-    })
-    await prismaClient.subscriptionFlow.update({
-      where: {
-        id: customMemberPlanFlow2.id
-      },
-      data: {
-        paymentMethods: {
-          connect: {
-            id: 'payrexx'
-          }
-        }
-      }
-    })
-
     const subscriptionFLowIntervals: SubscriptionFlowInterval[] = [
       // Custom1 SubscriptionFlow
       {
@@ -497,8 +513,50 @@ describe('PeriodicJobController', () => {
     expect(JSON.stringify(actions)).toEqual(res)
   })
   it('earliest creation date', async () => {
-    console.log('xxxx')
+    const subscriptionFLowIntervals: SubscriptionFlowInterval[] = [
+      // default -7
+      {
+        subscriptionFlowId: customMemberPlanFlow1.id,
+        mailTemplateName: 'custom1-INVOICE_CREATION',
+        event: SubscriptionEvent.INVOICE_CREATION,
+        daysAwayFromEnding: -1
+      },
+      {
+        subscriptionFlowId: customMemberPlanFlow2.id,
+        mailTemplateName: 'custom2-INVOICE_CREATION',
+        event: SubscriptionEvent.INVOICE_CREATION,
+        daysAwayFromEnding: -3
+      }
+    ]
+    const intervalList: SubscriptionInterval[] = []
+    for (const sfi of subscriptionFLowIntervals) {
+      intervalList.push(await createSubscriptionInterval(sfi))
+    }
+
+    let testDate = new Date()
+    const sed = new SubscriptionEventDictionary(prismaClient)
+    await sed.initialize()
+    let res = await sed.getEarliestInvoiceCreationDate(testDate)
+    expect(format(res, 'dd-MM-yyyy')).toEqual(format(add(testDate, {days: 14}), 'dd-MM-yyyy'))
+
+    await prismaClient.subscriptionInterval.update({
+      where: {
+        id: intervalList.find(il => il.daysAwayFromEnding === -3)!.id
+      },
+      data: {
+        daysAwayFromEnding: -20
+      }
+    })
+    await sed.initialize()
+    res = await sed.getEarliestInvoiceCreationDate(testDate)
+    expect(format(res, 'dd-MM-yyyy')).toEqual(format(add(testDate, {days: 20}), 'dd-MM-yyyy'))
+
+    testDate = sub(new Date(), {days: 10})
+    await sed.initialize()
+    res = await sed.getEarliestInvoiceCreationDate(testDate)
+    expect(format(res, 'dd-MM-yyyy')).toEqual(format(add(testDate, {days: 20}), 'dd-MM-yyyy'))
   })
+
   it('custom event date list', async () => {
     console.log('xxxx')
   })
