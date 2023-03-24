@@ -63,8 +63,6 @@ describe('PeriodicJobController', () => {
   })
   let mailTemplate1: MailTemplate
   let mailTemplate2: MailTemplate
-  let mailTemplate3: MailTemplate
-  let mailTemplate4: MailTemplate
 
   beforeEach(async () => {
     await initOldContextForTest(prismaClient)
@@ -89,14 +87,6 @@ describe('PeriodicJobController', () => {
     mailTemplate2 = await MailTemplateFactory.create({
       name: 'template2',
       externalMailTemplateId: 'template2'
-    })
-    mailTemplate3 = await MailTemplateFactory.create({
-      name: 'template3',
-      externalMailTemplateId: 'template3'
-    })
-    mailTemplate4 = await MailTemplateFactory.create({
-      name: 'template4',
-      externalMailTemplateId: 'template4'
     })
   })
 
