@@ -127,7 +127,7 @@ export const initOldContextForTest = async (prisma: PrismaClient) => {
     new PayrexxSubscriptionPaymentProvider({
       id: 'payrexx-subscription',
       name: 'Payrexx Subscription',
-      offSessionPayments: false,
+      offSessionPayments: true,
       instanceName: 'instanceName',
       instanceAPISecret: 'secret',
       incomingRequestHandler: bodyParser.json(),

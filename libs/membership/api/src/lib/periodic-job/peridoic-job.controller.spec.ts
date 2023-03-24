@@ -93,7 +93,8 @@ describe('PeriodicJobController', () => {
       'payments',
       'users',
       'users.payment-providers',
-      'periodic_jobs'
+      'periodic_jobs',
+      'subscriptions.deactivation-reasons'
     ])
 
     // Base data
@@ -102,6 +103,13 @@ describe('PeriodicJobController', () => {
       name: 'payrexx',
       paymentProviderID: 'payrexx',
       slug: 'payrexx',
+      active: true
+    })
+    const payrexxSubscription = await PaymentMethodFactory.create({
+      id: 'payrexx-subscription',
+      name: 'payrexx-subscription',
+      paymentProviderID: 'payrexx-subscription',
+      slug: 'payrexx-subscription',
       active: true
     })
 
@@ -323,7 +331,7 @@ describe('PeriodicJobController', () => {
     const invoice = await InvoiceFactory.create({
       dueAt: renewalDate,
       mail: mail,
-      paymentDeadline: sub(renewalDate, {months: 11, days: 20}),
+      paymentDeadline: add(renewalDate, {days: 5}),
       items: {
         create: {
           amount: 2400,
@@ -365,8 +373,8 @@ describe('PeriodicJobController', () => {
           },
           periods: {
             create: {
-              startsAt: sub(renewalDate, {months: 12}),
-              endsAt: renewalDate,
+              startsAt: renewalDate,
+              endsAt: add(renewalDate, {months: 12}),
               paymentPeriodicity: PaymentPeriodicity.yearly,
               amount: 2400,
               invoice: {
@@ -395,6 +403,13 @@ describe('PeriodicJobController', () => {
     expect(paidInvoice.canceledAt).toBeNull()
     expect(paidInvoice.manuallySetAsPaidByUserId).toBeNull()
 
+    // Test subscription
+    expect(paidInvoice.subscription).not.toBeNull()
+    expect(paidInvoice.subscription!.paidUntil).not.toBeNull()
+    expect(paidInvoice.subscription!.paidUntil!.getTime()).toEqual(
+      add(renewalDate, {months: 12}).getTime()
+    )
+
     // Test payment
     const payments = await prismaClient.payment.findMany({})
     expect(payments.length).toEqual(1)
@@ -406,5 +421,80 @@ describe('PeriodicJobController', () => {
 
     // Check that subscription is no canceled
     expect((await prismaClient.subscriptionDeactivation.findMany()).length).toEqual(0)
+  })
+
+  it('disable subscription', async () => {
+    const mail = 'dev-mail@test.wepublish.com'
+    const renewalDate = sub(new Date(), {days: 1})
+    const subscriptionValidUntil = sub(renewalDate, {days: 5})
+    const invoice = await InvoiceFactory.create({
+      dueAt: renewalDate,
+      mail: mail,
+      paymentDeadline: renewalDate,
+      items: {
+        create: {
+          amount: 2400,
+          quantity: 1,
+          name: 'Yearly Sub'
+        }
+      }
+    })
+
+    const testUserAndData = await UserFactory.create({
+      email: mail,
+      Subscription: {
+        create: {
+          paymentPeriodicity: PaymentPeriodicity.yearly,
+          paidUntil: subscriptionValidUntil,
+          autoRenew: true,
+          monthlyAmount: 200,
+          startsAt: sub(subscriptionValidUntil, {months: 12}),
+          paymentMethod: {
+            connect: {
+              id: 'payrexx-subscription'
+            }
+          },
+          memberPlan: {
+            connect: {
+              slug: 'yearly'
+            }
+          },
+          invoices: {
+            connect: {
+              id: invoice.id
+            }
+          },
+          periods: {
+            create: {
+              startsAt: subscriptionValidUntil,
+              endsAt: add(subscriptionValidUntil, {months: 12}),
+              paymentPeriodicity: PaymentPeriodicity.yearly,
+              amount: 2400,
+              invoice: {
+                connect: {
+                  id: invoice.id
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+    await controller.execute()
+    const subscriptions = await prismaClient.subscription.findMany({
+      include: {
+        invoices: true,
+        deactivation: true
+      }
+    })
+    expect(subscriptions.length).toEqual(1)
+    const updatedSubscription = subscriptions[0]
+    expect(updatedSubscription).not.toBeNull()
+    expect(updatedSubscription!.deactivation).not.toBeNull()
+    expect(updatedSubscription!.deactivation!.reason).toEqual('invoiceNotPaid')
+    expect(updatedSubscription!.invoices.length).toEqual(1)
+    const updatedInvoice = updatedSubscription!.invoices[0]
+    expect(updatedInvoice.paidAt).toBeNull()
+    expect(updatedInvoice.canceledAt).not.toBeNull()
   })
 })

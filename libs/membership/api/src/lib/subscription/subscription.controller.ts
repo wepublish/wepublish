@@ -14,7 +14,7 @@ import {
   PaymentState,
   InvoiceItem
 } from '@prisma/client'
-import {add} from 'date-fns'
+import {add, sub} from 'date-fns'
 import {Injectable} from '@nestjs/common'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {JSONDefinition} from 'graphql-scalars'
@@ -52,8 +52,8 @@ export class SubscriptionController {
         },
         invoices: {
           none: {
-            dueAt: {
-              gte: runDate
+            paymentDeadline: {
+              gte: sub(runDate, {days: 3})
             }
           }
         },
@@ -231,7 +231,7 @@ export class SubscriptionController {
       subscriptionPeriods: SubscriptionPeriod[]
     }
   ) {
-    this.prismaService.$transaction([
+    await this.prismaService.$transaction([
       this.prismaService.subscriptionDeactivation.create({
         data: {
           subscriptionID: invoice.subscriptionID!,

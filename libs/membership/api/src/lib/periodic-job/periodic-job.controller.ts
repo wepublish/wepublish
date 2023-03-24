@@ -191,6 +191,7 @@ export class PeriodicJobController {
         const subscriptionsToDeactivateInvoice =
           await this.subscriptionController.getSubscriptionsToDeactivate(periodicJobRunObject.date)
         for (const subscriptionToDeactivateInvoice of subscriptionsToDeactivateInvoice) {
+          console.log(JSON.stringify(subscriptionToDeactivateInvoice))
           if (!subscriptionToDeactivateInvoice.subscription) {
             throw Error(
               `Invoice ${subscriptionToDeactivateInvoice.id} has no subscription assigned!`
