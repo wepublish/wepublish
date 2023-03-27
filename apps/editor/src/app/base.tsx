@@ -124,7 +124,7 @@ const Navigation = styled(Nav)`
 
 const ChildrenContainer = styled(Container)`
   padding: 60px 40px 40px 40px;
-  overflow-y: scroll;
+  overflow-y: auto;
 `
 
 export function Base({children}: BaseProps) {
