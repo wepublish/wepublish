@@ -151,15 +151,19 @@ export class SubscriptionController {
   public async createInvoice(
     subscription: Subscription & {
       periods: SubscriptionPeriod[]
-      deactivation: SubscriptionDeactivation | null
       user: User
-      paymentMethod: PaymentMethod
       memberPlan: MemberPlan
     },
     paymentDeadline: Action
   ) {
+    if (paymentDeadline.type !== SubscriptionEvent.DEACTIVATION_UNPAID) {
+      throw new Error(
+        `Given action has not right type! ${JSON.stringify(paymentDeadline)} should never happen!`
+      )
+    }
+
     const amount = subscription.monthlyAmount * this.getMonthCount(subscription.paymentPeriodicity)
-    const description = `Renewal of subscription ${subscription.memberPlan.name} for ${subscription.paymentPeriodicity}`
+    const description = `${subscription.paymentPeriodicity} renewal of subscription ${subscription.memberPlan.name}`
     return this.prismaService.invoice.create({
       data: {
         mail: subscription.user.email,
@@ -228,12 +232,7 @@ export class SubscriptionController {
       })
     ])
   }
-  public async deactivateSubscription(
-    invoice: Invoice & {
-      subscription: Subscription | null
-      subscriptionPeriods: SubscriptionPeriod[]
-    }
-  ) {
+  public async deactivateSubscription(invoice: Invoice) {
     await this.prismaService.$transaction([
       this.prismaService.subscriptionDeactivation.create({
         data: {

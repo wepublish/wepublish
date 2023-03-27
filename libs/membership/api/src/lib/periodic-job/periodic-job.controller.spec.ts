@@ -677,16 +677,19 @@ describe('PeriodicJobController', () => {
     })
     try {
       await controller.execute()
+      throw Error('This execution should fail!')
     } catch (e) {
       expect((e as Error).toString()).toEqual('Error: No invoice creation date found!')
     }
     try {
       await controller.execute()
+      throw Error('This execution should fail!')
     } catch (e) {
       expect((e as Error).toString()).toEqual('Error: No invoice creation date found!')
     }
     try {
       await controller.execute()
+      throw Error('This execution should fail!')
     } catch (e) {
       expect((e as Error).toString()).toEqual('Error: No invoice creation date found!')
     }

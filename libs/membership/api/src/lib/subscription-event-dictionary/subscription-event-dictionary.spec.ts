@@ -460,7 +460,7 @@ describe('PeriodicJobController', () => {
     expect(JSON.stringify(actions)).toEqual(res)
 
     try {
-      actions = sed.getActionFromStore({
+      sed.getActionFromStore({
         memberplanId: customMemberPlan1.id,
         periodicity: PaymentPeriodicity.biannual,
         paymentmethodeId: 'payrexx',
@@ -468,6 +468,7 @@ describe('PeriodicJobController', () => {
         daysAwayFromEnding: 10,
         events: [SubscriptionEvent.INVOICE_CREATION]
       })
+      throw Error('This execution should fail!')
     } catch (e) {
       expect((e as Error).toString()).toEqual(
         'Error: Its not supported to query for daysAwayFromEnding combined with an event list'
@@ -660,6 +661,7 @@ describe('PeriodicJobController', () => {
     try {
       const evd = new SubscriptionEventDictionary(prismaClient)
       evd.buildCustomEventDateList(new Date())
+      throw Error('This execution should fail!')
     } catch (e) {
       expect((e as Error).toString()).toEqual(
         'Error: Tried to access store before it was successfully initialized!'
@@ -669,6 +671,7 @@ describe('PeriodicJobController', () => {
     try {
       const evd = new SubscriptionEventDictionary(prismaClient)
       evd.getDatesWithCustomEvent()
+      throw Error('This execution should fail!')
     } catch (e) {
       expect((e as Error).toString()).toEqual(
         'Error: Tried to access eventDataList before it was successfully initialized!'
