@@ -88,7 +88,7 @@ const Sidebar = styled(RSidebar)`
 
 const Sidenav = styled(RSidenav)`
   flex: 1 1 auto;
-  overflow-y: scroll;
+  overflow-y: auto;
 `
 
 const IconButton = styled(RIconButton)`
