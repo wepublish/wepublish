@@ -12,9 +12,10 @@ import {
   SubscriptionDeactivationReason,
   PaymentProviderCustomer,
   PaymentState,
-  InvoiceItem
+  InvoiceItem,
+  PrismaClient
 } from '@prisma/client'
-import {add, sub} from 'date-fns'
+import {add, endOfDay, startOfDay, sub} from 'date-fns'
 import {Injectable} from '@nestjs/common'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {JSONDefinition} from 'graphql-scalars'
@@ -26,7 +27,7 @@ export type SubscriptionControllerConfig = {
 @Injectable()
 export class SubscriptionController {
   constructor(
-    private readonly prismaService: PrismaService,
+    private readonly prismaService: PrismaClient,
     private readonly oldContextService: OldContextService
   ) {}
 
@@ -45,7 +46,7 @@ export class SubscriptionController {
     return await this.prismaService.subscription.findMany({
       where: {
         paidUntil: {
-          lte: closestRenewalDate
+          lte: endOfDay(closestRenewalDate)
         },
         deactivation: {
           is: null
@@ -53,7 +54,7 @@ export class SubscriptionController {
         invoices: {
           none: {
             paymentDeadline: {
-              gte: sub(runDate, {days: 3})
+              gte: sub(endOfDay(runDate), {days: 3})
             }
           }
         },
@@ -73,7 +74,7 @@ export class SubscriptionController {
     return this.prismaService.invoice.findMany({
       where: {
         dueAt: {
-          lte: runDate
+          lte: endOfDay(runDate)
         },
         canceledAt: null,
         paidAt: null
@@ -100,7 +101,7 @@ export class SubscriptionController {
     return this.prismaService.invoice.findMany({
       where: {
         paymentDeadline: {
-          lte: runDate
+          lte: startOfDay(runDate)
         },
         canceledAt: null,
         paidAt: null
@@ -287,7 +288,7 @@ export class SubscriptionController {
     }
   }
 
-  public async offSessionPayment(
+  private async offSessionPayment(
     invoice: Invoice & {
       subscription:
         | (Subscription & {
