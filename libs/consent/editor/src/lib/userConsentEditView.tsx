@@ -17,8 +17,6 @@ import {getApiClientV2} from '../apiClientv2'
 
 const mapApiDataToInput = (userConsent: any): MutationUpdateUserConsentArgs['userConsent'] => ({
   ...stripTypename(userConsent),
-  // name: userConsent.name,
-  // slug: userConsent.slug,
   value: userConsent.value
 })
 
@@ -49,8 +47,6 @@ export const UserConsentEditView = () => {
   const closePath = '/userConsents'
   const [userConsent, setUserConsent] = useState({
     value: '' as ConsentValue
-    // name: '',
-    // slug: ''
   })
 
   const [shouldClose, setShouldClose] = useState<boolean>(false)

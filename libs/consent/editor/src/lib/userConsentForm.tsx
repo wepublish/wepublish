@@ -26,9 +26,9 @@ const consentValues = [
   }
 ]
 
-type UserConsentFormData =
-  | MutationCreateUserConsentArgs['userConsent']
-  | MutationUpdateUserConsentArgs['userConsent']
+type UserConsentFormData = Partial<
+  MutationCreateUserConsentArgs['userConsent'] & MutationUpdateUserConsentArgs['userConsent']
+>
 
 type UserConsentFormProps = {
   isEdit?: boolean
@@ -101,7 +101,7 @@ export const UserConsentForm = ({userConsent, onChange, isEdit}: UserConsentForm
             block
             disabled={isEdit}
             data={consentsValues || []}
-            value={consentsData?.consents.find(c => c.id === userConsent.consentId)?.id}
+            value={consentsData?.consents.find(c => c.id === userConsent.userId)?.id}
             onChange={value =>
               onChange({consentId: consentsValues.find(v => v.value === value)?.value})
             }
