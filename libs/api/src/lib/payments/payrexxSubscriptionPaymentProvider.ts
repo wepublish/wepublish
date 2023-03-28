@@ -146,8 +146,6 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
   }
 
   activateHook(prisma: PrismaClient) {
-    console.log('Activate Payrexx subscription prisma hook')
-
     const hook = (): Prisma.Middleware => async (params, next) => {
       // Only handle subscription update db queries skip all other
       if (params.model !== 'Subscription' || params.action !== 'update') {
