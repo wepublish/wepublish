@@ -47,6 +47,11 @@ export const ConsentCreateView = () => {
     client,
     onError: error => onErrorToast(error, consent.slug),
     onCompleted: consent => {
+      toaster.push(
+        <Message type="success" showIcon closable duration={3000}>
+          {t('toast.createdSuccess')}
+        </Message>
+      )
       if (shouldClose) {
         navigate(closePath)
       } else {

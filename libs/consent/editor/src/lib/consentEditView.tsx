@@ -78,6 +78,11 @@ export const ConsentEditView = () => {
       if (data.updateConsent) {
         setConsent(mapApiDataToInput(data.updateConsent))
       }
+      toaster.push(
+        <Message type="success" showIcon closable duration={3000}>
+          {t('toast.updatedSuccess')}
+        </Message>
+      )
     }
   })
 

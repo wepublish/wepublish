@@ -68,6 +68,11 @@ export const UserConsentEditView = () => {
     client,
     onError: error => onErrorToast(error, 'userConsent.consent.slug'),
     onCompleted: data => {
+      toaster.push(
+        <Message type="success" showIcon closable duration={3000}>
+          {t('toast.updatedSuccess')}
+        </Message>
+      )
       if (shouldClose) {
         navigate(closePath)
       }

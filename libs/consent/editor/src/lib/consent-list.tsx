@@ -40,7 +40,14 @@ export function ConsentList(props: ConsentListProps) {
   const [deleteConsent] = useDeleteConsentMutation({
     client,
     onError: onErrorToast,
-    onCompleted: () => refetch()
+    onCompleted: () => {
+      toaster.push(
+        <Message type="success" showIcon closable duration={3000}>
+          {t('toast.deletedSuccess')}
+        </Message>
+      )
+      refetch()
+    }
   })
 
   const {t} = useTranslation()
