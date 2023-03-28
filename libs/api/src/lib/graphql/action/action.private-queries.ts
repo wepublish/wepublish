@@ -138,5 +138,5 @@ export const getActions = async (
     await Promise.all([articles, pages, comments, authors, subscriptions, polls, users, events])
   ).flat()
 
-  return actions.sort((v1: Action, v2: Action) => v2.date.getDate() - v1.date.getDate())
+  return actions.sort((v1: Action, v2: Action) => v2.date.getTime() - v1.date.getTime())
 }
