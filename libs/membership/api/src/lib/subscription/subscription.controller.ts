@@ -302,6 +302,12 @@ export class SubscriptionController {
     paymentProvider: PaymentProvider,
     mailActions: Action[]
   ) {
+    if (invoice.canceledAt || invoice.paidAt) {
+      throw new Error(
+        `Tried to renew paid ${invoice.paidAt} or canceled invoice ${invoice.canceledAt} for subscription ${invoice.subscription?.id}`
+      )
+    }
+
     const customer = invoice.subscription?.user?.paymentProviderCustomers.find(
       ppc => ppc.paymentProviderID === invoice.subscription?.paymentMethod.paymentProviderID
     )

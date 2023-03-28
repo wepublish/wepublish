@@ -1,13 +1,5 @@
 import nock from 'nock'
 import {
-  contextFromRequest,
-  defineInvoiceItemFactory,
-  defineSubscriptionPeriodFactory,
-  MailgunMailProvider,
-  OldContextService,
-  PrismaService
-} from '@wepublish/api'
-import {
   MailTemplate,
   PaymentPeriodicity,
   PrismaClient,
@@ -16,6 +8,10 @@ import {
   SubscriptionEvent
 } from '@prisma/client'
 import {
+  contextFromRequest,
+  MailgunMailProvider,
+  OldContextService,
+  PrismaService,
   initialize,
   defineMemberPlanFactory,
   defineMailTemplateFactory,
@@ -25,7 +21,9 @@ import {
   defineSubscriptionIntervalFactory,
   defineInvoiceFactory,
   definePeriodicJobFactory,
-  defineSubscriptionFactory
+  defineSubscriptionFactory,
+  defineInvoiceItemFactory,
+  defineSubscriptionPeriodFactory
 } from '@wepublish/api'
 
 import {initOldContextForTest} from '../../oldcontext-utils'
@@ -38,7 +36,6 @@ import {SubscriptionController} from '../subscription/subscription.controller'
 import {clearDatabase} from '../../prisma-utils'
 import {add, sub} from 'date-fns'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
-import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subscription-event-dictionary'
 
 describe('SubscriptionController', () => {
   let controller: OldContextService
@@ -70,6 +67,119 @@ describe('SubscriptionController', () => {
     }
   })
   const InvoiceItemFactory = defineInvoiceItemFactory()
+
+  const createDataForChargeFunction = async (
+    paymentProvider = 'stripe',
+    createPaymentProviderCustomer = true
+  ) => {
+    const memberplan = await MemberPlanFactory.create()
+    const user = await UserFactory.create({
+      paymentProviderCustomers: createPaymentProviderCustomer
+        ? {
+            create: {
+              paymentProviderID: paymentProvider,
+              customerID: 'stripeCustomerId'
+            }
+          }
+        : {}
+    })
+    const paymentMethode = await PaymentMethodFactory.create({
+      paymentProviderID: paymentProvider
+    })
+
+    const subscription = await SubscriptionFactory.create({
+      memberPlan: {
+        connect: {
+          id: memberplan.id
+        }
+      },
+      user: {
+        connect: {
+          id: user.id
+        }
+      },
+      paymentMethod: {
+        connect: {
+          id: paymentMethode.id
+        }
+      }
+    })
+    const item = await InvoiceItemFactory.create({
+      amount: 120,
+      quantity: 2
+    })
+
+    const invoice = await InvoiceFactory.create({
+      mail: 'test@wepublish.com',
+      subscription: {
+        connect: {
+          id: subscription.id
+        }
+      },
+      items: {
+        connect: {
+          id: item.id
+        }
+      }
+    })
+
+    const period = await SubscriptionPeriodFactory.create({
+      invoice: {
+        connect: {
+          id: invoice.id
+        }
+      }
+    })
+    await prismaClient.subscription.update({
+      where: {
+        id: subscription.id
+      },
+      data: {
+        periods: {
+          connect: {
+            id: period.id
+          }
+        }
+      }
+    })
+
+    const actions: Action[] = [
+      {
+        daysAwayFromEnding: 999,
+        type: SubscriptionEvent.RENEWAL_FAILED,
+        externalMailTemplate: 'failed-template'
+      },
+      {
+        daysAwayFromEnding: 999,
+        type: SubscriptionEvent.RENEWAL_SUCCESS,
+        externalMailTemplate: 'success-template'
+      }
+    ]
+
+    return {
+      testableInvoice: await prismaClient.invoice.findUnique({
+        where: {
+          id: invoice.id
+        },
+        include: {
+          items: true,
+          subscriptionPeriods: true,
+          subscription: {
+            include: {
+              paymentMethod: true,
+              user: {
+                include: {
+                  paymentProviderCustomers: true
+                }
+              },
+              memberPlan: true
+            }
+          }
+        }
+      }),
+      actions
+    }
+  }
 
   const createSubscriptionForInvoiceCreation = async (
     validUntil: Date,
@@ -204,7 +314,6 @@ describe('SubscriptionController', () => {
       }
     }
   })
-  const MailTemplateFactory = defineMailTemplateFactory()
 
   let subscriptionController: SubscriptionController
 
@@ -223,11 +332,17 @@ describe('SubscriptionController', () => {
     controller = module.get<OldContextService>(OldContextService)
 
     await clearDatabase(prismaClient, [
-      'users',
-      'subscriptions',
-      'subscriptions.deactivation-reasons',
+      'payments',
+      'subscriptions.periods',
+      'invoices.items',
       'invoices',
-      'subscriptions.periods'
+      'subscriptions.deactivation-reasons',
+      'member.plans.payment-methods',
+      'member.plans',
+      'payment.methods',
+      'subscriptions',
+      'users.payment-providers',
+      'users'
     ])
 
     subscriptionController = new SubscriptionController(prismaClient, controller)
@@ -653,110 +768,166 @@ describe('SubscriptionController', () => {
     expect(invoiceToDeactivateDeactivated!.subscription!.deactivation!.date).toBeDefined()
   })
 
-  it('payment invalid payment provider', async () => {
-    const memberplan = await MemberPlanFactory.create()
-    const user = await UserFactory.create()
-    const paymentMethode = await PaymentMethodFactory.create({
-      paymentProviderID: 'invalid'
-    })
-
-    const subscription = await SubscriptionFactory.create({
-      memberPlan: {
-        connect: {
-          id: memberplan.id
-        }
-      },
-      user: {
-        connect: {
-          id: user.id
-        }
-      },
-      paymentMethod: {
-        connect: {
-          id: paymentMethode.id
-        }
-      }
-    })
-    const item = await InvoiceItemFactory.create()
-
-    const invoice = await InvoiceFactory.create({
-      subscription: {
-        connect: {
-          id: subscription.id
-        }
-      },
-      items: {
-        connect: {
-          id: item.id
-        }
-      }
-    })
-
-    const period = await SubscriptionPeriodFactory.create({
-      invoice: {
-        connect: {
-          id: invoice.id
-        }
-      }
-    })
-    await prismaClient.subscription.update({
-      where: {
-        id: subscription.id
-      },
-      data: {
-        periods: {
-          connect: {
-            id: period.id
-          }
-        }
-      }
-    })
-
-    const actions: Action[] = [
-      {
-        daysAwayFromEnding: 999,
-        type: SubscriptionEvent.RENEWAL_FAILED,
-        externalMailTemplate: 'failed-template'
-      },
-      {
-        daysAwayFromEnding: 999,
-        type: SubscriptionEvent.RENEWAL_SUCCESS,
-        externalMailTemplate: 'success-template'
-      }
-    ]
-
-    const testableInvoice = await prismaClient.invoice.findUnique({
-      where: {
-        id: invoice.id
-      },
-      include: {
-        items: true,
-        subscriptionPeriods: true,
-        subscription: {
-          include: {
-            paymentMethod: true,
-            user: {
-              include: {
-                paymentProviderCustomers: true
-              }
-            },
-            memberPlan: true
-          }
-        }
-      }
-    })
-    if (
-      !testableInvoice!.subscription!.user ||
-      !testableInvoice!.subscription!.paymentMethod ||
-      !testableInvoice!.subscription!.memberPlan
-    ) {
-      throw new Error('Something important not found!')
-    }
+  it('Charge invoice: Payment invalid payment provider', async () => {
+    const {testableInvoice, actions} = await createDataForChargeFunction('invalid')
     try {
       await subscriptionController.chargeInvoice(testableInvoice!, actions)
       throw Error('This execution should fail!')
     } catch (e) {
       expect((e as Error).toString()).toEqual('Error: Payment Provider invalid not found!')
     }
+  })
+
+  it('Charge invoice:No offsession payment provider', async () => {
+    const {testableInvoice, actions} = await createDataForChargeFunction('payrexx')
+    const answer = await subscriptionController.chargeInvoice(testableInvoice!, actions)
+    expect(answer.action).toBeUndefined()
+    expect(answer.errorCode).toEqual('')
+  })
+
+  it('Charge invoice: missing payment provider customer', async () => {
+    const {testableInvoice, actions} = await createDataForChargeFunction('stripe', false)
+    const answer = await subscriptionController.chargeInvoice(testableInvoice!, actions)
+    expect(answer.action?.daysAwayFromEnding).toEqual(999)
+    expect(answer.action?.type).toEqual('RENEWAL_FAILED')
+    expect(answer.action?.externalMailTemplate).toEqual('failed-template')
+    expect(answer.errorCode).toEqual('customer-not-found')
+  })
+
+  it('Charge invoice: Stripe offsession payment customer deleted or no default', async () => {
+    const {testableInvoice, actions} = await createDataForChargeFunction()
+    const stripGetCustomersDeletedCustomer = await nock('https://api.stripe.com')
+      .get('/v1/customers/stripeCustomerId')
+      .replyWithFile(200, __dirname + '/__fixtures__/stripGetDeletedCustomers.json', {
+        'Content-Type': 'application/json'
+      })
+    const stripePaymentIntentDeletedCustomer = nock('https://api.stripe.com', {
+      encodedQueryParams: true
+    })
+      .post(
+        '/v1/payment_intents',
+        /amount=240&currency=chf&metadata\[paymentID\]=.*&metadata\[mail\]=test%40wepublish.com/g
+      )
+      .replyWithFile(200, __dirname + '/__fixtures__/stripePostPaymentIntentSuccess.json', {
+        'Content-Type': 'application/json'
+      })
+    const answerDeletedCustomer = await subscriptionController.chargeInvoice(
+      testableInvoice!,
+      actions
+    )
+    expect(answerDeletedCustomer.action?.daysAwayFromEnding).toEqual(999)
+    expect(answerDeletedCustomer.action?.type).toEqual('RENEWAL_SUCCESS')
+    expect(answerDeletedCustomer.action?.externalMailTemplate).toEqual('success-template')
+    expect(answerDeletedCustomer.errorCode).toEqual('')
+    expect(stripGetCustomersDeletedCustomer.isDone()).toBeTruthy()
+    expect(stripePaymentIntentDeletedCustomer.isDone()).toBeTruthy()
+    const stripGetCustomersNoDefault = await nock('https://api.stripe.com')
+      .get('/v1/customers/stripeCustomerId')
+      .replyWithFile(
+        200,
+        __dirname +
+          '/__fixtures__/stripGetMissingDefaultPaymentMethodeOrDefaultSourceCustomers.json',
+        {
+          'Content-Type': 'application/json'
+        }
+      )
+    const stripePaymentIntentNoDefault = nock('https://api.stripe.com', {encodedQueryParams: true})
+      .post(
+        '/v1/payment_intents',
+        /amount=240&currency=chf&metadata\[paymentID\]=.*&metadata\[mail\]=test%40wepublish.com/g
+      )
+      .replyWithFile(200, __dirname + '/__fixtures__/stripePostPaymentIntentSuccess.json', {
+        'Content-Type': 'application/json'
+      })
+    const answerNoDefault = await subscriptionController.chargeInvoice(testableInvoice!, actions)
+    expect(answerNoDefault.action?.daysAwayFromEnding).toEqual(999)
+    expect(answerNoDefault.action?.type).toEqual('RENEWAL_SUCCESS')
+    expect(answerNoDefault.action?.externalMailTemplate).toEqual('success-template')
+    expect(answerNoDefault.errorCode).toEqual('')
+    expect(stripGetCustomersNoDefault.isDone()).toBeTruthy()
+    expect(stripePaymentIntentNoDefault.isDone()).toBeTruthy()
+
+    const payments = await prismaClient.payment.findMany({
+      where: {
+        state: 'paid',
+        intentID: 'pi_xxxxxxxxxxxxxxxxxxxx',
+        intentSecret: 'pi_xxxxxxxxxxxxxxxxxxxx_secret_xxxxxxxxxxxxxxxxxxxx',
+        paymentData: null
+      }
+    })
+    expect(payments.length).toEqual(2)
+  })
+
+  it('Charge invoice: Stripe offsession payment card declined', async () => {
+    const {testableInvoice, actions} = await createDataForChargeFunction()
+    const stripGetCustomers = await nock('https://api.stripe.com')
+      .get('/v1/customers/stripeCustomerId')
+      .replyWithFile(200, __dirname + '/__fixtures__/stripGetCustomers.json', {
+        'Content-Type': 'application/json'
+      })
+    const stripePaymentIntent = nock('https://api.stripe.com', {encodedQueryParams: true})
+      .post('/v1/payment_intents')
+      .replyWithFile(402, __dirname + '/__fixtures__/stripePostPaymentIntentStripeCardError.json', {
+        'Content-Type': 'application/json'
+      })
+    const answer = await subscriptionController.chargeInvoice(testableInvoice!, actions)
+    expect(stripGetCustomers.isDone()).toBeTruthy()
+    expect(stripePaymentIntent.isDone()).toBeTruthy()
+    expect(answer.action?.daysAwayFromEnding).toEqual(999)
+    expect(answer.action?.type).toEqual('RENEWAL_FAILED')
+    expect(answer.action?.externalMailTemplate).toEqual('failed-template')
+    expect(answer.errorCode).toEqual('user-action-required')
+    const payments = await prismaClient.payment.findMany({
+      where: {
+        state: 'submitted',
+        intentID: 'unknown_error',
+        intentSecret: '',
+        intentData: '{"id":"unknown_error","error":{},"state":"requiresUserAction"}',
+        paymentData: null
+      }
+    })
+    expect(payments.length).toEqual(1)
+  })
+
+  it('Charge invoice: Stripe offsession successful', async () => {
+    const {testableInvoice, actions} = await createDataForChargeFunction()
+    const stripGetCustomers = await nock('https://api.stripe.com')
+      .get('/v1/customers/stripeCustomerId')
+      .replyWithFile(200, __dirname + '/__fixtures__/stripGetCustomers.json', {
+        'Content-Type': 'application/json'
+      })
+    const stripePaymentIntent = nock('https://api.stripe.com', {encodedQueryParams: true})
+      .post('/v1/payment_intents')
+      .replyWithFile(200, __dirname + '/__fixtures__/stripePostPaymentIntentSuccess.json', {
+        'Content-Type': 'application/json'
+      })
+    const answer = await subscriptionController.chargeInvoice(testableInvoice!, actions)
+    expect(stripGetCustomers.isDone()).toBeTruthy()
+    expect(stripePaymentIntent.isDone()).toBeTruthy()
+    expect(answer.action?.daysAwayFromEnding).toEqual(999)
+    expect(answer.action?.type).toEqual('RENEWAL_SUCCESS')
+    expect(answer.action?.externalMailTemplate).toEqual('success-template')
+    expect(answer.errorCode).toEqual('')
+
+    const payments = await prismaClient.payment.findMany({})
+    expect(payments.length).toEqual(1)
+    expect(payments[0].state).toEqual('paid')
+    expect(payments[0].intentID).toEqual('pi_xxxxxxxxxxxxxxxxxxxx')
+    expect(payments[0].intentSecret).toEqual('pi_xxxxxxxxxxxxxxxxxxxx_secret_xxxxxxxxxxxxxxxxxxxx')
+    expect(payments[0].paymentData).toBeNull()
+
+    const subscription = await prismaClient.subscription.findUnique({
+      where: {
+        id: testableInvoice!.subscription!.id
+      }
+    })
+    expect(subscription!.paidUntil).not.toBeNull()
+
+    const invoice = await prismaClient.invoice.findUnique({
+      where: {
+        id: testableInvoice!.id
+      }
+    })
+    expect(invoice!.paidAt).not.toBeNull()
   })
 })
