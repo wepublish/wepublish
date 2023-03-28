@@ -307,7 +307,7 @@ export class PeriodicJobController {
     return sub(endOfDay(date), {minutes: date.getTimezoneOffset()})
   }
 
-  public async sendTemplateMail(
+  private async sendTemplateMail(
     action: Action,
     user: User,
     isRetry: boolean,
@@ -316,6 +316,7 @@ export class PeriodicJobController {
     console.log(action)
     console.log(user)
     if (action.externalMailTemplate && user) {
+      console.log('SEND')
       await new MailController(this.prismaService, this.oldContextService, {
         daysAwayFromEnding: action.daysAwayFromEnding,
         externalMailTemplateId: action.externalMailTemplate,

@@ -22,6 +22,7 @@ import {add, sub} from 'date-fns'
 import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
 import {forwardRef} from '@nestjs/common'
 import {initOldContextForTest} from '../../oldcontext-utils'
+import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 
 describe('PeriodicJobController', () => {
   let controller: PeriodicJobController
@@ -794,5 +795,46 @@ describe('PeriodicJobController', () => {
     expect(retriedJob!.successfullyFinished!.getTime()).toBeGreaterThan(
       retriedJob!.finishedWithError!.getTime()
     )
+  })
+  it('Test Mail sending', async () => {
+    const user = {}
+    const action: Action = {
+      type: SubscriptionEvent.INVOICE_CREATION,
+      daysAwayFromEnding: 10,
+      externalMailTemplate: 'template'
+    }
+    try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      await controller.sendTemplateMail(action, user, true, {})
+    } catch (e) {
+      1 + 2
+      return
+    }
+    expect('should never get here').toEqual('was here')
+  })
+
+  it('Test Mail no template', async () => {
+    const user = {}
+    const action: Action = {
+      type: SubscriptionEvent.INVOICE_CREATION,
+      daysAwayFromEnding: 10,
+      externalMailTemplate: null
+    }
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    await controller.sendTemplateMail(action, user, true, {})
+  })
+
+  it('Test Mail no user', async () => {
+    const user = null
+    const action: Action = {
+      type: SubscriptionEvent.INVOICE_CREATION,
+      daysAwayFromEnding: 10,
+      externalMailTemplate: 'template'
+    }
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    await controller.sendTemplateMail(action, user, true, {})
   })
 })
