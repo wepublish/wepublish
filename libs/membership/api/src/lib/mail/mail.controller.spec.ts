@@ -1,23 +1,13 @@
 import nock from 'nock'
+import {MailTemplate, PrismaClient} from '@prisma/client'
 import {
-  contextFromRequest,
+  initialize,
+  defineMailTemplateFactory,
+  defineUserFactory,
   MailgunMailProvider,
   OldContextService,
   PrismaService
 } from '@wepublish/api'
-import {MailTemplate, PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
-import {
-  initialize,
-  defineMemberPlanFactory,
-  defineMailTemplateFactory,
-  defineSubscriptionFlowFactory,
-  definePaymentMethodFactory,
-  defineUserFactory,
-  defineSubscriptionIntervalFactory,
-  defineInvoiceFactory,
-  definePeriodicJobFactory
-} from '@wepublish/api'
-
 import {initOldContextForTest} from '../../oldcontext-utils'
 import {MailController, mailLogType} from './mail.controller'
 import {Test, TestingModule} from '@nestjs/testing'
@@ -35,27 +25,9 @@ describe('MailController', () => {
   const prismaClient = new PrismaClient()
   initialize({prisma: prismaClient})
 
-  const MemberPlanFactory = defineMemberPlanFactory()
-  const PaymentMethodFactory = definePaymentMethodFactory()
-  const SubscriptionFlowFactory = defineSubscriptionFlowFactory({
-    defaultData: {
-      memberPlan: MemberPlanFactory,
-      intervals: {connect: []}
-    }
-  })
   const UserFactory = defineUserFactory()
-  const InvoiceFactory = defineInvoiceFactory()
-  const SubscriptionIntervalFactory = defineSubscriptionIntervalFactory({
-    defaultData: {
-      subscriptionFlow: SubscriptionFlowFactory
-    }
-  })
   const MailTemplateFactory = defineMailTemplateFactory()
 
-  const PeriodicJobFactory = definePeriodicJobFactory()
-  beforeAll(async () => {
-    await clearFullDatabase(prismaClient)
-  })
   let mailTemplate1: MailTemplate
   let mailTemplate2: MailTemplate
 
@@ -73,9 +45,7 @@ describe('MailController', () => {
       ]
     }).compile()
     controller = module.get<OldContextService>(OldContextService)
-
     await clearDatabase(prismaClient, ['mail_templates', 'mail.log'])
-
     mailTemplate1 = await MailTemplateFactory.create({
       name: 'template1',
       externalMailTemplateId: 'template1'
@@ -88,7 +58,12 @@ describe('MailController', () => {
 
   afterEach(async () => {
     await nock.cleanAll()
+    await nock.enableNetConnect()
     await prismaClient.$disconnect()
+  })
+
+  beforeAll(async () => {
+    await clearFullDatabase(prismaClient)
   })
 
   it('is defined', () => {

@@ -229,6 +229,7 @@ describe('SubscriptionEventDictionary', () => {
 
   afterEach(async () => {
     await nock.cleanAll()
+    await nock.enableNetConnect()
     await prismaClient.$disconnect()
   })
 
