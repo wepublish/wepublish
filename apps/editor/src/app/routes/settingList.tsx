@@ -8,7 +8,6 @@ import {
 import {useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdCancel, MdInfo, MdSave, MdWarning} from 'react-icons/md'
-import {useLocation} from 'react-router-dom'
 import {
   Button,
   Col,
@@ -85,9 +84,7 @@ function settingsReducer(settings: Record<SettingName, SettingWithLabel>, change
 }
 
 function SettingList() {
-  const {pathname} = useLocation()
   const [showWarning, setShowWarning] = useState<boolean>(false)
-
   const {t} = useTranslation()
 
   const isAuthorized = useAuthorisation('CAN_UPDATE_SETTINGS')
@@ -189,7 +186,7 @@ function SettingList() {
       []
   )
 
-  const unsavedChangesDialog = useUnsavedChangesDialog(changedSetting.length > 0)
+  useUnsavedChangesDialog(changedSetting.length > 0)
 
   async function handleSettingListUpdate() {
     setShowWarning(false)
@@ -212,18 +209,7 @@ function SettingList() {
     )
   }, [settingListData, settings])
 
-  useEffect(() => {
-    console.log('pathname', pathname)
-    console.log('changed settingList')
-    window.dispatchEvent(new Event('beforeunload'))
-  }, [pathname])
-
   async function handleCancel() {
-    const isDialog = unsavedChangesDialog()
-    if (!isDialog) {
-      return
-    }
-
     settingListData?.settings.forEach(setSetting)
   }
 

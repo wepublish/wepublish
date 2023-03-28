@@ -595,7 +595,7 @@ export function App() {
             />
             {/* Settings Routes */}
             <Route
-              path="settings"
+              path={'settings'}
               element={
                 <Base>
                   <SettingList />

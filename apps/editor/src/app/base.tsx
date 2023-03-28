@@ -43,7 +43,6 @@ import {
 import {PermissionControl} from './atoms/permissionControl'
 import Version from './atoms/version'
 import {fr, de, enUS} from 'date-fns/locale'
-import {useUnsavedChangesDialog} from './unsavedChangesDialog'
 
 export interface BaseProps {
   children?: ReactNode
@@ -134,14 +133,6 @@ export function Base({children}: BaseProps) {
   const [isExpanded, setIsExpanded] = useState(true)
 
   const [uiLanguage, setUILanguage] = useStickyState(AVAILABLE_LANG[0].id, 'wepublish/language')
-
-  useEffect(() => {
-    console.log('changed base')
-    window.dispatchEvent(new Event('beforeunload'))
-  }, [pathname])
-
-  // const unsavedChangesDialog = useUnsavedChangesDialog(true)
-  // console.log('unsavedChangesDialog()', unsavedChangesDialog())
 
   useEffect(() => {
     i18n.changeLanguage(uiLanguage)
