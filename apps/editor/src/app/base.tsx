@@ -292,6 +292,22 @@ export function Base({children}: BaseProps) {
 
                   <PermissionControl
                     qualifyingPermissions={[
+                      'CAN_GET_EVENT',
+                      'CAN_UPDATE_EVENT',
+                      'CAN_DELETE_EVENT'
+                    ]}>
+                    <Nav.Item
+                      as={NavLink}
+                      href="/importableevents"
+                      icon={<MdEvent />}
+                      active={path === 'importableevents'}>
+                      {/* {t('navbar.events')} */}
+                      Importable events
+                    </Nav.Item>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
                       'CAN_GET_TAGS',
                       'CAN_CREATE_TAG',
                       'CAN_UPDATE_TAG',

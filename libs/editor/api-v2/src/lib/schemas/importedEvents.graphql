@@ -1,0 +1,22 @@
+fragment EventRef on Event {
+  id
+  name
+  description
+  status
+  location
+  image {
+    ...ImageRef
+  }
+  tags {
+    id
+    tag
+  }
+  startsAt
+  endsAt
+}
+
+query ImportedEventList {
+  importedEvents {
+    ...EventRef
+  }
+}

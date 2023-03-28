@@ -25,6 +25,7 @@ import {EventCreateView} from './routes/events/eventCreateView'
 import {EventEditView} from './routes/events/eventEditView'
 import {EventListView} from './routes/events/eventListView'
 import {ImageList} from './routes/imageList'
+import {ImportableEventListView} from './routes/importableEvents/importableEventListView'
 import {MemberPlanList} from './routes/memberPlanList'
 import {NavigationList} from './routes/navigationList'
 import {PageEditor} from './routes/pageEditor'
@@ -339,6 +340,15 @@ export function App() {
               element={
                 <Base>
                   <TagList type={TagType.Event} />
+                </Base>
+              }
+            />
+
+            <Route
+              path="importableevents"
+              element={
+                <Base>
+                  <ImportableEventListView />
                 </Base>
               }
             />
