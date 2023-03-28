@@ -12,24 +12,24 @@ export type MailControllerConfig = {
   externalMailTemplateId: string
   recipient: User
   isRetry: boolean
+  periodicJobRunDate: Date | null
   optionalData: Record<string, any>
   mailType: mailLogType
 }
 
 @Injectable()
 export class MailController {
-  private sendDate: Date
   constructor(
     private readonly prismaService: PrismaClient,
     private readonly oldContextService: OldContextService,
     private readonly config: MailControllerConfig
-  ) {
-    this.sendDate = new Date()
-  }
+  ) {}
   private generateMailIdentifier() {
-    return `${this.config.mailType}-${this.sendDate.toISOString()}-${
-      this.config.daysAwayFromEnding
-    }-${this.config.externalMailTemplateId}-${this.config.recipient.id}`
+    return `${this.config.mailType}-${
+      this.config.periodicJobRunDate ? this.config.periodicJobRunDate.toISOString() : 'null'
+    }-${this.config.daysAwayFromEnding}-${this.config.externalMailTemplateId}-${
+      this.config.recipient.id
+    }`
   }
 
   private async checkIfMailIsSent(): Promise<number> {
@@ -74,7 +74,7 @@ export class MailController {
           }
         },
         state: MailLogState.submitted,
-        sentDate: this.sendDate,
+        sentDate: new Date(),
         mailProviderID: oldContext.mailContext.mailProvider!.id || '',
         mailIdentifier: this.generateMailIdentifier(),
         mailTemplate: {

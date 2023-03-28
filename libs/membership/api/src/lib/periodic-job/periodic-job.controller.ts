@@ -70,7 +70,8 @@ export class PeriodicJobController {
                 event,
                 subscriptionsWithEvent.user,
                 periodicJobRunObject.isRetry,
-                subscriptionsWithEvent
+                subscriptionsWithEvent,
+                periodicJobRunObject.date
               )
               console.log(`SEND MAIL TEMPLATE ${event.externalMailTemplate}`)
             }
@@ -126,7 +127,8 @@ export class PeriodicJobController {
             creationEvent,
             subscriptionToCreateInvoice.user,
             periodicJobRunObject.isRetry,
-            subscriptionToCreateInvoice
+            subscriptionToCreateInvoice,
+            periodicJobRunObject.date
           )
           console.log('CODE FOR CREATE INVOICE')
         }
@@ -160,10 +162,16 @@ export class PeriodicJobController {
           if (mailAction.action) {
             const {paymentProviderCustomers, ...user} =
               subscriptionToChargeInvoice.subscription.user
-            await this.sendTemplateMail(mailAction.action, user, periodicJobRunObject.isRetry, {
-              errorCode: mailAction.errorCode,
-              ...subscriptionToChargeInvoice
-            })
+            await this.sendTemplateMail(
+              mailAction.action,
+              user,
+              periodicJobRunObject.isRetry,
+              {
+                errorCode: mailAction.errorCode,
+                ...subscriptionToChargeInvoice
+              },
+              periodicJobRunObject.date
+            )
           }
 
           console.log('CODE FOR CHARGE SUBSCRIPTION')
@@ -192,12 +200,12 @@ export class PeriodicJobController {
           }
           await this.subscriptionController.deactivateSubscription(subscriptionToDeactivateInvoice)
 
-          console.log('SSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEENNNNNNNNNNNNNNNNNNDDDDDDDDDDDDDDDD')
           await this.sendTemplateMail(
             eventDeactivationUnpaid[0],
             subscriptionToDeactivateInvoice.subscription.user,
             periodicJobRunObject.isRetry,
-            subscriptionToDeactivateInvoice
+            subscriptionToDeactivateInvoice,
+            periodicJobRunObject.date
           )
           console.log('CODE FOR DEACTIVATE SUBSCRIPTION')
         }
@@ -311,10 +319,9 @@ export class PeriodicJobController {
     action: Action,
     user: User,
     isRetry: boolean,
-    optionalData: Record<string, any>
+    optionalData: Record<string, any>,
+    periodicJobRunDate: Date
   ) {
-    console.log(action)
-    console.log(user)
     if (action.externalMailTemplate && user) {
       console.log('SEND')
       await new MailController(this.prismaService, this.oldContextService, {
@@ -323,6 +330,7 @@ export class PeriodicJobController {
         recipient: user,
         isRetry: isRetry,
         optionalData: optionalData,
+        periodicJobRunDate,
         mailType: mailLogType.SubscriptionFlow
       }).sendMail()
     }

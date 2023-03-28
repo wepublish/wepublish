@@ -172,6 +172,7 @@ describe('MailController', () => {
       externalMailTemplateId: mailTemplate1.externalMailTemplateId,
       recipient: user,
       isRetry: true,
+      periodicJobRunDate: new Date(),
       optionalData: deeplyNestedObject,
       mailType: mailLogType.SubscriptionFlow
     }).sendMail()
@@ -204,11 +205,13 @@ describe('MailController', () => {
       incomingRequestHandler: bodyParser.json()
     })
 
+    const periodicJobRunDate = new Date()
     await new MailController(prismaClient, controller, {
       daysAwayFromEnding: 1,
       externalMailTemplateId: mailTemplate2.externalMailTemplateId,
       recipient: user,
       isRetry: true,
+      periodicJobRunDate,
       optionalData: deeplyNestedObject,
       mailType: mailLogType.SubscriptionFlow
     }).sendMail()
@@ -221,5 +224,23 @@ describe('MailController', () => {
     expect(mailLog).not.toBeUndefined()
     expect(mailLog!.state).toEqual('submitted')
     expect(mailLog!.mailProviderID).toEqual('mailgun')
+
+    const mailgunNockScope2 = await nock('https://api.eu.mailgun.net')
+      .post('/v3/test.wepublish.com/messages')
+      .replyWithFile(200, __dirname + '/__fixtures__/mailgun_answer.json', {
+        'Content-Type': 'application/json'
+      })
+
+    await new MailController(prismaClient, controller, {
+      daysAwayFromEnding: 1,
+      externalMailTemplateId: mailTemplate2.externalMailTemplateId,
+      recipient: user,
+      isRetry: true,
+      periodicJobRunDate,
+      optionalData: deeplyNestedObject,
+      mailType: mailLogType.SubscriptionFlow
+    }).sendMail()
+    expect(mailgunNockScope2.isDone()).toBeFalsy()
+    nock.cleanAll()
   })
 })
