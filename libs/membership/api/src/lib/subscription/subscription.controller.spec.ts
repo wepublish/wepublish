@@ -33,7 +33,7 @@ import {PrismaModule} from '@wepublish/nest-modules'
 import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
 import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
 import {SubscriptionController} from '../subscription/subscription.controller'
-import {clearDatabase} from '../../prisma-utils'
+import {clearDatabase, clearFullDatabase} from '../../prisma-utils'
 import {add, sub} from 'date-fns'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 
@@ -314,10 +314,14 @@ describe('SubscriptionController', () => {
       }
     }
   })
+  beforeAll(async () => {
+    await clearFullDatabase(prismaClient)
+  })
 
   let subscriptionController: SubscriptionController
 
   beforeEach(async () => {
+    await nock.disableNetConnect()
     await initOldContextForTest(prismaClient)
     const module: TestingModule = await Test.createTestingModule({
       imports: [forwardRef(() => PrismaModule.forTest(prismaClient))],
@@ -416,6 +420,7 @@ describe('SubscriptionController', () => {
   })
 
   afterEach(async () => {
+    await nock.cleanAll()
     await prismaClient.$disconnect()
   })
 
@@ -801,7 +806,7 @@ describe('SubscriptionController', () => {
       .replyWithFile(200, __dirname + '/__fixtures__/stripGetDeletedCustomers.json', {
         'Content-Type': 'application/json'
       })
-    const stripePaymentIntentDeletedCustomer = nock('https://api.stripe.com', {
+    const stripePaymentIntentDeletedCustomer = await nock('https://api.stripe.com', {
       encodedQueryParams: true
     })
       .post(
@@ -831,7 +836,9 @@ describe('SubscriptionController', () => {
           'Content-Type': 'application/json'
         }
       )
-    const stripePaymentIntentNoDefault = nock('https://api.stripe.com', {encodedQueryParams: true})
+    const stripePaymentIntentNoDefault = await nock('https://api.stripe.com', {
+      encodedQueryParams: true
+    })
       .post(
         '/v1/payment_intents',
         /amount=240&currency=chf&metadata\[paymentID\]=.*&metadata\[mail\]=test%40wepublish.com/g
@@ -865,7 +872,7 @@ describe('SubscriptionController', () => {
       .replyWithFile(200, __dirname + '/__fixtures__/stripGetCustomers.json', {
         'Content-Type': 'application/json'
       })
-    const stripePaymentIntent = nock('https://api.stripe.com', {encodedQueryParams: true})
+    const stripePaymentIntent = await nock('https://api.stripe.com', {encodedQueryParams: true})
       .post('/v1/payment_intents')
       .replyWithFile(402, __dirname + '/__fixtures__/stripePostPaymentIntentStripeCardError.json', {
         'Content-Type': 'application/json'
@@ -896,7 +903,7 @@ describe('SubscriptionController', () => {
       .replyWithFile(200, __dirname + '/__fixtures__/stripGetCustomers.json', {
         'Content-Type': 'application/json'
       })
-    const stripePaymentIntent = nock('https://api.stripe.com', {encodedQueryParams: true})
+    const stripePaymentIntent = await nock('https://api.stripe.com', {encodedQueryParams: true})
       .post('/v1/payment_intents')
       .replyWithFile(200, __dirname + '/__fixtures__/stripePostPaymentIntentSuccess.json', {
         'Content-Type': 'application/json'

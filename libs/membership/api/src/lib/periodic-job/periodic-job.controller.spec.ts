@@ -1,6 +1,6 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import nock from 'nock'
-import {clearDatabase} from '../../prisma-utils'
+import {clearDatabase, clearFullDatabase} from '../../prisma-utils'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {contextFromRequest, OldContextService, PrismaService} from '@wepublish/api'
 import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
@@ -45,18 +45,12 @@ describe('PeriodicJobController', () => {
   })
   const PeriodicJobFactory = definePeriodicJobFactory()
 
-  beforeAll(() => {
-    // nock.recorder.rec()
-
-    /**
-    stripPostPaymentIntent.on('replied', () => {
-      nock.recorder.rec()
-    })**/
-    // nock.recorder.rec()
-    nock.disableNetConnect()
+  beforeAll(async () => {
+    await clearFullDatabase(prismaClient)
   })
 
   beforeEach(async () => {
+    await nock.disableNetConnect()
     await initOldContextForTest(prismaClient)
     const module: TestingModule = await Test.createTestingModule({
       imports: [forwardRef(() => PrismaModule.forTest(prismaClient))],
@@ -113,6 +107,10 @@ describe('PeriodicJobController', () => {
     const yearlyMemberPlan = await MemberPlanFactory.create({
       name: 'yearly',
       slug: 'yearly'
+    })
+    const customMessageMemberPlanNoMailTemplate = await MemberPlanFactory.create({
+      name: 'customMessageMemberPlanNoMailTemplate',
+      slug: 'customMessageMemberPlanNoMailTemplate'
     })
 
     const defaultFlow = await SubscriptionFlowFactory.create({
@@ -195,6 +193,7 @@ describe('PeriodicJobController', () => {
   })
 
   afterEach(async () => {
+    await nock.cleanAll()
     await prismaClient.$disconnect()
   })
 
@@ -203,7 +202,7 @@ describe('PeriodicJobController', () => {
   })
 
   it('create invoice', async () => {
-    const mandrillNockScope = nock('https://mandrillapp.com:443')
+    const mandrillNockScope = await nock('https://mandrillapp.com:443')
       .post('/api/1.0/messages/send-template', matches({template_name: 'default-INVOICE_CREATION'}))
       .reply(500)
     const mail = 'dev-mail@test.wepublish.com'
@@ -287,7 +286,7 @@ describe('PeriodicJobController', () => {
       add(newInvoice.dueAt, {days: 4}).getTime()
     )
     expect(newInvoice.mail).toEqual(mail)
-    expect(newInvoice.description).toEqual('Renewal of subscription yearly for yearly')
+    expect(newInvoice.description).toEqual('yearly renewal of subscription yearly')
     expect(newInvoice.paidAt).toBeNull()
     expect(newInvoice.canceledAt).toBeNull()
     expect(newInvoice.manuallySetAsPaidByUserId).toBeNull()
@@ -296,7 +295,7 @@ describe('PeriodicJobController', () => {
     expect(newInvoice.items.length).toEqual(1)
     const item = newInvoice.items[0]
     expect(item.name).toEqual('yearly')
-    expect(item.description).toEqual('Renewal of subscription yearly for yearly')
+    expect(item.description).toEqual('yearly renewal of subscription yearly')
     expect(item.quantity).toEqual(1)
     expect(item.amount).toEqual(2400)
     expect(item.invoiceId).not.toBeNull()
@@ -319,23 +318,11 @@ describe('PeriodicJobController', () => {
     expect((await prismaClient.subscriptionDeactivation.findMany()).length).toEqual(0)
   })
 
-  it('charge invoice', async () => {
-    const stripGetCustomers = nock('https://api.stripe.com')
-      .get('/v1/customers/testId')
-      .replyWithFile(200, __dirname + '/__fixtures__/stripGetCustomers.json', {
-        'Content-Type': 'application/json'
-      })
-
-    const stripPostPaymentIntent = nock('https://api.stripe.com')
-      .post('/v1/payment_intents')
-      .replyWithFile(200, __dirname + '/__fixtures__/stripePostPaymentIntent.json', {
-        'Content-Type': 'application/json'
-      })
-    const mandrillNockScope = nock('https://mandrillapp.com:443')
-      .post('/api/1.0/messages/send-template', matches({template_name: 'default-RENEWAL_SUCCESS'}))
-      .reply(500)
-    const mail = 'dev-mail@test.wepublish.com'
-    const renewalDate = new Date()
+  const generateInvoiceToCharge = async (
+    renewalDate: Date,
+    mail: string,
+    paymentProviderID: string
+  ) => {
     const invoice = await InvoiceFactory.create({
       dueAt: renewalDate,
       mail: mail,
@@ -353,7 +340,7 @@ describe('PeriodicJobController', () => {
       email: mail,
       paymentProviderCustomers: {
         create: {
-          paymentProviderID: 'stripe',
+          paymentProviderID,
           customerID: 'testId'
         }
       },
@@ -366,7 +353,7 @@ describe('PeriodicJobController', () => {
           startsAt: sub(renewalDate, {months: 12}),
           paymentMethod: {
             connect: {
-              id: 'stripe'
+              id: paymentProviderID
             }
           },
           memberPlan: {
@@ -395,6 +382,26 @@ describe('PeriodicJobController', () => {
         }
       }
     })
+  }
+
+  it('charge invoice offsession', async () => {
+    const stripGetCustomers = await nock('https://api.stripe.com')
+      .get('/v1/customers/testId')
+      .replyWithFile(200, __dirname + '/__fixtures__/stripGetCustomers.json', {
+        'Content-Type': 'application/json'
+      })
+
+    const stripPostPaymentIntent = await nock('https://api.stripe.com')
+      .post('/v1/payment_intents')
+      .replyWithFile(200, __dirname + '/__fixtures__/stripePostPaymentIntent.json', {
+        'Content-Type': 'application/json'
+      })
+    const mandrillNockScope = await nock('https://mandrillapp.com:443')
+      .post('/api/1.0/messages/send-template', matches({template_name: 'default-RENEWAL_SUCCESS'}))
+      .reply(500)
+    const mail = 'dev-mail@test.wepublish.com'
+    const renewalDate = new Date()
+    await generateInvoiceToCharge(renewalDate, mail, 'stripe')
     await controller.execute()
     const invoices = await prismaClient.invoice.findMany({
       include: {
@@ -435,11 +442,64 @@ describe('PeriodicJobController', () => {
     expect((await prismaClient.subscriptionDeactivation.findMany()).length).toEqual(0)
   })
 
+  it('charge invoice onsession', async () => {
+    const mail = 'dev-mail@test.wepublish.com'
+    const renewalDate = new Date()
+
+    const mandrillNockScope = await nock('https://mandrillapp.com:443')
+      .post('/api/1.0/messages/send-template')
+      .reply(500)
+    const stripGetCustomers = await nock('https://api.stripe.com')
+      .get('/v1/customers/testId')
+      .replyWithFile(200, __dirname + '/__fixtures__/stripGetCustomers.json', {
+        'Content-Type': 'application/json'
+      })
+
+    const stripPostPaymentIntent = await nock('https://api.stripe.com')
+      .post('/v1/payment_intents')
+      .replyWithFile(200, __dirname + '/__fixtures__/stripePostPaymentIntent.json', {
+        'Content-Type': 'application/json'
+      })
+    await generateInvoiceToCharge(renewalDate, mail, 'payrexx')
+    await controller.execute()
+    const invoices = await prismaClient.invoice.findMany({
+      include: {
+        subscription: true,
+        subscriptionPeriods: true
+      }
+    })
+
+    // Test invoice
+    expect(invoices.length).toEqual(1)
+    const paidInvoice = invoices[0]
+    expect(paidInvoice.mail).toEqual(mail)
+    expect(paidInvoice.paidAt).toBeNull()
+    expect(paidInvoice.canceledAt).toBeNull()
+    expect(paidInvoice.manuallySetAsPaidByUserId).toBeNull()
+
+    // Test subscription
+    expect(paidInvoice.subscription).not.toBeNull()
+    expect(paidInvoice.subscription!.paidUntil).not.toBeNull()
+    expect(paidInvoice.subscription!.paidUntil!.getTime()).toEqual(renewalDate.getTime())
+
+    // Test payment
+    const payments = await prismaClient.payment.findMany({})
+    expect(payments.length).toEqual(0)
+
+    expect(mandrillNockScope.isDone()).toBeFalsy()
+    expect(stripGetCustomers.isDone()).toBeFalsy()
+    expect(stripPostPaymentIntent.isDone()).toBeFalsy()
+
+    // Check that subscription is no canceled
+    expect((await prismaClient.subscriptionDeactivation.findMany()).length).toEqual(0)
+  })
+
   it('disable subscription', async () => {
-    const mandrillNockScopeFailedCharging = nock('https://mandrillapp.com:443')
+    const mandrillNockScopeFailedCharging = await nock('https://mandrillapp.com:443')
       .post('/api/1.0/messages/send-template', matches({template_name: 'default-RENEWAL_FAILED'}))
       .reply(500)
-    const mandrillNockScopeDeactiationUnpaid = nock('https://mandrillapp.com:443')
+
+    const mandrillNockScopeDeactivationUnpaid = await nock('https://mandrillapp.com:443')
       .post(
         '/api/1.0/messages/send-template',
         matches({template_name: 'default-DEACTIVATION_UNPAID'})
@@ -518,11 +578,11 @@ describe('PeriodicJobController', () => {
     expect(updatedInvoice.paidAt).toBeNull()
     expect(updatedInvoice.canceledAt).not.toBeNull()
     expect(mandrillNockScopeFailedCharging.isDone()).toBeTruthy()
-    expect(mandrillNockScopeDeactiationUnpaid.isDone()).toBeTruthy()
+    expect(mandrillNockScopeDeactivationUnpaid.isDone()).toBeTruthy()
   })
 
   it('send custom email', async () => {
-    const mandrillNockScopeCustomMessage = nock('https://mandrillapp.com:443')
+    const mandrillNockScopeCustomMessage = await nock('https://mandrillapp.com:443')
       .post('/api/1.0/messages/send-template', matches({template_name: 'default-CUSTOM1'}))
       .reply(500)
 

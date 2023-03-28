@@ -1,11 +1,12 @@
 import {OldContextService, PrismaService} from '@wepublish/api'
 import {add, addDays, differenceInDays, endOfDay, set, sub, subMinutes} from 'date-fns'
 import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subscription-event-dictionary'
-import {PeriodicJob, SubscriptionEvent} from '@prisma/client'
+import {PeriodicJob, SubscriptionEvent, User} from '@prisma/client'
 import {PeriodicJobRunObject} from './periodic-job.type'
 import {Injectable} from '@nestjs/common'
 import {SubscriptionController} from '../subscription/subscription.controller'
 import {MailController, mailLogType} from '../mail/mail.controller'
+import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 
 @Injectable()
 export class PeriodicJobController {
@@ -65,16 +66,12 @@ export class PeriodicJobController {
 
           for (const event of subscriptionDictionary) {
             if (event.type === SubscriptionEvent.CUSTOM) {
-              if (event && event.externalMailTemplate) {
-                await new MailController(this.prismaService, this.oldContextService, {
-                  daysAwayFromEnding,
-                  externalMailTemplateId: event.externalMailTemplate,
-                  recipient: subscriptionsWithEvent.user,
-                  isRetry: periodicJobRunObject.isRetry,
-                  optionalData: subscriptionsWithEvent,
-                  mailType: mailLogType.SubscriptionFlow
-                }).sendMail()
-              }
+              await this.sendTemplateMail(
+                event,
+                subscriptionsWithEvent.user,
+                periodicJobRunObject.isRetry,
+                subscriptionsWithEvent
+              )
               console.log(`SEND MAIL TEMPLATE ${event.externalMailTemplate}`)
             }
           }
@@ -125,17 +122,12 @@ export class PeriodicJobController {
             deactivationEvent
           )
 
-          if (creationEvent.externalMailTemplate) {
-            await new MailController(this.prismaService, this.oldContextService, {
-              daysAwayFromEnding: creationEvent.daysAwayFromEnding,
-              externalMailTemplateId: creationEvent.externalMailTemplate,
-              recipient: subscriptionToCreateInvoice.user,
-              isRetry: periodicJobRunObject.isRetry,
-              optionalData: subscriptionToCreateInvoice,
-              mailType: mailLogType.SubscriptionFlow
-            }).sendMail()
-          }
-
+          await this.sendTemplateMail(
+            creationEvent,
+            subscriptionToCreateInvoice.user,
+            periodicJobRunObject.isRetry,
+            subscriptionToCreateInvoice
+          )
           console.log('CODE FOR CREATE INVOICE')
         }
 
@@ -164,24 +156,14 @@ export class PeriodicJobController {
             subscriptionToChargeInvoice,
             eventsRenewal
           )
-          if (
-            mailAction.action &&
-            mailAction.action.externalMailTemplate &&
-            subscriptionToChargeInvoice.subscription.user
-          ) {
+
+          if (mailAction.action) {
             const {paymentProviderCustomers, ...user} =
               subscriptionToChargeInvoice.subscription.user
-            await new MailController(this.prismaService, this.oldContextService, {
-              daysAwayFromEnding: mailAction.action.daysAwayFromEnding,
-              externalMailTemplateId: mailAction.action.externalMailTemplate,
-              recipient: user,
-              isRetry: periodicJobRunObject.isRetry,
-              optionalData: {
-                errorCode: mailAction.errorCode,
-                ...subscriptionToChargeInvoice
-              },
-              mailType: mailLogType.SubscriptionFlow
-            }).sendMail()
+            await this.sendTemplateMail(mailAction.action, user, periodicJobRunObject.isRetry, {
+              errorCode: mailAction.errorCode,
+              ...subscriptionToChargeInvoice
+            })
           }
 
           console.log('CODE FOR CHARGE SUBSCRIPTION')
@@ -209,20 +191,14 @@ export class PeriodicJobController {
             throw new Error('No subscription deactivation found!')
           }
           await this.subscriptionController.deactivateSubscription(subscriptionToDeactivateInvoice)
-          if (
-            eventDeactivationUnpaid[0].externalMailTemplate &&
-            subscriptionToDeactivateInvoice.subscription.user
-          ) {
-            await new MailController(this.prismaService, this.oldContextService, {
-              daysAwayFromEnding: eventDeactivationUnpaid[0].daysAwayFromEnding,
-              externalMailTemplateId: eventDeactivationUnpaid[0].externalMailTemplate,
-              recipient: subscriptionToDeactivateInvoice.subscription.user,
-              isRetry: periodicJobRunObject.isRetry,
-              optionalData: subscriptionToDeactivateInvoice,
-              mailType: mailLogType.SubscriptionFlow
-            }).sendMail()
-          }
 
+          console.log('SSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEENNNNNNNNNNNNNNNNNNDDDDDDDDDDDDDDDD')
+          await this.sendTemplateMail(
+            eventDeactivationUnpaid[0],
+            subscriptionToDeactivateInvoice.subscription.user,
+            periodicJobRunObject.isRetry,
+            subscriptionToDeactivateInvoice
+          )
           console.log('CODE FOR DEACTIVATE SUBSCRIPTION')
         }
       } catch (e) {
@@ -329,5 +305,25 @@ export class PeriodicJobController {
   }
   private getEndOfDay(date: Date): Date {
     return sub(endOfDay(date), {minutes: date.getTimezoneOffset()})
+  }
+
+  public async sendTemplateMail(
+    action: Action,
+    user: User,
+    isRetry: boolean,
+    optionalData: Record<string, any>
+  ) {
+    console.log(action)
+    console.log(user)
+    if (action.externalMailTemplate && user) {
+      await new MailController(this.prismaService, this.oldContextService, {
+        daysAwayFromEnding: action.daysAwayFromEnding,
+        externalMailTemplateId: action.externalMailTemplate,
+        recipient: user,
+        isRetry: isRetry,
+        optionalData: optionalData,
+        mailType: mailLogType.SubscriptionFlow
+      }).sendMail()
+    }
   }
 }

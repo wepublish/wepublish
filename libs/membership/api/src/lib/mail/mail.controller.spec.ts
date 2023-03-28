@@ -26,7 +26,7 @@ import {PrismaModule} from '@wepublish/nest-modules'
 import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
 import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
 import {SubscriptionController} from '../subscription/subscription.controller'
-import {clearDatabase} from '../../prisma-utils'
+import {clearDatabase, clearFullDatabase} from '../../prisma-utils'
 import {matches} from 'lodash'
 import bodyParser from 'body-parser'
 
@@ -53,18 +53,14 @@ describe('PeriodicJobController', () => {
   const MailTemplateFactory = defineMailTemplateFactory()
 
   const PeriodicJobFactory = definePeriodicJobFactory()
-  beforeAll(() => {
-    /**
-         stripPostPaymentIntent.on('replied', () => {
-      nock.recorder.rec()
-    })**/
-    // nock.recorder.rec()
-    // nock.disableNetConnect()
+  beforeAll(async () => {
+    await clearFullDatabase(prismaClient)
   })
   let mailTemplate1: MailTemplate
   let mailTemplate2: MailTemplate
 
   beforeEach(async () => {
+    await nock.disableNetConnect()
     await initOldContextForTest(prismaClient)
     const module: TestingModule = await Test.createTestingModule({
       imports: [forwardRef(() => PrismaModule.forTest(prismaClient))],
@@ -91,6 +87,7 @@ describe('PeriodicJobController', () => {
   })
 
   afterEach(async () => {
+    await nock.cleanAll()
     await prismaClient.$disconnect()
   })
 
@@ -115,7 +112,7 @@ describe('PeriodicJobController', () => {
         }
       }
     })
-    const mandrillNockScope = nock('https://mandrillapp.com:443')
+    const mandrillNockScope = await nock('https://mandrillapp.com:443')
       .post(
         '/api/1.0/messages/send-template',
         matches({
@@ -190,7 +187,7 @@ describe('PeriodicJobController', () => {
 
     // Overwrite mailProvider with Mailgun
 
-    const mailgunNockScope = nock('https://api.eu.mailgun.net')
+    const mailgunNockScope = await nock('https://api.eu.mailgun.net')
       .post('/v3/test.wepublish.com/messages')
       .replyWithFile(200, __dirname + '/__fixtures__/mailgun_answer.json', {
         'Content-Type': 'application/json'

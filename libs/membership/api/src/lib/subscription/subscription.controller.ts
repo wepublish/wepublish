@@ -269,6 +269,7 @@ export class SubscriptionController {
     const paymentProvider = this.oldContextService.context.paymentProviders.find(
       pp => pp.id === invoice.subscription?.paymentMethod.paymentProviderID
     )
+    console.log()
     if (!paymentProvider) {
       throw new Error(
         `Payment Provider ${invoice.subscription?.paymentMethod.paymentProviderID} not found!`

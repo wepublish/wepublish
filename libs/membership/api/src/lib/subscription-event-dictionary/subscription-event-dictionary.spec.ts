@@ -1,4 +1,4 @@
-import {clearDatabase} from '../../prisma-utils'
+import {clearDatabase, clearFullDatabase} from '../../prisma-utils'
 import {
   MemberPlan,
   PaymentPeriodicity,
@@ -17,6 +17,7 @@ import {
 import {add, format, parseISO, sub} from 'date-fns'
 import {initOldContextForTest} from '../../oldcontext-utils'
 import {SubscriptionEventDictionary} from './subscription-event-dictionary'
+import nock from 'nock'
 
 type SubscriptionFlowInterval = {
   subscriptionFlowId: number
@@ -65,7 +66,12 @@ describe('PeriodicJobController', () => {
   let customMemberPlanFlow2: SubscriptionFlow
   let defaultFlow: SubscriptionFlow
 
+  beforeAll(async () => {
+    await clearFullDatabase(prismaClient)
+  })
+
   beforeEach(async () => {
+    await nock.disableNetConnect()
     await initOldContextForTest(prismaClient)
 
     await clearDatabase(prismaClient, [
@@ -222,6 +228,7 @@ describe('PeriodicJobController', () => {
   })
 
   afterEach(async () => {
+    await nock.cleanAll()
     await prismaClient.$disconnect()
   })
 
