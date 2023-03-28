@@ -7,18 +7,29 @@ import {Injectable, Logger} from '@nestjs/common'
 import {SubscriptionController} from '../subscription/subscription.controller'
 import {MailController, mailLogType} from '../mail/mail.controller'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
+const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
 
 @Injectable()
 export class PeriodicJobController {
   private subscriptionEventDictionary: SubscriptionEventDictionary
   private runningJob: PeriodicJob | undefined = undefined
   private readonly logger = new Logger('PeriodicJobController')
+  private randomNumberRangeForConcurrency = FIVE_MINUTES_IN_MS
   constructor(
     private readonly prismaService: PrismaService,
     private readonly oldContextService: OldContextService,
     private readonly subscriptionController: SubscriptionController
   ) {
     this.subscriptionEventDictionary = new SubscriptionEventDictionary(this.prismaService)
+  }
+
+  public async concurrentExecute() {
+    await this.sleepForRandomIntervalToEnsureConcurrency()
+    if (await this.isAlreadyAJobRunning()) {
+      this.logger.log('Periodic job already running on an other instance. skipping...')
+      return
+    }
+    await this.execute()
   }
 
   public async execute() {
@@ -234,6 +245,22 @@ export class PeriodicJobController {
     })
   }
 
+  private async isAlreadyAJobRunning() {
+    const runLimit = sub(new Date(), {hours: 2})
+    const runs = await this.prismaService.periodicJob.findMany({
+      where: {
+        executionTime: {
+          gte: runLimit
+        }
+      }
+    })
+    if (runs.length > 0) {
+      return true
+    } else {
+      return false
+    }
+  }
+
   private async markJobSuccessful() {
     if (!this.runningJob) {
       throw new Error('Try to make a job as running while none is running!')
@@ -248,6 +275,16 @@ export class PeriodicJobController {
       }
     })
     this.runningJob = undefined
+  }
+
+  private async sleepForRandomIntervalToEnsureConcurrency() {
+    const randomSleepTimeout = Math.floor(Math.random() * this.randomNumberRangeForConcurrency)
+    this.logger.log(
+      `To ensure concurrent execution in multi instance environment choosing random number between 0 and ${this.randomNumberRangeForConcurrency}... sleeping for  ${randomSleepTimeout}ms`
+    )
+    const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
+    await sleep(randomSleepTimeout)
+    return randomSleepTimeout
   }
 
   private async markJobFailed(error: string) {

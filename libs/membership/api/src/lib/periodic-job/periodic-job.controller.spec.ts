@@ -3,7 +3,7 @@ import nock from 'nock'
 import {clearDatabase, clearFullDatabase} from '../../prisma-utils'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {OldContextService, PrismaService} from '@wepublish/api'
-import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
+import {PaymentPeriodicity, PrismaClient, SubscriptionEvent, User} from '@prisma/client'
 import {PeriodicJobController} from './periodic-job.controller'
 import {SubscriptionController} from '../subscription/subscription.controller'
 import {matches} from 'lodash'
@@ -17,7 +17,7 @@ import {
   defineInvoiceFactory,
   definePeriodicJobFactory
 } from '@wepublish/api'
-import {add, sub} from 'date-fns'
+import {add, startOfDay, sub} from 'date-fns'
 import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
 import {forwardRef} from '@nestjs/common'
 import {initOldContextForTest} from '../../oldcontext-utils'
@@ -797,16 +797,16 @@ describe('PeriodicJobController', () => {
     )
   })
   it('Test Mail sending', async () => {
-    const user = {}
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const user: User = {}
     const action: Action = {
       type: SubscriptionEvent.INVOICE_CREATION,
       daysAwayFromEnding: 10,
       externalMailTemplate: 'template'
     }
     try {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      await controller.sendTemplateMail(action, user, true, {})
+      await controller['sendTemplateMail'](action, user, true, {}, new Date())
     } catch (e) {
       1 + 2
       return
@@ -815,26 +815,97 @@ describe('PeriodicJobController', () => {
   })
 
   it('Test Mail no template', async () => {
-    const user = {}
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const user: User = {}
     const action: Action = {
       type: SubscriptionEvent.INVOICE_CREATION,
       daysAwayFromEnding: 10,
       externalMailTemplate: null
     }
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    await controller.sendTemplateMail(action, user, true, {})
+
+    await controller['sendTemplateMail'](action, user, true, {}, new Date())
   })
 
   it('Test Mail no user', async () => {
-    const user = null
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const user: User = null
     const action: Action = {
       type: SubscriptionEvent.INVOICE_CREATION,
       daysAwayFromEnding: 10,
       externalMailTemplate: 'template'
     }
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    await controller.sendTemplateMail(action, user, true, {})
+    await controller['sendTemplateMail'](action, user, true, {}, new Date())
+  })
+
+  it('Get outstanding runs on first run', async () => {
+    const runs = await controller['getOutstandingRuns']()
+    expect(runs.length).toEqual(1)
+    expect(runs[0].isRetry).toBeFalsy()
+    expect(runs[0].date.getTime()).toEqual(startOfDay(new Date()).getTime())
+  })
+
+  it('Get outstanding runs if for one week not run', async () => {
+    await PeriodicJobFactory.create({
+      date: sub(new Date(), {days: 7}),
+      successfullyFinished: sub(new Date(), {days: 7}),
+      tries: 1
+    })
+    const runs = await controller['getOutstandingRuns']()
+
+    expect(runs.length).toEqual(7)
+    for (const runCtr in runs) {
+      expect(runs[runCtr].isRetry).toBeFalsy()
+      expect(runs[runCtr].date.getTime()).toEqual(
+        startOfDay(sub(new Date(), {days: 6 - parseInt(runCtr)})).getTime()
+      )
+    }
+  })
+
+  it('Get outstanding runs with last run has failed', async () => {
+    await PeriodicJobFactory.create({
+      date: sub(new Date(), {days: 3}),
+      finishedWithError: sub(new Date(), {days: 3}),
+      tries: 1
+    })
+    const runs = await controller['getOutstandingRuns']()
+    expect(runs.length).toEqual(4)
+    const retryRun = runs.shift()
+    expect(retryRun!.isRetry).toBeTruthy()
+    expect(retryRun!.date).toEqual(startOfDay(sub(new Date(), {days: 3})))
+    for (const runCtr in runs) {
+      expect(runs[runCtr].isRetry).toBeFalsy()
+      expect(runs[runCtr].date.getTime()).toEqual(
+        startOfDay(sub(new Date(), {days: 2 - parseInt(runCtr)})).getTime()
+      )
+    }
+  })
+
+  it('Concurrent periodic job run protection', async () => {
+    const runs = await controller['getOutstandingRuns']()
+    expect(await controller['isAlreadyAJobRunning']()).toBeFalsy()
+    await controller['markJobStarted'](runs[0].date)
+    expect(await controller['isAlreadyAJobRunning']()).toBeTruthy()
+    await controller['markJobFailed']('Failed with X')
+    expect(await controller['isAlreadyAJobRunning']()).toBeTruthy()
+    await prismaClient.periodicJob.updateMany({
+      where: {},
+      data: {
+        executionTime: sub(new Date(), {hours: 2})
+      }
+    })
+    expect(await controller['isAlreadyAJobRunning']()).toBeFalsy()
+    await controller['retryFailedJob'](runs[0].date)
+    expect(await controller['isAlreadyAJobRunning']()).toBeTruthy()
+    await controller['markJobSuccessful']()
+    expect(await controller['isAlreadyAJobRunning']()).toBeTruthy()
+  })
+
+  it('random timeout for concurrent execution of periodic job', async () => {
+    controller['randomNumberRangeForConcurrency'] = 500
+    const timeout = await controller['sleepForRandomIntervalToEnsureConcurrency']()
+    expect(timeout).toBeLessThanOrEqual(500)
+    expect(timeout).toBeGreaterThanOrEqual(0)
   })
 })

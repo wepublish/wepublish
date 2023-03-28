@@ -2,6 +2,8 @@ import {logger, OldContextService, PrismaService} from '@wepublish/api'
 import {Injectable, Logger} from '@nestjs/common'
 import {MailLogState, PrismaClient, User} from '@prisma/client'
 
+const ONE_WEEK_IN_MINUTES = 7 * 24 * 60 * 60
+
 export enum mailLogType {
   SubscriptionFlow,
   UserFlow
@@ -50,7 +52,7 @@ export class MailController {
       optional: this.config.optionalData,
       jwt: this.oldContextService.context.generateJWT({
         id: this.generateMailIdentifier(),
-        expiresInMinutes: 3600
+        expiresInMinutes: ONE_WEEK_IN_MINUTES
       })
     }
   }
