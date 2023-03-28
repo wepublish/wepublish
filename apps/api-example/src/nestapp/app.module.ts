@@ -30,7 +30,8 @@ import {
     SettingModule,
     EventsImportModule,
     ConsentModule,
-    SettingModule
+    SettingModule,
+    EventsImportModule
   ],
   controllers: [],
   providers: []

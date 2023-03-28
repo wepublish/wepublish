@@ -130,6 +130,26 @@ type PageInfo {
   startCursor: String!
 }
 
+type Event {
+  createdAt: DateTime!
+  description: String!
+  endsAt: DateTime!
+  id: String!
+  imageId: String!
+  location: String!
+  modifiedAt: DateTime!
+  name: String!
+  startsAt: DateTime!
+  status: EventStatus!
+}
+
+enum EventStatus {
+  Cancelled
+  Postponed
+  Rescheduled
+  Scheduled
+}
+
 enum PaymentPeriodicity {
   biannual
   monthly

@@ -4,30 +4,19 @@ fragment ImportabeEventRef on Event {
   description
   status
   location
-  modifiedAt
+  image {
+    ...ImageRef
+  }
+  tags {
+    id
+    tag
+  }
   startsAt
   endsAt
 }
 
-query ImportedEventList(
-  $filter: ImportedEventFilter
-  $order: Float
-  $skip: Float
-  $take: Float
-  $sort: String
-) {
-  importedEvents(filter: $filter, order: $order, skip: $skip, take: $take, sort: $sort) {
-    nodes {
-      ...ImportabeEventRef
-    }
-
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-
-    totalCount
+query ImportedEventList {
+  importedEvents {
+    ...EventRef
   }
 }
