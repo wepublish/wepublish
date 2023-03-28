@@ -3,7 +3,7 @@ import {add, addDays, differenceInDays, endOfDay, set, sub, subMinutes} from 'da
 import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subscription-event-dictionary'
 import {PeriodicJob, SubscriptionEvent, User} from '@prisma/client'
 import {PeriodicJobRunObject} from './periodic-job.type'
-import {Injectable} from '@nestjs/common'
+import {Injectable, Logger} from '@nestjs/common'
 import {SubscriptionController} from '../subscription/subscription.controller'
 import {MailController, mailLogType} from '../mail/mail.controller'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
@@ -12,6 +12,7 @@ import {Action} from '../subscription-event-dictionary/subscription-event-dictio
 export class PeriodicJobController {
   private subscriptionEventDictionary: SubscriptionEventDictionary
   private runningJob: PeriodicJob | undefined = undefined
+  private readonly logger = new Logger('PeriodicJobController')
   constructor(
     private readonly prismaService: PrismaService,
     private readonly oldContextService: OldContextService,
@@ -73,7 +74,6 @@ export class PeriodicJobController {
                 subscriptionsWithEvent,
                 periodicJobRunObject.date
               )
-              console.log(`SEND MAIL TEMPLATE ${event.externalMailTemplate}`)
             }
           }
         }
@@ -130,7 +130,6 @@ export class PeriodicJobController {
             subscriptionToCreateInvoice,
             periodicJobRunObject.date
           )
-          console.log('CODE FOR CREATE INVOICE')
         }
 
         //
@@ -173,8 +172,6 @@ export class PeriodicJobController {
               periodicJobRunObject.date
             )
           }
-
-          console.log('CODE FOR CHARGE SUBSCRIPTION')
         }
 
         //
@@ -207,7 +204,6 @@ export class PeriodicJobController {
             subscriptionToDeactivateInvoice,
             periodicJobRunObject.date
           )
-          console.log('CODE FOR DEACTIVATE SUBSCRIPTION')
         }
       } catch (e) {
         await this.markJobFailed((e as Error).toString())
@@ -226,7 +222,7 @@ export class PeriodicJobController {
         executionTime: new Date()
       }
     })
-    console.log('Retry failed job!')
+    this.logger.warn('Retry failed job!')
   }
 
   private async markJobStarted(runDate: Date) {
@@ -284,11 +280,11 @@ export class PeriodicJobController {
       }
     })
     if (!latestRun) {
-      console.log('First Run')
+      this.logger.debug('Periodic job first run')
       return [{isRetry: false, date: this.getStartOfDay(today)}]
     }
     if (latestRun.finishedWithError && !latestRun.successfullyFinished) {
-      console.log('Last run had errors retrying....')
+      this.logger.warn('Last run had errors retrying....')
       runDates.push({isRetry: true, date: this.getStartOfDay(new Date(latestRun.date))})
     }
     return runDates.concat(this.generateDateArray(latestRun.date, today))
@@ -323,7 +319,6 @@ export class PeriodicJobController {
     periodicJobRunDate: Date
   ) {
     if (action.externalMailTemplate && user) {
-      console.log('SEND')
       await new MailController(this.prismaService, this.oldContextService, {
         daysAwayFromEnding: action.daysAwayFromEnding,
         externalMailTemplateId: action.externalMailTemplate,

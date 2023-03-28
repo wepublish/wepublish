@@ -6,7 +6,9 @@ import {NestFactory} from '@nestjs/core'
 import {AppModule} from './nestapp/app.module'
 
 async function bootstrap() {
-  const nestApp = await NestFactory.create(AppModule)
+  const nestApp = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn']
+  })
   const port = process.env.PORT ?? 4000
 
   const expressApp = nestApp.getHttpAdapter().getInstance()

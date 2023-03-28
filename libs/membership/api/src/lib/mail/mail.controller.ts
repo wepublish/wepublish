@@ -1,5 +1,5 @@
-import {OldContextService, PrismaService} from '@wepublish/api'
-import {Injectable} from '@nestjs/common'
+import {logger, OldContextService, PrismaService} from '@wepublish/api'
+import {Injectable, Logger} from '@nestjs/common'
 import {MailLogState, PrismaClient, User} from '@prisma/client'
 
 export enum mailLogType {
@@ -19,6 +19,7 @@ export type MailControllerConfig = {
 
 @Injectable()
 export class MailController {
+  private readonly logger = new Logger('MailController')
   constructor(
     private readonly prismaService: PrismaClient,
     private readonly oldContextService: OldContextService,
@@ -56,7 +57,9 @@ export class MailController {
 
   public async sendMail() {
     if (this.config.isRetry && (await this.checkIfMailIsSent())) {
-      console.log(`Mail with id <${this.generateMailIdentifier()}> is already sent skipping...`)
+      this.logger.warn(
+        `Mail with id <${this.generateMailIdentifier()}> is already sent skipping...`
+      )
       return
     }
 
@@ -84,8 +87,5 @@ export class MailController {
         }
       }
     })
-    console.log(
-      `Sent template ${this.config.externalMailTemplateId} to ${this.config.recipient.email}`
-    )
   }
 }

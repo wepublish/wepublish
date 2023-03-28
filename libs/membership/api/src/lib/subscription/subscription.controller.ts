@@ -16,7 +16,7 @@ import {
   PrismaClient
 } from '@prisma/client'
 import {add, endOfDay, startOfDay, sub} from 'date-fns'
-import {Injectable} from '@nestjs/common'
+import {Injectable, Logger} from '@nestjs/common'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {JSONDefinition} from 'graphql-scalars'
 
@@ -26,6 +26,7 @@ export type SubscriptionControllerConfig = {
 
 @Injectable()
 export class SubscriptionController {
+  private readonly logger = new Logger('SubscriptionController')
   constructor(
     private readonly prismaService: PrismaClient,
     private readonly oldContextService: OldContextService
@@ -269,18 +270,13 @@ export class SubscriptionController {
     const paymentProvider = this.oldContextService.context.paymentProviders.find(
       pp => pp.id === invoice.subscription?.paymentMethod.paymentProviderID
     )
-    console.log()
     if (!paymentProvider) {
       throw new Error(
         `Payment Provider ${invoice.subscription?.paymentMethod.paymentProviderID} not found!`
       )
     }
     if (paymentProvider.offSessionPayments) {
-      console.log('Initiate offsession payment')
-
       return await this.offSessionPayment(invoice, paymentProvider, mailActions)
-    } else {
-      console.log('No action if payment provider not offsession')
     }
     return {
       action: undefined,
@@ -317,7 +313,6 @@ export class SubscriptionController {
       throw new Error('Subscription not found!')
     }
     if (!customer) {
-      console.log('Send error mail because off session customer not found')
       return {
         action: renewalFailedAction,
         errorCode: 'customer-not-found'
@@ -356,15 +351,12 @@ export class SubscriptionController {
       const renewalSuccessAction = mailActions.find(
         ma => ma.type === SubscriptionEvent.RENEWAL_SUCCESS
       )
-
-      console.log('Sent mail MemberSubscriptionOffSessionSuccess')
       await this.markInvoiceAsPaid(invoice)
       return {
         action: renewalSuccessAction,
         errorCode: ''
       }
     } else {
-      console.log('Send mail MemberSubscriptionOffSessionFailed')
       return {
         action: renewalFailedAction,
         errorCode: 'user-action-required'
