@@ -30,7 +30,7 @@ import {clearDatabase, clearFullDatabase} from '../../prisma-utils'
 import {matches} from 'lodash'
 import bodyParser from 'body-parser'
 
-describe('PeriodicJobController', () => {
+describe('MailController', () => {
   let controller: OldContextService
   const prismaClient = new PrismaClient()
   initialize({prisma: prismaClient})

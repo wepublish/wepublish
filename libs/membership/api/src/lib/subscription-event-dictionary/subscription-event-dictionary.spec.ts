@@ -26,7 +26,7 @@ type SubscriptionFlowInterval = {
   daysAwayFromEnding: null | number
 }
 
-describe('PeriodicJobController', () => {
+describe('SubscriptionEventDictionary', () => {
   const prismaClient = new PrismaClient()
   initialize({prisma: prismaClient})
 
