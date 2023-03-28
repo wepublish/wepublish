@@ -2,7 +2,7 @@ import {Test, TestingModule} from '@nestjs/testing'
 import nock from 'nock'
 import {clearDatabase, clearFullDatabase} from '../../prisma-utils'
 import {PrismaModule} from '@wepublish/nest-modules'
-import {contextFromRequest, OldContextService, PrismaService} from '@wepublish/api'
+import {OldContextService, PrismaService} from '@wepublish/api'
 import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
 import {PeriodicJobController} from './periodic-job.controller'
 import {SubscriptionController} from '../subscription/subscription.controller'
@@ -10,7 +10,6 @@ import {matches} from 'lodash'
 import {
   initialize,
   defineMemberPlanFactory,
-  defineMailTemplateFactory,
   defineSubscriptionFlowFactory,
   definePaymentMethodFactory,
   defineUserFactory,
@@ -82,14 +81,14 @@ describe('PeriodicJobController', () => {
     ])
 
     // Base data
-    const payrexx = await PaymentMethodFactory.create({
+    await PaymentMethodFactory.create({
       id: 'payrexx',
       name: 'payrexx',
       paymentProviderID: 'payrexx',
       slug: 'payrexx',
       active: true
     })
-    const payrexxSubscription = await PaymentMethodFactory.create({
+    await PaymentMethodFactory.create({
       id: 'payrexx-subscription',
       name: 'payrexx-subscription',
       paymentProviderID: 'payrexx-subscription',
@@ -97,7 +96,7 @@ describe('PeriodicJobController', () => {
       active: true
     })
 
-    const stripe = await PaymentMethodFactory.create({
+    await PaymentMethodFactory.create({
       id: 'stripe',
       name: 'stripe',
       paymentProviderID: 'stripe',
@@ -105,11 +104,11 @@ describe('PeriodicJobController', () => {
       active: true
     })
 
-    const yearlyMemberPlan = await MemberPlanFactory.create({
+    await MemberPlanFactory.create({
       name: 'yearly',
       slug: 'yearly'
     })
-    const customMessageMemberPlanNoMailTemplate = await MemberPlanFactory.create({
+    await MemberPlanFactory.create({
       name: 'customMessageMemberPlanNoMailTemplate',
       slug: 'customMessageMemberPlanNoMailTemplate'
     })
