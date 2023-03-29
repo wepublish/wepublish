@@ -7,12 +7,13 @@ import {
 } from '@wepublish/editor/api'
 import {useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdInfo, MdWarning} from 'react-icons/md'
+import {MdCancel, MdInfo, MdSave, MdWarning} from 'react-icons/md'
 import {
   Button,
   Col,
   Form,
   Grid,
+  IconButton,
   InputGroup,
   InputNumber,
   Modal,
@@ -28,11 +29,14 @@ import {
 import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon'
 import FormControl from 'rsuite/FormControl'
 
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {
   createCheckedPermissionComponent,
   PermissionControl,
   useAuthorisation
 } from '../atoms/permissionControl'
+import {ListViewActions, ListViewContainer, ListViewHeader} from '../ui/listView'
+import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 
 const Panel = styled(RPanel)`
   margin-bottom: 10px;
@@ -52,6 +56,10 @@ const WarningIcon = styled(MdWarning)`
   margin-left: 20px;
 `
 
+const DescriptionListItemWrapper = styled(DescriptionListItem)`
+  min-width: 100px;
+`
+
 type SettingInfoProps = {
   text: string
 }
@@ -63,9 +71,16 @@ const SettingInfo = ({text}: SettingInfoProps) => (
     </Info>
   </Whisper>
 )
+interface Label {
+  label: string
+}
+type SettingWithLabel = Label & Setting
 
-function settingsReducer(settings: Record<SettingName, Setting>, changedSetting: Setting) {
-  return {...settings, [changedSetting.name]: changedSetting}
+function settingsReducer(settings: Record<SettingName, SettingWithLabel>, changedSetting: Setting) {
+  return {
+    ...settings,
+    [changedSetting.name]: {...settings[changedSetting.name], value: changedSetting.value}
+  }
 }
 
 function SettingList() {
@@ -88,65 +103,75 @@ function SettingList() {
   const [settings, setSetting] = useReducer(settingsReducer, {
     [SettingName.AllowGuestCommenting]: {
       value: false,
-      name: SettingName.AllowGuestCommenting
+      name: SettingName.AllowGuestCommenting,
+      label: 'settingList.guestCommenting'
     },
     [SettingName.AllowGuestPollVoting]: {
       value: false,
-      name: SettingName.AllowGuestPollVoting
+      name: SettingName.AllowGuestPollVoting,
+      label: 'settingList.guestPollVote'
     },
     [SettingName.AllowGuestCommentRating]: {
       value: false,
-      name: SettingName.AllowGuestCommentRating
+      name: SettingName.AllowGuestCommentRating,
+      label: 'settingList.allowGuestCommentRating'
     },
     [SettingName.SendLoginJwtExpiresMin]: {
       value: 0,
-      name: SettingName.SendLoginJwtExpiresMin
+      name: SettingName.SendLoginJwtExpiresMin,
+      label: 'settingList.loginMinutes'
     },
     [SettingName.ResetPasswordJwtExpiresMin]: {
       value: 0,
-      name: SettingName.ResetPasswordJwtExpiresMin
+      name: SettingName.ResetPasswordJwtExpiresMin,
+      label: 'settingList.passwordToken'
     },
     [SettingName.PeeringTimeoutMs]: {
       value: 0,
-      name: SettingName.PeeringTimeoutMs
-    },
-    [SettingName.PeeringTimeoutMs]: {
-      value: 0,
-      name: SettingName.PeeringTimeoutMs
+      name: SettingName.PeeringTimeoutMs,
+      label: 'settingList.peerToken'
     },
     [SettingName.InvoiceReminderFreq]: {
       value: 0,
-      name: SettingName.InvoiceReminderFreq
+      name: SettingName.InvoiceReminderFreq,
+      label: 'settingList.invoiceFrequency'
     },
     [SettingName.InvoiceReminderMaxTries]: {
       value: 0,
-      name: SettingName.InvoiceReminderMaxTries
+      name: SettingName.InvoiceReminderMaxTries,
+      label: 'settingList.invoiceReminders'
     },
     [SettingName.MakeActiveSubscribersApiPublic]: {
       value: false,
-      name: SettingName.MakeActiveSubscribersApiPublic
+      name: SettingName.MakeActiveSubscribersApiPublic,
+      label: 'settingList.activeSubscriptionsApiPublic'
     },
     [SettingName.MakeNewSubscribersApiPublic]: {
       value: false,
-      name: SettingName.MakeNewSubscribersApiPublic
+      name: SettingName.MakeNewSubscribersApiPublic,
+      label: 'settingList.newSubscriptionsApiPublic'
     },
     [SettingName.MakeRenewingSubscribersApiPublic]: {
       value: false,
-      name: SettingName.MakeRenewingSubscribersApiPublic
+      name: SettingName.MakeRenewingSubscribersApiPublic,
+      label: 'settingList.renewingSubscriptionsApiPublic'
     },
     [SettingName.MakeNewDeactivationsApiPublic]: {
       value: false,
-      name: SettingName.MakeNewDeactivationsApiPublic
+      name: SettingName.MakeNewDeactivationsApiPublic,
+      label: 'settingList.newDeactivationsApiPublic'
     },
     [SettingName.MakeExpectedRevenueApiPublic]: {
       value: false,
-      name: SettingName.MakeExpectedRevenueApiPublic
+      name: SettingName.MakeExpectedRevenueApiPublic,
+      label: 'settingList.expectedRevenueApiPublic'
     },
     [SettingName.MakeRevenueApiPublic]: {
       value: false,
-      name: SettingName.MakeRevenueApiPublic
+      name: SettingName.MakeRevenueApiPublic,
+      label: 'settingList.revenueApiPublic'
     }
-  } as Record<SettingName, Setting>)
+  } as Record<SettingName, SettingWithLabel>)
 
   useEffect(() => {
     settingListData?.settings.forEach(setSetting)
@@ -155,6 +180,13 @@ function SettingList() {
   const [updateSettings, {error: updateSettingError}] = useUpdateSettingListMutation({
     fetchPolicy: 'network-only'
   })
+
+  const [changedSetting, setChangedSetting] = useState(
+    settingListData?.settings.filter(setting => setting.value !== settings[setting.name].value) ??
+      []
+  )
+
+  useUnsavedChangesDialog(changedSetting.length > 0)
 
   async function handleSettingListUpdate() {
     setShowWarning(false)
@@ -168,6 +200,17 @@ function SettingList() {
       </Notification>
     )
     await refetch()
+  }
+
+  useEffect(() => {
+    setChangedSetting(
+      settingListData?.settings.filter(setting => setting.value !== settings[setting.name].value) ??
+        []
+    )
+  }, [settingListData, settings])
+
+  async function handleCancel() {
+    settingListData?.settings.forEach(setSetting)
   }
 
   useEffect(() => {
@@ -244,6 +287,12 @@ function SettingList() {
     {} as Record<SettingName, unknown>
   )
 
+  const valueText = (value: any): string => {
+    if (value === true) return t('settingList.enabled')
+    if (value === false) return t('settingList.disabled')
+    return value
+  }
+
   return (
     <>
       <Form
@@ -251,9 +300,36 @@ function SettingList() {
         model={validationModel}
         formValue={formValue}
         onSubmit={validationPassed => validationPassed && setShowWarning(true)}>
-        <Form.Group>
-          <h2>{t('settingList.settings')}</h2>
-        </Form.Group>
+        <ListViewContainer>
+          <ListViewHeader>
+            <h2>{t('settingList.settings')}</h2>
+          </ListViewHeader>
+          <ListViewActions>
+            <PermissionControl qualifyingPermissions={['CAN_UPDATE_SETTINGS']}>
+              {/* cancel btn */}
+              <IconButton
+                icon={<MdCancel />}
+                onClick={() => handleCancel()}
+                className="actionButton"
+                type="reset"
+                size="lg"
+                appearance="default"
+                disabled={isDisabled || changedSetting.length === 0}>
+                {t('cancel')}
+              </IconButton>
+              {/* save btn */}
+              <IconButton
+                icon={<MdSave />}
+                className="actionButton"
+                type="submit"
+                size="lg"
+                appearance="primary"
+                disabled={isDisabled || changedSetting.length === 0}>
+                {t('save')}
+              </IconButton>
+            </PermissionControl>
+          </ListViewActions>
+        </ListViewContainer>
 
         <Grid fluid>
           <Row>
@@ -265,8 +341,10 @@ function SettingList() {
                   <Panel bordered header={t('settingList.comments')}>
                     <Form.Group controlId={SettingName.AllowGuestCommenting}>
                       <Form.ControlLabel>
-                        {t('settingList.guestCommenting')}
-                        <SettingInfo text={t('settingList.warnings.guestCommenting')} />
+                        <>
+                          {t(settings[SettingName.AllowGuestCommenting].label)}
+                          <SettingInfo text={t('settingList.warnings.guestCommenting')} />
+                        </>
                       </Form.ControlLabel>
 
                       <Toggle
@@ -284,7 +362,7 @@ function SettingList() {
                     {/* Allow guest rating of a comment */}
                     <Form.Group controlId={SettingName.AllowGuestCommentRating}>
                       <Form.ControlLabel>
-                        {t('settingList.allowGuestCommentRating')}
+                        {t(settings[SettingName.AllowGuestCommentRating].label)}
                         <SettingInfo text={t('settingList.warnings.guestCommentRating')} />
                       </Form.ControlLabel>
 
@@ -313,7 +391,9 @@ function SettingList() {
                       </>
                     }>
                     <Form.Group controlId="guestPollVote">
-                      <Form.ControlLabel>{t('settingList.guestPollVote')}</Form.ControlLabel>
+                      <Form.ControlLabel>
+                        {t(settings[SettingName.AllowGuestPollVoting].label)}
+                      </Form.ControlLabel>
                       <Toggle
                         disabled={isDisabled}
                         checked={settings[SettingName.AllowGuestPollVoting].value}
@@ -333,25 +413,25 @@ function SettingList() {
                   <Panel bordered header={t('settingList.memberships')}>
                     <Form.Group controlId={SettingName.MakeNewSubscribersApiPublic}>
                       <Form.ControlLabel>
-                        {t('settingList.newSubscriptionsApiPublic')}
+                        {t(settings[SettingName.MakeNewSubscribersApiPublic].label)}
                         <SettingInfo text={t('settingList.warnings.newSubscriptionsApiPublic')} />
                       </Form.ControlLabel>
 
                       <Toggle
                         disabled={isDisabled}
                         checked={settings[SettingName.MakeNewSubscribersApiPublic].value}
-                        onChange={checked =>
+                        onChange={checked => {
                           setSetting({
                             ...settings[SettingName.MakeNewSubscribersApiPublic],
                             value: checked
                           })
-                        }
+                        }}
                       />
                     </Form.Group>
 
                     <Form.Group controlId={SettingName.MakeActiveSubscribersApiPublic}>
                       <Form.ControlLabel>
-                        {t('settingList.activeSubscriptionsApiPublic')}
+                        {t(settings[SettingName.MakeActiveSubscribersApiPublic].label)}
                         <SettingInfo
                           text={t('settingList.warnings.activeSubscriptionsApiPublic')}
                         />
@@ -360,18 +440,18 @@ function SettingList() {
                       <Toggle
                         disabled={isDisabled}
                         checked={settings[SettingName.MakeActiveSubscribersApiPublic].value}
-                        onChange={checked =>
+                        onChange={checked => {
                           setSetting({
                             ...settings[SettingName.MakeActiveSubscribersApiPublic],
                             value: checked
                           })
-                        }
+                        }}
                       />
                     </Form.Group>
 
                     <Form.Group controlId={SettingName.MakeRenewingSubscribersApiPublic}>
                       <Form.ControlLabel>
-                        {t('settingList.renewingSubscriptionsApiPublic')}
+                        {t(settings[SettingName.MakeRenewingSubscribersApiPublic].label)}
                         <SettingInfo
                           text={t('settingList.warnings.renewingSubscriptionsApiPublic')}
                         />
@@ -380,18 +460,18 @@ function SettingList() {
                       <Toggle
                         disabled={isDisabled}
                         checked={settings[SettingName.MakeRenewingSubscribersApiPublic].value}
-                        onChange={checked =>
+                        onChange={checked => {
                           setSetting({
                             ...settings[SettingName.MakeRenewingSubscribersApiPublic],
                             value: checked
                           })
-                        }
+                        }}
                       />
                     </Form.Group>
 
                     <Form.Group controlId={SettingName.MakeNewDeactivationsApiPublic}>
                       <Form.ControlLabel>
-                        {t('settingList.newDeactivationsApiPublic')}
+                        {t(settings[SettingName.MakeNewDeactivationsApiPublic].label)}
                         <SettingInfo text={t('settingList.warnings.newDeactivationsApiPublic')} />
                       </Form.ControlLabel>
 
@@ -409,7 +489,7 @@ function SettingList() {
 
                     <Form.Group controlId={SettingName.MakeExpectedRevenueApiPublic}>
                       <Form.ControlLabel>
-                        {t('settingList.expectedRevenueApiPublic')}
+                        {t(settings[SettingName.MakeExpectedRevenueApiPublic].label)}
                         <SettingInfo text={t('settingList.warnings.expectedRevenueApiPublic')} />
                       </Form.ControlLabel>
 
@@ -427,7 +507,7 @@ function SettingList() {
 
                     <Form.Group controlId={SettingName.MakeRevenueApiPublic}>
                       <Form.ControlLabel>
-                        {t('settingList.revenueApiPublic')}
+                        {t(settings[SettingName.MakeRevenueApiPublic].label)}
                         <SettingInfo text={t('settingList.warnings.revenueApiPublic')} />
                       </Form.ControlLabel>
 
@@ -455,7 +535,7 @@ function SettingList() {
                   <Panel bordered header={t('settingList.login')}>
                     <Form.Group controlId={SettingName.SendLoginJwtExpiresMin}>
                       <Form.ControlLabel>
-                        {t('settingList.loginMinutes')}
+                        {t(settings[SettingName.SendLoginJwtExpiresMin].label)}
                         <SettingInfo text={t('settingList.warnings.loginMinutes')} />
                       </Form.ControlLabel>
 
@@ -471,14 +551,13 @@ function SettingList() {
                             })
                           }
                         />
-
                         <InputGroupAddon>{t('settingList.minutes')}</InputGroupAddon>
                       </InputGroup>
                     </Form.Group>
 
                     <Form.Group controlId={SettingName.ResetPasswordJwtExpiresMin}>
                       <Form.ControlLabel>
-                        {t('settingList.passwordToken')}
+                        {t(settings[SettingName.ResetPasswordJwtExpiresMin].label)}
                         <SettingInfo text={t('settingList.warnings.passwordToken')} />
                       </Form.ControlLabel>
 
@@ -512,7 +591,9 @@ function SettingList() {
                       </>
                     }>
                     <Form.Group controlId={SettingName.PeeringTimeoutMs}>
-                      <Form.ControlLabel>{t('settingList.peerToken')}</Form.ControlLabel>
+                      <Form.ControlLabel>
+                        {t(settings[SettingName.PeeringTimeoutMs].label)}
+                      </Form.ControlLabel>
                       <InputGroup>
                         <Form.Control
                           name={SettingName.PeeringTimeoutMs}
@@ -533,16 +614,32 @@ function SettingList() {
 
                 {/* payment */}
                 <Col xs={24}>
-                  <Panel
-                    bordered
-                    header={
-                      <>
-                        {t('settingList.payment')}
+                  <Panel bordered header={t('settingList.payment')}>
+                    <Form.Group controlId={SettingName.InvoiceReminderMaxTries}>
+                      <Form.ControlLabel>
+                        {t(settings[SettingName.InvoiceReminderMaxTries].label)}{' '}
                         <SettingInfo text={t('settingList.warnings.invoiceReminders')} />
-                      </>
-                    }>
+                      </Form.ControlLabel>
+                      <InputGroup>
+                        <Form.Control
+                          name={SettingName.InvoiceReminderMaxTries}
+                          accepter={InputNumber}
+                          value={settings[SettingName.InvoiceReminderMaxTries].value}
+                          onChange={(value: string) =>
+                            setSetting({
+                              ...settings[SettingName.InvoiceReminderMaxTries],
+                              value: +value
+                            })
+                          }
+                        />
+                      </InputGroup>
+                    </Form.Group>
+
                     <Form.Group controlId={SettingName.InvoiceReminderFreq}>
-                      <Form.ControlLabel>{t('settingList.invoiceReminders')}</Form.ControlLabel>
+                      <Form.ControlLabel>
+                        {t(settings[SettingName.InvoiceReminderFreq].label)}{' '}
+                        <SettingInfo text={t('settingList.warnings.invoiceFrequency')} />
+                      </Form.ControlLabel>
                       <InputGroup>
                         <Form.Control
                           name={SettingName.InvoiceReminderFreq}
@@ -564,13 +661,6 @@ function SettingList() {
             </Col>
           </Row>
         </Grid>
-
-        {/* save btn */}
-        <PermissionControl qualifyingPermissions={['CAN_UPDATE_SETTINGS']}>
-          <Button type="submit" appearance="primary" disabled={isDisabled}>
-            {t('save')}
-          </Button>
-        </PermissionControl>
       </Form>
 
       <Modal open={showWarning} backdrop="static" size="xs" onClose={() => setShowWarning(false)}>
@@ -580,6 +670,15 @@ function SettingList() {
         </Modal.Title>
 
         <Modal.Body>{t('settingList.warnings.askOperators')}</Modal.Body>
+        <Modal.Body>
+          <DescriptionList>
+            {changedSetting.map(setting => (
+              <DescriptionListItemWrapper label={t(settings[setting.name].label)}>
+                <s>{valueText(setting.value)}</s> {valueText(settings[setting.name].value)}
+              </DescriptionListItemWrapper>
+            ))}
+          </DescriptionList>
+        </Modal.Body>
 
         <Modal.Footer>
           <Button appearance="primary" onClick={handleSettingListUpdate}>
