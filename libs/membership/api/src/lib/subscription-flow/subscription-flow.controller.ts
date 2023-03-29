@@ -12,7 +12,7 @@ import {
   subscriptionFlowNonUniqueEvents,
   subscriptionFlowRequiredEvents
 } from './subscription-flow.type'
-import {SubscriptionEvent, SubscriptionFlow} from '@prisma/client'
+import {SubscriptionEvent} from '@prisma/client'
 import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
 const SUBSCRIPTION_EVEN_MAX_DAYS_BEFORE = -25
 const SUBSCRIPTION_EVEN_MAX_DAYS_AFTER = 90

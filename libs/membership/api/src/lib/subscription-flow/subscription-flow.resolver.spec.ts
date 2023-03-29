@@ -1,4 +1,4 @@
-import {INestApplication, Module} from '@nestjs/common'
+import {CanActivate, ExecutionContext, INestApplication, Injectable, Module} from '@nestjs/common'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
 import {PrismaModule} from '@wepublish/nest-modules'
@@ -9,10 +9,25 @@ import {SubscriptionFlowController} from './subscription-flow.controller'
 import {OldContextService, PrismaService} from '@wepublish/api'
 import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
 import {SubscriptionController} from '../subscription/subscription.controller'
-import {PermissionsGuard} from '@wepublish/permissions/api'
 import {APP_GUARD} from '@nestjs/core'
 import {SubscriptionFlowHelper} from './subscription-flow.helper'
-import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
+import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
+import {
+  initialize,
+  defineMemberPlanFactory,
+  defineSubscriptionFlowFactory,
+  definePaymentMethodFactory
+} from '@wepublish/api'
+import {PermissionsGuard} from '@wepublish/permissions/api'
+import {clearDatabase} from '../../prisma-utils'
+import {initOldContextForTest} from '../../oldcontext-utils'
+
+@Injectable()
+export class TestPermissionsGuard implements CanActivate {
+  public canActivate(context: ExecutionContext): boolean {
+    return true
+  }
+}
 
 /**
  * Define GraphQL test queries and mutations.
@@ -102,206 +117,325 @@ const paymentMethodsQuery = `
     }
   ]
 })
-export class AppModule {}
+export class AppUnauthenticatedModule {}
+@Module({
+  imports: [
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: true,
+      path: '/'
+    }),
+    PrismaModule
+  ],
+  providers: [
+    SubscriptionFlowResolver,
+    PrismaService,
+    SubscriptionFlowController,
+    OldContextService,
+    PeriodicJobController,
+    SubscriptionController,
+    SubscriptionFlowHelper,
+    {
+      provide: APP_GUARD,
+      useClass: TestPermissionsGuard
+    }
+  ]
+})
+export class AppAuthenticatedModule {}
 
 describe('Subscription Flow Resolver', () => {
-  let app: INestApplication
+  describe('unauthenticated', () => {
+    let app: INestApplication
 
-  beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      imports: [AppModule]
-    }).compile()
-    app = module.createNestApplication()
-    await app.init()
-  })
+    beforeAll(async () => {
+      const module: TestingModule = await Test.createTestingModule({
+        imports: [AppUnauthenticatedModule]
+      }).compile()
+      app = module.createNestApplication()
+      await app.init()
+    })
 
-  afterAll(async () => {
-    await app.close()
-  })
+    afterAll(async () => {
+      await app.close()
+    })
 
-  it('subscriptionFlows are not public', () => {
-    return request(app.getHttpServer())
-      .post('')
-      .send({
-        query: getSubscriptionFlowsQuery,
-        variables: {
-          defaultFlowOnly: false
-        }
-      })
-      .expect(200)
-      .expect(({body}) => {
-        expect(!!body.errors.find((error: any) => error.message === 'Forbidden resource')).toEqual(
-          true
-        )
-        expect(body.data).toBeNull()
-      })
-  })
-
-  it('createSubscriptionFlow is not public', () => {
-    return request(app.getHttpServer())
-      .post('')
-      .send({
-        query: createSubscriptionFlowMutation,
-        variables: {
-          subscriptionFlow: {
-            autoRenewal: true,
-            memberPlanId: 'abc',
-            paymentMethodIds: ['abc'],
-            periodicities: [PaymentPeriodicity.monthly]
+    it('subscriptionFlows are not public', () => {
+      return request(app.getHttpServer())
+        .post('')
+        .send({
+          query: getSubscriptionFlowsQuery,
+          variables: {
+            defaultFlowOnly: false
           }
-        }
-      })
-      .expect(200)
-      .expect(({body}) => {
-        expect(!!body.errors.find((error: any) => error.message === 'Forbidden resource')).toEqual(
-          true
-        )
-        expect(body.data).toBeNull()
-      })
-  })
+        })
+        .expect(200)
+        .expect(({body}) => {
+          expect(
+            !!body.errors.find((error: any) => error.message === 'Forbidden resource')
+          ).toEqual(true)
+          expect(body.data).toBeNull()
+        })
+    })
 
-  it('updateSubscriptionFlow is not public', () => {
-    return request(app.getHttpServer())
-      .post('')
-      .send({
-        query: updateSubscriptionFlowMutation,
-        variables: {
-          subscriptionFlow: {
-            id: 1,
-            autoRenewal: true,
-            paymentMethodIds: ['abc'],
-            periodicities: [PaymentPeriodicity.monthly]
+    it('createSubscriptionFlow is not public', () => {
+      return request(app.getHttpServer())
+        .post('')
+        .send({
+          query: createSubscriptionFlowMutation,
+          variables: {
+            subscriptionFlow: {
+              autoRenewal: true,
+              memberPlanId: 'abc',
+              paymentMethodIds: ['abc'],
+              periodicities: [PaymentPeriodicity.monthly]
+            }
           }
-        }
-      })
-      .expect(200)
-      .expect(({body}) => {
-        expect(!!body.errors.find((error: any) => error.message === 'Forbidden resource')).toEqual(
-          true
-        )
-        expect(body.data).toBeNull()
-      })
-  })
+        })
+        .expect(200)
+        .expect(({body}) => {
+          expect(
+            !!body.errors.find((error: any) => error.message === 'Forbidden resource')
+          ).toEqual(true)
+          expect(body.data).toBeNull()
+        })
+    })
 
-  it('deleteSubscriptionFlow is not public', () => {
-    return request(app.getHttpServer())
-      .post('')
-      .send({
-        query: deleteSubscriptionFlowMutation,
-        variables: {
-          subscriptionFlowId: 1
-        }
-      })
-      .expect(200)
-      .expect(({body}) => {
-        expect(!!body.errors.find((error: any) => error.message === 'Forbidden resource')).toEqual(
-          true
-        )
-        expect(body.data).toBeNull()
-      })
-  })
+    it('updateSubscriptionFlow is not public', () => {
+      return request(app.getHttpServer())
+        .post('')
+        .send({
+          query: updateSubscriptionFlowMutation,
+          variables: {
+            subscriptionFlow: {
+              id: 1,
+              autoRenewal: true,
+              paymentMethodIds: ['abc'],
+              periodicities: [PaymentPeriodicity.monthly]
+            }
+          }
+        })
+        .expect(200)
+        .expect(({body}) => {
+          expect(
+            !!body.errors.find((error: any) => error.message === 'Forbidden resource')
+          ).toEqual(true)
+          expect(body.data).toBeNull()
+        })
+    })
 
-  it('createSubscriptionInterval is not public', () => {
-    return request(app.getHttpServer())
-      .post('')
-      .send({
-        query: createSubscriptionIntervalMutation,
-        variables: {
-          subscriptionInterval: {
-            daysAwayFromEnding: 1,
-            event: SubscriptionEvent.CUSTOM,
-            mailTemplateId: 1,
+    it('deleteSubscriptionFlow is not public', () => {
+      return request(app.getHttpServer())
+        .post('')
+        .send({
+          query: deleteSubscriptionFlowMutation,
+          variables: {
             subscriptionFlowId: 1
           }
-        }
-      })
-      .expect(200)
-      .expect(({body}) => {
-        expect(!!body.errors.find((error: any) => error.message === 'Forbidden resource')).toEqual(
-          true
-        )
-        expect(body.data).toBeNull()
-      })
-  })
+        })
+        .expect(200)
+        .expect(({body}) => {
+          expect(
+            !!body.errors.find((error: any) => error.message === 'Forbidden resource')
+          ).toEqual(true)
+          expect(body.data).toBeNull()
+        })
+    })
 
-  it('updateSubscriptionIntervals is not public', () => {
-    return request(app.getHttpServer())
-      .post('')
-      .send({
-        query: updateSubscriptionIntervals,
-        variables: {
-          subscriptionIntervals: [
-            {
+    it('createSubscriptionInterval is not public', () => {
+      return request(app.getHttpServer())
+        .post('')
+        .send({
+          query: createSubscriptionIntervalMutation,
+          variables: {
+            subscriptionInterval: {
+              daysAwayFromEnding: 1,
+              event: SubscriptionEvent.CUSTOM,
+              mailTemplateId: 1,
+              subscriptionFlowId: 1
+            }
+          }
+        })
+        .expect(200)
+        .expect(({body}) => {
+          expect(
+            !!body.errors.find((error: any) => error.message === 'Forbidden resource')
+          ).toEqual(true)
+          expect(body.data).toBeNull()
+        })
+    })
+
+    it('updateSubscriptionIntervals is not public', () => {
+      return request(app.getHttpServer())
+        .post('')
+        .send({
+          query: updateSubscriptionIntervals,
+          variables: {
+            subscriptionIntervals: [
+              {
+                id: 1,
+                daysAwayFromEnding: 1,
+                mailTemplateId: 1
+              }
+            ]
+          }
+        })
+        .expect(200)
+        .expect(({body}) => {
+          expect(
+            !!body.errors.find((error: any) => error.message === 'Forbidden resource')
+          ).toEqual(true)
+          expect(body.data).toBeNull()
+        })
+    })
+
+    it('updateSubscriptionInterval is not public', () => {
+      return request(app.getHttpServer())
+        .post('')
+        .send({
+          query: updateSubscriptionInterval,
+          variables: {
+            subscriptionInterval: {
               id: 1,
               daysAwayFromEnding: 1,
               mailTemplateId: 1
             }
-          ]
-        }
-      })
-      .expect(200)
-      .expect(({body}) => {
-        expect(!!body.errors.find((error: any) => error.message === 'Forbidden resource')).toEqual(
-          true
-        )
-        expect(body.data).toBeNull()
-      })
-  })
-
-  it('updateSubscriptionInterval is not public', () => {
-    return request(app.getHttpServer())
-      .post('')
-      .send({
-        query: updateSubscriptionInterval,
-        variables: {
-          subscriptionInterval: {
-            id: 1,
-            daysAwayFromEnding: 1,
-            mailTemplateId: 1
           }
-        }
-      })
-      .expect(200)
-      .expect(({body}) => {
-        expect(!!body.errors.find((error: any) => error.message === 'Forbidden resource')).toEqual(
-          true
-        )
-        expect(body.data).toBeNull()
-      })
-  })
+        })
+        .expect(200)
+        .expect(({body}) => {
+          expect(
+            !!body.errors.find((error: any) => error.message === 'Forbidden resource')
+          ).toEqual(true)
+          expect(body.data).toBeNull()
+        })
+    })
 
-  it('deleteSubscriptionInterval is not public', () => {
-    return request(app.getHttpServer())
-      .post('')
-      .send({
-        query: updateSubscriptionInterval,
-        variables: {
-          subscriptionInterval: {
-            id: 1
+    it('deleteSubscriptionInterval is not public', () => {
+      return request(app.getHttpServer())
+        .post('')
+        .send({
+          query: updateSubscriptionInterval,
+          variables: {
+            subscriptionInterval: {
+              id: 1
+            }
           }
-        }
-      })
-      .expect(200)
-      .expect(({body}) => {
-        expect(!!body.errors.find((error: any) => error.message === 'Forbidden resource')).toEqual(
-          true
-        )
-        expect(body.data).toBeNull()
-      })
+        })
+        .expect(200)
+        .expect(({body}) => {
+          expect(
+            !!body.errors.find((error: any) => error.message === 'Forbidden resource')
+          ).toEqual(true)
+          expect(body.data).toBeNull()
+        })
+    })
+
+    it('paymentMethods is not public', () => {
+      return request(app.getHttpServer())
+        .post('')
+        .send({
+          query: paymentMethodsQuery
+        })
+        .expect(200)
+        .expect(({body}) => {
+          expect(
+            !!body.errors.find((error: any) => error.message === 'Forbidden resource')
+          ).toEqual(true)
+          expect(body.data).toBeNull()
+        })
+    })
   })
 
-  it('paymentMethods is not public', () => {
-    return request(app.getHttpServer())
-      .post('')
-      .send({
-        query: paymentMethodsQuery
+  describe('authenticated', () => {
+    let resolver: SubscriptionFlowResolver
+
+    const prismaClient = new PrismaClient()
+    initialize({prisma: prismaClient})
+
+    const PaymentMethodFactory = definePaymentMethodFactory()
+    const MemberPlanFactory = defineMemberPlanFactory()
+    const SubscriptionFlowFactory = defineSubscriptionFlowFactory({
+      defaultData: {
+        memberPlan: MemberPlanFactory
+      }
+    })
+
+    beforeEach(async () => {
+      await initOldContextForTest(prismaClient)
+      const module: TestingModule = await Test.createTestingModule({
+        imports: [PrismaModule.forTest(prismaClient)],
+        providers: [
+          OldContextService,
+          PeriodicJobController,
+          PrismaService,
+          SubscriptionController,
+          SubscriptionFlowController,
+          SubscriptionFlowHelper,
+          SubscriptionFlowResolver
+        ]
+      }).compile()
+
+      resolver = module.get<SubscriptionFlowResolver>(SubscriptionFlowResolver)
+
+      await clearDatabase(prismaClient, [
+        'subscription_communication_flows',
+        'payment.methods',
+        'member.plans',
+        'subscriptions.intervals',
+        'mail_templates'
+      ])
+    })
+
+    afterEach(async () => {
+      await prismaClient.$disconnect()
+    })
+
+    it('includes number of subscriptions', async () => {
+      const plan = await MemberPlanFactory.create()
+      await SubscriptionFlowFactory.create({
+        default: true,
+        memberPlan: {connect: {id: plan.id}}
       })
-      .expect(200)
-      .expect(({body}) => {
-        expect(!!body.errors.find((error: any) => error.message === 'Forbidden resource')).toEqual(
-          true
-        )
-        expect(body.data).toBeNull()
+
+      const response = await resolver.subscriptionFlows(false, plan.id)
+      expect(response.length).toEqual(1)
+      expect(response[0].numberOfSubscriptions).toEqual(0)
+    })
+
+    it('returns subscription flows for all queries and mutations', async () => {
+      const plan = await MemberPlanFactory.create()
+      const flow = await SubscriptionFlowFactory.create({
+        default: true,
+        memberPlan: {connect: {id: plan.id}}
       })
+      const paymentMethod = await PaymentMethodFactory.create()
+
+      expect((await resolver.subscriptionFlows(false, plan.id)).length).toEqual(1)
+
+      expect(
+        (
+          await resolver.createSubscriptionFlow({
+            memberPlanId: plan.id,
+            paymentMethodIds: [paymentMethod.id],
+            periodicities: [PaymentPeriodicity.biannual],
+            autoRenewal: [true]
+          })
+        ).length
+      ).toEqual(2)
+
+      expect(
+        (
+          await resolver.updateSubscriptionFlow({
+            id: flow.id,
+            paymentMethodIds: [paymentMethod.id],
+            periodicities: [PaymentPeriodicity.monthly],
+            autoRenewal: [true]
+          })
+        ).length
+      ).toEqual(2)
+
+      const allFlows = await resolver.subscriptionFlows(false, plan.id)
+      expect((await resolver.deleteSubscriptionFlow(allFlows[1].id)).length).toEqual(1)
+    })
   })
 })
