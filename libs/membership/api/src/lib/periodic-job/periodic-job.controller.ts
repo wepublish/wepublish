@@ -174,13 +174,6 @@ export class PeriodicJobController {
       throw new Error('No invoice deactivation event found!')
     }
 
-    console.log(
-      periodicJobRunObject.date.toISOString() +
-        '=>' +
-        add(startOfDay(subscriptionToCreateInvoice.paidUntil!), {
-          days: creationEvent.daysAwayFromEnding!
-        }).toISOString()
-    )
     if (
       subscriptionToCreateInvoice.paidUntil &&
       add(startOfDay(subscriptionToCreateInvoice.paidUntil), {
