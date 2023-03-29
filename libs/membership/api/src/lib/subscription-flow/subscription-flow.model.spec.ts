@@ -65,11 +65,12 @@ describe('SubscriptionFlowController', () => {
     const interval = await SubscriptionIntervalFactory.create({
       mailTemplate: {connect: {id: template.id}}
     })
-    await SubscriptionFlowFactory.create({
+    const flow1 = await SubscriptionFlowFactory.create({
       intervals: {connect: [{id: interval.id}]}
     })
 
     const flow = await prismaClient.subscriptionFlow.findFirst({
+      where: {id: flow1.id},
       include: {intervals: {include: {mailTemplate: true}}}
     })
 
