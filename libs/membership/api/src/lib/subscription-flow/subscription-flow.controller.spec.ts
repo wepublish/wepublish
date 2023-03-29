@@ -208,7 +208,7 @@ describe('SubscriptionFlowController', () => {
           {
             event: SubscriptionEvent.INVOICE_CREATION,
             mailTemplateId: template.id,
-            daysAwayFromEnding: null
+            daysAwayFromEnding: -3
           }
         ]
       }
@@ -227,11 +227,12 @@ describe('SubscriptionFlowController', () => {
     }
 
     expect(existingInterval.mailTemplateId).toEqual(template.id)
-    expect(existingInterval.daysAwayFromEnding).toEqual(null)
+    expect(existingInterval.daysAwayFromEnding).toEqual(-3)
 
     await controller.updateInterval({
       id: existingInterval.id,
-      mailTemplateId: template2.id
+      mailTemplateId: template2.id,
+      daysAwayFromEnding: -5
     })
 
     const updatedFlow = await prismaClient.subscriptionFlow.findFirst({
