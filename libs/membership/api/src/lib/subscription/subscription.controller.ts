@@ -159,7 +159,7 @@ export class SubscriptionController {
   ) {
     if (paymentDeadline.type !== SubscriptionEvent.DEACTIVATION_UNPAID) {
       throw new Error(
-        `Given action has not right type! ${JSON.stringify(paymentDeadline)} should never happen!`
+        `Given action has not right type! ${paymentDeadline.type} should never happen!`
       )
     }
 
@@ -304,14 +304,15 @@ export class SubscriptionController {
         `Tried to renew paid ${invoice.paidAt} or canceled invoice ${invoice.canceledAt} for subscription ${invoice.subscription?.id}`
       )
     }
+    if (!invoice.subscription || !invoice.subscription.user) {
+      throw new Error('Subscription or user not found!')
+    }
 
-    const customer = invoice.subscription?.user?.paymentProviderCustomers.find(
+    const customer = invoice.subscription.user.paymentProviderCustomers.find(
       ppc => ppc.paymentProviderID === invoice.subscription?.paymentMethod.paymentProviderID
     )
     const renewalFailedAction = mailActions.find(ma => ma.type === SubscriptionEvent.RENEWAL_FAILED)
-    if (!invoice.subscription) {
-      throw new Error('Subscription not found!')
-    }
+
     if (!customer) {
       return {
         action: renewalFailedAction,
