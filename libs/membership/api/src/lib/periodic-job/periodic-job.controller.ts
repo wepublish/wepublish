@@ -1,7 +1,18 @@
 import {OldContextService, PrismaService} from '@wepublish/api'
-import {add, addDays, differenceInDays, endOfDay, set, sub, subMinutes} from 'date-fns'
+import {add, addDays, differenceInDays, endOfDay, set, startOfDay, sub, subMinutes} from 'date-fns'
 import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subscription-event-dictionary'
-import {PeriodicJob, SubscriptionEvent, User} from '@prisma/client'
+import {
+  Invoice,
+  InvoiceItem,
+  MemberPlan,
+  PaymentMethod,
+  PaymentProviderCustomer,
+  PeriodicJob,
+  Subscription,
+  SubscriptionEvent,
+  SubscriptionPeriod,
+  User
+} from '@prisma/client'
 import {PeriodicJobRunObject} from './periodic-job.type'
 import {Injectable, Logger} from '@nestjs/common'
 import {SubscriptionController} from '../subscription/subscription.controller'
@@ -58,35 +69,11 @@ export class PeriodicJobController {
             }))
           },
           include: {
-            user: true,
-            paymentMethod: true,
-            memberPlan: true
+            user: true
           }
         })
         for (const subscriptionsWithEvent of subscriptionsWithEvents) {
-          const daysAwayFromEnding = differenceInDays(
-            periodicJobRunObject.date,
-            this.getStartOfDay(subscriptionsWithEvent.paidUntil!)
-          )
-          const subscriptionDictionary = this.subscriptionEventDictionary.getActionFromStore({
-            memberplanId: subscriptionsWithEvent.memberPlanID,
-            paymentmethodeId: subscriptionsWithEvent.paymentMethodID,
-            periodicity: subscriptionsWithEvent.paymentPeriodicity,
-            autorenwal: subscriptionsWithEvent.autoRenew,
-            daysAwayFromEnding: daysAwayFromEnding
-          })
-
-          for (const event of subscriptionDictionary) {
-            if (event.type === SubscriptionEvent.CUSTOM) {
-              await this.sendTemplateMail(
-                event,
-                subscriptionsWithEvent.user,
-                periodicJobRunObject.isRetry,
-                subscriptionsWithEvent,
-                periodicJobRunObject.date
-              )
-            }
-          }
+          await this.sendCustomMails(periodicJobRunObject, subscriptionsWithEvent)
         }
 
         //
@@ -100,121 +87,27 @@ export class PeriodicJobController {
             )
           )
         for (const subscriptionToCreateInvoice of subscriptionsToCreateInvoice) {
-          const eventInvoiceCreation = this.subscriptionEventDictionary.getActionFromStore({
-            memberplanId: subscriptionToCreateInvoice.memberPlanID,
-            paymentmethodeId: subscriptionToCreateInvoice.paymentMethodID,
-            periodicity: subscriptionToCreateInvoice.paymentPeriodicity,
-            autorenwal: subscriptionToCreateInvoice.autoRenew,
-            events: [SubscriptionEvent.INVOICE_CREATION, SubscriptionEvent.DEACTIVATION_UNPAID]
-          })
-          const creationEvent = eventInvoiceCreation.find(
-            e => e.type === SubscriptionEvent.INVOICE_CREATION
-          )
-          if (!creationEvent) {
-            throw new Error('No invoice creation found!')
-          }
-          const deactivationEvent = eventInvoiceCreation.find(
-            e => e.type === SubscriptionEvent.DEACTIVATION_UNPAID
-          )
-          if (!deactivationEvent) {
-            throw new Error('No invoice deactivation event found!')
-          }
-
-          if (
-            subscriptionToCreateInvoice.paidUntil &&
-            add(subscriptionToCreateInvoice.paidUntil, {
-              days: creationEvent.daysAwayFromEnding!
-            }) >= periodicJobRunObject.date
-          ) {
-            continue
-          }
-
-          await this.subscriptionController.createInvoice(
-            subscriptionToCreateInvoice,
-            deactivationEvent
-          )
-
-          await this.sendTemplateMail(
-            creationEvent,
-            subscriptionToCreateInvoice.user,
-            periodicJobRunObject.isRetry,
-            subscriptionToCreateInvoice,
-            periodicJobRunObject.date
-          )
+          await this.createInvoice(periodicJobRunObject, subscriptionToCreateInvoice)
         }
 
         //
         // Charging Invoices which are due
         //
-        const subscriptionsToChargeInvoice = await this.subscriptionController.getInvoicesToCharge(
+        const invoicesToCharge = await this.subscriptionController.getInvoicesToCharge(
           this.getEndOfDay(periodicJobRunObject.date)
         )
-        for (const subscriptionToChargeInvoice of subscriptionsToChargeInvoice) {
-          if (!subscriptionToChargeInvoice.subscription) {
-            throw new Error(
-              `Invoice ${subscriptionToChargeInvoice.id} has no subscription assigned!`
-            )
-          }
-
-          const eventsRenewal = this.subscriptionEventDictionary.getActionFromStore({
-            memberplanId: subscriptionToChargeInvoice.subscription.memberPlanID,
-            paymentmethodeId: subscriptionToChargeInvoice.subscription.paymentMethodID,
-            periodicity: subscriptionToChargeInvoice.subscription.paymentPeriodicity,
-            autorenwal: subscriptionToChargeInvoice.subscription.autoRenew,
-            events: [SubscriptionEvent.RENEWAL_SUCCESS, SubscriptionEvent.RENEWAL_FAILED]
-          })
-
-          const mailAction = await this.subscriptionController.chargeInvoice(
-            subscriptionToChargeInvoice,
-            eventsRenewal
-          )
-
-          if (mailAction.action) {
-            const {paymentProviderCustomers, ...user} =
-              subscriptionToChargeInvoice.subscription.user
-            await this.sendTemplateMail(
-              mailAction.action,
-              user,
-              periodicJobRunObject.isRetry,
-              {
-                errorCode: mailAction.errorCode,
-                ...subscriptionToChargeInvoice
-              },
-              periodicJobRunObject.date
-            )
-          }
+        for (const invoiceToCharge of invoicesToCharge) {
+          await this.chargeInvoice(periodicJobRunObject, invoiceToCharge)
         }
 
         //
         // Deactivate Subscriptions which have invoices who are overdue
         //
-        const subscriptionsToDeactivateInvoice =
-          await this.subscriptionController.getSubscriptionsToDeactivate(periodicJobRunObject.date)
-        for (const subscriptionToDeactivateInvoice of subscriptionsToDeactivateInvoice) {
-          if (!subscriptionToDeactivateInvoice.subscription) {
-            throw new Error(
-              `Invoice ${subscriptionToDeactivateInvoice.id} has no subscription assigned!`
-            )
-          }
-          const eventDeactivationUnpaid = this.subscriptionEventDictionary.getActionFromStore({
-            memberplanId: subscriptionToDeactivateInvoice.subscription.memberPlanID,
-            paymentmethodeId: subscriptionToDeactivateInvoice.subscription.paymentMethodID,
-            periodicity: subscriptionToDeactivateInvoice.subscription.paymentPeriodicity,
-            autorenwal: subscriptionToDeactivateInvoice.subscription.autoRenew,
-            events: [SubscriptionEvent.DEACTIVATION_UNPAID]
-          })
-          if (!eventDeactivationUnpaid[0]) {
-            throw new Error('No subscription deactivation found!')
-          }
-          await this.subscriptionController.deactivateSubscription(subscriptionToDeactivateInvoice)
-
-          await this.sendTemplateMail(
-            eventDeactivationUnpaid[0],
-            subscriptionToDeactivateInvoice.subscription.user,
-            periodicJobRunObject.isRetry,
-            subscriptionToDeactivateInvoice,
-            periodicJobRunObject.date
-          )
+        const unpaidInvoices = await this.subscriptionController.getSubscriptionsToDeactivate(
+          periodicJobRunObject.date
+        )
+        for (const unpaidInvoice of unpaidInvoices) {
+          await this.deactivateSubscription(periodicJobRunObject, unpaidInvoice)
         }
       } catch (e) {
         await this.markJobFailed((e as Error).toString())
@@ -222,6 +115,159 @@ export class PeriodicJobController {
       }
       await this.markJobSuccessful()
     }
+  }
+
+  private async sendCustomMails(
+    periodicJobRunObject: PeriodicJobRunObject,
+    subscriptionsWithEvent: Subscription & {user: User}
+  ) {
+    const daysAwayFromEnding = differenceInDays(
+      periodicJobRunObject.date,
+      this.getStartOfDay(subscriptionsWithEvent.paidUntil!)
+    )
+    const subscriptionDictionary = this.subscriptionEventDictionary.getActionFromStore({
+      memberplanId: subscriptionsWithEvent.memberPlanID,
+      paymentmethodeId: subscriptionsWithEvent.paymentMethodID,
+      periodicity: subscriptionsWithEvent.paymentPeriodicity,
+      autorenwal: subscriptionsWithEvent.autoRenew,
+      daysAwayFromEnding: daysAwayFromEnding
+    })
+
+    for (const event of subscriptionDictionary) {
+      if (event.type === SubscriptionEvent.CUSTOM) {
+        await this.sendTemplateMail(
+          event,
+          subscriptionsWithEvent.user,
+          periodicJobRunObject.isRetry,
+          subscriptionsWithEvent,
+          periodicJobRunObject.date
+        )
+      }
+    }
+  }
+
+  private async createInvoice(
+    periodicJobRunObject: PeriodicJobRunObject,
+    subscriptionToCreateInvoice: Subscription & {
+      periods: SubscriptionPeriod[]
+      user: User
+      memberPlan: MemberPlan
+    }
+  ) {
+    const eventInvoiceCreation = this.subscriptionEventDictionary.getActionFromStore({
+      memberplanId: subscriptionToCreateInvoice.memberPlanID,
+      paymentmethodeId: subscriptionToCreateInvoice.paymentMethodID,
+      periodicity: subscriptionToCreateInvoice.paymentPeriodicity,
+      autorenwal: subscriptionToCreateInvoice.autoRenew,
+      events: [SubscriptionEvent.INVOICE_CREATION, SubscriptionEvent.DEACTIVATION_UNPAID]
+    })
+    const creationEvent = eventInvoiceCreation.find(
+      e => e.type === SubscriptionEvent.INVOICE_CREATION
+    )
+    if (!creationEvent) {
+      throw new Error('No invoice creation found!')
+    }
+    const deactivationEvent = eventInvoiceCreation.find(
+      e => e.type === SubscriptionEvent.DEACTIVATION_UNPAID
+    )
+    if (!deactivationEvent) {
+      throw new Error('No invoice deactivation event found!')
+    }
+
+    if (
+      subscriptionToCreateInvoice.paidUntil &&
+      add(startOfDay(subscriptionToCreateInvoice.paidUntil), {
+        days: creationEvent.daysAwayFromEnding!
+      }) > periodicJobRunObject.date
+    ) {
+      return false
+    }
+
+    await this.subscriptionController.createInvoice(subscriptionToCreateInvoice, deactivationEvent)
+
+    await this.sendTemplateMail(
+      creationEvent,
+      subscriptionToCreateInvoice.user,
+      periodicJobRunObject.isRetry,
+      subscriptionToCreateInvoice,
+      periodicJobRunObject.date
+    )
+    return true
+  }
+
+  private async chargeInvoice(
+    periodicJobRunObject: PeriodicJobRunObject,
+    invoiceToCharge: Invoice & {
+      subscription:
+        | (Subscription & {
+            paymentMethod: PaymentMethod
+            memberPlan: MemberPlan
+            user: (User & {paymentProviderCustomers: PaymentProviderCustomer[]}) | null
+          })
+        | null
+      items: InvoiceItem[]
+      subscriptionPeriods: SubscriptionPeriod[]
+    }
+  ) {
+    if (!invoiceToCharge.subscription) {
+      throw new Error(`Invoice ${invoiceToCharge.id} has no subscription assigned!`)
+    }
+
+    const eventsRenewal = this.subscriptionEventDictionary.getActionFromStore({
+      memberplanId: invoiceToCharge.subscription.memberPlanID,
+      paymentmethodeId: invoiceToCharge.subscription.paymentMethodID,
+      periodicity: invoiceToCharge.subscription.paymentPeriodicity,
+      autorenwal: invoiceToCharge.subscription.autoRenew,
+      events: [SubscriptionEvent.RENEWAL_SUCCESS, SubscriptionEvent.RENEWAL_FAILED]
+    })
+
+    const mailAction = await this.subscriptionController.chargeInvoice(
+      invoiceToCharge,
+      eventsRenewal
+    )
+
+    if (mailAction.action) {
+      const user = Object.assign({}, invoiceToCharge.subscription.user)
+      await this.sendTemplateMail(
+        mailAction.action,
+        user,
+        periodicJobRunObject.isRetry,
+        {
+          errorCode: mailAction.errorCode,
+          ...invoiceToCharge
+        },
+        periodicJobRunObject.date
+      )
+    }
+  }
+
+  private async deactivateSubscription(
+    periodicJobRunObject: PeriodicJobRunObject,
+    unpaidInvoice: Invoice & {subscription: (Subscription & {user: User}) | null}
+  ) {
+    if (!unpaidInvoice.subscription) {
+      throw new Error(`Invoice ${unpaidInvoice.id} has no subscription assigned!`)
+    }
+    const eventDeactivationUnpaid = this.subscriptionEventDictionary.getActionFromStore({
+      memberplanId: unpaidInvoice.subscription.memberPlanID,
+      paymentmethodeId: unpaidInvoice.subscription.paymentMethodID,
+      periodicity: unpaidInvoice.subscription.paymentPeriodicity,
+      autorenwal: unpaidInvoice.subscription.autoRenew,
+      events: [SubscriptionEvent.DEACTIVATION_UNPAID]
+    })
+    if (!eventDeactivationUnpaid[0]) {
+      throw new Error('No subscription deactivation found!')
+    }
+
+    await this.subscriptionController.deactivateSubscription(unpaidInvoice)
+
+    await this.sendTemplateMail(
+      eventDeactivationUnpaid[0],
+      unpaidInvoice.subscription.user,
+      periodicJobRunObject.isRetry,
+      unpaidInvoice,
+      periodicJobRunObject.date
+    )
   }
 
   private async retryFailedJob(runDate: Date) {
@@ -263,7 +309,7 @@ export class PeriodicJobController {
 
   private async markJobSuccessful() {
     if (!this.runningJob) {
-      throw new Error('Try to make a job as running while none is running!')
+      throw new Error('Try to make a job as successful while none is running!')
     }
     await this.prismaService.periodicJob.update({
       where: {
@@ -289,7 +335,7 @@ export class PeriodicJobController {
 
   private async markJobFailed(error: string) {
     if (!this.runningJob) {
-      throw new Error('Try to make a job as running while none is running!')
+      throw new Error('Try to make a job as failed while none is running!')
     }
     await this.prismaService.periodicJob.update({
       where: {
