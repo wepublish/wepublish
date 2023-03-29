@@ -908,4 +908,183 @@ describe('PeriodicJobController', () => {
     expect(timeout).toBeLessThanOrEqual(500)
     expect(timeout).toBeGreaterThanOrEqual(0)
   })
+
+  it('Concurrent execute', async () => {
+    controller['randomNumberRangeForConcurrency'] = 500
+    await controller.concurrentExecute()
+    const pj = await prismaClient.periodicJob.findMany({})
+    expect(pj.length).toEqual(1)
+  })
+
+  it('Concurrent execute with already running process', async () => {
+    controller['randomNumberRangeForConcurrency'] = 500
+    await PeriodicJobFactory.create({
+      executionTime: new Date()
+    })
+    await controller.concurrentExecute()
+    const pj = await prismaClient.periodicJob.findMany({})
+    expect(pj.length).toEqual(1)
+  })
+
+  it('Mark job as successful while now job runs', async () => {
+    try {
+      await controller['markJobSuccessful']()
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual(
+        'Error: Try to make a job as successful while none is running!'
+      )
+    }
+  })
+
+  it('Mark job as failed while now job runs', async () => {
+    try {
+      await controller['markJobFailed']('error')
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual(
+        'Error: Try to make a job as failed while none is running!'
+      )
+    }
+  })
+
+  it('Invoice creation missing invoice creation or invoice deletion object', async () => {
+    const mp = await MemberPlanFactory.create({})
+    const pm = await PaymentMethodFactory.create({})
+    const sf = await SubscriptionFlowFactory.create({
+      default: false,
+      memberPlan: {
+        connect: {
+          id: mp.id
+        }
+      },
+      paymentMethods: {
+        connect: {
+          id: pm.id
+        }
+      },
+      autoRenewal: [true],
+      periodicities: [PaymentPeriodicity.biannual]
+    })
+    const runDate = startOfDay(new Date())
+    const pjo: any = {
+      date: runDate
+    }
+    const invoice: any = {
+      memberPlanID: mp.id,
+      paymentMethodID: pm.id,
+      autoRenew: true,
+      paymentPeriodicity: PaymentPeriodicity.biannual
+    }
+    await controller['loadEnvironment']()
+    try {
+      await controller['createInvoice'](pjo, invoice)
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual('Error: No invoice creation found!')
+    }
+    await SubscriptionIntervalFactory.create({
+      subscriptionFlow: {
+        connect: {
+          id: sf.id
+        }
+      },
+      daysAwayFromEnding: -10,
+      event: SubscriptionEvent.INVOICE_CREATION
+    })
+    await controller['loadEnvironment']()
+    try {
+      await controller['createInvoice'](pjo, invoice)
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual('Error: No invoice deactivation event found!')
+    }
+    await SubscriptionIntervalFactory.create({
+      subscriptionFlow: {
+        connect: {
+          id: sf.id
+        }
+      },
+      event: SubscriptionEvent.DEACTIVATION_UNPAID
+    })
+    await controller['loadEnvironment']()
+    invoice.paidUntil = add(runDate, {days: 9})
+    await controller['createInvoice'](pjo, invoice)
+    try {
+      invoice.paidUntil = add(runDate, {days: 10, seconds: -10})
+      await controller['createInvoice'](pjo, invoice)
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual(
+        "TypeError: Cannot read properties of undefined (reading 'name')"
+      )
+    }
+    try {
+      invoice.paidUntil = add(runDate, {days: 11})
+      await controller['createInvoice'](pjo, invoice)
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual(
+        "TypeError: Cannot read properties of undefined (reading 'name')"
+      )
+    }
+  })
+  it('Charge Invoice missing subscription', async () => {
+    const pjo: any = {}
+    const invoice: any = {}
+    try {
+      await controller['chargeInvoice'](pjo, invoice)
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual(
+        'Error: Invoice undefined has no subscription assigned!'
+      )
+    }
+  })
+
+  it('Deactivate subscription missing invoice deletion object', async () => {
+    const mp = await MemberPlanFactory.create({})
+    const pm = await PaymentMethodFactory.create({})
+    const sf = await SubscriptionFlowFactory.create({
+      default: false,
+      memberPlan: {
+        connect: {
+          id: mp.id
+        }
+      },
+      paymentMethods: {
+        connect: {
+          id: pm.id
+        }
+      },
+      autoRenewal: [true],
+      periodicities: [PaymentPeriodicity.biannual]
+    })
+    const runDate = startOfDay(new Date())
+    const pjo: any = {
+      date: runDate
+    }
+    const invoice: any = {
+      id: 100
+    }
+    try {
+      await controller['deactivateSubscription'](pjo, invoice)
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual('Error: Invoice 100 has no subscription assigned!')
+    }
+    invoice.subscription = {
+      memberPlanID: mp.id,
+      paymentMethodID: pm.id,
+      autoRenew: true,
+      paymentPeriodicity: PaymentPeriodicity.biannual
+    }
+    await controller['loadEnvironment']()
+    try {
+      await controller['deactivateSubscription'](pjo, invoice)
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual('Error: No subscription deactivation found!')
+    }
+  })
 })

@@ -110,8 +110,7 @@ export class SubscriptionController {
           include: {
             user: true
           }
-        },
-        subscriptionPeriods: true
+        }
       }
     })
   }
