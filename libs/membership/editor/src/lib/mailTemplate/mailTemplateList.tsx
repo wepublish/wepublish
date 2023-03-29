@@ -1,4 +1,3 @@
-import {ApolloError} from '@apollo/client'
 import {
   Table,
   TableBody,
@@ -14,17 +13,10 @@ import {getApiClientV2} from 'apps/editor/src/app/utility'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdCheck, MdSync, MdWarning} from 'react-icons/all'
-import {Button, Message, Stack, toaster} from 'rsuite'
+import {Button, Stack} from 'rsuite'
 import styles from './mailTemplate.module.css'
 import {createCheckedPermissionComponent, PermissionControl} from 'app/atoms/permissionControl'
-
-const showErrors = (error: ApolloError): void => {
-  toaster.push(
-    <Message type="error" showIcon closable duration={3000}>
-      {error.message}
-    </Message>
-  )
-}
+import {DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS} from '../common'
 
 function MailTemplateList() {
   const {t} = useTranslation()
@@ -33,14 +25,10 @@ function MailTemplateList() {
    * API SERVICES
    */
   const client = useMemo(() => getApiClientV2(), [])
-  const {data: queryData} = useMailTemplateQuery({
-    client,
-    onError: showErrors
-  })
+  const {data: queryData} = useMailTemplateQuery(DEFAULT_QUERY_OPTIONS(client, t))
 
   const [syncTemplates, {loading: mutationLoading}] = useSynchronizeMailTemplatesMutation({
-    client,
-    onError: showErrors,
+    ...DEFAULT_MUTATION_OPTIONS(client, t),
     refetchQueries: ['MailTemplate']
   })
 

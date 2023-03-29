@@ -12,11 +12,11 @@ import {
   Typography
 } from '@mui/material'
 import {MdOutlineClose, MdOutlineNoteAdd, MdTune} from 'react-icons/all'
-import {TFunction, useTranslation} from 'react-i18next'
+import {useTranslation} from 'react-i18next'
 import {useParams} from 'react-router-dom'
-import {Loader, Message, toaster} from 'rsuite'
+import {Loader} from 'rsuite'
 import {useMemberPlanListQuery} from '@wepublish/editor/api'
-import {ApolloClient, ApolloError, NormalizedCacheObject} from '@apollo/client'
+import {ApolloClient, NormalizedCacheObject} from '@apollo/client'
 import {getApiClientV2} from 'apps/editor/src/app/utility'
 import {
   FullMailTemplateFragment,
@@ -45,27 +45,12 @@ import TimelineBody from './timeline/timelineBody'
 import DeleteSubscriptionFlow from './deleteSubscriptionFlow'
 import SubscriptionFlowHeadline from './subscriptionFlowHeadline'
 import {createCheckedPermissionComponent, PermissionControl} from 'app/atoms/permissionControl'
+import {DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS, showErrors} from '../common'
 
 /**
  * CONTEXT
  */
 export const MailTemplatesContext = createContext<FullMailTemplateFragment[]>([])
-
-export const showErrors = (error: ApolloError): void => {
-  toaster.push(
-    <Message type="error" showIcon closable duration={8000}>
-      {error.message}
-    </Message>
-  )
-}
-
-export const showSavedToast = (t: TFunction): void => {
-  toaster.push(
-    <Message type="success" showIcon closable duration={3000}>
-      {t('subscriptionFlow.savedChange')}
-    </Message>
-  )
-}
 
 /**
  * TYPES
@@ -150,38 +135,46 @@ function SubscriptionFlowList() {
     loading: loadingSubscriptionFlows,
     refetch
   } = useSubscriptionFlowsQuery({
+    ...DEFAULT_QUERY_OPTIONS(client, t),
     variables: {
       defaultFlowOnly,
       memberPlanId
-    },
-    client,
-    onError: showErrors
+    }
   })
 
-  const {data: mailTemplates, loading: loadingMailTemplates} = useMailTemplateQuery({
-    client,
-    onError: showErrors
-  })
-
-  const {data: paymentMethods} = useListPaymentMethodsQuery({
-    client,
-    onError: showErrors
-  })
-
-  const defaultClientOptions = {
-    client,
-    onError: showErrors,
-    onCompleted: () => showSavedToast(t)
-  }
+  const {data: mailTemplates, loading: loadingMailTemplates} = useMailTemplateQuery(
+    DEFAULT_QUERY_OPTIONS(client, t)
+  )
+  const {data: paymentMethods} = useListPaymentMethodsQuery(DEFAULT_QUERY_OPTIONS(client, t))
 
   // Mutation methods are later passed to the GraphqlClientContext, so they can reuse the same client everywhere. This makes the GraphQL cache work across all requests.
-  const [createSubscriptionInterval] = useCreateSubscriptionIntervalMutation(defaultClientOptions)
-  const [updateSubscriptionIntervals] = useUpdateSubscriptionIntervalsMutation(defaultClientOptions)
-  const [updateSubscriptionInterval] = useUpdateSubscriptionIntervalMutation(defaultClientOptions)
-  const [deleteSubscriptionInterval] = useDeleteSubscriptionIntervalMutation(defaultClientOptions)
-  const [createSubscriptionFlow] = useCreateSubscriptionFlowMutation({ ...defaultClientOptions, onCompleted: () => { refetch() } })
-  const [updateSubscriptionFlow] = useUpdateSubscriptionFlowMutation(defaultClientOptions)
-  const [deleteSubscriptionFlow] = useDeleteSubscriptionFlowMutation({ ...defaultClientOptions, onCompleted: () => { refetch() } })
+  const [createSubscriptionInterval] = useCreateSubscriptionIntervalMutation(
+    DEFAULT_MUTATION_OPTIONS(client, t)
+  )
+  const [updateSubscriptionIntervals] = useUpdateSubscriptionIntervalsMutation(
+    DEFAULT_MUTATION_OPTIONS(client, t)
+  )
+  const [updateSubscriptionInterval] = useUpdateSubscriptionIntervalMutation(
+    DEFAULT_MUTATION_OPTIONS(client, t)
+  )
+  const [deleteSubscriptionInterval] = useDeleteSubscriptionIntervalMutation(
+    DEFAULT_MUTATION_OPTIONS(client, t)
+  )
+  const [createSubscriptionFlow] = useCreateSubscriptionFlowMutation({
+    ...DEFAULT_MUTATION_OPTIONS(client, t),
+    onCompleted: () => {
+      refetch()
+    }
+  })
+  const [updateSubscriptionFlow] = useUpdateSubscriptionFlowMutation(
+    DEFAULT_MUTATION_OPTIONS(client, t)
+  )
+  const [deleteSubscriptionFlow] = useDeleteSubscriptionFlowMutation({
+    ...DEFAULT_MUTATION_OPTIONS(client, t),
+    onCompleted: () => {
+      refetch()
+    }
+  })
 
   /******************************************
    * HELPER METHODS
@@ -369,9 +362,7 @@ function SubscriptionFlowList() {
 
                       {/************************************************** ACTIONS **************************************************/}
                       <TableCell align="center">
-                        <DeleteSubscriptionFlow
-                          subscriptionFlow={subscriptionFlow}
-                        />
+                        <DeleteSubscriptionFlow subscriptionFlow={subscriptionFlow} />
                       </TableCell>
                     </DndContext>
                   </SplitTableRow>
