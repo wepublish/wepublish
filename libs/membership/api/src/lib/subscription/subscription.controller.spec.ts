@@ -934,4 +934,98 @@ describe('SubscriptionController', () => {
     })
     expect(invoice!.paidAt).not.toBeNull()
   })
+  it('Error if payment periodicity is not found', async () => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      await subscriptionController['getMonthCount'](PaymentPeriodicity.invalid)
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual(
+        'Error: Enum for PaymentPeriodicity undefined not defined!'
+      )
+    }
+  })
+
+  it('Get period start and and if no previous period exist', async () => {
+    const res = await subscriptionController['getPeriodStarEnd']([], PaymentPeriodicity.monthly)
+    expect(res.startsAt.getTime()).toBeGreaterThanOrEqual(
+      add(new Date(), {minutes: -2, days: 1}).getTime()
+    )
+    expect(res.startsAt.getTime()).toBeLessThanOrEqual(add(new Date(), {days: 1}).getTime())
+    expect(res.endsAt.getTime()).toBeGreaterThanOrEqual(
+      add(new Date(), {minutes: -2, months: 1}).getTime()
+    )
+    expect(res.endsAt.getTime()).toBeLessThanOrEqual(add(new Date(), {months: 1}).getTime())
+  })
+
+  it('Pass wrong SubscriptionEvent when creating invoice', async () => {
+    try {
+      const event: Action = {
+        type: SubscriptionEvent.RENEWAL_SUCCESS,
+        daysAwayFromEnding: 1,
+        externalMailTemplate: null
+      }
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      await subscriptionController['createInvoice']({}, event)
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual(
+        'Error: Given action has not right type! RENEWAL_SUCCESS should never happen!'
+      )
+    }
+  })
+
+  it('Offsession payment with canceled or already paid invoice', async () => {
+    const date = new Date()
+    try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      await subscriptionController['offSessionPayment']({canceledAt: date, paidAt: null}, {}, {})
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual(
+        `Error: Tried to renew paid null or canceled invoice ${date} for subscription undefined`
+      )
+    }
+    try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      await subscriptionController['offSessionPayment']({canceledAt: null, paidAt: date}, {}, {})
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual(
+        `Error: Tried to renew paid ${date} or canceled invoice null for subscription undefined`
+      )
+    }
+    try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      await subscriptionController['offSessionPayment']({canceledAt: date, paidAt: date}, {}, {})
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual(
+        `Error: Tried to renew paid ${date} or canceled invoice ${date} for subscription undefined`
+      )
+    }
+  })
+
+  it('Offsession payment invoice without subscription', async () => {
+    try {
+      const event: Action = {
+        type: SubscriptionEvent.RENEWAL_SUCCESS,
+        daysAwayFromEnding: 1,
+        externalMailTemplate: null
+      }
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      await subscriptionController['offSessionPayment']({canceledAt: null, paidAt: null}, {}, [
+        event
+      ])
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual('Error: Subscription or user not found!')
+    }
+  })
 })
