@@ -230,22 +230,6 @@ export async function runServer(app?: Application | undefined) {
         defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch',
         mailTemplateMaps: [
           {
-            type: SendMailType.LoginLink,
-            localTemplate: 'loginLink',
-            local: true,
-            subject: 'Welcome new Member' // only needed if remoteTemplate
-          },
-          {
-            type: SendMailType.TestMail,
-            localTemplate: 'testMail',
-            local: true
-          },
-          {
-            type: SendMailType.PasswordReset,
-            localTemplate: 'passwordReset',
-            local: true
-          },
-          {
             type: SendMailType.NewMemberSubscription,
             localTemplate: 'newMemberSubscription',
             local: true
