@@ -345,7 +345,7 @@ describe('SubscriptionController', () => {
       'users'
     ])
 
-    subscriptionController = new SubscriptionController(prismaClient, controller)
+    subscriptionController = new SubscriptionController(prismaClient as PrismaService, controller)
 
     // Create deactivated subscription
     await SubscriptionFactory.create({

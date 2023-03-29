@@ -12,13 +12,11 @@ import {
   SubscriptionDeactivationReason,
   PaymentProviderCustomer,
   PaymentState,
-  InvoiceItem,
-  PrismaClient
+  InvoiceItem
 } from '@prisma/client'
 import {add, endOfDay, startOfDay, sub} from 'date-fns'
 import {Injectable, Logger} from '@nestjs/common'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
-import {JSONDefinition} from 'graphql-scalars'
 
 export type SubscriptionControllerConfig = {
   subscription: Subscription
@@ -28,7 +26,7 @@ export type SubscriptionControllerConfig = {
 export class SubscriptionController {
   private readonly logger = new Logger('SubscriptionController')
   constructor(
-    private readonly prismaService: PrismaClient,
+    private readonly prismaService: PrismaService,
     private readonly oldContextService: OldContextService
   ) {}
 

@@ -142,7 +142,7 @@ describe('MailController', () => {
       root3: 'ok'
     }
 
-    await new MailController(prismaClient, controller, {
+    await new MailController(prismaClient as PrismaService, controller, {
       daysAwayFromEnding: 1,
       externalMailTemplateId: mailTemplate1.externalMailTemplateId,
       recipient: user,
@@ -181,7 +181,7 @@ describe('MailController', () => {
     })
 
     const periodicJobRunDate = new Date()
-    await new MailController(prismaClient, controller, {
+    await new MailController(prismaClient as PrismaService, controller, {
       daysAwayFromEnding: 1,
       externalMailTemplateId: mailTemplate2.externalMailTemplateId,
       recipient: user,
@@ -206,7 +206,7 @@ describe('MailController', () => {
         'Content-Type': 'application/json'
       })
 
-    await new MailController(prismaClient, controller, {
+    await new MailController(prismaClient as PrismaService, controller, {
       daysAwayFromEnding: 1,
       externalMailTemplateId: mailTemplate2.externalMailTemplateId,
       recipient: user,

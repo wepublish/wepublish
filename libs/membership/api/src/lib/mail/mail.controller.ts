@@ -1,6 +1,6 @@
-import {logger, OldContextService, PrismaService} from '@wepublish/api'
+import {OldContextService, PrismaService} from '@wepublish/api'
 import {Injectable, Logger} from '@nestjs/common'
-import {MailLogState, PrismaClient, User} from '@prisma/client'
+import {MailLogState, User} from '@prisma/client'
 
 const ONE_WEEK_IN_MINUTES = 7 * 24 * 60 * 60
 
@@ -23,7 +23,7 @@ export type MailControllerConfig = {
 export class MailController {
   private readonly logger = new Logger('MailController')
   constructor(
-    private readonly prismaService: PrismaClient,
+    private readonly prismaService: PrismaService,
     private readonly oldContextService: OldContextService,
     private readonly config: MailControllerConfig
   ) {}
