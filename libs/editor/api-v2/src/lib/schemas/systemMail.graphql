@@ -10,6 +10,12 @@ mutation UpdateSystemMail($systemMail: SystemMailUpdateInput!) {
   }
 }
 
+mutation TestSystemMail($systemMail: SystemMailTestInput!) {
+  testSystemMail(systemMail: $systemMail) {
+    ...SystemMail
+  }
+}
+
 fragment SystemMail on SystemMailModel {
   event
   mailTemplate {

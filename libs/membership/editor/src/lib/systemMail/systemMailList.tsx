@@ -1,4 +1,3 @@
-import {ApolloError} from '@apollo/client'
 import {
   Table,
   TableBody,
@@ -9,30 +8,22 @@ import {
   Typography
 } from '@mui/material'
 import {
-  SystemMailModel,
   useGetSystemMailsQuery,
   useMailTemplateQuery,
   UserEvent,
+  useTestSystemMailMutation,
   useUpdateSystemMailMutation
 } from '@wepublish/editor/api-v2'
 import {ListViewContainer, ListViewHeader} from 'apps/editor/src/app/ui/listView'
 import {getApiClientV2} from 'apps/editor/src/app/utility'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Message, SelectPicker, Stack, Tag, toaster} from 'rsuite'
+import {Button, SelectPicker, Stack, Tag} from 'rsuite'
 import {createCheckedPermissionComponent} from 'app/atoms/permissionControl'
-import {showSavedToast} from '../subscriptionFlow/subscriptionFlowList'
 import {TypeAttributes} from 'rsuite/esm/@types/common'
 import {MdLink, MdLogin, MdPassword} from 'react-icons/md'
 import {RiTestTubeLine} from 'react-icons/ri'
-
-const showErrors = (error: ApolloError): void => {
-  toaster.push(
-    <Message type="error" showIcon closable duration={3000}>
-      {error.message}
-    </Message>
-  )
-}
+import {DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS} from '../common'
 
 type UserEventColorMap = Record<typeof UserEvent[keyof typeof UserEvent], TypeAttributes.Color>
 const userEventColors: UserEventColorMap = {
@@ -57,32 +48,11 @@ function SystemMailList() {
    * API SERVICES
    */
   const client = useMemo(() => getApiClientV2(), [])
-  const {data: systemMails} = useGetSystemMailsQuery({
-    client,
-    onError: showErrors
-  })
+  const {data: systemMails} = useGetSystemMailsQuery(DEFAULT_QUERY_OPTIONS(client, t))
+  const {data: mailTemplates} = useMailTemplateQuery(DEFAULT_QUERY_OPTIONS(client, t))
 
-  const {data: mailTemplates} = useMailTemplateQuery({
-    client,
-    onError: showErrors
-  })
-
-  const [updateSystemMail] = useUpdateSystemMailMutation({
-    client,
-    onError: showErrors,
-    onCompleted: () => showSavedToast(t)
-  })
-
-  const updateMailTemplate = async (systemMail: SystemMailModel, value: number) => {
-    await updateSystemMail({
-      variables: {
-        systemMail: {
-          event: systemMail.event,
-          mailTemplateId: value
-        }
-      }
-    })
-  }
+  const [updateSystemMail] = useUpdateSystemMailMutation(DEFAULT_MUTATION_OPTIONS(client, t))
+  const [testSystemMail] = useTestSystemMailMutation(DEFAULT_MUTATION_OPTIONS(client, t))
 
   return (
     <>
@@ -130,11 +100,19 @@ function SystemMailList() {
                       }))}
                       cleanable={false}
                       defaultValue={systemMail.mailTemplate.id}
-                      onSelect={(value: number) => updateMailTemplate(systemMail, value)}
+                      onSelect={(value: number) =>
+                        updateSystemMail({
+                          variables: {systemMail: {event: systemMail.event, mailTemplateId: value}}
+                        })
+                      }
                     />
                   </TableCell>
                   <TableCell>
-                    <Button appearance="default" onClick={() => alert(systemMail.event)}>
+                    <Button
+                      appearance="default"
+                      onClick={() =>
+                        testSystemMail({variables: {systemMail: {event: systemMail.event}}})
+                      }>
                       {t('systemMails.test')}
                     </Button>
                   </TableCell>

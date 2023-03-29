@@ -74,6 +74,7 @@ export type Mutation = {
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   deleteSubscriptionInterval: Array<SubscriptionFlowModel>;
   syncTemplates: Scalars['Boolean'];
+  testSystemMail: Array<SystemMailModel>;
   updateSubscriptionFlow: Array<SubscriptionFlowModel>;
   updateSubscriptionInterval: Array<SubscriptionFlowModel>;
   updateSubscriptionIntervals: Array<SubscriptionFlowModel>;
@@ -98,6 +99,11 @@ export type MutationDeleteSubscriptionFlowArgs = {
 
 export type MutationDeleteSubscriptionIntervalArgs = {
   subscriptionInterval: SubscriptionIntervalDeleteInput;
+};
+
+
+export type MutationTestSystemMailArgs = {
+  systemMail: SystemMailTestInput;
 };
 
 
@@ -280,6 +286,10 @@ export type SystemMailModel = {
   mailTemplate: MailTemplateRef;
 };
 
+export type SystemMailTestInput = {
+  event: UserEvent;
+};
+
 export type SystemMailUpdateInput = {
   event: UserEvent;
   mailTemplateId: Scalars['Int'];
@@ -394,6 +404,13 @@ export type UpdateSystemMailMutationVariables = Exact<{
 
 
 export type UpdateSystemMailMutation = { __typename?: 'Mutation', updateSystemMail: Array<{ __typename?: 'SystemMailModel', event: UserEvent, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } }> };
+
+export type TestSystemMailMutationVariables = Exact<{
+  systemMail: SystemMailTestInput;
+}>;
+
+
+export type TestSystemMailMutation = { __typename?: 'Mutation', testSystemMail: Array<{ __typename?: 'SystemMailModel', event: UserEvent, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } }> };
 
 export type SystemMailFragment = { __typename?: 'SystemMailModel', event: UserEvent, mailTemplate: { __typename?: 'MailTemplateRef', id: number, name: string } };
 
@@ -913,6 +930,39 @@ export function useUpdateSystemMailMutation(baseOptions?: Apollo.MutationHookOpt
 export type UpdateSystemMailMutationHookResult = ReturnType<typeof useUpdateSystemMailMutation>;
 export type UpdateSystemMailMutationResult = Apollo.MutationResult<UpdateSystemMailMutation>;
 export type UpdateSystemMailMutationOptions = Apollo.BaseMutationOptions<UpdateSystemMailMutation, UpdateSystemMailMutationVariables>;
+export const TestSystemMailDocument = gql`
+    mutation TestSystemMail($systemMail: SystemMailTestInput!) {
+  testSystemMail(systemMail: $systemMail) {
+    ...SystemMail
+  }
+}
+    ${SystemMailFragmentDoc}`;
+export type TestSystemMailMutationFn = Apollo.MutationFunction<TestSystemMailMutation, TestSystemMailMutationVariables>;
+
+/**
+ * __useTestSystemMailMutation__
+ *
+ * To run a mutation, you first call `useTestSystemMailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTestSystemMailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [testSystemMailMutation, { data, loading, error }] = useTestSystemMailMutation({
+ *   variables: {
+ *      systemMail: // value for 'systemMail'
+ *   },
+ * });
+ */
+export function useTestSystemMailMutation(baseOptions?: Apollo.MutationHookOptions<TestSystemMailMutation, TestSystemMailMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<TestSystemMailMutation, TestSystemMailMutationVariables>(TestSystemMailDocument, options);
+      }
+export type TestSystemMailMutationHookResult = ReturnType<typeof useTestSystemMailMutation>;
+export type TestSystemMailMutationResult = Apollo.MutationResult<TestSystemMailMutation>;
+export type TestSystemMailMutationOptions = Apollo.BaseMutationOptions<TestSystemMailMutation, TestSystemMailMutationVariables>;
 export const VersionInformationDocument = gql`
     query VersionInformation {
   versionInformation {

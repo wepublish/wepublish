@@ -1,19 +1,19 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
-import {PrismaService} from '@wepublish/api'
-import {SystemMailModel, SystemMailUpdateInput} from './system-mail.model'
+import {User, UserFlowMail} from '@prisma/client'
+import {OldContextService, PrismaService} from '@wepublish/api'
+import {CurrentUser} from '../user.decorator'
+import {SystemMailModel, SystemMailTestInput, SystemMailUpdateInput} from './system-mail.model'
 
 @Resolver(() => SystemMailModel)
 export class SystemMailResolver {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private readonly oldContextService: OldContextService
+  ) {}
 
   @Query(() => [SystemMailModel])
   async getSystemMails() {
-    return this.prismaService.userFlowMail.findMany({
-      include: {
-        mailTemplate: true
-      },
-      orderBy: [{id: 'asc'}]
-    })
+    return this.getAllMails()
   }
 
   @Mutation(() => [SystemMailModel])
@@ -37,6 +37,24 @@ export class SystemMailResolver {
       }
     })
 
+    return this.getAllMails()
+  }
+
+  @Mutation(() => [SystemMailModel])
+  async testSystemMail(
+    @CurrentUser() user: User,
+    @Args('systemMail') systemMail: SystemMailTestInput
+  ) {
+    await this.oldContextService.context.mailContext.sendMailNew({
+      event: systemMail.event,
+      recipient: user.email,
+      data: {user}
+    })
+
+    return this.getAllMails()
+  }
+
+  private async getAllMails(): Promise<UserFlowMail[]> {
     return this.prismaService.userFlowMail.findMany({
       include: {
         mailTemplate: true

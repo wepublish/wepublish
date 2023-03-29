@@ -74,6 +74,7 @@ export type Mutation = {
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>
   deleteSubscriptionInterval: Array<SubscriptionFlowModel>
   syncTemplates: Scalars['Boolean']
+  testSystemMail: Array<SystemMailModel>
   updateSubscriptionFlow: Array<SubscriptionFlowModel>
   updateSubscriptionInterval: Array<SubscriptionFlowModel>
   updateSubscriptionIntervals: Array<SubscriptionFlowModel>
@@ -94,6 +95,10 @@ export type MutationDeleteSubscriptionFlowArgs = {
 
 export type MutationDeleteSubscriptionIntervalArgs = {
   subscriptionInterval: SubscriptionIntervalDeleteInput
+}
+
+export type MutationTestSystemMailArgs = {
+  systemMail: SystemMailTestInput
 }
 
 export type MutationUpdateSubscriptionFlowArgs = {
@@ -264,6 +269,10 @@ export type SystemMailModel = {
   __typename?: 'SystemMailModel'
   event: UserEvent
   mailTemplate: MailTemplateRef
+}
+
+export type SystemMailTestInput = {
+  event: UserEvent
 }
 
 export type SystemMailUpdateInput = {

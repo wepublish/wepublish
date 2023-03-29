@@ -23,3 +23,9 @@ export class SystemMailUpdateInput {
   @Field(() => Int)
   mailTemplateId!: number
 }
+
+@InputType()
+export class SystemMailTestInput {
+  @Field(() => UserEvent)
+  event!: UserEvent
+}

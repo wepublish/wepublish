@@ -55,6 +55,7 @@ type Mutation {
   deleteSubscriptionFlow(subscriptionFlowId: Int!): [SubscriptionFlowModel!]!
   deleteSubscriptionInterval(subscriptionInterval: SubscriptionIntervalDeleteInput!): [SubscriptionFlowModel!]!
   syncTemplates: Boolean!
+  testSystemMail(systemMail: SystemMailTestInput!): [SystemMailModel!]!
   updateSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelUpdateInput!): [SubscriptionFlowModel!]!
   updateSubscriptionInterval(subscriptionInterval: SubscriptionIntervalUpdateInput!): [SubscriptionFlowModel!]!
   updateSubscriptionIntervals(subscriptionIntervals: [SubscriptionIntervalUpdateInput!]!): [SubscriptionFlowModel!]!
@@ -197,6 +198,10 @@ input SubscriptionIntervalUpdateInput {
 type SystemMailModel {
   event: UserEvent!
   mailTemplate: MailTemplateRef!
+}
+
+input SystemMailTestInput {
+  event: UserEvent!
 }
 
 input SystemMailUpdateInput {
