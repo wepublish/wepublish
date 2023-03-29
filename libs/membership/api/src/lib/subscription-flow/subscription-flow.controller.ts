@@ -276,7 +276,7 @@ export class SubscriptionFlowController {
     return this.prismaService.paymentMethod.findMany({})
   }
 
-  async filterHasOverlap(
+  private async filterHasOverlap(
     memberPlanId: string | null,
     newFlow: Partial<SubscriptionFlowModelUpdateInput>
   ) {
@@ -323,7 +323,7 @@ export class SubscriptionFlowController {
     return false
   }
 
-  async isIntervalValid(
+  private async isIntervalValid(
     interval: SubscriptionIntervalCreateInput,
     checkEventUniqueConstraint = true
   ) {
