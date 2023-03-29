@@ -113,7 +113,7 @@ describe('SubscriptionEventDictionary', () => {
 
     defaultFlow = await SubscriptionFlowFactory.create({
       default: true,
-      memberPlan: {},
+      memberPlan: undefined,
       autoRenewal: [],
       periodicities: [],
       paymentMethods: {}
@@ -683,6 +683,82 @@ describe('SubscriptionEventDictionary', () => {
     } catch (e) {
       expect((e as Error).toString()).toEqual(
         'Error: Tried to access eventDataList before it was successfully initialized!'
+      )
+    }
+  })
+
+  it('Assign actions undefined store timeline', async () => {
+    const sed = new SubscriptionEventDictionary(prismaClient)
+    try {
+      await sed['assignActions'](undefined, [])
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual(
+        'Error: StoreTimeline is undefined, this should not happen! You should never see this'
+      )
+    }
+  })
+
+  it('Get action before store is fully initialized', async () => {
+    const sed = new SubscriptionEventDictionary(prismaClient)
+    try {
+      sed['getActionFromStore']({
+        memberplanId: '2',
+        paymentmethodeId: '1',
+        periodicity: PaymentPeriodicity.biannual,
+        autorenwal: true
+      })
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual(
+        'Error: Tried to access store before it was successfully initialized!'
+      )
+    }
+  })
+
+  it('No default flow defined', async () => {
+    await prismaClient.subscriptionFlow.deleteMany({
+      where: {
+        default: true
+      }
+    })
+    const sed = new SubscriptionEventDictionary(prismaClient)
+    try {
+      await sed.initialize()
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual('Error: Default user subscription flow not found!')
+    }
+  })
+
+  it('Subscription Flow with no memberplan', async () => {
+    await SubscriptionFlowFactory.create({
+      memberPlan: undefined,
+      default: false
+    })
+    const sed = new SubscriptionEventDictionary(prismaClient)
+    try {
+      await sed.initialize()
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual(
+        'Error: Subscription Flow with no memberplan found that is not default! This is a data integrity error!'
+      )
+    }
+  })
+
+  it('Multiple default memberplans', async () => {
+    await SubscriptionFlowFactory.create({
+      memberPlan: undefined,
+      default: true
+    })
+    const sed = new SubscriptionEventDictionary(prismaClient)
+    try {
+      await sed.initialize()
+      throw Error('This execution should fail!')
+    } catch (e) {
+      expect((e as Error).toString()).toEqual(
+        'Error: Multiple default memberplans found! This is a data integrity error!'
       )
     }
   })
