@@ -14,6 +14,7 @@ import {
   definePaymentMethodFactory
 } from '@wepublish/api'
 import {initOldContextForTest} from '../../oldcontext-utils'
+import {update} from 'lodash'
 
 describe('SubscriptionFlowController', () => {
   let controller: SubscriptionFlowController
@@ -220,11 +221,16 @@ describe('SubscriptionFlowController', () => {
     const existingInterval = createdFlow?.intervals.find(
       i => i.event === SubscriptionEvent.INVOICE_CREATION
     )
-    expect(existingInterval?.mailTemplateId).toEqual(template.id)
-    expect(existingInterval?.daysAwayFromEnding).toEqual(null)
+
+    if (existingInterval === undefined) {
+      fail()
+    }
+
+    expect(existingInterval.mailTemplateId).toEqual(template.id)
+    expect(existingInterval.daysAwayFromEnding).toEqual(null)
 
     await controller.updateInterval({
-      id: existingInterval!.id,
+      id: existingInterval.id,
       mailTemplateId: template2.id
     })
 
@@ -236,5 +242,70 @@ describe('SubscriptionFlowController', () => {
       i => i.event === SubscriptionEvent.INVOICE_CREATION
     )
     expect(newInterval?.mailTemplateId).toEqual(template2.id)
+  })
+
+  it('creates intervals for an existing flow', async () => {
+    const flow = await SubscriptionFlowFactory.create()
+    const template = await MailTemplateFactory.create()
+
+    const existingFlow = await prismaClient.subscriptionFlow.findFirst({
+      where: {id: flow.id},
+      include: {intervals: true}
+    })
+    expect(existingFlow?.intervals.length).toEqual(0)
+
+    await controller.createInterval({
+      subscriptionFlowId: existingFlow?.id,
+      mailTemplateId: template.id,
+      event: 'SUBSCRIBE'
+    })
+
+    const updatedFlow = await prismaClient.subscriptionFlow.findFirst({
+      where: {id: flow.id},
+      include: {intervals: true}
+    })
+    expect(updatedFlow?.intervals.length).toEqual(1)
+    expect(updatedFlow?.intervals[0].event).toEqual('SUBSCRIBE')
+  })
+
+  it('deletes intervals for an existing flow', async () => {
+    const template = await MailTemplateFactory.create()
+    const flow = await SubscriptionFlowFactory.create({
+      intervals: {
+        create: [
+          {
+            event: SubscriptionEvent.CUSTOM,
+            mailTemplateId: template.id,
+            daysAwayFromEnding: 3
+          }
+        ]
+      }
+    })
+
+    const existingFlow = await prismaClient.subscriptionFlow.findFirst({
+      where: {id: flow.id},
+      include: {intervals: true}
+    })
+
+    if (existingFlow === null) {
+      fail()
+    }
+
+    expect(existingFlow.intervals.length).toEqual(1)
+
+    await controller.deleteInterval({
+      id: existingFlow.intervals[0].id
+    })
+
+    const updatedFlow = await prismaClient.subscriptionFlow.findFirst({
+      where: {id: flow.id},
+      include: {intervals: true}
+    })
+
+    if (updatedFlow === null) {
+      fail()
+    }
+
+    expect(updatedFlow.intervals.length).toEqual(0)
   })
 })

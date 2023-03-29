@@ -327,7 +327,7 @@ export class SubscriptionFlowController {
     interval: SubscriptionIntervalCreateInput,
     checkEventUniqueConstraint = true
   ) {
-    if (interval.daysAwayFromEnding === null) {
+    if (interval.daysAwayFromEnding === null || interval.daysAwayFromEnding === undefined) {
       if (!subscriptionFlowDaysAwayFromEndingNeedToBeNull.includes(interval.event)) {
         throw new Error(`For event ${interval.event} daysAwayFromEnding can not be null!`)
       }
