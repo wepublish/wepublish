@@ -1,5 +1,5 @@
 import {css, styled} from '@mui/material'
-import {useWebsiteBuilder} from '@wepublish/website-builder'
+import {useWebsiteBuilder} from '@wepublish/website'
 import {differenceInDays} from 'date-fns'
 import Link from 'next/link'
 import {memo} from 'react'

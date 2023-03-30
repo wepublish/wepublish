@@ -9,15 +9,16 @@ import {
   TextField,
   Typography
 } from '@mui/material'
-import {PayInvoicesContainer, SubscribeContainer} from '@wepublish/membership/website'
 import {RadioCard as WepRadioCard} from '@wepublish/ui'
 import {
+  ApiV1,
   BuilderPayInvoicesProps,
   BuilderSubscribeProps,
+  PayInvoicesContainer,
+  SubscribeContainer,
   useWebsiteBuilder,
   WebsiteBuilderProvider
-} from '@wepublish/website-builder'
-import {PaymentPeriodicity} from '@wepublish/website/api'
+} from '@wepublish/website'
 import {memo, useEffect, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 
@@ -109,7 +110,7 @@ const SliderWrapper = styled('div')`
 
 const ChallengeWrapper = styled('div')`
   display: grid;
-  grid-template-columns: auto 200px;
+  grid-template-columns: minmax(max-content, 200px) 200px;
   align-items: center;
   gap: ${({theme}) => theme.spacing(3)};
   justify-content: flex-start;
@@ -167,7 +168,7 @@ const CustomSubscribe = ({
         },
         memberPlanID: selectedMemberplan?.id,
         paymentMethodID: selectedMemberplan?.availablePaymentMethods[0]?.paymentMethods[0]?.id,
-        paymentPeriodicity: PaymentPeriodicity.Monthly,
+        paymentPeriodicity: ApiV1.PaymentPeriodicity.Monthly,
         autoRenew: false,
         successURL: `${location.origin}/payment/success`,
         failureURL: `${location.origin}/payment/fail`
@@ -201,7 +202,7 @@ const CustomSubscribe = ({
                     label={memberPlan.name}
                     subLabel={<RichText richText={memberPlan.description ?? []} />}>
                     <Typography variant="h4" component="div">
-                      {formatChf(memberPlan.amountPerMonthMin / 100)}
+                      {formatChf(Math.max(memberPlan.amountPerMonthMin / 100, 1))}
                     </Typography>
                   </RadioCard>
                 }
@@ -386,7 +387,11 @@ const CustomSubscribe = ({
           <ChallengeWrapper>
             <div
               dangerouslySetInnerHTML={{
-                __html: challenge.data?.challenge.challenge?.replace('#ffffff', 'transparent') ?? ''
+                __html:
+                  challenge.data?.challenge.challenge
+                    ?.replace('#ffffff', 'transparent')
+                    .replace('width="200"', '')
+                    .replace('height="200"', '') ?? ''
               }}></div>
 
             <Controller

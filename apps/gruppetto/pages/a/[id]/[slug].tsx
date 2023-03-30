@@ -1,4 +1,4 @@
-import {ArticleContainer} from '@wepublish/article/website'
+import {ArticleContainer} from '@wepublish/website'
 import {useRouter} from 'next/router'
 
 export function ArticleBySlug() {

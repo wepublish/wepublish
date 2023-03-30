@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {BuilderPayInvoicesProps} from '@wepublish/website-builder'
+import {BuilderPayInvoicesProps} from '@wepublish/website/builder'
 
 export type PayInvoicesProps = BuilderPayInvoicesProps
 

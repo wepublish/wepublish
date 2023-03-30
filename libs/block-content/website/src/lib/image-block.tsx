@@ -1,5 +1,5 @@
 import {styled} from '@mui/material'
-import {BuilderImageBlockProps} from '@wepublish/website-builder'
+import {BuilderImageBlockProps} from '@wepublish/website/builder'
 import {Block, ImageBlock as ImageBlockType} from '@wepublish/website/api'
 
 export const isImageBlock = (block: Block): block is ImageBlockType =>

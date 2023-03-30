@@ -1,5 +1,5 @@
 import {styled} from '@mui/material'
-import {BuilderHTMLBlockProps} from '@wepublish/website-builder'
+import {BuilderHTMLBlockProps} from '@wepublish/website/builder'
 import {Block, HtmlBlock as HtmlBlockType} from '@wepublish/website/api'
 import InnerHTML from 'dangerously-set-html-content'
 

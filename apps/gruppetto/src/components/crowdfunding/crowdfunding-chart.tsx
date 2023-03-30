@@ -1,5 +1,5 @@
 import {css, styled, useMediaQuery, useTheme} from '@mui/material'
-import {createWithV2ApiClient, useRevenueQuery} from '@wepublish/website/api-v2'
+import {ApiV2} from '@wepublish/website'
 import getConfig from 'next/config'
 import {ComponentProps, memo, useMemo} from 'react'
 import {Area, ComposedChart, ResponsiveContainer, XAxis, YAxis} from 'recharts'
@@ -137,7 +137,7 @@ const CrowdfundingChartInnerWrapper = styled('div')`
 const CrowdfundingChart = (props: ComponentProps<typeof CrowdfundingChartWrapper>) => {
   const theme = useTheme()
   const enableAnimations = useMediaQuery(theme.breakpoints.up('lg'))
-  const {data: revenueData} = useRevenueQuery({
+  const {data: revenueData} = ApiV2.useRevenueQuery({
     variables: {
       start: new Date('2023-01-01').toISOString()
     }
@@ -200,6 +200,6 @@ const CrowdfundingChart = (props: ComponentProps<typeof CrowdfundingChartWrapper
 
 const {publicRuntimeConfig} = getConfig()
 const ConnectedCrowdfundingChart = memo(
-  createWithV2ApiClient(publicRuntimeConfig.env.API_URL!)(CrowdfundingChart)
+  ApiV2.createWithV2ApiClient(publicRuntimeConfig.env.API_URL!)(CrowdfundingChart)
 )
 export {ConnectedCrowdfundingChart as CrowdfundingChart}

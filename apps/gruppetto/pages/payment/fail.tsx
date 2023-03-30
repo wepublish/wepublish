@@ -1,15 +1,8 @@
 import {Alert, CircularProgress, styled, Typography} from '@mui/material'
-import {useUser} from '@wepublish/authentication/website'
-import {
-  CheckInvoiceStatusQuery,
-  useCheckInvoiceStatusLazyQuery,
-  useInvoicesLazyQuery,
-  usePayMutation,
-  useSubscriptionsLazyQuery
-} from '@wepublish/website/api'
-import {Button} from '../../src/components/button'
+import {ApiV1, useUser} from '@wepublish/website'
 import {useRouter} from 'next/router'
 import {useEffect, useMemo, useState} from 'react'
+import {Button} from '../../src/components/button'
 
 const ProgressWrapper = styled('div')`
   display: flex;
@@ -38,18 +31,18 @@ export default function PaymentFail() {
   const router = useRouter()
   const {hasUser} = useUser()
   const [checkedInvoices, setCheckedInvoices] =
-    useState<CheckInvoiceStatusQuery['checkInvoiceStatus'][]>()
+    useState<ApiV1.CheckInvoiceStatusQuery['checkInvoiceStatus'][]>()
 
-  const [pay, payResult] = usePayMutation({
+  const [pay, payResult] = ApiV1.usePayMutation({
     onCompleted(data) {
       if (data.createPaymentFromInvoice?.intentSecret) {
         window.location.href = data.createPaymentFromInvoice.intentSecret
       }
     }
   })
-  const [getSubscriptions, subscriptionList] = useSubscriptionsLazyQuery()
-  const [checkInvoice] = useCheckInvoiceStatusLazyQuery()
-  const [getInvoices] = useInvoicesLazyQuery({
+  const [getSubscriptions, subscriptionList] = ApiV1.useSubscriptionsLazyQuery()
+  const [checkInvoice] = ApiV1.useCheckInvoiceStatusLazyQuery()
+  const [getInvoices] = ApiV1.useInvoicesLazyQuery({
     onCompleted: async data => {
       const invoices = await Promise.all(
         data?.invoices.map(async ({id}) => {

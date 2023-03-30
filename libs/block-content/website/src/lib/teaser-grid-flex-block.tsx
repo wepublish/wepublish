@@ -1,5 +1,5 @@
 import {css, styled} from '@mui/material'
-import {BuilderTeaserGridFlexBlockProps, useWebsiteBuilder} from '@wepublish/website-builder'
+import {BuilderTeaserGridFlexBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {
   Block,
   FlexAlignment,

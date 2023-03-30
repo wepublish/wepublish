@@ -1,7 +1,7 @@
 import {useNavigationQuery, NavigationQuery} from '@wepublish/website/api'
 import {QueryResult} from '@apollo/client'
 import {PropsWithChildren, useEffect} from 'react'
-import {useWebsiteBuilder} from '@wepublish/website-builder'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 
 export type FooterContainerProps = PropsWithChildren<{
   slug: string

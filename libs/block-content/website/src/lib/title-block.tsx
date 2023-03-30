@@ -1,6 +1,6 @@
 import {styled} from '@mui/material'
 import {Block, TitleBlock as TitleBlockType} from '@wepublish/website/api'
-import {BuilderTitleBlockProps, useWebsiteBuilder} from '@wepublish/website-builder'
+import {BuilderTitleBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const isTitleBlock = (block: Block): block is TitleBlockType =>
   block.__typename === 'TitleBlock'

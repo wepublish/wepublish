@@ -1,5 +1,5 @@
 import {useUser} from '@wepublish/authentication/website'
-import {useWebsiteBuilder} from '@wepublish/website-builder'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {
   CheckInvoiceStatusQuery,
   useCheckInvoiceStatusLazyQuery,

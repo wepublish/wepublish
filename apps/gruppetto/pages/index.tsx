@@ -1,5 +1,5 @@
 import {Link, Typography} from '@mui/material'
-import {PageContainer} from '@wepublish/page/website'
+import {PageContainer} from '@wepublish/website'
 import Image from 'next/image'
 import Marlen from '../src/2212_Marlen Reusser030_396 1.png'
 import Marlen2 from '../src/2212_Marlen Reusser030_396 2.png'

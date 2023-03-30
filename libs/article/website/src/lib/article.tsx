@@ -1,5 +1,5 @@
 import {styled} from '@mui/material'
-import {BuilderArticleProps} from '@wepublish/website-builder'
+import {BuilderArticleProps} from '@wepublish/website/builder'
 import {Block} from '@wepublish/website/api'
 import {Blocks} from '@wepublish/block-content/website'
 

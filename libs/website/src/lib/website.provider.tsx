@@ -14,7 +14,7 @@ import {
   OrderedList,
   ListItem
 } from '@wepublish/ui'
-import {WebsiteBuilderProvider} from '@wepublish/website-builder'
+import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {MemberPlans, PayInvoices, Subscribe} from '@wepublish/membership/website'
 import {memo, PropsWithChildren} from 'react'
 import {Navbar, Footer} from '@wepublish/navigation/website'

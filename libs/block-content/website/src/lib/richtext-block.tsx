@@ -1,6 +1,6 @@
 import {styled} from '@mui/material'
 import {BlockFormat} from '@wepublish/richtext/website'
-import {BuilderRichTextBlockProps, useWebsiteBuilder} from '@wepublish/website-builder'
+import {BuilderRichTextBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Block, RichTextBlock as RichTextBlockType} from '@wepublish/website/api'
 import {useMemo} from 'react'
 import {createEditor} from 'slate'

@@ -18,17 +18,9 @@
       "allowBranch": "master"
     },
     "publish": {
-      "ignoreChanges": [
-        "*.md",
-        "*.txt"
-      ],
+      "ignoreChanges": ["*.md", "*.txt"],
       "message": "chore(release): publish %s"
     }
   },
-  "packages": [
-    "libs/api",
-    "libs/nest-modules",
-    "libs/analytics",
-    "apps/editor"
-  ]
+  "packages": ["libs/api", "libs/nest-modules", "libs/analytics", "apps/editor"]
 }

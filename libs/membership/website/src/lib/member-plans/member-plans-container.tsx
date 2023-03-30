@@ -1,5 +1,5 @@
 import {QueryResult} from '@apollo/client'
-import {useWebsiteBuilder} from '@wepublish/website-builder'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {MemberPlanListQuery, useMemberPlanListQuery} from '@wepublish/website/api'
 import {useEffect} from 'react'
 

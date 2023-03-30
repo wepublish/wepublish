@@ -1,5 +1,5 @@
 import {Link as BuilderLink} from '@wepublish/ui'
-import {BuilderLinkProps} from '@wepublish/website-builder'
+import {BuilderLinkProps} from '@wepublish/website'
 import NextLink from 'next/link'
 
 export const Link = ({children, href, ...props}: BuilderLinkProps) => {

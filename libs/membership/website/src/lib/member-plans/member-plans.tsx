@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {BuilderMemberPlansProps} from '@wepublish/website-builder'
+import {BuilderMemberPlansProps} from '@wepublish/website/builder'
 
 export type MemberPlansProps = BuilderMemberPlansProps
 

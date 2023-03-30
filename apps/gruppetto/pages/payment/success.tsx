@@ -1,10 +1,9 @@
 import {CircularProgress, styled, Typography} from '@mui/material'
-import {useUser} from '@wepublish/authentication/website'
-import {useCheckInvoiceStatusLazyQuery, useInvoicesLazyQuery} from '@wepublish/website/api'
-import {useRouter} from 'next/router'
-import {useEffect, useState} from 'react'
+import {ApiV1, useUser} from '@wepublish/website'
 import {GetServerSideProps} from 'next'
 import Link from 'next/link'
+import {useRouter} from 'next/router'
+import {useEffect, useState} from 'react'
 
 const ProgressWrapper = styled('div')`
   display: flex;
@@ -52,8 +51,8 @@ export default function PaymentSuccess({host}: PaymentSuccessProps) {
   const {hasUser} = useUser()
   const [hasOpenInvoices, setHasOpenInvoices] = useState<boolean>()
 
-  const [checkInvoice] = useCheckInvoiceStatusLazyQuery()
-  const [getInvoices] = useInvoicesLazyQuery({
+  const [checkInvoice] = ApiV1.useCheckInvoiceStatusLazyQuery()
+  const [getInvoices] = ApiV1.useInvoicesLazyQuery({
     onCompleted: async data => {
       const invoices = await Promise.all(
         data?.invoices.map(async ({id}) => {

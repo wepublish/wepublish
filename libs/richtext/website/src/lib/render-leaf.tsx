@@ -1,4 +1,4 @@
-import {BuilderRenderLeafProps} from '@wepublish/website-builder'
+import {BuilderRenderLeafProps} from '@wepublish/website/builder'
 
 export enum TextFormat {
   Bold = 'bold',

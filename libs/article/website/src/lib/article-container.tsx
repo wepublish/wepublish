@@ -1,7 +1,7 @@
 import {useArticleQuery, ArticleQuery} from '@wepublish/website/api'
 import {QueryResult} from '@apollo/client'
 import {useEffect} from 'react'
-import {useWebsiteBuilder} from '@wepublish/website-builder'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 
 type IdOrSlug = {id: string; slug?: never} | {id?: never; slug: string}
 

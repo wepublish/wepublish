@@ -1,5 +1,5 @@
 import {Container, css, styled} from '@mui/material'
-import {BuilderFooterProps, useWebsiteBuilder} from '@wepublish/website-builder'
+import {BuilderFooterProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {NavigationQuery} from '@wepublish/website/api'
 
 const FooterWrapper = styled('footer')`

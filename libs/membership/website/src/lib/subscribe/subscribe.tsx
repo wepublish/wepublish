@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {BuilderSubscribeProps} from '@wepublish/website-builder'
+import {BuilderSubscribeProps} from '@wepublish/website/builder'
 
 export type SubscribeProps = BuilderSubscribeProps
 

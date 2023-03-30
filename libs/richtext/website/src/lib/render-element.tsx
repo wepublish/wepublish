@@ -1,5 +1,5 @@
-import {useWebsiteBuilder} from '@wepublish/website-builder'
-import {BuilderRenderElementProps} from '@wepublish/website-builder'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderRenderElementProps} from '@wepublish/website/builder'
 import {Link} from '@mui/material'
 
 export enum BlockFormat {

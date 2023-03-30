@@ -1,5 +1,5 @@
 import {Button as MuiButton, styled} from '@mui/material'
-import {BuilderButtonProps} from '@wepublish/website-builder'
+import {BuilderButtonProps} from '@wepublish/website'
 import {memo} from 'react'
 
 const ButtonWrapper = styled(MuiButton)`

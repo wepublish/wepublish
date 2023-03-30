@@ -1,4 +1,4 @@
-import {PageContainer} from '@wepublish/page/website'
+import {PageContainer} from '@wepublish/website'
 import {useRouter} from 'next/router'
 
 export function PageById() {

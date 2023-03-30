@@ -8,13 +8,13 @@ import {
   ThemeOptions,
   ThemeProvider
 } from '@mui/material'
-import {FooterContainer} from '@wepublish/navigation/website'
 import {theme} from '@wepublish/ui'
-import {WebsiteProvider} from '@wepublish/website'
-import {WebsiteBuilderProvider} from '@wepublish/website-builder'
-import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
+import {FooterContainer, WebsiteBuilderProvider, WebsiteProvider, ApiV1} from '@wepublish/website'
 import {deleteCookie, getCookie} from 'cookies-next'
+import {setDefaultOptions} from 'date-fns'
+import {de} from 'date-fns/locale'
 import App, {AppContext, AppProps} from 'next/app'
+import getConfig from 'next/config'
 import Head from 'next/head'
 import {PartialDeep} from 'type-fest'
 import {authLink} from '../src/auth-link'
@@ -25,9 +25,6 @@ import {Header} from '../src/components/header'
 import {Link} from '../src/components/link'
 import {Logo} from '../src/components/logo'
 import {AuthTokenStorageKey, SessionProvider} from '../src/session.provider'
-import {setDefaultOptions} from 'date-fns'
-import {de} from 'date-fns/locale'
-import getConfig from 'next/config'
 
 setDefaultOptions({
   locale: de
@@ -91,7 +88,7 @@ const SocialLink = styled(Link)`
 `
 
 type CustomAppProps = AppProps & {
-  sessionToken: UserSession | null
+  sessionToken: ApiV1.UserSession | null
 }
 
 function CustomApp({Component, pageProps, sessionToken}: CustomAppProps) {
@@ -173,7 +170,9 @@ function CustomApp({Component, pageProps, sessionToken}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(CustomApp)
+const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
+  CustomApp
+)
 
 ;(ConnectedApp as any).getInitialProps = async (appContext: AppContext) => {
   const appProps = await App.getInitialProps(appContext)
@@ -183,7 +182,7 @@ const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [au
       ? getCookie(AuthTokenStorageKey, {req: appContext.ctx.req})
       : getCookie(AuthTokenStorageKey)
 
-  let sessionToken = token ? (JSON.parse(token.toString()) as UserSession) : null
+  let sessionToken = token ? (JSON.parse(token.toString()) as ApiV1.UserSession) : null
 
   if (sessionToken) {
     if (Date.now() > +new Date(sessionToken.expiresAt)) {

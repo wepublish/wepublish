@@ -3,7 +3,7 @@ import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website-builder'
+import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 const NavbarWrapper = styled(Box)`
   flex-grow: 1;

@@ -1,5 +1,5 @@
 import {styled} from '@mui/material'
-import {BuilderQuoteBlockProps, useWebsiteBuilder} from '@wepublish/website-builder'
+import {BuilderQuoteBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Block, QuoteBlock as QuoteBlockType} from '@wepublish/website/api'
 
 export const isQuoteBlock = (block: Block): block is QuoteBlockType =>

@@ -1,4 +1,4 @@
-import {BuilderPageProps, useWebsiteBuilder} from '@wepublish/website-builder'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {Block as BlockType} from '@wepublish/website/api'
 import {isHtmlBlock} from './html-block'
 import {isImageBlock} from './image-block'
@@ -6,8 +6,6 @@ import {isQuoteBlock} from './quote-block'
 import {isRichTextBlock} from './richtext-block'
 import {isTeaserGridFlexBlock} from './teaser-grid-flex-block'
 import {isTitleBlock} from './title-block'
-
-export type PageProps = BuilderPageProps
 
 export type BlockProp = {
   block: BlockType

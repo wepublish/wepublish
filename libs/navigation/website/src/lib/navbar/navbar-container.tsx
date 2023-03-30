@@ -1,7 +1,7 @@
 import {useNavigationListQuery, NavigationListQuery} from '@wepublish/website/api'
 import {QueryResult} from '@apollo/client'
 import {useEffect} from 'react'
-import {useWebsiteBuilder} from '@wepublish/website-builder'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 
 export type NavbarContainerProps = {
   onQuery?: (
