@@ -11,7 +11,7 @@ import {
   defineSubscriptionFactory,
   defineUserFactory,
   definePaymentMethodFactory
-} from '../../../../../api/src/__generated__/fabbrica'
+} from '@wepublish/api'
 
 describe('SubscriptionFlowHelper', () => {
   let helper: SubscriptionFlowHelper
@@ -42,10 +42,7 @@ describe('SubscriptionFlowHelper', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [PrismaModule.forTest(prismaClient)],
-      providers: [
-        PrismaService,
-        SubscriptionFlowHelper
-      ]
+      providers: [PrismaService, SubscriptionFlowHelper]
     }).compile()
 
     helper = module.get<SubscriptionFlowHelper>(SubscriptionFlowHelper)
@@ -70,64 +67,64 @@ describe('SubscriptionFlowHelper', () => {
     })
     flow1 = await SubscriptionFlowFactory.create({
       default: false,
-      memberPlan: { connect: { id: memberPlan.id } },
+      memberPlan: {connect: {id: memberPlan.id}},
       periodicities: [PaymentPeriodicity.monthly],
       autoRenewal: [true, false],
-      paymentMethods: { connect: [{ id: paymentMethod.id }] }
+      paymentMethods: {connect: [{id: paymentMethod.id}]}
     })
     flow2 = await SubscriptionFlowFactory.create({
       default: false,
-      memberPlan: { connect: { id: memberPlan.id } },
+      memberPlan: {connect: {id: memberPlan.id}},
       periodicities: [PaymentPeriodicity.biannual],
       autoRenewal: [false],
-      paymentMethods: { connect: [{ id: paymentMethod.id }] }
+      paymentMethods: {connect: [{id: paymentMethod.id}]}
     })
 
     // those belong to flow0
     const flow0Users = await UserFactory.createList(3)
-    for(const user of flow0Users) {
+    for (const user of flow0Users) {
       await SubscriptionFactory.create({
-        user: { connect: { id: user.id } },
-        memberPlan: { connect: { id: memberPlan.id } },
+        user: {connect: {id: user.id}},
+        memberPlan: {connect: {id: memberPlan.id}},
         paymentPeriodicity: PaymentPeriodicity.biannual,
         autoRenew: true,
-        paymentMethod: { connect: { id: paymentMethod.id } }
+        paymentMethod: {connect: {id: paymentMethod.id}}
       })
     }
 
     // those as well
     const flow0Users2 = await UserFactory.createList(3)
-    for(const user of flow0Users2) {
+    for (const user of flow0Users2) {
       await SubscriptionFactory.create({
-        user: { connect: { id: user.id } },
-        memberPlan: { connect: { id: memberPlan.id } },
+        user: {connect: {id: user.id}},
+        memberPlan: {connect: {id: memberPlan.id}},
         paymentPeriodicity: PaymentPeriodicity.biannual,
         autoRenew: true,
-        paymentMethod: { connect: { id: paymentMethod2.id } }
+        paymentMethod: {connect: {id: paymentMethod2.id}}
       })
     }
 
     // those belong to flow1
     const flow1Users = await UserFactory.createList(3)
-    for(const user of flow1Users) {
+    for (const user of flow1Users) {
       await SubscriptionFactory.create({
-        user: { connect: { id: user.id } },
-        memberPlan: { connect: { id: memberPlan.id } },
+        user: {connect: {id: user.id}},
+        memberPlan: {connect: {id: memberPlan.id}},
         paymentPeriodicity: PaymentPeriodicity.monthly,
         autoRenew: Math.random() > 0.5,
-        paymentMethod: { connect: { id: paymentMethod.id } }
+        paymentMethod: {connect: {id: paymentMethod.id}}
       })
     }
 
     // those belong to flow2
     const flow2Users = await UserFactory.createList(3)
-    for(const user of flow2Users) {
+    for (const user of flow2Users) {
       await SubscriptionFactory.create({
-        user: { connect: { id: user.id } },
-        memberPlan: { connect: { id: memberPlan.id } },
+        user: {connect: {id: user.id}},
+        memberPlan: {connect: {id: memberPlan.id}},
         paymentPeriodicity: PaymentPeriodicity.biannual,
         autoRenew: false,
-        paymentMethod: { connect: { id: paymentMethod.id } }
+        paymentMethod: {connect: {id: paymentMethod.id}}
       })
     }
   })

@@ -130,7 +130,7 @@ export class PeriodicJobController {
       paymentmethodeId: subscriptionsWithEvent.paymentMethodID,
       periodicity: subscriptionsWithEvent.paymentPeriodicity,
       autorenwal: subscriptionsWithEvent.autoRenew,
-      daysAwayFromEnding: daysAwayFromEnding
+      daysAwayFromEnding
     })
 
     for (const event of subscriptionDictionary) {
@@ -406,8 +406,8 @@ export class PeriodicJobController {
         daysAwayFromEnding: action.daysAwayFromEnding,
         externalMailTemplateId: action.externalMailTemplate,
         recipient: user,
-        isRetry: isRetry,
-        optionalData: optionalData,
+        isRetry,
+        optionalData,
         periodicJobRunDate,
         mailType: mailLogType.SubscriptionFlow
       }).sendMail()

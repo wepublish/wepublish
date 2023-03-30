@@ -211,7 +211,7 @@ describe('PeriodicJobController', () => {
     const invoice = await InvoiceFactory.create({
       dueAt: sub(renewalDate, {months: 12}),
       paidAt: sub(renewalDate, {months: 12}),
-      mail: mail,
+      mail,
       paymentDeadline: sub(renewalDate, {months: 11, days: 20})
     })
 
@@ -326,7 +326,7 @@ describe('PeriodicJobController', () => {
   ) => {
     const invoice = await InvoiceFactory.create({
       dueAt: renewalDate,
-      mail: mail,
+      mail,
       paymentDeadline: add(renewalDate, {days: 5}),
       items: {
         create: {
@@ -511,7 +511,7 @@ describe('PeriodicJobController', () => {
     const subscriptionValidUntil = sub(renewalDate, {days: 5})
     const invoice = await InvoiceFactory.create({
       dueAt: renewalDate,
-      mail: mail,
+      mail,
       paymentDeadline: renewalDate,
       items: {
         create: {
@@ -591,7 +591,7 @@ describe('PeriodicJobController', () => {
     const renewalDate = add(new Date(), {days: 15})
     const invoice = await InvoiceFactory.create({
       dueAt: renewalDate,
-      mail: mail,
+      mail,
       paymentDeadline: add(renewalDate, {days: 5}),
       items: {
         create: {
@@ -687,7 +687,7 @@ describe('PeriodicJobController', () => {
     const invoice = await InvoiceFactory.create({
       dueAt: sub(renewalDate, {months: 12}),
       paidAt: sub(renewalDate, {months: 12}),
-      mail: mail,
+      mail,
       paymentDeadline: sub(renewalDate, {months: 11, days: 20})
     })
     await UserFactory.create({

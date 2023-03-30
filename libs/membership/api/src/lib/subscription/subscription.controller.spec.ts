@@ -182,7 +182,7 @@ describe('SubscriptionController', () => {
   ) => {
     const subscription = await SubscriptionFactory.create({
       monthlyAmount: 10,
-      paymentPeriodicity: paymentPeriodicity,
+      paymentPeriodicity,
       paidUntil: validUntil,
       startsAt: sub(validUntil, {years: 3, days: -1}),
       periods: {

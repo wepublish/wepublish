@@ -14,7 +14,7 @@ import {
   definePaymentMethodFactory,
   defineSubscriptionIntervalFactory
 } from '@wepublish/api'
-import {add, format, parseISO, sub} from 'date-fns'
+import {add, format, sub} from 'date-fns'
 import {initOldContextForTest} from '../../oldcontext-utils'
 import {SubscriptionEventDictionary} from './subscription-event-dictionary'
 import nock from 'nock'
