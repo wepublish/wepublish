@@ -1275,6 +1275,8 @@
       "newDeactivationsApiPublic": "Make the new deactivations API accessible by the public",
       "expectedRevenueApiPublic": "Make the expected revenue API accessible by the public",
       "revenueApiPublic": "Make the revenue API accessible by the public",
+      "enabled": "enabled",
+      "disabled": "disabled",
       "warnings": {
         "guestCommenting": "Allow guest visitors (not logged in) to write and publish comments to articles.",
         "guestCommentRating": "Allow guest visitors (not logged in) to rate other people's comments.",
@@ -1283,6 +1285,7 @@
         "passwordToken": "How long (in minutes) the link sent via email to reset password will be valid. Defaults to one day (1440 / 60 / 24).",
         "peerToken": "Timeout in milliseconds after which we will no longer try to pull peer articles. Defaults to 3 seconds.",
         "invoiceReminders": "How many times we will remind user to pay the subscription (once per day).",
+        "invoiceFrequency": "The interval in days between invoice reminder attempts.",
         "askOperators": "Warning: changing one or more of the settings may break the page or have other unpredictable consequences. If you are unsure, please try talking to the operators first. If you are sure, feel free to continue.",
         "newSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "activeSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
