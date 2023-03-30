@@ -14,8 +14,8 @@ import {
   useTestSystemMailMutation,
   useUpdateSystemMailMutation
 } from '@wepublish/editor/api-v2'
-import {ListViewContainer, ListViewHeader} from 'apps/editor/src/app/ui/listView'
-import {getApiClientV2} from 'apps/editor/src/app/utility'
+import {ListViewContainer, ListViewHeader} from 'app/ui/listView'
+import {getApiClientV2} from 'app/utility'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, SelectPicker, Stack, Tag} from 'rsuite'

@@ -17,7 +17,7 @@ import {useParams} from 'react-router-dom'
 import {Loader} from 'rsuite'
 import {useMemberPlanListQuery} from '@wepublish/editor/api'
 import {ApolloClient, NormalizedCacheObject} from '@apollo/client'
-import {getApiClientV2} from 'apps/editor/src/app/utility'
+import {getApiClientV2} from 'app/utility'
 import {
   FullMailTemplateFragment,
   SubscriptionEvent,
@@ -45,7 +45,7 @@ import TimelineBody from './timeline/timelineBody'
 import DeleteSubscriptionFlow from './deleteSubscriptionFlow'
 import SubscriptionFlowHeadline from './subscriptionFlowHeadline'
 import {createCheckedPermissionComponent, PermissionControl} from 'app/atoms/permissionControl'
-import {DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS, showErrors} from '../common'
+import {DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS} from '../common'
 
 /**
  * CONTEXT

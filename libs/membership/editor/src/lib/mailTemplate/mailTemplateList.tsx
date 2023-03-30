@@ -8,8 +8,8 @@ import {
   Typography
 } from '@mui/material'
 import {useMailTemplateQuery, useSynchronizeMailTemplatesMutation} from '@wepublish/editor/api-v2'
-import {ListViewContainer, ListViewHeader} from 'apps/editor/src/app/ui/listView'
-import {getApiClientV2} from 'apps/editor/src/app/utility'
+import {ListViewContainer, ListViewHeader} from 'app/ui/listView'
+import {getApiClientV2} from 'app/utility'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdCheck, MdSync, MdWarning} from 'react-icons/all'

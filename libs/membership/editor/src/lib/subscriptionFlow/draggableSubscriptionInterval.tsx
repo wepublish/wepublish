@@ -1,5 +1,4 @@
 import React, {useMemo} from 'react'
-import {Tag} from 'rsuite'
 import {DecoratedSubscriptionInterval} from './subscriptionFlowList'
 import {
   FullMailTemplateFragment,
