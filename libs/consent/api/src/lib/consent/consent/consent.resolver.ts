@@ -63,7 +63,7 @@ export class ConsentResolver {
   @Mutation(returns => Consent, {
     name: 'deleteConsent',
     description: `
-      Deletes an existing Consent.
+      Deletes an existing consent.
     `
   })
   @Permissions(CanDeleteConsent)
