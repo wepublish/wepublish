@@ -88,7 +88,7 @@ export async function runServer(app?: Application | undefined) {
     })
   }
   // left here intentionally for testing
-  /*if (process.env.MAILCHIMP_API_KEY && process.env.MAILCHIMP_WEBHOOK_SECRET) {
+  /* if (process.env.MAILCHIMP_API_KEY && process.env.MAILCHIMP_WEBHOOK_SECRET) {
     mailProvider = new MailchimpMailProvider({
       id: 'mailchimp',
       name: 'Mailchimp',
@@ -98,7 +98,7 @@ export async function runServer(app?: Application | undefined) {
       baseURL: '',
       incomingRequestHandler: bodyParser.urlencoded({extended: true})
     })
-  }*/
+  } */
 
   if (process.env.SLACK_DEV_MAIL_WEBHOOK_URL) {
     mailProvider = new SlackMailProvider({
