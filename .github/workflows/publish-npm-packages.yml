@@ -30,8 +30,12 @@ jobs:
           contains(github.ref, 'tags/') && contains(github.ref, 'alpha')
         name: "Publish next npms"
         run: npm run release:next -- --yes
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - if: |
           contains(github.ref, 'tags/') && !contains(github.ref, 'alpha')
         name: "Publish latest npms"
         run: npm run release -- --yes
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
