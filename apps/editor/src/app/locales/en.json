@@ -691,6 +691,7 @@
       "waiting": "Poll is waiting for the opening on {{date, ccc PP p}}"
     },
     "navbar": {
+      "dashboard": "Dashboard",
       "events": "Events",
       "eventTags": "Tags",
       "articles": "Articles",
@@ -1267,6 +1268,13 @@
       "allowGuestCommentRating": "Allow guest ratings on comments",
       "polls": "Polls",
       "guestPollVote": "Allow guest votes on polls",
+      "memberships": "Memberships",
+      "newSubscriptionsApiPublic": "Make the new subscriptions API accessible by the public",
+      "activeSubscriptionsApiPublic": "Make the active subscriptions API accessible by the public",
+      "renewingSubscriptionsApiPublic": "Make the renewing subscriptions API accessible by the public",
+      "newDeactivationsApiPublic": "Make the new deactivations API accessible by the public",
+      "expectedRevenueApiPublic": "Make the expected revenue API accessible by the public",
+      "revenueApiPublic": "Make the revenue API accessible by the public",
       "warnings": {
         "guestCommenting": "Allow guest visitors (not logged in) to write and publish comments to articles.",
         "guestCommentRating": "Allow guest visitors (not logged in) to rate other people's comments.",
@@ -1275,7 +1283,13 @@
         "passwordToken": "How long (in minutes) the link sent via email to reset password will be valid. Defaults to one day (1440 / 60 / 24).",
         "peerToken": "Timeout in milliseconds after which we will no longer try to pull peer articles. Defaults to 3 seconds.",
         "invoiceReminders": "How many times we will remind user to pay the subscription (once per day).",
-        "askOperators": "Warning: changing one or more of the settings may break the page or have other unpredictable consequences. If you are unsure, please try talking to the operators first. If you are sure, feel free to continue."
+        "askOperators": "Warning: changing one or more of the settings may break the page or have other unpredictable consequences. If you are unsure, please try talking to the operators first. If you are sure, feel free to continue.",
+        "newSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
+        "activeSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
+        "renewingSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
+        "newDeactivationsApiPublic": "Exposes subscriptions anonymized to the public.",
+        "expectedRevenueApiPublic": "Exposes invoices anonymized to the public.",
+        "revenueApiPublic": "Exposes invoices anonymized to the public."
       }
     },
     "tags": {
@@ -1334,6 +1348,26 @@
       "createdSuccess": "Created successfully",
       "updatedSuccess": "Updated successfully",
       "updateError": "There was an error, please try again"
+    },
+    "dashboard": {
+      "dashboard": "Dashboard",
+      "greeting": "Hello, {{name}}!",
+      "yearlySubscribers": "New subscribers over past year",
+      "activity": "Latest Activity",
+      "event": "Event",
+      "summary": "Summary",
+      "noData": "No current subscriber data",
+      "newArticle": "New <0>article</0> added",
+      "newPage": "New <0>page</0> added",
+      "newComment": "New <0>comment</0> added",
+      "newPoll": "New <0>poll</0> opened",
+      "newSubscription": "New <0>subscription</0> created",
+      "newAuthor": "New <0>author</0> added",
+      "newUser": "New <0>user</0> added",
+      "newEvent": "New <0>event</0> added",
+      "createdBy": "by {{creator}}",
+      "user": "User",
+      "memberPlan": "Member Plan: {{plan}}"
     }
   }
 }

@@ -9,7 +9,9 @@ import {
   Peer,
   PrismaClient,
   User,
-  UserRole
+  UserRole,
+  Comment,
+  Subscription
 } from '@prisma/client'
 import {
   AuthenticationService,
@@ -46,7 +48,6 @@ import {InvoiceWithItems} from './db/invoice'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {NavigationWithLinks} from './db/navigation'
 import {PageWithRevisions, pageWithRevisionsToPublicPage, PublicPage} from './db/page'
-import {SettingName} from './db/setting'
 import {TokenExpiredError} from './error'
 import {getEvent} from './graphql/event/event.query'
 import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
@@ -58,6 +59,7 @@ import {MemberContext} from './memberContext'
 import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
 import {URLAdapter} from './urlAdapter'
+import {SettingName} from '@wepublish/settings/api'
 
 /**
  * Peered article cache configuration and setup
@@ -109,6 +111,10 @@ export interface DataLoaderContext {
 
   readonly pollById: DataLoader<string, FullPoll | null>
   readonly eventById: DataLoader<string, Event | null>
+
+  readonly commentsById: DataLoader<string, Comment | null>
+  readonly subscriptionsById: DataLoader<string, Subscription | null>
+  readonly usersById: DataLoader<string, User | null>
 }
 
 export interface OAuth2Clients {
@@ -793,7 +799,54 @@ export async function contextFromRequest(
     ),
 
     pollById: new DataLoader(async ids => Promise.all(ids.map(id => getPoll(id, prisma.poll)))),
-    eventById: new DataLoader(async ids => Promise.all(ids.map(id => getEvent(id, prisma.event))))
+    eventById: new DataLoader(async ids => Promise.all(ids.map(id => getEvent(id, prisma.event)))),
+
+    commentsById: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.comment.findMany({
+          where: {
+            id: {in: ids as string[]}
+          },
+          include: {
+            overriddenRatings: true,
+            revisions: {orderBy: {createdAt: 'asc'}}
+          }
+        }),
+        'id'
+      )
+    ),
+
+    subscriptionsById: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.subscription.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          },
+          include: {
+            memberPlan: true,
+            user: true
+          }
+        }),
+        'id'
+      )
+    ),
+
+    usersById: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.user.findMany({
+          where: {
+            id: {in: ids as string[]}
+          },
+          include: {address: true}
+        }),
+        'id'
+      )
+    )
   }
 
   const mailContext = new MailContext({

@@ -25,6 +25,8 @@ export type Scalars = {
   VoteValue: number;
 };
 
+export type Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction;
+
 export type AllowedSettingVals = {
   __typename?: 'AllowedSettingVals';
   boolChoice?: Maybe<Scalars['Boolean']>;
@@ -48,6 +50,12 @@ export type ArticleConnection = {
   nodes: Array<Article>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type ArticleCreatedAction = {
+  __typename?: 'ArticleCreatedAction';
+  article: Article;
+  date: Scalars['DateTime'];
 };
 
 export type ArticleFilter = {
@@ -174,6 +182,12 @@ export type AuthorConnection = {
   nodes: Array<Author>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type AuthorCreatedAction = {
+  __typename?: 'AuthorCreatedAction';
+  author: Author;
+  date: Scalars['DateTime'];
 };
 
 export type AuthorFilter = {
@@ -317,6 +331,12 @@ export type CommentConnection = {
   nodes: Array<Comment>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type CommentCreatedAction = {
+  __typename?: 'CommentCreatedAction';
+  comment: Comment;
+  date: Scalars['DateTime'];
 };
 
 export type CommentFilter = {
@@ -485,6 +505,12 @@ export type EventConnection = {
   nodes: Array<Event>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type EventCreatedAction = {
+  __typename?: 'EventCreatedAction';
+  date: Scalars['DateTime'];
+  event: Event;
 };
 
 export type EventFilter = {
@@ -1451,6 +1477,12 @@ export type PageConnection = {
   totalCount: Scalars['Int'];
 };
 
+export type PageCreatedAction = {
+  __typename?: 'PageCreatedAction';
+  date: Scalars['DateTime'];
+  page: Page;
+};
+
 export type PageFilter = {
   description?: InputMaybe<Scalars['String']>;
   draft?: InputMaybe<Scalars['Boolean']>;
@@ -1786,6 +1818,12 @@ export enum PollSort {
   OpensAt = 'OPENS_AT'
 }
 
+export type PollStartedAction = {
+  __typename?: 'PollStartedAction';
+  date: Scalars['DateTime'];
+  poll: Poll;
+};
+
 export type PollWithAnswers = {
   __typename?: 'PollWithAnswers';
   answers?: Maybe<Array<PollAnswer>>;
@@ -1810,6 +1848,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
+  actions: Array<Action>;
   article?: Maybe<Article>;
   articlePreviewLink?: Maybe<Scalars['String']>;
   articles: ArticleConnection;
@@ -1830,6 +1869,7 @@ export type Query = {
   memberPlans: MemberPlanConnection;
   navigation?: Maybe<Navigation>;
   navigations: Array<Navigation>;
+  newSubscribersPerMonth?: Maybe<Array<Maybe<SubscribersPerMonth>>>;
   page?: Maybe<Page>;
   pagePreviewLink?: Maybe<Scalars['String']>;
   pages: PageConnection;
@@ -1990,6 +2030,11 @@ export type QueryMemberPlansArgs = {
 export type QueryNavigationArgs = {
   id?: InputMaybe<Scalars['ID']>;
   key?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryNewSubscribersPerMonthArgs = {
+  monthsBack?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -2197,6 +2242,12 @@ export enum SettingName {
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
   InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
   InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES',
+  MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
+  MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
+  MakeNewDeactivationsApiPublic = 'MAKE_NEW_DEACTIVATIONS_API_PUBLIC',
+  MakeNewSubscribersApiPublic = 'MAKE_NEW_SUBSCRIBERS_API_PUBLIC',
+  MakeRenewingSubscribersApiPublic = 'MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC',
+  MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN'
@@ -2224,6 +2275,12 @@ export type SoundCloudTrackBlockInput = {
   trackID: Scalars['String'];
 };
 
+export type SubscribersPerMonth = {
+  __typename?: 'SubscribersPerMonth';
+  month: Scalars['String'];
+  subscriberCount: Scalars['Int'];
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   autoRenew: Scalars['Boolean'];
@@ -2246,6 +2303,12 @@ export type SubscriptionConnection = {
   nodes: Array<Subscription>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type SubscriptionCreatedAction = {
+  __typename?: 'SubscriptionCreatedAction';
+  date: Scalars['DateTime'];
+  subscription: Subscription;
 };
 
 export type SubscriptionDeactivation = {
@@ -2533,6 +2596,12 @@ export type UserConnection = {
   totalCount: Scalars['Int'];
 };
 
+export type UserCreatedAction = {
+  __typename?: 'UserCreatedAction';
+  date: Scalars['DateTime'];
+  user: User;
+};
+
 export type UserFilter = {
   name?: InputMaybe<Scalars['String']>;
   text?: InputMaybe<Scalars['String']>;
@@ -2630,6 +2699,29 @@ export type OverriddenRating = {
   answerId: Scalars['ID'];
   value?: Maybe<Scalars['Int']>;
 };
+
+export type RecentActionsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RecentActionsQuery = { __typename?: 'Query', actions: Array<{ __typename: 'ArticleCreatedAction', date: string, article: { __typename?: 'Article', id: string, createdAt: string, latest: { __typename?: 'ArticleRevision', title?: string | null, url: string } } } | { __typename: 'AuthorCreatedAction', date: string, author: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } } | { __typename: 'CommentCreatedAction', date: string, comment: { __typename?: 'Comment', id: string, guestUsername?: string | null, user?: { __typename?: 'User', name: string } | null, revisions: Array<{ __typename?: 'CommentRevision', title?: string | null, text?: Node[] | null }> } } | { __typename: 'EventCreatedAction', date: string, event: { __typename?: 'Event', id: string, name: string, location?: string | null } } | { __typename: 'PageCreatedAction', date: string, page: { __typename?: 'Page', id: string, createdAt: string, latest: { __typename?: 'PageRevision', title?: string | null, socialMediaTitle?: string | null, url: string } } } | { __typename: 'PollStartedAction', date: string, poll: { __typename?: 'Poll', id: string, question?: string | null } } | { __typename: 'SubscriptionCreatedAction', date: string, subscription: { __typename?: 'Subscription', id: string, user?: { __typename?: 'User', email: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } } | { __typename: 'UserCreatedAction', date: string, user: { __typename?: 'User', id: string, firstName?: string | null, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } }> };
+
+type FullAction_ArticleCreatedAction_Fragment = { __typename: 'ArticleCreatedAction', date: string, article: { __typename?: 'Article', id: string, createdAt: string, latest: { __typename?: 'ArticleRevision', title?: string | null, url: string } } };
+
+type FullAction_AuthorCreatedAction_Fragment = { __typename: 'AuthorCreatedAction', date: string, author: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } };
+
+type FullAction_CommentCreatedAction_Fragment = { __typename: 'CommentCreatedAction', date: string, comment: { __typename?: 'Comment', id: string, guestUsername?: string | null, user?: { __typename?: 'User', name: string } | null, revisions: Array<{ __typename?: 'CommentRevision', title?: string | null, text?: Node[] | null }> } };
+
+type FullAction_EventCreatedAction_Fragment = { __typename: 'EventCreatedAction', date: string, event: { __typename?: 'Event', id: string, name: string, location?: string | null } };
+
+type FullAction_PageCreatedAction_Fragment = { __typename: 'PageCreatedAction', date: string, page: { __typename?: 'Page', id: string, createdAt: string, latest: { __typename?: 'PageRevision', title?: string | null, socialMediaTitle?: string | null, url: string } } };
+
+type FullAction_PollStartedAction_Fragment = { __typename: 'PollStartedAction', date: string, poll: { __typename?: 'Poll', id: string, question?: string | null } };
+
+type FullAction_SubscriptionCreatedAction_Fragment = { __typename: 'SubscriptionCreatedAction', date: string, subscription: { __typename?: 'Subscription', id: string, user?: { __typename?: 'User', email: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } };
+
+type FullAction_UserCreatedAction_Fragment = { __typename: 'UserCreatedAction', date: string, user: { __typename?: 'User', id: string, firstName?: string | null, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } };
+
+export type FullActionFragment = FullAction_ArticleCreatedAction_Fragment | FullAction_AuthorCreatedAction_Fragment | FullAction_CommentCreatedAction_Fragment | FullAction_EventCreatedAction_Fragment | FullAction_PageCreatedAction_Fragment | FullAction_PollStartedAction_Fragment | FullAction_SubscriptionCreatedAction_Fragment | FullAction_UserCreatedAction_Fragment;
 
 export type MutationArticleFragment = { __typename?: 'Article', id: string, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, publishAt?: string | null, revision: number } };
 
@@ -3499,6 +3591,13 @@ export type DeleteSubscriptionMutationVariables = Exact<{
 
 export type DeleteSubscriptionMutation = { __typename?: 'Mutation', deleteSubscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
 
+export type NewSubscribersPerMonthQueryVariables = Exact<{
+  months: Scalars['Int'];
+}>;
+
+
+export type NewSubscribersPerMonthQuery = { __typename?: 'Query', newSubscribersPerMonth?: Array<{ __typename?: 'SubscribersPerMonth', month: string, subscriberCount: number } | null> | null };
+
 export type TagListQueryVariables = Exact<{
   filter?: InputMaybe<TagFilter>;
   cursor?: InputMaybe<Scalars['ID']>;
@@ -3669,6 +3768,94 @@ export type DeleteUserRoleMutationVariables = Exact<{
 
 export type DeleteUserRoleMutation = { __typename?: 'Mutation', deleteUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
 
+export const FullActionFragmentDoc = gql`
+    fragment FullAction on Action {
+  __typename
+  ... on ArticleCreatedAction {
+    date
+    article {
+      id
+      createdAt
+      latest {
+        title
+        url
+      }
+    }
+  }
+  ... on PageCreatedAction {
+    date
+    page {
+      id
+      createdAt
+      latest {
+        title
+        socialMediaTitle
+        url
+      }
+    }
+  }
+  ... on CommentCreatedAction {
+    date
+    comment {
+      id
+      user {
+        name
+      }
+      guestUsername
+      revisions {
+        title
+        text
+      }
+    }
+  }
+  ... on PollStartedAction {
+    date
+    poll {
+      id
+      question
+    }
+  }
+  ... on SubscriptionCreatedAction {
+    date
+    subscription {
+      id
+      user {
+        email
+      }
+      memberPlan {
+        name
+      }
+    }
+  }
+  ... on AuthorCreatedAction {
+    date
+    author {
+      id
+      name
+      jobTitle
+    }
+  }
+  ... on UserCreatedAction {
+    date
+    user {
+      id
+      firstName
+      name
+      address {
+        city
+      }
+    }
+  }
+  ... on EventCreatedAction {
+    date
+    event {
+      id
+      name
+      location
+    }
+  }
+}
+    `;
 export const MutationArticleFragmentDoc = gql`
     fragment MutationArticle on Article {
   id
@@ -4449,6 +4636,40 @@ export const TokenRefFragmentDoc = gql`
   name
 }
     `;
+export const RecentActionsDocument = gql`
+    query RecentActions {
+  actions {
+    ...FullAction
+  }
+}
+    ${FullActionFragmentDoc}`;
+
+/**
+ * __useRecentActionsQuery__
+ *
+ * To run a query within a React component, call `useRecentActionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRecentActionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRecentActionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRecentActionsQuery(baseOptions?: Apollo.QueryHookOptions<RecentActionsQuery, RecentActionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RecentActionsQuery, RecentActionsQueryVariables>(RecentActionsDocument, options);
+      }
+export function useRecentActionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecentActionsQuery, RecentActionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RecentActionsQuery, RecentActionsQueryVariables>(RecentActionsDocument, options);
+        }
+export type RecentActionsQueryHookResult = ReturnType<typeof useRecentActionsQuery>;
+export type RecentActionsLazyQueryHookResult = ReturnType<typeof useRecentActionsLazyQuery>;
+export type RecentActionsQueryResult = Apollo.QueryResult<RecentActionsQuery, RecentActionsQueryVariables>;
 export const ArticleListDocument = gql`
     query ArticleList($filter: ArticleFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
   articles(
@@ -8093,6 +8314,42 @@ export function useDeleteSubscriptionMutation(baseOptions?: Apollo.MutationHookO
 export type DeleteSubscriptionMutationHookResult = ReturnType<typeof useDeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationResult = Apollo.MutationResult<DeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>;
+export const NewSubscribersPerMonthDocument = gql`
+    query NewSubscribersPerMonth($months: Int!) {
+  newSubscribersPerMonth(monthsBack: $months) {
+    month
+    subscriberCount
+  }
+}
+    `;
+
+/**
+ * __useNewSubscribersPerMonthQuery__
+ *
+ * To run a query within a React component, call `useNewSubscribersPerMonthQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNewSubscribersPerMonthQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewSubscribersPerMonthQuery({
+ *   variables: {
+ *      months: // value for 'months'
+ *   },
+ * });
+ */
+export function useNewSubscribersPerMonthQuery(baseOptions: Apollo.QueryHookOptions<NewSubscribersPerMonthQuery, NewSubscribersPerMonthQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NewSubscribersPerMonthQuery, NewSubscribersPerMonthQueryVariables>(NewSubscribersPerMonthDocument, options);
+      }
+export function useNewSubscribersPerMonthLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NewSubscribersPerMonthQuery, NewSubscribersPerMonthQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NewSubscribersPerMonthQuery, NewSubscribersPerMonthQueryVariables>(NewSubscribersPerMonthDocument, options);
+        }
+export type NewSubscribersPerMonthQueryHookResult = ReturnType<typeof useNewSubscribersPerMonthQuery>;
+export type NewSubscribersPerMonthLazyQueryHookResult = ReturnType<typeof useNewSubscribersPerMonthLazyQuery>;
+export type NewSubscribersPerMonthQueryResult = Apollo.QueryResult<NewSubscribersPerMonthQuery, NewSubscribersPerMonthQueryVariables>;
 export const TagListDocument = gql`
     query TagList($filter: TagFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
   tags(

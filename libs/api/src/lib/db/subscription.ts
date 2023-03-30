@@ -34,3 +34,8 @@ export type SubscriptionWithRelations = Subscription & {
   properties: MetadataProperty[]
   deactivation: SubscriptionDeactivation | null
 }
+
+export type SubscribersPerMonth = {
+  readonly month: string
+  readonly subscriberCount: number
+}

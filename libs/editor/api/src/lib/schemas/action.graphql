@@ -1,0 +1,95 @@
+query RecentActions {
+    actions {
+        ...FullAction
+    }
+}
+fragment FullAction on Action {
+    __typename
+
+    ... on ArticleCreatedAction {
+        date
+        article {
+            id
+            createdAt
+            latest {
+                title
+                url
+            }
+        }
+    }
+
+    ... on PageCreatedAction {
+        date
+        page {
+            id
+            createdAt
+            latest {
+                title
+                socialMediaTitle
+                url
+            }
+        }
+    }
+
+    ... on CommentCreatedAction {
+        date
+        comment {
+            id
+            user  {name}
+            guestUsername
+            revisions {
+                title
+                text
+            }
+        }
+    }
+
+    ... on PollStartedAction {
+        date
+        poll {
+            id
+            question
+        }
+    }
+
+    ... on SubscriptionCreatedAction {
+        date
+        subscription {
+            id
+            user { email }
+            memberPlan {
+                name
+            }
+        }
+    }
+
+    ... on AuthorCreatedAction {
+        date
+        author {
+            id
+            name
+            jobTitle
+        }
+    }
+
+    ... on UserCreatedAction {
+        date
+        user {
+            id
+            firstName
+            name
+            address {
+                city
+            }
+        }
+    }
+
+    ... on EventCreatedAction {
+        date
+        event {
+            id
+            name
+            location
+        }
+    }
+}
