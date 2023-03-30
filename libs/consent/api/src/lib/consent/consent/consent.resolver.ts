@@ -52,7 +52,7 @@ export class ConsentResolver {
   @Mutation(returns => Consent, {
     name: 'updateConsent',
     description: `
-      Update an existing Consent.
+      Updates an existing consent.
     `
   })
   @Permissions(CanUpdateConsent)
