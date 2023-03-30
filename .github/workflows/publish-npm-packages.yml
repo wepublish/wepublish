@@ -28,7 +28,6 @@ jobs:
           npm config set registry 'https://registry.npmjs.org'
           npm set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_AUTH_TOKEN }}'
           npm whoami
-        env:
 
       - name: "npm install"
         run: npm ci
