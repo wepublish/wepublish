@@ -282,6 +282,10 @@ export class PeriodicJobController {
     this.logger.warn('Retry failed job!')
   }
 
+  /**
+   * Mark a job as started so no other processes try to run it.
+   * @param runDate the timestamp when processing started.
+   */
   private async markJobStarted(runDate: Date) {
     this.runningJob = await this.prismaService.periodicJob.create({
       data: {
@@ -291,6 +295,10 @@ export class PeriodicJobController {
     })
   }
 
+  /**
+   * Check if any job is already being processed.
+   * @returns if there are any jobs running.
+   */
   private async isAlreadyAJobRunning() {
     const runLimit = sub(new Date(), {hours: 2})
     const runs = await this.prismaService.periodicJob.findMany({
@@ -307,6 +315,9 @@ export class PeriodicJobController {
     }
   }
 
+  /**
+   * Mark a job as completed in the database.
+   */
   private async markJobSuccessful() {
     if (!this.runningJob) {
       throw new Error('Try to make a job as successful while none is running!')
@@ -323,6 +334,11 @@ export class PeriodicJobController {
     this.runningJob = undefined
   }
 
+  /**
+   * Sleep for a random time between 0 and 300 seconds to ensure that two parallel processes
+   * are not starting to process the queue at the same time.
+   * @returns void
+   */
   private async sleepForRandomIntervalToEnsureConcurrency() {
     const randomSleepTimeout = Math.floor(Math.random() * this.randomNumberRangeForConcurrency)
     this.logger.log(
@@ -333,6 +349,10 @@ export class PeriodicJobController {
     return randomSleepTimeout
   }
 
+  /**
+   * Mark a job as failed in the database by incrementing the `tries` count and updating the failure timestamp.
+   * @param error a description of the error
+   */
   private async markJobFailed(error: string) {
     if (!this.runningJob) {
       throw new Error('Try to make a job as failed while none is running!')
@@ -354,6 +374,13 @@ export class PeriodicJobController {
     await this.subscriptionEventDictionary.initialize()
   }
 
+  /**
+   * Calculate the runs in the past that have not completed yet.
+   * - If the Controller is run for the first time, this returns just the current date.
+   * - If the last run had an error, it returns the date of the error.
+   * - If there was an execution pause, it returns all days between the last run and the current day.
+   * @returns An array of dates to run.
+   */
   private async getOutstandingRuns(): Promise<PeriodicJobRunObject[]> {
     const today = new Date()
     const runDates: PeriodicJobRunObject[] = []
@@ -373,6 +400,12 @@ export class PeriodicJobController {
     return runDates.concat(this.generateDateArray(latestRun.date, today))
   }
 
+  /**
+   * Generate an array of dates between the two bounds
+   * @param startDate The beginning date (inclusive)
+   * @param endDate The ending date (exclusive)
+   * @returns An array of Date objects
+   */
   private generateDateArray(startDate: Date, endDate: Date) {
     const dateArray = []
     const lastDate = this.getStartOfDay(endDate)
@@ -385,13 +418,10 @@ export class PeriodicJobController {
   }
 
   private getStartOfDay(date: Date): Date {
-    return subMinutes(
-      set(date, {hours: 0, minutes: 0, seconds: 0, milliseconds: 0}),
-      date.getTimezoneOffset()
-    )
+    return startOfDay(date)
   }
   private getEndOfDay(date: Date): Date {
-    return sub(endOfDay(date), {minutes: date.getTimezoneOffset()})
+    return endOfDay(date)
   }
 
   private async sendTemplateMail(

@@ -1087,4 +1087,23 @@ describe('PeriodicJobController', () => {
       expect((e as Error).toString()).toEqual('Error: No subscription deactivation found!')
     }
   })
+
+  it('loads time in same timezone as it was stored', async () => {
+    const date = new Date()
+    date.setHours(1)
+
+    await prismaClient.periodicJob.create({
+      data: {
+        date
+      }
+    })
+
+    const pj = await prismaClient.periodicJob.findMany()
+    const date2 = new Date(date.getTime())
+    date2.setHours(0)
+    date2.setMinutes(0)
+    date2.setSeconds(0)
+    date2.setMilliseconds(0)
+    expect(pj[0].date).toEqual(date2)
+  })
 })
