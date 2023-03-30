@@ -25,11 +25,6 @@ export interface SendEMailProps {
   readonly recipient: string
   readonly data: Record<string, any>
 }
-export interface SendNewEMailProps {
-  readonly event: UserEvent
-  readonly recipient: string
-  readonly data: Record<string, any>
-}
 export interface SendRemoteEMailProps {
   readonly remoteTemplate: string
   readonly recipient: string
@@ -105,19 +100,20 @@ export class MailContext implements MailContext {
     data,
     mailLogID
   }: SendRemoteEMailProps): Promise<void> {
-    if (this.mailProvider) {
-      await this.mailProvider.sendMail({
-        mailLogID,
-        recipient,
-        replyToAddress: this.defaultReplyToAddress ?? this.defaultFromAddress,
-        subject: '',
-        template: remoteTemplate,
-        templateData: data
-      })
+    if (!this.mailProvider) {
+      throw new Error('MailProvider is not set!')
     }
+    await this.mailProvider.sendMail({
+      mailLogID,
+      recipient,
+      replyToAddress: this.defaultReplyToAddress ?? this.defaultFromAddress,
+      subject: '',
+      template: remoteTemplate,
+      templateData: data
+    })
   }
 
-  async sendMailNew({event, recipient, data}: SendNewEMailProps) {
+  async getUserTemplateName(event: UserEvent): Promise<string> {
     const userFlowMail = await this.prisma.userFlowMail.findUnique({
       where: {
         event
@@ -126,24 +122,10 @@ export class MailContext implements MailContext {
         mailTemplate: true
       }
     })
-
     if (!userFlowMail) {
-      logger('mailContext').warn(`Template for event: ${event} not found`)
-      return
+      throw new Error(`No UserFlowMail defined for event ${event}`)
     }
-
-    if (this.mailProvider) {
-      await this.mailProvider.sendMail({
-        mailLogID: '1',
-        recipient,
-        replyToAddress: this.defaultReplyToAddress ?? this.defaultFromAddress,
-        subject: '',
-        message: undefined,
-        messageHtml: undefined,
-        template: userFlowMail.mailTemplate.externalMailTemplateId,
-        templateData: data
-      })
-    }
+    return userFlowMail.mailTemplate.externalMailTemplateId
   }
 
   getProvider(): MailProvider {

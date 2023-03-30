@@ -45,10 +45,14 @@ export class SystemMailResolver {
     @CurrentUser() user: User,
     @Args('systemMail') systemMail: SystemMailTestInput
   ) {
-    await this.oldContextService.context.mailContext.sendMailNew({
-      event: systemMail.event,
+    const remoteTemplate = await this.oldContextService.context.mailContext.getUserTemplateName(
+      systemMail.event
+    )
+    await this.oldContextService.context.mailContext.sendRemoteTemplate({
+      remoteTemplate,
       recipient: user.email,
-      data: {user}
+      data: {user},
+      mailLogID: systemMail.event
     })
 
     return this.getAllMails()

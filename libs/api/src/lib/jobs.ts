@@ -52,12 +52,14 @@ async function dailyInvoiceReminder(context: Context, data: any): Promise<void> 
 async function sendTestMail(context: Context, data: any): Promise<void> {
   const {recipient = 'fake@fake.com', message = 'This is a test message'} = data
 
-  await context.mailContext.sendMailNew({
-    event: UserEvent.TEST_MAIL,
+  const remoteTemplate = await context.mailContext.getUserTemplateName(UserEvent.TEST_MAIL)
+  await context.mailContext.sendRemoteTemplate({
+    remoteTemplate,
     recipient,
     data: {
       message
-    }
+    },
+    mailLogID: UserEvent.TEST_MAIL
   })
 }
 

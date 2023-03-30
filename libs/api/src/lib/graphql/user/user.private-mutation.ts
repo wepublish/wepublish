@@ -108,10 +108,12 @@ export const resetUserPassword = async (
   })
 
   if (sendMail && user) {
-    await mailContext.sendMailNew({
-      event: UserEvent.PASSWORD_RESET,
+    const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.PASSWORD_RESET)
+    await mailContext.sendRemoteTemplate({
+      remoteTemplate,
       recipient: user.email,
-      data: {user}
+      data: {user},
+      mailLogID: UserEvent.PASSWORD_RESET
     })
   }
 

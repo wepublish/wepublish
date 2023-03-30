@@ -370,13 +370,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           expiresInMinutes: jwtExpires
         })
 
-        await mailContext.sendMailNew({
-          event: UserEvent.LOGIN_LINK,
+        const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.LOGIN_LINK)
+        await mailContext.sendRemoteTemplate({
+          remoteTemplate,
           recipient: email,
           data: {
             url: `${url}?jwt=${token}`,
             user
-          }
+          },
+          mailLogID: UserEvent.LOGIN_LINK
         })
 
         return email
@@ -419,13 +421,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           expiresInMinutes: jwtExpires
         })
 
-        await mailContext.sendMailNew({
-          event: UserEvent.LOGIN_LINK,
+        const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.LOGIN_LINK)
+        await mailContext.sendRemoteTemplate({
+          remoteTemplate,
           recipient: email,
           data: {
             url: urlAdapter.getLoginURL(token),
             user
-          }
+          },
+          mailLogID: UserEvent.LOGIN_LINK
         })
 
         return email

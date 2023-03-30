@@ -708,13 +708,15 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           expiresInMinutes: resetPwd
         })
 
-        await mailContext.sendMailNew({
-          event: UserEvent.LOGIN_LINK,
+        const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.LOGIN_LINK)
+        await mailContext.sendRemoteTemplate({
+          remoteTemplate,
           recipient: user.email,
           data: {
             url: urlAdapter.getLoginURL(token),
             user
-          }
+          },
+          mailLogID: UserEvent.LOGIN_LINK
         })
 
         try {
