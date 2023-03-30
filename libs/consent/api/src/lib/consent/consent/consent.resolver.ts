@@ -18,7 +18,7 @@ export class ConsentResolver {
   @Query(returns => [Consent], {
     name: 'consents',
     description: `
-      Returns all Consents.
+      Returns all consents.
     `
   })
   consentList(@Args('filter', {nullable: true}) filter: ConsentFilter) {
