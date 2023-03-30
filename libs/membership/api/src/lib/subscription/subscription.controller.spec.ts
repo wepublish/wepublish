@@ -1,6 +1,5 @@
 import nock from 'nock'
 import {
-  MailTemplate,
   PaymentPeriodicity,
   PrismaClient,
   Subscription,

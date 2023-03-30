@@ -1,7 +1,12 @@
-import {MailLogState, PrismaClient, UserEvent} from '@prisma/client'
+import {PrismaClient, UserEvent} from '@prisma/client'
 import Email from 'email-templates'
 import {logger} from '../server'
-import {BaseMailProvider} from './mailProvider'
+import {
+  BaseMailProvider,
+  MailProvider,
+  MailProviderError,
+  MailProviderTemplate
+} from './mailProvider'
 
 export enum SendMailType {
   LoginLink,
@@ -139,6 +144,26 @@ export class MailContext implements MailContext {
         templateData: data
       })
     }
+  }
+
+  getProvider(): MailProvider {
+    if (!this.mailProvider) {
+      throw new Error('MailProvider in MailContext must be defined!')
+    }
+    return this.mailProvider
+  }
+
+  async getTemplates(): Promise<MailProviderTemplate[] | MailProviderError> {
+    return this.getProvider().getTemplates()
+  }
+
+  async getUsedTemplateIdentifiers(): Promise<string[]> {
+    const intervals = await this.prisma.subscriptionInterval.findMany({
+      include: {
+        mailTemplate: true
+      }
+    })
+    return intervals.map(i => i.mailTemplate?.externalMailTemplateId || '')
   }
 
   /**

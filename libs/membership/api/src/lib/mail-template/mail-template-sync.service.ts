@@ -1,7 +1,6 @@
 import {Injectable} from '@nestjs/common'
 import {MailTemplate} from '@prisma/client'
-import {MailProviderTemplate, PrismaService} from '@wepublish/api'
-import {MailProviderService} from './mail-provider.service'
+import {MailProviderTemplate, OldContextService, PrismaService} from '@wepublish/api'
 
 export interface MailTemplateSyncDiff {
   remoteNew: MailProviderTemplate[]
@@ -11,15 +10,12 @@ export interface MailTemplateSyncDiff {
 
 @Injectable()
 export class MailTemplateSyncService {
-  constructor(
-    private prismaService: PrismaService,
-    private mailProviderService: MailProviderService
-  ) {}
+  constructor(private prismaService: PrismaService, private oldContextService: OldContextService) {}
 
   async synchronizeTemplates(): Promise<void> {
     const localTemplates = await this.prismaService.mailTemplate.findMany()
 
-    const mailProvider = await this.mailProviderService.getProvider()
+    const mailProvider = await this.oldContextService.context.mailContext.getProvider()
     const remoteTemplates = (await mailProvider.getTemplates()) as MailProviderTemplate[]
 
     // find new and updated remote templates
@@ -41,7 +37,8 @@ export class MailTemplateSyncService {
         await this.prismaService.mailTemplate.create({
           data: {
             name: remoteTemplate.name,
-            externalMailTemplateId: remoteTemplate.uniqueIdentifier
+            externalMailTemplateId: remoteTemplate.uniqueIdentifier,
+            remoteMissing: false
           }
         })
       }

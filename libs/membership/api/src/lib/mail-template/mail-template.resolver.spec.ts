@@ -1,7 +1,6 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {MailTemplate} from '@prisma/client'
-import {PrismaService} from '@wepublish/api'
-import {MailProviderService} from './mail-provider.service'
+import {MailProvider, MailTemplateStatus, OldContextService, PrismaService} from '@wepublish/api'
 import {MailTemplateSyncService} from './mail-template-sync.service'
 import {MailTemplatesResolver} from './mail-template.resolver'
 import {INestApplication, Module} from '@nestjs/common'
@@ -32,27 +31,48 @@ const syncTemplatesMutation = `
   }
 `
 
-const mockTemplate: MailTemplate = {
+const mockTemplate1: MailTemplate = {
   id: 1,
-  name: 'Mock Template',
-  description: 'Mock Desc',
+  name: 'Mock Template 1',
+  description: 'Mock Desc 1',
   externalMailTemplateId: '123',
   remoteMissing: false,
   createdAt: new Date(),
   modifiedAt: new Date()
 }
 
+const mockTemplate2: MailTemplate = {
+  id: 2,
+  name: 'Mock Template 2',
+  description: 'Mock Desc 2',
+  externalMailTemplateId: '124',
+  remoteMissing: true,
+  createdAt: new Date(),
+  modifiedAt: new Date()
+}
+
 const prismaServiceMock = {
   mailTemplate: {
-    findMany: jest.fn((): MailTemplate[] => [mockTemplate])
+    findMany: jest.fn((): MailTemplate[] => [mockTemplate1, mockTemplate2])
   }
 }
 
 const mailProviderServiceMock = {
   name: 'MockProvider',
-  getProvider: jest.fn().mockReturnThis(),
-  getTemplateUrl: jest.fn((): string => 'https://example.com/template.html'),
-  getUsedTemplateIdentifiers: jest.fn((): string[] => [])
+  getTemplateUrl: jest.fn((): string => 'https://example.com/template.html')
+}
+
+const oldContextServiceMock = {
+  context: {
+    mailContext: {
+      getProvider: jest.fn((): MailProvider => mailProviderServiceMock as unknown as MailProvider),
+      getUsedTemplateIdentifiers: jest.fn((): string[] => [])
+    }
+  }
+}
+
+const syncServiceMock = {
+  synchronizeTemplates: jest.fn((): void => undefined)
 }
 
 @Module({
@@ -66,7 +86,7 @@ const mailProviderServiceMock = {
   ],
   providers: [
     PrismaService,
-    MailProviderService,
+    OldContextService,
     MailTemplatesResolver,
     MailTemplateSyncService,
     {
@@ -94,8 +114,8 @@ describe('MailTemplatesResolver', () => {
       providers: [
         MailTemplatesResolver,
         {provide: PrismaService, useValue: prismaServiceMock},
-        {provide: MailTemplateSyncService, useValue: {}},
-        {provide: MailProviderService, useValue: mailProviderServiceMock}
+        {provide: MailTemplateSyncService, useValue: syncServiceMock},
+        {provide: OldContextService, useValue: oldContextServiceMock}
       ]
     }).compile()
 
@@ -112,19 +132,33 @@ describe('MailTemplatesResolver', () => {
 
   it('returns all templates', async () => {
     const result = await resolver.mailTemplates()
-    expect(result.length).toEqual(1)
-    expect(result[0].name).toEqual('Mock Template')
+    expect(result.length).toEqual(2)
+    expect(result[0].name).toEqual('Mock Template 1')
+    expect(result[1].name).toEqual('Mock Template 2')
   })
 
   it('computes the template url', async () => {
     const result = await resolver.mailTemplates()
-    expect(result.length).toEqual(1)
+    expect(result.length).toEqual(2)
     expect(result[0].url).toEqual('https://example.com/template.html')
+    expect(result[1].url).toEqual('https://example.com/template.html')
   })
 
   it('resolves the provider', async () => {
     const result = await resolver.provider()
     expect(result.name).toEqual('MockProvider')
+  })
+
+  it('synchronizes the mail templates', async () => {
+    const result = await resolver.syncTemplates()
+    expect(result).toEqual(true)
+  })
+
+  it('computes the template status', async () => {
+    const result = await resolver.mailTemplates()
+    expect(result.length).toEqual(2)
+    expect(result[0].status).toEqual(MailTemplateStatus.Unused)
+    expect(result[1].status).toEqual(MailTemplateStatus.RemoteMissing)
   })
 
   /**
