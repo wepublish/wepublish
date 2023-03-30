@@ -28,7 +28,7 @@ export class ConsentResolver {
   @Query(returns => Consent, {
     name: 'consent',
     description: `
-      Returns Consent by id.
+      Returns a consent by id.
     `
   })
   consent(@Args('id') id: string) {
