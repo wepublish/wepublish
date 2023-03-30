@@ -22,7 +22,6 @@
     "directory": "libs/api"
   },
   "license": "MIT",
-  "bin": "./src/run-server.js",
   "prisma": {
     "schema": "prisma/schema.prisma",
     "seed": "npx ts-node __tests__/seed.ts"
