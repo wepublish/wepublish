@@ -13,7 +13,7 @@ import {useNavigate, useParams} from 'react-router-dom'
 import {Col, DatePicker, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
 import {Node} from 'slate'
 
-import {SingleViewTitle} from '../../../../../../libs/ui/src/lib/singleView/singleViewTitle'
+import {SingleViewTitle} from '@wepublish/ui'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {PollAnswers} from '../../atoms/poll/pollAnswers'
 import {PollExternalVotes} from '../../atoms/poll/pollExternalVotes'

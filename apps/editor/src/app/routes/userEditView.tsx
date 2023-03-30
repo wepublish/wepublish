@@ -29,7 +29,7 @@ import {
 
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
-import {SingleViewTitle} from '../../../../../libs/ui/src/lib/singleView/singleViewTitle'
+import {SingleViewTitle} from '@wepublish/ui'
 import {createCheckedPermissionComponent, useAuthorisation} from '../atoms/permissionControl'
 import {EditUserPassword} from '../atoms/user/editUserPassword'
 import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'

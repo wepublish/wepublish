@@ -30,7 +30,7 @@ import {
 import {CommentDeleteBtn} from '../../atoms/comment/commentDeleteBtn'
 import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {CommentUser} from '../../atoms/comment/commentUser'
-import {SingleViewTitle} from '../../../../../../libs/ui/src/lib/singleView/singleViewTitle'
+import {SingleViewTitle} from '@wepublish/ui'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {SelectTags} from '../../atoms/tag/selectTags'
 import {CommentHistory} from '../../atoms/comment/commentHistory'

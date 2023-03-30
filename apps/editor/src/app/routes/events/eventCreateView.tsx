@@ -9,7 +9,7 @@ import {useTranslation} from 'react-i18next'
 import {useNavigate} from 'react-router-dom'
 import {Form, Message, Schema, toaster} from 'rsuite'
 
-import {SingleViewTitle} from '../../../../../../libs/ui/src/lib/singleView/singleViewTitle'
+import {SingleViewTitle} from '@wepublish/ui'
 import {EventForm} from './eventForm'
 
 const onErrorToast = (error: ApolloError) => {
