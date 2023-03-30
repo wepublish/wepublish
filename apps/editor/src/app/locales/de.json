@@ -1196,7 +1196,8 @@
       "slug": "Slug",
       "defaultValue": "Standardwert",
       "titleCreate": "Konsens erstellen",
-      "titleEdit": "Konsens bearbeiten"
+      "titleEdit": "Konsens bearbeiten",
+      "uniqueConstraint": "A consent with slug '\"{{slug}}\"' already exists. Please choose a different slug."
     },
     "userConsents": {
       "title": "User-Konsens",

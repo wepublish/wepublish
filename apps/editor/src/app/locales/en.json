@@ -1213,7 +1213,8 @@
       "slug": "Slug",
       "defaultValue": "Default value",
       "titleCreate": "Create Consent",
-      "titleEdit": "Edit Consent"
+      "titleEdit": "Edit Consent",
+      "uniqueConstraint": "A consent with slug '\"{{slug}}\"' already exists. Please choose a different slug."
     },
     "userConsents": {
       "title": "User Consents",

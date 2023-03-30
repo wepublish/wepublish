@@ -66,8 +66,6 @@ export function ConsentList(props: ConsentListProps) {
         <ListViewHeader>
           <h2>{t('consents.title')}</h2>
         </ListViewHeader>
-        {/* todo permission control */}
-        {/* <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}> */}
         <ListViewActions>
           <Link to="/consents/create">
             <IconButton appearance="primary" disabled={loading} icon={<MdAdd />}>
@@ -75,7 +73,6 @@ export function ConsentList(props: ConsentListProps) {
             </IconButton>
           </Link>
         </ListViewActions>
-        {/* </PermissionControl> */}
       </ListViewContainer>
 
       <TableWrapper>

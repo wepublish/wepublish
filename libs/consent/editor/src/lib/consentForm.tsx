@@ -57,7 +57,7 @@ export const ConsentForm = ({consent, onChange, create}: ConsentFormProps) => {
           <Form.ControlLabel>{t('consents.defaultValue')}</Form.ControlLabel>
           <SelectPicker
             key="default-value"
-            placeholder={t('userSubscriptionEdit.selectMemberPlan')}
+            placeholder={t('consents.defaultValue')}
             block
             data={consentValues}
             value={consent.defaultValue ?? ''}

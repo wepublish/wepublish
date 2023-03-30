@@ -22,22 +22,6 @@ const mapApiDataToInput = (consent: any): MutationUpdateConsentArgs['consent'] =
   defaultValue: consent.defaultValue
 })
 
-const onErrorToast = (error: ApolloError, slug?: string) => {
-  if (error.message.includes('Unique constraint')) {
-    toaster.push(
-      <Message type="error" showIcon closable duration={3000}>
-        {`A consent with slug '${slug}' already exists. Please choose a different slug.`}
-      </Message>
-    )
-    return
-  }
-  toaster.push(
-    <Message type="error" showIcon closable duration={3000}>
-      {error.message}
-    </Message>
-  )
-}
-
 export const ConsentEditView = () => {
   const {id} = useParams()
   const consentId = id!
@@ -45,6 +29,22 @@ export const ConsentEditView = () => {
   const client = useMemo(() => getApiClientV2(), [])
   const navigate = useNavigate()
   const {t} = useTranslation()
+
+  const onErrorToast = (error: ApolloError, slug?: string) => {
+    if (error.message.includes('Unique constraint')) {
+      toaster.push(
+        <Message type="error" showIcon closable duration={3000}>
+          {t('consents.uniqueConstraint', {slug})}
+        </Message>
+      )
+      return
+    }
+    toaster.push(
+      <Message type="error" showIcon closable duration={3000}>
+        {error.message}
+      </Message>
+    )
+  }
 
   const closePath = '/consents'
   const [consent, setConsent] = useState({

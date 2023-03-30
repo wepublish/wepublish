@@ -1191,7 +1191,8 @@
       "slug": "Slug",
       "defaultValue": "Valeur par défaut",
       "titleCreate": "Créer un consentement",
-      "titleEdit": "Modifier le consentement"
+      "titleEdit": "Modifier le consentement",
+      "uniqueConstraint": "A consent with slug '\"{{slug}}\"' already exists. Please choose a different slug."
     },
     "userConsents": {
       "title": "Consentement de l'utilisateur",
