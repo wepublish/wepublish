@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
   "version": "9.2.0",
-=======
-  "version": "9.2.0-alpha.9",
->>>>>>> d9a12231 (npm_token+lerna changes)
   "changelog": {
     "repo": "wepublish/wepublish",
     "cacheDir": ".changelog",

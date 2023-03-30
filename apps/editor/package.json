@@ -1,10 +1,6 @@
 {
   "name": "@wepublish/editor",
-<<<<<<< HEAD
   "version": "9.2.0",
-=======
-  "version": "9.2.0-alpha.9",
->>>>>>> d9a12231 (npm_token+lerna changes)
   "description": "We.publish CMS Editor",
   "keywords": [
     "editor",
