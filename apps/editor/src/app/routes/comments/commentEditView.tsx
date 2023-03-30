@@ -28,12 +28,12 @@ import {
 } from 'rsuite'
 
 import {CommentDeleteBtn} from '../../atoms/comment/commentDeleteBtn'
+import {CommentHistory} from '../../atoms/comment/commentHistory'
 import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {CommentUser} from '../../atoms/comment/commentUser'
 import {SingleViewTitle} from '@wepublish/ui'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {SelectTags} from '../../atoms/tag/selectTags'
-import {CommentHistory} from '../../atoms/comment/commentHistory'
 
 const ColNoMargin = styled(RCol)`
   margin-top: 0px;

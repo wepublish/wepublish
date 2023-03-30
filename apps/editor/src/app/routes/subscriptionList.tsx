@@ -20,6 +20,7 @@ import {
   toaster
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
+
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {

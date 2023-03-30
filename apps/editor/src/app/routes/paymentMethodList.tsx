@@ -3,8 +3,7 @@ import {
   useDeletePaymentMethodMutation,
   usePaymentMethodListQuery
 } from '@wepublish/editor/api'
-import styled from '@emotion/styled'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
