@@ -23,6 +23,13 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
+      - name: "Setup npm registry"
+        run: |
+          npm config set registry 'https://registry.npmjs.org'
+          npm set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_AUTH_TOKEN }}'
+          npm whoami
+        env:
+
       - name: "npm install"
         run: npm ci
 
@@ -30,12 +37,8 @@ jobs:
           contains(github.ref, 'tags/') && contains(github.ref, 'alpha')
         name: "Publish next npms"
         run: npm run release:next -- --yes
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - if: |
           contains(github.ref, 'tags/') && !contains(github.ref, 'alpha')
         name: "Publish latest npms"
         run: npm run release -- --yes
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
