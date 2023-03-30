@@ -1007,11 +1007,9 @@ describe('PeriodicJobController', () => {
       },
       event: SubscriptionEvent.DEACTIVATION_UNPAID
     })
-    console.log('1')
     await controller['loadEnvironment']()
     invoice.paidUntil = add(runDate, {days: 11})
     await controller['createInvoice'](pjo, invoice)
-    console.log('2')
     try {
       invoice.paidUntil = add(runDate, {days: 10, seconds: -10})
       await controller['createInvoice'](pjo, invoice)
@@ -1021,7 +1019,6 @@ describe('PeriodicJobController', () => {
         "TypeError: Cannot read properties of undefined (reading 'name')"
       )
     }
-    console.log('3')
     try {
       invoice.paidUntil = add(runDate, {days: 9})
       await controller['createInvoice'](pjo, invoice)

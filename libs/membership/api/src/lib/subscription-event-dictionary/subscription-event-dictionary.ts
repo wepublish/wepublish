@@ -42,12 +42,17 @@ export class SubscriptionEventDictionary {
       }))
 
       if (subscriptionFlow.default) {
+        if (defaultFlowInitialized) {
+          throw new Error('Multiple default memberplans found! This is a data integrity error!')
+        }
         this.assignActions(this.store.defaultFlow, intervals)
         defaultFlowInitialized = true
         continue
       }
       if (!subscriptionFlow.memberPlanId) {
-        continue
+        throw new Error(
+          'Subscription Flow with no memberplan found that is not default! This is a data integrity error!'
+        )
       }
 
       if (!this.store.customFlow[subscriptionFlow.memberPlanId])
