@@ -34,9 +34,9 @@ jobs:
       - if: |
           contains(github.ref, 'tags/') && contains(github.ref, 'alpha')
         name: "Publish next npms"
-        run: npm run release:next -- --yes
+        run: npm run publish --  --dist-tag next --yes
 
       - if: |
           contains(github.ref, 'tags/') && !contains(github.ref, 'alpha')
         name: "Publish latest npms"
-        run: npm run release -- --yes
+        run: npm run publish -- --yes
