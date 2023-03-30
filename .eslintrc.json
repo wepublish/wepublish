@@ -22,7 +22,7 @@
             // START of temporary nx workaround as long as nx refactoring is not finished
             // https://stackoverflow.com/questions/67643569/eslint-rule-nrwl-nx-enforce-module-boundaries-fails
             "allowCircularSelfDependency": true,
-            "allow": ["app/**"]
+            "allow": ["app/**", "@wepublish/membership/editor"]
             // END of temporary nx workaround
           }
         ]

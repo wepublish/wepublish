@@ -43,10 +43,12 @@ import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
 import {LocalStorageKey} from './utility'
-import {MemberPlanEdit} from '../../../../libs/membership/editor/src/lib/memberPlan/memberPlanEdit'
-import {MailTemplateList} from '../../../../libs/membership/editor/src/lib/mailTemplate/mailTemplateList'
-import {SubscriptionFlowList} from '../../../../libs/membership/editor/src/lib/subscriptionFlow/subscriptionFlowList'
-import {SystemMailList} from '../../../../libs/membership/editor/src/lib/systemMail/systemMailList'
+import {
+  MailTemplateList,
+  MemberPlanEdit,
+  SubscriptionFlowList,
+  SystemMailList
+} from '@wepublish/membership/editor'
 
 const LogoutMutation = gql`
   mutation Logout {
