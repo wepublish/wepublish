@@ -1,5 +1,21 @@
 # Change Log
 
+## 9.2.0 (2023-03-30)
+
+#### :heart: New Feature
+* [#866](https://github.com/wepublish/wepublish/pull/866) f/WPC-953-public-endpoint-switch ([@Itrulia](https://github.com/Itrulia))
+* [#819](https://github.com/wepublish/wepublish/pull/819) dashboard ([@penk85](https://github.com/penk85))
+* [#859](https://github.com/wepublish/wepublish/pull/859) feat(website): builder init ([@Itrulia](https://github.com/Itrulia))
+
+#### :bug: Bug Fix
+* [#875](https://github.com/wepublish/wepublish/pull/875) fix(editor): user filter being wrong after graphql changes ([@Itrulia](https://github.com/Itrulia))
+* [#873](https://github.com/wepublish/wepublish/pull/873) fix(api): add onDelete cascade for authors and revisions ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 2
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+
+
 ## 9.1.0 (2023-03-16)
 
 #### :bug: Bug Fix
