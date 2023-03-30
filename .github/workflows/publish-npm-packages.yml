@@ -18,12 +18,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16'
+          registry-url: 'https://registry.npmjs.org/'
           cache: npm
-
-      - name: "Setup npm"
-        run: |
-          npm config set registry 'https://registry.npmjs.org'
-          npm set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_AUTH_TOKEN }}'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: "npm install"
         run: npm ci
