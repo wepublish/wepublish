@@ -41,7 +41,7 @@ export class ConsentResolver {
   @Mutation(returns => Consent, {
     name: 'createConsent',
     description: `
-      Create a new Consent.
+      Create a new consent.
     `
   })
   @Permissions(CanCreateConsent)
