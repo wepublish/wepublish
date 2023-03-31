@@ -1,6 +1,7 @@
 import {PrismaClient} from '@prisma/client'
 import {
   AlgebraicCaptchaChallenge,
+  JobType,
   KarmaMediaAdapter,
   MailgunMailProvider,
   Oauth2Provider,
@@ -21,6 +22,7 @@ import {URL} from 'url'
 import {SlackMailProvider} from './slack-mail-provider'
 import {ExampleURLAdapter} from './url-adapter'
 import {Application} from 'express'
+import {CronJob} from 'cron'
 
 export async function runServer(app?: Application | undefined) {
   if (!process.env.DATABASE_URL) throw new Error('No DATABASE_URL defined in environment.')
@@ -138,8 +140,11 @@ export async function runServer(app?: Application | undefined) {
   if (
     process.env.PAYREXX_INSTANCE_NAME &&
     process.env.PAYREXX_API_SECRET &&
-    process.env.PAYREXX_WEBHOOK_SECRET
+    process.env.PAYREXX_WEBHOOK_SECRET &&
+    process.env.PAYREXX_PAYMENT_METHODS
   ) {
+    const paymentMethods = process.env.PAYREXX_PAYMENT_METHODS.split(',').map(pm => pm.trim())
+
     paymentProviders.push(
       new PayrexxPaymentProvider({
         id: 'payrexx',
@@ -148,15 +153,7 @@ export async function runServer(app?: Application | undefined) {
         instanceName: process.env.PAYREXX_INSTANCE_NAME,
         instanceAPISecret: process.env.PAYREXX_API_SECRET,
         psp: [0, 15, 17, 2, 3, 36],
-        pm: [
-          'postfinance_card',
-          'postfinance_efinance',
-          // "mastercard",
-          // "visa",
-          'twint',
-          // "invoice",
-          'paypal'
-        ],
+        pm: paymentMethods,
         vatRate: 7.7,
         incomingRequestHandler: bodyParser.json()
       })
@@ -165,7 +162,7 @@ export async function runServer(app?: Application | undefined) {
       new PayrexxSubscriptionPaymentProvider({
         id: 'payrexx-subscription',
         name: 'Payrexx Subscription',
-        offSessionPayments: false,
+        offSessionPayments: true,
         instanceName: process.env.PAYREXX_INSTANCE_NAME,
         instanceAPISecret: process.env.PAYREXX_API_SECRET,
         incomingRequestHandler: bodyParser.json(),
@@ -289,6 +286,23 @@ export async function runServer(app?: Application | undefined) {
     },
     app
   )
+
+  const checkInvoiceCron = new CronJob('0 8 * * *', async function () {
+    await server.runJob(JobType.DailyInvoiceChecker, {})
+  })
+  checkInvoiceCron.start()
+
+  const chargeInvoiceCron = new CronJob('0 8 * * *', async function () {
+    await server.runJob(JobType.DailyInvoiceCharger, {})
+  })
+  chargeInvoiceCron.start()
+
+  const renewMemberships = new CronJob('0 8 * * *', async function () {
+    await server.runJob(JobType.DailyMembershipRenewal, {
+      startDate: new Date()
+    })
+  })
+  renewMemberships.start()
 
   await server.listen(port, address)
 }
