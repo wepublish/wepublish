@@ -35,6 +35,9 @@ export class Event {
   @Field()
   imageId!: string
 
+  // @Field()
+  // image!: string
+
   @Field()
   location!: string
 

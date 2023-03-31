@@ -43,7 +43,7 @@ type XMLEventType = {
   PriceInformation: string[]
   TicketInformation: string[]
   ExternalURL: string[]
-  OriginURL: ['https://www.theater-basel.ch/de/streit']
+  OriginURL: string[]
   Location: XMLEventLocation[]
   ActivityDates: XMLEventActivityDate[]
   ActivityMultimedia: XMLEventMultimedia[]
@@ -51,20 +51,40 @@ type XMLEventType = {
 }
 
 const parseXMLEventToWpEvent = (XMLEvent: XMLEventType) => {
+  const startDate =
+    XMLEvent &&
+    XMLEvent.ActivityDates &&
+    typeof XMLEvent.ActivityDates[0] !== 'string' &&
+    XMLEvent.ActivityDates[0]?.ActivityDate &&
+    XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$'] &&
+    XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$'].startDate
+
+  // if (!startDate) {
+  //   console.log('startDate', startDate)
+  //   console.log(
+  //     'XMLEvent && XMLEvent.ActivityDates && typeof XMLEvent.ActivityDates[0]',
+  //     XMLEvent && XMLEvent.ActivityDates && typeof XMLEvent.ActivityDates[0]
+  //   )
+  //   console.log('XMLEvent.ActivityDates', XMLEvent.ActivityDates)
+  //   console.log('XMLEvent.ActivityDates[0]', XMLEvent.ActivityDates[0])
+  //   console.log('XMLEvent.ActivityDates[0].ActivityDate', XMLEvent.ActivityDates[0].ActivityDate)
+  // }
+
   const parsedEvent = {
     id: XMLEvent['$'].originId,
-    createdAt: '',
-    modifiedAt: XMLEvent['$'].lastUpdate,
-    name: XMLEvent.Title[0],
-    description: XMLEvent.CastInformation[0],
+    // createdAt: '',
+    // modifiedAt: XMLEvent['$'].lastUpdate,
+    name: XMLEvent.Title[0] || '',
+    description: XMLEvent.CastInformation[0] || '',
     status: 'Scheduled',
 
     // imageId String?
     // image   Image?  @relation(fields: [imageId], references: [id])
 
-    location: XMLEvent.Location[0].LocationAdress[0],
-    startsAt: XMLEvent.ActivityDates[0].ActivityDate[0],
-    endsAt: 'dupa'
+    location: XMLEvent.Location[0]?.LocationAdress[0] || '',
+    // startsAt: startDate ? startDate : '',
+    startsAt: new Date('2023-01-01 12:00:00'),
+    endsAt: new Date('2023-01-01 12:00:00')
 
     // tags TaggedEvents[]
   }
@@ -76,7 +96,7 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType) => {
 export class EventsImportService {
   constructor(private prisma: PrismaClient) {}
 
-  async importedEvents(): Promise<PrismaClient['event'][]> {
+  async importedEvents(): Promise<PrismaClient['event']> {
     const parser = new xml2js.Parser()
     const urlToQuery = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
 
@@ -93,24 +113,20 @@ export class EventsImportService {
     }
 
     const eventsParsedXML = await getXMLfromURL(urlToQuery)
-    // console.log('eventsParsedXML1', eventsParsedXML)
-    // console.log('eventsParsedXML2', eventsParsedXML["kdz:exportActivities"])
-    // console.log('eventsParsedXML2', eventsParsedXML['kdz:exportActivities'].Activities[0].Activity)
-    // console.log('eventsParsedXML3', eventsParsedXML['kdz:exportActivities'].Activities[0].Activity[0])
 
     // console.log('events', eventsXML)
 
     const importedEvents = eventsParsedXML['kdz:exportActivities']?.Activities[0]?.Activity?.map(
       a => {
-        console.log('a dupa', a)
+        // console.log('a events-import service', a)
         return parseXMLEventToWpEvent(a)
       }
     )
 
-    console.log('importedEvents', importedEvents)
+    console.log('importedEvents.length', importedEvents.length)
 
-    console.log('here dupa')
+    console.log('here events-import service')
 
-    return []
+    return importedEvents || []
   }
 }
