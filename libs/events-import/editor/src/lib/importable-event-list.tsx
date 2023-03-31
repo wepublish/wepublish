@@ -8,7 +8,7 @@ import {IconButton, Message, Pagination, Table as RTable, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 // import {} from '@wepublish/editor/api-v2'
 
-import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
+// import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
 import {
   ListViewActions,
   ListViewContainer,
@@ -17,7 +17,6 @@ import {
   TableWrapper
 } from '../../ui/listView'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
-// import {DeleteEventModal} from './deleteEventModal'
 
 const {Column, HeaderCell, Cell} = RTable
 
@@ -79,15 +78,15 @@ function ImportableEventListView() {
           <h2>{t('event.list.title')}</h2>
         </ListViewHeader>
 
-        <PermissionControl qualifyingPermissions={['CAN_CREATE_EVENT']}>
-          <ListViewActions>
-            <Link to="create">
-              <IconButton appearance="primary" icon={<MdAdd />}>
-                {t('event.list.create')}
-              </IconButton>
-            </Link>
-          </ListViewActions>
-        </PermissionControl>
+        {/* <PermissionControl qualifyingPermissions={['CAN_CREATE_EVENT']}> */}
+        <ListViewActions>
+          <Link to="create">
+            <IconButton appearance="primary" icon={<MdAdd />}>
+              {t('event.list.create')}
+            </IconButton>
+          </Link>
+        </ListViewActions>
+        {/* </PermissionControl> */}
       </ListViewContainer>
 
       <TableWrapper>
@@ -159,11 +158,13 @@ function ImportableEventListView() {
   )
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_EVENT',
-  'CAN_CREATE_EVENT',
-  'CAN_UPDATE_EVENT',
-  'CAN_DELETE_EVENT'
-])(ImportableEventListView)
+// const CheckedPermissionComponent = createCheckedPermissionComponent([
+//   'CAN_GET_EVENT',
+//   'CAN_CREATE_EVENT',
+//   'CAN_UPDATE_EVENT',
+//   'CAN_DELETE_EVENT'
+// ])(ImportableEventListView)
 
-export {CheckedPermissionComponent as ImportableEventListView}
+// export {CheckedPermissionComponent as ImportableEventListView}
+
+export {ImportableEventListView}
