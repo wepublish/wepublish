@@ -1,7 +1,7 @@
 import React from 'react'
 import {render} from '@testing-library/react'
 
-import {ConsentCreateView} from './consentCreateView'
+import {ConsentCreateView} from './consent-create-view'
 import {BrowserRouter} from 'react-router-dom'
 import fetch from 'jest-fetch-mock'
 jest.setMock('node-fetch', fetch)

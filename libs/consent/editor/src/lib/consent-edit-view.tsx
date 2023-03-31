@@ -12,7 +12,7 @@ import {useNavigate, useParams} from 'react-router-dom'
 import {Form, Message, Schema, toaster} from 'rsuite'
 
 import {ModelTitle} from '@wepublish/ui/editor'
-import {ConsentForm} from './consentForm'
+import {ConsentForm} from './consent-form'
 import {getApiClientV2} from '../apiClientv2'
 
 const mapApiDataToInput = (consent: any): MutationUpdateConsentArgs['consent'] => ({

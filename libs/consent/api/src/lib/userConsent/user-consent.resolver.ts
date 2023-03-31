@@ -4,12 +4,11 @@ import {
   UserConsentInput,
   UpdateUserConsentInput,
   UserConsentFilter
-} from './userConsent.model'
-import {UserConsentService} from './userConsent.service'
+} from './user-consent.model'
+import {UserConsentService} from './user-consent.service'
 
 import {UseGuards} from '@nestjs/common'
-import {CurrentUser} from '../user.decorator.graphql'
-import {UserSession, AuthenticationGuard} from '@wepublish/authentication/api'
+import {UserSession, AuthenticationGuard, CurrentUser} from '@wepublish/authentication/api'
 
 @Resolver()
 export class UserConsentResolver {
@@ -21,7 +20,7 @@ export class UserConsentResolver {
   @Query(returns => [UserConsent], {
     name: 'userConsents',
     description: `
-      Returns all userConsents.
+      Returns a list of userConsents. Possible to filter.
     `
   })
   userConsentList(@Args('filter', {nullable: true}) filter: UserConsentFilter) {
@@ -31,7 +30,7 @@ export class UserConsentResolver {
   @Query(returns => UserConsent, {
     name: 'userConsent',
     description: `
-      Returns userConsent by id.
+      Returns a single userConsent by id.
     `
   })
   userConsent(@Args('id') id: string) {
@@ -44,7 +43,8 @@ export class UserConsentResolver {
   @Mutation(returns => UserConsent, {
     name: 'createUserConsent',
     description: `
-      Create a new UserConsent.
+      Creates a new userConsent based on input.
+      Returns created userConsent.
     `
   })
   @UseGuards(AuthenticationGuard)
@@ -58,7 +58,8 @@ export class UserConsentResolver {
   @Mutation(returns => UserConsent, {
     name: 'updateUserConsent',
     description: `
-      Update an existing UserConsent.
+      Updates an existing userConsent based on input.
+      Returns updated userConsent.
     `
   })
   @UseGuards(AuthenticationGuard)
@@ -73,7 +74,8 @@ export class UserConsentResolver {
   @Mutation(returns => UserConsent, {
     name: 'deleteUserConsent',
     description: `
-      Delete an existing UserConsent.
+      Delete an existing userConsent by id.
+      Returns deleted userConsent.
     `
   })
   @UseGuards(AuthenticationGuard)

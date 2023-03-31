@@ -55,42 +55,45 @@ scalar DateTime
 type Mutation {
   """
   
-        Create a new Consent.
+        Create a new consent.
       
   """
   createConsent(consent: ConsentInput!): Consent!
 
   """
   
-        Create a new UserConsent.
+        Creates a new userConsent based on input.
+        Returns created userConsent.
       
   """
   createUserConsent(userConsent: UserConsentInput!): UserConsent!
 
   """
   
-        Deletes an existing Consent.
+        Deletes an existing consent.
       
   """
   deleteConsent(id: String!): Consent!
 
   """
   
-        Delete an existing UserConsent.
+        Delete an existing userConsent by id.
+        Returns deleted userConsent.
       
   """
   deleteUserConsent(id: String!): UserConsent!
 
   """
   
-        Update an existing Consent.
+        Updates an existing consent.
       
   """
   updateConsent(consent: ConsentInput!, id: String!): Consent!
 
   """
   
-        Update an existing UserConsent.
+        Updates an existing userConsent based on input.
+        Returns updated userConsent.
       
   """
   updateUserConsent(id: String!, userConsent: UpdateUserConsentInput!): UserConsent!
@@ -114,14 +117,14 @@ type Query {
 
   """
   
-        Returns Consent by id.
+        Returns a consent by id.
       
   """
   consent(id: String!): Consent!
 
   """
   
-        Returns all Consents.
+        Returns all consents.
       
   """
   consents(filter: ConsentFilter): [Consent!]!
@@ -167,14 +170,14 @@ type Query {
 
   """
   
-        Returns userConsent by id.
+        Returns a single userConsent by id.
       
   """
   userConsent(id: String!): UserConsent!
 
   """
   
-        Returns all userConsents.
+        Returns a list of userConsents. Possible to filter.
       
   """
   userConsents(filter: UserConsentFilter): [UserConsent!]!
@@ -219,9 +222,9 @@ type UserConsent {
 }
 
 input UserConsentFilter {
-  defaultValue: ConsentValue
   name: String
   slug: String
+  value: ConsentValue
 }
 
 input UserConsentInput {

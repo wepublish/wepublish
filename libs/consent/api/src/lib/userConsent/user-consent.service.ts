@@ -6,7 +6,7 @@ import {
   UserConsentInput,
   UpdateUserConsentInput,
   UserConsentFilter
-} from './userConsent.model'
+} from './user-consent.model'
 
 @Injectable()
 export class UserConsentService {

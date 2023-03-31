@@ -1,8 +1,8 @@
 import {ApolloError} from '@apollo/client'
 import {
   ConsentValue,
-  MutationCreateUserConsentArgs,
-  useCreateUserConsentMutation
+  MutationCreateConsentArgs,
+  useCreateConsentMutation
 } from '@wepublish/editor/api-v2'
 import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -10,7 +10,7 @@ import {useNavigate} from 'react-router-dom'
 import {Form, Message, Schema, toaster} from 'rsuite'
 
 import {ModelTitle} from '@wepublish/ui/editor'
-import {UserConsentForm} from './userConsentForm'
+import {ConsentForm} from './consent-form'
 import {getApiClientV2} from '../apiClientv2'
 
 const onErrorToast = (error: ApolloError, slug?: string) => {
@@ -29,23 +29,23 @@ const onErrorToast = (error: ApolloError, slug?: string) => {
   )
 }
 
-export const UserConsentCreateView = () => {
+export const ConsentCreateView = () => {
   const client = useMemo(() => getApiClientV2(), [])
   const navigate = useNavigate()
   const {t} = useTranslation()
 
-  const closePath = '/userConsents'
-  const [userConsent, setUserConsent] = useState({
-    consentId: '',
-    userId: '',
-    value: ConsentValue.Accepted
-  } as MutationCreateUserConsentArgs['userConsent'])
+  const closePath = '/consents'
+  const [consent, setConsent] = useState({
+    name: '',
+    slug: '',
+    defaultValue: ConsentValue.Accepted
+  } as MutationCreateConsentArgs['consent'])
 
   const [shouldClose, setShouldClose] = useState(false)
 
-  const [createUserConsent, {loading}] = useCreateUserConsentMutation({
+  const [createConsent, {loading}] = useCreateConsentMutation({
     client,
-    onError: error => onErrorToast(error, userConsent.userId),
+    onError: error => onErrorToast(error, consent.slug),
     onCompleted: consent => {
       toaster.push(
         <Message type="success" showIcon closable duration={3000}>
@@ -55,46 +55,47 @@ export const UserConsentCreateView = () => {
       if (shouldClose) {
         navigate(closePath)
       } else {
-        navigate(`/userConsents/edit/${consent.createUserConsent?.id}`)
+        navigate(`/consents/edit/${consent.createConsent?.id}`)
       }
     }
   })
 
   const onSubmit = () => {
-    createUserConsent({
+    createConsent({
       variables: {
-        userConsent
+        consent
       }
     })
   }
 
   const {StringType} = Schema.Types
   const validationModel = Schema.Model({
-    userId: StringType().isRequired(),
-    consentId: StringType().isRequired(),
-    value: StringType().isRequired()
+    name: StringType().isRequired(),
+    slug: StringType().isRequired(),
+    defaultValue: StringType().isRequired()
   })
 
   return (
     <Form
       fluid
-      formValue={userConsent}
+      formValue={consent}
       model={validationModel}
       disabled={loading}
       onSubmit={validationPassed => validationPassed && onSubmit()}>
       <ModelTitle
         loading={loading}
-        title={t('userConsents.titleCreate')}
-        loadingTitle={t('userConsents.titleCreate')}
+        title={t('consents.titleCreate')}
+        loadingTitle={t('consents.titleCreate')}
         saveBtnTitle={t('save')}
         saveAndCloseBtnTitle={t('saveAndClose')}
         closePath={closePath}
         setCloseFn={setShouldClose}
       />
 
-      <UserConsentForm
-        userConsent={userConsent}
-        onChange={changes => setUserConsent(oldConsent => ({...oldConsent, ...(changes as any)}))}
+      <ConsentForm
+        consent={consent}
+        create
+        onChange={changes => setConsent(oldConsent => ({...oldConsent, ...(changes as any)}))}
       />
     </Form>
   )

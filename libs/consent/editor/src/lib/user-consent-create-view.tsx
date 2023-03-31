@@ -1,30 +1,23 @@
 import {ApolloError} from '@apollo/client'
-import {stripTypename} from '@wepublish/editor/api'
 import {
   ConsentValue,
-  MutationUpdateUserConsentArgs,
-  useUpdateUserConsentMutation,
-  useUserConsentQuery
+  MutationCreateUserConsentArgs,
+  useCreateUserConsentMutation
 } from '@wepublish/editor/api-v2'
 import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {useNavigate, useParams} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import {Form, Message, Schema, toaster} from 'rsuite'
 
 import {ModelTitle} from '@wepublish/ui/editor'
-import {UserConsentForm} from './userConsentForm'
+import {UserConsentForm} from './user-consent-form'
 import {getApiClientV2} from '../apiClientv2'
-
-const mapApiDataToInput = (userConsent: any): MutationUpdateUserConsentArgs['userConsent'] => ({
-  ...stripTypename(userConsent),
-  value: userConsent.value
-})
 
 const onErrorToast = (error: ApolloError, slug?: string) => {
   if (error.message.includes('Unique constraint')) {
     toaster.push(
       <Message type="error" showIcon closable duration={3000}>
-        {`A user consent with slug '${slug}' already exists. Please choose a different slug.`}
+        {`A consent with slug '${slug}' already exists. Please choose a different slug.`}
       </Message>
     )
     return
@@ -36,64 +29,44 @@ const onErrorToast = (error: ApolloError, slug?: string) => {
   )
 }
 
-export const UserConsentEditView = () => {
-  const {id} = useParams()
-  const userConsentId = id!
-
+export const UserConsentCreateView = () => {
   const client = useMemo(() => getApiClientV2(), [])
   const navigate = useNavigate()
   const {t} = useTranslation()
 
   const closePath = '/userConsents'
   const [userConsent, setUserConsent] = useState({
-    value: '' as ConsentValue
-  })
+    consentId: '',
+    userId: '',
+    value: ConsentValue.Accepted
+  } as MutationCreateUserConsentArgs['userConsent'])
 
-  const [shouldClose, setShouldClose] = useState<boolean>(false)
+  const [shouldClose, setShouldClose] = useState(false)
 
-  const {loading: dataLoading} = useUserConsentQuery({
+  const [createUserConsent, {loading}] = useCreateUserConsentMutation({
     client,
-    variables: {
-      id: userConsentId
-    },
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.userConsent) {
-        setUserConsent(mapApiDataToInput(data.userConsent))
-      }
-    }
-  })
-
-  const [updateUserConsent, {loading: updateLoading}] = useUpdateUserConsentMutation({
-    client,
-    onError: error => onErrorToast(error, 'userConsent.consent.slug'),
-    onCompleted: data => {
+    onError: error => onErrorToast(error, userConsent.userId),
+    onCompleted: consent => {
       toaster.push(
         <Message type="success" showIcon closable duration={3000}>
-          {t('toast.updatedSuccess')}
+          {t('toast.createdSuccess')}
         </Message>
       )
       if (shouldClose) {
         navigate(closePath)
-      }
-      if (data.updateUserConsent) {
-        setUserConsent(mapApiDataToInput(data.updateUserConsent))
+      } else {
+        navigate(`/userConsents/edit/${consent.createUserConsent?.id}`)
       }
     }
   })
 
   const onSubmit = () => {
-    updateUserConsent({
+    createUserConsent({
       variables: {
-        id: userConsentId,
-        userConsent: {
-          value: userConsent.value
-        }
+        userConsent
       }
     })
   }
-
-  const loading = dataLoading || updateLoading
 
   const {StringType} = Schema.Types
   const validationModel = Schema.Model({
@@ -111,8 +84,8 @@ export const UserConsentEditView = () => {
       onSubmit={validationPassed => validationPassed && onSubmit()}>
       <ModelTitle
         loading={loading}
-        title={t('userConsents.titleEdit')}
-        loadingTitle={t('userConsents.titleEdit')}
+        title={t('userConsents.titleCreate')}
+        loadingTitle={t('userConsents.titleCreate')}
         saveBtnTitle={t('save')}
         saveAndCloseBtnTitle={t('saveAndClose')}
         closePath={closePath}
@@ -121,7 +94,6 @@ export const UserConsentEditView = () => {
 
       <UserConsentForm
         userConsent={userConsent}
-        isEdit
         onChange={changes => setUserConsent(oldConsent => ({...oldConsent, ...(changes as any)}))}
       />
     </Form>

@@ -6,8 +6,8 @@ import {ConsentService} from './consent/consent.service'
 import {ConsentResolver} from './consent/consent.resolver'
 
 // UserConsent
-import {UserConsentService} from './userConsent/userConsent.service'
-import {UserConsentResolver} from './userConsent/userConsent.resolver'
+import {UserConsentService} from './userConsent/user-consent.service'
+import {UserConsentResolver} from './userConsent/user-consent.resolver'
 
 @Module({
   imports: [PrismaModule],

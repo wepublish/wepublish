@@ -1,9 +1,9 @@
 import {Test, TestingModule} from '@nestjs/testing'
-import {UserConsentService} from './userConsent.service'
+import {UserConsentService} from './user-consent.service'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {ConsentValue, PrismaClient} from '@prisma/client'
 import {UserSession} from '@wepublish/authentication/api'
-import {mockUserConsents} from './userConsent.resolver.spec'
+import {mockUserConsents} from './user-consent.resolver.spec'
 
 describe('UserConsentService', () => {
   let service: UserConsentService
