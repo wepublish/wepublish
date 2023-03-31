@@ -1,6 +1,13 @@
 import {Args, Query, Resolver} from '@nestjs/graphql'
 import {ImportedEventFilter, ImportedEventDocument} from './events-import.model'
 import {EventsImportService} from './events-import.service'
+import {PrismaClient} from '@prisma/client'
+import {Event} from './events-import.model'
+// import {CanGetInvoices, Permissions} from '@wepublish/permissions/api'
+// import {DashboardInvoice} from './dashboard-invoice.model'
+import {EventsImportService} from './events-import.service'
+// import {DashboardInvoiceService} from './dashboard-invoice.service'
+// import {SettingName, Settings} from '@wepublish/settings/api'
 
 @Resolver()
 export class EventsImportResolver {
