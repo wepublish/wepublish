@@ -97,8 +97,21 @@ export default function ({
   return (
     <>
       <TableCell align="center">
-        {!subscriptionFlow?.default && memberPlan.name}
-        {subscriptionFlow &&  <Badge color="green" content={subscriptionFlow?.numberOfSubscriptions.toString() + ' subscriptions'} />}
+        {subscriptionFlow && (
+          <>
+            <Badge
+              color={subscriptionFlow?.numberOfSubscriptions ? 'green' : 'red'}
+              content={
+                <div style={{whiteSpace: 'nowrap', fontSize: '13px'}}>
+                  {t('subscriptionFlow.subscriptionsAffected', {
+                    numberOfSubscriptions: subscriptionFlow?.numberOfSubscriptions
+                  })}
+                </div>
+              }
+            />
+            <div style={{marginTop: '5px'}}>{!subscriptionFlow?.default && memberPlan.name}</div>
+          </>
+        )}
       </TableCell>
       <TableCell align="center">
         {paymentMethods && paymentMethods.paymentMethods && (

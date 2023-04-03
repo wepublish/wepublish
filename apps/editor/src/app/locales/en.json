@@ -1419,7 +1419,8 @@
       "subscriptionEvents": "Static Subscription Events",
       "timeline": "Timeline",
       "actions": "Actions",
-      "dayOfRenewal": "Day of renewal / subscription ends"
+      "dayOfRenewal": "Day of renewal / subscription ends",
+      "subscriptionsAffected": "Filter applies to {{numberOfSubscriptions}} subscriptions"
     },
     "systemMails": {
       "title": "System Mails",
