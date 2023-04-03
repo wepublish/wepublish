@@ -10,6 +10,7 @@ import {
   PrismaClient,
   Subscription,
   SubscriptionDeactivationReason,
+  SubscriptionEvent,
   User
 } from '@prisma/client'
 import {DataLoaderContext} from './context'
@@ -29,6 +30,7 @@ import {
   ONE_MONTH_IN_MILLISECONDS
 } from './utility'
 import {add} from 'date-fns'
+import {mailLogType} from '@wepublish/membership/mail'
 
 export interface HandleSubscriptionChangeProps {
   subscription: SubscriptionWithRelations
@@ -383,16 +385,22 @@ export class MemberContext implements MemberContext {
     })
 
     if (intent.state === PaymentState.requiresUserAction) {
+      const subscription = await this.prisma.subscription.findUnique({
+        where: {id: invoice.subscriptionID}
+      })
+      const remoteTemplate = await this.mailContext.getSubsciptionTemplateIdentifier(
+        subscription,
+        SubscriptionEvent.RENEWAL_FAILED
+      )
       await this.mailContext.sendMail({
-        type: SendMailType.MemberSubscriptionOffSessionFailed,
-        recipient: invoice.mail,
-        data: {
-          user,
-          ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {}),
+        externalMailTemplateId: remoteTemplate,
+        recipient: user,
+        optionalData: {
           invoice,
           paymentProviderID: paymentProvider.id,
           errorCode: intent.errorCode
-        }
+        },
+        mailType: mailLogType.UserFlow
       })
 
       const {items, ...invoiceData} = invoice

@@ -7,6 +7,7 @@ import {Validator} from '../../validator'
 import {authorise} from '../permissions'
 import {CanCreateUser, CanDeleteUser, CanResetUserPassword} from '@wepublish/permissions/api'
 import {createUser, CreateUserInput} from './user.mutation'
+import {mailLogType} from '@wepublish/membership/mail'
 
 export const deleteUserById = (
   id: string,
@@ -109,11 +110,11 @@ export const resetUserPassword = async (
 
   if (sendMail && user) {
     const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.PASSWORD_RESET)
-    await mailContext.sendRemoteTemplate({
-      remoteTemplate,
-      recipient: user.email,
-      data: {user},
-      mailLogID: UserEvent.PASSWORD_RESET
+    await mailContext.sendMail({
+      externalMailTemplateId: remoteTemplate,
+      recipient: user,
+      optionalData: {},
+      mailType: mailLogType.UserFlow
     })
   }
 

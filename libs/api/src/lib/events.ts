@@ -1,9 +1,10 @@
-import {Invoice, Prisma, SubscriptionPeriod, PrismaClient} from '@prisma/client'
+import {Invoice, Prisma, SubscriptionPeriod, PrismaClient, SubscriptionEvent} from '@prisma/client'
 import {Context} from './context'
 import {unselectPassword} from '@wepublish/user/api'
 import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
 import {SettingName} from '@wepublish/settings/api'
+import {mailLogType} from '@wepublish/membership/mail'
 
 // @TODO: move into cron job
 export const onFindArticle =
@@ -146,7 +147,7 @@ export const onInvoiceUpdate =
       return model
     }
 
-    let mailTypeToSend = SendMailType.NewMemberSubscription
+    let subscriptionEvent: SubscriptionEvent = SubscriptionEvent.SUBSCRIBE
     let subscription = await context.prisma.subscription.findUnique({
       where: {
         id: model.subscriptionID
@@ -195,7 +196,7 @@ export const onInvoiceUpdate =
 
       // in case of multiple periods we need to send a renewal member subscription instead of the default new member subscription mail
       if (periods.length > 1) {
-        mailTypeToSend = SendMailType.RenewedMemberSubscription
+        subscriptionEvent = SubscriptionEvent.REACTIVATION
       }
 
       // send mails including login link
@@ -226,14 +227,17 @@ export const onInvoiceUpdate =
         expiresInMinutes: jwtExpires
       })
 
+      const remoteTemplate = await context.mailContext.getSubsciptionTemplateIdentifier(
+        subscription,
+        subscriptionEvent
+      )
       await context.mailContext.sendMail({
-        type: mailTypeToSend,
-        recipient: user.email,
-        data: {
-          url: context.urlAdapter.getLoginURL(token),
-          user,
+        externalMailTemplateId: remoteTemplate,
+        recipient: user,
+        optionalData: {
           subscription
-        }
+        },
+        mailType: mailLogType.UserFlow
       })
     }
 

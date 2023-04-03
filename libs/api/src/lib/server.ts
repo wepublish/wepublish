@@ -14,6 +14,7 @@ import {
 } from 'apollo-server-core'
 import {graphqlUploadExpress} from 'graphql-upload'
 import {Context} from './context'
+import {SubscriptionEvent} from '@prisma/client'
 
 declare global {
   // Workaround not working with let or const https://stackoverflow.com/questions/68481686/type-typeof-globalthis-has-no-index-signature
@@ -117,6 +118,20 @@ export class WepublishServer {
     })
     // Only as workaround until everything is migrated to NESTJS
     global.oldContext = await contextFromRequest(null, this.opts)
+
+    const sub = await this.opts.prisma.subscription.findFirst({
+      where: {
+        id: '2'
+      }
+    })
+
+    console.log(sub)
+    console.log(
+      await global.oldContext.mailContext.getSubsciptionTemplateIdentifier(
+        sub,
+        SubscriptionEvent.REACTIVATION
+      )
+    )
     this.app = app
   }
 

@@ -48,7 +48,7 @@ export class SystemMailResolver {
     const remoteTemplate = await this.oldContextService.context.mailContext.getUserTemplateName(
       systemMail.event
     )
-    await this.oldContextService.context.mailContext.sendRemoteTemplate({
+    await this.oldContextService.context.mailContext.sendRemoteTemplateDirect({
       remoteTemplate,
       recipient: user.email,
       data: {user},
