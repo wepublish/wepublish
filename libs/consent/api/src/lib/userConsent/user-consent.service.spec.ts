@@ -214,7 +214,7 @@ describe('UserConsentService', () => {
       {
         id: idToUpdate,
         userConsent: {
-          value: 'Rejected'
+          value: false
         }
       }
     ])

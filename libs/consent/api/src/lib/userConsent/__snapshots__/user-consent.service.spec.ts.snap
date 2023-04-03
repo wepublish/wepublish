@@ -5,7 +5,7 @@ Array [
   Object {
     "id": "0c6e7727-711b-40ee-b8b8-22170a085c51",
     "userId": "clf870cla0719q1rx6vg0y2rj",
-    "value": "Accepted",
+    "value": true,
   },
 ]
 `;
@@ -15,7 +15,7 @@ Object {
   "data": Object {
     "consentId": "2152b9c8-438b-4f4a-a066-ebe85f98f607",
     "userId": "clf870cla0719q1rx6vg0y2rj",
-    "value": "Accepted",
+    "value": true,
   },
   "include": Object {
     "consent": true,
@@ -43,7 +43,7 @@ Array [
       "name": "ssss",
     },
     "userId": "clfb7nce50264cvrxlliyxung",
-    "value": "Accepted",
+    "value": true,
   },
   Object {
     "consent": Object {
@@ -62,7 +62,7 @@ Array [
       "name": "Editor User",
     },
     "userId": "clesor2a50105kgrxh0kyxmxy",
-    "value": "Rejected",
+    "value": false,
   },
 ]
 `;
@@ -101,7 +101,7 @@ Array [
       "name": "ssss",
     },
     "userId": "clfb7nce50264cvrxlliyxung",
-    "value": "Accepted",
+    "value": true,
   },
 ]
 `;
@@ -137,7 +137,7 @@ Array [
       "name": "ssss",
     },
     "userId": "clfb7nce50264cvrxlliyxung",
-    "value": "Accepted",
+    "value": true,
   },
   Object {
     "consent": Object {
@@ -156,7 +156,7 @@ Array [
       "name": "Editor User",
     },
     "userId": "clesor2a50105kgrxh0kyxmxy",
-    "value": "Rejected",
+    "value": false,
   },
 ]
 `;
