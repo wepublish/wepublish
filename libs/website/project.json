@@ -20,7 +20,9 @@
         "tsConfig": "libs/website/tsconfig.lib.json",
         "packageJson": "libs/website/package.json",
         "main": "libs/website/src/index.ts",
-        "assets": ["libs/website/*.md"]
+        "assets": ["libs/website/*.md"],
+        "external": "all",
+        "clean": false
       }
     },
     "test": {

@@ -1,6 +1,19 @@
+import {css, Global} from '@emotion/react'
 import {ThemeProvider} from '@mui/material'
+import {Article} from '@wepublish/article/website'
 import {
-  theme,
+  HtmlBlock,
+  ImageBlock,
+  QuoteBlock,
+  RichTextBlock,
+  TeaserGridFlexBlock,
+  TitleBlock
+} from '@wepublish/block-content/website'
+import {MemberPlans, PayInvoices, Subscribe} from '@wepublish/membership/website'
+import {Footer, Navbar} from '@wepublish/navigation/website'
+import {Page} from '@wepublish/page/website'
+import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
+import {
   Button,
   H1,
   H2,
@@ -8,29 +21,16 @@ import {
   H4,
   H5,
   H6,
-  Paragraph,
   Link,
-  UnorderedList,
+  ListItem,
   OrderedList,
-  ListItem
+  Paragraph,
+  theme,
+  UnorderedList
 } from '@wepublish/ui'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
-import {MemberPlans, PayInvoices, Subscribe} from '@wepublish/membership/website'
 import {memo, PropsWithChildren} from 'react'
-import {Navbar, Footer} from '@wepublish/navigation/website'
 import {IconContext} from 'react-icons'
-import {Article} from '@wepublish/article/website'
-import {Page} from '@wepublish/page/website'
-import {css, Global} from '@emotion/react'
-import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
-import {
-  HtmlBlock,
-  ImageBlock,
-  QuoteBlock,
-  RichTextBlock,
-  TitleBlock,
-  TeaserGridFlexBlock
-} from '@wepublish/block-content/website'
 
 const globalStyles = css`
   body {

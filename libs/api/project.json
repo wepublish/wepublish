@@ -27,7 +27,8 @@
         "tsConfig": "libs/api/tsconfig.lib.json",
         "packageJson": "libs/api/package.json",
         "main": "libs/api/src/index.ts",
-        "assets": ["libs/api/*.md", "libs/api/prisma/**/*"]
+        "assets": ["libs/api/*.md", "libs/api/prisma/**/*"],
+        "rootDir": "."
       }
     },
     "generate-api": {

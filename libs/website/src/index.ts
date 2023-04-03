@@ -6,7 +6,6 @@ export * from '@wepublish/navigation/website'
 export * from '@wepublish/richtext/website'
 export * from '@wepublish/membership/website'
 export * from '@wepublish/block-content/website'
-
 export * from '@wepublish/authentication/website'
 
 export * from '@wepublish/website/builder'
