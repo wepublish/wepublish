@@ -82,7 +82,6 @@ export class PeriodicJobController {
   private async findAndDeactivateSubscriptions(
     periodicJobRunObject: PeriodicJobRunObject
   ): Promise<void> {
-    await this.findAndDeactivateSubscriptions(periodicJobRunObject)
     const unpaidInvoices = await this.subscriptionController.getSubscriptionsToDeactivate(
       periodicJobRunObject.date
     )
