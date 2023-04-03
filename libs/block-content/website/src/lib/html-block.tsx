@@ -9,5 +9,7 @@ export const isHtmlBlock = (block: Block): block is HtmlBlockType =>
 export const HtmlBlockWrapper = styled('div')``
 
 export const HtmlBlock = ({html, className}: BuilderHTMLBlockProps) => (
-  <HtmlBlockWrapper className={className}>{/* <InnerHTML html={html ?? ''} /> */}</HtmlBlockWrapper>
+  <HtmlBlockWrapper className={className}>
+    <InnerHTML html={html ?? ''} />
+  </HtmlBlockWrapper>
 )
