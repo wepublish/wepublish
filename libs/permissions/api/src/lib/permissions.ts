@@ -604,6 +604,21 @@ export const CanSyncMailTemplates: Permission = {
   deprecated: false
 }
 
+/**
+ * System mails
+ */
+export const CanGetSystemMails: Permission = {
+  id: 'CAN_GET_SYSTEM_MAILS',
+  description: 'Allows to get system mail list.',
+  deprecated: false
+}
+
+export const CanUpdateSystemMails: Permission = {
+  id: 'CAN_UPDATE_SYSTEM_MAILS',
+  description: 'Allows user to edit and save a system mail.',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanTakeActionOnComment,
   CanCreateNavigation,
@@ -701,7 +716,9 @@ export const AllPermissions: Permission[] = [
   CanCreateSubscriptionFlow,
   CanDeleteSubscriptionFlow,
   CanGetMailTemplates,
-  CanSyncMailTemplates
+  CanSyncMailTemplates,
+  CanGetSystemMails,
+  CanUpdateSystemMails
 ]
 
 export const EditorPermissions: Permission[] = [
