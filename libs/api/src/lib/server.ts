@@ -118,20 +118,6 @@ export class WepublishServer {
     })
     // Only as workaround until everything is migrated to NESTJS
     global.oldContext = await contextFromRequest(null, this.opts)
-
-    const sub = await this.opts.prisma.subscription.findFirst({
-      where: {
-        id: '2'
-      }
-    })
-
-    console.log(sub)
-    console.log(
-      await global.oldContext.mailContext.getSubsciptionTemplateIdentifier(
-        sub,
-        SubscriptionEvent.REACTIVATION
-      )
-    )
     this.app = app
   }
 
