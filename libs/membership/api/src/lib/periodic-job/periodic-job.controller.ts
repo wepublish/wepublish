@@ -23,7 +23,7 @@ const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
 @Injectable()
 export class PeriodicJobController {
   private subscriptionEventDictionary: SubscriptionEventDictionary
-  private runningJob: PeriodicJob | undefined = undefined
+  private runningJob: PeriodicJob | undefined
   private readonly logger = new Logger('PeriodicJobController')
   private randomNumberRangeForConcurrency = FIVE_MINUTES_IN_MS
   constructor(
@@ -53,67 +53,84 @@ export class PeriodicJobController {
       }
       try {
         //
-        // Sent Custom Mails
+        // Send custom mails
         //
-        this.subscriptionEventDictionary.buildCustomEventDateList(periodicJobRunObject.date)
-        const subscriptionsWithEvents = await this.prismaService.subscription.findMany({
-          where: {
-            OR: this.subscriptionEventDictionary.getDatesWithCustomEvent().map(date => ({
-              paidUntil: {
-                gte: date,
-                lte: subMinutes(
-                  set(date, {hours: 23, minutes: 59, seconds: 59, milliseconds: 999}),
-                  date.getTimezoneOffset()
-                )
-              }
-            }))
-          },
-          include: {
-            user: true
-          }
-        })
-        for (const subscriptionsWithEvent of subscriptionsWithEvents) {
-          await this.sendCustomMails(periodicJobRunObject, subscriptionsWithEvent)
-        }
+        await this.findAndSendCustomMails(periodicJobRunObject)
 
         //
         // Creating invoices which need to get created
         //
-        const subscriptionsToCreateInvoice =
-          await this.subscriptionController.getSubscriptionsForInvoiceCreation(
-            periodicJobRunObject.date,
-            this.subscriptionEventDictionary.getEarliestInvoiceCreationDate(
-              periodicJobRunObject.date
-            )
-          )
-        for (const subscriptionToCreateInvoice of subscriptionsToCreateInvoice) {
-          await this.createInvoice(periodicJobRunObject, subscriptionToCreateInvoice)
-        }
+        await this.findAndCreateInvoices(periodicJobRunObject)
 
         //
         // Charging Invoices which are due
         //
-        const invoicesToCharge = await this.subscriptionController.getInvoicesToCharge(
-          this.getEndOfDay(periodicJobRunObject.date)
-        )
-        for (const invoiceToCharge of invoicesToCharge) {
-          await this.chargeInvoice(periodicJobRunObject, invoiceToCharge)
-        }
+        await this.findAndChargeDueInvoices(periodicJobRunObject)
 
         //
         // Deactivate Subscriptions which have invoices who are overdue
         //
-        const unpaidInvoices = await this.subscriptionController.getSubscriptionsToDeactivate(
-          periodicJobRunObject.date
-        )
-        for (const unpaidInvoice of unpaidInvoices) {
-          await this.deactivateSubscription(periodicJobRunObject, unpaidInvoice)
-        }
+        await this.findAndDeactivateSubscriptions(periodicJobRunObject)
       } catch (e) {
         await this.markJobFailed((e as Error).toString())
         throw e
       }
       await this.markJobSuccessful()
+    }
+  }
+
+  private async findAndDeactivateSubscriptions(
+    periodicJobRunObject: PeriodicJobRunObject
+  ): Promise<void> {
+    await this.findAndDeactivateSubscriptions(periodicJobRunObject)
+    const unpaidInvoices = await this.subscriptionController.getSubscriptionsToDeactivate(
+      periodicJobRunObject.date
+    )
+    for (const unpaidInvoice of unpaidInvoices) {
+      await this.deactivateSubscription(periodicJobRunObject, unpaidInvoice)
+    }
+  }
+
+  private async findAndChargeDueInvoices(periodicJobRunObject: PeriodicJobRunObject) {
+    const invoicesToCharge = await this.subscriptionController.getInvoicesToCharge(
+      this.getEndOfDay(periodicJobRunObject.date)
+    )
+    for (const invoiceToCharge of invoicesToCharge) {
+      await this.chargeInvoice(periodicJobRunObject, invoiceToCharge)
+    }
+  }
+
+  private async findAndCreateInvoices(periodicJobRunObject: PeriodicJobRunObject) {
+    const subscriptionsToCreateInvoice =
+      await this.subscriptionController.getSubscriptionsForInvoiceCreation(
+        periodicJobRunObject.date,
+        this.subscriptionEventDictionary.getEarliestInvoiceCreationDate(periodicJobRunObject.date)
+      )
+    for (const subscriptionToCreateInvoice of subscriptionsToCreateInvoice) {
+      await this.createInvoice(periodicJobRunObject, subscriptionToCreateInvoice)
+    }
+  }
+
+  private async findAndSendCustomMails(periodicJobRunObject: PeriodicJobRunObject) {
+    this.subscriptionEventDictionary.buildCustomEventDateList(periodicJobRunObject.date)
+    const subscriptionsWithEvents = await this.prismaService.subscription.findMany({
+      where: {
+        OR: this.subscriptionEventDictionary.getDatesWithCustomEvent().map(date => ({
+          paidUntil: {
+            gte: date,
+            lte: subMinutes(
+              set(date, {hours: 23, minutes: 59, seconds: 59, milliseconds: 999}),
+              date.getTimezoneOffset()
+            )
+          }
+        }))
+      },
+      include: {
+        user: true
+      }
+    })
+    for (const subscriptionsWithEvent of subscriptionsWithEvents) {
+      await this.sendCustomMails(periodicJobRunObject, subscriptionsWithEvent)
     }
   }
 
