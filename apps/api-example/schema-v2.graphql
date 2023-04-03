@@ -191,7 +191,7 @@ enum SubscriptionDeactivationReason {
 }
 
 input UpdateUserConsentInput {
-  value: ConsentValue!
+  value: Boolean!
 }
 
 type User {
@@ -218,19 +218,19 @@ type UserConsent {
   modifiedAt: DateTime!
   user: User!
   userId: String!
-  value: ConsentValue!
+  value: Boolean!
 }
 
 input UserConsentFilter {
   name: String
   slug: String
-  value: ConsentValue
+  value: Boolean
 }
 
 input UserConsentInput {
   consentId: String!
   userId: String!
-  value: ConsentValue!
+  value: Boolean!
 }
 
 type VersionInformation {

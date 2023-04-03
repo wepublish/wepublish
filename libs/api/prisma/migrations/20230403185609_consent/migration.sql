@@ -20,13 +20,16 @@ CREATE TABLE "user-consents" (
     "modifiedAt" TIMESTAMP(3) NOT NULL,
     "consentId" UUID NOT NULL,
     "userId" TEXT NOT NULL,
-    "value" "ConsentValue" NOT NULL,
+    "value" BOOLEAN,
 
     CONSTRAINT "user-consents_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "consents_slug_key" ON "consents"("slug");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user-consents_userId_consentId_key" ON "user-consents"("userId", "consentId");
 
 -- AddForeignKey
 ALTER TABLE "user-consents" ADD CONSTRAINT "user-consents_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

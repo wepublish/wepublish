@@ -29,6 +29,12 @@ export type Consent = {
   slug: Scalars['String']
 }
 
+export type ConsentFilter = {
+  defaultValue?: InputMaybe<ConsentValue>
+  name?: InputMaybe<Scalars['String']>
+  slug?: InputMaybe<Scalars['String']>
+}
+
 export type ConsentInput = {
   defaultValue: ConsentValue
   name: Scalars['String']
@@ -63,17 +69,26 @@ export type DashboardSubscription = {
 
 export type Mutation = {
   __typename?: 'Mutation'
-  /** Create a new Consent. */
+  /** Create a new consent. */
   createConsent: Consent
-  /** Create a new UserConsent. */
+  /**
+   * Creates a new userConsent based on input.
+   * Returns created userConsent.
+   */
   createUserConsent: UserConsent
-  /** Deletes an existing Consent. */
+  /** Deletes an existing consent. */
   deleteConsent: Consent
-  /** Delete an existing UserConsent. */
+  /**
+   * Delete an existing userConsent by id.
+   * Returns deleted userConsent.
+   */
   deleteUserConsent: UserConsent
-  /** Update an existing Consent. */
+  /** Updates an existing consent. */
   updateConsent: Consent
-  /** Update an existing UserConsent. */
+  /**
+   * Updates an existing userConsent based on input.
+   * Returns updated userConsent.
+   */
   updateUserConsent: UserConsent
 }
 
@@ -117,9 +132,9 @@ export type Query = {
    * Includes subscribers with a cancelled but not run out subscription.
    */
   activeSubscribers: Array<DashboardSubscription>
-  /** Returns Consent by id. */
+  /** Returns a consent by id. */
   consent: Consent
-  /** Returns all Consents. */
+  /** Returns all consents. */
   consents: Array<Consent>
   /**
    * Returns the expected revenue for the time period given.
@@ -143,15 +158,19 @@ export type Query = {
    * Only includes paid invoices that have not been manually paid.
    */
   revenue: Array<DashboardInvoice>
-  /** Returns userConsent by id. */
+  /** Returns a single userConsent by id. */
   userConsent: UserConsent
-  /** Returns all userConsents. */
+  /** Returns a list of userConsents. Possible to filter. */
   userConsents: Array<UserConsent>
   versionInformation: VersionInformation
 }
 
 export type QueryConsentArgs = {
   id: Scalars['String']
+}
+
+export type QueryConsentsArgs = {
+  filter?: InputMaybe<ConsentFilter>
 }
 
 export type QueryExpectedRevenueArgs = {
@@ -183,6 +202,10 @@ export type QueryUserConsentArgs = {
   id: Scalars['String']
 }
 
+export type QueryUserConsentsArgs = {
+  filter?: InputMaybe<UserConsentFilter>
+}
+
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'invoiceNotPaid',
   None = 'none',
@@ -190,7 +213,7 @@ export enum SubscriptionDeactivationReason {
 }
 
 export type UpdateUserConsentInput = {
-  value: ConsentValue
+  value: Scalars['Boolean']
 }
 
 export type User = {
@@ -219,13 +242,19 @@ export type UserConsent = {
   modifiedAt: Scalars['DateTime']
   user: User
   userId: Scalars['String']
-  value: ConsentValue
+  value: Scalars['Boolean']
+}
+
+export type UserConsentFilter = {
+  name?: InputMaybe<Scalars['String']>
+  slug?: InputMaybe<Scalars['String']>
+  value?: InputMaybe<Scalars['Boolean']>
 }
 
 export type UserConsentInput = {
   consentId: Scalars['String']
   userId: Scalars['String']
-  value: ConsentValue
+  value: Scalars['Boolean']
 }
 
 export type VersionInformation = {

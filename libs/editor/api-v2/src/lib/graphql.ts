@@ -29,6 +29,12 @@ export type Consent = {
   slug: Scalars['String'];
 };
 
+export type ConsentFilter = {
+  defaultValue?: InputMaybe<ConsentValue>;
+  name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+};
+
 export type ConsentInput = {
   defaultValue: ConsentValue;
   name: Scalars['String'];
@@ -63,17 +69,26 @@ export type DashboardSubscription = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  /** Create a new Consent. */
+  /** Create a new consent. */
   createConsent: Consent;
-  /** Create a new UserConsent. */
+  /**
+   * Creates a new userConsent based on input.
+   * Returns created userConsent.
+   */
   createUserConsent: UserConsent;
-  /** Deletes an existing Consent. */
+  /** Deletes an existing consent. */
   deleteConsent: Consent;
-  /** Delete an existing UserConsent. */
+  /**
+   * Delete an existing userConsent by id.
+   * Returns deleted userConsent.
+   */
   deleteUserConsent: UserConsent;
-  /** Update an existing Consent. */
+  /** Updates an existing consent. */
   updateConsent: Consent;
-  /** Update an existing UserConsent. */
+  /**
+   * Updates an existing userConsent based on input.
+   * Returns updated userConsent.
+   */
   updateUserConsent: UserConsent;
 };
 
@@ -123,9 +138,9 @@ export type Query = {
    * Includes subscribers with a cancelled but not run out subscription.
    */
   activeSubscribers: Array<DashboardSubscription>;
-  /** Returns Consent by id. */
+  /** Returns a consent by id. */
   consent: Consent;
-  /** Returns all Consents. */
+  /** Returns all consents. */
   consents: Array<Consent>;
   /**
    * Returns the expected revenue for the time period given.
@@ -149,9 +164,9 @@ export type Query = {
    * Only includes paid invoices that have not been manually paid.
    */
   revenue: Array<DashboardInvoice>;
-  /** Returns userConsent by id. */
+  /** Returns a single userConsent by id. */
   userConsent: UserConsent;
-  /** Returns all userConsents. */
+  /** Returns a list of userConsents. Possible to filter. */
   userConsents: Array<UserConsent>;
   versionInformation: VersionInformation;
 };
@@ -159,6 +174,11 @@ export type Query = {
 
 export type QueryConsentArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryConsentsArgs = {
+  filter?: InputMaybe<ConsentFilter>;
 };
 
 
@@ -196,6 +216,11 @@ export type QueryUserConsentArgs = {
   id: Scalars['String'];
 };
 
+
+export type QueryUserConsentsArgs = {
+  filter?: InputMaybe<UserConsentFilter>;
+};
+
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'invoiceNotPaid',
   None = 'none',
@@ -203,7 +228,7 @@ export enum SubscriptionDeactivationReason {
 }
 
 export type UpdateUserConsentInput = {
-  value: ConsentValue;
+  value: Scalars['Boolean'];
 };
 
 export type User = {
@@ -232,13 +257,19 @@ export type UserConsent = {
   modifiedAt: Scalars['DateTime'];
   user: User;
   userId: Scalars['String'];
-  value: ConsentValue;
+  value: Scalars['Boolean'];
+};
+
+export type UserConsentFilter = {
+  name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  value?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type UserConsentInput = {
   consentId: Scalars['String'];
   userId: Scalars['String'];
-  value: ConsentValue;
+  value: Scalars['Boolean'];
 };
 
 export type VersionInformation = {
@@ -283,21 +314,21 @@ export type DeleteConsentMutation = { __typename?: 'Mutation', deleteConsent: { 
 export type UserConsentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserConsentsQuery = { __typename?: 'Query', userConsents: Array<{ __typename?: 'UserConsent', id: string, userId: string, consentId: string, value: ConsentValue, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', slug: string, id: string, name: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } }> };
+export type UserConsentsQuery = { __typename?: 'Query', userConsents: Array<{ __typename?: 'UserConsent', id: string, userId: string, consentId: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', slug: string, id: string, name: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } }> };
 
 export type UserConsentQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type UserConsentQuery = { __typename?: 'Query', userConsent: { __typename?: 'UserConsent', id: string, userId: string, consentId: string, value: ConsentValue, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', slug: string, id: string, name: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
+export type UserConsentQuery = { __typename?: 'Query', userConsent: { __typename?: 'UserConsent', id: string, userId: string, consentId: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', slug: string, id: string, name: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
 
 export type CreateUserConsentMutationVariables = Exact<{
   userConsent: UserConsentInput;
 }>;
 
 
-export type CreateUserConsentMutation = { __typename?: 'Mutation', createUserConsent: { __typename?: 'UserConsent', id: string, userId: string, value: ConsentValue } };
+export type CreateUserConsentMutation = { __typename?: 'Mutation', createUserConsent: { __typename?: 'UserConsent', id: string, userId: string, value: boolean } };
 
 export type UpdateUserConsentMutationVariables = Exact<{
   id: Scalars['String'];
@@ -305,7 +336,7 @@ export type UpdateUserConsentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserConsentMutation = { __typename?: 'Mutation', updateUserConsent: { __typename?: 'UserConsent', id: string, userId: string, consentId: string, value: ConsentValue, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', slug: string, id: string, name: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
+export type UpdateUserConsentMutation = { __typename?: 'Mutation', updateUserConsent: { __typename?: 'UserConsent', id: string, userId: string, consentId: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', slug: string, id: string, name: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
 
 export type DeleteUserConsentMutationVariables = Exact<{
   id: Scalars['String'];

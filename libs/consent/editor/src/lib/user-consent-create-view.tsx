@@ -1,9 +1,5 @@
 import {ApolloError} from '@apollo/client'
-import {
-  ConsentValue,
-  MutationCreateUserConsentArgs,
-  useCreateUserConsentMutation
-} from '@wepublish/editor/api-v2'
+import {MutationCreateUserConsentArgs, useCreateUserConsentMutation} from '@wepublish/editor/api-v2'
 import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate} from 'react-router-dom'
@@ -38,7 +34,7 @@ export const UserConsentCreateView = () => {
   const [userConsent, setUserConsent] = useState({
     consentId: '',
     userId: '',
-    value: ConsentValue.Accepted
+    value: true
   } as MutationCreateUserConsentArgs['userConsent'])
 
   const [shouldClose, setShouldClose] = useState(false)
@@ -68,11 +64,11 @@ export const UserConsentCreateView = () => {
     })
   }
 
-  const {StringType} = Schema.Types
+  const {StringType, BooleanType} = Schema.Types
   const validationModel = Schema.Model({
     userId: StringType().isRequired(),
     consentId: StringType().isRequired(),
-    value: StringType().isRequired()
+    value: BooleanType().isRequired()
   })
 
   return (

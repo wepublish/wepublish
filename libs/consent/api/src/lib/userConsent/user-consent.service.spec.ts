@@ -1,7 +1,7 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {UserConsentService} from './user-consent.service'
 import {PrismaModule} from '@wepublish/nest-modules'
-import {ConsentValue, PrismaClient} from '@prisma/client'
+import {PrismaClient} from '@prisma/client'
 import {UserSession} from '@wepublish/authentication/api'
 import {mockUserConsents} from './user-consent.resolver.spec'
 
@@ -29,7 +29,7 @@ describe('UserConsentService', () => {
         id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
         userId: 'clfb7nce50264cvrxlliyxung',
         consentId: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
-        value: 'Accepted',
+        value: true,
         createdAt: '2023-03-17T12:08:17.277Z',
         modifiedAt: '2023-03-17T12:08:17.278Z',
         consent: {
@@ -48,7 +48,7 @@ describe('UserConsentService', () => {
         id: '216d312d-f26f-4692-ad51-1591ca425d97',
         userId: 'clesor2a50105kgrxh0kyxmxy',
         consentId: '4e70d86a-e3d9-4487-9d98-6ea8e665ee46',
-        value: 'Rejected',
+        value: false,
         createdAt: '2023-03-17T11:00:48.580Z',
         modifiedAt: '2023-03-17T11:40:21.092Z',
         consent: {
@@ -80,7 +80,7 @@ describe('UserConsentService', () => {
         id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
         userId: 'clfb7nce50264cvrxlliyxung',
         consentId: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
-        value: 'Accepted',
+        value: true,
         createdAt: '2023-03-17T12:08:17.277Z',
         modifiedAt: '2023-03-17T12:08:17.278Z',
         consent: {
@@ -99,7 +99,7 @@ describe('UserConsentService', () => {
         id: '216d312d-f26f-4692-ad51-1591ca425d97',
         userId: 'clesor2a50105kgrxh0kyxmxy',
         consentId: '4e70d86a-e3d9-4487-9d98-6ea8e665ee46',
-        value: 'Rejected',
+        value: false,
         createdAt: '2023-03-17T11:00:48.580Z',
         modifiedAt: '2023-03-17T11:40:21.092Z',
         consent: {
@@ -134,7 +134,7 @@ describe('UserConsentService', () => {
         id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
         userId: 'clfb7nce50264cvrxlliyxung',
         consentId: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
-        value: 'Accepted',
+        value: true,
         createdAt: '2023-03-17T12:08:17.277Z',
         modifiedAt: '2023-03-17T12:08:17.278Z',
         consent: {
@@ -166,7 +166,7 @@ describe('UserConsentService', () => {
       {
         id: '0c6e7727-711b-40ee-b8b8-22170a085c51',
         userId: 'clf870cla0719q1rx6vg0y2rj',
-        value: 'Accepted'
+        value: true
       }
     ])
 
@@ -175,7 +175,7 @@ describe('UserConsentService', () => {
     const userConsent = {
       consentId: '2152b9c8-438b-4f4a-a066-ebe85f98f607',
       userId: 'clf870cla0719q1rx6vg0y2rj',
-      value: ConsentValue.Accepted
+      value: true
     }
 
     const user = {user: {roleIDs: ['admin']}} as UserSession
@@ -196,7 +196,7 @@ describe('UserConsentService', () => {
       {
         id: idToUpdate,
         userConsent: {
-          value: ConsentValue.Rejected
+          value: false
         }
       }
     ])
@@ -204,7 +204,7 @@ describe('UserConsentService', () => {
     const mockFunction = jest.spyOn(prisma.userConsent, 'update').mockReturnValue(mockValue as any)
 
     const userConsent = {
-      value: ConsentValue.Rejected
+      value: false
     }
 
     const user = {user: {roleIDs: ['admin']}} as UserSession

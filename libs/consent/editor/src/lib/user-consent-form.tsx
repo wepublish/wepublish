@@ -1,30 +1,14 @@
 import {ApolloError} from '@apollo/client'
 import {useUserListQuery} from '@wepublish/editor/api'
 import {
-  ConsentValue,
   MutationCreateUserConsentArgs,
   MutationUpdateUserConsentArgs,
   useConsentsQuery
 } from '@wepublish/editor/api-v2'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Form, Loader, Message, Panel, SelectPicker, toaster} from 'rsuite'
+import {Checkbox, Form, Loader, Message, Panel, SelectPicker, toaster} from 'rsuite'
 import {getApiClientV2} from '../apiClientv2'
-
-const consentValues = [
-  {
-    value: ConsentValue.Accepted,
-    label: ConsentValue.Accepted
-  },
-  {
-    value: ConsentValue.Rejected,
-    label: ConsentValue.Rejected
-  },
-  {
-    value: ConsentValue.Unset,
-    label: ConsentValue.Unset
-  }
-]
 
 type UserConsentFormData = Partial<
   MutationCreateUserConsentArgs['userConsent'] & MutationUpdateUserConsentArgs['userConsent']
@@ -47,6 +31,17 @@ const onErrorToast = (error: ApolloError) => {
 export const UserConsentForm = ({userConsent, onChange, isEdit}: UserConsentFormProps) => {
   const client = useMemo(() => getApiClientV2(), [])
   const {t} = useTranslation()
+
+  const consentValues = [
+    {
+      value: true,
+      label: 'Accepted'
+    },
+    {
+      value: false,
+      label: 'Rejected'
+    }
+  ]
 
   const {loading: loadingUsers, data: userData} = useUserListQuery({
     variables: {
@@ -108,17 +103,28 @@ export const UserConsentForm = ({userConsent, onChange, isEdit}: UserConsentForm
           />
         </Form.Group>
 
-        <Form.Group controlId="defaultValue">
+        <Form.Group controlId="value">
+          <Form.ControlLabel>{t('userConsents.value')}</Form.ControlLabel>
+          <Checkbox
+            checked={userConsent.value}
+            onChange={(_, checked) => {
+              onChange({value: checked})
+            }}>
+            {consentValues.find(v => v.value === userConsent.value)?.label}
+          </Checkbox>
+        </Form.Group>
+
+        {/* <Form.Group controlId="value">
           <Form.ControlLabel>{t('userConsents.value')}</Form.ControlLabel>
           <SelectPicker
             key="value"
             placeholder={t('userConsents.value')}
             block
             data={consentValues}
-            value={userConsent.value ?? ''}
-            onChange={value => onChange({value: consentValues.find(v => v.value === value)?.label})}
+            value={userConsent.value}
+            onChange={value => onChange({value: consentValues.find(v => v.value === value)?.value})}
           />
-        </Form.Group>
+        </Form.Group> */}
       </Panel>
     </div>
   )

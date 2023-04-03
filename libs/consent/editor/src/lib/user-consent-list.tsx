@@ -32,6 +32,17 @@ const onErrorToast = (error: ApolloError) => {
 /* eslint-disable-next-line */
 export interface UserConsentListProps {}
 
+const consentValues = [
+  {
+    value: true,
+    label: 'Accepted'
+  },
+  {
+    value: false,
+    label: 'Rejected'
+  }
+]
+
 export function UserConsentList(props: UserConsentListProps) {
   const client = useMemo(() => getApiClientV2(), [])
   const {t} = useTranslation()
@@ -107,7 +118,11 @@ export function UserConsentList(props: UserConsentListProps) {
 
           <Column width={200} resizable>
             <HeaderCell>{t('userConsents.value')}</HeaderCell>
-            <Cell>{(rowData: RowDataType<UserConsent>) => <span>{rowData.value}</span>}</Cell>
+            <Cell>
+              {(rowData: RowDataType<UserConsent>) => (
+                <span>{consentValues.find(v => v.value === rowData.value)?.label}</span>
+              )}
+            </Cell>
           </Column>
 
           <Column resizable>

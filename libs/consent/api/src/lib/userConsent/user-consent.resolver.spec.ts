@@ -3,7 +3,7 @@ import {INestApplication, Module} from '@nestjs/common'
 import request from 'supertest'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
-import {PrismaClient, Prisma, ConsentValue, UserConsent} from '@prisma/client'
+import {PrismaClient, Prisma, UserConsent} from '@prisma/client'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {UserConsentResolver} from './user-consent.resolver'
 import {UserConsentService} from './user-consent.service'
@@ -104,7 +104,7 @@ export const mockUserConsents: Prisma.UserConsentCreateInput[] = [
         }
       }
     },
-    value: 'Accepted',
+    value: true,
     user: {
       connectOrCreate: {
         where: {id: 'some-id'},
@@ -176,7 +176,7 @@ describe('UserConsentResolver', () => {
         expect(res.body.data.userConsent).toMatchObject({
           id: expect.any(String),
           consent: expect.any(Object),
-          value: ConsentValue.Accepted,
+          value: true,
           user: expect.any(Object)
         })
       })
@@ -210,7 +210,7 @@ describe('UserConsentResolver', () => {
           userConsent: {
             consentId: createdConsent.id,
             userId: createdUser.id,
-            value: 'Accepted'
+            value: true
           }
         }
       })
@@ -234,7 +234,7 @@ describe('UserConsentResolver', () => {
         variables: {
           id: idToUpdate,
           userConsent: {
-            value: 'Rejected'
+            value: false
           }
         }
       })
@@ -277,7 +277,7 @@ describe('UserConsentResolver', () => {
         variables: {
           id: idToUpdate,
           userConsent: {
-            value: 'Rejected'
+            value: false
           }
         }
       })

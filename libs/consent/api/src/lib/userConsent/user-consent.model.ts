@@ -1,11 +1,7 @@
-import {Field, ObjectType, InputType, registerEnumType} from '@nestjs/graphql'
+import {Field, ObjectType, InputType} from '@nestjs/graphql'
 import {Consent} from '../consent/consent.model'
 import {User} from '@wepublish/user/api'
-import {ConsentValue, User as UserType} from '@prisma/client'
-
-registerEnumType(ConsentValue, {
-  name: 'ConsentValue'
-})
+import {User as UserType} from '@prisma/client'
 
 @ObjectType()
 export class UserConsent {
@@ -30,8 +26,8 @@ export class UserConsent {
   @Field()
   userId!: string
 
-  @Field(type => ConsentValue)
-  value!: ConsentValue
+  @Field()
+  value!: boolean
 }
 
 @InputType()
@@ -42,14 +38,14 @@ export class UserConsentInput {
   @Field()
   userId!: string
 
-  @Field(type => ConsentValue)
-  value!: ConsentValue
+  @Field()
+  value!: boolean
 }
 
 @InputType()
 export class UpdateUserConsentInput {
-  @Field(type => ConsentValue)
-  value!: ConsentValue
+  @Field()
+  value!: boolean
 }
 
 @InputType()
@@ -60,6 +56,6 @@ export class UserConsentFilter {
   @Field({nullable: true})
   slug?: string
 
-  @Field(type => ConsentValue, {nullable: true})
-  value?: ConsentValue
+  @Field({nullable: true})
+  value?: boolean
 }
