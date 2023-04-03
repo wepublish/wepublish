@@ -1,0 +1,136 @@
+fragment FullArticle on Article {
+  id
+  blocks {
+    __typename
+
+    ... on TitleBlock {
+      title
+      lead
+    }
+
+    ... on ImageBlock {
+      caption
+      image {
+        ...FullImage
+      }
+    }
+
+    ... on QuoteBlock {
+      quote
+      author
+    }
+
+    ... on RichTextBlock {
+      richText
+    }
+
+    ... on HTMLBlock {
+      html
+    }
+
+    ... on TeaserGridFlexBlock {
+      flexTeasers {
+        alignment {
+          x
+          y
+          w
+          h
+        }
+
+        teaser {
+          ... on ArticleTeaser {
+            style
+
+            image {
+              ...ImageRef
+            }
+
+            preTitle
+            title
+            lead
+
+            article {
+              id
+              title
+              preTitle
+              lead
+              url
+              blocks {
+                __typename
+
+                ... on TitleBlock {
+                  title
+                  lead
+                }
+
+                ... on ImageBlock {
+                  caption
+                  image {
+                    ...FullImage
+                  }
+                }
+              }
+            }
+          }
+
+          ... on PageTeaser {
+            style
+
+            image {
+              ...ImageRef
+            }
+
+            preTitle
+            title
+            lead
+
+            page {
+              id
+              title
+              description
+              url
+              blocks {
+                __typename
+
+                ... on TitleBlock {
+                  title
+                  lead
+                }
+
+                ... on ImageBlock {
+                  caption
+                  image {
+                    ...FullImage
+                  }
+                }
+              }
+            }
+          }
+
+          ... on CustomTeaser {
+            style
+
+            image {
+              ...ImageRef
+            }
+
+            preTitle
+            title
+            lead
+            contentUrl
+            properties {
+              key
+              value
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query Article($slug: Slug, $id: ID) {
+  article(slug: $slug, id: $id) {
+    ...FullArticle
+  }
+}

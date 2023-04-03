@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-vscode-remote.remote-containers",
+    "ms-azuretools.vscode-docker",
+    "chrmarti.regex",
+    "firsttris.vscode-jest-runner",
+    "shd101wyy.markdown-preview-enhanced",
+    "bierner.markdown-mermaid"
+  ]
+}

@@ -1,0 +1,37 @@
+fragment FullNavigation on Navigation {
+  id
+  key
+  name
+  links {
+    ... on PageNavigationLink {
+      label
+      page {
+        url
+      }
+    }
+
+    ... on ArticleNavigationLink {
+      label
+      article {
+        url
+      }
+    }
+
+    ... on ExternalNavigationLink {
+      label
+      url
+    }
+  }
+}
+
+query NavigationList {
+  navigations {
+    ...FullNavigation
+  }
+}
+
+query Navigation($slug: ID) {
+  navigation(key: $slug) {
+    ...FullNavigation
+  }
+}

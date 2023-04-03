@@ -1,0 +1,48 @@
+fragment ImageURLs on Image {
+  url
+  largeURL: transformURL(input: {width: 500})
+  mediumURL: transformURL(input: {width: 300})
+  thumbURL: transformURL(input: {width: 280, height: 200})
+  squareURL: transformURL(input: {width: 100, height: 100})
+  previewURL: transformURL(input: {width: 400, height: 200})
+  column1URL: transformURL(input: {width: 800, height: 300})
+  column6URL: transformURL(input: {width: 260, height: 300})
+}
+
+fragment ImageRef on Image {
+  id
+  filename
+  extension
+  title
+  description
+  width
+  height
+  ...ImageURLs
+}
+
+fragment FullImage on Image {
+  id
+
+  createdAt
+  modifiedAt
+
+  filename
+  extension
+  width
+  height
+  fileSize
+
+  description
+  tags
+
+  source
+  link
+  license
+
+  focalPoint {
+    x
+    y
+  }
+
+  ...ImageRef
+}

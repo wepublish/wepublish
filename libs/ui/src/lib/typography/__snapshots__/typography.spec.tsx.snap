@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`H1 should render successfully 1`] = `
+<body>
+  <div>
+    <h1
+      class="MuiTypography-root MuiTypography-h1 css-o2w69a-MuiTypography-root"
+    >
+      Foobar
+    </h1>
+  </div>
+</body>
+`;
+
+exports[`H2 should render successfully 1`] = `
+<body>
+  <div>
+    <h2
+      class="MuiTypography-root MuiTypography-h2 css-1sra7t5-MuiTypography-root"
+    >
+      Foobar
+    </h2>
+  </div>
+</body>
+`;
+
+exports[`H3 should render successfully 1`] = `
+<body>
+  <div>
+    <h3
+      class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
+    >
+      Foobar
+    </h3>
+  </div>
+</body>
+`;
+
+exports[`Paragraph should render successfully 1`] = `
+<body>
+  <div>
+    <p
+      class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+    >
+      Foobar
+    </p>
+  </div>
+</body>
+`;

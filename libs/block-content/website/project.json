@@ -1,0 +1,35 @@
+{
+  "name": "block-content-website",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/block-content/website/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/block-content/website/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/block-content/website",
+        "tsConfig": "libs/block-content/website/tsconfig.lib.json",
+        "packageJson": "libs/block-content/website/package.json",
+        "main": "libs/block-content/website/src/index.ts",
+        "assets": ["libs/block-content/website/*.md"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/block-content/website/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

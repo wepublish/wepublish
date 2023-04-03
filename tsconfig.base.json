@@ -1,0 +1,36 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@wepublish/article/website": ["libs/article/website/src/index.ts"],
+      "@wepublish/authentication/website": ["libs/authentication/website/src/index.ts"],
+      "@wepublish/block-content/website": ["libs/block-content/website/src/index.ts"],
+      "@wepublish/membership/website": ["libs/membership/website/src/index.ts"],
+      "@wepublish/navigation/website": ["libs/navigation/website/src/index.ts"],
+      "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"],
+      "@wepublish/page/website": ["libs/page/website/src/index.ts"],
+      "@wepublish/richtext/website": ["libs/richtext/website/src/index.ts"],
+      "@wepublish/ui": ["libs/ui/src/index.ts"],
+      "@wepublish/website": ["libs/website/src/index.ts"],
+      "@wepublish/website/api": ["libs/website/api/src/index.ts"],
+      "@wepublish/website/api-v2": ["libs/website/api-v2/src/index.ts"],
+      "@wepublish/website/builder": ["libs/website/builder/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

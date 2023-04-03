@@ -1,0 +1,14 @@
+.DS_Store
+.idea/
+dist/
+node_modules
+npm-debug.log
+.media
+.changelog
+coverage/
+screenshots
+.env.local
+tmp
+
+# Next.js
+.next

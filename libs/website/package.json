@@ -1,0 +1,25 @@
+{
+  "name": "@wepublish/website",
+  "version": "0.0.7",
+  "description": "Website builder for We.Publish",
+  "keywords": [
+    "publishing",
+    "media",
+    "newspaper",
+    "cms"
+  ],
+  "homepage": "https://github.com/wepublish/wepublish",
+  "bugs": {
+    "url": "https://github.com/wepublish/wepublish/issues",
+    "email": "development@wepublish.ch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wepublish/wepublish.git",
+    "directory": "libs/website"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "directory": "../../dist/libs/website"
+  }
+}

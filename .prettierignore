@@ -1,0 +1,6 @@
+dist/
+static/
+libs/editor/api/src/lib/graphql.ts
+libs/editor/api-v2/src/lib/graphql.ts
+libs/api/__tests__/api/private/index.ts
+libs/api/__tests__/api/public/index.ts

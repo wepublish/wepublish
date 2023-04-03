@@ -1,0 +1,25 @@
+{
+  "name": "@wepublish/ui",
+  "version": "0.0.7",
+  "description": "UI components for We.Publish",
+  "keywords": [
+    "publishing",
+    "media",
+    "newspaper",
+    "cms"
+  ],
+  "homepage": "https://github.com/wepublish/wepublish",
+  "bugs": {
+    "url": "https://github.com/wepublish/wepublish/issues",
+    "email": "development@wepublish.ch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wepublish/wepublish.git",
+    "directory": "libs/ui"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "directory": "../../dist/libs/ui"
+  }
+}
