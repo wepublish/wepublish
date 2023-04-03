@@ -1016,7 +1016,7 @@ model UserConsent {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
-  value Boolean?
+  value Boolean
 
   @@unique([userId, consentId])
   @@map("user-consents")

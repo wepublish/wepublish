@@ -20,7 +20,7 @@ CREATE TABLE "user-consents" (
     "modifiedAt" TIMESTAMP(3) NOT NULL,
     "consentId" UUID NOT NULL,
     "userId" TEXT NOT NULL,
-    "value" BOOLEAN,
+    "value" BOOLEAN NOT NULL,
 
     CONSTRAINT "user-consents_pkey" PRIMARY KEY ("id")
 );
