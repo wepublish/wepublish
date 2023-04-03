@@ -5,7 +5,6 @@ import pinoHttp from 'pino-http'
 import {contextFromRequest, ContextOptions} from './context'
 import {onInvoiceUpdate, onFindArticle, onFindPage} from './events'
 import {GraphQLWepublishPublicSchema, GraphQLWepublishSchema} from './graphql/schema'
-import {JobType, runJob} from './jobs'
 import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
 import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments/paymentProvider'
 import {MAX_PAYLOAD_SIZE} from './utility'
@@ -119,19 +118,6 @@ export class WepublishServer {
     // Only as workaround until everything is migrated to NESTJS
     global.oldContext = await contextFromRequest(null, this.opts)
     this.app = app
-  }
-
-  async runJob(command: JobType, data: any): Promise<void> {
-    try {
-      const context = await contextFromRequest(null, this.opts)
-      await runJob(command, context, data)
-
-      // FIXME: Will be refactored in WPC-604
-      // Wait for all asynchronous events to finish. I know this is bad code.
-      await new Promise(resolve => setTimeout(resolve, 10000))
-    } catch (error) {
-      logger('server').error(error as Error, 'Error while running job "%s"', command)
-    }
   }
 
   private async setupPrismaMiddlewares(): Promise<void> {

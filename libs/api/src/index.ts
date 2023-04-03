@@ -41,7 +41,6 @@ export * from './lib/urlAdapter'
 
 export * from './lib/utility'
 export * from './lib/error'
-export * from './lib/jobs'
 export * from './lib/context'
 export * from './lib/server'
 export * from './lib/payments/paymentProvider'
