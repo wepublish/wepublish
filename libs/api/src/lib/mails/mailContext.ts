@@ -1,4 +1,4 @@
-import {PrismaClient, UserEvent} from '@prisma/client'
+import {PrismaClient, Subscription, SubscriptionEvent, UserEvent} from '@prisma/client'
 import Email from 'email-templates'
 import {logger} from '../server'
 import {
@@ -7,6 +7,11 @@ import {
   MailProviderError,
   MailProviderTemplate
 } from './mailProvider'
+
+import {MailController, MailControllerConfig} from '@wepublish/membership/mail'
+import {PrismaService} from '../prisma.service'
+import {OldContextService} from '../oldContext.service'
+import {SubscriptionEventDictionary} from '@wepublish/membership/subscription-event-dictionary'
 
 export enum SendMailType {
   LoginLink,
@@ -45,8 +50,10 @@ export interface MailTemplateMap {
 export interface MailContextOptions {
   readonly defaultFromAddress: string
   readonly defaultReplyToAddress?: string
+  // ENTFERNEN
   readonly mailTemplateMaps: MailTemplateMap[]
   readonly mailTemplatesPath?: string
+  // ENTFERNEN
 }
 
 export interface MailContext {
@@ -59,7 +66,7 @@ export interface MailContext {
   defaultFromAddress: string
   defaultReplyToAddress?: string
 
-  sendMail(props: SendEMailProps): Promise<void>
+  sendMail(opts: MailControllerConfig): Promise<void>
 }
 
 export interface MailContextProps extends MailContextOptions {
@@ -71,8 +78,6 @@ export class MailContext implements MailContext {
   mailProvider: BaseMailProvider | null
 
   email: Email
-
-  mailTemplateMaps: MailTemplateMap[]
 
   defaultFromAddress: string
   defaultReplyToAddress?: string
@@ -91,10 +96,19 @@ export class MailContext implements MailContext {
         root: props.mailTemplatesPath
       }
     })
-
-    this.mailTemplateMaps = props.mailTemplateMaps ?? []
   }
-  async sendRemoteTemplate({
+
+  async sendMail(opts: MailControllerConfig) {
+    if (opts.externalMailTemplateId) {
+      await new MailController(
+        this.prisma as PrismaService,
+        {context: global.oldContext} as OldContextService,
+        opts
+      ).sendMail()
+    }
+  }
+
+  async sendRemoteTemplateDirect({
     remoteTemplate,
     recipient,
     data,
@@ -148,34 +162,14 @@ export class MailContext implements MailContext {
     return intervals.map(i => i.mailTemplate?.externalMailTemplateId || '')
   }
 
-  /**
-   * @deprecated use sendNewMail instead
-   */
-  async sendMail({type, recipient, data}: SendEMailProps): Promise<void> {
-    // const type = SendMailType.LoginLink
-    const mailTemplate = this.mailTemplateMaps.find(template => template.type === type)
-    if (!mailTemplate) {
-      logger('mailContext').warn(`Template for type: ${type} not found`)
-      return
-    }
-
-    const mailView =
-      mailTemplate.local && mailTemplate.localTemplate
-        ? await this.email.renderAll(mailTemplate.localTemplate, data)
-        : undefined
-
-    if (this.mailProvider) {
-      await this.mailProvider.sendMail({
-        mailLogID: '1',
-        recipient,
-        replyToAddress:
-          mailTemplate.replyToAddress ?? this.defaultReplyToAddress ?? this.defaultFromAddress,
-        subject: mailView?.subject ?? mailTemplate.subject ?? '',
-        message: mailView?.text,
-        messageHtml: mailView?.html,
-        template: mailTemplate.remoteTemplate,
-        templateData: data
-      })
-    }
+  async getSubsciptionTemplateIdentifier(
+    subsciption: Subscription,
+    subscriptionEvent: SubscriptionEvent
+  ): Promise<string | undefined> {
+    return SubscriptionEventDictionary.getSubsciptionTemplateIdentifier(
+      this.prisma,
+      subsciption,
+      subscriptionEvent
+    )
   }
 }

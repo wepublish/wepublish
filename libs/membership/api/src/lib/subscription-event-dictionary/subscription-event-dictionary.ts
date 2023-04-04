@@ -6,7 +6,7 @@ import {
   StoreTimeline
 } from './subscription-event-dictionary.type'
 import {startOfDay, subDays, subMinutes} from 'date-fns'
-import {PrismaClient, SubscriptionEvent} from '@prisma/client'
+import {PrismaClient, Subscription, SubscriptionEvent} from '@prisma/client'
 
 export class SubscriptionEventDictionary {
   private store: Store = {
@@ -201,5 +201,65 @@ export class SubscriptionEventDictionary {
 
   private normalizeDate(date: Date): Date {
     return new Date(subMinutes(startOfDay(date), date.getTimezoneOffset()))
+  }
+
+  public static async getSubsciptionTemplateIdentifier(
+    prisma: PrismaClient,
+    subsciption: Subscription,
+    subscriptionEvent: SubscriptionEvent
+  ): Promise<string | undefined> {
+    let flow = await prisma.subscriptionFlow.findFirst({
+      where: {
+        default: false,
+        memberPlan: {
+          id: subsciption.memberPlanID
+        },
+        autoRenewal: {
+          has: subsciption.autoRenew
+        },
+        periodicities: {
+          has: subsciption.paymentPeriodicity
+        },
+        paymentMethods: {
+          some: {
+            id: subsciption.paymentMethodID
+          }
+        }
+      },
+      include: {
+        intervals: {
+          where: {
+            event: subscriptionEvent
+          },
+          include: {
+            mailTemplate: true
+          }
+        }
+      }
+    })
+    if (!flow) {
+      flow = await prisma.subscriptionFlow.findFirst({
+        where: {
+          default: true
+        },
+        include: {
+          intervals: {
+            where: {
+              event: subscriptionEvent
+            },
+            include: {
+              mailTemplate: true
+            }
+          }
+        }
+      })
+    }
+    if (flow && flow.intervals[0]) {
+      if (!flow.intervals[0].mailTemplate) {
+        return undefined
+      }
+      return flow.intervals[0].mailTemplate.externalMailTemplateId
+    }
+    return undefined
   }
 }

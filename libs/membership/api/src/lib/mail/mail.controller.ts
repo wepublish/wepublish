@@ -10,11 +10,11 @@ export enum mailLogType {
 }
 
 export type MailControllerConfig = {
-  daysAwayFromEnding: number | null
+  daysAwayFromEnding?: number | null
   externalMailTemplateId: string
   recipient: User
-  isRetry: boolean
-  periodicJobRunDate: Date | null
+  isRetry?: boolean
+  periodicJobRunDate?: Date | null
   optionalData: Record<string, any>
   mailType: mailLogType
 }
@@ -65,7 +65,7 @@ export class MailController {
       return
     }
 
-    await this.oldContextService.context.mailContext.sendRemoteTemplate({
+    await this.oldContextService.context.mailContext.sendRemoteTemplateDirect({
       mailLogID: this.generateMailIdentifier(),
       remoteTemplate: this.config.externalMailTemplateId,
       recipient: this.config.recipient.email,

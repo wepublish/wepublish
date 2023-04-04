@@ -14,6 +14,7 @@ import {
 } from 'apollo-server-core'
 import {graphqlUploadExpress} from 'graphql-upload'
 import {Context} from './context'
+import {SubscriptionEvent} from '@prisma/client'
 
 declare global {
   // Workaround not working with let or const https://stackoverflow.com/questions/68481686/type-typeof-globalthis-has-no-index-signature

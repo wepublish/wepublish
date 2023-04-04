@@ -28,10 +28,10 @@ import {createAuthor, deleteAuthorById, updateAuthor} from './author/author.priv
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 import {
   GraphQLComment,
-  GraphQLCommentRejectionReason,
   GraphQLCommentItemType,
-  GraphQLCommentRevisionUpdateInput,
-  GraphQLCommentRatingOverrideUpdateInput
+  GraphQLCommentRatingOverrideUpdateInput,
+  GraphQLCommentRejectionReason,
+  GraphQLCommentRevisionUpdateInput
 } from './comment/comment'
 import {
   GraphQLCommentRatingSystemAnswer,
@@ -155,6 +155,7 @@ import {
   UpdateOrCreateEventInput
 } from './event/event.private-mutation'
 import {CanSendJWTLogin} from '@wepublish/permissions/api'
+import {mailLogType} from '@wepublish/membership/mail'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -365,22 +366,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
         }
 
-        const token = generateJWT({
-          id: user.id,
-          expiresInMinutes: jwtExpires
-        })
-
         const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.LOGIN_LINK)
-        await mailContext.sendRemoteTemplate({
-          remoteTemplate,
-          recipient: email,
-          data: {
-            url: `${url}?jwt=${token}`,
-            user
-          },
-          mailLogID: UserEvent.LOGIN_LINK
+        await mailContext.sendMail({
+          externalMailTemplateId: remoteTemplate,
+          recipient: user,
+          optionalData: {},
+          mailType: mailLogType.UserFlow
         })
-
         return email
       }
     },
@@ -416,20 +408,12 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!user) throw new NotFound('User', email)
 
-        const token = generateJWT({
-          id: user.id,
-          expiresInMinutes: jwtExpires
-        })
-
         const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.LOGIN_LINK)
-        await mailContext.sendRemoteTemplate({
-          remoteTemplate,
-          recipient: email,
-          data: {
-            url: urlAdapter.getLoginURL(token),
-            user
-          },
-          mailLogID: UserEvent.LOGIN_LINK
+        await mailContext.sendMail({
+          externalMailTemplateId: remoteTemplate,
+          recipient: user,
+          optionalData: {},
+          mailType: mailLogType.UserFlow
         })
 
         return email

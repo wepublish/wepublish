@@ -71,6 +71,8 @@ import {rateComment} from './comment-rating/comment-rating.public-mutation'
 import {SubscriptionWithRelations} from '../db/subscription'
 import {GraphQLUploadImageInput} from './image'
 
+import {mailLogType} from '@wepublish/membership/mail'
+
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
   fields: {
@@ -703,20 +705,12 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           throw new Error('No value set for RESET_PASSWORD_JWT_EXPIRES_MIN')
         }
 
-        const token = generateJWT({
-          id: user.id,
-          expiresInMinutes: resetPwd
-        })
-
         const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.LOGIN_LINK)
-        await mailContext.sendRemoteTemplate({
-          remoteTemplate,
-          recipient: user.email,
-          data: {
-            url: urlAdapter.getLoginURL(token),
-            user
-          },
-          mailLogID: UserEvent.LOGIN_LINK
+        await mailContext.sendMail({
+          externalMailTemplateId: remoteTemplate,
+          recipient: user,
+          optionalData: {},
+          mailType: mailLogType.UserFlow
         })
 
         try {

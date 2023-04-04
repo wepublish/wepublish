@@ -23,6 +23,8 @@
       "@wepublish/authentication/api": ["libs/authentication/api/src/index.ts"],
       "@wepublish/editor/api-v2": ["libs/editor/api-v2/src/index.ts"],
       "@wepublish/editor/api": ["libs/editor/api/src/index.ts"],
+      "@wepublish/membership/mail": ["libs/membership/api/src/lib/mail/index.ts"],
+      "@wepublish/membership/subscription-event-dictionary": ["libs/membership/api/src/lib/subscription-event-dictionary/index.ts"],
       "@wepublish/membership/api": ["libs/membership/api/src/index.ts"],
       "@wepublish/membership/editor": ["libs/membership/editor/src/index.ts"],
       "@wepublish/navigation/website": ["libs/navigation/website/src/index.ts"],
