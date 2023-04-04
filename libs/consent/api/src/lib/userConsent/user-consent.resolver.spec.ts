@@ -28,8 +28,6 @@ const userConsentQuery = `
   query userConsent($id: String!) {
     userConsent(id: $id) {
       id
-      userId
-      consentId
       value
       createdAt
       modifiedAt
@@ -52,7 +50,6 @@ const createUserConsentMutation = `
   mutation createUserConsent($userConsent: UserConsentInput!) {
     createUserConsent(userConsent: $userConsent) {
       id
-      userId
       value
     }
   }
@@ -62,8 +59,6 @@ const updateUserConsentMutation = `
   mutation updateUserConsent($id: String!, $userConsent: UpdateUserConsentInput!) {
     updateUserConsent(id: $id, userConsent: $userConsent) {
       id
-      userId
-      consentId
       value
       createdAt
       modifiedAt
@@ -218,7 +213,7 @@ describe('UserConsentResolver', () => {
       .expect(res => {
         expect(res.body.data.createUserConsent).toMatchObject({
           id: expect.any(String),
-          userId: createdUser.id
+          value: true
         })
       })
   })
@@ -241,8 +236,7 @@ describe('UserConsentResolver', () => {
       .expect(200)
       .expect(res => {
         expect(res.body.data.updateUserConsent).toMatchObject({
-          id: expect.any(String),
-          userId: userConsents[0].userId
+          id: expect.any(String)
         })
       })
   })

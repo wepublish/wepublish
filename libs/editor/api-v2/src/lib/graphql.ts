@@ -245,12 +245,10 @@ export type User = {
 export type UserConsent = {
   __typename?: 'UserConsent';
   consent: Consent;
-  consentId: Scalars['String'];
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   user: User;
-  userId: Scalars['String'];
   value: Scalars['Boolean'];
 };
 
@@ -308,21 +306,21 @@ export type DeleteConsentMutation = { __typename?: 'Mutation', deleteConsent: { 
 export type UserConsentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserConsentsQuery = { __typename?: 'Query', userConsents: Array<{ __typename?: 'UserConsent', id: string, userId: string, consentId: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', slug: string, id: string, name: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } }> };
+export type UserConsentsQuery = { __typename?: 'Query', userConsents: Array<{ __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', slug: string, id: string, name: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } }> };
 
 export type UserConsentQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type UserConsentQuery = { __typename?: 'Query', userConsent: { __typename?: 'UserConsent', id: string, userId: string, consentId: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', slug: string, id: string, name: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
+export type UserConsentQuery = { __typename?: 'Query', userConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', slug: string, id: string, name: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
 
 export type CreateUserConsentMutationVariables = Exact<{
   userConsent: UserConsentInput;
 }>;
 
 
-export type CreateUserConsentMutation = { __typename?: 'Mutation', createUserConsent: { __typename?: 'UserConsent', id: string, userId: string, value: boolean } };
+export type CreateUserConsentMutation = { __typename?: 'Mutation', createUserConsent: { __typename?: 'UserConsent', id: string, value: boolean } };
 
 export type UpdateUserConsentMutationVariables = Exact<{
   id: Scalars['String'];
@@ -330,7 +328,7 @@ export type UpdateUserConsentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserConsentMutation = { __typename?: 'Mutation', updateUserConsent: { __typename?: 'UserConsent', id: string, userId: string, consentId: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', slug: string, id: string, name: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
+export type UpdateUserConsentMutation = { __typename?: 'Mutation', updateUserConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', slug: string, id: string, name: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
 
 export type DeleteUserConsentMutationVariables = Exact<{
   id: Scalars['String'];
@@ -538,8 +536,6 @@ export const UserConsentsDocument = gql`
     query UserConsents {
   userConsents {
     id
-    userId
-    consentId
     value
     createdAt
     modifiedAt
@@ -588,8 +584,6 @@ export const UserConsentDocument = gql`
     query userConsent($id: String!) {
   userConsent(id: $id) {
     id
-    userId
-    consentId
     value
     createdAt
     modifiedAt
@@ -639,7 +633,6 @@ export const CreateUserConsentDocument = gql`
     mutation createUserConsent($userConsent: UserConsentInput!) {
   createUserConsent(userConsent: $userConsent) {
     id
-    userId
     value
   }
 }
@@ -674,8 +667,6 @@ export const UpdateUserConsentDocument = gql`
     mutation updateUserConsent($id: String!, $userConsent: UpdateUserConsentInput!) {
   updateUserConsent(id: $id, userConsent: $userConsent) {
     id
-    userId
-    consentId
     value
     createdAt
     modifiedAt

@@ -206,12 +206,10 @@ type User {
 
 type UserConsent {
   consent: Consent!
-  consentId: String!
   createdAt: DateTime!
   id: String!
   modifiedAt: DateTime!
   user: User!
-  userId: String!
   value: Boolean!
 }
 

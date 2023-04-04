@@ -230,12 +230,10 @@ export type User = {
 export type UserConsent = {
   __typename?: 'UserConsent'
   consent: Consent
-  consentId: Scalars['String']
   createdAt: Scalars['DateTime']
   id: Scalars['String']
   modifiedAt: Scalars['DateTime']
   user: User
-  userId: Scalars['String']
   value: Scalars['Boolean']
 }
 

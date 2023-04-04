@@ -46,7 +46,7 @@ export const ConsentForm = ({consent, onChange, create}: ConsentFormProps) => {
         </Form.Group>
 
         <Form.Group controlId="defaultValue">
-          <Form.ControlLabel>{t('userConsents.value')}</Form.ControlLabel>
+          <Form.ControlLabel>{t('consents.defaultValueTitle')}</Form.ControlLabel>
           <Checkbox
             checked={consent.defaultValue}
             onChange={(_, checked) => {

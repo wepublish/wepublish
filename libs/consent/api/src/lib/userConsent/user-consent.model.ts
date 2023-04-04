@@ -17,14 +17,8 @@ export class UserConsent {
   @Field(type => Consent)
   consent!: Consent
 
-  @Field()
-  consentId!: string
-
   @Field(type => User)
   user!: UserType
-
-  @Field()
-  userId!: string
 
   @Field()
   value!: boolean

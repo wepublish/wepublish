@@ -27,8 +27,6 @@ describe('UserConsentService', () => {
     const mockValue = Promise.resolve([
       {
         id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
-        userId: 'clfb7nce50264cvrxlliyxung',
-        consentId: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
         value: true,
         createdAt: '2023-03-17T12:08:17.277Z',
         modifiedAt: '2023-03-17T12:08:17.278Z',
@@ -46,8 +44,6 @@ describe('UserConsentService', () => {
       },
       {
         id: '216d312d-f26f-4692-ad51-1591ca425d97',
-        userId: 'clesor2a50105kgrxh0kyxmxy',
-        consentId: '4e70d86a-e3d9-4487-9d98-6ea8e665ee46',
         value: false,
         createdAt: '2023-03-17T11:00:48.580Z',
         modifiedAt: '2023-03-17T11:40:21.092Z',
@@ -78,8 +74,6 @@ describe('UserConsentService', () => {
     const mockValue = Promise.resolve([
       {
         id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
-        userId: 'clfb7nce50264cvrxlliyxung',
-        consentId: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
         value: true,
         createdAt: '2023-03-17T12:08:17.277Z',
         modifiedAt: '2023-03-17T12:08:17.278Z',
@@ -97,8 +91,6 @@ describe('UserConsentService', () => {
       },
       {
         id: '216d312d-f26f-4692-ad51-1591ca425d97',
-        userId: 'clesor2a50105kgrxh0kyxmxy',
-        consentId: '4e70d86a-e3d9-4487-9d98-6ea8e665ee46',
         value: false,
         createdAt: '2023-03-17T11:00:48.580Z',
         modifiedAt: '2023-03-17T11:40:21.092Z',
@@ -132,8 +124,6 @@ describe('UserConsentService', () => {
     const mockValue = Promise.resolve([
       {
         id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
-        userId: 'clfb7nce50264cvrxlliyxung',
-        consentId: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
         value: true,
         createdAt: '2023-03-17T12:08:17.277Z',
         modifiedAt: '2023-03-17T12:08:17.278Z',

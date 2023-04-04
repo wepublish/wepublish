@@ -54,8 +54,6 @@ mutation deleteConsent($id: String!) {
 query UserConsents {
   userConsents {
     id
-    userId
-    consentId
     value
     createdAt
     modifiedAt
@@ -76,8 +74,6 @@ query UserConsents {
 query userConsent($id: String!) {
   userConsent(id: $id) {
     id
-    userId
-    consentId
     value
     createdAt
     modifiedAt
@@ -98,7 +94,6 @@ query userConsent($id: String!) {
 mutation createUserConsent($userConsent: UserConsentInput!) {
   createUserConsent(userConsent: $userConsent) {
     id
-    userId
     value
   }
 }
@@ -106,8 +101,6 @@ mutation createUserConsent($userConsent: UserConsentInput!) {
 mutation updateUserConsent($id: String!, $userConsent: UpdateUserConsentInput!) {
   updateUserConsent(id: $id, userConsent: $userConsent) {
     id
-    userId
-    consentId
     value
     createdAt
     modifiedAt
