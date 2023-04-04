@@ -1,23 +1,15 @@
-import {
-  ConsentValue,
-  MutationCreateConsentArgs,
-  MutationUpdateConsentArgs
-} from '@wepublish/editor/api-v2'
+import {MutationCreateConsentArgs, MutationUpdateConsentArgs} from '@wepublish/editor/api-v2'
 import {useTranslation} from 'react-i18next'
-import {Form, Panel, SelectPicker} from 'rsuite'
+import {Checkbox, Form, Panel} from 'rsuite'
 
 const consentValues = [
   {
-    value: ConsentValue.Accepted,
-    label: ConsentValue.Accepted
+    value: true,
+    label: 'Accepted'
   },
   {
-    value: ConsentValue.Rejected,
-    label: ConsentValue.Rejected
-  },
-  {
-    value: ConsentValue.Unset,
-    label: ConsentValue.Unset
+    value: false,
+    label: 'Rejected'
   }
 ]
 
@@ -54,17 +46,14 @@ export const ConsentForm = ({consent, onChange, create}: ConsentFormProps) => {
         </Form.Group>
 
         <Form.Group controlId="defaultValue">
-          <Form.ControlLabel>{t('consents.defaultValue')}</Form.ControlLabel>
-          <SelectPicker
-            key="default-value"
-            placeholder={t('consents.defaultValue')}
-            block
-            data={consentValues}
-            value={consent.defaultValue ?? ''}
-            onChange={value =>
-              onChange({defaultValue: consentValues.find(v => v.value === value)?.label})
-            }
-          />
+          <Form.ControlLabel>{t('userConsents.value')}</Form.ControlLabel>
+          <Checkbox
+            checked={consent.defaultValue}
+            onChange={(_, checked) => {
+              onChange({defaultValue: checked})
+            }}>
+            {consentValues.find(v => v.value === consent.defaultValue)?.label}
+          </Checkbox>
         </Form.Group>
       </Panel>
     </div>

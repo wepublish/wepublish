@@ -100,7 +100,7 @@ export const mockUserConsents: Prisma.UserConsentCreateInput[] = [
         create: {
           name: 'some-name',
           slug: mockSlug1,
-          defaultValue: 'Accepted'
+          defaultValue: true
         }
       }
     },
@@ -196,7 +196,7 @@ describe('UserConsentResolver', () => {
       data: {
         name: 'some-name3',
         slug: generateRandomString(),
-        defaultValue: 'Accepted'
+        defaultValue: true
       }
     })
 

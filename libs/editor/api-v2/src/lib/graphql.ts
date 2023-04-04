@@ -22,7 +22,7 @@ export type Scalars = {
 export type Consent = {
   __typename?: 'Consent';
   createdAt: Scalars['DateTime'];
-  defaultValue: ConsentValue;
+  defaultValue: Scalars['Boolean'];
   id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
@@ -30,22 +30,16 @@ export type Consent = {
 };
 
 export type ConsentFilter = {
-  defaultValue?: InputMaybe<ConsentValue>;
+  defaultValue?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
 };
 
 export type ConsentInput = {
-  defaultValue: ConsentValue;
+  defaultValue: Scalars['Boolean'];
   name: Scalars['String'];
   slug: Scalars['String'];
 };
-
-export enum ConsentValue {
-  Accepted = 'Accepted',
-  Rejected = 'Rejected',
-  Unset = 'Unset'
-}
 
 export type DashboardInvoice = {
   __typename?: 'DashboardInvoice';
@@ -280,21 +274,21 @@ export type VersionInformation = {
 export type ConsentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ConsentsQuery = { __typename?: 'Query', consents: Array<{ __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: ConsentValue, createdAt: string, modifiedAt: string }> };
+export type ConsentsQuery = { __typename?: 'Query', consents: Array<{ __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }> };
 
 export type ConsentQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type ConsentQuery = { __typename?: 'Query', consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: ConsentValue, createdAt: string, modifiedAt: string } };
+export type ConsentQuery = { __typename?: 'Query', consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string } };
 
 export type CreateConsentMutationVariables = Exact<{
   consent: ConsentInput;
 }>;
 
 
-export type CreateConsentMutation = { __typename?: 'Mutation', createConsent: { __typename?: 'Consent', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, defaultValue: ConsentValue } };
+export type CreateConsentMutation = { __typename?: 'Mutation', createConsent: { __typename?: 'Consent', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, defaultValue: boolean } };
 
 export type UpdateConsentMutationVariables = Exact<{
   id: Scalars['String'];
@@ -302,7 +296,7 @@ export type UpdateConsentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateConsentMutation = { __typename?: 'Mutation', updateConsent: { __typename?: 'Consent', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, defaultValue: ConsentValue } };
+export type UpdateConsentMutation = { __typename?: 'Mutation', updateConsent: { __typename?: 'Consent', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, defaultValue: boolean } };
 
 export type DeleteConsentMutationVariables = Exact<{
   id: Scalars['String'];

@@ -113,18 +113,6 @@ export const UserConsentForm = ({userConsent, onChange, isEdit}: UserConsentForm
             {consentValues.find(v => v.value === userConsent.value)?.label}
           </Checkbox>
         </Form.Group>
-
-        {/* <Form.Group controlId="value">
-          <Form.ControlLabel>{t('userConsents.value')}</Form.ControlLabel>
-          <SelectPicker
-            key="value"
-            placeholder={t('userConsents.value')}
-            block
-            data={consentValues}
-            value={userConsent.value}
-            onChange={value => onChange({value: consentValues.find(v => v.value === value)?.value})}
-          />
-        </Form.Group> */}
       </Panel>
     </div>
   )

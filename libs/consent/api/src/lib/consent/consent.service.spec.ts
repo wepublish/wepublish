@@ -1,7 +1,7 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {ConsentService} from './consent.service'
 import {PrismaModule} from '@wepublish/nest-modules'
-import {Consent, ConsentValue, PrismaClient} from '@prisma/client'
+import {Consent, PrismaClient} from '@prisma/client'
 import {mockConsents} from './consent.resolver.spec'
 
 describe('ConsentService', () => {
@@ -31,13 +31,13 @@ describe('ConsentService', () => {
         id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
         name: 'some-name',
         slug: 'some-slug',
-        defaultValue: 'Accepted'
+        defaultValue: true
       },
       {
         id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
         name: 'some-other-name',
         slug: 'some-other-slug',
-        defaultValue: 'Rejected'
+        defaultValue: false
       }
     ])
 
@@ -54,7 +54,7 @@ describe('ConsentService', () => {
         id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
         name: 'some-name',
         slug: 'some-slug',
-        defaultValue: 'Accepted'
+        defaultValue: true
       }
     ])
 
@@ -72,7 +72,7 @@ describe('ConsentService', () => {
         id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
         name: 'some-name',
         slug: 'some-slug',
-        defaultValue: 'Accepted'
+        defaultValue: true
       }
     ])
 
@@ -81,7 +81,7 @@ describe('ConsentService', () => {
     const consent = {
       name: 'some-name',
       slug: 'some-slug',
-      defaultValue: ConsentValue.Accepted
+      defaultValue: true
     }
 
     const result = await service.createConsent(consent)
@@ -96,7 +96,7 @@ describe('ConsentService', () => {
       {
         id: idToUpdate,
         consent: {
-          defaultValue: ConsentValue.Rejected
+          defaultValue: false
         }
       }
     ])
@@ -106,7 +106,7 @@ describe('ConsentService', () => {
     const consent = {
       name: consents[0].name,
       slug: consents[0].slug,
-      defaultValue: ConsentValue.Rejected
+      defaultValue: false
     }
 
     const result = await service.updateConsent({id: idToUpdate, consent})
@@ -114,7 +114,7 @@ describe('ConsentService', () => {
       {
         id: idToUpdate,
         consent: {
-          defaultValue: 'Rejected'
+          defaultValue: false
         }
       }
     ])

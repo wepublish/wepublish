@@ -4,7 +4,7 @@
 
 type Consent {
   createdAt: DateTime!
-  defaultValue: ConsentValue!
+  defaultValue: Boolean!
   id: String!
   modifiedAt: DateTime!
   name: String!
@@ -12,21 +12,15 @@ type Consent {
 }
 
 input ConsentFilter {
-  defaultValue: ConsentValue
+  defaultValue: Boolean
   name: String
   slug: String
 }
 
 input ConsentInput {
-  defaultValue: ConsentValue!
+  defaultValue: Boolean!
   name: String!
   slug: String!
-}
-
-enum ConsentValue {
-  Accepted
-  Rejected
-  Unset
 }
 
 type DashboardInvoice {

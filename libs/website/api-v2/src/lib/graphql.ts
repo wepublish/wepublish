@@ -22,7 +22,7 @@ export type Scalars = {
 export type Consent = {
   __typename?: 'Consent'
   createdAt: Scalars['DateTime']
-  defaultValue: ConsentValue
+  defaultValue: Scalars['Boolean']
   id: Scalars['String']
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
@@ -30,21 +30,15 @@ export type Consent = {
 }
 
 export type ConsentFilter = {
-  defaultValue?: InputMaybe<ConsentValue>
+  defaultValue?: InputMaybe<Scalars['Boolean']>
   name?: InputMaybe<Scalars['String']>
   slug?: InputMaybe<Scalars['String']>
 }
 
 export type ConsentInput = {
-  defaultValue: ConsentValue
+  defaultValue: Scalars['Boolean']
   name: Scalars['String']
   slug: Scalars['String']
-}
-
-export enum ConsentValue {
-  Accepted = 'Accepted',
-  Rejected = 'Rejected',
-  Unset = 'Unset'
 }
 
 export type DashboardInvoice = {

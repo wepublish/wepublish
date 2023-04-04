@@ -3,7 +3,7 @@
 exports[`ConsentService should create a consent 1`] = `
 Array [
   Object {
-    "defaultValue": "Accepted",
+    "defaultValue": true,
     "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
     "name": "some-name",
     "slug": "some-slug",
@@ -14,7 +14,7 @@ Array [
 exports[`ConsentService should create a consent 2`] = `
 Object {
   "data": Object {
-    "defaultValue": "Accepted",
+    "defaultValue": true,
     "name": "some-name",
     "slug": "some-slug",
   },
@@ -24,7 +24,7 @@ Object {
 exports[`ConsentService should get a single consent by id 1`] = `
 Array [
   Object {
-    "defaultValue": "Accepted",
+    "defaultValue": true,
     "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
     "name": "some-name",
     "slug": "some-slug",
@@ -43,13 +43,13 @@ Object {
 exports[`ConsentService should get consents 1`] = `
 Array [
   Object {
-    "defaultValue": "Accepted",
+    "defaultValue": true,
     "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
     "name": "some-name",
     "slug": "some-slug",
   },
   Object {
-    "defaultValue": "Rejected",
+    "defaultValue": false,
     "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
     "name": "some-other-name",
     "slug": "some-other-slug",

@@ -986,12 +986,6 @@ model TaggedEvents {
   @@map("events.tagged-events")
 }
 
-enum ConsentValue {
-  Accepted @map("accepted")
-  Rejected @map("rejected")
-  Unset    @map("unset")
-}
-
 model Consent {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt  DateTime @default(now())
@@ -999,7 +993,7 @@ model Consent {
 
   name         String
   slug         String        @unique
-  defaultValue ConsentValue
+  defaultValue Boolean
   UserConsent  UserConsent[]
 
   @@map("consents")

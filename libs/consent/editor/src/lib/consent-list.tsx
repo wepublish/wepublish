@@ -15,6 +15,17 @@ import {RowDataType} from 'rsuite-table'
 import {useMemo} from 'react'
 import {getApiClientV2} from '../apiClientv2'
 
+const consentValues = [
+  {
+    value: true,
+    label: 'Accepted'
+  },
+  {
+    value: false,
+    label: 'Rejected'
+  }
+]
+
 const {Column, HeaderCell, Cell} = RTable
 
 const onErrorToast = (error: ApolloError) => {
@@ -93,7 +104,11 @@ export function ConsentList(props: ConsentListProps) {
 
           <Column width={200} resizable>
             <HeaderCell>{t('consents.defaultValue')}</HeaderCell>
-            <Cell>{(rowData: RowDataType<Consent>) => <span>{rowData.defaultValue}</span>}</Cell>
+            <Cell>
+              {(rowData: RowDataType<Consent>) => (
+                <span>{consentValues.find(v => v.value === rowData.defaultValue)?.label}</span>
+              )}
+            </Cell>
           </Column>
 
           <Column resizable>

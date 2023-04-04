@@ -4,7 +4,7 @@ import request from 'supertest'
 import * as crypto from 'crypto'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
-import {PrismaClient, Prisma, ConsentValue, Consent} from '@prisma/client'
+import {PrismaClient, Prisma, Consent} from '@prisma/client'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {ConsentResolver} from './consent.resolver'
 import {ConsentService} from './consent.service'
@@ -75,7 +75,7 @@ export const mockConsents: Prisma.ConsentCreateInput[] = [
   {
     name: 'some-name1',
     slug: generateRandomString(),
-    defaultValue: ConsentValue.Accepted
+    defaultValue: true
   }
 ]
 
@@ -117,7 +117,7 @@ describe('ConsentResolver', () => {
           id: expect.any(String),
           name: 'some-name1',
           slug: consents[0].slug,
-          defaultValue: ConsentValue.Accepted
+          defaultValue: true
         })
       })
   })
@@ -126,7 +126,7 @@ describe('ConsentResolver', () => {
     const toCreate = {
       name: 'some-name',
       slug: generateRandomString(),
-      defaultValue: ConsentValue.Accepted
+      defaultValue: true
     }
 
     await request(app.getHttpServer())
@@ -144,7 +144,7 @@ describe('ConsentResolver', () => {
           id: expect.any(String),
           name: 'some-name',
           slug: toCreate.slug,
-          defaultValue: ConsentValue.Accepted
+          defaultValue: true
         })
       })
   })
@@ -155,7 +155,7 @@ describe('ConsentResolver', () => {
     const toUpdate = {
       name: 'changed name',
       slug: generateRandomString(),
-      defaultValue: ConsentValue.Rejected
+      defaultValue: true
     }
 
     await request(app.getHttpServer())
@@ -174,7 +174,7 @@ describe('ConsentResolver', () => {
           id: idToUpdate,
           name: 'changed name',
           slug: toUpdate.slug,
-          defaultValue: ConsentValue.Rejected
+          defaultValue: true
         })
       })
   })

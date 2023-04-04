@@ -1,7 +1,6 @@
 import {ApolloError} from '@apollo/client'
 import {stripTypename} from '@wepublish/editor/api'
 import {
-  ConsentValue,
   MutationUpdateConsentArgs,
   useConsentQuery,
   useUpdateConsentMutation
@@ -48,7 +47,7 @@ export const ConsentEditView = () => {
 
   const closePath = '/consents'
   const [consent, setConsent] = useState({
-    defaultValue: '' as ConsentValue,
+    defaultValue: true,
     name: '',
     slug: ''
   })
@@ -101,11 +100,11 @@ export const ConsentEditView = () => {
 
   const loading = dataLoading || updateLoading
 
-  const {StringType} = Schema.Types
+  const {StringType, BooleanType} = Schema.Types
   const validationModel = Schema.Model({
     name: StringType().isRequired(),
     slug: StringType().isRequired(),
-    defaultValue: StringType().isRequired()
+    defaultValue: BooleanType().isRequired()
   })
 
   return (

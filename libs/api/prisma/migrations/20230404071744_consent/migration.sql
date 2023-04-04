@@ -1,6 +1,3 @@
--- CreateEnum
-CREATE TYPE "ConsentValue" AS ENUM ('accepted', 'rejected', 'unset');
-
 -- CreateTable
 CREATE TABLE "consents" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
@@ -8,7 +5,7 @@ CREATE TABLE "consents" (
     "modifiedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
-    "defaultValue" "ConsentValue" NOT NULL,
+    "defaultValue" BOOLEAN NOT NULL,
 
     CONSTRAINT "consents_pkey" PRIMARY KEY ("id")
 );
