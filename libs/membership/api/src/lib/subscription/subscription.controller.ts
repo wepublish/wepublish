@@ -194,11 +194,6 @@ export class SubscriptionController {
           connect: {
             id: subscription.id
           }
-        },
-        user: {
-          connect: {
-            id: subscription.user.id
-          }
         }
       }
     })

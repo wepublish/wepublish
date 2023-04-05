@@ -398,11 +398,6 @@ const modelFieldDefinitions = [
         relationName: 'InvoiceToSubscription'
       },
       {
-        name: 'user',
-        type: 'User',
-        relationName: 'InvoiceToUser'
-      },
-      {
         name: 'subscriptionPeriods',
         type: 'SubscriptionPeriod',
         relationName: 'InvoiceToSubscriptionPeriod'
@@ -750,11 +745,6 @@ const modelFieldDefinitions = [
         name: 'Subscription',
         type: 'Subscription',
         relationName: 'SubscriptionToUser'
-      },
-      {
-        name: 'Invoice',
-        type: 'Invoice',
-        relationName: 'InvoiceToUser'
       },
       {
         name: 'CommentRating',
@@ -2383,9 +2373,6 @@ export function defineInvoiceItemFactory(options = {}) {
 function isInvoicesubscriptionFactory(x) {
   return (x === null || x === void 0 ? void 0 : x._factoryFor) === 'Subscription'
 }
-function isInvoiceuserFactory(x) {
-  return (x === null || x === void 0 ? void 0 : x._factoryFor) === 'User'
-}
 function autoGenerateInvoiceScalarsOrEnums({seq}) {
   return {
     mail: getScalarFieldValueGenerator().String({
@@ -2421,12 +2408,7 @@ function defineInvoiceFactoryInternal({defaultData: defaultDataResolver}) {
           ? {
               create: yield defaultData.subscription.build()
             }
-          : defaultData.subscription,
-        user: isInvoiceuserFactory(defaultData.user)
-          ? {
-              create: yield defaultData.user.build()
-            }
-          : defaultData.user
+          : defaultData.subscription
       }
       const data = Object.assign(
         Object.assign(

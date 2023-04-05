@@ -397,8 +397,6 @@ model Invoice {
   subscriptionID String?
   subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)
 
-  userID String?
-  user   User?   @relation(fields: [userID], references: [id])
 
   subscriptionPeriods SubscriptionPeriod[]
 
@@ -818,7 +816,6 @@ model User {
   Comment       Comment[]
   Session       Session[]
   Subscription  Subscription[]
-  Invoice       Invoice[]
   CommentRating CommentRating[]
   PollVote      PollVote[]
   mailSent      MailLog[]

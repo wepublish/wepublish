@@ -974,10 +974,6 @@ declare type InvoicesubscriptionFactory = {
   _factoryFor: 'Subscription'
   build: () => PromiseLike<Prisma.SubscriptionCreateNestedOneWithoutInvoicesInput['create']>
 }
-declare type InvoiceuserFactory = {
-  _factoryFor: 'User'
-  build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutInvoiceInput['create']>
-}
 declare type InvoiceFactoryDefineInput = {
   id?: string
   createdAt?: Date
@@ -991,7 +987,6 @@ declare type InvoiceFactoryDefineInput = {
   items?: Prisma.InvoiceItemCreateNestedManyWithoutInvoicesInput
   manuallySetAsPaidByUserId?: string | null
   subscription?: InvoicesubscriptionFactory | Prisma.SubscriptionCreateNestedOneWithoutInvoicesInput
-  user?: InvoiceuserFactory | Prisma.UserCreateNestedOneWithoutInvoiceInput
   subscriptionPeriods?: Prisma.SubscriptionPeriodCreateNestedManyWithoutInvoiceInput
 }
 declare type InvoiceFactoryDefineOptions = {
@@ -1979,7 +1974,6 @@ declare type UserFactoryDefineInput = {
   Comment?: Prisma.CommentCreateNestedManyWithoutUserInput
   Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   Subscription?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
-  Invoice?: Prisma.InvoiceCreateNestedManyWithoutUserInput
   CommentRating?: Prisma.CommentRatingCreateNestedManyWithoutUserInput
   PollVote?: Prisma.PollVoteCreateNestedManyWithoutUserInput
   mailSent?: Prisma.MailLogCreateNestedManyWithoutRecipientInput
