@@ -193,7 +193,7 @@ describe('SubscriptionController', () => {
           amount: 10,
           invoice: {
             create: {
-              paymentDeadline: null,
+              scheduledDeactivationAt: null,
               mail: 'test@wepublish.com',
               dueAt: sub(validUntil, {years: 1}),
               paidAt: sub(validUntil, {years: 1})
@@ -375,7 +375,7 @@ describe('SubscriptionController', () => {
       },
       invoices: {
         create: {
-          paymentDeadline: sub(new Date(), {days: 100}),
+          scheduledDeactivationAt: sub(new Date(), {days: 100}),
           mail: 'test@wepublish.com',
           dueAt: sub(new Date(), {days: 100}),
           paidAt: new Date()
@@ -401,7 +401,7 @@ describe('SubscriptionController', () => {
       },
       invoices: {
         create: {
-          paymentDeadline: sub(new Date(), {days: 100}),
+          scheduledDeactivationAt: sub(new Date(), {days: 100}),
           mail: 'test@wepublish.com',
           dueAt: sub(new Date(), {days: 100}),
           canceledAt: new Date()
@@ -437,7 +437,7 @@ describe('SubscriptionController', () => {
       paidUntil: add(new Date(), {days: 1}),
       invoices: {
         create: {
-          paymentDeadline: sub(new Date(), {days: 2}),
+          scheduledDeactivationAt: sub(new Date(), {days: 2}),
           mail: 'test@wepublish.com',
           dueAt: sub(new Date(), {days: 100})
         }
@@ -453,7 +453,7 @@ describe('SubscriptionController', () => {
       paidUntil: add(new Date(), {days: 1}),
       invoices: {
         create: {
-          paymentDeadline: sub(new Date(), {days: 4}),
+          scheduledDeactivationAt: sub(new Date(), {days: 4}),
           mail: 'test@wepublish.com',
           dueAt: sub(new Date(), {days: 100})
         }
@@ -507,13 +507,13 @@ describe('SubscriptionController', () => {
     let invoicesToDeactivate = await subscriptionController.getSubscriptionsToDeactivate(new Date())
     expect(invoicesToDeactivate.length).toEqual(0)
     await InvoiceFactory.create({
-      paymentDeadline: sub(new Date(), {days: 1})
+      scheduledDeactivationAt: sub(new Date(), {days: 1})
     })
     await InvoiceFactory.create({
-      paymentDeadline: sub(new Date(), {seconds: 10})
+      scheduledDeactivationAt: sub(new Date(), {seconds: 10})
     })
     await InvoiceFactory.create({
-      paymentDeadline: add(new Date(), {days: 1})
+      scheduledDeactivationAt: add(new Date(), {days: 1})
     })
     invoicesToDeactivate = await subscriptionController.getSubscriptionsToDeactivate(new Date())
     expect(invoicesToDeactivate.length).toEqual(1)
@@ -543,7 +543,7 @@ describe('SubscriptionController', () => {
     expect(updatedSubscription!.invoices.length).toEqual(1)
     const invoice = updatedSubscription!.invoices[0]
     expect(invoice.dueAt).toEqual(paidUntil)
-    expect(invoice.paymentDeadline).toEqual(add(paidUntil, {days: 10}))
+    expect(invoice.scheduledDeactivationAt).toEqual(add(paidUntil, {days: 10}))
     expect(invoice.items.length).toEqual(1)
     const item = invoice.items[0]
     expect(item.amount).toEqual(120)
@@ -577,7 +577,7 @@ describe('SubscriptionController', () => {
     expect(updatedSubscription!.invoices.length).toEqual(1)
     const invoice = updatedSubscription!.invoices[0]
     expect(invoice.dueAt).toEqual(paidUntil)
-    expect(invoice.paymentDeadline).toEqual(add(paidUntil, {days: 3}))
+    expect(invoice.scheduledDeactivationAt).toEqual(add(paidUntil, {days: 3}))
     expect(invoice.items.length).toEqual(1)
     const item = invoice.items[0]
     expect(item.amount).toEqual(10)
@@ -610,7 +610,7 @@ describe('SubscriptionController', () => {
 
     expect(updatedSubscription!.invoices.length).toEqual(1)
     const invoice = updatedSubscription!.invoices[0]
-    expect(invoice.paymentDeadline).toEqual(add(paidUntil, {days: 30}))
+    expect(invoice.scheduledDeactivationAt).toEqual(add(paidUntil, {days: 30}))
     const item = invoice.items[0]
     expect(item.amount).toEqual(30)
     expect(item.description).toEqual('quarterly renewal of subscription memberplan')
@@ -640,7 +640,7 @@ describe('SubscriptionController', () => {
 
     expect(updatedSubscription!.invoices.length).toEqual(1)
     const invoice = updatedSubscription!.invoices[0]
-    expect(invoice.paymentDeadline).toEqual(add(paidUntil, {days: 1}))
+    expect(invoice.scheduledDeactivationAt).toEqual(add(paidUntil, {days: 1}))
     const item = invoice.items[0]
     expect(item.amount).toEqual(60)
     expect(item.description).toEqual('biannual renewal of subscription memberplan')

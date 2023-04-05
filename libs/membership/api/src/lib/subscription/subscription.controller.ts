@@ -52,7 +52,7 @@ export class SubscriptionController {
         },
         invoices: {
           none: {
-            paymentDeadline: {
+            scheduledDeactivationAt: {
               gte: sub(endOfDay(runDate), {days: 3})
             }
           }
@@ -99,7 +99,7 @@ export class SubscriptionController {
   public async getSubscriptionsToDeactivate(runDate: Date) {
     return this.prismaService.invoice.findMany({
       where: {
-        paymentDeadline: {
+        scheduledDeactivationAt: {
           lte: startOfDay(runDate)
         },
         canceledAt: null,
@@ -152,11 +152,11 @@ export class SubscriptionController {
       user: User
       memberPlan: MemberPlan
     },
-    paymentDeadline: Action
+    scheduledDeactivation: Action
   ) {
-    if (paymentDeadline.type !== SubscriptionEvent.DEACTIVATION_UNPAID) {
+    if (scheduledDeactivation.type !== SubscriptionEvent.DEACTIVATION_UNPAID) {
       throw new Error(
-        `Given action has not right type! ${paymentDeadline.type} should never happen!`
+        `Given action has not right type! ${scheduledDeactivation.type} should never happen!`
       )
     }
 
@@ -175,8 +175,8 @@ export class SubscriptionController {
             amount
           }
         },
-        paymentDeadline: add(subscription.paidUntil || new Date(), {
-          days: paymentDeadline.daysAwayFromEnding || undefined
+        scheduledDeactivationAt: add(subscription.paidUntil || new Date(), {
+          days: scheduledDeactivation.daysAwayFromEnding || undefined
         }),
         subscriptionPeriods: {
           create: {

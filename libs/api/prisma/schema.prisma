@@ -390,7 +390,7 @@ model Invoice {
   description               String?
   paidAt                    DateTime?
   canceledAt                DateTime?
-  paymentDeadline           DateTime?
+  scheduledDeactivationAt           DateTime?
   items                     InvoiceItem[]
   manuallySetAsPaidByUserId String?
 

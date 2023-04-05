@@ -19,7 +19,7 @@ CREATE TYPE "SubscriptionEvent" AS ENUM ('SUBSCRIBE', 'INVOICE_CREATION', 'RENEW
 DROP INDEX "mail.log_subject_idx";
 
 -- AlterTable
-ALTER TABLE "invoices" ADD COLUMN     "paymentDeadline" TIMESTAMP(3);
+ALTER TABLE "invoices" ADD COLUMN     "scheduledDeactivationAt" TIMESTAMP(3);
 
 -- AlterTable
 ALTER TABLE "mail.log" DROP COLUMN "recipient",

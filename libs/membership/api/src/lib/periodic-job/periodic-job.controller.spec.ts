@@ -212,7 +212,7 @@ describe('PeriodicJobController', () => {
       dueAt: sub(renewalDate, {months: 12}),
       paidAt: sub(renewalDate, {months: 12}),
       mail,
-      paymentDeadline: sub(renewalDate, {months: 11, days: 20})
+      scheduledDeactivationAt: sub(renewalDate, {months: 11, days: 20})
     })
 
     const testUserAndData = await UserFactory.create({
@@ -283,7 +283,7 @@ describe('PeriodicJobController', () => {
     expect(newInvoice.dueAt.getTime()).toBeGreaterThan(
       add(newInvoice.createdAt, {days: 12}).getTime()
     )
-    expect(newInvoice.paymentDeadline!.getTime()).toBeGreaterThan(
+    expect(newInvoice.scheduledDeactivationAt!.getTime()).toBeGreaterThan(
       add(newInvoice.dueAt, {days: 4}).getTime()
     )
     expect(newInvoice.mail).toEqual(mail)
@@ -327,7 +327,7 @@ describe('PeriodicJobController', () => {
     const invoice = await InvoiceFactory.create({
       dueAt: renewalDate,
       mail,
-      paymentDeadline: add(renewalDate, {days: 5}),
+      scheduledDeactivationAt: add(renewalDate, {days: 5}),
       items: {
         create: {
           amount: 2400,
@@ -512,7 +512,7 @@ describe('PeriodicJobController', () => {
     const invoice = await InvoiceFactory.create({
       dueAt: renewalDate,
       mail,
-      paymentDeadline: renewalDate,
+      scheduledDeactivationAt: renewalDate,
       items: {
         create: {
           amount: 2400,
@@ -592,7 +592,7 @@ describe('PeriodicJobController', () => {
     const invoice = await InvoiceFactory.create({
       dueAt: renewalDate,
       mail,
-      paymentDeadline: add(renewalDate, {days: 5}),
+      scheduledDeactivationAt: add(renewalDate, {days: 5}),
       items: {
         create: {
           amount: 2400,
@@ -688,7 +688,7 @@ describe('PeriodicJobController', () => {
       dueAt: sub(renewalDate, {months: 12}),
       paidAt: sub(renewalDate, {months: 12}),
       mail,
-      paymentDeadline: sub(renewalDate, {months: 11, days: 20})
+      scheduledDeactivationAt: sub(renewalDate, {months: 11, days: 20})
     })
     await UserFactory.create({
       email: mail,
