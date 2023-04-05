@@ -994,7 +994,7 @@ model Consent {
   name         String
   slug         String        @unique
   defaultValue Boolean
-  UserConsent  UserConsent[]
+  userConsents  UserConsent[]
 
   @@map("consents")
 }

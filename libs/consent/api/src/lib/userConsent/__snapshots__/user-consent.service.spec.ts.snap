@@ -73,7 +73,11 @@ Object {
     "createdAt": "desc",
   },
   "where": Object {
-    "consent": Object {},
+    "consent": Object {
+      "name": undefined,
+      "slug": undefined,
+    },
+    "value": undefined,
   },
 }
 `;
@@ -161,7 +165,11 @@ Object {
     "createdAt": "desc",
   },
   "where": Object {
-    "consent": Object {},
+    "consent": Object {
+      "name": undefined,
+      "slug": undefined,
+    },
+    "value": undefined,
   },
 }
 `;

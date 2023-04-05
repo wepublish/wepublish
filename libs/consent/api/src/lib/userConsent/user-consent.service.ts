@@ -13,13 +13,15 @@ export class UserConsentService {
   constructor(private prisma: PrismaClient) {}
 
   /*
-  Queries
- */
+    Queries
+  */
   async userConsentList(filter?: UserConsentFilter): Promise<UserConsent[]> {
     const data = await this.prisma.userConsent.findMany({
       where: {
+        value: filter?.value,
         consent: {
-          ...filter
+          name: filter?.name,
+          slug: filter?.slug
         }
       },
       orderBy: {
@@ -52,13 +54,9 @@ export class UserConsentService {
   }
 
   /*
-  Mutations
- */
+    Mutations
+  */
   async createUserConsent(userConsent: UserConsentInput, user: UserSession): Promise<UserConsent> {
-    // only allow creating for admin or affected user
-    if (!user.user.roleIDs.includes('admin') && user.user.id !== userConsent.userId) {
-      throw Error(`Unauthorized`)
-    }
     const created = await this.prisma.userConsent.create({
       data: userConsent,
       include: {user: true, consent: true}

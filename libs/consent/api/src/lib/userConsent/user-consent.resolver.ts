@@ -52,6 +52,10 @@ export class UserConsentResolver {
     @CurrentUser() user: UserSession,
     @Args('userConsent') userConsent: UserConsentInput
   ) {
+    // only allow creating for admin or affected user
+    if (!user.user.roleIDs.includes('admin') && user.user.id !== userConsent.userId) {
+      throw Error(`Unauthorized`)
+    }
     return this.userConsents.createUserConsent(userConsent, user)
   }
 
