@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common'
+import {Injectable, NotFoundException} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
 import {UserSession} from '@wepublish/authentication/api'
 import {
@@ -45,7 +45,7 @@ export class UserConsentService {
     })
 
     if (!data) {
-      throw Error(`UserConsent with id ${id} not found`)
+      throw new NotFoundException(`UserConsent with id ${id} not found`)
     }
 
     return data
