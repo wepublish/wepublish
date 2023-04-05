@@ -14,10 +14,8 @@ import {
   User
 } from '@prisma/client'
 import {DataLoaderContext} from './context'
-import {MaxResultsPerPage} from './db/common'
 import {InvoiceWithItems} from './db/invoice'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
-import {SettingName} from '@wepublish/settings/api'
 import {SubscriptionWithRelations} from './db/subscription'
 import {unselectPassword} from '@wepublish/user/api'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
@@ -29,7 +27,6 @@ import {
   ONE_HOUR_IN_MILLISECONDS,
   ONE_MONTH_IN_MILLISECONDS
 } from './utility'
-import {add} from 'date-fns'
 import {mailLogType} from '@wepublish/membership/mail'
 
 export interface HandleSubscriptionChangeProps {
@@ -106,18 +103,6 @@ export function calculateAmountForPeriodicity(
     case PaymentPeriodicity.yearly:
       return monthlyAmount * 12
   }
-}
-
-interface GetNextReminderAndDeactivationDateProps {
-  sentReminderAt: Date
-  createdAt: Date
-  frequency: number
-  maxAttempts: number
-}
-
-interface ReminderAndDeactivationDate {
-  nextReminder: Date
-  deactivateSubscription: Date
 }
 
 export class MemberContext implements MemberContext {
@@ -414,8 +399,7 @@ export class MemberContext implements MemberContext {
               invoiceId: invoiceData.id
             },
             create: items.map(({invoiceId, ...item}) => item)
-          },
-          sentReminderAt: new Date()
+          }
         }
       })
       return updatedPayment

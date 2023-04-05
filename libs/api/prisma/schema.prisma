@@ -391,7 +391,6 @@ model Invoice {
   paidAt                    DateTime?
   canceledAt                DateTime?
   paymentDeadline           DateTime?
-  sentReminderAt            DateTime?
   items                     InvoiceItem[]
   manuallySetAsPaidByUserId String?
 
