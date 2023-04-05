@@ -48,7 +48,7 @@ type PaymentSuccessProps = {host?: string}
 
 export default function PaymentSuccess({host}: PaymentSuccessProps) {
   const router = useRouter()
-  const {hasUser} = useUser()
+  const {hasUser, user} = useUser()
   const [hasOpenInvoices, setHasOpenInvoices] = useState<boolean>()
 
   const [checkInvoice] = ApiV1.useCheckInvoiceStatusLazyQuery()
@@ -122,7 +122,7 @@ export default function PaymentSuccess({host}: PaymentSuccessProps) {
         </Typography>
 
         <Typography variant="body1">
-          Wir haben dir eine Bestätigungsmail auf simondreyfus@hotmail.de gesendet.
+          Wir haben dir eine Bestätigungsmail auf {user?.email} gesendet.
         </Typography>
       </div>
 
