@@ -853,9 +853,7 @@ export async function contextFromRequest(
     prisma,
     mailProvider,
     defaultFromAddress: mailContextOptions.defaultFromAddress,
-    defaultReplyToAddress: mailContextOptions.defaultReplyToAddress,
-    mailTemplateMaps: mailContextOptions.mailTemplateMaps,
-    mailTemplatesPath: mailContextOptions.mailTemplatesPath
+    defaultReplyToAddress: mailContextOptions.defaultReplyToAddress
   })
 
   const generateJWT = (props: GenerateJWTProps): string => {

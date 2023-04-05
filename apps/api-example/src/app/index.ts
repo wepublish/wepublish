@@ -7,7 +7,6 @@ import {
   Oauth2Provider,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
-  SendMailType,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
   WepublishServer
@@ -227,43 +226,7 @@ export async function runServer(app?: Application | undefined) {
       mailProvider,
       mailContextOptions: {
         defaultFromAddress: process.env.DEFAULT_FROM_ADDRESS ?? 'dev@wepublish.ch',
-        defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch',
-        mailTemplateMaps: [
-          {
-            type: SendMailType.NewMemberSubscription,
-            localTemplate: 'newMemberSubscription',
-            local: true
-          },
-          {
-            type: SendMailType.RenewedMemberSubscription,
-            localTemplate: 'renewedMemberSubscription',
-            local: true
-          },
-          {
-            type: SendMailType.MemberSubscriptionOffSessionBefore,
-            localTemplate: 'memberSubscriptionPayment/offSessionPaymentOneWeekBefore',
-            local: true
-          },
-          {
-            type: SendMailType.MemberSubscriptionOnSessionBefore,
-            localTemplate: 'memberSubscriptionPayment/onSessionBefore',
-            local: true
-          },
-          {
-            type: SendMailType.MemberSubscriptionOnSessionAfter,
-            localTemplate: 'memberSubscriptionPayment/onSessionAfter',
-            local: true
-          },
-          {
-            type: SendMailType.MemberSubscriptionOffSessionFailed,
-            localTemplate: 'memberSubscriptionPayment/offSessionPaymentFailed',
-            local: true
-          }
-        ],
-        mailTemplatesPath:
-          process.env.NODE_ENV === 'production'
-            ? path.resolve('apps', 'api-example', 'templates', 'emails')
-            : path.resolve('templates', 'emails')
+        defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch'
       },
       paymentProviders,
       urlAdapter: new ExampleURLAdapter({websiteURL}),

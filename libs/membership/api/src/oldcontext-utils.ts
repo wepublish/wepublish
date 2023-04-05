@@ -11,7 +11,6 @@ import {
   PublicArticle,
   PublicComment,
   PublicPage,
-  SendMailType,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
   URLAdapter
@@ -168,59 +167,7 @@ export const initOldContextForTest = async (prisma: PrismaClient) => {
     mailProvider,
     mailContextOptions: {
       defaultFromAddress: process.env.DEFAULT_FROM_ADDRESS ?? 'dev@wepublish.ch',
-      defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch',
-      mailTemplateMaps: [
-        {
-          type: SendMailType.LoginLink,
-          localTemplate: 'loginLink',
-          local: true,
-          subject: 'Welcome new Member' // only needed if remoteTemplate
-        },
-        {
-          type: SendMailType.TestMail,
-          localTemplate: 'testMail',
-          local: true
-        },
-        {
-          type: SendMailType.PasswordReset,
-          localTemplate: 'passwordReset',
-          local: true
-        },
-        {
-          type: SendMailType.NewMemberSubscription,
-          localTemplate: 'newMemberSubscription',
-          local: true
-        },
-        {
-          type: SendMailType.RenewedMemberSubscription,
-          localTemplate: 'renewedMemberSubscription',
-          local: true
-        },
-        {
-          type: SendMailType.MemberSubscriptionOffSessionBefore,
-          localTemplate: 'memberSubscriptionPayment/offSessionPaymentOneWeekBefore',
-          local: true
-        },
-        {
-          type: SendMailType.MemberSubscriptionOnSessionBefore,
-          localTemplate: 'memberSubscriptionPayment/onSessionBefore',
-          local: true
-        },
-        {
-          type: SendMailType.MemberSubscriptionOnSessionAfter,
-          localTemplate: 'memberSubscriptionPayment/onSessionAfter',
-          local: true
-        },
-        {
-          type: SendMailType.MemberSubscriptionOffSessionFailed,
-          localTemplate: 'memberSubscriptionPayment/offSessionPaymentFailed',
-          local: true
-        }
-      ],
-      mailTemplatesPath:
-        process.env.NODE_ENV === 'production'
-          ? path.resolve('apps', 'api-example', 'templates', 'emails')
-          : path.resolve('templates', 'emails')
+      defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch'
     },
     oauth2Providers,
     paymentProviders,

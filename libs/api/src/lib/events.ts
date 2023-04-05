@@ -1,7 +1,6 @@
 import {Invoice, Prisma, SubscriptionPeriod, PrismaClient, SubscriptionEvent} from '@prisma/client'
 import {Context} from './context'
 import {unselectPassword} from '@wepublish/user/api'
-import {SendMailType} from './mails/mailContext'
 import {logger} from './server'
 import {SettingName} from '@wepublish/settings/api'
 import {mailLogType} from '@wepublish/membership/mail'

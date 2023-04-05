@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common'
-import {OldContextService, PrismaService} from '@wepublish/api'
+import {PrismaService} from '@wepublish/api'
 import {
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
@@ -13,16 +13,11 @@ import {
   subscriptionFlowRequiredEvents
 } from './subscription-flow.type'
 import {SubscriptionEvent} from '@prisma/client'
-import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
 const SUBSCRIPTION_EVEN_MAX_DAYS_BEFORE = -25
 const SUBSCRIPTION_EVEN_MAX_DAYS_AFTER = 90
 @Injectable()
 export class SubscriptionFlowController {
-  constructor(
-    private readonly prismaService: PrismaService,
-    private readonly periodicJobController: PeriodicJobController,
-    private oldContextService: OldContextService
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
   async getFlows(defaultFlowOnly: boolean, memberPlanId?: string) {
     let where = {}
     if (defaultFlowOnly) {

@@ -21,7 +21,7 @@ import {SettingName} from '@wepublish/settings/api'
 import {SubscriptionWithRelations} from './db/subscription'
 import {unselectPassword} from '@wepublish/user/api'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
-import {MailContext, SendMailType} from './mails/mailContext'
+import {MailContext} from './mails/mailContext'
 import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
 import {

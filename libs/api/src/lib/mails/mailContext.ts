@@ -1,6 +1,5 @@
 import {PrismaClient, Subscription, SubscriptionEvent, UserEvent} from '@prisma/client'
 import Email from 'email-templates'
-import {logger} from '../server'
 import {
   BaseMailProvider,
   MailProvider,
@@ -13,23 +12,6 @@ import {PrismaService} from '../prisma.service'
 import {OldContextService} from '../oldContext.service'
 import {SubscriptionEventDictionary} from '@wepublish/membership/subscription-event-dictionary'
 
-export enum SendMailType {
-  LoginLink,
-  TestMail,
-  PasswordReset,
-  NewMemberSubscription,
-  RenewedMemberSubscription,
-  MemberSubscriptionOffSessionBefore,
-  MemberSubscriptionOnSessionBefore,
-  MemberSubscriptionOnSessionAfter,
-  MemberSubscriptionOffSessionFailed
-}
-
-export interface SendEMailProps {
-  readonly type: SendMailType
-  readonly recipient: string
-  readonly data: Record<string, any>
-}
 export interface SendRemoteEMailProps {
   readonly remoteTemplate: string
   readonly recipient: string
@@ -37,23 +19,9 @@ export interface SendRemoteEMailProps {
   readonly data: Record<string, any>
 }
 
-export interface MailTemplateMap {
-  type: SendMailType
-  subject?: string
-  fromAddress?: string
-  replyToAddress?: string
-  local: boolean
-  localTemplate?: string
-  remoteTemplate?: string
-}
-
 export interface MailContextOptions {
   readonly defaultFromAddress: string
   readonly defaultReplyToAddress?: string
-  // ENTFERNEN
-  readonly mailTemplateMaps: MailTemplateMap[]
-  readonly mailTemplatesPath?: string
-  // ENTFERNEN
 }
 
 export interface MailContext {
@@ -61,7 +29,6 @@ export interface MailContext {
   prisma: PrismaClient
 
   email: Email
-  mailTemplateMaps: MailTemplateMap[]
 
   defaultFromAddress: string
   defaultReplyToAddress?: string
@@ -88,14 +55,6 @@ export class MailContext implements MailContext {
 
     this.defaultFromAddress = props.defaultFromAddress
     this.defaultReplyToAddress = props.defaultReplyToAddress
-
-    this.email = new Email({
-      send: false,
-      // textOnly: true,
-      views: {
-        root: props.mailTemplatesPath
-      }
-    })
   }
 
   async sendMail(opts: MailControllerConfig) {

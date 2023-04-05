@@ -15,9 +15,9 @@ import {
 } from '@prisma/client'
 import {PeriodicJobRunObject} from './periodic-job.type'
 import {Injectable, Logger} from '@nestjs/common'
-import {SubscriptionController} from '../subscription/subscription.controller'
 import {MailController, mailLogType} from '../mail/mail.controller'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
+import {SubscriptionController} from '../subscription/subscription.controller'
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
 
 @Injectable()
@@ -434,7 +434,10 @@ export class PeriodicJobController {
   }
 
   private getStartOfDay(date: Date): Date {
-    return startOfDay(date)
+    return subMinutes(
+      set(date, {hours: 0, minutes: 0, seconds: 0, milliseconds: 0}),
+      date.getTimezoneOffset()
+    )
   }
   private getEndOfDay(date: Date): Date {
     return endOfDay(date)

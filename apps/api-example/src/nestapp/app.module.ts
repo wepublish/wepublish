@@ -7,6 +7,7 @@ import {OldContextService, PrismaService} from '@wepublish/api'
 import {AuthenticationModule} from '@wepublish/authentication/api'
 import {PermissionModule} from '@wepublish/permissions/api'
 import {SettingModule} from '@wepublish/settings/api'
+import {ScheduleModule} from '@nestjs/schedule'
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import {SettingModule} from '@wepublish/settings/api'
     DashboardModule,
     AuthenticationModule,
     PermissionModule,
-    SettingModule
+    SettingModule,
+    ScheduleModule.forRoot()
   ],
   controllers: [],
   providers: [PrismaService, OldContextService]

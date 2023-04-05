@@ -1,6 +1,5 @@
 import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
 import bodyParser from 'body-parser'
-import path from 'path'
 import pinoMultiStream from 'pino-multi-stream'
 import {createWriteStream} from 'pino-sentry'
 import pinoStackdriver from 'pino-stackdriver'
@@ -8,7 +7,6 @@ import * as process from 'process'
 import {URL} from 'url'
 import {AlgebraicCaptchaChallenge} from './lib/challenges/algebraicCaptchaChallenge'
 import {WepublishServer} from './lib/server'
-import {SendMailType} from './lib/mails/mailContext'
 import {StripePaymentProvider} from './lib/payments/stripePaymentProvider'
 import {StripeCheckoutPaymentProvider} from './lib/payments/stripeCheckoutPaymentProvider'
 import {MailgunMailProvider} from './lib/mails/MailgunMailProvider'
@@ -264,56 +262,7 @@ export async function runServer() {
     mailProvider,
     mailContextOptions: {
       defaultFromAddress: process.env.DEFAULT_FROM_ADDRESS ?? 'dev@wepublish.ch',
-      defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch',
-      mailTemplateMaps: [
-        {
-          type: SendMailType.LoginLink,
-          localTemplate: 'loginLink',
-          local: true,
-          subject: 'Welcome new Member' // only needed if remoteTemplate
-        },
-        {
-          type: SendMailType.TestMail,
-          localTemplate: 'testMail',
-          local: true
-        },
-        {
-          type: SendMailType.PasswordReset,
-          localTemplate: 'passwordReset',
-          local: true
-        },
-        {
-          type: SendMailType.NewMemberSubscription,
-          localTemplate: 'newMemberSubscription',
-          local: true
-        },
-        {
-          type: SendMailType.RenewedMemberSubscription,
-          localTemplate: 'renewedMemberSubscription',
-          local: true
-        },
-        {
-          type: SendMailType.MemberSubscriptionOffSessionBefore,
-          localTemplate: 'memberSubscriptionPayment/offSessionPaymentOneWeekBefore',
-          local: true
-        },
-        {
-          type: SendMailType.MemberSubscriptionOnSessionBefore,
-          localTemplate: 'memberSubscriptionPayment/onSessionBefore',
-          local: true
-        },
-        {
-          type: SendMailType.MemberSubscriptionOnSessionAfter,
-          localTemplate: 'memberSubscriptionPayment/onSessionAfter',
-          local: true
-        },
-        {
-          type: SendMailType.MemberSubscriptionOffSessionFailed,
-          localTemplate: 'memberSubscriptionPayment/offSessionPaymentFailed',
-          local: true
-        }
-      ],
-      mailTemplatesPath: path.resolve('templates', 'emails')
+      defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch'
     },
     paymentProviders,
     urlAdapter: new WepublishURLAdapter({websiteURL}),
