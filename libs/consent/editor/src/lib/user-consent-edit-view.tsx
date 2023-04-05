@@ -44,7 +44,9 @@ export const UserConsentEditView = () => {
   const {t} = useTranslation()
 
   const closePath = '/userConsents'
-  const [userConsent, setUserConsent] = useState({value: false})
+  const [userConsent, setUserConsent] = useState({
+    value: false
+  } as MutationUpdateUserConsentArgs['userConsent'])
 
   const [shouldClose, setShouldClose] = useState<boolean>(false)
 
@@ -92,10 +94,8 @@ export const UserConsentEditView = () => {
 
   const loading = dataLoading || updateLoading
 
-  const {StringType, BooleanType} = Schema.Types
+  const {BooleanType} = Schema.Types
   const validationModel = Schema.Model({
-    userId: StringType().isRequired(),
-    consentId: StringType().isRequired(),
     value: BooleanType().isRequired()
   })
 
