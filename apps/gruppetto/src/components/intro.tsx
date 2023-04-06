@@ -1,7 +1,9 @@
 import {css, styled} from '@mui/material'
 import {useWebsiteBuilder} from '@wepublish/website'
 import {differenceInDays} from 'date-fns'
+import Head from 'next/head'
 import Link from 'next/link'
+import Script from 'next/script'
 import {memo} from 'react'
 
 const IntroWrapper = styled('article')`
@@ -47,6 +49,22 @@ const Intro = () => {
         rauschen. Verhelfe dem «Gruppetto» jetzt zum Erfolg{' '}
         {(difference && <strong>und unterstütze uns noch {difference} Tage!</strong>) || <>.</>}
       </Paragraph>
+
+      <div style={{padding: '56.25% 0 0 0', position: 'relative'}}>
+        <iframe
+          src="https://player.vimeo.com/video/812916971?h=ee3ad2232d&color=ffffff&title=0&byline=0&portrait=0"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%'
+          }}
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowFullScreen></iframe>
+      </div>
+
+      <Script async src="https://player.vimeo.com/api/player.js" />
 
       <ActionWrapper>
         <UnstyledLink href="#unterstuetze-uns" scroll={false} shallow>
