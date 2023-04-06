@@ -3,6 +3,7 @@ import {
   CircularProgress,
   css,
   FormControlLabel,
+  Link,
   RadioGroup,
   Slider,
   styled,
@@ -411,7 +412,15 @@ const CustomSubscribe = ({
           </ChallengeWrapper>
 
           <Typography variant="h6" component="p" marginBottom={3}>
-            <strong>Deine Bezahlmethode kannst du im nächsten Schritt wählen.</strong>
+            <strong>
+              Bezahlen kannst du mit Twint. Alternativ kannst du eine Zahlung an Megaprint AG,
+              Hohlstrasse 207, 8004, CH5404835055588231000 mit dem Zahlunszweck
+              &quot;Gruppetto&quot; machen und uns per Mail an{' '}
+              <Link href="mailto:redaktion@gruppetto-magazin.ch">
+                redaktion@gruppetto-magazin.ch
+              </Link>{' '}
+              informieren.
+            </strong>
           </Typography>
 
           {subscribe.error?.message && (
