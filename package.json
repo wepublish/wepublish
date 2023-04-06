@@ -10,7 +10,7 @@
     "clean": "run-p --print-label clean:**",
     "clean:media": "docker-compose exec media rm -rf ./.media",
     "lint": " nx run-many --target=lint --exclude website-example",
-    "build": " nx run-many --target=build --projects=api,editor,api-example,website-example,gruppetto",
+    "build": " nx run-many --target=build --projects=api,editor,api-example,website-example",
     "test": " nx run-many --target=test",
     "watch": "npm run migrate && run-p --print-label watch:*",
     "watch:editor": "nx serve editor",

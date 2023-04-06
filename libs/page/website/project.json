@@ -12,17 +12,6 @@
         "lintFilePatterns": ["libs/page/website/**/*.{ts,tsx,js,jsx}"]
       }
     },
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/libs/page/website",
-        "tsConfig": "libs/page/website/tsconfig.lib.json",
-        "packageJson": "libs/page/website/package.json",
-        "main": "libs/page/website/src/index.ts",
-        "assets": ["libs/page/website/*.md"]
-      }
-    },
     "test": {
       "executor": "@nrwl/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],

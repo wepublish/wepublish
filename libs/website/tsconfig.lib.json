@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "types": ["node"],
-    "declaration": true
+    "declaration": true,
+    "rootDirs": ["../../"]
   },
   "files": [
     "../../node_modules/@nrwl/react/typings/cssmodule.d.ts",

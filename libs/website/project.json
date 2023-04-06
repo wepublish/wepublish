@@ -22,6 +22,7 @@
         "main": "libs/website/src/index.ts",
         "assets": ["libs/website/*.md"],
         "external": "all",
+        "rootDir": ".",
         "clean": false
       }
     },
