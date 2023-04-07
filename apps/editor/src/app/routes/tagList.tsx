@@ -8,6 +8,12 @@ import {
   useTagListLazyQuery,
   useUpdateTagMutation
 } from '@wepublish/editor/api'
+import {
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import {memo, useCallback, useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSave} from 'react-icons/md'
@@ -25,7 +31,6 @@ import {
 
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
-import {ListViewActions, ListViewContainer, ListViewHeader, TableWrapper} from '../ui/listView'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
 
 const FlexGridSmallerMargin = styled(FlexboxGrid)`

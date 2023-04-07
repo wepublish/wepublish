@@ -723,7 +723,9 @@
       "subscriptions": "Subscriptions",
       "userRoles": "User Roles",
       "users": "Users",
-      "usersAndMembers": "Users & Members"
+      "usersAndMembers": "Users & Members",
+      "consents": "Consents",
+      "userConsents": "User Consents"
     },
     "navigation": {
       "overview": {
@@ -1202,6 +1204,30 @@
       "selectMemberPlan": "Member Plan",
       "startsAt": "Subscription Start",
       "selectUser": "Select User"
+    },
+    "consents": {
+      "title": "Consents",
+      "consent": "Consent",
+      "create": "Create new Consent",
+      "name": "Name",
+      "slug": "Slug",
+      "defaultValue": "Default value",
+      "titleCreate": "Create Consent",
+      "titleEdit": "Edit Consent",
+      "uniqueConstraint": "A consent with slug '\"{{slug}}\"' already exists. Please choose a different slug.",
+      "defaultValueTitle": "Default value (checked by default)"
+    },
+    "userConsents": {
+      "title": "User Consents",
+      "create": "Create new User Consent",
+      "user": "User",
+      "consentName": "Consent name",
+      "consentSlug": "Consent slug",
+      "value": "Value",
+      "titleCreate": "Create User Consent",
+      "titleEdit": "Edit User Consent",
+      "userId": "User id",
+      "consentId": "Consent id"
     },
     "errorMessages": {
       "noFirstNameErrorMessage": "Please enter a firstname",
