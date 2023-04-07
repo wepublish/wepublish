@@ -159,10 +159,8 @@ enum PaymentPeriodicity {
 
 type Query {
   """
-  
-        Returns all active subscribers.
-        Includes subscribers with a cancelled but not run out subscription.
-      
+  Returns all active subscribers.
+  Includes subscribers with a cancelled but not run out subscription.
   """
   activeSubscribers: [DashboardSubscription!]!
 
@@ -189,40 +187,30 @@ type Query {
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
   """
-  
-        Returns a list of imported events from external sources, transformed to match our model.
-      
+  Returns a list of imported events from external sources, transformed to match our model.
   """
   importedEvents(filter: ImportedEventFilter, order: Float, skip: Float, sort: String, take: Float): ImportedEventDocument!
 
   """
-  
-        Returns all new deactivations in a given timeframe.
-        This considers the time the deactivation was made, not when the subscription runs out.
-      
+  Returns all new deactivations in a given timeframe.
+  This considers the time the deactivation was made, not when the subscription runs out.
   """
   newDeactivations(end: DateTime, start: DateTime!): [DashboardSubscription!]!
 
   """
-  
-        Returns all new subscribers in a given timeframe.
-        Includes already deactivated ones.
-      
+  Returns all new subscribers in a given timeframe.
+  Includes already deactivated ones.
   """
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
 
   """
-  
-        Returns all renewing subscribers in a given timeframe.
-      
+  Returns all renewing subscribers in a given timeframe.
   """
   renewingSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
 
   """
-  
-        Returns the revenue generated for the time period given.
-        Only includes paid invoices that have not been manually paid.
-      
+  Returns the revenue generated for the time period given.
+  Only includes paid invoices that have not been manually paid.
   """
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
