@@ -809,6 +809,7 @@ model User {
   Invoice       Invoice[]
   CommentRating CommentRating[]
   PollVote      PollVote[]
+  UserConsent   UserConsent[]
 
   @@map("users")
 }
@@ -983,4 +984,34 @@ model TaggedEvents {
 
   @@id([eventId, tagId])
   @@map("events.tagged-events")
+}
+
+model Consent {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name         String
+  slug         String        @unique
+  defaultValue Boolean
+  userConsents  UserConsent[]
+
+  @@map("consents")
+}
+
+model UserConsent {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  consent   Consent @relation(fields: [consentId], references: [id], onDelete: Cascade)
+  consentId String  @db.Uuid
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  value Boolean
+
+  @@unique([userId, consentId])
+  @@map("user-consents")
 }

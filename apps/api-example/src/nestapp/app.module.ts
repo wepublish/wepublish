@@ -7,7 +7,8 @@ import {
   DashboardModule,
   AuthenticationModule,
   PermissionModule,
-  EventsImportModule
+  EventsImportModule,
+  ConsentModule
 } from '@wepublish/api'
 
 @Module({
@@ -28,6 +29,7 @@ import {
     PermissionModule,
     SettingModule,
     EventsImportModule
+    ConsentModule
   ],
   controllers: [],
   providers: []

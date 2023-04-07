@@ -12,9 +12,6 @@ export * from './lib/graphql/token'
 export * from './lib/graphql/richText'
 export * from './lib/graphql/slug'
 
-// export * from './lib/graphql/mutation.private'
-// export * from './lib/graphql/query.private'
-
 export * from './lib/graphql/schema'
 export * from './lib/graphql/permissions'
 
@@ -64,3 +61,4 @@ export * from '@wepublish/membership/api'
 export * from '@wepublish/authentication/api'
 export * from '@wepublish/permissions/api'
 export * from '@wepublish/events/api'
+export * from '@wepublish/consent/api'

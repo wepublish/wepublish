@@ -11,17 +11,17 @@ exports[`User list view does not render list when encounter apollo error 1`] = `
 exports[`User list view should render successfully 1`] = `
 <DocumentFragment>
   <div
-    class="css-1hwna3y-ListViewContainer e1gxvbeo10"
+    class="css-7mtr21"
   >
     <div
-      class="css-yt11xs-ListViewHeader e1gxvbeo9"
+      class="css-19cek6g"
     >
       <h2>
         userList.overview.users
       </h2>
     </div>
     <div
-      class="css-1eznoh-ListViewActions e1gxvbeo8"
+      class="css-1px0aha"
     >
       <a
         href="/users/create"
@@ -60,7 +60,7 @@ exports[`User list view should render successfully 1`] = `
       </a>
     </div>
     <form
-      class="e1gxvbeo7 css-1bah74g-Form-ListFilters e10oh4y65 rs-form rs-form-vertical rs-form-fixed-width"
+      class="css-e7e6rz rs-form rs-form-vertical rs-form-fixed-width"
     >
       <div
         class="rs-form-group"
@@ -68,7 +68,7 @@ exports[`User list view should render successfully 1`] = `
         style="margin-right: 15px; margin-top: 0px; margin-bottom: 10px;"
       >
         <input
-          class="css-2i0332-WideInput e10oh4y60 rs-input"
+          class="css-15y3b4e rs-input"
           placeholder="subscriptionList.filter.searchPlaceholder"
           type="text"
           value=""
@@ -124,13 +124,13 @@ exports[`User list view should render successfully 1`] = `
     </form>
   </div>
   <div
-    class="css-y62g0h-TableWrapper e1gxvbeo5"
+    class="css-1clcivw"
   >
     <div
       aria-busy="false"
       aria-colcount="8"
       aria-rowcount="4"
-      class="css-1qxmfqz-Table e1gxvbeo0 rs-table rs-table-hover"
+      class="css-kkcxf3 rs-table rs-table-hover"
       role="grid"
       style="width: auto; height: 0px;"
     >
@@ -528,7 +528,7 @@ exports[`User list view should render successfully 1`] = `
               </div>
               <div
                 aria-colindex="8"
-                class="css-1iy2g3c-PaddedCell e1gxvbeo4 rs-table-cell rs-table-cell-last"
+                class="css-1d7qmd3 rs-table-cell rs-table-cell-last"
                 role="gridcell"
                 style="width: 100px; height: 46px; z-index: 0; left: 1400px;"
               >
@@ -537,7 +537,7 @@ exports[`User list view should render successfully 1`] = `
                   style="width: 100px; height: 46px; text-align: center;"
                 >
                   <button
-                    class="css-1ctuvml-IconButton e1gxvbeo1 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
+                    class="css-lp92kk rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
                     type="button"
                   >
                     <svg
@@ -566,7 +566,7 @@ exports[`User list view should render successfully 1`] = `
                     </span>
                   </button>
                   <button
-                    class="css-1ctuvml-IconButton e1gxvbeo1 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
+                    class="css-lp92kk rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
                     type="button"
                   >
                     <svg
@@ -704,7 +704,7 @@ exports[`User list view should render successfully 1`] = `
               </div>
               <div
                 aria-colindex="8"
-                class="css-1iy2g3c-PaddedCell e1gxvbeo4 rs-table-cell rs-table-cell-last"
+                class="css-1d7qmd3 rs-table-cell rs-table-cell-last"
                 role="gridcell"
                 style="width: 100px; height: 46px; z-index: 0; left: 1400px;"
               >
@@ -713,7 +713,7 @@ exports[`User list view should render successfully 1`] = `
                   style="width: 100px; height: 46px; text-align: center;"
                 >
                   <button
-                    class="css-1ctuvml-IconButton e1gxvbeo1 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
+                    class="css-lp92kk rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
                     type="button"
                   >
                     <svg
@@ -742,7 +742,7 @@ exports[`User list view should render successfully 1`] = `
                     </span>
                   </button>
                   <button
-                    class="css-1ctuvml-IconButton e1gxvbeo1 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
+                    class="css-lp92kk rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
                     type="button"
                   >
                     <svg
@@ -880,7 +880,7 @@ exports[`User list view should render successfully 1`] = `
               </div>
               <div
                 aria-colindex="8"
-                class="css-1iy2g3c-PaddedCell e1gxvbeo4 rs-table-cell rs-table-cell-last"
+                class="css-1d7qmd3 rs-table-cell rs-table-cell-last"
                 role="gridcell"
                 style="width: 100px; height: 46px; z-index: 0; left: 1400px;"
               >
@@ -889,7 +889,7 @@ exports[`User list view should render successfully 1`] = `
                   style="width: 100px; height: 46px; text-align: center;"
                 >
                   <button
-                    class="css-1ctuvml-IconButton e1gxvbeo1 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
+                    class="css-lp92kk rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
                     type="button"
                   >
                     <svg
@@ -918,7 +918,7 @@ exports[`User list view should render successfully 1`] = `
                     </span>
                   </button>
                   <button
-                    class="css-1ctuvml-IconButton e1gxvbeo1 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
+                    class="css-lp92kk rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
                     type="button"
                   >
                     <svg

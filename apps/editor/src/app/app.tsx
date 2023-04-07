@@ -2,6 +2,14 @@ import 'rsuite/styles/index.less'
 
 import {gql, useMutation} from '@apollo/client'
 import {css, Global} from '@emotion/react'
+import {
+  ConsentCreateView,
+  ConsentEditView,
+  ConsentList,
+  UserConsentCreateView,
+  UserConsentEditView,
+  UserConsentList
+} from '@wepublish/consent/editor'
 import {TagType} from '@wepublish/editor/api'
 import {ImportableEventListView} from '@wepublish/events/editor'
 import {useContext, useEffect, useState} from 'react'
@@ -550,6 +558,56 @@ export function App() {
               element={
                 <Base>
                   <PaymentMethodList />
+                </Base>
+              }
+            />
+            {/* Consents Routes */}
+            <Route
+              path="consents"
+              element={
+                <Base>
+                  <ConsentList />
+                </Base>
+              }
+            />
+            <Route
+              path="consents/create"
+              element={
+                <Base>
+                  <ConsentCreateView />
+                </Base>
+              }
+            />
+            <Route
+              path="consents/edit/:id"
+              element={
+                <Base>
+                  <ConsentEditView />
+                </Base>
+              }
+            />
+            {/* Consents Routes */}
+            <Route
+              path="userConsents"
+              element={
+                <Base>
+                  <UserConsentList />
+                </Base>
+              }
+            />
+            <Route
+              path="userConsents/create"
+              element={
+                <Base>
+                  <UserConsentCreateView />
+                </Base>
+              }
+            />
+            <Route
+              path="userConsents/edit/:id"
+              element={
+                <Base>
+                  <UserConsentEditView />
                 </Base>
               }
             />
