@@ -42,7 +42,7 @@ const Intro = () => {
 
       <Paragraph>
         Das «Gruppetto»-Magazin will packende Velogeschichten erzählen, weniger bekannte
-        Hintergründe beleuchten und die Velobegeisterung der Leser:inne widerspiegeln. Diese
+        Hintergründe beleuchten und die Velobegeisterung der Leser:innen widerspiegeln. Diese
         Begeisterung besteht aus einem Gefühl der Freiheit. Es entsteht beim Rollen über
         Landstrassen und Hügel oder beim Anblick von Serpentinen eines Alpenpasses. Es entsteht
         durch den Geruch nach Asphalt und Sonnencreme, durch den Klang von Hochfelgen, die im Wind
