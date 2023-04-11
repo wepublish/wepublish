@@ -212,7 +212,7 @@ export default function PaymentSuccess({host}: PaymentSuccessProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({req}) => {
-  const host = `${(req as any)['protocol']}://${req.headers.host || ''}`
+  const host = `https://${req.headers.host || ''}`
 
   return {props: {host}}
 }
