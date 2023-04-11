@@ -145,7 +145,7 @@ const CrowdfundingChart = (props: ComponentProps<typeof CrowdfundingChartWrapper
 
   const money = revenueData?.revenue.reduce((sum, invoice) => (sum += invoice.amount), 0) ?? 0
   const amountSupporters = revenueData?.revenue.length ?? 0
-  const position = calculationPosition(money)
+  const position = calculationPosition(money / 100)
   const gradientOffset = `${position * 100}%`
   const gruppettoOffset = Math.max(0.1, position * 0.4)
   const dustBusOffset = Math.max(0.25, position * 0.5)
