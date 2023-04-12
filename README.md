@@ -43,7 +43,7 @@
     <br />
     <a href="#demo">View Demo</a>
     ·
-    <a href="https://github.com/wepublish/wepublish/issues">ReDport Bug</a>
+    <a href="https://github.com/wepublish/wepublish/issues">Report Bug</a>
     ·
     <a href="https://github.com/wepublish/wepublish/issues">Request Feature</a>
   </p>
