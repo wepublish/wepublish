@@ -74,31 +74,30 @@ export function Index() {
           </Typography>
 
           <Typography variant="body1" marginBottom={2}>
-            Hinter dem Gruppetto stehen Corsin Zander, 34, der die Fahrerinnen und Fahrer am
-            liebsten vom Streckenrand aus anfeuert – ob am Mortirolo oder auf der Offenen Rennbahn
-            in Oerlikon. Vor 15 Jahren ist er in den Journalismus eingestiegen und arbeitet
-            mittlerweile in leitender Funktion beim «Tages-Anzeiger». Corsin schaut dafür, dass das
-            Gruppetto das Ziel in der Karenzzeit erreicht.
+            Hinter dem Gruppetto stehen Corsin Zander, Pascal Ritter und Tim Brühlmann.
           </Typography>
 
           <Typography variant="body1" marginBottom={2}>
-            Der eigentliche Ideengeber des Magazins ist Pascal Ritter, 37, der an Montagen als
-            Velokurier durch Zürich flitzt und an den anderen Tagen als Reporter für die Zeitungen
-            der CH-Media unterwegs ist oder als Tagesleiter den Online-Auftritt verantwortet. Pascal
-            liefert für die Taktik des Gruppetto die zündenden Ideen.
+            Corsin Zander, 34, feuert die Fahrerinnen und Fahrer am liebsten vom Streckenrand aus an
+            – ob am Mortirolo oder auf der Offenen Rennbahn in Oerlikon. Vor 15 Jahren ist er in den
+            Journalismus eingestiegen und arbeitet mittlerweile in leitender Funktion beim
+            «Tages-Anzeiger». Corsin schaut dafür, dass das Gruppetto das Ziel in der Karenzzeit
+            erreicht.
           </Typography>
 
           <Typography variant="body1" marginBottom={2}>
-            Der Mann fürs Grafische heisst Tim Brühlmann, 36. Er arbeitet seit 16 Jahren für
-            verschiedene Schweizer Magazine («Das Magazin», «Annabelle», «Facts», «Schweizer
+            Der eigentliche Ideengeber des Magazins ist Pascal Ritter, 37. An Montagen flitzt er als
+            Velokurier durch Zürich. Den Rest der Woche ist er als Reporter für die Zeitungen von
+            CH-Media unterwegs oder verantwortet als Tagesleiter den Online-Auftritt. Pascal liefert
+            für die Taktik des Gruppetto die nötige Kreativität.
+          </Typography>
+
+          <Typography variant="body1" marginBottom={2}>
+            Der Mann für Grafik und Produktion heisst Tim Brühlmann, 36. Er arbeitet seit 16 Jahren
+            für verschiedene Schweizer Magazine («Das Magazin», «Annabelle», «Facts», «Schweizer
             Illustrierte», etc.). Zurzeit ist er Art Director und Produktionsleiter vom
-            «Sport-Magazin» der «Schweizer Illustrierten». Dank Tim sieht das Gruppetto immer gut
-            aus.
-          </Typography>
-
-          <Typography variant="body1">
-            Wenn ihr Fragen an uns habt, kontaktiert uns per E-Mail an{' '}
-            <Link href="mailto:redaktion@gruppetto-magazin.ch">redaktion@gruppetto-magazin.ch</Link>
+            «Sport-Magazin» der «Schweizer Illustrierten». Dank Tims Erfahrung, rollt das Gruppetto
+            sicher die Serpentinen zum Gipfel hinauf und sieht dabei auch noch gut aus.
           </Typography>
         </div>
       </BreakImage>
