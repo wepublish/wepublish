@@ -43,7 +43,7 @@
     <br />
     <a href="#demo">View Demo</a>
     ·
-    <a href="https://github.com/wepublish/wepublish/issues">Report Bug</a>
+    <a href="https://github.com/wepublish/wepublish/issues">ReDport Bug</a>
     ·
     <a href="https://github.com/wepublish/wepublish/issues">Request Feature</a>
   </p>
@@ -83,13 +83,22 @@ TBD
 - [TypeScript](https://www.typescriptlang.org/)
 - :green_heart:
 
-## Demo
+## Demo (Stable)
 
 - [Editor](https://editor.demo.wepublish.media)
-  - username: `dev@wepublish.ch`
+  - username: `admin@wepublish.ch`
   - password: `123`
 - [Website](https://demo.wepublish.media)
 - [API](https://api.demo.wepublish.media)
+
+## Preview (Next)
+
+- [Editor](https://editor.next.wepublish.media)
+  - username: `dev@wepublish.ch`
+  - password: `123`
+- [Website](https://next.wepublish.media)
+- [API](https://api.next.wepublish.media)
+
 
 ## Packages
 
