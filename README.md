@@ -86,7 +86,7 @@ TBD
 ## Demo (Stable)
 
 - [Editor](https://editor.demo.wepublish.media)
-  - username: `admin@wepublish.ch`
+  - username: `dev@wepublish.ch`
   - password: `123`
 - [Website](https://demo.wepublish.media)
 - [API](https://api.demo.wepublish.media)
@@ -94,7 +94,7 @@ TBD
 ## Preview (Next)
 
 - [Editor](https://editor.next.wepublish.media)
-  - username: `dev@wepublish.ch`
+  - username: `admin@wepublish.ch`
   - password: `123`
 - [Website](https://next.wepublish.media)
 - [API](https://api.next.wepublish.media)
