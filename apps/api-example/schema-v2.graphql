@@ -46,45 +46,10 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Mutation {
-  """
-  Create a new consent.
-  """
-  createConsent(consent: ConsentInput!): Consent!
-
-  """
-  Creates a new userConsent based on input.
-  Returns created userConsent.
-  """
-  createUserConsent(userConsent: UserConsentInput!): UserConsent!
-
-  """
-  Deletes an existing consent.
-  """
-  deleteConsent(id: String!): Consent!
-
-  """
-  Delete an existing userConsent by id.
-  Returns deleted userConsent.
-  """
-  deleteUserConsent(id: String!): UserConsent!
-
-  """
-  Updates an existing consent.
-  """
-  updateConsent(consent: ConsentInput!, id: String!): Consent!
-
-  """
-  Updates an existing userConsent based on input.
-  Returns updated userConsent.
-  """
-  updateUserConsent(id: String!, userConsent: UpdateUserConsentInput!): UserConsent!
-}
-
 type Event {
   createdAt: DateTime!
   description: String!
-  endsAt: DateTime!
+  endsAt: DateTime
   id: String!
   imageId: String!
   location: String!
@@ -101,6 +66,70 @@ enum EventStatus {
   Scheduled
 }
 
+type ImportedEventDocument {
+  nodes: [Event!]!
+  pageInfo: PageInfo!
+  totalCount: Float!
+}
+
+input ImportedEventFilter {
+  name: String
+}
+
+type Mutation {
+  """
+  
+        Create a new consent.
+      
+  """
+  createConsent(consent: ConsentInput!): Consent!
+
+  """
+  
+        Creates a new userConsent based on input.
+        Returns created userConsent.
+      
+  """
+  createUserConsent(userConsent: UserConsentInput!): UserConsent!
+
+  """
+  
+        Deletes an existing consent.
+      
+  """
+  deleteConsent(id: String!): Consent!
+
+  """
+  
+        Delete an existing userConsent by id.
+        Returns deleted userConsent.
+      
+  """
+  deleteUserConsent(id: String!): UserConsent!
+
+  """
+  
+        Updates an existing consent.
+      
+  """
+  updateConsent(consent: ConsentInput!, id: String!): Consent!
+
+  """
+  
+        Updates an existing userConsent based on input.
+        Returns updated userConsent.
+      
+  """
+  updateUserConsent(id: String!, userConsent: UpdateUserConsentInput!): UserConsent!
+}
+
+type PageInfo {
+  endCursor: String!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String!
+}
+
 enum PaymentPeriodicity {
   biannual
   monthly
@@ -110,62 +139,84 @@ enum PaymentPeriodicity {
 
 type Query {
   """
-  Returns all active subscribers.
-  Includes subscribers with a cancelled but not run out subscription.
+  
+        Returns all active subscribers.
+        Includes subscribers with a cancelled but not run out subscription.
+      
   """
   activeSubscribers: [DashboardSubscription!]!
 
   """
-  Returns a consent by id.
+  
+        Returns a consent by id.
+      
   """
   consent(id: String!): Consent!
 
   """
-  Returns all consents.
+  
+        Returns all consents.
+      
   """
   consents(filter: ConsentFilter): [Consent!]!
 
   """
-  Returns the expected revenue for the time period given.
-  Excludes cancelled or manually set as paid invoices.
+  
+        Returns the expected revenue for the time period given.
+        Excludes cancelled or manually set as paid invoices.
+      
   """
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
   """
-  Returns a list of imported events from external sources, transformed to match our model.
+  
+        Returns a list of imported events from external sources, transformed to match our model.
+      
   """
-  importedEvents: [Event!]!
+  importedEvents(filter: ImportedEventFilter, order: Float, skip: Float, sort: String, take: Float): ImportedEventDocument!
 
   """
-  Returns all new deactivations in a given timeframe.
-  This considers the time the deactivation was made, not when the subscription runs out.
+  
+        Returns all new deactivations in a given timeframe.
+        This considers the time the deactivation was made, not when the subscription runs out.
+      
   """
   newDeactivations(end: DateTime, start: DateTime!): [DashboardSubscription!]!
 
   """
-  Returns all new subscribers in a given timeframe.
-  Includes already deactivated ones.
+  
+        Returns all new subscribers in a given timeframe.
+        Includes already deactivated ones.
+      
   """
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
 
   """
-  Returns all renewing subscribers in a given timeframe.
+  
+        Returns all renewing subscribers in a given timeframe.
+      
   """
   renewingSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
 
   """
-  Returns the revenue generated for the time period given.
-  Only includes paid invoices that have not been manually paid.
+  
+        Returns the revenue generated for the time period given.
+        Only includes paid invoices that have not been manually paid.
+      
   """
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
   """
-  Returns a single userConsent by id.
+  
+        Returns a single userConsent by id.
+      
   """
   userConsent(id: String!): UserConsent!
 
   """
-  Returns a list of userConsents. Possible to filter.
+  
+        Returns a list of userConsents. Possible to filter.
+      
   """
   userConsents(filter: UserConsentFilter): [UserConsent!]!
   versionInformation: VersionInformation!

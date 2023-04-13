@@ -1372,6 +1372,9 @@
         "delete": "Yes, delete the event"
       }
     },
+    "importableEvent": {
+      "title": "Importable events"
+    },
     "toast": {
       "deletedSuccess": "Deleted successfully",
       "createdSuccess": "Created successfully",

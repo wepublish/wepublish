@@ -1,22 +1,33 @@
-fragment EventRef on Event {
+fragment ImportabeEventRef on Event {
   id
   name
   description
   status
   location
-  image {
-    ...ImageRef
-  }
-  tags {
-    id
-    tag
-  }
+  modifiedAt
   startsAt
   endsAt
 }
 
-query ImportedEventList {
-  importedEvents {
-    ...EventRef
+query ImportedEventList(
+  $filter: ImportedEventFilter
+  $order: Float
+  $skip: Float
+  $take: Float
+  $sort: String
+) {
+  importedEvents(filter: $filter, order: $order, skip: $skip, take: $take, sort: $sort) {
+    nodes {
+      ...ImportabeEventRef
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
   }
 }

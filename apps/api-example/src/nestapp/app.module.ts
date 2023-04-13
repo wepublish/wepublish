@@ -28,7 +28,7 @@ import {
     AuthenticationModule,
     PermissionModule,
     SettingModule,
-    EventsImportModule
+    EventsImportModule,
     ConsentModule
   ],
   controllers: [],

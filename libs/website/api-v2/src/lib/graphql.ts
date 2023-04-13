@@ -61,6 +61,38 @@ export type DashboardSubscription = {
   startsAt: Scalars['DateTime']
 }
 
+export type Event = {
+  __typename?: 'Event'
+  createdAt: Scalars['DateTime']
+  description: Scalars['String']
+  endsAt?: Maybe<Scalars['DateTime']>
+  id: Scalars['String']
+  imageId: Scalars['String']
+  location: Scalars['String']
+  modifiedAt: Scalars['DateTime']
+  name: Scalars['String']
+  startsAt: Scalars['DateTime']
+  status: EventStatus
+}
+
+export enum EventStatus {
+  Cancelled = 'Cancelled',
+  Postponed = 'Postponed',
+  Rescheduled = 'Rescheduled',
+  Scheduled = 'Scheduled'
+}
+
+export type ImportedEventDocument = {
+  __typename?: 'ImportedEventDocument'
+  nodes: Array<Event>
+  pageInfo: PageInfo
+  totalCount: Scalars['Float']
+}
+
+export type ImportedEventFilter = {
+  name?: InputMaybe<Scalars['String']>
+}
+
 export type Mutation = {
   __typename?: 'Mutation'
   /** Create a new consent. */
@@ -112,6 +144,14 @@ export type MutationUpdateUserConsentArgs = {
   userConsent: UpdateUserConsentInput
 }
 
+export type PageInfo = {
+  __typename?: 'PageInfo'
+  endCursor: Scalars['String']
+  hasNextPage: Scalars['Boolean']
+  hasPreviousPage: Scalars['Boolean']
+  startCursor: Scalars['String']
+}
+
 export enum PaymentPeriodicity {
   Biannual = 'biannual',
   Monthly = 'monthly',
@@ -135,6 +175,8 @@ export type Query = {
    * Excludes cancelled or manually set as paid invoices.
    */
   expectedRevenue: Array<DashboardInvoice>
+  /** Returns a list of imported events from external sources, transformed to match our model. */
+  importedEvents: ImportedEventDocument
   /**
    * Returns all new deactivations in a given timeframe.
    * This considers the time the deactivation was made, not when the subscription runs out.
@@ -170,6 +212,14 @@ export type QueryConsentsArgs = {
 export type QueryExpectedRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>
   start: Scalars['DateTime']
+}
+
+export type QueryImportedEventsArgs = {
+  filter?: InputMaybe<ImportedEventFilter>
+  order?: InputMaybe<Scalars['Float']>
+  skip?: InputMaybe<Scalars['Float']>
+  sort?: InputMaybe<Scalars['String']>
+  take?: InputMaybe<Scalars['Float']>
 }
 
 export type QueryNewDeactivationsArgs = {
