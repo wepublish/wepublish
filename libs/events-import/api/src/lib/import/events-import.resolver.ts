@@ -6,8 +6,6 @@ import {Event} from './events-import.model'
 // import {CanGetInvoices, Permissions} from '@wepublish/permissions/api'
 // import {DashboardInvoice} from './dashboard-invoice.model'
 import {EventsImportService} from './events-import.service'
-// import {DashboardInvoiceService} from './dashboard-invoice.service'
-// import {SettingName, Settings} from '@wepublish/settings/api'
 
 @Resolver()
 export class EventsImportResolver {
