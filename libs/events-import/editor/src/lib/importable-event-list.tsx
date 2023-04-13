@@ -1,22 +1,23 @@
 import {ApolloError} from '@apollo/client'
-import {Event, useEventListQuery} from '@wepublish/editor/api'
-import {useEffect, useState} from 'react'
+import {Event} from '@wepublish/editor/api'
+import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete} from 'react-icons/md'
+import {MdAdd} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {IconButton, Message, Pagination, Table as RTable, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
-// import {} from '@wepublish/editor/api-v2'
+import {useImportedEventListQuery} from '@wepublish/editor/api-v2'
+import {getApiClientV2} from '../apiClientv2'
 
-// import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
 import {
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
   Table,
-  TableWrapper
-} from '../../ui/listView'
-import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
+  TableWrapper,
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES
+} from '@wepublish/ui/editor'
 
 const {Column, HeaderCell, Cell} = RTable
 
@@ -48,12 +49,14 @@ const onErrorToast = (error: ApolloError) => {
 }
 
 function ImportableEventListView() {
+  const client = useMemo(() => getApiClientV2(), [])
   const {t} = useTranslation()
-  const [eventDelete, setEventDelete] = useState<Event | undefined>(undefined)
+  // const [eventDelete, setEventDelete] = useState<Event | undefined>(undefined)
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
 
-  const {data, loading, refetch} = useEventListQuery({
+  const {data, refetch, loading} = useImportedEventListQuery({
+    client,
     fetchPolicy: 'no-cache',
     variables: {
       take: limit,
@@ -62,20 +65,20 @@ function ImportableEventListView() {
     onError: onErrorToast
   })
 
-  // useEventImp
+  console.log('data', data)
 
-  useEffect(() => {
-    refetch({
-      take: limit,
-      skip: (page - 1) * limit
-    })
-  }, [page, limit])
+  // useEffect(() => {
+  //   refetch({
+  //     take: limit,
+  //     skip: (page - 1) * limit
+  //   })
+  // }, [page, limit])
 
   return (
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('event.list.title')}</h2>
+          <h2>{t('importableEvent.title')}</h2>
         </ListViewHeader>
 
         {/* <PermissionControl qualifyingPermissions={['CAN_CREATE_EVENT']}> */}
@@ -90,7 +93,7 @@ function ImportableEventListView() {
       </ListViewContainer>
 
       <TableWrapper>
-        <Table fillHeight loading={loading} data={data?.events?.nodes || []}>
+        <Table fillHeight loading={loading} data={data?.importedEvents.nodes || []}>
           <Column width={200} resizable>
             <HeaderCell>{t('event.list.name')}</HeaderCell>
             <Cell>
@@ -114,7 +117,7 @@ function ImportableEventListView() {
             </Cell>
           </Column>
 
-          <Column resizable>
+          {/* <Column resizable>
             <HeaderCell align={'center'}>{t('event.list.delete')}</HeaderCell>
             <Cell align={'center'} style={{padding: '5px 0'}}>
               {(event: RowDataType<Event>) => (
@@ -128,7 +131,7 @@ function ImportableEventListView() {
                 />
               )}
             </Cell>
-          </Column>
+          </Column> */}
         </Table>
 
         <Pagination
@@ -142,7 +145,7 @@ function ImportableEventListView() {
           ellipsis
           boundaryLinks
           layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.events?.totalCount ?? 0}
+          total={data?.importedEvents?.totalCount ?? 0}
           activePage={page}
           onChangePage={page => setPage(page)}
           onChangeLimit={limit => setLimit(limit)}

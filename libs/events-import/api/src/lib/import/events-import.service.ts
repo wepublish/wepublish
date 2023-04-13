@@ -1,8 +1,8 @@
 import {Injectable} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
-// import {DashboardInvoice} from './dashboard-invoice.model'
 import fetch from 'node-fetch'
 import xml2js from 'xml2js'
+import {ImportedEventDocument, ImportedEventFilter, ImportedEventSort} from './events-import.model'
 
 type XMLEventOrigin = {
   ownerid: string
@@ -50,6 +50,27 @@ type XMLEventType = {
   ActivitySettings: XMLEventSettings[]
 }
 
+interface ImportedEventsParams {
+  filter: ImportedEventFilter
+  order: 1 | -1
+  skip: number
+  take: number
+  sort: string
+}
+
+const upcomingOnly = (XMLEvent: XMLEventType) => {
+  const startDate =
+    XMLEvent &&
+    XMLEvent.ActivityDates &&
+    typeof XMLEvent.ActivityDates[0] !== 'string' &&
+    XMLEvent.ActivityDates[0]?.ActivityDate &&
+    XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$'] &&
+    XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$'].startDate
+
+  if (new Date(startDate) < new Date()) return
+  return XMLEvent
+}
+
 const parseXMLEventToWpEvent = (XMLEvent: XMLEventType) => {
   const startDate =
     XMLEvent &&
@@ -59,23 +80,27 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType) => {
     XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$'] &&
     XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$'].startDate
 
-  // if (!startDate) {
-  //   console.log('startDate', startDate)
-  //   console.log(
-  //     'XMLEvent && XMLEvent.ActivityDates && typeof XMLEvent.ActivityDates[0]',
-  //     XMLEvent && XMLEvent.ActivityDates && typeof XMLEvent.ActivityDates[0]
-  //   )
-  //   console.log('XMLEvent.ActivityDates', XMLEvent.ActivityDates)
-  //   console.log('XMLEvent.ActivityDates[0]', XMLEvent.ActivityDates[0])
-  //   console.log('XMLEvent.ActivityDates[0].ActivityDate', XMLEvent.ActivityDates[0].ActivityDate)
-  // }
+  const endDate =
+    XMLEvent &&
+    XMLEvent.ActivityDates &&
+    typeof XMLEvent.ActivityDates[0] !== 'string' &&
+    XMLEvent.ActivityDates[0]?.ActivityDate &&
+    XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$'] &&
+    XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$'].endDate
+
+  // console.log("XMLEvent['$']", XMLEvent['$'])
+  console.log('endDate', endDate)
 
   const parsedEvent = {
     id: XMLEvent['$'].originId,
     // createdAt: '',
-    // modifiedAt: XMLEvent['$'].lastUpdate,
+    modifiedAt: new Date(XMLEvent['$'].lastUpdate || ''),
     name: XMLEvent.Title[0] || '',
-    description: XMLEvent.CastInformation[0] || '',
+    description:
+      XMLEvent.CastInformation[0] ||
+      XMLEvent.LongDescription[0] ||
+      XMLEvent.ShortDescription[0] ||
+      '',
     status: 'Scheduled',
 
     // imageId String?
@@ -83,8 +108,8 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType) => {
 
     location: XMLEvent.Location[0]?.LocationAdress[0] || '',
     // startsAt: startDate ? startDate : '',
-    startsAt: new Date('2023-01-01 12:00:00'),
-    endsAt: new Date('2023-01-01 12:00:00')
+    startsAt: new Date(startDate),
+    endsAt: endDate ? new Date(endDate) : null
 
     // tags TaggedEvents[]
   }
@@ -96,9 +121,23 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType) => {
 export class EventsImportService {
   constructor(private prisma: PrismaClient) {}
 
-  async importedEvents(): Promise<PrismaClient['event']> {
+  async importedEvents({
+    filter,
+    order,
+    skip = 0,
+    take = 10,
+    sort
+  }: ImportedEventsParams): Promise<ImportedEventDocument> {
     const parser = new xml2js.Parser()
     const urlToQuery = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
+
+    // check out params
+    console.log('filter', filter)
+    console.log('order', order)
+    console.log('skip', skip)
+    console.log('take', take)
+    console.log('sort', sort)
+    // check out params
 
     async function getXMLfromURL(url) {
       try {
@@ -113,20 +152,41 @@ export class EventsImportService {
     }
 
     const eventsParsedXML = await getXMLfromURL(urlToQuery)
+    const totalCount = eventsParsedXML.length
+    console.log('totalCount', totalCount)
 
-    // console.log('events', eventsXML)
+    const events = eventsParsedXML['kdz:exportActivities']?.Activities[0]?.Activity
 
-    const importedEvents = eventsParsedXML['kdz:exportActivities']?.Activities[0]?.Activity?.map(
-      a => {
+    // only take events that take time in the future
+    const upcomingEvents = events.filter(event => upcomingOnly(event))
+    console.log('upcomingEvents.length', upcomingEvents.length)
+
+    const importedEvents = upcomingEvents
+      ?.map(a => {
         // console.log('a events-import service', a)
         return parseXMLEventToWpEvent(a)
-      }
-    )
+      })
+      .sort((a, b) => {
+        return a.startsAt - b.startsAt
+      })
+      .slice(skip, skip + take)
 
     console.log('importedEvents.length', importedEvents.length)
 
-    console.log('here events-import service')
+    // return importedEvents || []
 
-    return importedEvents || []
+    const firstEvent = importedEvents[0]
+    const lastEvent = importedEvents[importedEvents.length - 1]
+
+    return {
+      nodes: importedEvents,
+      totalCount: upcomingEvents.length,
+      pageInfo: {
+        hasPreviousPage: false,
+        hasNextPage: false,
+        startCursor: firstEvent?.id,
+        endCursor: lastEvent?.id
+      }
+    }
   }
 }

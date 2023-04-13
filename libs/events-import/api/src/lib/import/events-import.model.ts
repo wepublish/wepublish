@@ -1,16 +1,35 @@
 import {Field, ObjectType, InputType, registerEnumType} from '@nestjs/graphql'
 import {EventStatus} from '@prisma/client'
 
-// const EventStatus = {
-//   Cancelled: 'Cancelled',
-//   Rescheduled: 'Rescheduled',
-//   Postponed: 'Postponed',
-//   Scheduled: 'Scheduled'
-// }
+export enum ImportedEventSort {
+  STARTS_AT = 'STARTS_AT',
+  ENDS_AT = 'ENDS_AT',
+  CREATED_AT = 'CREATED_AT',
+  MODIFIED_AT = 'MODIFIED_AT'
+}
+
+registerEnumType(ImportedEventSort, {
+  name: 'ImportedEventSort'
+})
 
 registerEnumType(EventStatus, {
   name: 'EventStatus'
 })
+
+@ObjectType()
+export class PageInfo {
+  @Field()
+  hasPreviousPage: boolean
+
+  @Field()
+  hasNextPage: boolean
+
+  @Field()
+  startCursor: string
+
+  @Field()
+  endCursor: string
+}
 
 @ObjectType()
 export class Event {
@@ -35,56 +54,30 @@ export class Event {
   @Field()
   imageId!: string
 
-  // @Field()
-  // image!: string
-
   @Field()
   location!: string
 
   @Field()
   startsAt!: Date
 
-  @Field()
-  endsAt!: Date
-
-  // @Field()
-  // slug!: string
-
-  // @Field(type => ConsentValue)
-  // defaultValue!: ConsentValue
-
-  // id: string
-  // createdAt: Date
-  // modifiedAt: Date
-  // name: string
-  // description: Prisma.JsonValue[]
-  // status: EventStatus
-  // imageId: string | null
-  // location: string | null
-  // startsAt: Date
-  // endsAt: Date | null
+  @Field({nullable: true})
+  endsAt: Date
 }
 
-// @InputType()
-// export class ConsentInput {
-//   @Field()
-//   name!: string
+@ObjectType()
+export class ImportedEventDocument {
+  @Field(type => [Event])
+  nodes!: Event[]
 
-//   @Field()
-//   slug!: string
+  @Field()
+  totalCount!: number
 
-//   @Field(type => ConsentValue)
-//   defaultValue!: ConsentValue
-// }
+  @Field()
+  pageInfo!: PageInfo
+}
 
-// @InputType()
-// export class ConsentFilter {
-//   @Field({nullable: true})
-//   name?: string
-
-//   @Field({nullable: true})
-//   slug?: string
-
-//   @Field(type => ConsentValue, {nullable: true})
-//   defaultValue?: ConsentValue
-// }
+@InputType()
+export class ImportedEventFilter {
+  @Field({nullable: true})
+  name?: string
+}

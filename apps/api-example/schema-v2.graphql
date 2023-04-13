@@ -95,7 +95,7 @@ type Mutation {
 type Event {
   createdAt: DateTime!
   description: String!
-  endsAt: DateTime!
+  endsAt: DateTime
   id: String!
   imageId: String!
   location: String!
@@ -110,6 +110,70 @@ enum EventStatus {
   Postponed
   Rescheduled
   Scheduled
+}
+
+type ImportedEventDocument {
+  nodes: [Event!]!
+  pageInfo: PageInfo!
+  totalCount: Float!
+}
+
+input ImportedEventFilter {
+  name: String
+}
+
+type Mutation {
+  """
+  
+        Create a new consent.
+      
+  """
+  createConsent(consent: ConsentInput!): Consent!
+
+  """
+  
+        Creates a new userConsent based on input.
+        Returns created userConsent.
+      
+  """
+  createUserConsent(userConsent: UserConsentInput!): UserConsent!
+
+  """
+  
+        Deletes an existing consent.
+      
+  """
+  deleteConsent(id: String!): Consent!
+
+  """
+  
+        Delete an existing userConsent by id.
+        Returns deleted userConsent.
+      
+  """
+  deleteUserConsent(id: String!): UserConsent!
+
+  """
+  
+        Updates an existing consent.
+      
+  """
+  updateConsent(consent: ConsentInput!, id: String!): Consent!
+
+  """
+  
+        Updates an existing userConsent based on input.
+        Returns updated userConsent.
+      
+  """
+  updateUserConsent(id: String!, userConsent: UpdateUserConsentInput!): UserConsent!
+}
+
+type PageInfo {
+  endCursor: String!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String!
 }
 
 enum PaymentPeriodicity {
@@ -155,7 +219,7 @@ type Query {
         Returns a list of imported events from external sources, transformed to match our model.
       
   """
-  importedEvents: [Event!]!
+  importedEvents(filter: ImportedEventFilter, order: Float, skip: Float, sort: String, take: Float): ImportedEventDocument!
 
   """
   
