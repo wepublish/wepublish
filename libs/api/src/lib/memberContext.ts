@@ -370,23 +370,38 @@ export class MemberContext implements MemberContext {
     })
 
     if (intent.state === PaymentState.requiresUserAction) {
+      if (!invoice.subscriptionID) {
+        logger('memberContext').error('Invoice %s has no associated subscriptionID', invoice.id)
+        return false
+      }
       const subscription = await this.prisma.subscription.findUnique({
         where: {id: invoice.subscriptionID}
       })
+      if (!subscription) {
+        logger('memberContext').error('No subscription found with ID %s', invoice.subscriptionID)
+        return false
+      }
       const remoteTemplate = await this.mailContext.getSubsciptionTemplateIdentifier(
         subscription,
         SubscriptionEvent.RENEWAL_FAILED
       )
-      await this.mailContext.sendMail({
-        externalMailTemplateId: remoteTemplate,
-        recipient: user,
-        optionalData: {
-          invoice,
-          paymentProviderID: paymentProvider.id,
-          errorCode: intent.errorCode
-        },
-        mailType: mailLogType.UserFlow
-      })
+      if (remoteTemplate) {
+        await this.mailContext.sendMail({
+          externalMailTemplateId: remoteTemplate,
+          recipient: user,
+          optionalData: {
+            invoice,
+            paymentProviderID: paymentProvider.id,
+            errorCode: intent.errorCode
+          },
+          mailType: mailLogType.UserFlow
+        })
+      } else {
+        logger('memberContext').info(
+          'No remote template found for subscription %s and event RENEWAL_FAILED',
+          subscription.id
+        )
+      }
 
       const {items, ...invoiceData} = invoice
 

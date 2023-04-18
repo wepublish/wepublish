@@ -118,8 +118,7 @@ export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
         mediaAdapter,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
-          defaultReplyToAddress: 'reply-to@fake.org',
-          mailTemplateMaps: []
+          defaultReplyToAddress: 'reply-to@fake.org'
         },
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],
@@ -139,8 +138,7 @@ export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
         mediaAdapter,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
-          defaultReplyToAddress: 'reply-to@fake.org',
-          mailTemplateMaps: []
+          defaultReplyToAddress: 'reply-to@fake.org'
         },
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],

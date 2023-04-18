@@ -28,8 +28,6 @@ export interface MailContext {
   mailProvider: BaseMailProvider | null
   prisma: PrismaClient
 
-  email: Email
-
   defaultFromAddress: string
   defaultReplyToAddress?: string
 
@@ -43,8 +41,6 @@ export interface MailContextProps extends MailContextOptions {
 
 export class MailContext implements MailContext {
   mailProvider: BaseMailProvider | null
-
-  email: Email
 
   defaultFromAddress: string
   defaultReplyToAddress?: string

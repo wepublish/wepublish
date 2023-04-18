@@ -230,6 +230,12 @@ export const onInvoiceUpdate =
         subscription,
         subscriptionEvent
       )
+
+      if (!remoteTemplate) {
+        logger('events').warn(`User not found %s`, subscription.userID)
+        return model
+      }
+
       await context.mailContext.sendMail({
         externalMailTemplateId: remoteTemplate,
         recipient: user,
