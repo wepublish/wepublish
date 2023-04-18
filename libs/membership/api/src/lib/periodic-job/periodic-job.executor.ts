@@ -20,12 +20,6 @@ export class PeriodicJobExecutor {
     }
   )
   async handleCron() {
-    console.log(
-      'Called when the current second is' +
-        (process.env.PERIODIC_JOB_EXECUTION_TIME || 3) +
-        ' = ' +
-        new Date().toISOString()
-    )
     const subscriptionController = new SubscriptionController(
       this.prismaService,
       this.oldContextService
