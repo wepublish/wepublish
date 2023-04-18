@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'events-import',
+  displayName: 'events-import-api',
   preset: '../../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -12,5 +12,6 @@ export default {
     '^.+\\.[tj]s$': 'ts-jest'
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../../coverage/libs/events/import'
+  coverageDirectory: '../../../coverage/libs/events/import',
+  globalSetup: '<rootDir>/setup-database.js'
 }
