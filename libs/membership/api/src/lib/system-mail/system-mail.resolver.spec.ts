@@ -34,7 +34,7 @@ const oldContextServiceMock = {
   context: {
     mailContext: {
       getUserTemplateName: jest.fn((): string => 'test-template'),
-      sendRemoteTemplate: jest.fn((): void => undefined)
+      sendRemoteTemplateDirect: jest.fn((): void => undefined)
     }
   }
 }
