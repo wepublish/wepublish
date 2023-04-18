@@ -725,7 +725,8 @@
       "users": "Users",
       "usersAndMembers": "Users & Members",
       "consents": "Consents",
-      "userConsents": "User Consents"
+      "userConsents": "User Consents",
+      "importableEvents": "Importable Events"
     },
     "navigation": {
       "overview": {

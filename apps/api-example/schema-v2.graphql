@@ -46,52 +46,6 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Mutation {
-  """
-  
-        Create a new consent.
-      
-  """
-  createConsent(consent: ConsentInput!): Consent!
-
-  """
-  
-        Creates a new userConsent based on input.
-        Returns created userConsent.
-      
-  """
-  createUserConsent(userConsent: UserConsentInput!): UserConsent!
-
-  """
-  
-        Deletes an existing consent.
-      
-  """
-  deleteConsent(id: String!): Consent!
-
-  """
-  
-        Delete an existing userConsent by id.
-        Returns deleted userConsent.
-      
-  """
-  deleteUserConsent(id: String!): UserConsent!
-
-  """
-  
-        Updates an existing consent.
-      
-  """
-  updateConsent(consent: ConsentInput!, id: String!): Consent!
-
-  """
-  
-        Updates an existing userConsent based on input.
-        Returns updated userConsent.
-      
-  """
-  updateUserConsent(id: String!, userConsent: UpdateUserConsentInput!): UserConsent!
-}
 type Event {
   createdAt: DateTime!
   description: String!

@@ -1,6 +1,6 @@
 import {ApolloError} from '@apollo/client'
 import {Event} from '@wepublish/editor/api'
-import {useEffect, useMemo, useState} from 'react'
+import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd} from 'react-icons/md'
 import {Link} from 'react-router-dom'

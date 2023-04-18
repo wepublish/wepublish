@@ -2,7 +2,10 @@ import {Injectable} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
 import fetch from 'node-fetch'
 import xml2js from 'xml2js'
-import {ImportedEventDocument, ImportedEventFilter, ImportedEventSort} from './events-import.model'
+import {
+  ImportedEventDocument,
+  ImportedEventFilter /* , ImportedEventSort */
+} from './events-import.model'
 
 type XMLEventOrigin = {
   ownerid: string
@@ -88,9 +91,6 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType) => {
     XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$'] &&
     XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$'].endDate
 
-  // console.log("XMLEvent['$']", XMLEvent['$'])
-  console.log('endDate', endDate)
-
   const parsedEvent = {
     id: XMLEvent['$'].originId,
     // createdAt: '',
@@ -102,9 +102,6 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType) => {
       XMLEvent.ShortDescription[0] ||
       '',
     status: 'Scheduled',
-
-    // imageId String?
-    // image   Image?  @relation(fields: [imageId], references: [id])
 
     location: XMLEvent.Location[0]?.LocationAdress[0] || '',
     // startsAt: startDate ? startDate : '',
@@ -159,7 +156,6 @@ export class EventsImportService {
 
     // only take events that take time in the future
     const upcomingEvents = events.filter(event => upcomingOnly(event))
-    console.log('upcomingEvents.length', upcomingEvents.length)
 
     const importedEvents = upcomingEvents
       ?.map(a => {
@@ -171,9 +167,7 @@ export class EventsImportService {
       })
       .slice(skip, skip + take)
 
-    console.log('importedEvents.length', importedEvents.length)
-
-    // return importedEvents || []
+    // console.log('importedEvents.length', importedEvents.length)
 
     const firstEvent = importedEvents[0]
     const lastEvent = importedEvents[importedEvents.length - 1]

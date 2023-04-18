@@ -1,5 +1,6 @@
 {
   "name": "events-import-editor",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/events-import/editor/src",
   "projectType": "library",
   "tags": [],

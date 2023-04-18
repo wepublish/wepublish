@@ -725,7 +725,8 @@
       "subscriptions": "Abonnements",
       "peerArticles": "Peerbare Artikel",
       "consents": "Konsens",
-      "userConsents": "User-Konsens"
+      "userConsents": "User-Konsens",
+      "importableEvents": "Importable Events"
     },
     "navigation": {
       "overview": {

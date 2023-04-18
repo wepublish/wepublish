@@ -4,18 +4,18 @@ import {forwardRef, ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
   MdAccountCircle,
+  MdApproval,
   MdAutorenew,
   MdBadge,
   MdBookOnline,
   MdChat,
-  MdFactCheck,
   MdChevronLeft,
-  MdApproval,
   MdChevronRight,
   MdCreditCard,
   MdDashboard,
   MdDescription,
   MdEvent,
+  MdFactCheck,
   MdFileCopy,
   MdGroup,
   MdGroups,
@@ -304,8 +304,7 @@ export function Base({children}: BaseProps) {
                       href="/importableevents"
                       icon={<MdEvent />}
                       active={path === 'importableevents'}>
-                      {/* {t('navbar.events')} */}
-                      Importable events
+                      {t('navbar.importableEvents')}
                     </Nav.Item>
                   </PermissionControl>
 
