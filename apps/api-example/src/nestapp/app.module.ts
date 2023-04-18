@@ -3,10 +3,13 @@ import {Module} from '@nestjs/common'
 import {GraphQLModule} from '@nestjs/graphql'
 import {DashboardModule, MembershipModule} from '@wepublish/membership/api'
 import {ApiModule} from '@wepublish/nest-modules'
-import {OldContextService, PrismaService} from '@wepublish/api'
-import {AuthenticationModule} from '@wepublish/authentication/api'
-import {PermissionModule} from '@wepublish/permissions/api'
-import {SettingModule} from '@wepublish/settings/api'
+import {
+  SettingModule,
+  AuthenticationModule,
+  PermissionModule,
+  OldContextService,
+  PrismaService
+} from '@wepublish/api'
 import {ScheduleModule} from '@nestjs/schedule'
 
 @Module({
