@@ -188,6 +188,7 @@
     "@prisma/client": "^3.14.0",
     "@types/js-cookie": "^3.0.2",
     "@types/node-fetch": "^2.6.2",
+    "@types/xml2js": "^0.4.11",
     "@wepublish/analytics": "1.0.0-alpha.3",
     "abort-controller": "^3.0.0",
     "algebraic-captcha": "^1.0.1",

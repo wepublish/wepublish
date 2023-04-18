@@ -13,6 +13,8 @@ type XMLEventOrigin = {
   originId: string
   lastUpdate: string
   languageCode: string
+  startDate: string
+  endDate: string
 }
 
 type XMLEventLocation = {
@@ -22,7 +24,11 @@ type XMLEventLocation = {
 }
 
 type XMLEventActivityDate = {
-  ActivityDate: string[]
+  ActivityDate: XMLEventMisc[]
+}
+
+type XMLEventMisc = {
+  $: XMLEventOrigin
 }
 
 type XMLEventMultimedia = {
@@ -70,6 +76,10 @@ const upcomingOnly = (XMLEvent: XMLEventType) => {
     XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$'] &&
     XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$'].startDate
 
+  if (!startDate) {
+    return
+  }
+
   if (new Date(startDate) < new Date()) return
   return XMLEvent
 }
@@ -105,10 +115,8 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType) => {
 
     location: XMLEvent.Location[0]?.LocationAdress[0] || '',
     // startsAt: startDate ? startDate : '',
-    startsAt: new Date(startDate),
+    startsAt: startDate ? new Date(startDate) : null,
     endsAt: endDate ? new Date(endDate) : null
-
-    // tags TaggedEvents[]
   }
 
   return parsedEvent
@@ -136,7 +144,7 @@ export class EventsImportService {
     console.log('sort', sort)
     // check out params
 
-    async function getXMLfromURL(url) {
+    async function getXMLfromURL(url: string) {
       try {
         const response = await fetch(url)
         const content = await response.text()
@@ -155,19 +163,17 @@ export class EventsImportService {
     const events = eventsParsedXML['kdz:exportActivities']?.Activities[0]?.Activity
 
     // only take events that take time in the future
-    const upcomingEvents = events.filter(event => upcomingOnly(event))
+    const upcomingEvents = events.filter((event: XMLEventType) => upcomingOnly(event))
 
     const importedEvents = upcomingEvents
-      ?.map(a => {
+      ?.map((a: any) => {
         // console.log('a events-import service', a)
         return parseXMLEventToWpEvent(a)
       })
-      .sort((a, b) => {
+      .sort((a: any, b: any) => {
         return a.startsAt - b.startsAt
       })
       .slice(skip, skip + take)
-
-    // console.log('importedEvents.length', importedEvents.length)
 
     const firstEvent = importedEvents[0]
     const lastEvent = importedEvents[importedEvents.length - 1]

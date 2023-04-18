@@ -19,16 +19,16 @@ registerEnumType(EventStatus, {
 @ObjectType()
 export class PageInfo {
   @Field()
-  hasPreviousPage: boolean
+  hasPreviousPage!: boolean
 
   @Field()
-  hasNextPage: boolean
+  hasNextPage!: boolean
 
   @Field()
-  startCursor: string
+  startCursor!: string
 
   @Field()
-  endCursor: string
+  endCursor!: string
 }
 
 @ObjectType()
@@ -61,7 +61,7 @@ export class Event {
   startsAt!: Date
 
   @Field({nullable: true})
-  endsAt: Date
+  endsAt?: Date
 }
 
 @ObjectType()
