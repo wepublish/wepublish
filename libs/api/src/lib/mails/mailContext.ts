@@ -37,12 +37,12 @@ export interface MailContext {
 }
 
 export interface MailContextProps extends MailContextOptions {
-  readonly mailProvider: BaseMailProvider
+  readonly mailProvider?: BaseMailProvider
   readonly prisma: PrismaClient
 }
 
 export class MailContext implements MailContext {
-  mailProvider: BaseMailProvider
+  mailProvider: BaseMailProvider | null
 
   email: Email
 
