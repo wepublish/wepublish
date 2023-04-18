@@ -57,7 +57,7 @@ export * from './lib/challenges/algebraicCaptchaChallenge'
 export * from './lib/payments/payrexxSubscriptionPaymentProvider'
 export * from './__generated__/fabbrica/index'
 
-export {PrismaService} from './lib/prisma.service'
+export {PrismaService} from '@wepublish/nest-modules'
 export {OldContextService} from './lib/oldContext.service'
 
 export {getUserForCredentials} from './lib/graphql/user/user.queries'

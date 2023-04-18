@@ -8,7 +8,7 @@ import {
 } from './mailProvider'
 
 import {MailController, MailControllerConfig} from '@wepublish/membership/mail'
-import {PrismaService} from '../prisma.service'
+import {PrismaService} from '@wepublish/api'
 import {OldContextService} from '../oldContext.service'
 import {SubscriptionEventDictionary} from '@wepublish/membership/subscription-event-dictionary'
 
@@ -37,12 +37,12 @@ export interface MailContext {
 }
 
 export interface MailContextProps extends MailContextOptions {
-  readonly mailProvider?: BaseMailProvider
+  readonly mailProvider: BaseMailProvider
   readonly prisma: PrismaClient
 }
 
 export class MailContext implements MailContext {
-  mailProvider: BaseMailProvider | null
+  mailProvider: BaseMailProvider
 
   email: Email
 
