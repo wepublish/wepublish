@@ -1,7 +1,7 @@
 import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
 
 export type Store = {
-  defaultFlow: StoreTimeline
+  defaultFlow: Action[]
   customFlow: StoreMemberPlan
 }
 
@@ -18,21 +18,11 @@ type StorePeriodicites = {
 }
 
 type StoreAutoRenewal = {
-  [key: string]: StoreTimeline
+  [key: string]: Action[]
 }
 
-export type StoreTimeline = {
-  [key: number]: Action[]
-  onUserAction: Action[]
-}
 export type Action = {
   type: SubscriptionEvent
-  daysAwayFromEnding: number | null
-  externalMailTemplate: string | null
-}
-
-export type StoreInterval = {
-  event: SubscriptionEvent
   daysAwayFromEnding: number | null
   externalMailTemplate: string | null
 }

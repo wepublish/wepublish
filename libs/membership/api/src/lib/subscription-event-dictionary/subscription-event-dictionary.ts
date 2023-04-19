@@ -1,9 +1,7 @@
 import {
   Action,
   LookupActionInput,
-  Store as SubscriptionFlowStore,
-  StoreInterval,
-  StoreTimeline
+  Store as SubscriptionFlowStore
 } from './subscription-event-dictionary.type'
 import {startOfDay, subDays, subMinutes} from 'date-fns'
 import {PrismaClient, Subscription, SubscriptionEvent} from '@prisma/client'
@@ -24,7 +22,7 @@ import {PrismaClient, Subscription, SubscriptionEvent} from '@prisma/client'
  *   }
  * },
  * defaultFlow: {
- *  ...see above
+ *   Action[]
  * }
  *
  * The Action array is a list of all MailTemplates where the settings
@@ -35,14 +33,12 @@ import {PrismaClient, Subscription, SubscriptionEvent} from '@prisma/client'
  *
  * The method {@link getActionFromStore} can be used to query a specific leaf
  * by providing filter values for member plan, payment method, periodicity,
- * renewal and EITHER the daysAwayFromEnding or a list of events.
+ * renewal and EITHER the daysAwayFromEnding or a list of event names.
  */
 export class SubscriptionEventDictionary {
   private store: SubscriptionFlowStore = {
     customFlow: {},
-    defaultFlow: {
-      onUserAction: []
-    }
+    defaultFlow: []
   }
   private storeIsBuild = false
   private daysAwayFromEndingCustomEventList: number[] = [0]
@@ -67,8 +63,8 @@ export class SubscriptionEventDictionary {
       }
     })
     for (const subscriptionFlow of subscriptionFlows) {
-      const intervals = subscriptionFlow.intervals.map(int => ({
-        event: int.event,
+      const actions = subscriptionFlow.intervals.map(int => ({
+        type: int.event,
         daysAwayFromEnding: int.daysAwayFromEnding,
         externalMailTemplate: int.mailTemplate ? int.mailTemplate.externalMailTemplateId : null
       }))
@@ -77,7 +73,7 @@ export class SubscriptionEventDictionary {
         if (defaultFlowInitialized) {
           throw new Error('Multiple default memberplans found! This is a data integrity error!')
         }
-        this.assignActions(this.store.defaultFlow, intervals)
+        this.assignActions(this.store.defaultFlow, actions)
         defaultFlowInitialized = true
         continue
       }
@@ -87,25 +83,28 @@ export class SubscriptionEventDictionary {
         )
       }
 
-      if (!this.store.customFlow[subscriptionFlow.memberPlanId])
+      if (!this.store.customFlow[subscriptionFlow.memberPlanId]) {
         this.store.customFlow[subscriptionFlow.memberPlanId] = {}
+      }
 
       for (const pm of subscriptionFlow.paymentMethods.map(pm => pm.id)) {
-        if (!this.store.customFlow[subscriptionFlow.memberPlanId][pm])
+        if (!this.store.customFlow[subscriptionFlow.memberPlanId][pm]) {
           this.store.customFlow[subscriptionFlow.memberPlanId][pm] = {}
+        }
         for (const periodicity of subscriptionFlow.periodicities) {
-          if (!this.store.customFlow[subscriptionFlow.memberPlanId][pm][periodicity])
+          if (!this.store.customFlow[subscriptionFlow.memberPlanId][pm][periodicity]) {
             this.store.customFlow[subscriptionFlow.memberPlanId][pm][periodicity] = {}
+          }
           for (const ar of subscriptionFlow.autoRenewal) {
             if (
               !this.store.customFlow[subscriptionFlow.memberPlanId][pm][periodicity]![ar.toString()]
             )
               this.store.customFlow[subscriptionFlow.memberPlanId][pm][periodicity]![
                 ar.toString()
-              ] = {onUserAction: []}
+              ] = []
             this.assignActions(
               this.store.customFlow[subscriptionFlow.memberPlanId][pm][periodicity]![ar.toString()],
-              intervals
+              actions
             )
           }
         }
@@ -117,43 +116,31 @@ export class SubscriptionEventDictionary {
     this.storeIsBuild = true
   }
 
-  private assignActions(storeTimeline: StoreTimeline | undefined, intervals: StoreInterval[]) {
-    if (!storeTimeline) {
-      throw new Error(
-        'StoreTimeline is undefined, this should not happen! You should never see this'
-      )
-    }
-    for (const interval of intervals) {
-      if (!interval.daysAwayFromEnding) {
-        storeTimeline.onUserAction.push({
-          type: interval.event,
-          daysAwayFromEnding: interval.daysAwayFromEnding,
-          externalMailTemplate: interval.externalMailTemplate
-        })
+  /**
+   * Store the provided intervals in the specified leaf of the tree structure.
+   * @param treeLeaf The leaf to store the actions in.
+   * @param intervals The actions to store.
+   */
+  private assignActions(treeLeaf: Action[], actions: Action[]) {
+    for (const action of actions) {
+      treeLeaf.push(action)
+      if (!action.daysAwayFromEnding) {
         continue
       }
-      if (!storeTimeline[interval.daysAwayFromEnding]) {
-        storeTimeline[interval.daysAwayFromEnding] = []
-      }
-      storeTimeline[interval.daysAwayFromEnding].push({
-        type: interval.event,
-        daysAwayFromEnding: interval.daysAwayFromEnding,
-        externalMailTemplate: interval.externalMailTemplate
-      })
 
       // Store earliest invoice creation date
-      if (interval.event === SubscriptionEvent.INVOICE_CREATION) {
+      if (action.type === SubscriptionEvent.INVOICE_CREATION) {
         if (
           !this.earliestInvoiceCreationDate ||
-          interval.daysAwayFromEnding < this.earliestInvoiceCreationDate
+          action.daysAwayFromEnding < this.earliestInvoiceCreationDate
         ) {
-          this.earliestInvoiceCreationDate = interval.daysAwayFromEnding
+          this.earliestInvoiceCreationDate = action.daysAwayFromEnding
         }
       }
 
-      if (interval.event === SubscriptionEvent.CUSTOM) {
-        if (!this.daysAwayFromEndingCustomEventList.includes(interval.daysAwayFromEnding)) {
-          this.daysAwayFromEndingCustomEventList.push(interval.daysAwayFromEnding)
+      if (action.type === SubscriptionEvent.CUSTOM) {
+        if (!this.daysAwayFromEndingCustomEventList.includes(action.daysAwayFromEnding)) {
+          this.daysAwayFromEndingCustomEventList.push(action.daysAwayFromEnding)
         }
       }
     }
@@ -238,26 +225,18 @@ export class SubscriptionEventDictionary {
    * @returns Array of mail templates.
    */
   private getActionByDay(
-    timeline: StoreTimeline,
+    timeline: Action[],
     daysAwayFromEnding: number | undefined,
     lookupEvents: SubscriptionEvent[] | undefined
   ): Action[] {
     if (lookupEvents) {
-      let events: Action[] = []
-      let k: keyof typeof timeline
-      for (k in timeline) {
-        events = events.concat(timeline[k].filter(e => lookupEvents.includes(e.type)))
-      }
-      return events
+      return timeline.filter(e => lookupEvents.includes(e.type))
     }
     // Return user actions for null and 0!
     if (!daysAwayFromEnding) {
-      return timeline.onUserAction
+      return timeline.filter(t => t.daysAwayFromEnding === 0 || t.daysAwayFromEnding === null)
     }
-    if (timeline[daysAwayFromEnding]) {
-      return timeline[daysAwayFromEnding]
-    }
-    return []
+    return timeline.filter(t => t.daysAwayFromEnding === daysAwayFromEnding)
   }
 
   private normalizeDate(date: Date): Date {

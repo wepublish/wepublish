@@ -493,7 +493,7 @@ describe('SubscriptionEventDictionary', () => {
       events: [SubscriptionEvent.INVOICE_CREATION, SubscriptionEvent.DEACTIVATION_UNPAID]
     })
     res =
-      '[{"type":"DEACTIVATION_UNPAID","daysAwayFromEnding":7,"externalMailTemplate":"custom1-DEACTIVATION_UNPAID"},{"type":"INVOICE_CREATION","daysAwayFromEnding":-7,"externalMailTemplate":"custom1-INVOICE_CREATION"}]'
+      '[{"type":"INVOICE_CREATION","daysAwayFromEnding":-7,"externalMailTemplate":"custom1-INVOICE_CREATION"},{"type":"DEACTIVATION_UNPAID","daysAwayFromEnding":7,"externalMailTemplate":"custom1-DEACTIVATION_UNPAID"}]'
     expect(JSON.stringify(actions)).toEqual(res)
 
     // Lookup events default
@@ -505,7 +505,7 @@ describe('SubscriptionEventDictionary', () => {
       events: [SubscriptionEvent.INVOICE_CREATION, SubscriptionEvent.DEACTIVATION_UNPAID]
     })
     res =
-      '[{"type":"DEACTIVATION_UNPAID","daysAwayFromEnding":5,"externalMailTemplate":"default-DEACTIVATION_UNPAID"},{"type":"INVOICE_CREATION","daysAwayFromEnding":-14,"externalMailTemplate":"default-INVOICE_CREATION"}]'
+      '[{"type":"INVOICE_CREATION","daysAwayFromEnding":-14,"externalMailTemplate":"default-INVOICE_CREATION"},{"type":"DEACTIVATION_UNPAID","daysAwayFromEnding":5,"externalMailTemplate":"default-DEACTIVATION_UNPAID"}]'
     expect(JSON.stringify(actions)).toEqual(res)
   })
   it('earliest creation date', async () => {
@@ -683,18 +683,6 @@ describe('SubscriptionEventDictionary', () => {
     } catch (e) {
       expect((e as Error).toString()).toEqual(
         'Error: Tried to access eventDataList before it was successfully initialized!'
-      )
-    }
-  })
-
-  it('Assign actions undefined store timeline', async () => {
-    const sed = new SubscriptionEventDictionary(prismaClient)
-    try {
-      await sed['assignActions'](undefined, [])
-      throw Error('This execution should fail!')
-    } catch (e) {
-      expect((e as Error).toString()).toEqual(
-        'Error: StoreTimeline is undefined, this should not happen! You should never see this'
       )
     }
   })
