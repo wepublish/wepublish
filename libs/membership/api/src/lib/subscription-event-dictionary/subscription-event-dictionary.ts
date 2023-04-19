@@ -1,7 +1,7 @@
 import {
   Action,
   LookupActionInput,
-  Store,
+  Store as SubscriptionFlowStore,
   StoreInterval,
   StoreTimeline
 } from './subscription-event-dictionary.type'
@@ -9,7 +9,7 @@ import {startOfDay, subDays, subMinutes} from 'date-fns'
 import {PrismaClient, Subscription, SubscriptionEvent} from '@prisma/client'
 
 export class SubscriptionEventDictionary {
-  private store: Store = {
+  private store: SubscriptionFlowStore = {
     customFlow: {},
     defaultFlow: {
       onUserAction: []
@@ -22,6 +22,31 @@ export class SubscriptionEventDictionary {
   private earliestInvoiceCreationDate: null | number = null
   constructor(private readonly prismaService: PrismaClient) {}
 
+  /**
+   * Store all possible SubscriptionFlows in a single tree datastructure. The
+   * structure of the flow is as follows:
+   * @example
+   * customFlow: {
+   *   [memberPlanId]: {
+   *     [paymentMethodId]: {
+   *       [periodicity]: {
+   *         [autoRenew]: [
+   *           Action[]
+   *         ]
+   *       }
+   *     }
+   *   }
+   * },
+   * defaultFlow: {
+   *  ...see above
+   * }
+   *
+   * The Action array is a list of all MailTemplates where the settings
+   * match the given tree hierarchy.
+   *
+   * @example
+   * customFlow: { "mp1": { "payrexx": { "monthly": { "true": [{ event: "RENEWAL", externalMailTemplate: "template1" }] } } } }
+   */
   public async initialize() {
     let defaultFlowInitialized = false
     const subscriptionFlows = await this.prismaService.subscriptionFlow.findMany({
@@ -150,6 +175,15 @@ export class SubscriptionEventDictionary {
     return this.dateAwayFromEndingList
   }
 
+  /**
+   * Try to get the MailTemplates for a specific filter of [memberPlan,
+   * paymentMethod, periodicity, autoRenewal]. You additionally need to pass
+   * either `daysAwayFromEnding` or `events` to filter further. If any
+   * filter leads to an empty result set, the templates of the default flow are
+   * returned.
+   * @param query The filter of the above properties.
+   * @returns An array of MailTemplates.
+   */
   public getActionFromStore(query: LookupActionInput): Action[] {
     if (!this.storeIsBuild) {
       throw new Error('Tried to access store before it was successfully initialized!')
@@ -180,6 +214,14 @@ export class SubscriptionEventDictionary {
     return this.getActionByDay(custom_path, query.daysAwayFromEnding, query.events)
   }
 
+  /**
+   * Filter the MailTemplates stored in a leaf of the store. They can either be
+   * filtered by `daysAwayFromEnding` or by `lookupEvents`.
+   * @param timeline The leaf of the store.
+   * @param daysAwayFromEnding Number of days away from ending.
+   * @param lookupEvents The event identifiers.
+   * @returns Array of mail templates.
+   */
   private getActionByDay(
     timeline: StoreTimeline,
     daysAwayFromEnding: number | undefined,
