@@ -41,6 +41,11 @@ interface EventsProvider {
   importedEvent({id, source}: ImportedEventParams): Promise<Event>
 }
 
+interface ImportedEventParams {
+  id: string
+  source: typeof Providers[keyof typeof Providers]
+}
+
 const upcomingOnly = (XMLEvent: XMLEventType) => {
   const startDate =
     XMLEvent &&

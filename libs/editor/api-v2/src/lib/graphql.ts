@@ -232,7 +232,8 @@ export type QueryExpectedRevenueArgs = {
 
 
 export type QueryImportedEventArgs = {
-  filter: SingleEventFilter;
+  id: Scalars['String'];
+  source: Scalars['String'];
 };
 
 
@@ -421,7 +422,6 @@ export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { _
 export type ImportedEventQueryVariables = Exact<{
   filter: SingleEventFilter;
 }>;
-
 
 export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: string, status: EventStatus, location: string, modifiedAt: string, startsAt: string, endsAt?: string | null } };
 
