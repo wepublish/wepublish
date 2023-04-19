@@ -15,6 +15,7 @@ import {
   MdDashboard,
   MdDescription,
   MdEvent,
+  MdEventAvailable,
   MdFactCheck,
   MdFileCopy,
   MdGroup,
@@ -302,7 +303,7 @@ export function Base({children}: BaseProps) {
                     <Nav.Item
                       as={NavLink}
                       href="/importableevents"
-                      icon={<MdEvent />}
+                      icon={<MdEventAvailable />}
                       active={path === 'importableevents'}>
                       {t('navbar.importableEvents')}
                     </Nav.Item>

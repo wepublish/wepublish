@@ -114,7 +114,6 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType) => {
     status: 'Scheduled',
 
     location: XMLEvent.Location[0]?.LocationAdress[0] || '',
-    // startsAt: startDate ? startDate : '',
     startsAt: startDate ? new Date(startDate) : null,
     endsAt: endDate ? new Date(endDate) : null
   }
@@ -126,6 +125,32 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType) => {
 export class EventsImportService {
   constructor(private prisma: PrismaClient) {}
 
+  async importedEvents({filter, order, skip, take, sort}: ImportedEventsParams) {
+    const importableEvents = Promise.all(
+      providers.map(provider => provider.importedEvents({filter, order, skip, take, sort}))
+    )
+
+    try {
+      const values = await importableEvents
+      // for now we have only one provider, to be extended in the future when needed
+      return values[0]
+    } catch (e) {
+      console.log(e)
+    }
+  }
+}
+
+interface EventsProvider {
+  importedEvents({
+    filter,
+    order,
+    skip,
+    take,
+    sort
+  }: ImportedEventsParams): Promise<ImportedEventDocument>
+}
+
+class AgendaBaselEventsProvider implements EventsProvider {
   async importedEvents({
     filter,
     order,
@@ -136,14 +161,6 @@ export class EventsImportService {
     const parser = new xml2js.Parser()
     const urlToQuery = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
 
-    // check out params
-    console.log('filter', filter)
-    console.log('order', order)
-    console.log('skip', skip)
-    console.log('take', take)
-    console.log('sort', sort)
-    // check out params
-
     async function getXMLfromURL(url: string) {
       try {
         const response = await fetch(url)
@@ -152,13 +169,11 @@ export class EventsImportService {
 
         return data
       } catch (e) {
-        console.log({e})
+        console.error({e})
       }
     }
 
     const eventsParsedXML = await getXMLfromURL(urlToQuery)
-    const totalCount = eventsParsedXML.length
-    console.log('totalCount', totalCount)
 
     const events = eventsParsedXML['kdz:exportActivities']?.Activities[0]?.Activity
 
@@ -167,7 +182,6 @@ export class EventsImportService {
 
     const importedEvents = upcomingEvents
       ?.map((a: any) => {
-        // console.log('a events-import service', a)
         return parseXMLEventToWpEvent(a)
       })
       .sort((a: any, b: any) => {
@@ -190,3 +204,5 @@ export class EventsImportService {
     }
   }
 }
+
+const providers = [new AgendaBaselEventsProvider()]

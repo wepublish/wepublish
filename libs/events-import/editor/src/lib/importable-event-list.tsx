@@ -51,11 +51,10 @@ const onErrorToast = (error: ApolloError) => {
 function ImportableEventListView() {
   const client = useMemo(() => getApiClientV2(), [])
   const {t} = useTranslation()
-  // const [eventDelete, setEventDelete] = useState<Event | undefined>(undefined)
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
 
-  const {data, refetch, loading} = useImportedEventListQuery({
+  const {data, loading} = useImportedEventListQuery({
     client,
     fetchPolicy: 'no-cache',
     variables: {
@@ -65,15 +64,6 @@ function ImportableEventListView() {
     onError: onErrorToast
   })
 
-  console.log('data', data)
-
-  // useEffect(() => {
-  //   refetch({
-  //     take: limit,
-  //     skip: (page - 1) * limit
-  //   })
-  // }, [page, limit])
-
   return (
     <>
       <ListViewContainer>
@@ -81,7 +71,6 @@ function ImportableEventListView() {
           <h2>{t('importableEvent.title')}</h2>
         </ListViewHeader>
 
-        {/* <PermissionControl qualifyingPermissions={['CAN_CREATE_EVENT']}> */}
         <ListViewActions>
           <Link to="create">
             <IconButton appearance="primary" icon={<MdAdd />}>
@@ -89,7 +78,6 @@ function ImportableEventListView() {
             </IconButton>
           </Link>
         </ListViewActions>
-        {/* </PermissionControl> */}
       </ListViewContainer>
 
       <TableWrapper>
@@ -116,22 +104,6 @@ function ImportableEventListView() {
               {(rowData: RowDataType<Event>) => <EventEndsAtView endsAt={rowData.endsAt} />}
             </Cell>
           </Column>
-
-          {/* <Column resizable>
-            <HeaderCell align={'center'}>{t('event.list.delete')}</HeaderCell>
-            <Cell align={'center'} style={{padding: '5px 0'}}>
-              {(event: RowDataType<Event>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  color="red"
-                  appearance="ghost"
-                  circle
-                  size="sm"
-                  onClick={() => setEventDelete(event as Event)}
-                />
-              )}
-            </Cell>
-          </Column> */}
         </Table>
 
         <Pagination
@@ -151,16 +123,11 @@ function ImportableEventListView() {
           onChangeLimit={limit => setLimit(limit)}
         />
       </TableWrapper>
-
-      {/* <DeleteEventModal
-        event={eventDelete}
-        onDelete={refetch}
-        onClose={() => setEventDelete(undefined)}
-      /> */}
     </>
   )
 }
 
+// todo
 // const CheckedPermissionComponent = createCheckedPermissionComponent([
 //   'CAN_GET_EVENT',
 //   'CAN_CREATE_EVENT',
