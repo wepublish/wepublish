@@ -61,7 +61,7 @@ export class PeriodicJobController {
    * If any of the tasks fail, the entire job is marked as failed.
    */
   public async execute() {
-    await this.subscriptionEventDictionary.initialize()
+    await this.loadEnvironment()
     for (const periodicJobRunObject of await this.getOutstandingRuns()) {
       if (periodicJobRunObject.isRetry) {
         await this.retryFailedJob(periodicJobRunObject.date)
@@ -79,6 +79,10 @@ export class PeriodicJobController {
       }
       await this.markJobSuccessful()
     }
+  }
+
+  private async loadEnvironment() {
+    await this.subscriptionEventDictionary.initialize()
   }
 
   private async findAndDeactivateSubscriptions(

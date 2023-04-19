@@ -947,7 +947,7 @@ describe('SubscriptionController', () => {
   })
 
   it('Get period start and and if no previous period exist', async () => {
-    const res = await subscriptionController['getPeriodStarEnd']([], PaymentPeriodicity.monthly)
+    const res = await subscriptionController['getNextPeriod']([], PaymentPeriodicity.monthly)
     expect(res.startsAt.getTime()).toBeGreaterThanOrEqual(
       add(new Date(), {minutes: -2, days: 1}).getTime()
     )
