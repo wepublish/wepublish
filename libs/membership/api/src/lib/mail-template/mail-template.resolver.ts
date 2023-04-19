@@ -49,7 +49,7 @@ export class MailTemplatesResolver {
     return templates.map(t => {
       let status = MailTemplateStatus.Ok
 
-      if (usedTemplates.indexOf(t.externalMailTemplateId) === -1) {
+      if (!usedTemplates.includes(t.externalMailTemplateId)) {
         status = MailTemplateStatus.Unused
       }
 
