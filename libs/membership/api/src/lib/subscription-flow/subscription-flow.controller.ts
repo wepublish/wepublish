@@ -13,8 +13,9 @@ import {
   subscriptionFlowRequiredEvents
 } from './subscription-flow.type'
 import {SubscriptionEvent} from '@prisma/client'
-const SUBSCRIPTION_EVEN_MAX_DAYS_BEFORE = -25
-const SUBSCRIPTION_EVEN_MAX_DAYS_AFTER = 90
+const SUBSCRIPTION_EVENT_MAX_DAYS_BEFORE = -25
+const SUBSCRIPTION_EVENT_MAX_DAYS_AFTER = 90
+
 @Injectable()
 export class SubscriptionFlowController {
   constructor(private readonly prismaService: PrismaService) {}
@@ -275,10 +276,7 @@ export class SubscriptionFlowController {
     memberPlanId: string | null,
     newFlow: Partial<SubscriptionFlowModelUpdateInput>
   ) {
-    //const whereClause = memberPlanId ? {memberPlan: {id: memberPlanId}} : {}
-
     const allFlows = await this.prismaService.subscriptionFlow.findMany({
-      //where: whereClause,
       select: {
         id: true,
         paymentMethods: {
@@ -352,11 +350,11 @@ export class SubscriptionFlowController {
     // Limit daysAwayFromEnding
     if (
       !!interval.daysAwayFromEnding &&
-      (interval.daysAwayFromEnding < SUBSCRIPTION_EVEN_MAX_DAYS_BEFORE ||
-        interval.daysAwayFromEnding > SUBSCRIPTION_EVEN_MAX_DAYS_AFTER)
+      (interval.daysAwayFromEnding < SUBSCRIPTION_EVENT_MAX_DAYS_BEFORE ||
+        interval.daysAwayFromEnding > SUBSCRIPTION_EVENT_MAX_DAYS_AFTER)
     ) {
       throw new Error(
-        `daysAwayFromEnding is not in allowed range ${SUBSCRIPTION_EVEN_MAX_DAYS_BEFORE} to ${SUBSCRIPTION_EVEN_MAX_DAYS_AFTER}: ${interval.daysAwayFromEnding}`
+        `daysAwayFromEnding is not in allowed range ${SUBSCRIPTION_EVENT_MAX_DAYS_BEFORE} to ${SUBSCRIPTION_EVENT_MAX_DAYS_AFTER}: ${interval.daysAwayFromEnding}`
       )
     }
 
