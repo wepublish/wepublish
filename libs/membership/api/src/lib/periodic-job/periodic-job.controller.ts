@@ -117,18 +117,19 @@ export class PeriodicJobController {
   }
 
   private async findAndSendCustomMails(periodicJobRunObject: PeriodicJobRunObject) {
-    this.subscriptionEventDictionary.buildCustomEventDateList(periodicJobRunObject.date)
     const subscriptionsWithEvents = await this.prismaService.subscription.findMany({
       where: {
-        OR: this.subscriptionEventDictionary.getDatesWithCustomEvent().map(date => ({
-          paidUntil: {
-            gte: date,
-            lte: subMinutes(
-              set(date, {hours: 23, minutes: 59, seconds: 59, milliseconds: 999}),
-              date.getTimezoneOffset()
-            )
-          }
-        }))
+        OR: this.subscriptionEventDictionary
+          .getDatesWithCustomEvent(periodicJobRunObject.date)
+          .map(date => ({
+            paidUntil: {
+              gte: date,
+              lte: subMinutes(
+                set(date, {hours: 23, minutes: 59, seconds: 59, milliseconds: 999}),
+                date.getTimezoneOffset()
+              )
+            }
+          }))
       },
       include: {
         user: true

@@ -606,8 +606,7 @@ describe('SubscriptionEventDictionary', () => {
 
     let testDate = new Date()
     await sed.initialize()
-    await sed.buildCustomEventDateList(testDate)
-    let res = sed.getDatesWithCustomEvent()
+    let res = sed.getDatesWithCustomEvent(testDate)
     let dateRes = res.map(r => {
       return format(r, 'dd-MM-yyyy')
     })
@@ -637,8 +636,7 @@ describe('SubscriptionEventDictionary', () => {
 
     testDate = sub(new Date(), {days: 12})
     await sed.initialize()
-    await sed.buildCustomEventDateList(testDate)
-    res = sed.getDatesWithCustomEvent()
+    res = sed.getDatesWithCustomEvent(testDate)
     dateRes = res.map(r => {
       return format(r, 'dd-MM-yyyy')
     })
@@ -668,21 +666,11 @@ describe('SubscriptionEventDictionary', () => {
 
     try {
       const evd = new SubscriptionEventDictionary(prismaClient)
-      evd.buildCustomEventDateList(new Date())
+      evd.getDatesWithCustomEvent(new Date())
       throw Error('This execution should fail!')
     } catch (e) {
       expect((e as Error).toString()).toEqual(
         'Error: Tried to access store before it was successfully initialized!'
-      )
-    }
-
-    try {
-      const evd = new SubscriptionEventDictionary(prismaClient)
-      evd.getDatesWithCustomEvent()
-      throw Error('This execution should fail!')
-    } catch (e) {
-      expect((e as Error).toString()).toEqual(
-        'Error: Tried to access eventDataList before it was successfully initialized!'
       )
     }
   })

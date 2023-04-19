@@ -1,180 +1,129 @@
+import {Action, LookupActionInput} from './subscription-event-dictionary.type'
+import {startOfDay, subDays} from 'date-fns'
 import {
-  Action,
-  LookupActionInput,
-  Store as SubscriptionFlowStore
-} from './subscription-event-dictionary.type'
-import {startOfDay, subDays, subMinutes} from 'date-fns'
-import {PrismaClient, Subscription, SubscriptionEvent} from '@prisma/client'
+  MailTemplate,
+  PaymentMethod,
+  PrismaClient,
+  Subscription,
+  SubscriptionEvent,
+  SubscriptionFlow,
+  SubscriptionInterval
+} from '@prisma/client'
 
 /**
- * This class stores all possible SubscriptionFlows in a single tree
- * data structure. The structure of the tree is as follows:
- * @example
- * customFlow: {
- *   [memberPlanId]: {
- *     [paymentMethodId]: {
- *       [periodicity]: {
- *         [autoRenew]: [
- *           Action[]
- *         ]
- *       }
- *     }
- *   }
- * },
- * defaultFlow: {
- *   Action[]
- * }
- *
- * The Action array is a list of all MailTemplates where the settings
- * match the given tree hierarchy.
- *
- * @example
- * customFlow: { "mp1": { "payrexx": { "monthly": { "true": [{ event: "RENEWAL", externalMailTemplate: "template1" }] } } } }
- *
- * The method {@link getActionFromStore} can be used to query a specific leaf
- * by providing filter values for member plan, payment method, periodicity,
- * renewal and EITHER the daysAwayFromEnding or a list of event names.
+ * This class loads all subscription flows and allows filtering by member plan,
+ * payment method, periodicity, renewal and EITHER the daysAwayFromEnding or a
+ * list of event names.
  */
 export class SubscriptionEventDictionary {
-  private store: SubscriptionFlowStore = {
-    customFlow: {},
-    defaultFlow: []
-  }
-  private storeIsBuild = false
-  private daysAwayFromEndingCustomEventList: number[] = [0]
-  private dateAwayFromEndingList: Date[] = []
+  private storeIsBuilt = false
+  private allFlows: (SubscriptionFlow & {
+    actions: Action[]
+    paymentMethods: PaymentMethod[]
+    intervals: (SubscriptionInterval & {mailTemplate: MailTemplate | null})[]
+  })[] = []
 
-  private earliestInvoiceCreationDate: null | number = null
   constructor(private readonly prismaService: PrismaClient) {}
 
   /**
-   * Generate the tree structure mentioned in the docs of {@link SubscriptionEventDictionary}.
+   * Load all subscription flows. This is required before calling
+   * {@link getActionFromStore}.
    */
   public async initialize() {
-    let defaultFlowInitialized = false
-    const subscriptionFlows = await this.prismaService.subscriptionFlow.findMany({
-      include: {
-        paymentMethods: true,
-        intervals: {
-          include: {
-            mailTemplate: true
+    this.allFlows = (
+      await this.prismaService.subscriptionFlow.findMany({
+        include: {
+          paymentMethods: true,
+          intervals: {
+            include: {
+              mailTemplate: true
+            }
           }
         }
+      })
+    ).map(flow => {
+      return {
+        ...flow,
+        actions: flow.intervals.map(int => ({
+          type: int.event,
+          daysAwayFromEnding: int.daysAwayFromEnding,
+          externalMailTemplate: int.mailTemplate ? int.mailTemplate.externalMailTemplateId : null
+        }))
       }
     })
-    for (const subscriptionFlow of subscriptionFlows) {
-      const actions = subscriptionFlow.intervals.map(int => ({
-        type: int.event,
-        daysAwayFromEnding: int.daysAwayFromEnding,
-        externalMailTemplate: int.mailTemplate ? int.mailTemplate.externalMailTemplateId : null
-      }))
 
-      if (subscriptionFlow.default) {
-        if (defaultFlowInitialized) {
-          throw new Error('Multiple default memberplans found! This is a data integrity error!')
-        }
-        this.assignActions(this.store.defaultFlow, actions)
-        defaultFlowInitialized = true
-        continue
-      }
-      if (!subscriptionFlow.memberPlanId) {
-        throw new Error(
-          'Subscription Flow with no memberplan found that is not default! This is a data integrity error!'
-        )
-      }
+    const defaultFlows = this.allFlows.filter(flow => flow.default)
 
-      if (!this.store.customFlow[subscriptionFlow.memberPlanId]) {
-        this.store.customFlow[subscriptionFlow.memberPlanId] = {}
-      }
-
-      for (const pm of subscriptionFlow.paymentMethods.map(pm => pm.id)) {
-        if (!this.store.customFlow[subscriptionFlow.memberPlanId][pm]) {
-          this.store.customFlow[subscriptionFlow.memberPlanId][pm] = {}
-        }
-        for (const periodicity of subscriptionFlow.periodicities) {
-          if (!this.store.customFlow[subscriptionFlow.memberPlanId][pm][periodicity]) {
-            this.store.customFlow[subscriptionFlow.memberPlanId][pm][periodicity] = {}
-          }
-          for (const ar of subscriptionFlow.autoRenewal) {
-            if (
-              !this.store.customFlow[subscriptionFlow.memberPlanId][pm][periodicity]![ar.toString()]
-            )
-              this.store.customFlow[subscriptionFlow.memberPlanId][pm][periodicity]![
-                ar.toString()
-              ] = []
-            this.assignActions(
-              this.store.customFlow[subscriptionFlow.memberPlanId][pm][periodicity]![ar.toString()],
-              actions
-            )
-          }
-        }
-      }
-    }
-    if (!defaultFlowInitialized) {
+    if (defaultFlows.length === 0) {
       throw new Error('Default user subscription flow not found!')
     }
-    this.storeIsBuild = true
-  }
 
-  /**
-   * Store the provided intervals in the specified leaf of the tree structure.
-   * @param treeLeaf The leaf to store the actions in.
-   * @param intervals The actions to store.
-   */
-  private assignActions(treeLeaf: Action[], actions: Action[]) {
-    for (const action of actions) {
-      treeLeaf.push(action)
-      if (!action.daysAwayFromEnding) {
-        continue
-      }
-
-      // Store earliest invoice creation date
-      if (action.type === SubscriptionEvent.INVOICE_CREATION) {
-        if (
-          !this.earliestInvoiceCreationDate ||
-          action.daysAwayFromEnding < this.earliestInvoiceCreationDate
-        ) {
-          this.earliestInvoiceCreationDate = action.daysAwayFromEnding
-        }
-      }
-
-      if (action.type === SubscriptionEvent.CUSTOM) {
-        if (!this.daysAwayFromEndingCustomEventList.includes(action.daysAwayFromEnding)) {
-          this.daysAwayFromEndingCustomEventList.push(action.daysAwayFromEnding)
-        }
-      }
+    if (defaultFlows.length > 1) {
+      throw new Error('Multiple default memberplans found! This is a data integrity error!')
     }
-  }
 
-  public getEarliestInvoiceCreationDate(date: Date) {
-    if (!this.earliestInvoiceCreationDate) throw new Error('No invoice creation date found!')
-    return subDays(this.normalizeDate(date), this.earliestInvoiceCreationDate)
+    const nonDefaultFlows = this.allFlows.filter(flow => !flow.default)
+    if (nonDefaultFlows.filter(flow => !flow.memberPlanId).length > 0) {
+      throw new Error(
+        'Subscription Flow with no memberplan found that is not default! This is a data integrity error!'
+      )
+    }
+
+    this.storeIsBuilt = true
   }
 
   /**
-   * Build the list of custom events for {@link getDatesWithCustomEvent}.
-   * @param date The date for which to calculate the offsets for the custom events.
+   * Get the earliest date when an invoice must be created.
+   * @param date The current date.
+   * @returns The earliest date.
    */
-  public buildCustomEventDateList(date: Date) {
-    if (!this.storeIsBuild) {
+  public getEarliestInvoiceCreationDate(date: Date) {
+    if (!this.storeIsBuilt) {
       throw new Error('Tried to access store before it was successfully initialized!')
     }
-    const normalizedDate = this.normalizeDate(date)
+    const allIntervals = this.allFlows.map(flow => flow.intervals).flat()
+    const allCreationEvents = allIntervals.filter(
+      interval => interval.event === SubscriptionEvent.INVOICE_CREATION
+    )
 
-    for (const daysAwayFromEnding of this.daysAwayFromEndingCustomEventList) {
-      this.dateAwayFromEndingList.push(subDays(normalizedDate, daysAwayFromEnding))
+    if (allCreationEvents.length === 0) {
+      throw new Error('No invoice creation date found!')
     }
+
+    let earliest = Number.MAX_SAFE_INTEGER
+    for (const event of allCreationEvents) {
+      if (event.daysAwayFromEnding !== null && event.daysAwayFromEnding < earliest) {
+        earliest = event.daysAwayFromEnding
+      }
+    }
+    return subDays(this.normalizeDate(date), earliest)
   }
 
   /**
    * Get an array of the dates where custom events have been defined.
+   * @param date The current date.
    * @returns An array of dates.
    */
-  public getDatesWithCustomEvent(): Date[] {
-    if (this.dateAwayFromEndingList.length === 0) {
-      throw new Error('Tried to access eventDataList before it was successfully initialized!')
+  public getDatesWithCustomEvent(date: Date): Date[] {
+    if (!this.storeIsBuilt) {
+      throw new Error('Tried to access store before it was successfully initialized!')
     }
-    return this.dateAwayFromEndingList
+    const customEventDaysAwayFromEnding: number[] = []
+    const allIntervals = this.allFlows.map(flow => flow.intervals).flat()
+    const allCustomEvents = allIntervals.filter(
+      interval => interval.event === SubscriptionEvent.CUSTOM
+    )
+    for (const event of allCustomEvents) {
+      if (
+        event.daysAwayFromEnding !== null &&
+        !customEventDaysAwayFromEnding.includes(event.daysAwayFromEnding)
+      ) {
+        customEventDaysAwayFromEnding.push(event.daysAwayFromEnding)
+      }
+    }
+    return customEventDaysAwayFromEnding.map(daysAwayFromEnding =>
+      subDays(this.normalizeDate(date), daysAwayFromEnding)
+    )
   }
 
   /**
@@ -187,7 +136,7 @@ export class SubscriptionEventDictionary {
    * @returns An array of MailTemplates.
    */
   public getActionFromStore(query: LookupActionInput): Action[] {
-    if (!this.storeIsBuild) {
+    if (!this.storeIsBuilt) {
       throw new Error('Tried to access store before it was successfully initialized!')
     }
     if (query.daysAwayFromEnding && query.events) {
@@ -196,28 +145,29 @@ export class SubscriptionEventDictionary {
       )
     }
 
-    let path = this.store.customFlow
-    const pathElements = [
-      query.memberplanId,
-      query.paymentmethodeId,
-      query.periodicity,
-      query.autorenwal.toString()
-    ]
-    for (const pathElement of pathElements) {
-      if (!(pathElement in path)) {
-        return this.getActionByDay(this.store.defaultFlow, query.daysAwayFromEnding, query.events)
-      }
-      path = path[pathElement]
+    const defaultFlow = this.allFlows.find(flow => flow.default)
+
+    if (!defaultFlow) {
+      throw new Error('Default flow is missing!')
     }
-    const custom_path =
-      this.store.customFlow![query.memberplanId]![query.paymentmethodeId]![query.periodicity]![
-        query.autorenwal.toString()
-      ]
-    return this.getActionByDay(custom_path, query.daysAwayFromEnding, query.events)
+
+    const filteredFlows = this.allFlows.filter(
+      flow =>
+        flow.memberPlanId === query.memberplanId &&
+        flow.paymentMethods.map(pm => pm.id).includes(query.paymentmethodeId) &&
+        flow.periodicities.includes(query.periodicity) &&
+        flow.autoRenewal.includes(query.autorenwal)
+    )
+
+    if (filteredFlows.length === 0) {
+      return this.getActionByDay(defaultFlow.actions, query.daysAwayFromEnding, query.events)
+    }
+
+    return this.getActionByDay(filteredFlows[0].actions, query.daysAwayFromEnding, query.events)
   }
 
   /**
-   * Filter the MailTemplates stored in a leaf of the store. They can either be
+   * Filter the MailTemplates stored for a specific flow. They can either be
    * filtered by `daysAwayFromEnding` or by `lookupEvents`.
    * @param timeline The leaf of the store.
    * @param daysAwayFromEnding Number of days away from ending.
@@ -240,7 +190,7 @@ export class SubscriptionEventDictionary {
   }
 
   private normalizeDate(date: Date): Date {
-    return new Date(subMinutes(startOfDay(date), date.getTimezoneOffset()))
+    return startOfDay(date)
   }
 
   /**
