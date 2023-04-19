@@ -9,8 +9,6 @@ registerEnumType(SubscriptionEvent, {
   name: 'SubscriptionEvent'
 })
 
-// Output
-
 @ObjectType()
 export class MailTemplateRef {
   @Field(() => Int)
@@ -66,8 +64,6 @@ export class SubscriptionFlowModel {
   @Field(() => Int)
   numberOfSubscriptions!: number
 }
-
-// Input
 
 @InputType()
 export class SubscriptionIntervalCreateInput {
