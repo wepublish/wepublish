@@ -92,7 +92,8 @@ export const addPublicComment = async (
 export const updatePublicComment = async (
   input: {id: Comment['id']} & Prisma.CommentsRevisionsCreateInput,
   authenticateUser: Context['authenticateUser'],
-  commentClient: PrismaClient['comment']
+  commentClient: PrismaClient['comment'],
+  settingsClient: PrismaClient['setting']
 ) => {
   const {user} = authenticateUser()
 
@@ -106,7 +107,14 @@ export const updatePublicComment = async (
 
   if (user.id !== comment?.userID) {
     throw new NotAuthorisedError()
-  } else if (comment.state !== CommentState.pendingUserChanges) {
+  }
+  const commentEditingSetting = await settingsClient.findUnique({
+    where: {
+      name: SettingName.ALLOW_COMMENT_EDITING
+    }
+  })
+
+  if (!commentEditingSetting.value && comment.state !== CommentState.pendingUserChanges) {
     throw new UserInputError('Comment state must be pending user changes')
   }
 
