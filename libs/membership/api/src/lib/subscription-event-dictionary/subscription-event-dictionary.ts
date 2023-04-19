@@ -8,6 +8,35 @@ import {
 import {startOfDay, subDays, subMinutes} from 'date-fns'
 import {PrismaClient, Subscription, SubscriptionEvent} from '@prisma/client'
 
+/**
+ * This class stores all possible SubscriptionFlows in a single tree
+ * data structure. The structure of the tree is as follows:
+ * @example
+ * customFlow: {
+ *   [memberPlanId]: {
+ *     [paymentMethodId]: {
+ *       [periodicity]: {
+ *         [autoRenew]: [
+ *           Action[]
+ *         ]
+ *       }
+ *     }
+ *   }
+ * },
+ * defaultFlow: {
+ *  ...see above
+ * }
+ *
+ * The Action array is a list of all MailTemplates where the settings
+ * match the given tree hierarchy.
+ *
+ * @example
+ * customFlow: { "mp1": { "payrexx": { "monthly": { "true": [{ event: "RENEWAL", externalMailTemplate: "template1" }] } } } }
+ *
+ * The method {@link getActionFromStore} can be used to query a specific leaf
+ * by providing filter values for member plan, payment method, periodicity,
+ * renewal and EITHER the daysAwayFromEnding or a list of events.
+ */
 export class SubscriptionEventDictionary {
   private store: SubscriptionFlowStore = {
     customFlow: {},
@@ -23,29 +52,7 @@ export class SubscriptionEventDictionary {
   constructor(private readonly prismaService: PrismaClient) {}
 
   /**
-   * Store all possible SubscriptionFlows in a single tree datastructure. The
-   * structure of the flow is as follows:
-   * @example
-   * customFlow: {
-   *   [memberPlanId]: {
-   *     [paymentMethodId]: {
-   *       [periodicity]: {
-   *         [autoRenew]: [
-   *           Action[]
-   *         ]
-   *       }
-   *     }
-   *   }
-   * },
-   * defaultFlow: {
-   *  ...see above
-   * }
-   *
-   * The Action array is a list of all MailTemplates where the settings
-   * match the given tree hierarchy.
-   *
-   * @example
-   * customFlow: { "mp1": { "payrexx": { "monthly": { "true": [{ event: "RENEWAL", externalMailTemplate: "template1" }] } } } }
+   * Generate the tree structure mentioned in the docs of {@link SubscriptionEventDictionary}.
    */
   public async initialize() {
     let defaultFlowInitialized = false
