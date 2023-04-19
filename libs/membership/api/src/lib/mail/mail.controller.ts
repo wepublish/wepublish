@@ -27,6 +27,11 @@ export class MailController {
     private readonly oldContextService: OldContextService,
     private readonly config: MailControllerConfig
   ) {}
+
+  /**
+   * Build a string uniquely identifying the email delivery
+   * @returns the identification string
+   */
   private generateMailIdentifier() {
     return `${this.config.mailType}-${
       this.config.periodicJobRunDate ? this.config.periodicJobRunDate.toISOString() : 'null'
@@ -35,6 +40,11 @@ export class MailController {
     }`
   }
 
+  /**
+   * Get the number of mails with the specified MailIdentifier. Any number > 0
+   * means the mail was already sent.
+   * @returns number of mails with this identifier
+   */
   private async checkIfMailIsSent(): Promise<number> {
     return this.prismaService.mailLog.count({
       where: {
@@ -43,6 +53,10 @@ export class MailController {
     })
   }
 
+  /**
+   * Build the data for passing it to the mail templates
+   * @returns a HashMap of configuration data
+   */
   private buildData() {
     this.config.recipient.password = 'hidden'
     this.config.recipient.roleIDs = ['hidden']
@@ -57,7 +71,13 @@ export class MailController {
     }
   }
 
-  public async sendMail() {
+  /**
+   * Send an email using a specific template with the configured mail provider.
+   * This method stores an entry in the MailLog table for referencing and
+   * re-trying the delivery.
+   * @returns void
+   */
+  public async sendMail(): Promise<void> {
     if (this.config.isRetry && (await this.checkIfMailIsSent())) {
       this.logger.warn(
         `Mail with id <${this.generateMailIdentifier()}> is already sent skipping...`

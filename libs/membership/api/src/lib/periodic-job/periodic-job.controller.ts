@@ -20,6 +20,10 @@ import {Action} from '../subscription-event-dictionary/subscription-event-dictio
 import {SubscriptionController} from '../subscription/subscription.controller'
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
 
+/**
+ * Controller responsible for performing periodic jobs. A new controller
+ * instance must be created for every run.
+ */
 @Injectable()
 export class PeriodicJobController {
   private subscriptionEventDictionary: SubscriptionEventDictionary
@@ -34,6 +38,11 @@ export class PeriodicJobController {
     this.subscriptionEventDictionary = new SubscriptionEventDictionary(this.prismaService)
   }
 
+  /**
+   * Run the periodic jobs. This makes sure that no two instances of the same
+   * controller run their jobs at the same time and returns if they are.
+   * @returns void
+   */
   public async concurrentExecute() {
     await this.sleepForRandomIntervalToEnsureConcurrency()
     if (await this.isAlreadyAJobRunning()) {
@@ -43,8 +52,16 @@ export class PeriodicJobController {
     await this.execute()
   }
 
+  /**
+   * Runs all outstanding {@link getOutstandingRuns} runs by doing the following for each run:
+   * - send custom mails
+   * - create invoices
+   * - charge due invoices
+   * - deactivate overdue subscriptions
+   * If any of the tasks fail, the entire job is marked as failed.
+   */
   public async execute() {
-    await this.loadEnvironment()
+    await this.subscriptionEventDictionary.initialize()
     for (const periodicJobRunObject of await this.getOutstandingRuns()) {
       if (periodicJobRunObject.isRetry) {
         await this.retryFailedJob(periodicJobRunObject.date)
@@ -52,24 +69,9 @@ export class PeriodicJobController {
         await this.markJobStarted(periodicJobRunObject.date)
       }
       try {
-        //
-        // Send custom mails
-        //
         await this.findAndSendCustomMails(periodicJobRunObject)
-
-        //
-        // Creating invoices which need to get created
-        //
         await this.findAndCreateInvoices(periodicJobRunObject)
-
-        //
-        // Charging Invoices which are due
-        //
         await this.findAndChargeDueInvoices(periodicJobRunObject)
-
-        //
-        // Deactivate Subscriptions which have invoices who are overdue
-        //
         await this.findAndDeactivateSubscriptions(periodicJobRunObject)
       } catch (e) {
         await this.markJobFailed((e as Error).toString())
@@ -92,7 +94,7 @@ export class PeriodicJobController {
 
   private async findAndChargeDueInvoices(periodicJobRunObject: PeriodicJobRunObject) {
     const invoicesToCharge = await this.subscriptionController.getInvoicesToCharge(
-      this.getEndOfDay(periodicJobRunObject.date)
+      endOfDay(periodicJobRunObject.date)
     )
     for (const invoiceToCharge of invoicesToCharge) {
       await this.chargeInvoice(periodicJobRunObject, invoiceToCharge)
@@ -139,7 +141,7 @@ export class PeriodicJobController {
   ) {
     const daysAwayFromEnding = differenceInDays(
       periodicJobRunObject.date,
-      this.getStartOfDay(subscriptionsWithEvent.paidUntil!)
+      startOfDay(subscriptionsWithEvent.paidUntil!)
     )
     const subscriptionDictionary = this.subscriptionEventDictionary.getActionFromStore({
       memberplanId: subscriptionsWithEvent.memberPlanID,
@@ -286,6 +288,10 @@ export class PeriodicJobController {
     )
   }
 
+  /**
+   * Mark a job as re-trying at the current date.
+   * @param runDate The original date of the job run.
+   */
   private async retryFailedJob(runDate: Date) {
     this.runningJob = await this.prismaService.periodicJob.update({
       where: {
@@ -299,8 +305,8 @@ export class PeriodicJobController {
   }
 
   /**
-   * Mark a job as started so no other processes try to run it.
-   * @param runDate the timestamp when processing started.
+   * Mark a job as started at the current date.
+   * @param runDate the original date of the job run.
    */
   private async markJobStarted(runDate: Date) {
     this.runningJob = await this.prismaService.periodicJob.create({
@@ -315,7 +321,7 @@ export class PeriodicJobController {
    * Check if any job is already being processed.
    * @returns if there are any jobs running.
    */
-  private async isAlreadyAJobRunning() {
+  private async isAlreadyAJobRunning(): Promise<boolean> {
     const runLimit = sub(new Date(), {hours: 2})
     const runs = await this.prismaService.periodicJob.findMany({
       where: {
@@ -386,16 +392,12 @@ export class PeriodicJobController {
     this.runningJob = undefined
   }
 
-  private async loadEnvironment() {
-    await this.subscriptionEventDictionary.initialize()
-  }
-
   /**
    * Calculate the runs in the past that have not completed yet.
-   * - If the Controller is run for the first time, this returns just the current date.
-   * - If the last run had an error, it returns the date of the error.
-   * - If there was an execution pause, it returns all days between the last run and the current day.
-   * @returns An array of dates to run.
+   * - If the Controller is run for the first time, this returns just todays run.
+   * - If the last run had an error, it returns the run when the error happened.
+   * - If there was an execution pause, it returns all runs between the last successful run and the current day.
+   * @returns An array of pending runs.
    */
   private async getOutstandingRuns(): Promise<PeriodicJobRunObject[]> {
     const today = new Date()
@@ -407,11 +409,11 @@ export class PeriodicJobController {
     })
     if (!latestRun) {
       this.logger.debug('Periodic job first run')
-      return [{isRetry: false, date: this.getStartOfDay(today)}]
+      return [{isRetry: false, date: startOfDay(today)}]
     }
     if (latestRun.finishedWithError && !latestRun.successfullyFinished) {
       this.logger.warn('Last run had errors retrying....')
-      runDates.push({isRetry: true, date: this.getStartOfDay(new Date(latestRun.date))})
+      runDates.push({isRetry: true, date: startOfDay(latestRun.date)})
     }
     return runDates.concat(this.generateDateArray(latestRun.date, today))
   }
@@ -424,8 +426,8 @@ export class PeriodicJobController {
    */
   private generateDateArray(startDate: Date, endDate: Date) {
     const dateArray = []
-    const lastDate = this.getStartOfDay(endDate)
-    let inputDate = this.getStartOfDay(startDate)
+    const lastDate = startOfDay(endDate)
+    let inputDate = startOfDay(startDate)
     while (inputDate < lastDate) {
       inputDate = addDays(inputDate, 1)
       dateArray.push({isRetry: false, date: inputDate})
@@ -433,16 +435,14 @@ export class PeriodicJobController {
     return dateArray
   }
 
-  private getStartOfDay(date: Date): Date {
-    return subMinutes(
-      set(date, {hours: 0, minutes: 0, seconds: 0, milliseconds: 0}),
-      date.getTimezoneOffset()
-    )
-  }
-  private getEndOfDay(date: Date): Date {
-    return endOfDay(date)
-  }
-
+  /**
+   * Send an email and store it in the Mail Log
+   * @param action the event and template to send
+   * @param user the recipient
+   * @param isRetry whether this is a retried delivery
+   * @param optionalData unknown
+   * @param periodicJobRunDate the current date for the delivery
+   */
   private async sendTemplateMail(
     action: Action,
     user: User,

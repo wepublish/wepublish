@@ -22,6 +22,16 @@ export type SubscriptionControllerConfig = {
   subscription: Subscription
 }
 
+interface ChargeStatus {
+  action: Action | undefined
+  errorCode: string
+}
+
+interface PeriodBounds {
+  startsAt: Date
+  endsAt: Date
+}
+
 @Injectable()
 export class SubscriptionController {
   private readonly logger = new Logger('SubscriptionController')
@@ -69,6 +79,11 @@ export class SubscriptionController {
     })
   }
 
+  /**
+   * Get all invoices that are due at the current date or earlier.
+   * @param runDate The current date.
+   * @returns All invoices that are due.
+   */
   public async getInvoicesToCharge(runDate: Date) {
     return this.prismaService.invoice.findMany({
       where: {
@@ -96,6 +111,11 @@ export class SubscriptionController {
     })
   }
 
+  /**
+   * Find all invoices that should be deactivated at the given date and are unpaid.
+   * @param runDate the date to check for.
+   * @returns a list of invoices.
+   */
   public async getSubscriptionsToDeactivate(runDate: Date) {
     return this.prismaService.invoice.findMany({
       where: {
@@ -115,6 +135,11 @@ export class SubscriptionController {
     })
   }
 
+  /**
+   * Calculate the runtime of a specific {@link PaymentPeriodicity}
+   * @param periodicity The periodicity to calculate the runtime for.
+   * @returns the number of months the subscription runs for.
+   */
   private getMonthCount(periodicity: PaymentPeriodicity) {
     switch (periodicity) {
       case PaymentPeriodicity.monthly:
@@ -130,7 +155,17 @@ export class SubscriptionController {
     }
   }
 
-  private getPeriodStarEnd(periods: SubscriptionPeriod[], periodicity: PaymentPeriodicity) {
+  /**
+   * Calculates the start and end of the next subscription period. if no active
+   * periods are passed, the bounds starting from now are returned.
+   * @param periods The currently active periods
+   * @param periodicity The duration of the next period
+   * @returns Start and end date of the next period
+   */
+  private getNextPeriod(
+    periods: SubscriptionPeriod[],
+    periodicity: PaymentPeriodicity
+  ): PeriodBounds {
     if (periods.length === 0) {
       return {
         startsAt: add(new Date(), {days: 1}),
@@ -146,6 +181,12 @@ export class SubscriptionController {
     }
   }
 
+  /**
+   * Create an invoice for the new runtime of a subscription.
+   * @param subscription The subscription to create an invoice for.
+   * @param scheduledDeactivation The object containing the deactivation date at the end of the new period.
+   * @returns The invoice.
+   */
   public async createInvoice(
     subscription: Subscription & {
       periods: SubscriptionPeriod[]
@@ -162,6 +203,9 @@ export class SubscriptionController {
 
     const amount = subscription.monthlyAmount * this.getMonthCount(subscription.paymentPeriodicity)
     const description = `${subscription.paymentPeriodicity} renewal of subscription ${subscription.memberPlan.name}`
+    const deactivationDate = add(subscription.paidUntil || new Date(), {
+      days: scheduledDeactivation.daysAwayFromEnding || undefined
+    })
     return this.prismaService.invoice.create({
       data: {
         mail: subscription.user.email,
@@ -175,9 +219,7 @@ export class SubscriptionController {
             amount
           }
         },
-        scheduledDeactivationAt: add(subscription.paidUntil || new Date(), {
-          days: scheduledDeactivation.daysAwayFromEnding || undefined
-        }),
+        scheduledDeactivationAt: deactivationDate,
         subscriptionPeriods: {
           create: {
             paymentPeriodicity: subscription.paymentPeriodicity,
@@ -187,7 +229,7 @@ export class SubscriptionController {
                 id: subscription.id
               }
             },
-            ...this.getPeriodStarEnd(subscription.periods, subscription.paymentPeriodicity)
+            ...this.getNextPeriod(subscription.periods, subscription.paymentPeriodicity)
           }
         },
         subscription: {
@@ -198,6 +240,11 @@ export class SubscriptionController {
       }
     })
   }
+
+  /**
+   * Mark a specific invoice and the corresponding subscription as paid.
+   * @param invoice The invoice to mark.
+   */
   public async markInvoiceAsPaid(
     invoice: Invoice & {
       subscription: Subscription | null
@@ -225,6 +272,11 @@ export class SubscriptionController {
       })
     ])
   }
+
+  /**
+   * Deactivates the subscription belonging to an invoice.
+   * @param invoice the invoice belonging to subscription.
+   */
   public async deactivateSubscription(invoice: Invoice) {
     await this.prismaService.$transaction([
       this.prismaService.subscriptionDeactivation.create({
@@ -245,6 +297,14 @@ export class SubscriptionController {
     ])
   }
 
+  /**
+   * Try to charge the payment provider for a specific invoice. If the provider
+   * supports off-session payments, it is charged automatically. If it doesn't
+   * support them, the method returns.
+   * @param invoice The invoice to charge.
+   * @param mailActions The possible mailtemplates to use in case of success/failure.
+   * @returns The transaction status.
+   */
   public async chargeInvoice(
     invoice: Invoice & {
       subscription:
@@ -258,7 +318,7 @@ export class SubscriptionController {
       subscriptionPeriods: SubscriptionPeriod[]
     },
     mailActions: Action[]
-  ) {
+  ): Promise<ChargeStatus> {
     const paymentProvider = this.oldContextService.context.paymentProviders.find(
       pp => pp.id === invoice.subscription?.paymentMethod.paymentProviderID
     )
@@ -276,6 +336,14 @@ export class SubscriptionController {
     }
   }
 
+  /**
+   * Try to charge an off session payment. This creates a payment record and marks the
+   * invoice as paid if the charge was successful.
+   * @param invoice The invoice to charge.
+   * @param paymentProvider The payment provider.
+   * @param mailActions The possible mails to deliver on successful or failed charge.
+   * @returns The transaction status.
+   */
   private async offSessionPayment(
     invoice: Invoice & {
       subscription:
@@ -290,7 +358,7 @@ export class SubscriptionController {
     },
     paymentProvider: PaymentProvider,
     mailActions: Action[]
-  ) {
+  ): Promise<ChargeStatus> {
     if (invoice.canceledAt || invoice.paidAt) {
       throw new Error(
         `Tried to renew paid ${invoice.paidAt} or canceled invoice ${invoice.canceledAt} for subscription ${invoice.subscription?.id}`

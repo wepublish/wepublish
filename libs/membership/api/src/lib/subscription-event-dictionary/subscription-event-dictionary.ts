@@ -84,6 +84,7 @@ export class SubscriptionEventDictionary {
     }
     this.storeIsBuild = true
   }
+
   private assignActions(storeTimeline: StoreTimeline | undefined, intervals: StoreInterval[]) {
     if (!storeTimeline) {
       throw new Error(
@@ -113,8 +114,9 @@ export class SubscriptionEventDictionary {
         if (
           !this.earliestInvoiceCreationDate ||
           interval.daysAwayFromEnding < this.earliestInvoiceCreationDate
-        )
+        ) {
           this.earliestInvoiceCreationDate = interval.daysAwayFromEnding
+        }
       }
 
       if (interval.event === SubscriptionEvent.CUSTOM) {
@@ -124,10 +126,12 @@ export class SubscriptionEventDictionary {
       }
     }
   }
+
   public getEarliestInvoiceCreationDate(date: Date) {
     if (!this.earliestInvoiceCreationDate) throw new Error('No invoice creation date found!')
     return subDays(this.normalizeDate(date), this.earliestInvoiceCreationDate)
   }
+
   public buildCustomEventDateList(date: Date) {
     if (!this.storeIsBuild) {
       throw new Error('Tried to access store before it was successfully initialized!')
