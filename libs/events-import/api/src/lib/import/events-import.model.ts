@@ -1,12 +1,21 @@
 import {Field, ObjectType, InputType, registerEnumType} from '@nestjs/graphql'
 import {EventStatus} from '@prisma/client'
 
+export enum Providers {
+  AgendaBasel = 'AgendaBasel',
+  SomeOtherProvider = 'SomeOtherProvider' // add others in the future
+}
+
 export enum ImportedEventSort {
   STARTS_AT = 'STARTS_AT',
   ENDS_AT = 'ENDS_AT',
   CREATED_AT = 'CREATED_AT',
   MODIFIED_AT = 'MODIFIED_AT'
 }
+
+registerEnumType(Providers, {
+  name: 'Providers'
+})
 
 registerEnumType(ImportedEventSort, {
   name: 'ImportedEventSort'
@@ -65,7 +74,7 @@ export class Event {
 }
 
 @ObjectType()
-export class ImportedEventDocument {
+export class ImportedEventsDocument {
   @Field(type => [Event])
   nodes!: Event[]
 
@@ -80,4 +89,13 @@ export class ImportedEventDocument {
 export class ImportedEventFilter {
   @Field({nullable: true})
   name?: string
+}
+
+@InputType()
+export class SingleEventFilter {
+  @Field()
+  id!: string
+
+  @Field(type => Providers)
+  source!: Providers
 }

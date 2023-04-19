@@ -3,8 +3,11 @@ import {PrismaClient} from '@prisma/client'
 import fetch from 'node-fetch'
 import xml2js from 'xml2js'
 import {
-  ImportedEventDocument,
-  ImportedEventFilter /* , ImportedEventSort */
+  ImportedEventsDocument,
+  ImportedEventFilter /* , ImportedEventSort */,
+  Event,
+  Providers,
+  SingleEventFilter
 } from './events-import.model'
 
 type XMLEventOrigin = {
@@ -65,6 +68,11 @@ interface ImportedEventsParams {
   skip: number
   take: number
   sort: string
+}
+
+interface ImportedEventParams {
+  id: string
+  source: typeof Providers[keyof typeof Providers]
 }
 
 const upcomingOnly = (XMLEvent: XMLEventType) => {
@@ -138,6 +146,15 @@ export class EventsImportService {
       console.log(e)
     }
   }
+
+  async importedEvent(filter: SingleEventFilter) {
+    const {id, source} = filter
+    switch (source) {
+      case Providers.AgendaBasel: {
+        return new AgendaBaselEventsProvider().importedEvent({id})
+      }
+    }
+  }
 }
 
 interface EventsProvider {
@@ -147,7 +164,9 @@ interface EventsProvider {
     skip,
     take,
     sort
-  }: ImportedEventsParams): Promise<ImportedEventDocument>
+  }: ImportedEventsParams): Promise<ImportedEventsDocument>
+
+  importedEvent({id, source}: ImportedEventParams): Promise<Event>
 }
 
 class AgendaBaselEventsProvider implements EventsProvider {
@@ -157,7 +176,7 @@ class AgendaBaselEventsProvider implements EventsProvider {
     skip = 0,
     take = 10,
     sort
-  }: ImportedEventsParams): Promise<ImportedEventDocument> {
+  }: ImportedEventsParams): Promise<ImportedEventsDocument> {
     const parser = new xml2js.Parser()
     const urlToQuery = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
 
@@ -174,6 +193,7 @@ class AgendaBaselEventsProvider implements EventsProvider {
     }
 
     const eventsParsedXML = await getXMLfromURL(urlToQuery)
+    // todo save parsed json in cache
 
     const events = eventsParsedXML['kdz:exportActivities']?.Activities[0]?.Activity
 
@@ -202,6 +222,66 @@ class AgendaBaselEventsProvider implements EventsProvider {
         endCursor: lastEvent?.id
       }
     }
+  }
+
+  async importedEvent({id}: {id: string}): Promise<Event> {
+    // todo get single event from cached data
+    return {
+      id,
+      createdAt: new Date(),
+      modifiedAt: new Date(),
+      name: 'test',
+      description: 'bla bla bla description',
+      imageId: '123',
+      status: 'Scheduled',
+      location: 'some location',
+      startsAt: new Date()
+    }
+
+    // const parser = new xml2js.Parser()
+    // const urlToQuery = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
+
+    // async function getXMLfromURL(url: string) {
+    //   try {
+    //     const response = await fetch(url)
+    //     const content = await response.text()
+    //     const data = await parser.parseStringPromise(content)
+
+    //     return data
+    //   } catch (e) {
+    //     console.error({e})
+    //   }
+    // }
+
+    // const eventsParsedXML = await getXMLfromURL(urlToQuery)
+
+    // const events = eventsParsedXML['kdz:exportActivities']?.Activities[0]?.Activity
+
+    // // only take events that take time in the future
+    // const upcomingEvents = events.filter((event: XMLEventType) => upcomingOnly(event))
+
+    // const importedEvents = upcomingEvents
+    //   ?.map((a: any) => {
+    //     return parseXMLEventToWpEvent(a)
+    //   })
+    //   .sort((a: any, b: any) => {
+    //     return a.startsAt - b.startsAt
+    //   })
+    //   .slice(skip, skip + take)
+
+    // const firstEvent = importedEvents[0]
+    // const lastEvent = importedEvents[importedEvents.length - 1]
+
+    // return {
+    //   nodes: importedEvents,
+    //   totalCount: upcomingEvents.length,
+    //   pageInfo: {
+    //     hasPreviousPage: false,
+    //     hasNextPage: false,
+    //     startCursor: firstEvent?.id,
+    //     endCursor: lastEvent?.id
+    //   }
+    // }
   }
 }
 

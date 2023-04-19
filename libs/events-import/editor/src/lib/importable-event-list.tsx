@@ -70,14 +70,6 @@ function ImportableEventListView() {
         <ListViewHeader>
           <h2>{t('importableEvent.title')}</h2>
         </ListViewHeader>
-
-        <ListViewActions>
-          <Link to="create">
-            <IconButton appearance="primary" icon={<MdAdd />}>
-              {t('event.list.create')}
-            </IconButton>
-          </Link>
-        </ListViewActions>
       </ListViewContainer>
 
       <TableWrapper>

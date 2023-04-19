@@ -82,15 +82,15 @@ export enum EventStatus {
   Scheduled = 'Scheduled'
 }
 
-export type ImportedEventDocument = {
-  __typename?: 'ImportedEventDocument'
+export type ImportedEventFilter = {
+  name?: InputMaybe<Scalars['String']>
+}
+
+export type ImportedEventsDocument = {
+  __typename?: 'ImportedEventsDocument'
   nodes: Array<Event>
   pageInfo: PageInfo
   totalCount: Scalars['Float']
-}
-
-export type ImportedEventFilter = {
-  name?: InputMaybe<Scalars['String']>
 }
 
 export type Mutation = {
@@ -175,8 +175,10 @@ export type Query = {
    * Excludes cancelled or manually set as paid invoices.
    */
   expectedRevenue: Array<DashboardInvoice>
+  /** Returns a more detailed version of a single importable event, by id and source (e.g. AgendaBasel). */
+  importedEvent: Event
   /** Returns a list of imported events from external sources, transformed to match our model. */
-  importedEvents: ImportedEventDocument
+  importedEvents: ImportedEventsDocument
   /**
    * Returns all new deactivations in a given timeframe.
    * This considers the time the deactivation was made, not when the subscription runs out.
@@ -212,6 +214,11 @@ export type QueryConsentsArgs = {
 export type QueryExpectedRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>
   start: Scalars['DateTime']
+}
+
+export type QueryImportedEventArgs = {
+  id: Scalars['String']
+  source: Scalars['String']
 }
 
 export type QueryImportedEventsArgs = {

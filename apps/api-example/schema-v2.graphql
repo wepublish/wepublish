@@ -66,14 +66,14 @@ enum EventStatus {
   Scheduled
 }
 
-type ImportedEventDocument {
+input ImportedEventFilter {
+  name: String
+}
+
+type ImportedEventsDocument {
   nodes: [Event!]!
   pageInfo: PageInfo!
   totalCount: Float!
-}
-
-input ImportedEventFilter {
-  name: String
 }
 
 type Mutation {
@@ -137,6 +137,11 @@ enum PaymentPeriodicity {
   yearly
 }
 
+enum Providers {
+  AgendaBasel
+  SomeOtherProvider
+}
+
 type Query {
   """
   
@@ -170,10 +175,17 @@ type Query {
 
   """
   
+        Returns a more detailed version of a single importable event, by id and source (e.g. AgendaBasel).
+      
+  """
+  importedEvent(filter: SingleEventFilter!): Event!
+
+  """
+  
         Returns a list of imported events from external sources, transformed to match our model.
       
   """
-  importedEvents(filter: ImportedEventFilter, order: Float, skip: Float, sort: String, take: Float): ImportedEventDocument!
+  importedEvents(filter: ImportedEventFilter, order: Float, skip: Float, sort: String, take: Float): ImportedEventsDocument!
 
   """
   
@@ -220,6 +232,11 @@ type Query {
   """
   userConsents(filter: UserConsentFilter): [UserConsent!]!
   versionInformation: VersionInformation!
+}
+
+input SingleEventFilter {
+  id: String!
+  source: Providers!
 }
 
 enum SubscriptionDeactivationReason {

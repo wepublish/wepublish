@@ -1,12 +1,17 @@
 import {Args, Query, Resolver} from '@nestjs/graphql'
-import {ImportedEventFilter, ImportedEventDocument} from './events-import.model'
+import {
+  ImportedEventFilter,
+  ImportedEventsDocument,
+  Event,
+  SingleEventFilter
+} from './events-import.model'
 import {EventsImportService} from './events-import.service'
 
 @Resolver()
 export class EventsImportResolver {
   constructor(private events: EventsImportService) {}
 
-  @Query(returns => ImportedEventDocument, {
+  @Query(returns => ImportedEventsDocument, {
     name: 'importedEvents',
     description: `
       Returns a list of imported events from external sources, transformed to match our model.
@@ -20,5 +25,15 @@ export class EventsImportResolver {
     @Args('sort', {nullable: true}) sort: string
   ) {
     return this.events.importedEvents({filter, order, skip, take, sort})
+  }
+
+  @Query(returns => Event, {
+    name: 'importedEvent',
+    description: `
+      Returns a more detailed version of a single importable event, by id and source (e.g. AgendaBasel).
+    `
+  })
+  importedEvent(@Args('filter') filter: SingleEventFilter) {
+    return this.events.importedEvent(filter)
   }
 }
