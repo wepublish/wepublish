@@ -335,11 +335,7 @@ export class PeriodicJobController {
         }
       }
     })
-    if (runs.length > 0) {
-      return true
-    } else {
-      return false
-    }
+    return runs.length > 0
   }
 
   /**
