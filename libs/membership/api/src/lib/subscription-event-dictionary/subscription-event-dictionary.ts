@@ -164,6 +164,10 @@ export class SubscriptionEventDictionary {
     return subDays(this.normalizeDate(date), this.earliestInvoiceCreationDate)
   }
 
+  /**
+   * Build the list of custom events for {@link getDatesWithCustomEvent}.
+   * @param date The date for which to calculate the offsets for the custom events.
+   */
   public buildCustomEventDateList(date: Date) {
     if (!this.storeIsBuild) {
       throw new Error('Tried to access store before it was successfully initialized!')
@@ -175,6 +179,10 @@ export class SubscriptionEventDictionary {
     }
   }
 
+  /**
+   * Get an array of the dates where custom events have been defined.
+   * @returns An array of dates.
+   */
   public getDatesWithCustomEvent(): Date[] {
     if (this.dateAwayFromEndingList.length === 0) {
       throw new Error('Tried to access eventDataList before it was successfully initialized!')
@@ -256,6 +264,13 @@ export class SubscriptionEventDictionary {
     return new Date(subMinutes(startOfDay(date), date.getTimezoneOffset()))
   }
 
+  /**
+   * Get the External Mail Template name for a specific subscription and subscription event.
+   * @param prisma The Prisma client.
+   * @param subsciption The subscription to search for.
+   * @param subscriptionEvent The event to search for.
+   * @returns The external template identifier OR undefined of none was found.
+   */
   public static async getSubsciptionTemplateIdentifier(
     prisma: PrismaClient,
     subsciption: Subscription,
