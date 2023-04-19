@@ -99,7 +99,9 @@ export class MailContext implements MailContext {
 
   getProvider(): MailProvider {
     if (!this.mailProvider) {
-      throw new Error('MailProvider in MailContext must be defined!')
+      throw new Error(
+        'MailProvider in MailContext must be defined! Did you forget to set a provider? See `runServer.ts:121` for information.'
+      )
     }
     return this.mailProvider
   }
