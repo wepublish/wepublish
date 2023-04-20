@@ -335,7 +335,17 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
 
       rejectionReason: {type: GraphQLString},
       createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-      modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+      modifiedAt: {
+        type: GraphQLDateTime,
+        resolve: createProxyingResolver(async ({id}, _, {prisma: {commentsRevisions}}) => {
+          const revisions = await commentsRevisions.findMany({
+            where: {
+              commentId: id
+            }
+          })
+          return revisions.length > 1 ? revisions[revisions.length - 1].createdAt : undefined
+        })
+      },
       calculatedRatings: {
         type: GraphQLList(GraphQLCalculatedRating)
       },
