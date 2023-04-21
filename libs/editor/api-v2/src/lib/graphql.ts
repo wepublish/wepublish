@@ -165,6 +165,11 @@ export enum PaymentPeriodicity {
   Yearly = 'yearly'
 }
 
+export enum Providers {
+  AgendaBasel = 'AgendaBasel',
+  SomeOtherProvider = 'SomeOtherProvider'
+}
+
 export type Query = {
   __typename?: 'Query';
   /**
@@ -227,8 +232,7 @@ export type QueryExpectedRevenueArgs = {
 
 
 export type QueryImportedEventArgs = {
-  id: Scalars['String'];
-  source: Scalars['String'];
+  filter: SingleEventFilter;
 };
 
 
@@ -272,6 +276,11 @@ export type QueryUserConsentArgs = {
 
 export type QueryUserConsentsArgs = {
   filter?: InputMaybe<UserConsentFilter>;
+};
+
+export type SingleEventFilter = {
+  id: Scalars['String'];
+  source: Providers;
 };
 
 export enum SubscriptionDeactivationReason {
@@ -408,6 +417,13 @@ export type ImportedEventListQueryVariables = Exact<{
 
 
 export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'ImportedEventsDocument', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description: string, status: EventStatus, location: string, modifiedAt: string, startsAt: string, endsAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor: string, endCursor: string, hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type ImportedEventQueryVariables = Exact<{
+  filter: SingleEventFilter;
+}>;
+
+
+export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: string, status: EventStatus, location: string, modifiedAt: string, startsAt: string, endsAt?: string | null } };
 
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -881,6 +897,41 @@ export function useImportedEventListLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type ImportedEventListQueryHookResult = ReturnType<typeof useImportedEventListQuery>;
 export type ImportedEventListLazyQueryHookResult = ReturnType<typeof useImportedEventListLazyQuery>;
 export type ImportedEventListQueryResult = Apollo.QueryResult<ImportedEventListQuery, ImportedEventListQueryVariables>;
+export const ImportedEventDocument = gql`
+    query ImportedEvent($filter: SingleEventFilter!) {
+  importedEvent(filter: $filter) {
+    ...ImportabeEventRef
+  }
+}
+    ${ImportabeEventRefFragmentDoc}`;
+
+/**
+ * __useImportedEventQuery__
+ *
+ * To run a query within a React component, call `useImportedEventQuery` and pass it any options that fit your needs.
+ * When your component renders, `useImportedEventQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useImportedEventQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useImportedEventQuery(baseOptions: Apollo.QueryHookOptions<ImportedEventQuery, ImportedEventQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ImportedEventQuery, ImportedEventQueryVariables>(ImportedEventDocument, options);
+      }
+export function useImportedEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImportedEventQuery, ImportedEventQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ImportedEventQuery, ImportedEventQueryVariables>(ImportedEventDocument, options);
+        }
+export type ImportedEventQueryHookResult = ReturnType<typeof useImportedEventQuery>;
+export type ImportedEventLazyQueryHookResult = ReturnType<typeof useImportedEventLazyQuery>;
+export type ImportedEventQueryResult = Apollo.QueryResult<ImportedEventQuery, ImportedEventQueryVariables>;
 export const VersionInformationDocument = gql`
     query VersionInformation {
   versionInformation {

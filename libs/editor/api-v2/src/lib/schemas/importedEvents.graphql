@@ -9,6 +9,7 @@ fragment ImportabeEventRef on Event {
   endsAt
 }
 
+# queries
 query ImportedEventList(
   $filter: ImportedEventFilter
   $order: Float
@@ -29,5 +30,11 @@ query ImportedEventList(
     }
 
     totalCount
+  }
+}
+
+query ImportedEvent($filter: SingleEventFilter!) {
+  importedEvent(filter: $filter) {
+    ...ImportabeEventRef
   }
 }

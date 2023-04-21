@@ -159,6 +159,11 @@ export enum PaymentPeriodicity {
   Yearly = 'yearly'
 }
 
+export enum Providers {
+  AgendaBasel = 'AgendaBasel',
+  SomeOtherProvider = 'SomeOtherProvider'
+}
+
 export type Query = {
   __typename?: 'Query'
   /**
@@ -217,8 +222,7 @@ export type QueryExpectedRevenueArgs = {
 }
 
 export type QueryImportedEventArgs = {
-  id: Scalars['String']
-  source: Scalars['String']
+  filter: SingleEventFilter
 }
 
 export type QueryImportedEventsArgs = {
@@ -255,6 +259,11 @@ export type QueryUserConsentArgs = {
 
 export type QueryUserConsentsArgs = {
   filter?: InputMaybe<UserConsentFilter>
+}
+
+export type SingleEventFilter = {
+  id: Scalars['String']
+  source: Providers
 }
 
 export enum SubscriptionDeactivationReason {

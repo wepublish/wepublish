@@ -11,7 +11,7 @@ import {
   UserConsentList
 } from '@wepublish/consent/editor'
 import {TagType} from '@wepublish/editor/api'
-import {ImportableEventListView} from '@wepublish/events/editor'
+import {ImportableEventEditor, ImportableEventListView} from '@wepublish/events/editor'
 import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
@@ -360,6 +360,8 @@ export function App() {
                 </Base>
               }
             />
+
+            <Route path="importableevents/edit/:id" element={<ImportableEventEditor />} />
 
             {/* Images Routes */}
             <Route

@@ -78,7 +78,7 @@ function ImportableEventListView() {
             <HeaderCell>{t('event.list.name')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<Event>) => (
-                <Link to={`/events/edit/${rowData.id}`}>{rowData.name}</Link>
+                <Link to={`/importableevents/edit/${rowData.id}`}>{rowData.name}</Link>
               )}
             </Cell>
           </Column>

@@ -1,66 +1,18 @@
-import {Injectable} from '@nestjs/common'
+import {Inject, Injectable} from '@nestjs/common'
+import {CACHE_MANAGER} from '@nestjs/cache-manager'
+import {Cache} from 'cache-manager'
 import {PrismaClient} from '@prisma/client'
 import fetch from 'node-fetch'
 import xml2js from 'xml2js'
 import {
   ImportedEventsDocument,
-  ImportedEventFilter /* , ImportedEventSort */,
+  ImportedEventFilter,
   Event,
   Providers,
   SingleEventFilter
 } from './events-import.model'
 
-type XMLEventOrigin = {
-  ownerid: string
-  owner: string
-  originId: string
-  lastUpdate: string
-  languageCode: string
-  startDate: string
-  endDate: string
-}
-
-type XMLEventLocation = {
-  LocationId: string[]
-  LocationName: string[]
-  LocationAdress: string[]
-}
-
-type XMLEventActivityDate = {
-  ActivityDate: XMLEventMisc[]
-}
-
-type XMLEventMisc = {
-  $: XMLEventOrigin
-}
-
-type XMLEventMultimedia = {
-  Images: string[]
-  Videos: string[]
-}
-
-type XMLEventSettings = {
-  Branches: string[]
-  Genres: string[]
-  EventTypes: string[]
-}
-
-type XMLEventType = {
-  Title: string
-  Subtitle: string
-  ShortDescription: string
-  LongDescription: string
-  $: XMLEventOrigin
-  CastInformation: string[] // I think it's rich text
-  PriceInformation: string[]
-  TicketInformation: string[]
-  ExternalURL: string[]
-  OriginURL: string[]
-  Location: XMLEventLocation[]
-  ActivityDates: XMLEventActivityDate[]
-  ActivityMultimedia: XMLEventMultimedia[]
-  ActivitySettings: XMLEventSettings[]
-}
+import {XMLEventType} from './xmlTypes'
 
 interface ImportedEventsParams {
   filter: ImportedEventFilter
@@ -68,11 +20,25 @@ interface ImportedEventsParams {
   skip: number
   take: number
   sort: string
+  cacheManager?: Cache
 }
 
 interface ImportedEventParams {
   id: string
-  source: typeof Providers[keyof typeof Providers]
+  source?: typeof Providers[keyof typeof Providers]
+  cacheManager?: Cache
+}
+
+interface EventsProvider {
+  importedEvents({
+    filter,
+    order,
+    skip,
+    take,
+    sort
+  }: ImportedEventsParams): Promise<ImportedEventsDocument>
+
+  importedEvent({id, source}: ImportedEventParams): Promise<Event>
 }
 
 const upcomingOnly = (XMLEvent: XMLEventType) => {
@@ -131,11 +97,13 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType) => {
 
 @Injectable()
 export class EventsImportService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache, private prisma: PrismaClient) {}
 
   async importedEvents({filter, order, skip, take, sort}: ImportedEventsParams) {
     const importableEvents = Promise.all(
-      providers.map(provider => provider.importedEvents({filter, order, skip, take, sort}))
+      providers.map(provider =>
+        provider.importedEvents({filter, order, skip, take, sort, cacheManager: this.cacheManager})
+      )
     )
 
     try {
@@ -151,22 +119,10 @@ export class EventsImportService {
     const {id, source} = filter
     switch (source) {
       case Providers.AgendaBasel: {
-        return new AgendaBaselEventsProvider().importedEvent({id})
+        return new AgendaBaselEventsProvider().importedEvent({id, cacheManager: this.cacheManager})
       }
     }
   }
-}
-
-interface EventsProvider {
-  importedEvents({
-    filter,
-    order,
-    skip,
-    take,
-    sort
-  }: ImportedEventsParams): Promise<ImportedEventsDocument>
-
-  importedEvent({id, source}: ImportedEventParams): Promise<Event>
 }
 
 class AgendaBaselEventsProvider implements EventsProvider {
@@ -175,10 +131,17 @@ class AgendaBaselEventsProvider implements EventsProvider {
     order,
     skip = 0,
     take = 10,
-    sort
+    sort,
+    cacheManager
   }: ImportedEventsParams): Promise<ImportedEventsDocument> {
+    // todo check for parsedEvents cache and only do all the logic below if record doesn't exist
+    // const parsedEvents: Event[] = await cacheManager.get('parsedEvents')
+
     const parser = new xml2js.Parser()
     const urlToQuery = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
+
+    // todo remove
+    await cacheManager.reset()
 
     async function getXMLfromURL(url: string) {
       try {
@@ -200,20 +163,27 @@ class AgendaBaselEventsProvider implements EventsProvider {
     // only take events that take time in the future
     const upcomingEvents = events.filter((event: XMLEventType) => upcomingOnly(event))
 
-    const importedEvents = upcomingEvents
-      ?.map((a: any) => {
-        return parseXMLEventToWpEvent(a)
-      })
-      .sort((a: any, b: any) => {
-        return a.startsAt - b.startsAt
-      })
-      .slice(skip, skip + take)
+    const importedEvents = upcomingEvents?.map((a: any) => {
+      return parseXMLEventToWpEvent(a)
+    })
+
+    // save in cache
+    const ttl = 8 * 60 * 60 * 1000 // 8 hours
+    await cacheManager.set('parsedEvents', importedEvents, ttl)
+
+    // split into separate functions
+    const sortedEvents = importedEvents.sort((a: any, b: any) => {
+      return a.startsAt - b.startsAt
+    })
+
+    // split into separate functions
+    const paginatedEvents = sortedEvents.slice(skip, skip + take)
 
     const firstEvent = importedEvents[0]
     const lastEvent = importedEvents[importedEvents.length - 1]
 
     return {
-      nodes: importedEvents,
+      nodes: paginatedEvents,
       totalCount: upcomingEvents.length,
       pageInfo: {
         hasPreviousPage: false,
@@ -224,64 +194,16 @@ class AgendaBaselEventsProvider implements EventsProvider {
     }
   }
 
-  async importedEvent({id}: {id: string}): Promise<Event> {
-    // todo get single event from cached data
-    return {
-      id,
-      createdAt: new Date(),
-      modifiedAt: new Date(),
-      name: 'test',
-      description: 'bla bla bla description',
-      imageId: '123',
-      status: 'Scheduled',
-      location: 'some location',
-      startsAt: new Date()
+  async importedEvent({id, cacheManager}: ImportedEventParams): Promise<Event> {
+    const parsedEvents: Event[] = await cacheManager.get('parsedEvents')
+
+    const event = parsedEvents.find(e => e.id === id)
+
+    if (!event) {
+      throw Error(`Event with id ${id} not found.`)
     }
 
-    // const parser = new xml2js.Parser()
-    // const urlToQuery = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
-
-    // async function getXMLfromURL(url: string) {
-    //   try {
-    //     const response = await fetch(url)
-    //     const content = await response.text()
-    //     const data = await parser.parseStringPromise(content)
-
-    //     return data
-    //   } catch (e) {
-    //     console.error({e})
-    //   }
-    // }
-
-    // const eventsParsedXML = await getXMLfromURL(urlToQuery)
-
-    // const events = eventsParsedXML['kdz:exportActivities']?.Activities[0]?.Activity
-
-    // // only take events that take time in the future
-    // const upcomingEvents = events.filter((event: XMLEventType) => upcomingOnly(event))
-
-    // const importedEvents = upcomingEvents
-    //   ?.map((a: any) => {
-    //     return parseXMLEventToWpEvent(a)
-    //   })
-    //   .sort((a: any, b: any) => {
-    //     return a.startsAt - b.startsAt
-    //   })
-    //   .slice(skip, skip + take)
-
-    // const firstEvent = importedEvents[0]
-    // const lastEvent = importedEvents[importedEvents.length - 1]
-
-    // return {
-    //   nodes: importedEvents,
-    //   totalCount: upcomingEvents.length,
-    //   pageInfo: {
-    //     hasPreviousPage: false,
-    //     hasNextPage: false,
-    //     startCursor: firstEvent?.id,
-    //     endCursor: lastEvent?.id
-    //   }
-    // }
+    return event
   }
 }
 
