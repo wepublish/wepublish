@@ -232,8 +232,7 @@ export type QueryExpectedRevenueArgs = {
 
 
 export type QueryImportedEventArgs = {
-  id: Scalars['String'];
-  source: Scalars['String'];
+  filter: SingleEventFilter;
 };
 
 
