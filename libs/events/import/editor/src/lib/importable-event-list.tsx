@@ -89,7 +89,15 @@ function ImportableEventListView() {
         <Table fillHeight rowHeight={60} loading={loading} data={data?.importedEvents.nodes || []}>
           <Column width={200} resizable>
             <HeaderCell>{t('event.list.name')}</HeaderCell>
+<<<<<<< HEAD
             <Cell>{(rowData: RowDataType<Event>) => rowData.name}</Cell>
+=======
+            <Cell>
+              {(rowData: RowDataType<Event>) => (
+                <Link to={`/importableevents/edit/${rowData.id}`}>{rowData.name}</Link>
+              )}
+            </Cell>
+>>>>>>> 94dda4a2 (cache, basic ui, edit path, edit form)
           </Column>
 
           <Column width={220} resizable>

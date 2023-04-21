@@ -428,6 +428,13 @@ export type ImportedEventQueryVariables = Exact<{
 
 export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, modifiedAt: string, startsAt: string, endsAt?: string | null } };
 
+export type ImportedEventQueryVariables = Exact<{
+  filter: SingleEventFilter;
+}>;
+
+
+export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: string, status: EventStatus, location: string, modifiedAt: string, startsAt: string, endsAt?: string | null } };
+
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
 
