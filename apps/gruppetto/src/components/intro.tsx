@@ -33,7 +33,7 @@ const Intro = () => {
     elements: {Button, Paragraph, H3}
   } = useWebsiteBuilder()
 
-  const difference = Math.max(0, differenceInDays(new Date('2023-05-09'), new Date()))
+  const difference = Math.max(0, differenceInDays(new Date('2023-05-11'), new Date()))
 
   return (
     <IntroWrapper>
