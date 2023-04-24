@@ -302,9 +302,9 @@ export function Base({children}: BaseProps) {
                     ]}>
                     <Nav.Item
                       as={NavLink}
-                      href="/importableevents"
+                      href="/events/import"
                       icon={<MdEventAvailable />}
-                      active={path === 'importableevents'}>
+                      active={path === 'events/import'}>
                       {t('navbar.importableEvents')}
                     </Nav.Item>
                   </PermissionControl>

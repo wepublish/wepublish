@@ -12,9 +12,9 @@ fragment ImportabeEventRef on Event {
 # queries
 query ImportedEventList(
   $filter: ImportedEventFilter
-  $order: Float
-  $skip: Float
-  $take: Float
+  $order: Int
+  $skip: Int
+  $take: Int
   $sort: String
 ) {
   importedEvents(filter: $filter, order: $order, skip: $skip, take: $take, sort: $sort) {

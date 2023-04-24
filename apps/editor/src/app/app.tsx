@@ -353,7 +353,7 @@ export function App() {
             />
 
             <Route
-              path="importableevents"
+              path="events/import"
               element={
                 <Base>
                   <ImportableEventListView />
