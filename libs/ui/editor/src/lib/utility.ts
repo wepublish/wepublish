@@ -1,5 +1,6 @@
 import {PaymentPeriodicity, SortOrder} from '@wepublish/editor/api'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
+import {de, enUS, fr} from 'date-fns/locale'
 import nanoid from 'nanoid'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 
@@ -229,3 +230,19 @@ export function isValueConstructor<T>(value: T | (() => T)): value is () => T {
 export function isFunctionalUpdate<T>(value: React.SetStateAction<T>): value is (value: T) => T {
   return typeof value === 'function'
 }
+
+/**
+ * Helper function to read env variable IMG_MIN_SIZE_TO_COMPRESS
+ */
+export function getImgMinSizeToCompress(): number {
+  // const {imgMinSizeToCompress} = getSettings()
+  const imgMinSizeToCompress = 10 // todo
+
+  return imgMinSizeToCompress
+}
+
+export const AVAILABLE_LANG = [
+  {id: 'en', lang: 'en_US', name: 'English', locale: enUS},
+  {id: 'fr', lang: 'fr_FR', name: 'Français', locale: fr},
+  {id: 'de', lang: 'de_CH', name: 'Deutsch', locale: de}
+]

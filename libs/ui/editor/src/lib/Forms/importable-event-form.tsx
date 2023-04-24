@@ -9,11 +9,11 @@ import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Drawer, Form, Panel, SelectPicker} from 'rsuite'
 
-// import {ChooseEditImage} from '../../atoms/chooseEditImage'
-// import {DateTimePicker} from '../../atoms/dateTimePicker'
-// import {SelectTags} from '../../atoms/tag/selectTags'
-// import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
-// import {RichTextBlockValue} from '../../blocks/types'
+// import {ChooseEditImage} from '../../Atoms/chooseEditImage'
+// import {DateTimePicker} from '../../Atoms/dateTimePicker'
+// import {SelectTags} from '../../Atoms/tag/selectTags'
+import {RichTextBlock, SelectTags} from '@wepublish/ui/editor'
+// import {RichTextBlockValue} from '../../Blocks/types'
 // import {ImageEditPanel} from '../../panel/imageEditPanel'
 // import {ImageSelectPanel} from '../../panel/imageSelectPanel'
 
@@ -90,7 +90,7 @@ export const ImportableEventForm = ({event, onChange, create}: EventFormProps) =
                 name="description"
                 value={event.description || []}
                 // onChange={(description: RichTextBlockValue) => onChange({description})}
-                // accepter={RichTextBlock}
+                accepter={RichTextBlock}
               />
             </Panel>
           </Form.Group>
@@ -126,7 +126,7 @@ export const ImportableEventForm = ({event, onChange, create}: EventFormProps) =
               selectedTags={event.tagIds ?? []}
               setSelectedTags={(tagIds: string[]) => onChange({tagIds})}
               tagType={TagType.Event}
-              // accepter={SelectTags}
+              accepter={SelectTags}
             />
           </Form.Group>
 
