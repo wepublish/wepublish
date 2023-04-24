@@ -84,7 +84,8 @@ export const addPublicComment = async (
       userID: user?.user.id,
       authorType,
       state: CommentState.pendingApproval
-    }
+    },
+    include: {revisions: {orderBy: {createdAt: 'asc'}}}
   })
   return {...comment, title, text}
 }
@@ -100,7 +101,8 @@ export const updatePublicComment = async (
   const comment = await commentClient.findUnique({
     where: {
       id: input.id
-    }
+    },
+    include: {revisions: {orderBy: {createdAt: 'asc'}}}
   })
 
   if (!comment) return null
@@ -129,7 +131,8 @@ export const updatePublicComment = async (
         }
       },
       state: CommentState.pendingApproval
-    }
+    },
+    include: {revisions: {orderBy: {createdAt: 'asc'}}}
   })
 
   return {...updatedComment, text}
