@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'events-import-api',
+  displayName: 'events/import-api',
   preset: '../../../jest.preset.js',
   globals: {
     'ts-jest': {
