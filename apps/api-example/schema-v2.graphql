@@ -69,7 +69,7 @@ enum EventStatus {
 type ImportedEventDocument {
   nodes: [Event!]!
   pageInfo: PageInfo!
-  totalCount: Float!
+  totalCount: Int!
 }
 
 input ImportedEventFilter {
