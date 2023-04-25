@@ -86,7 +86,7 @@ export type ImportedEventDocument = {
   __typename?: 'ImportedEventDocument'
   nodes: Array<Event>
   pageInfo: PageInfo
-  totalCount: Scalars['Float']
+  totalCount: Scalars['Int']
 }
 
 export type ImportedEventFilter = {
@@ -216,10 +216,10 @@ export type QueryExpectedRevenueArgs = {
 
 export type QueryImportedEventsArgs = {
   filter?: InputMaybe<ImportedEventFilter>
-  order?: InputMaybe<Scalars['Float']>
-  skip?: InputMaybe<Scalars['Float']>
+  order?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']>
   sort?: InputMaybe<Scalars['String']>
-  take?: InputMaybe<Scalars['Float']>
+  take?: InputMaybe<Scalars['Int']>
 }
 
 export type QueryNewDeactivationsArgs = {

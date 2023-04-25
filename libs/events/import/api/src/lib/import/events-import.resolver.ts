@@ -1,4 +1,4 @@
-import {Args, Query, Resolver} from '@nestjs/graphql'
+import {Args, Int, Query, Resolver} from '@nestjs/graphql'
 import {ImportedEventFilter, ImportedEventDocument} from './events-import.model'
 import {EventsImportService} from './events-import.service'
 
@@ -14,9 +14,9 @@ export class EventsImportResolver {
   })
   importedEvents(
     @Args('filter', {nullable: true}) filter: ImportedEventFilter,
-    @Args('order', {nullable: true}) order: 1 | -1,
-    @Args('skip', {nullable: true}) skip: number,
-    @Args('take', {nullable: true}) take: number,
+    @Args('order', {nullable: true, type: () => Int}) order: 1 | -1,
+    @Args('skip', {nullable: true, type: () => Int}) skip: number,
+    @Args('take', {nullable: true, type: () => Int}) take: number,
     @Args('sort', {nullable: true}) sort: string
   ) {
     return this.events.importedEvents({filter, order, skip, take, sort})

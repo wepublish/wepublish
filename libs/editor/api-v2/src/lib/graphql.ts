@@ -86,7 +86,7 @@ export type ImportedEventDocument = {
   __typename?: 'ImportedEventDocument';
   nodes: Array<Event>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Float'];
+  totalCount: Scalars['Int'];
 };
 
 export type ImportedEventFilter = {
@@ -226,10 +226,10 @@ export type QueryExpectedRevenueArgs = {
 
 export type QueryImportedEventsArgs = {
   filter?: InputMaybe<ImportedEventFilter>;
-  order?: InputMaybe<Scalars['Float']>;
-  skip?: InputMaybe<Scalars['Float']>;
+  order?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<Scalars['String']>;
-  take?: InputMaybe<Scalars['Float']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -392,9 +392,9 @@ export type ImportabeEventRefFragment = { __typename?: 'Event', id: string, name
 
 export type ImportedEventListQueryVariables = Exact<{
   filter?: InputMaybe<ImportedEventFilter>;
-  order?: InputMaybe<Scalars['Float']>;
-  skip?: InputMaybe<Scalars['Float']>;
-  take?: InputMaybe<Scalars['Float']>;
+  order?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<Scalars['String']>;
 }>;
 
@@ -820,7 +820,7 @@ export type DeleteUserConsentMutationHookResult = ReturnType<typeof useDeleteUse
 export type DeleteUserConsentMutationResult = Apollo.MutationResult<DeleteUserConsentMutation>;
 export type DeleteUserConsentMutationOptions = Apollo.BaseMutationOptions<DeleteUserConsentMutation, DeleteUserConsentMutationVariables>;
 export const ImportedEventListDocument = gql`
-    query ImportedEventList($filter: ImportedEventFilter, $order: Float, $skip: Float, $take: Float, $sort: String) {
+    query ImportedEventList($filter: ImportedEventFilter, $order: Int, $skip: Int, $take: Int, $sort: String) {
   importedEvents(
     filter: $filter
     order: $order
