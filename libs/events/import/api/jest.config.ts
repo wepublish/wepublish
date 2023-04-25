@@ -1,7 +1,7 @@
 /* eslint-disable */
 export default {
   displayName: 'events/import-api',
-  preset: '../../../jest.preset.js',
+  preset: '../../../../jest.preset.js',
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json'
