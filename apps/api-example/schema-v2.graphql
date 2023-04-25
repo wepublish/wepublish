@@ -185,7 +185,7 @@ type Query {
         Returns a list of imported events from external sources, transformed to match our model.
       
   """
-  importedEvents(filter: ImportedEventFilter, order: Float, skip: Float, sort: String, take: Float): ImportedEventsDocument!
+  importedEvents(filter: ImportedEventFilter, order: Int, skip: Int, sort: String, take: Int): ImportedEventDocument!
 
   """
   
