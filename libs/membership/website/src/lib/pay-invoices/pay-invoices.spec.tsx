@@ -1,12 +1,14 @@
 import {render} from '@testing-library/react'
+import * as stories from './pay-invoices.stories'
+import {composeStories} from '@storybook/react'
 
-import {PayInvoices} from './pay-invoices'
+const storiesCmp = composeStories(stories)
 
-describe('PayInvoices', () => {
-  it('should render successfully', () => {
-    const {baseElement} = render(
-      <PayInvoices challenge={{data: undefined, error: undefined, loading: true}} />
-    )
-    expect(baseElement).toBeTruthy()
+describe('Pay Invoices', () => {
+  Object.entries(storiesCmp).forEach(([story, Component]) => {
+    it(`should render ${story}`, () => {
+      const {asFragment} = render(<Component />)
+      expect(asFragment()).toMatchSnapshot()
+    })
   })
 })

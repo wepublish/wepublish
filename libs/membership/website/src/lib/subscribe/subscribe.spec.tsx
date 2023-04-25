@@ -1,12 +1,14 @@
 import {render} from '@testing-library/react'
+import * as stories from './subscribe.stories'
+import {composeStories} from '@storybook/react'
 
-import {Subscribe} from './subscribe'
+const storiesCmp = composeStories(stories)
 
 describe('Subscribe', () => {
-  it('should render successfully', () => {
-    const {baseElement} = render(
-      <Subscribe challenge={{data: undefined, error: undefined, loading: true}} />
-    )
-    expect(baseElement).toBeTruthy()
+  Object.entries(storiesCmp).forEach(([story, Component]) => {
+    it(`should render ${story}`, () => {
+      const {asFragment} = render(<Component />)
+      expect(asFragment()).toMatchSnapshot()
+    })
   })
 })

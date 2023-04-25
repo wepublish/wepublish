@@ -1,10 +1,14 @@
 import {render} from '@testing-library/react'
+import * as stories from './member-plans.stories'
+import {composeStories} from '@storybook/react'
 
-import {MemberPlans} from './member-plans'
+const storiesCmp = composeStories(stories)
 
 describe('MemberPlans', () => {
-  it('should render successfully', () => {
-    const {baseElement} = render(<MemberPlans data={undefined} loading={true} error={undefined} />)
-    expect(baseElement).toBeTruthy()
+  Object.entries(storiesCmp).forEach(([story, Component]) => {
+    it(`should render ${story}`, () => {
+      const {asFragment} = render(<Component />)
+      expect(asFragment()).toMatchSnapshot()
+    })
   })
 })

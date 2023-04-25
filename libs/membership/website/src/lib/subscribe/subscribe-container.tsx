@@ -1,6 +1,6 @@
 import {MutationResult, QueryResult} from '@apollo/client'
 import {useUser} from '@wepublish/authentication/website'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {useWebsiteBuilder, BuilderContainerProps} from '@wepublish/website/builder'
 import {
   ChallengeQuery,
   MemberPlanListQuery,
@@ -23,12 +23,13 @@ export type SubscribeContainerProps = {
   onMemberPlansQuery?: (
     queryResult: Pick<QueryResult<MemberPlanListQuery>, 'data' | 'loading' | 'error' | 'refetch'>
   ) => void
-}
+} & BuilderContainerProps
 
 export const SubscribeContainer = ({
   onChallengeQuery,
   onMemberPlansQuery,
-  onSubscribeMutation
+  onSubscribeMutation,
+  className
 }: SubscribeContainerProps) => {
   const {hasUser, setToken} = useUser()
   const {Subscribe} = useWebsiteBuilder()
@@ -71,6 +72,7 @@ export const SubscribeContainer = ({
 
   return (
     <Subscribe
+      className={className}
       challenge={challenge}
       memberPlans={memberPlanList}
       subscribe={result}

@@ -1,5 +1,6 @@
 fragment FullPage on Page {
   id
+  slug
   blocks {
     __typename
 

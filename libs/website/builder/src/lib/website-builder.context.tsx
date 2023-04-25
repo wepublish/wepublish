@@ -1,19 +1,7 @@
-import {createContext, useContext, PropsWithChildren, memo, ComponentType, ReactNode} from 'react'
-import {BuilderNavbarProps} from './navbar.interface'
-import {BuilderButtonProps} from './button.interface'
-import {BuilderMemberPlansProps} from './member-plans.interface'
-import {BuilderSubscribeProps} from './subscribe.interface'
-import {BuilderPageProps} from './page.interface'
 import {mergeDeepRight} from 'ramda'
+import {ComponentType, createContext, memo, PropsWithChildren, ReactNode, useContext} from 'react'
 import {PartialDeep} from 'type-fest'
-import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
-import {
-  BuilderOrderedListProps,
-  BuilderUnorderedListProps,
-  BuilderListItemProps
-} from './lists.interface'
-import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
-import {BuilderFooterProps} from './footer.interface'
+import {BuilderArticleProps} from './article.interface'
 import {
   BuilderHTMLBlockProps,
   BuilderImageBlockProps,
@@ -22,8 +10,20 @@ import {
   BuilderTeaserGridFlexBlockProps,
   BuilderTitleBlockProps
 } from './blocks.interface'
-import {BuilderArticleProps} from './article.interface'
+import {BuilderButtonProps} from './button.interface'
+import {BuilderFooterProps} from './footer.interface'
+import {
+  BuilderListItemProps,
+  BuilderOrderedListProps,
+  BuilderUnorderedListProps
+} from './lists.interface'
+import {BuilderMemberPlansProps} from './member-plans.interface'
+import {BuilderNavbarProps} from './navbar.interface'
+import {BuilderPageProps} from './page.interface'
 import {BuilderPayInvoicesProps} from './pay-invoices.interface'
+import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
+import {BuilderSubscribeProps} from './subscribe.interface'
+import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
 
 const NoComponent = () => null
 

@@ -1,10 +1,14 @@
 import {render} from '@testing-library/react'
+import * as stories from './navbar.stories'
+import {composeStories} from '@storybook/react'
 
-import {Navbar} from './navbar'
+const storiesCmp = composeStories(stories)
 
 describe('Navbar', () => {
-  it('should render successfully', () => {
-    const {baseElement} = render(<Navbar data={undefined} loading={true} error={undefined} />)
-    expect(baseElement).toBeTruthy()
+  Object.entries(storiesCmp).forEach(([story, Component]) => {
+    it(`should render ${story}`, () => {
+      const {asFragment} = render(<Component />)
+      expect(asFragment()).toMatchSnapshot()
+    })
   })
 })

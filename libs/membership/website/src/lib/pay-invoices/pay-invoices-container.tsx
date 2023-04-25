@@ -1,5 +1,5 @@
 import {useUser} from '@wepublish/authentication/website'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {useWebsiteBuilder, BuilderContainerProps} from '@wepublish/website/builder'
 import {
   CheckInvoiceStatusQuery,
   useCheckInvoiceStatusLazyQuery,
@@ -9,9 +9,10 @@ import {
 } from '@wepublish/website/api'
 import {useEffect, useMemo, useState} from 'react'
 
-export type PayInvoicesContainerProps = {}
+export type PayInvoicesContainerProps = BuilderContainerProps
 
-export const PayInvoicesContainer = (props: PayInvoicesContainerProps) => {
+export const PayInvoicesContainer = ({className}: PayInvoicesContainerProps) => {
+  const {PayInvoices} = useWebsiteBuilder()
   const {user} = useUser()
   const [checkedInvoices, setCheckedInvoices] =
     useState<CheckInvoiceStatusQuery['checkInvoiceStatus'][]>()
@@ -43,8 +44,6 @@ export const PayInvoicesContainer = (props: PayInvoicesContainerProps) => {
     }
   })
 
-  const {PayInvoices} = useWebsiteBuilder()
-
   useEffect(() => {
     if (user) {
       getInvoices()
@@ -75,6 +74,7 @@ export const PayInvoicesContainer = (props: PayInvoicesContainerProps) => {
 
   return (
     <PayInvoices
+      className={className}
       invoices={invoices as any}
       pay={result}
       onSubmit={data =>

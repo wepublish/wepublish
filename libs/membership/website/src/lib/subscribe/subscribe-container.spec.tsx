@@ -1,16 +1,23 @@
-import {render} from '@testing-library/react'
-
-import {SubscribeContainer} from './subscribe-container'
 import {MockedProvider} from '@apollo/client/testing'
+import {composeStories} from '@storybook/react'
+import {render} from '@testing-library/react'
+import {actWait} from '@wepublish/testing'
+import * as stories from './subscribe-container.stories'
 
-describe('SubscribeContainer', () => {
-  it('should render successfully', () => {
-    const {baseElement} = render(
-      <MockedProvider addTypename={false}>
-        <SubscribeContainer />
-      </MockedProvider>
-    )
+const storiesCmp = composeStories(stories)
 
-    expect(baseElement).toBeTruthy()
+describe('Subscribe Container', () => {
+  Object.entries(storiesCmp).forEach(([story, Component]) => {
+    it(`should render ${story}`, async () => {
+      const {asFragment} = render(
+        <MockedProvider {...Component.parameters?.apolloClient}>
+          <Component />
+        </MockedProvider>
+      )
+
+      await actWait()
+
+      expect(asFragment()).toMatchSnapshot()
+    })
   })
 })

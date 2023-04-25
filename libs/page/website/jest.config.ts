@@ -6,5 +6,6 @@ export default {
     '^.+\\.[tj]sx?$': ['@swc/jest', {jsc: {transform: {react: {runtime: 'automatic'}}}}]
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../coverage/libs/page/website'
+  coverageDirectory: '../../../coverage/libs/page/website',
+  setupFiles: ['./setup-tests.tsx']
 }

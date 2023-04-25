@@ -64,7 +64,7 @@ export function Footer({className, data, loading, error, children}: FooterProps)
         {children}
 
         <FooterLinks>
-          {data?.navigation?.links.map((link, index) => {
+          {data?.navigation?.links?.map((link, index) => {
             const url = navigationLinkToUrl(link)
 
             return (

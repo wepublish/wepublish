@@ -6,6 +6,7 @@ import {isQuoteBlock} from './quote-block'
 import {isRichTextBlock} from './richtext-block'
 import {isTeaserGridFlexBlock} from './teaser-grid-flex-block'
 import {isTitleBlock} from './title-block'
+import {cond} from 'ramda'
 
 export type BlockProp = {
   block: BlockType
@@ -14,31 +15,14 @@ export type BlockProp = {
 export const Block = ({block}: BlockProp) => {
   const {blocks} = useWebsiteBuilder()
 
-  if (isTitleBlock(block)) {
-    return <blocks.Title {...block} />
-  }
-
-  if (isImageBlock(block)) {
-    return <blocks.Image {...block} />
-  }
-
-  if (isQuoteBlock(block)) {
-    return <blocks.Quote {...block} />
-  }
-
-  if (isRichTextBlock(block)) {
-    return <blocks.RichText {...block} />
-  }
-
-  if (isHtmlBlock(block)) {
-    return <blocks.HTML {...block} />
-  }
-
-  if (isTeaserGridFlexBlock(block)) {
-    return <blocks.TeaserGridFlex {...block} />
-  }
-
-  return null
+  return cond([
+    [isTitleBlock, block => <blocks.Title {...block} />],
+    [isImageBlock, block => <blocks.Image {...block} />],
+    [isQuoteBlock, block => <blocks.Quote {...block} />],
+    [isRichTextBlock, block => <blocks.RichText {...block} />],
+    [isHtmlBlock, block => <blocks.HTML {...block} />],
+    [isTeaserGridFlexBlock, block => <blocks.TeaserGridFlex {...block} />]
+  ])(block)
 }
 
 export type BlocksProp = {

@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Title Block should render Default 1`] = `
+<DocumentFragment>
+  <div
+    class="css-1glohcq"
+  >
+    <h1
+      class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
+    >
+      This is a title
+    </h1>
+    <p
+      class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+    >
+      This is a lead
+    </p>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Title Block should render WithClassName 1`] = `
+<DocumentFragment>
+  <div
+    class="extra-classname css-1glohcq"
+  >
+    <h1
+      class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
+    >
+      This is a title
+    </h1>
+    <p
+      class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+    >
+      This is a lead
+    </p>
+  </div>
+</DocumentFragment>
+`;

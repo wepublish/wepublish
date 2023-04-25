@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MemberPlans should render Default 1`] = `
+<DocumentFragment>
+  <div
+    class="css-bdz642"
+  >
+    <h1>
+      Welcome to MemberPlans!
+    </h1>
+  </div>
+</DocumentFragment>
+`;

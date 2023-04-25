@@ -1,0 +1,110 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Footer should render Default 1`] = `
+<DocumentFragment>
+  <footer
+    class="css-vtn3aj"
+  >
+    <div
+      class="MuiContainer-root MuiContainer-maxWidthLg css-1ezpp1g-MuiContainer-root"
+    >
+      <svg
+        height="50"
+        style="justify-self: center;"
+        viewBox="0 0 100 100"
+        width="50"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle
+          cx="50"
+          cy="50"
+          fill="#fff"
+          r="50"
+        />
+      </svg>
+      <nav
+        class="css-1hew1jc"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          href="/"
+        >
+          Home
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          href="/a/impressum"
+        >
+          Impressum
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          href="https://google.com"
+        >
+          FAQ
+        </a>
+      </nav>
+    </div>
+  </footer>
+</DocumentFragment>
+`;
+
+exports[`Footer should render WithError 1`] = `
+<DocumentFragment>
+  <footer
+    class="css-vtn3aj"
+  >
+    <div
+      class="MuiContainer-root MuiContainer-maxWidthLg css-1ezpp1g-MuiContainer-root"
+    >
+      <svg
+        height="50"
+        style="justify-self: center;"
+        viewBox="0 0 100 100"
+        width="50"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle
+          cx="50"
+          cy="50"
+          fill="#fff"
+          r="50"
+        />
+      </svg>
+      <nav
+        class="css-1hew1jc"
+      />
+    </div>
+  </footer>
+</DocumentFragment>
+`;
+
+exports[`Footer should render WithLoading 1`] = `
+<DocumentFragment>
+  <footer
+    class="css-vtn3aj"
+  >
+    <div
+      class="MuiContainer-root MuiContainer-maxWidthLg css-1ezpp1g-MuiContainer-root"
+    >
+      <svg
+        height="50"
+        style="justify-self: center;"
+        viewBox="0 0 100 100"
+        width="50"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle
+          cx="50"
+          cy="50"
+          fill="#fff"
+          r="50"
+        />
+      </svg>
+      <nav
+        class="css-1hew1jc"
+      />
+    </div>
+  </footer>
+</DocumentFragment>
+`;

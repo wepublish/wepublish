@@ -12,7 +12,15 @@ export const ImageBlockWrapper = styled('figure')`
 
 export const ImageBlock = ({caption, image, className}: BuilderImageBlockProps) => (
   <ImageBlockWrapper className={className}>
-    {image?.url && <img width={image.width} height={image.height} src={image.url} />}
+    {image?.url && (
+      <img
+        alt={image.description ?? image.title ?? image.filename ?? ''}
+        title={image.title ?? ''}
+        width={image.width}
+        height={image.height}
+        src={image.url}
+      />
+    )}
 
     <figcaption>{caption}</figcaption>
   </ImageBlockWrapper>

@@ -4,11 +4,21 @@ import {createContext, Dispatch, SetStateAction, useContext} from 'react'
 export const AuthTokenStorageKey = 'auth.token'
 
 export const SessionTokenContext = createContext<
-  [User | null, boolean, Dispatch<SetStateAction<UserSession | null>>]
->(null!)
+  [User | null, boolean, Dispatch<SetStateAction<UserSession | null>>] | null
+>(null)
+
+const useSessionContext = () => {
+  const context = useContext(SessionTokenContext)
+
+  if (!context) {
+    throw new Error('SessionTokenContext has not been provided.')
+  }
+
+  return context
+}
 
 export const useUser = () => {
-  const [user, hasUser, setToken] = useContext(SessionTokenContext)
+  const [user, hasUser, setToken] = useSessionContext()
 
   const logout = async () => {
     setToken(null)
