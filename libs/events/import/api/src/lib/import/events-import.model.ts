@@ -1,4 +1,4 @@
-import {Field, ObjectType, InputType, registerEnumType} from '@nestjs/graphql'
+import {Field, ObjectType, InputType, registerEnumType, Int} from '@nestjs/graphql'
 import {EventStatus} from '@prisma/client'
 
 export enum Providers {
@@ -78,7 +78,7 @@ export class ImportedEventsDocument {
   @Field(type => [Event])
   nodes!: Event[]
 
-  @Field()
+  @Field(type => Int)
   totalCount!: number
 
   @Field()

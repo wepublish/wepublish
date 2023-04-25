@@ -73,7 +73,7 @@ input ImportedEventFilter {
 type ImportedEventsDocument {
   nodes: [Event!]!
   pageInfo: PageInfo!
-  totalCount: Float!
+  totalCount: Int!
 }
 
 type Mutation {
