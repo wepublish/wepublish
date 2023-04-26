@@ -24,11 +24,10 @@ export interface CommentData {
   readonly modifiedAt: Date
 
   readonly overriddenRatings?: CommentRatingOverride[] | null
+  readonly revisions: CommentRevision[]
 }
 
 export interface Comment extends CommentData {
-  readonly revisions: CommentRevision[]
-
   readonly state: CommentState
 
   readonly rejectionReason?: CommentRejectionReason | null
