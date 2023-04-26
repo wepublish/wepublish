@@ -166,6 +166,13 @@ const seedSettings = (prisma: PrismaClient) => [
       name: SettingName.COMMENT_CHAR_LIMIT,
       value: 1000,
       settingRestriction: {allowedValues: {minValue: 0, maxValue: 10000}}
+      name: SettingName.ALLOW_COMMENT_EDITING
+    },
+    update: {},
+    create: {
+      name: SettingName.ALLOW_COMMENT_EDITING,
+      value: false,
+      settingRestriction: {allowedValues: {boolChoice: true}}
     }
   })
 ]

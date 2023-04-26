@@ -1292,6 +1292,7 @@
       "peering": "Peering",
       "payment": "Payment",
       "allowGuestCommentRating": "Allow guest ratings on comments",
+      "allowCommentEditing": "Allow comment editing",
       "polls": "Polls",
       "guestPollVote": "Allow guest votes on polls",
       "memberships": "Memberships",
@@ -1307,6 +1308,7 @@
       "warnings": {
         "guestCommenting": "Allow guest visitors (not logged in) to write and publish comments to articles.",
         "guestCommentRating": "Allow guest visitors (not logged in) to rate other people's comments.",
+        "allowCommentEditing": "Allow users to edit their comments",
         "guestPollVote": "Allow guest visitors (not logged in) to take a vote in polls.",
         "loginMinutes": "How long (in minutes) the link sent via email to create account will be valid. Defaults to one week (10080 / 60 / 24).",
         "passwordToken": "How long (in minutes) the link sent via email to reset password will be valid. Defaults to one day (1440 / 60 / 24).",

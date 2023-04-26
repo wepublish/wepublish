@@ -175,6 +175,10 @@ function SettingList() {
       value: 0,
       name: SettingName.CommentCharLimit,
       label: 'settingList.commentCharLimit'
+    [SettingName.AllowCommentEditing]: {
+      value: false,
+      name: SettingName.AllowCommentEditing,
+      label: 'settingList.allowCommentEditing'
     }
   } as Record<SettingName, SettingWithLabel>)
 
@@ -412,6 +416,23 @@ function SettingList() {
                           }
                         />
                       </InputGroup>
+                    {/* Allow editing of a comment */}
+                    <Form.Group controlId={SettingName.AllowCommentEditing}>
+                      <Form.ControlLabel>
+                        {t(settings[SettingName.AllowCommentEditing].label)}
+                        <SettingInfo text={t('settingList.warnings.allowCommentEditing')} />
+                      </Form.ControlLabel>
+
+                      <Toggle
+                        disabled={isDisabled}
+                        checked={settings[SettingName.AllowCommentEditing].value}
+                        onChange={checked =>
+                          setSetting({
+                            ...settings[SettingName.AllowCommentEditing],
+                            value: checked
+                          })
+                        }
+                      />
                     </Form.Group>
                   </Panel>
                 </Col>

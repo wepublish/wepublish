@@ -22,7 +22,9 @@ export enum SettingName {
 
   MAKE_EXPECTED_REVENUE_API_PUBLIC = 'makeExpectedRevenueApiPublic',
   MAKE_REVENUE_API_PUBLIC = 'makeRevenueApiPublic',
-  COMMENT_CHAR_LIMIT = 'commentCharLimit'
+  COMMENT_CHAR_LIMIT = 'commentCharLimit',
+
+  ALLOW_COMMENT_EDITING = 'allowCommentEditing'
 }
 
 export type SettingInput<T = unknown> = Pick<Setting<T>, 'value'>
