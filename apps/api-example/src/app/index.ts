@@ -3,6 +3,7 @@ import {
   AlgebraicCaptchaChallenge,
   JobType,
   KarmaMediaAdapter,
+  MailchimpMailProvider,
   MailgunMailProvider,
   Oauth2Provider,
   PayrexxPaymentProvider,
@@ -74,13 +75,13 @@ export async function runServer(app?: Application | undefined) {
   if (
     process.env.MAILGUN_API_KEY &&
     process.env.MAILGUN_BASE_DOMAIN &&
-    process.env.MAILGUN_MAIL_DOMAIN &&
-    process.env.MAILGUN_WEBHOOK_SECRET
+    process.env.MAILGUN_MAIL_DOMAIN
   ) {
     mailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
-      fromAddress: 'dev@wepublish.ch',
+      fromAddress:
+        process.env.MAILGUN_FROM_ADDRESS || process.env.DEFAULT_FROM_ADDRESS || 'dev@wepublish.ch',
       webhookEndpointSecret: process.env.MAILGUN_WEBHOOK_SECRET,
       baseDomain: process.env.MAILGUN_BASE_DOMAIN,
       mailDomain: process.env.MAILGUN_MAIL_DOMAIN,
@@ -88,18 +89,21 @@ export async function runServer(app?: Application | undefined) {
       incomingRequestHandler: bodyParser.json()
     })
   }
-  // left here intentionally for testing
-  /* if (process.env.MAILCHIMP_API_KEY && process.env.MAILCHIMP_WEBHOOK_SECRET) {
+
+  if (process.env.MAILCHIMP_API_KEY) {
     mailProvider = new MailchimpMailProvider({
       id: 'mailchimp',
       name: 'Mailchimp',
-      fromAddress: 'dev@wepublish.ch',
+      fromAddress:
+        process.env.MAILCHIMP_FROM_ADDRESS ||
+        process.env.DEFAULT_FROM_ADDRESS ||
+        'dev@wepublish.ch',
       webhookEndpointSecret: process.env.MAILCHIMP_WEBHOOK_SECRET,
       apiKey: process.env.MAILCHIMP_API_KEY,
       baseURL: '',
       incomingRequestHandler: bodyParser.urlencoded({extended: true})
     })
-  } */
+  }
 
   if (process.env.SLACK_DEV_MAIL_WEBHOOK_URL) {
     mailProvider = new SlackMailProvider({
@@ -222,8 +226,8 @@ export async function runServer(app?: Application | undefined) {
       oauth2Providers,
       mailProvider,
       mailContextOptions: {
-        defaultFromAddress: process.env.DEFAULT_FROM_ADDRESS ?? 'dev@wepublish.ch',
-        defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch',
+        defaultFromAddress: process.env.DEFAULT_FROM_ADDRESS || 'dev@wepublish.ch',
+        defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS || 'reply-to@wepublish.ch',
         mailTemplateMaps: [
           {
             type: SendMailType.LoginLink,
@@ -272,10 +276,7 @@ export async function runServer(app?: Application | undefined) {
             local: true
           }
         ],
-        mailTemplatesPath:
-          process.env.NODE_ENV === 'production'
-            ? path.resolve('apps', 'api-example', 'templates', 'emails')
-            : path.resolve('templates', 'emails')
+        mailTemplatesPath: path.resolve('apps', 'api-example', 'templates', 'emails')
       },
       paymentProviders,
       urlAdapter: new ExampleURLAdapter({websiteURL}),
