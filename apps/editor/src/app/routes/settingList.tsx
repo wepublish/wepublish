@@ -175,6 +175,7 @@ function SettingList() {
       value: 0,
       name: SettingName.CommentCharLimit,
       label: 'settingList.commentCharLimit'
+    },
     [SettingName.AllowCommentEditing]: {
       value: false,
       name: SettingName.AllowCommentEditing,
@@ -397,6 +398,26 @@ function SettingList() {
                       />
                     </Form.Group>
 
+                    {/* Allow editing of a comment */}
+                    <Form.Group controlId={SettingName.AllowCommentEditing}>
+                      <Form.ControlLabel>
+                        {t(settings[SettingName.AllowCommentEditing].label)}
+                        <SettingInfo text={t('settingList.warnings.allowCommentEditing')} />
+                      </Form.ControlLabel>
+
+                      <Toggle
+                        disabled={isDisabled}
+                        checked={settings[SettingName.AllowCommentEditing].value}
+                        onChange={checked =>
+                          setSetting({
+                            ...settings[SettingName.AllowCommentEditing],
+                            value: checked
+                          })
+                        }
+                      />
+                    </Form.Group>
+
+                    {/* Comment char limit */}
                     <Form.Group controlId={SettingName.CommentCharLimit}>
                       <Form.ControlLabel>
                         {t(settings[SettingName.CommentCharLimit].label)}
@@ -416,23 +437,6 @@ function SettingList() {
                           }
                         />
                       </InputGroup>
-                    {/* Allow editing of a comment */}
-                    <Form.Group controlId={SettingName.AllowCommentEditing}>
-                      <Form.ControlLabel>
-                        {t(settings[SettingName.AllowCommentEditing].label)}
-                        <SettingInfo text={t('settingList.warnings.allowCommentEditing')} />
-                      </Form.ControlLabel>
-
-                      <Toggle
-                        disabled={isDisabled}
-                        checked={settings[SettingName.AllowCommentEditing].value}
-                        onChange={checked =>
-                          setSetting({
-                            ...settings[SettingName.AllowCommentEditing],
-                            value: checked
-                          })
-                        }
-                      />
                     </Form.Group>
                   </Panel>
                 </Col>
