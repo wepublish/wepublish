@@ -170,6 +170,11 @@ function SettingList() {
       value: false,
       name: SettingName.MakeRevenueApiPublic,
       label: 'settingList.revenueApiPublic'
+    },
+    [SettingName.CommentCharLimit]: {
+      value: 0,
+      name: SettingName.CommentCharLimit,
+      label: 'settingList.commentCharLimit'
     }
   } as Record<SettingName, SettingWithLabel>)
 
@@ -276,6 +281,16 @@ function SettingList() {
           min: settings[SettingName.InvoiceReminderFreq].settingRestriction?.minValue ?? 0,
           max: settings[SettingName.InvoiceReminderFreq].settingRestriction?.maxValue ?? 30
         })
+      ),
+    [SettingName.CommentCharLimit]: NumberType()
+      .isRequired(t('errorMessages.required'))
+      .range(
+        settings[SettingName.CommentCharLimit].settingRestriction?.minValue ?? 0,
+        settings[SettingName.CommentCharLimit].settingRestriction?.maxValue ?? 10000,
+        t('errorMessages.invalidRange', {
+          min: settings[SettingName.CommentCharLimit].settingRestriction?.minValue ?? 0,
+          max: settings[SettingName.CommentCharLimit].settingRestriction?.maxValue ?? 10000
+        })
       )
   })
 
@@ -376,6 +391,27 @@ function SettingList() {
                           })
                         }
                       />
+                    </Form.Group>
+
+                    <Form.Group controlId={SettingName.CommentCharLimit}>
+                      <Form.ControlLabel>
+                        {t(settings[SettingName.CommentCharLimit].label)}
+                        <SettingInfo text={t('settingList.warnings.commentCharLimit')} />
+                      </Form.ControlLabel>
+
+                      <InputGroup>
+                        <FormControl
+                          name={SettingName.CommentCharLimit}
+                          accepter={InputNumber}
+                          value={settings[SettingName.CommentCharLimit].value}
+                          onChange={(value: string) =>
+                            setSetting({
+                              ...settings[SettingName.CommentCharLimit],
+                              value: +value
+                            })
+                          }
+                        />
+                      </InputGroup>
                     </Form.Group>
                   </Panel>
                 </Col>
