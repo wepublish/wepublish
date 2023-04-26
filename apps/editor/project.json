@@ -66,7 +66,8 @@
         "assets": ["apps/editor/src/assets"],
         "styles": [],
         "scripts": [],
-        "webpackConfig": "@nrwl/react/plugins/webpack"
+        "webpackConfig": "apps/editor/webpack.config.js",
+        "isolatedConfig": true
       },
       "configurations": {
         "development": {
@@ -104,7 +105,8 @@
         "externalDependencies": "all",
         "generatePackageJson": true,
         "outputHashing": "none",
-        "webpackConfig": "@nrwl/react/plugins/webpack"
+        "webpackConfig": "apps/editor/webpack.config.js",
+        "isolatedConfig": true
       },
       "configurations": {
         "development": {

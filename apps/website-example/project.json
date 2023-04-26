@@ -66,7 +66,8 @@
         "assets": ["apps/website-example/src/assets"],
         "styles": [],
         "scripts": [],
-        "webpackConfig": "apps/website-example/webpack.config.js"
+        "webpackConfig": "apps/website-example/webpack.config.js",
+        "isolatedConfig": true
       },
       "configurations": {
         "development": {
@@ -104,7 +105,8 @@
         "externalDependencies": "all",
         "generatePackageJson": true,
         "outputHashing": "none",
-        "webpackConfig": "@nrwl/react/plugins/webpack"
+        "webpackConfig": "apps/website-example/webpack.config.js",
+        "isolatedConfig": true
       },
       "configurations": {
         "development": {

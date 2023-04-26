@@ -1,6 +1,9 @@
+const {composePlugins, withNx} = require('@nrwl/webpack')
+const {withReact} = require('@nrwl/react')
 const {merge} = require('webpack-merge')
 
-module.exports = (config, context) => {
+// Nx plugins for webpack.
+module.exports = composePlugins(withNx(), withReact(), (config, {options, context}) => {
   return merge(config, {
     resolve: {
       fallback: {
@@ -14,4 +17,4 @@ module.exports = (config, context) => {
       }
     }
   })
-}
+})

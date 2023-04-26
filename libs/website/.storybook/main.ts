@@ -4,7 +4,6 @@ export default {
   ...rootMain,
   core: {...rootMain.core, builder: 'webpack5'},
   stories: [
-    ...rootMain.stories,
     '../../**/website/src/lib/**/*.stories.mdx',
     '../../**/website/src/lib/**/*.stories.@(js|jsx|ts|tsx)'
   ],

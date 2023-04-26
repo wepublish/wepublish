@@ -1,5 +1,4 @@
 export default {
-  stories: [],
   addons: [
     '@storybook/addon-essentials',
     'storybook-addon-apollo-client',

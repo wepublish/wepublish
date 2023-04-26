@@ -35,14 +35,14 @@
       "@wepublish/permissions/api": ["libs/permissions/api/src/index.ts"],
       "@wepublish/richtext/website": ["libs/richtext/website/src/index.ts"],
       "@wepublish/settings/api": ["libs/settings/api/src/index.ts"],
+      "@wepublish/storybook": ["tools/storybook/index.tsx"],
       "@wepublish/testing": ["libs/testing/src/index.ts"],
       "@wepublish/ui": ["libs/ui/src/index.ts"],
       "@wepublish/user/api": ["libs/user/api/src/index.ts"],
       "@wepublish/website": ["libs/website/src/index.ts"],
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
       "@wepublish/website/api-v2": ["libs/website/api-v2/src/index.ts"],
-      "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],
-      "@wepublish/storybook": ["tools/storybook/index.tsx"]
+      "@wepublish/website/builder": ["libs/website/builder/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
