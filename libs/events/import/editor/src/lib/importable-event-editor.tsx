@@ -4,6 +4,7 @@ import {
   ImageRefFragment,
   MutationCreateEventArgs,
   stripTypename,
+  useCreateEventMutation,
   useEventQuery,
   useUpdateEventMutation
 } from '@wepublish/editor/api'
@@ -25,12 +26,20 @@ const onErrorToast = (error: ApolloError) => {
   )
 }
 
-const mapApiDataToInput = (event: ImportabeEventRefFragment) => ({
-  ...stripTypename(event)
-  // description: event.description as
-  // imageId: event.image?.id,
-  // tagIds: event.tags?.map(tag => tag.id)
-  // ...event
+// const mapApiDataToInput = (event: ImportabeEventRefFragment) => ({
+//   ...stripTypename(event)
+//   // description: event.description as
+//   // imageId: event.image?.id,
+//   // tagIds: event.tags?.map(tag => tag.id)
+//   // ...event
+// })
+
+const mapApiDataToInput = (
+  event: EventRefFragment
+): MutationCreateEventArgs & {image?: ImageRefFragment | null} => ({
+  ...stripTypename(event),
+  imageId: event.image?.id,
+  tagIds: event.tags?.map(tag => tag.id)
 })
 
 export const ImportableEventEditor = () => {
@@ -44,13 +53,16 @@ export const ImportableEventEditor = () => {
 
   // todo use MutationCreateEventArgs?
   const [event, setEvent] = useState({
+    name: '',
     id: eventId,
+    externalSourceId: eventId,
+    externalSourceName: 'AgendaBasel', // todo
     startsAt: ''
-  })
+  } as MutationCreateEventArgs & {image?: ImageRefFragment | null})
 
   const [shouldClose, setShouldClose] = useState(false)
 
-  const {data, loading} = useImportedEventQuery({
+  const {loading: dataLoading} = useImportedEventQuery({
     client,
     fetchPolicy: 'no-cache',
     variables: {
@@ -67,6 +79,22 @@ export const ImportableEventEditor = () => {
     }
   })
 
+  console.log('event.description', event.description)
+
+  // const prepareDescription = {...event.description, }
+  // event?.description[0] && event.description[0].type: 'paragraph'
+
+  const [createEvent, {loading: createLoading}] = useCreateEventMutation({
+    onError: onErrorToast,
+    onCompleted: event => {
+      if (shouldClose) {
+        navigate(closePath)
+      } else {
+        navigate(`/events/edit/${event.createEvent?.id}`)
+      }
+    }
+  })
+  console.log('createLoading', createLoading)
   // const {loading: dataLoading} = useEventQuery({
   //   variables: {
   //     id: eventId
@@ -95,8 +123,8 @@ export const ImportableEventEditor = () => {
   // const loading = dataLoading || updateLoading
 
   const onSubmit = () => {
-    // const {image, ...eventWithoutImage} = event!
-    // updateEvent({variables: eventWithoutImage})
+    const {image, ...eventWithoutImage} = event!
+    createEvent({variables: eventWithoutImage})
   }
 
   const {StringType, DateType} = Schema.Types
@@ -107,7 +135,7 @@ export const ImportableEventEditor = () => {
     endsAt: DateType().min(new Date(event.startsAt ?? new Date()))
   })
 
-  console.log('data', data)
+  // console.log('data', data)
   console.log('event dupa', event)
 
   return (
@@ -115,10 +143,10 @@ export const ImportableEventEditor = () => {
       fluid
       formValue={event || {}}
       model={validationModel}
-      disabled={loading}
+      disabled={dataLoading}
       onSubmit={validationPassed => validationPassed && onSubmit()}>
       <ModelTitle
-        loading={loading}
+        loading={dataLoading}
         title={t('importableEvent.editTitle')}
         loadingTitle={t('importableEvent.editTitle')}
         saveBtnTitle={t('save')}

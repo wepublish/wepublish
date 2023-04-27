@@ -1,4 +1,5 @@
 import {Field, ObjectType, InputType, registerEnumType, Int} from '@nestjs/graphql'
+import GraphQLJSON from 'graphql-type-json'
 
 export enum Providers {
   AgendaBasel = 'AgendaBasel'
@@ -32,6 +33,12 @@ registerEnumType(EventStatus, {
   name: 'EventStatus'
 })
 
+// @ObjectType()
+// export class RichTextNode {
+//   @Field(type => any)
+//   children?: any
+// }
+
 @ObjectType()
 export class PageInfo {
   @Field()
@@ -61,8 +68,8 @@ export class Event {
   @Field()
   name!: string
 
-  @Field()
-  description!: string
+  @Field(type => GraphQLJSON)
+  description?: JSON
 
   @Field(type => EventStatus)
   status!: EventStatus

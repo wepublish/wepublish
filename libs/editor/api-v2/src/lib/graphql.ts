@@ -17,6 +17,8 @@ export type Scalars = {
   Float: number;
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: string;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSON: any;
 };
 
 export type Consent = {
@@ -64,7 +66,7 @@ export type DashboardSubscription = {
 export type Event = {
   __typename?: 'Event';
   createdAt: Scalars['DateTime'];
-  description: Scalars['String'];
+  description: Scalars['JSON'];
   endsAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['String'];
   imageId: Scalars['String'];
@@ -76,10 +78,10 @@ export type Event = {
 };
 
 export enum EventStatus {
-  Cancelled = 'Cancelled',
-  Postponed = 'Postponed',
-  Rescheduled = 'Rescheduled',
-  Scheduled = 'Scheduled'
+  Cancelled = 'CANCELLED',
+  Postponed = 'POSTPONED',
+  Rescheduled = 'RESCHEDULED',
+  Scheduled = 'SCHEDULED'
 }
 
 export type ImportedEventFilter = {
@@ -166,8 +168,7 @@ export enum PaymentPeriodicity {
 }
 
 export enum Providers {
-  AgendaBasel = 'AgendaBasel',
-  SomeOtherProvider = 'SomeOtherProvider'
+  AgendaBasel = 'AgendaBasel'
 }
 
 export type Query = {
@@ -405,7 +406,7 @@ export type DeleteUserConsentMutationVariables = Exact<{
 
 export type DeleteUserConsentMutation = { __typename?: 'Mutation', deleteUserConsent: { __typename?: 'UserConsent', id: string } };
 
-export type ImportabeEventRefFragment = { __typename?: 'Event', id: string, name: string, description: string, status: EventStatus, location: string, modifiedAt: string, startsAt: string, endsAt?: string | null };
+export type ImportabeEventRefFragment = { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, modifiedAt: string, startsAt: string, endsAt?: string | null };
 
 export type ImportedEventListQueryVariables = Exact<{
   filter?: InputMaybe<ImportedEventFilter>;
@@ -416,13 +417,14 @@ export type ImportedEventListQueryVariables = Exact<{
 }>;
 
 
-export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'ImportedEventsDocument', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description: string, status: EventStatus, location: string, modifiedAt: string, startsAt: string, endsAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor: string, endCursor: string, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'ImportedEventsDocument', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, modifiedAt: string, startsAt: string, endsAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor: string, endCursor: string, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type ImportedEventQueryVariables = Exact<{
   filter: SingleEventFilter;
 }>;
 
-export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: string, status: EventStatus, location: string, modifiedAt: string, startsAt: string, endsAt?: string | null } };
+
+export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, modifiedAt: string, startsAt: string, endsAt?: string | null } };
 
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 

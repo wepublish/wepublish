@@ -4,6 +4,8 @@ fragment EventRef on Event {
   description
   status
   location
+  externalSourceId
+  externalSourceName
   image {
     ...ImageRef
   }
@@ -53,6 +55,8 @@ mutation CreateEvent(
   $endsAt: DateTime
   $imageId: ID
   $tagIds: [ID!]
+  $externalSourceId: String
+  $externalSourceName: String
 ) {
   createEvent(
     name: $name
@@ -62,6 +66,8 @@ mutation CreateEvent(
     endsAt: $endsAt
     imageId: $imageId
     tagIds: $tagIds
+    externalSourceId: $externalSourceId
+    externalSourceName: $externalSourceName
   ) {
     ...EventRef
   }

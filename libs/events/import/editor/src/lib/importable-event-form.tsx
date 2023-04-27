@@ -5,7 +5,7 @@ import {
   MutationUpdateEventArgs,
   TagType
 } from '@wepublish/editor/api'
-import {htmlToSlate} from 'slate-serializers'
+// import {htmlToSlate} from 'slate-serializers'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Drawer, Form, Panel, SelectPicker} from 'rsuite'
@@ -45,8 +45,8 @@ export const ImportableEventForm = ({event, onChange, create}: EventFormProps) =
   //   new DOMParser().parseFromString(event.description as any, 'text/html')
   // )
 
-  const serializedToSlate = htmlToSlate(event.description ? event.description : ('' as any))
-  console.log('serializedToSlate', serializedToSlate)
+  // const serializedToSlate = htmlToSlate(event.description ? event.description : ('' as any))
+  // console.log('serializedToSlate', serializedToSlate)
 
   return (
     <>
@@ -103,8 +103,8 @@ export const ImportableEventForm = ({event, onChange, create}: EventFormProps) =
             <Panel bordered>
               <Form.Control
                 name="description"
-                value={serializedToSlate || []}
-                // value={event.description || []}
+                // value={serializedToSlate || []}
+                value={event.description || []}
                 onChange={(description: RichTextBlockValue) => onChange({description})}
                 accepter={RichTextBlock}
               />
