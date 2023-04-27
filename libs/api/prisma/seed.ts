@@ -156,6 +156,17 @@ const seedSettings = (prisma: PrismaClient) => [
       value: false,
       settingRestriction: {allowedValues: {boolChoice: true}}
     }
+  }),
+  prisma.setting.upsert({
+    where: {
+      name: SettingName.ALLOW_COMMENT_EDITING
+    },
+    update: {},
+    create: {
+      name: SettingName.ALLOW_COMMENT_EDITING,
+      value: false,
+      settingRestriction: {allowedValues: {boolChoice: true}}
+    }
   })
 ]
 
