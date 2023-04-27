@@ -172,6 +172,7 @@ export function DateTimePicker({
               margin-bottom: 10px;
               width: unset;
               input {
+                background-color: white;
                 outline: none;
                 padding: 7px;
                 border-radius: 5px;
