@@ -7,7 +7,7 @@ import {Drawer, IconButton, Panel as RPanel} from 'rsuite'
 
 import {BlockProps} from '../Atoms/blockList'
 import {PlaceholderInput} from '../Atoms/placeholderInput'
-import {HtmlEditPanel} from '../panel/htmlEditPanel'
+import {HtmlEditPanel} from '../Panel/htmlEditPanel'
 import {HTMLBlockValue} from './types'
 
 const Panel = styled(RPanel)<{isEmpty: boolean}>`

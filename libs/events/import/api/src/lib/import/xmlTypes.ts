@@ -5,7 +5,9 @@ type XMLEventOrigin = {
   lastUpdate: string
   languageCode: string
   startDate: string
+  startTime: string
   endDate: string
+  endTime: string
 }
 
 type XMLEventLocation = {

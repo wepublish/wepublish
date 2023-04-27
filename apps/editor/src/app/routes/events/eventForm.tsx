@@ -33,6 +33,8 @@ export const EventForm = ({event, onChange, create}: EventFormProps) => {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
+  console.log('event', event)
+
   return (
     <>
       <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>

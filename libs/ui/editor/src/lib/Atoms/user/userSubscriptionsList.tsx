@@ -7,8 +7,9 @@ import {
   SubscriptionDeactivationReason,
   UserSubscriptionFragment
 } from '@wepublish/editor/api'
-import {useTranslation} from 'react-i18next'
+import {TFunction, useTranslation} from 'react-i18next'
 import {
+  MdAdd,
   MdCreditCard,
   MdDisabledByDefault,
   MdEdit,
@@ -20,10 +21,10 @@ import {
   MdTimelapse
 } from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {Button, Divider, FlexboxGrid, Panel as RPanel} from 'rsuite'
+import {Button, Divider, FlexboxGrid, IconButton, Panel as RPanel} from 'rsuite'
 
-import {NewSubscriptionButton} from '../../routes/subscriptionList'
-import {createCheckedPermissionComponent} from '../permissionControl'
+// import {NewSubscriptionButton} from '../../routes/subscriptionList'
+import {createCheckedPermissionComponent, useAuthorisation} from '../permissionControl'
 
 const NewSubscriptionButtonWrapper = styled.div`
   margin-top: 20px;
@@ -76,6 +77,27 @@ const FlexItemMLeft = styled(FlexboxGrid.Item)`
 interface UserSubscriptionsProps {
   subscriptions?: UserSubscriptionFragment[] | null
   userId?: string
+}
+
+export const NewSubscriptionButton = ({
+  isLoading,
+  t,
+  userId
+}: {
+  isLoading?: boolean
+  t: TFunction<'translation'>
+  userId?: string
+}) => {
+  const canCreate = useAuthorisation('CAN_CREATE_SUBSCRIPTION')
+  const urlToRedirect = `/subscriptions/create${userId ? `${`?userId=${userId}`}` : ''}`
+  return (
+    <Link to={urlToRedirect}>
+      <IconButton appearance="primary" disabled={isLoading || !canCreate}>
+        <MdAdd />
+        {t('subscriptionList.overview.newSubscription')}
+      </IconButton>
+    </Link>
+  )
 }
 
 function UserSubscriptionsList({subscriptions, userId}: UserSubscriptionsProps) {

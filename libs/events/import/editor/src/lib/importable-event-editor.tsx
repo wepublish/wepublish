@@ -14,7 +14,8 @@ import {Form, Message, Schema, toaster} from 'rsuite'
 import {Providers, useImportedEventQuery, ImportabeEventRefFragment} from '@wepublish/editor/api-v2'
 import {getApiClientV2} from '../apiClientv2'
 
-import {ModelTitle, ImportableEventForm} from '@wepublish/ui/editor'
+import {ModelTitle} from '@wepublish/ui/editor'
+import {ImportableEventForm} from './importable-event-form'
 
 const onErrorToast = (error: ApolloError) => {
   toaster.push(
@@ -39,7 +40,7 @@ export const ImportableEventEditor = () => {
   const navigate = useNavigate()
   const {t} = useTranslation()
 
-  const closePath = '/importableevents'
+  const closePath = '/events/import'
 
   // todo use MutationCreateEventArgs?
   const [event, setEvent] = useState({
@@ -107,6 +108,7 @@ export const ImportableEventEditor = () => {
   })
 
   console.log('data', data)
+  console.log('event dupa', event)
 
   return (
     <Form
@@ -117,15 +119,14 @@ export const ImportableEventEditor = () => {
       onSubmit={validationPassed => validationPassed && onSubmit()}>
       <ModelTitle
         loading={loading}
-        title={t('event.edit.title')}
-        loadingTitle={t('event.edit.title')}
+        title={t('importableEvent.editTitle')}
+        loadingTitle={t('importableEvent.editTitle')}
         saveBtnTitle={t('save')}
         saveAndCloseBtnTitle={t('saveAndClose')}
         closePath={closePath}
         setCloseFn={setShouldClose}
       />
 
-      <div>siema</div>
       <div>event id: {id}</div>
       <ImportableEventForm
         event={event}

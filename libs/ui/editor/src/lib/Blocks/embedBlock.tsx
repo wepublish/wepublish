@@ -6,7 +6,7 @@ import {Drawer, IconButton, Panel as RPanel} from 'rsuite'
 
 import {BlockProps} from '../Atoms/blockList'
 import {PlaceholderInput} from '../Atoms/placeholderInput'
-import {EmbedEditPanel} from '../panel/embedEditPanel'
+import {EmbedEditPanel} from '../Panel/embedEditPanel'
 import {BildwurfAdEmbed} from './embeds/bildwurfAd'
 import {FacebookPostEmbed, FacebookVideoEmbed} from './embeds/facebook'
 import {IframeEmbed} from './embeds/iframe'

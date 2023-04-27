@@ -18,8 +18,8 @@ import {
 import {BlockProps} from '../Atoms/blockList'
 import {IconButtonTooltip} from '../Atoms/iconButtonTooltip'
 import {PlaceholderInput} from '../Atoms/placeholderInput'
-import {TeaserEditPanel} from '../panel/teaserEditPanel'
-import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
+import {TeaserEditPanel} from '../Panel/teaserEditPanel'
+import {TeaserSelectAndEditPanel} from '../Panel/teaserSelectAndEditPanel'
 import {ContentForTeaser, IconButton, IconWrapper, Teaser} from './teaserGridBlock'
 import {FlexAlignment, FlexTeaser, Teaser as TeaserType, TeaserGridFlexBlockValue} from './types'
 

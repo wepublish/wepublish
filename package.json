@@ -268,6 +268,7 @@
     "slate-history": "^0.58.1",
     "slate-hyperscript": "^0.58.1",
     "slate-react": "^0.58.1",
+    "slate-serializers": "^0.0.32",
     "stripe": "^8.126.0",
     "tslib": "^2.3.0"
   }

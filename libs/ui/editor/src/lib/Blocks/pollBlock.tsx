@@ -6,7 +6,7 @@ import {Drawer, IconButton, Panel as RPanel} from 'rsuite'
 
 import {BlockProps} from '../Atoms/blockList'
 import {PlaceholderInput} from '../Atoms/placeholderInput'
-import {SelectPollPanel} from '../panel/selectPollPanel'
+import {SelectPollPanel} from '../Panel/selectPollPanel'
 import {PollBlockValue} from './types'
 
 const IconWrapper = styled.div`

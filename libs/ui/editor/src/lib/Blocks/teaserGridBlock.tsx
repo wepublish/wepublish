@@ -13,8 +13,8 @@ import {Overlay} from '../Atoms/overlay'
 import {PlaceholderImage} from '../Atoms/placeholderImage'
 import {PlaceholderInput} from '../Atoms/placeholderInput'
 import {Typography} from '../Atoms/typography'
-import {TeaserEditPanel} from '../panel/teaserEditPanel'
-import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
+import {TeaserEditPanel} from '../Panel/teaserEditPanel'
+import {TeaserSelectAndEditPanel} from '../Panel/teaserSelectAndEditPanel'
 import {Teaser as TeaserTypeMixed, TeaserGridBlockValue, TeaserType} from './types'
 
 export const IconButton = styled(RIconButton)`

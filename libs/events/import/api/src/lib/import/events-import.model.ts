@@ -1,9 +1,9 @@
 import {Field, ObjectType, InputType, registerEnumType, Int} from '@nestjs/graphql'
-import {EventStatus} from '@prisma/client'
 
 export enum Providers {
-  AgendaBasel = 'AgendaBasel',
-  SomeOtherProvider = 'SomeOtherProvider' // add others in the future
+  AgendaBasel = 'AgendaBasel'
+  // add others in the future
+  // SomeOtherProvider = 'SomeOtherProvider'
 }
 
 export enum ImportedEventSort {
@@ -11,6 +11,13 @@ export enum ImportedEventSort {
   ENDS_AT = 'ENDS_AT',
   CREATED_AT = 'CREATED_AT',
   MODIFIED_AT = 'MODIFIED_AT'
+}
+
+export enum EventStatus {
+  SCHEDULED = 'SCHEDULED',
+  RESCHEDULED = 'RESCHEDULED',
+  POSTPONED = 'POSTPONED',
+  CANCELLED = 'CANCELLED'
 }
 
 registerEnumType(Providers, {

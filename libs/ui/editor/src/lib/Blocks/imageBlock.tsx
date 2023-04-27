@@ -8,8 +8,8 @@ import {Drawer, Dropdown, IconButton, Panel as RPanel} from 'rsuite'
 import {BlockProps} from '../Atoms/blockList'
 import {PlaceholderInput} from '../Atoms/placeholderInput'
 import {TypographicTextArea} from '../Atoms/typographicTextArea'
-import {ImageEditPanel} from '../panel/imageEditPanel'
-import {ImageSelectPanel} from '../panel/imageSelectPanel'
+import {ImageEditPanel} from '../Panel/imageEditPanel'
+import {ImageSelectPanel} from '../Panel/imageSelectPanel'
 import {ImageBlockValue} from './types'
 
 export const Panel = styled(RPanel)`

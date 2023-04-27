@@ -5,17 +5,19 @@ import {
   MutationUpdateEventArgs,
   TagType
 } from '@wepublish/editor/api'
-import React, {useState} from 'react'
+import {htmlToSlate} from 'slate-serializers'
+import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Drawer, Form, Panel, SelectPicker} from 'rsuite'
 
 // import {ChooseEditImage} from '../../Atoms/chooseEditImage'
 // import {DateTimePicker} from '../../Atoms/dateTimePicker'
 // import {SelectTags} from '../../Atoms/tag/selectTags'
-import {RichTextBlock, SelectTags} from '@wepublish/ui/editor'
+import {DateTimePicker, RichTextBlock, SelectTags} from '@wepublish/ui/editor'
+import {RichTextBlockValue} from 'libs/ui/editor/src/lib/Blocks/types'
 // import {RichTextBlockValue} from '../../Blocks/types'
-// import {ImageEditPanel} from '../../panel/imageEditPanel'
-// import {ImageSelectPanel} from '../../panel/imageSelectPanel'
+// import {ImageEditPanel} from '../../Panel/imageEditPanel'
+// import {ImageSelectPanel} from '../../Panel/imageSelectPanel'
 
 type EventFormData = (MutationCreateEventArgs | MutationUpdateEventArgs) & {
   image?: ImageRefFragment | null
@@ -32,6 +34,19 @@ export const ImportableEventForm = ({event, onChange, create}: EventFormProps) =
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
+
+  if (!event) {
+    return <div>siema</div>
+  }
+
+  // console.log('event.description', event.description)
+  // console.log(
+  //   "new DOMParser().parseFromString(event.description as any, 'text/html')",
+  //   new DOMParser().parseFromString(event.description as any, 'text/html')
+  // )
+
+  const serializedToSlate = htmlToSlate(event.description ? event.description : ('' as any))
+  console.log('serializedToSlate', serializedToSlate)
 
   return (
     <>
@@ -68,7 +83,7 @@ export const ImportableEventForm = ({event, onChange, create}: EventFormProps) =
                 label={t('event.form.startsAt')}
                 dateTime={event.startsAt ? new Date(event.startsAt) : undefined}
                 changeDate={(date: Date) => onChange({startsAt: date?.toISOString()})}
-                // accepter={DateTimePicker}
+                accepter={DateTimePicker}
               />
             </Form.Group>
 
@@ -78,7 +93,7 @@ export const ImportableEventForm = ({event, onChange, create}: EventFormProps) =
                 label={t('event.form.endsAt')}
                 dateTime={event.endsAt ? new Date(event.endsAt) : undefined}
                 changeDate={(date: Date) => onChange({endsAt: date?.toISOString()})}
-                // accepter={DateTimePicker}
+                accepter={DateTimePicker}
               />
             </Form.Group>
           </div>
@@ -88,8 +103,9 @@ export const ImportableEventForm = ({event, onChange, create}: EventFormProps) =
             <Panel bordered>
               <Form.Control
                 name="description"
-                value={event.description || []}
-                // onChange={(description: RichTextBlockValue) => onChange({description})}
+                value={serializedToSlate || []}
+                // value={event.description || []}
+                onChange={(description: RichTextBlockValue) => onChange({description})}
                 accepter={RichTextBlock}
               />
             </Panel>
