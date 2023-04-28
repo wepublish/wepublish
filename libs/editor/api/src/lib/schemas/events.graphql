@@ -83,6 +83,8 @@ mutation UpdateEvent(
   $endsAt: DateTime
   $imageId: ID
   $tagIds: [ID!]
+  $externalSourceId: String
+  $externalSourceName: String
 ) {
   updateEvent(
     id: $id
@@ -94,6 +96,8 @@ mutation UpdateEvent(
     endsAt: $endsAt
     imageId: $imageId
     tagIds: $tagIds
+    externalSourceId: $externalSourceId
+    externalSourceName: $externalSourceName
   ) {
     ...EventRef
   }

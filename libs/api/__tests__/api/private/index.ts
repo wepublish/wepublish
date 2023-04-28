@@ -468,6 +468,8 @@ export type Event = {
   __typename?: 'Event';
   description?: Maybe<Scalars['RichText']>;
   endsAt?: Maybe<Scalars['DateTime']>;
+  externalSourceId?: Maybe<Scalars['String']>;
+  externalSourceName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   image?: Maybe<Image>;
   location?: Maybe<Scalars['String']>;
@@ -1007,6 +1009,8 @@ export type MutationCreateCommentArgs = {
 export type MutationCreateEventArgs = {
   description?: InputMaybe<Scalars['RichText']>;
   endsAt?: InputMaybe<Scalars['DateTime']>;
+  externalSourceId?: InputMaybe<Scalars['String']>;
+  externalSourceName?: InputMaybe<Scalars['String']>;
   imageId?: InputMaybe<Scalars['ID']>;
   location?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
@@ -1319,6 +1323,8 @@ export type MutationUpdateCommentArgs = {
 export type MutationUpdateEventArgs = {
   description?: InputMaybe<Scalars['RichText']>;
   endsAt?: InputMaybe<Scalars['DateTime']>;
+  externalSourceId?: InputMaybe<Scalars['String']>;
+  externalSourceName?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
   imageId?: InputMaybe<Scalars['ID']>;
   location?: InputMaybe<Scalars['String']>;

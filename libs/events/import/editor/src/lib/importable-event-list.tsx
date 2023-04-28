@@ -1,16 +1,15 @@
+import {format as formatDate} from 'date-fns'
 import {ApolloError} from '@apollo/client'
 import {Event} from '@wepublish/editor/api'
 import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAdd} from 'react-icons/md'
-import {Link} from 'react-router-dom'
-import {IconButton, Message, Pagination, Table as RTable, toaster} from 'rsuite'
+import {Link, useNavigate} from 'react-router-dom'
+import {Message, Pagination, Table as RTable, toaster, Button} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 import {useImportedEventListQuery} from '@wepublish/editor/api-v2'
 import {getApiClientV2} from '../apiClientv2'
 
 import {
-  ListViewActions,
   ListViewContainer,
   ListViewHeader,
   Table,
@@ -18,22 +17,28 @@ import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES
 } from '@wepublish/ui/editor'
+import styled from '@emotion/styled'
 
-const {Column, HeaderCell, Cell} = RTable
+const {Column, HeaderCell, Cell: RCell} = RTable
+
+const Cell = styled(RCell)`
+  .rs-table-cell-content {
+    display: flex;
+    align-items: center;
+  }
+`
 
 export function EventStartsAtView({startsAt}: {startsAt: string}) {
   const startsAtDate = new Date(startsAt)
-  const {t} = useTranslation()
-
-  return <>{t('event.list.startsAt', {startsAt: startsAtDate})}</>
+  return <span>{formatDate(startsAtDate, 'PPP p')}</span>
 }
 
 export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
   const endsAtDate = endsAt ? new Date(endsAt) : undefined
   const {t} = useTranslation()
 
-  if (endsAt) {
-    return <>{t('event.list.endsAt', {endsAt: endsAtDate})}</>
+  if (endsAtDate) {
+    return <span>{formatDate(endsAtDate, 'PPP p')}</span>
   }
   return <>{t('event.list.endsAtNone')}</>
 }
@@ -51,6 +56,7 @@ const onErrorToast = (error: ApolloError) => {
 function ImportableEventListView() {
   const client = useMemo(() => getApiClientV2(), [])
   const {t} = useTranslation()
+  const navigate = useNavigate()
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
 
@@ -73,27 +79,49 @@ function ImportableEventListView() {
       </ListViewContainer>
 
       <TableWrapper>
-        <Table fillHeight loading={loading} data={data?.importedEvents.nodes || []}>
+        <Table fillHeight rowHeight={60} loading={loading} data={data?.importedEvents.nodes || []}>
           <Column width={200} resizable>
             <HeaderCell>{t('event.list.name')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<Event>) => (
-                <Link to={`/events/import/edit/${rowData.id}`}>{rowData.name}</Link>
-              )}
-            </Cell>
+            <Cell>{(rowData: RowDataType<Event>) => rowData.name}</Cell>
           </Column>
 
-          <Column width={250} resizable>
+          <Column width={220} resizable>
             <HeaderCell>{t('event.list.startsAt')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<Event>) => <EventStartsAtView startsAt={rowData.startsAt} />}
             </Cell>
           </Column>
 
-          <Column width={250} resizable>
+          <Column width={220} resizable>
             <HeaderCell>{t('event.list.endsAt')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<Event>) => <EventEndsAtView endsAt={rowData.endsAt} />}
+            </Cell>
+          </Column>
+
+          <Column width={150} resizable>
+            <HeaderCell>{t('event.list.source')}</HeaderCell>
+            <Cell>{(rowData: RowDataType<Event>) => rowData.externalSourceName}</Cell>
+          </Column>
+
+          <Column width={150} resizable>
+            <HeaderCell>{t('event.list.source')}</HeaderCell>
+            <Cell>
+              {(rowData: RowDataType<Event>) => (
+                <Button
+                  onClick={() => navigate(`/events/import/edit/${rowData.id}`)}
+                  appearance="primary">
+                  Import
+                </Button>
+
+                // todo check if already imported
+                // if (importedEvents.includes(rowData.id))....
+                // <Button
+                //   appearance="subtle"
+                //   disabled>
+                //   Imported
+                // </Button>
+              )}
             </Cell>
           </Column>
         </Table>

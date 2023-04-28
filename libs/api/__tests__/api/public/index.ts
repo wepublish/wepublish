@@ -276,6 +276,8 @@ export type Event = {
   __typename?: 'Event';
   description?: Maybe<Scalars['RichText']>;
   endsAt?: Maybe<Scalars['DateTime']>;
+  externalSourceId?: Maybe<Scalars['String']>;
+  externalSourceName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   image?: Maybe<Image>;
   location?: Maybe<Scalars['String']>;

@@ -68,6 +68,8 @@ export type Event = {
   createdAt: Scalars['DateTime']
   description: Scalars['JSON']
   endsAt?: Maybe<Scalars['DateTime']>
+  externalSourceId: Scalars['String']
+  externalSourceName: Scalars['String']
   id: Scalars['String']
   imageId: Scalars['String']
   location: Scalars['String']

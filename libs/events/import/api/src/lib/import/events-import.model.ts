@@ -33,12 +33,6 @@ registerEnumType(EventStatus, {
   name: 'EventStatus'
 })
 
-// @ObjectType()
-// export class RichTextNode {
-//   @Field(type => any)
-//   children?: any
-// }
-
 @ObjectType()
 export class PageInfo {
   @Field()
@@ -79,6 +73,12 @@ export class Event {
 
   @Field()
   location!: string
+
+  @Field()
+  externalSourceId!: string
+
+  @Field()
+  externalSourceName!: string
 
   @Field()
   startsAt!: Date

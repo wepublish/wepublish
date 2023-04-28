@@ -50,7 +50,9 @@ export async function readImageMetaData(data: File): Promise<ImageMetaData> {
         }
       }
     }
-  } catch {}
+  } catch (err) {
+    console.error(err)
+  }
 
   return fields
 }

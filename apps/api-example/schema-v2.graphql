@@ -50,6 +50,8 @@ type Event {
   createdAt: DateTime!
   description: JSON!
   endsAt: DateTime
+  externalSourceId: String!
+  externalSourceName: String!
   id: String!
   imageId: String!
   location: String!

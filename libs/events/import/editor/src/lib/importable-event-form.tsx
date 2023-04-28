@@ -5,19 +5,11 @@ import {
   MutationUpdateEventArgs,
   TagType
 } from '@wepublish/editor/api'
-// import {htmlToSlate} from 'slate-serializers'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Drawer, Form, Panel, SelectPicker} from 'rsuite'
-
-// import {ChooseEditImage} from '../../Atoms/chooseEditImage'
-// import {DateTimePicker} from '../../Atoms/dateTimePicker'
-// import {SelectTags} from '../../Atoms/tag/selectTags'
 import {DateTimePicker, RichTextBlock, SelectTags} from '@wepublish/ui/editor'
 import {RichTextBlockValue} from 'libs/ui/editor/src/lib/Blocks/types'
-// import {RichTextBlockValue} from '../../Blocks/types'
-// import {ImageEditPanel} from '../../Panel/imageEditPanel'
-// import {ImageSelectPanel} from '../../Panel/imageSelectPanel'
 
 type EventFormData = (MutationCreateEventArgs | MutationUpdateEventArgs) & {
   image?: ImageRefFragment | null
@@ -34,19 +26,6 @@ export const ImportableEventForm = ({event, onChange, create}: EventFormProps) =
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
-
-  if (!event) {
-    return <div>siema</div>
-  }
-
-  // console.log('event.description', event.description)
-  // console.log(
-  //   "new DOMParser().parseFromString(event.description as any, 'text/html')",
-  //   new DOMParser().parseFromString(event.description as any, 'text/html')
-  // )
-
-  // const serializedToSlate = htmlToSlate(event.description ? event.description : ('' as any))
-  // console.log('serializedToSlate', serializedToSlate)
 
   return (
     <>

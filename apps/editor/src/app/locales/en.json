@@ -1345,7 +1345,8 @@
         "create": "Create new event",
         "startsAt": "Starts at {{startsAt, ccc PP p}}",
         "endsAt": "Ends at {{endsAt, ccc PP p}}",
-        "endsAtNone": "Open ended"
+        "endsAtNone": "Open ended",
+        "source": "Source"
       },
       "create": {
         "title": "Create Event"
@@ -1356,6 +1357,7 @@
       "form": {
         "name": "Name",
         "location": "Location",
+        "externalSource": "External source (for imported events)",
         "status": "Status",
         "startsAt": "Starts at",
         "endsAt": "Ends at",

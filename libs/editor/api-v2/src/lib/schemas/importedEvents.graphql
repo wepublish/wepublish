@@ -4,6 +4,8 @@ fragment ImportabeEventRef on Event {
   description
   status
   location
+  externalSourceId
+  externalSourceName
   modifiedAt
   startsAt
   endsAt

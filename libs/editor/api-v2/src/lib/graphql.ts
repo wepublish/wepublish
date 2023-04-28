@@ -68,6 +68,8 @@ export type Event = {
   createdAt: Scalars['DateTime'];
   description: Scalars['JSON'];
   endsAt?: Maybe<Scalars['DateTime']>;
+  externalSourceId: Scalars['String'];
+  externalSourceName: Scalars['String'];
   id: Scalars['String'];
   imageId: Scalars['String'];
   location: Scalars['String'];
@@ -406,7 +408,7 @@ export type DeleteUserConsentMutationVariables = Exact<{
 
 export type DeleteUserConsentMutation = { __typename?: 'Mutation', deleteUserConsent: { __typename?: 'UserConsent', id: string } };
 
-export type ImportabeEventRefFragment = { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, modifiedAt: string, startsAt: string, endsAt?: string | null };
+export type ImportabeEventRefFragment = { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, modifiedAt: string, startsAt: string, endsAt?: string | null };
 
 export type ImportedEventListQueryVariables = Exact<{
   filter?: InputMaybe<ImportedEventFilter>;
@@ -417,14 +419,14 @@ export type ImportedEventListQueryVariables = Exact<{
 }>;
 
 
-export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'ImportedEventsDocument', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, modifiedAt: string, startsAt: string, endsAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor: string, endCursor: string, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'ImportedEventsDocument', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, modifiedAt: string, startsAt: string, endsAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor: string, endCursor: string, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type ImportedEventQueryVariables = Exact<{
   filter: SingleEventFilter;
 }>;
 
 
-export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, modifiedAt: string, startsAt: string, endsAt?: string | null } };
+export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, modifiedAt: string, startsAt: string, endsAt?: string | null } };
 
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -438,6 +440,8 @@ export const ImportabeEventRefFragmentDoc = gql`
   description
   status
   location
+  externalSourceId
+  externalSourceName
   modifiedAt
   startsAt
   endsAt

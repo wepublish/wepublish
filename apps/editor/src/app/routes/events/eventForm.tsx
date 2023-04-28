@@ -33,8 +33,6 @@ export const EventForm = ({event, onChange, create}: EventFormProps) => {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
-  console.log('event', event)
-
   return (
     <>
       <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
@@ -47,6 +45,17 @@ export const EventForm = ({event, onChange, create}: EventFormProps) => {
               onChange={(name: string) => onChange({name})}
             />
           </Form.Group>
+
+          {event.externalSourceName && (
+            <Form.Group controlId="externalSourceName">
+              <Form.ControlLabel>{t('event.form.externalSource')}</Form.ControlLabel>
+              <Form.Control
+                name="externalSourceName"
+                value={event.externalSourceName ?? ''}
+                disabled
+              />
+            </Form.Group>
+          )}
 
           <Form.Group controlId="location">
             <Form.ControlLabel>{t('event.form.location')}</Form.ControlLabel>

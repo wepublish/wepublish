@@ -4,15 +4,13 @@ import {
   ImageRefFragment,
   MutationCreateEventArgs,
   stripTypename,
-  useCreateEventMutation,
-  useEventQuery,
-  useUpdateEventMutation
+  useCreateEventMutation
 } from '@wepublish/editor/api'
 import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Form, Message, Schema, toaster} from 'rsuite'
-import {Providers, useImportedEventQuery, ImportabeEventRefFragment} from '@wepublish/editor/api-v2'
+import {Providers, useImportedEventQuery} from '@wepublish/editor/api-v2'
 import {getApiClientV2} from '../apiClientv2'
 
 import {ModelTitle} from '@wepublish/ui/editor'
@@ -25,14 +23,6 @@ const onErrorToast = (error: ApolloError) => {
     </Message>
   )
 }
-
-// const mapApiDataToInput = (event: ImportabeEventRefFragment) => ({
-//   ...stripTypename(event)
-//   // description: event.description as
-//   // imageId: event.image?.id,
-//   // tagIds: event.tags?.map(tag => tag.id)
-//   // ...event
-// })
 
 const mapApiDataToInput = (
   event: EventRefFragment
@@ -51,12 +41,9 @@ export const ImportableEventEditor = () => {
 
   const closePath = '/events/import'
 
-  // todo use MutationCreateEventArgs?
   const [event, setEvent] = useState({
     name: '',
     id: eventId,
-    externalSourceId: eventId,
-    externalSourceName: 'AgendaBasel', // todo
     startsAt: ''
   } as MutationCreateEventArgs & {image?: ImageRefFragment | null})
 
@@ -79,11 +66,6 @@ export const ImportableEventEditor = () => {
     }
   })
 
-  console.log('event.description', event.description)
-
-  // const prepareDescription = {...event.description, }
-  // event?.description[0] && event.description[0].type: 'paragraph'
-
   const [createEvent, {loading: createLoading}] = useCreateEventMutation({
     onError: onErrorToast,
     onCompleted: event => {
@@ -94,33 +76,6 @@ export const ImportableEventEditor = () => {
       }
     }
   })
-  console.log('createLoading', createLoading)
-  // const {loading: dataLoading} = useEventQuery({
-  //   variables: {
-  //     id: eventId
-  //   },
-  //   onError: onErrorToast,
-  // onCompleted: data => {
-  //   if (data.event) {
-  //     setEvent(mapApiDataToInput(data.event))
-  //   }
-  // }
-  // })
-
-  // const [updateEvent, {loading: updateLoading}] = useUpdateEventMutation({
-  //   onError: onErrorToast,
-  //   onCompleted: data => {
-  //     if (shouldClose) {
-  //       navigate(closePath)
-  //     }
-
-  //     if (data.updateEvent) {
-  //       setEvent(mapApiDataToInput(data.updateEvent))
-  //     }
-  //   }
-  // })
-
-  // const loading = dataLoading || updateLoading
 
   const onSubmit = () => {
     const {image, ...eventWithoutImage} = event!
@@ -135,18 +90,17 @@ export const ImportableEventEditor = () => {
     endsAt: DateType().min(new Date(event.startsAt ?? new Date()))
   })
 
-  // console.log('data', data)
-  console.log('event dupa', event)
+  const isLoading = dataLoading || createLoading
 
   return (
     <Form
       fluid
       formValue={event || {}}
       model={validationModel}
-      disabled={dataLoading}
+      disabled={isLoading}
       onSubmit={validationPassed => validationPassed && onSubmit()}>
       <ModelTitle
-        loading={dataLoading}
+        loading={isLoading}
         title={t('importableEvent.editTitle')}
         loadingTitle={t('importableEvent.editTitle')}
         saveBtnTitle={t('save')}
@@ -155,7 +109,6 @@ export const ImportableEventEditor = () => {
         setCloseFn={setShouldClose}
       />
 
-      <div>event id: {id}</div>
       <ImportableEventForm
         event={event}
         onChange={changes => setEvent(oldEvent => ({...oldEvent, ...(changes as any)}))}

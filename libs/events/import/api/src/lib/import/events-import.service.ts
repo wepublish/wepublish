@@ -15,22 +15,57 @@ import {htmlToSlate} from 'slate-serializers'
 
 import {XMLEventType} from './xmlTypes'
 
+const parseAndCacheData = async (cacheManager: Cache, source: Providers) => {
+  const parser = new xml2js.Parser()
+  const urlToQuery = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
+
+  async function getXMLfromURL(url: string) {
+    try {
+      const response = await fetch(url)
+      const content = await response.text()
+      const data = await parser.parseStringPromise(content)
+
+      return data
+    } catch (e) {
+      console.error({e})
+    }
+  }
+
+  const eventsParsedXML = await getXMLfromURL(urlToQuery)
+  const events = eventsParsedXML['kdz:exportActivities']?.Activities[0]?.Activity
+
+  // only take events that take time in the future
+  const upcomingEvents = events.filter((event: XMLEventType) => upcomingOnly(event))
+
+  // parse their structure to ours
+  const importedEvents = upcomingEvents?.map((a: XMLEventType) => {
+    return parseXMLEventToWpEvent(a, source)
+  })
+
+  // save in cache
+  const ttl = 8 * 60 * 60 * 1000 // 8 hours
+  await cacheManager.set('parsedEvents', importedEvents, ttl)
+  return importedEvents
+}
+
 interface ImportedEventsParams {
   filter: ImportedEventFilter
   order: 1 | -1
   skip: number
   take: number
   sort: string
-  cacheManager?: Cache
+  cacheManager: Cache
+  source: typeof Providers[keyof typeof Providers]
 }
 
 interface ImportedEventParams {
   id: string
-  source?: typeof Providers[keyof typeof Providers]
-  cacheManager?: Cache
+  // source: typeof Providers[keyof typeof Providers]
+  cacheManager: Cache
 }
 
 interface EventsProvider {
+  name: Providers
   importedEvents({
     filter,
     order,
@@ -49,6 +84,7 @@ export enum EventStatus {
   Scheduled = 'SCHEDULED'
 }
 
+const today = new Date()
 const upcomingOnly = (XMLEvent: XMLEventType) => {
   const startDate =
     XMLEvent &&
@@ -62,11 +98,11 @@ const upcomingOnly = (XMLEvent: XMLEventType) => {
     return
   }
 
-  if (new Date(startDate) < new Date()) return
+  if (new Date(startDate) < today) return
   return XMLEvent
 }
 
-const parseXMLEventToWpEvent = (XMLEvent: XMLEventType) => {
+const parseXMLEventToWpEvent = (XMLEvent: XMLEventType, source: Providers) => {
   const activityDate =
     (XMLEvent &&
       XMLEvent.ActivityDates &&
@@ -84,13 +120,6 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType) => {
   const start = `${startDate} ${startTime}`
   const end = endDate ? `${endDate} ${endTime}` : null
 
-  // console.log('XMLEvent', XMLEvent)
-  // console.log('XMLEvent.ActivityMultimedia[0].Images', XMLEvent.ActivityMultimedia[0].Images)
-  // console.log('XMLEvent.ActivityMultimedia[0].Videos', XMLEvent.ActivityMultimedia[0].Videos)
-  // console.log('XMLEvent.Location[0].LocationAdress', XMLEvent.Location[0].LocationAdress)
-  // console.log('XMLEvent.Location[0].LocationName', XMLEvent.Location[0].LocationName)
-  // console.log('XMLEvent.Location[0].LocationId', XMLEvent.Location[0].LocationId)
-
   const castInfo = XMLEvent.CastInformation[0].replace(/(<([^>]+)>)/gi, '')
   const longDescription = XMLEvent.LongDescription[0].replace(/(<([^>]+)>)/gi, '')
   const shortDescription = XMLEvent.ShortDescription[0].replace(/(<([^>]+)>)/gi, '')
@@ -105,7 +134,8 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType) => {
     name: XMLEvent.Title[0].replace(/(<([^>]+)>)/gi, ''),
     description: parsedDescription,
     status: EventStatus.Scheduled,
-
+    externalSourceId: XMLEvent['$'].originId,
+    externalSourceName: source,
     location: XMLEvent.Location[0]?.LocationAdress[0].replace(/(<([^>]+)>)/gi, '') || '',
     startsAt: start ? new Date(start.trim()) : null,
     endsAt: end ? new Date(end.trim()) : null
@@ -121,7 +151,15 @@ export class EventsImportService {
   async importedEvents({filter, order, skip, take, sort}: ImportedEventsParams) {
     const importableEvents = Promise.all(
       providers.map(provider =>
-        provider.importedEvents({filter, order, skip, take, sort, cacheManager: this.cacheManager})
+        provider.importedEvents({
+          filter,
+          order,
+          skip,
+          take,
+          sort,
+          cacheManager: this.cacheManager,
+          source: provider.name
+        })
       )
     )
 
@@ -130,7 +168,7 @@ export class EventsImportService {
       // for now we have only one provider, to be extended in the future when needed
       return values[0]
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
 
@@ -138,72 +176,43 @@ export class EventsImportService {
     const {id, source} = filter
     switch (source) {
       case Providers.AgendaBasel: {
-        return new AgendaBaselEventsProvider().importedEvent({id, cacheManager: this.cacheManager})
+        return new AgendaBasel().importedEvent({id, cacheManager: this.cacheManager})
       }
     }
   }
 }
 
-class AgendaBaselEventsProvider implements EventsProvider {
+class AgendaBasel implements EventsProvider {
+  name = Providers.AgendaBasel
   async importedEvents({
-    filter,
-    order,
+    // filter,
+    // order,
+    // sort,
     skip = 0,
     take = 10,
-    sort,
-    cacheManager
+    cacheManager,
+    source
   }: ImportedEventsParams): Promise<ImportedEventsDocument> {
-    // todo check for parsedEvents cache and only do all the logic below if record doesn't exist
-    // const parsedEvents: Event[] = await cacheManager.get('parsedEvents')
+    let parsedEvents: Event[] = await cacheManager.get('parsedEvents')
 
-    const parser = new xml2js.Parser()
-    const urlToQuery = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
-
-    // todo remove
-    await cacheManager.reset()
-
-    async function getXMLfromURL(url: string) {
-      try {
-        const response = await fetch(url)
-        const content = await response.text()
-        const data = await parser.parseStringPromise(content)
-
-        return data
-      } catch (e) {
-        console.error({e})
-      }
+    if (!parsedEvents) {
+      parsedEvents = await parseAndCacheData(cacheManager, Providers.AgendaBasel)
     }
 
-    const eventsParsedXML = await getXMLfromURL(urlToQuery)
-    // todo save parsed json in cache
-
-    const events = eventsParsedXML['kdz:exportActivities']?.Activities[0]?.Activity
-
-    // only take events that take time in the future
-    const upcomingEvents = events.filter((event: XMLEventType) => upcomingOnly(event))
-
-    const importedEvents = upcomingEvents?.map((a: any) => {
-      return parseXMLEventToWpEvent(a)
-    })
-
-    // save in cache
-    const ttl = 8 * 60 * 60 * 1000 // 8 hours
-    await cacheManager.set('parsedEvents', importedEvents, ttl)
-
-    // split into separate functions
-    const sortedEvents = importedEvents.sort((a: any, b: any) => {
+    // todo split into separate functions?
+    const sortedEvents = parsedEvents.sort((a: any, b: any) => {
       return a.startsAt - b.startsAt
     })
 
-    // split into separate functions
+    // todo split into separate functions?
     const paginatedEvents = sortedEvents.slice(skip, skip + take)
 
-    const firstEvent = importedEvents[0]
-    const lastEvent = importedEvents[importedEvents.length - 1]
+    const firstEvent = parsedEvents[0]
+    const lastEvent = parsedEvents[parsedEvents.length - 1]
 
     return {
       nodes: paginatedEvents,
-      totalCount: upcomingEvents.length,
+      totalCount: parsedEvents.length,
       pageInfo: {
         hasPreviousPage: false,
         hasNextPage: false,
@@ -214,7 +223,11 @@ class AgendaBaselEventsProvider implements EventsProvider {
   }
 
   async importedEvent({id, cacheManager}: ImportedEventParams): Promise<Event> {
-    const parsedEvents: Event[] = await cacheManager.get('parsedEvents')
+    let parsedEvents: Event[] = await cacheManager.get('parsedEvents')
+
+    if (!parsedEvents) {
+      parsedEvents = await parseAndCacheData(cacheManager, Providers.AgendaBasel)
+    }
 
     const event = parsedEvents.find(e => e.id === id)
 
@@ -226,4 +239,4 @@ class AgendaBaselEventsProvider implements EventsProvider {
   }
 }
 
-const providers = [new AgendaBaselEventsProvider()]
+const providers = [new AgendaBasel()]
