@@ -18,7 +18,7 @@ import {
   PeerIdMissingCommentError,
   UserInputError
 } from '../../error'
-import {countRichtextChars, MAX_COMMENT_LENGTH} from '../../utility'
+import {countRichtextChars} from '../../utility'
 
 export const addPublicComment = async (
   input: {
@@ -35,8 +35,16 @@ export const addPublicComment = async (
   let authorType: CommentAuthorType = CommentAuthorType.verifiedUser
   const commentLength = countRichtextChars(0, input.text)
 
-  if (commentLength > MAX_COMMENT_LENGTH) {
-    throw new CommentLengthError()
+  const maxCommentLength = (
+    await new PrismaClient().setting.findUnique({
+      where: {
+        name: SettingName.COMMENT_CHAR_LIMIT
+      }
+    })
+  ).value
+
+  if (commentLength > maxCommentLength) {
+    throw new CommentLengthError(+maxCommentLength)
   }
 
   // Challenge
