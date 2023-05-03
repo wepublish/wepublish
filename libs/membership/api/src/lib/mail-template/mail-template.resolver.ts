@@ -35,10 +35,9 @@ export class MailTemplatesResolver {
   }
 
   @Permissions(CanSyncMailTemplates)
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, { nullable: true })
   async syncTemplates() {
     await this.syncService.synchronizeTemplates()
-    return true
   }
 
   private async decorate(templates: MailTemplate[]): Promise<WithUrlAndStatus<MailTemplate>[]> {
