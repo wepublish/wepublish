@@ -30,7 +30,7 @@ export class MailTemplatesResolver {
   @Permissions(CanGetMailTemplates)
   @Query(() => MailProviderModel)
   async provider() {
-    const provider = await this.oldContextService.context.mailContext.getProvider()
+    const provider = await this.oldContextService.context.mailContext.mailProvider
     return {name: provider.name}
   }
 
@@ -42,7 +42,7 @@ export class MailTemplatesResolver {
   }
 
   private async decorate(templates: MailTemplate[]): Promise<WithUrlAndStatus<MailTemplate>[]> {
-    const provider = await this.oldContextService.context.mailContext.getProvider()
+    const provider = await this.oldContextService.context.mailContext.mailProvider
     const usedTemplates =
       await this.oldContextService.context.mailContext.getUsedTemplateIdentifiers()
 

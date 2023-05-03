@@ -2,7 +2,6 @@ import { MailTemplate } from '@prisma/client'
 import {
   BaseMailProvider,
   MailLogStatus,
-  MailProviderError,
   MailProviderProps,
   MailProviderTemplate,
   SendMailProps,

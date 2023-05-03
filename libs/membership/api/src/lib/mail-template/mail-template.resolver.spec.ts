@@ -65,7 +65,7 @@ const mailProviderServiceMock = {
 const oldContextServiceMock = {
   context: {
     mailContext: {
-      getProvider: jest.fn((): MailProvider => mailProviderServiceMock as unknown as MailProvider),
+      mailProvider: mailProviderServiceMock as unknown as MailProvider,
       getUsedTemplateIdentifiers: jest.fn((): string[] => [])
     }
   }

@@ -149,6 +149,10 @@ export async function runServer() {
       })
     } */
 
+  if(!mailProvider) {
+    throw new Error("A MailProvider must be configured.")
+  }
+
   const paymentProviders = []
 
   if (
