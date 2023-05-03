@@ -4,17 +4,6 @@
   "sourceRoot": "libs/authentication/api/src",
   "projectType": "library",
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/libs/authentication/api",
-        "tsConfig": "libs/authentication/api/tsconfig.lib.json",
-        "packageJson": "libs/authentication/api/package.json",
-        "main": "libs/authentication/api/src/index.ts",
-        "assets": ["libs/authentication/api/*.md"]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

@@ -1,0 +1,22 @@
+diff --git a/node_modules/@nrwl/js/src/utils/inline.js b/node_modules/@nrwl/js/src/utils/inline.js
+index bf2f366..153cf76 100644
+--- a/node_modules/@nrwl/js/src/utils/inline.js
++++ b/node_modules/@nrwl/js/src/utils/inline.js
+@@ -49,6 +49,7 @@ function postProcessInlinedDependencies(outputPath, parentOutputPath, inlineGrap
+                 destDepOutputPath + '/src';
+         }
+     }
++    (0, fs_extra_1.removeSync)(outputPath + "/libs");
+     updateImports(outputPath, inlinedDepsDestOutputRecord);
+ }
+ exports.postProcessInlinedDependencies = postProcessInlinedDependencies;
+@@ -148,8 +149,8 @@ function buildInlineGraphExternals(context, inlineProjectGraph, pathAliases) {
+     }
+ }
+ function movePackage(from, to) {
++    if (from === to) return;
+     (0, fs_extra_1.copySync)(from, to, { overwrite: true, recursive: true });
+-    (0, fs_extra_1.removeSync)(from);
+ }
+ function updateImports(destOutputPath, inlinedDepsDestOutputRecord) {
+     const importRegex = new RegExp(Object.keys(inlinedDepsDestOutputRecord)
