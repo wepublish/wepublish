@@ -48,7 +48,7 @@ export class SlackMailProvider extends BaseMailProvider {
     })
   }
 
-  async getTemplates(): Promise<MailProviderTemplate[] | MailProviderError> {
+  async getTemplates(): Promise<MailProviderTemplate[]> {
     return [
       {
         name: 'SlackEmptyTemplate',

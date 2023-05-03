@@ -115,7 +115,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
     return Promise.resolve(mailLogStatuses)
   }
 
-  async sendMail(props: SendMailProps): Promise<void | MailProviderError> {
+  async sendMail(props: SendMailProps): Promise<void> {
     if (props.template) {
       const templateContent: any = []
       const flattenedObject = flattenObj(props.templateData)
@@ -147,7 +147,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
         }
       })
       if (this.responseIsError(response)) {
-        return new MailProviderError(response.response?.data.message)
+        throw new MailProviderError(response.response?.data.message)
       }
     } else {
       const response = await this.mailchimpClient.messages.send({
@@ -165,16 +165,16 @@ export class MailchimpMailProvider extends BaseMailProvider {
         }
       })
       if (this.responseIsError(response)) {
-        return new MailProviderError(response.response?.data.message)
+        throw new MailProviderError(response.response?.data.message)
       }
     }
   }
 
   // beware: Mailchimp templates are still created and stored in Mandrill: https://mandrillapp.com/templates
-  async getTemplates(): Promise<MailProviderTemplate[] | MailProviderError> {
+  async getTemplates(): Promise<MailProviderTemplate[]> {
     const response = await this.mailchimpClient.templates.list()
     if (this.responseIsError(response)) {
-      return new MailProviderError(response.response?.data.message)
+      throw new MailProviderError(response.response?.data.message)
     }
     const templates: MailProviderTemplate[] = response.map(mailTemplateResponse => {
       return {

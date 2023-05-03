@@ -1,5 +1,5 @@
 import nock from 'nock'
-import {MailgunMailProvider, MailProviderError, MailProviderTemplate} from '../../src'
+import {MailgunMailProvider, MailProviderTemplate} from '../../src'
 
 let mockSubmit = jest.fn()
 const mockAppend = jest.fn()
@@ -109,10 +109,9 @@ describe('Mailgun Mail Provider', () => {
       fromAddress: 'dev@wepublish.ch'
     })
 
-    const response = await mailgunMailProvider.getTemplates()
-    expect(response).toBeInstanceOf(MailProviderError)
-    const error = response as MailProviderError
-    expect(error.message).toEqual('Invalid private key')
+    await expect(mailgunMailProvider.getTemplates())
+    .rejects
+    .toThrow('Invalid private key')
     expect(listTemplatesInvalidKey.isDone()).toEqual(true)
   })
 })

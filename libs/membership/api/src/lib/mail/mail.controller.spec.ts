@@ -123,7 +123,13 @@ describe('MailController', () => {
           key: 'key'
         })
       )
-      .reply(500)
+      .replyWithFile(
+        200,
+        __dirname + '/__fixtures__/mailchimp-messages-send-success-response.json',
+        {
+          'Content-Type': 'application/json'
+        }
+      )
 
     const deeplyNestedObject = {
       root1: {

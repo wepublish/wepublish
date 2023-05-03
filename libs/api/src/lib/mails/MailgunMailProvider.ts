@@ -141,7 +141,7 @@ export class MailgunMailProvider extends BaseMailProvider {
     })
   }
 
-  async getTemplates(): Promise<MailProviderTemplate[] | MailProviderError> {
+  async getTemplates(): Promise<MailProviderTemplate[]> {
     try {
       const response = await this.mailgunClient.domains.domainTemplates.list(this.mailDomain)
       const templates: MailProviderTemplate[] = response.items.map(mailTemplateResponse => {
@@ -155,9 +155,9 @@ export class MailgunMailProvider extends BaseMailProvider {
       return templates
     } catch (e: unknown) {
       if (this.isMailgunApiError(e)) {
-        return new MailProviderError(e.details)
+        throw new MailProviderError(e.details)
       } else {
-        return new MailProviderError(String(e))
+        throw new MailProviderError(String(e))
       }
     }
   }
