@@ -28,6 +28,7 @@ import {
   theme,
   UnorderedList
 } from '@wepublish/ui'
+import {Event} from '@wepublish/event/website'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {memo, PropsWithChildren} from 'react'
 import {IconContext} from 'react-icons'
@@ -58,6 +59,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         PayInvoices={PayInvoices}
         Page={Page}
         Article={Article}
+        Event={Event}
         elements={{
           Button,
           H1,

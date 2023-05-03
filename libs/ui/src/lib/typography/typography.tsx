@@ -56,7 +56,7 @@ export type ParagraphProps = HTMLAttributes<HTMLParagraphElement> & {component?:
 
 export const Paragraph = forwardRef(({children, ...props}: ParagraphProps, ref) => {
   return (
-    <Typography {...props} ref={ref as any} variant="body1">
+    <Typography {...props} ref={ref as any} variant="body1" gutterBottom>
       {children}
     </Typography>
   )

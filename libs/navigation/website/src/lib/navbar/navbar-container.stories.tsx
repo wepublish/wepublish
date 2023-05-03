@@ -2,6 +2,7 @@ import {action} from '@storybook/addon-actions'
 import {ComponentStory, Meta} from '@storybook/react'
 import {Navigation, NavigationListDocument} from '@wepublish/website/api'
 import {NavbarContainer} from './navbar-container'
+import {css} from '@emotion/react'
 
 const navigations = [
   {
@@ -69,6 +70,32 @@ WithClassName.args = {
 }
 
 WithClassName.parameters = {
+  apolloClient: {
+    mocks: [
+      {
+        request: {
+          query: NavigationListDocument
+        },
+        result: {
+          data: {
+            navigations
+          }
+        }
+      }
+    ]
+  }
+}
+
+export const WithEmotion = Template.bind({})
+
+WithEmotion.args = {
+  onQuery: action('onQuery'),
+  css: css`
+    background-color: #eee;
+  `
+} as any // The css prop comes from the WithConditionalCSSProp type by the Emotion JSX Pragma
+
+WithEmotion.parameters = {
   apolloClient: {
     mocks: [
       {

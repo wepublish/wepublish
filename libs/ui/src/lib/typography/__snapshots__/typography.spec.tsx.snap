@@ -40,7 +40,7 @@ exports[`Paragraph should render successfully 1`] = `
 <body>
   <div>
     <p
-      class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
     >
       Foobar
     </p>

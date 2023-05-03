@@ -21,7 +21,15 @@ export default {
     },
     '@storybook/addon-a11y',
     '@storybook/addon-docs'
-  ]
+  ],
+  babel: async (options: any) => {
+    options.overrides.push({
+      presets: [['@babel/preset-react', {runtime: 'automatic', importSource: '@emotion/react'}]],
+      test: '*' // This says "for all files, use this override".
+    })
+
+    return options
+  }
   // uncomment the property below if you want to apply some webpack config globally
   // webpackFinal: async (config, { configType }) => {
   //   // Make whatever fine-grained changes you need that should apply to all storybook configs

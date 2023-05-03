@@ -102,7 +102,7 @@ exports[`Blocks should render Default 1`] = `
         </li>
       </ol>
       <p
-        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -129,7 +129,7 @@ exports[`Blocks should render Default 1`] = `
               style="border-color: #000000;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -148,7 +148,7 @@ exports[`Blocks should render Default 1`] = `
               style="border-color: #000000;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -171,7 +171,7 @@ exports[`Blocks should render Default 1`] = `
               style="border-color: #000000;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -190,7 +190,7 @@ exports[`Blocks should render Default 1`] = `
               style="border-color: #000000;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -208,7 +208,7 @@ exports[`Blocks should render Default 1`] = `
         </tbody>
       </table>
       <p
-        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -405,7 +405,7 @@ exports[`Blocks should render Default 1`] = `
       «Quote»
     </p>
     <cite
-      class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
     >
       By an Author
     </cite>
@@ -691,7 +691,7 @@ exports[`Blocks should render WithLayout 1`] = `
           </li>
         </ol>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
           data-slate-node="element"
         >
           <span
@@ -718,7 +718,7 @@ exports[`Blocks should render WithLayout 1`] = `
                 style="border-color: #000000;"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
                   data-slate-node="element"
                 >
                   <span
@@ -737,7 +737,7 @@ exports[`Blocks should render WithLayout 1`] = `
                 style="border-color: #000000;"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
                   data-slate-node="element"
                 >
                   <span
@@ -760,7 +760,7 @@ exports[`Blocks should render WithLayout 1`] = `
                 style="border-color: #000000;"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
                   data-slate-node="element"
                 >
                   <span
@@ -779,7 +779,7 @@ exports[`Blocks should render WithLayout 1`] = `
                 style="border-color: #000000;"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
                   data-slate-node="element"
                 >
                   <span
@@ -797,7 +797,7 @@ exports[`Blocks should render WithLayout 1`] = `
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
           data-slate-node="element"
         >
           <span
@@ -994,7 +994,7 @@ exports[`Blocks should render WithLayout 1`] = `
         «Quote»
       </p>
       <cite
-        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
       >
         By an Author
       </cite>

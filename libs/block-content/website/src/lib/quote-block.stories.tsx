@@ -1,5 +1,6 @@
 import {ComponentStory, Meta} from '@storybook/react'
 import {QuoteBlock} from './quote-block'
+import {css} from '@emotion/react'
 
 export default {
   component: QuoteBlock,
@@ -19,3 +20,12 @@ WithClassName.args = {
   author: 'John Doe',
   className: 'extra-classname'
 }
+
+export const WithEmotion = Template.bind({})
+WithEmotion.args = {
+  quote: 'This is a quote',
+  author: 'John Doe',
+  css: css`
+    background-color: #eee;
+  `
+} as any // The css prop comes from the WithConditionalCSSProp type by the Emotion JSX Pragma

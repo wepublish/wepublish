@@ -18,8 +18,7 @@ export const TitleBlock = ({title, lead, className}: BuilderTitleBlockProps) => 
   return (
     <TitleBlockWrapper className={className}>
       <H3 component="h1">{title}</H3>
-
-      <H6 component="p">{lead}</H6>
+      {lead && <H6 component="p">{lead}</H6>}
     </TitleBlockWrapper>
   )
 }

@@ -27,6 +27,8 @@ fragment FullImage on Image {
   modifiedAt
 
   filename
+  format
+  mimeType
   extension
   width
   height

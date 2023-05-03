@@ -1,5 +1,6 @@
 import {ComponentStory, Meta} from '@storybook/react'
 import {PayInvoicesContainer} from './pay-invoices-container'
+import {css} from '@emotion/react'
 
 export default {
   component: PayInvoicesContainer,
@@ -26,6 +27,20 @@ WithClassName.args = {
 }
 
 WithClassName.parameters = {
+  apolloClient: {
+    mocks: []
+  }
+}
+
+export const WithEmotion = Template.bind({})
+
+WithEmotion.args = {
+  css: css`
+    background-color: #eee;
+  `
+} as any // The css prop comes from the WithConditionalCSSProp type by the Emotion JSX Pragma
+
+WithEmotion.parameters = {
   apolloClient: {
     mocks: []
   }

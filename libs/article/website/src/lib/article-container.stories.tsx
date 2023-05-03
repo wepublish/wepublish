@@ -2,8 +2,10 @@ import {action} from '@storybook/addon-actions'
 import {ComponentStory, Meta} from '@storybook/react'
 import {ArticleDocument, ArticleQuery} from '@wepublish/website/api'
 import {ArticleContainer} from './article-container'
+import {css} from '@emotion/react'
 
 const article = {
+  __typename: 'Article',
   id: 'clgp1hfio50331801rejmrk6sj3',
   slug: 'slug',
   blocks: [
@@ -213,6 +215,7 @@ const article = {
       __typename: 'ImageBlock',
       caption: 'Caption',
       image: {
+        __typename: 'Image',
         id: 'ljh9FHAvHAs0AxC',
         createdAt: '2023-04-18T12:38:56.369Z',
         modifiedAt: '2023-04-18T12:38:56.371Z',
@@ -1019,6 +1022,36 @@ WithClassName.args = {
 }
 
 WithClassName.parameters = {
+  apolloClient: {
+    mocks: [
+      {
+        request: {
+          query: ArticleDocument,
+          variables: {
+            id: article.id
+          }
+        },
+        result: {
+          data: {
+            article
+          }
+        }
+      }
+    ]
+  }
+}
+
+export const WithEmotion = Template.bind({})
+
+WithEmotion.args = {
+  onQuery: action('onQuery'),
+  id: article.id,
+  css: css`
+    background-color: #eee;
+  `
+} as any // The css prop comes from the WithConditionalCSSProp type by the Emotion JSX Pragma
+
+WithEmotion.parameters = {
   apolloClient: {
     mocks: [
       {

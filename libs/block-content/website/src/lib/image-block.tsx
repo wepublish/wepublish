@@ -22,6 +22,6 @@ export const ImageBlock = ({caption, image, className}: BuilderImageBlockProps) 
       />
     )}
 
-    <figcaption>{caption}</figcaption>
+    {caption && <figcaption>{caption}</figcaption>}
   </ImageBlockWrapper>
 )

@@ -1370,6 +1370,8 @@ export type FullArticleFragment = {
           createdAt: string
           modifiedAt: string
           filename?: string | null
+          format: string
+          mimeType: string
           extension: string
           width: number
           height: number
@@ -1454,6 +1456,8 @@ export type FullArticleFragment = {
                           createdAt: string
                           modifiedAt: string
                           filename?: string | null
+                          format: string
+                          mimeType: string
                           extension: string
                           width: number
                           height: number
@@ -1567,6 +1571,8 @@ export type FullArticleFragment = {
                           createdAt: string
                           modifiedAt: string
                           filename?: string | null
+                          format: string
+                          mimeType: string
                           extension: string
                           width: number
                           height: number
@@ -1646,6 +1652,8 @@ export type ArticleQuery = {
             createdAt: string
             modifiedAt: string
             filename?: string | null
+            format: string
+            mimeType: string
             extension: string
             width: number
             height: number
@@ -1730,6 +1738,8 @@ export type ArticleQuery = {
                             createdAt: string
                             modifiedAt: string
                             filename?: string | null
+                            format: string
+                            mimeType: string
                             extension: string
                             width: number
                             height: number
@@ -1843,6 +1853,8 @@ export type ArticleQuery = {
                             createdAt: string
                             modifiedAt: string
                             filename?: string | null
+                            format: string
+                            mimeType: string
                             extension: string
                             width: number
                             height: number
@@ -1926,6 +1938,156 @@ export type ChallengeQuery = {
   }
 }
 
+export type FullEventFragment = {
+  __typename?: 'Event'
+  id: string
+  name: string
+  description?: Node[] | null
+  status: EventStatus
+  location?: string | null
+  startsAt: string
+  endsAt?: string | null
+  image?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    title?: string | null
+    url?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    thumbURL?: string | null
+    squareURL?: string | null
+    previewURL?: string | null
+    column1URL?: string | null
+    column6URL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
+  tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+}
+
+export type EventListQueryVariables = Exact<{
+  filter?: InputMaybe<EventFilter>
+  cursor?: InputMaybe<Scalars['ID']>
+  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']>
+  order?: InputMaybe<SortOrder>
+  sort?: InputMaybe<EventSort>
+}>
+
+export type EventListQuery = {
+  __typename?: 'Query'
+  events?: {
+    __typename?: 'EventConnection'
+    totalCount: number
+    nodes: Array<{
+      __typename?: 'Event'
+      id: string
+      name: string
+      description?: Node[] | null
+      status: EventStatus
+      location?: string | null
+      startsAt: string
+      endsAt?: string | null
+      image?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        title?: string | null
+        url?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        thumbURL?: string | null
+        squareURL?: string | null
+        previewURL?: string | null
+        column1URL?: string | null
+        column6URL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+      tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+    }>
+    pageInfo: {
+      __typename?: 'PageInfo'
+      startCursor?: string | null
+      endCursor?: string | null
+      hasNextPage: boolean
+      hasPreviousPage: boolean
+    }
+  } | null
+}
+
+export type EventQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type EventQuery = {
+  __typename?: 'Query'
+  event: {
+    __typename?: 'Event'
+    id: string
+    name: string
+    description?: Node[] | null
+    status: EventStatus
+    location?: string | null
+    startsAt: string
+    endsAt?: string | null
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      title?: string | null
+      url?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      thumbURL?: string | null
+      squareURL?: string | null
+      previewURL?: string | null
+      column1URL?: string | null
+      column6URL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+  }
+}
+
 export type ImageUrLsFragment = {
   __typename?: 'Image'
   url?: string | null
@@ -1963,6 +2125,8 @@ export type FullImageFragment = {
   createdAt: string
   modifiedAt: string
   filename?: string | null
+  format: string
+  mimeType: string
   extension: string
   width: number
   height: number
@@ -2207,6 +2371,8 @@ export type FullPageFragment = {
           createdAt: string
           modifiedAt: string
           filename?: string | null
+          format: string
+          mimeType: string
           extension: string
           width: number
           height: number
@@ -2291,6 +2457,8 @@ export type FullPageFragment = {
                           createdAt: string
                           modifiedAt: string
                           filename?: string | null
+                          format: string
+                          mimeType: string
                           extension: string
                           width: number
                           height: number
@@ -2404,6 +2572,8 @@ export type FullPageFragment = {
                           createdAt: string
                           modifiedAt: string
                           filename?: string | null
+                          format: string
+                          mimeType: string
                           extension: string
                           width: number
                           height: number
@@ -2483,6 +2653,8 @@ export type PageQuery = {
             createdAt: string
             modifiedAt: string
             filename?: string | null
+            format: string
+            mimeType: string
             extension: string
             width: number
             height: number
@@ -2567,6 +2739,8 @@ export type PageQuery = {
                             createdAt: string
                             modifiedAt: string
                             filename?: string | null
+                            format: string
+                            mimeType: string
                             extension: string
                             width: number
                             height: number
@@ -2680,6 +2854,8 @@ export type PageQuery = {
                             createdAt: string
                             modifiedAt: string
                             filename?: string | null
+                            format: string
+                            mimeType: string
                             extension: string
                             width: number
                             height: number
@@ -2764,6 +2940,8 @@ export const FullImageFragmentDoc = gql`
     createdAt
     modifiedAt
     filename
+    format
+    mimeType
     extension
     width
     height
@@ -2894,6 +3072,25 @@ export const FullArticleFragmentDoc = gql`
   }
   ${FullImageFragmentDoc}
   ${ImageRefFragmentDoc}
+`
+export const FullEventFragmentDoc = gql`
+  fragment FullEvent on Event {
+    id
+    name
+    description
+    status
+    location
+    image {
+      ...FullImage
+    }
+    tags {
+      id
+      tag
+    }
+    startsAt
+    endsAt
+  }
+  ${FullImageFragmentDoc}
 `
 export const FullNavigationFragmentDoc = gql`
   fragment FullNavigation on Navigation {
@@ -3199,6 +3396,107 @@ export function useChallengeLazyQuery(
 export type ChallengeQueryHookResult = ReturnType<typeof useChallengeQuery>
 export type ChallengeLazyQueryHookResult = ReturnType<typeof useChallengeLazyQuery>
 export type ChallengeQueryResult = Apollo.QueryResult<ChallengeQuery, ChallengeQueryVariables>
+export const EventListDocument = gql`
+  query EventList(
+    $filter: EventFilter
+    $cursor: ID
+    $take: Int
+    $skip: Int
+    $order: SortOrder
+    $sort: EventSort
+  ) {
+    events(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+      nodes {
+        ...FullEvent
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+  }
+  ${FullEventFragmentDoc}
+`
+
+/**
+ * __useEventListQuery__
+ *
+ * To run a query within a React component, call `useEventListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEventListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEventListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useEventListQuery(
+  baseOptions?: Apollo.QueryHookOptions<EventListQuery, EventListQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<EventListQuery, EventListQueryVariables>(EventListDocument, options)
+}
+export function useEventListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<EventListQuery, EventListQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<EventListQuery, EventListQueryVariables>(EventListDocument, options)
+}
+export type EventListQueryHookResult = ReturnType<typeof useEventListQuery>
+export type EventListLazyQueryHookResult = ReturnType<typeof useEventListLazyQuery>
+export type EventListQueryResult = Apollo.QueryResult<EventListQuery, EventListQueryVariables>
+export const EventDocument = gql`
+  query Event($id: ID!) {
+    event(id: $id) {
+      ...FullEvent
+    }
+  }
+  ${FullEventFragmentDoc}
+`
+
+/**
+ * __useEventQuery__
+ *
+ * To run a query within a React component, call `useEventQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEventQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEventQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useEventQuery(
+  baseOptions: Apollo.QueryHookOptions<EventQuery, EventQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<EventQuery, EventQueryVariables>(EventDocument, options)
+}
+export function useEventLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<EventQuery, EventQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<EventQuery, EventQueryVariables>(EventDocument, options)
+}
+export type EventQueryHookResult = ReturnType<typeof useEventQuery>
+export type EventLazyQueryHookResult = ReturnType<typeof useEventLazyQuery>
+export type EventQueryResult = Apollo.QueryResult<EventQuery, EventQueryVariables>
 export const MemberPlanListDocument = gql`
   query MemberPlanList($take: Int, $skip: Int) {
     memberPlans(filter: {active: true}, take: $take, skip: $skip) {

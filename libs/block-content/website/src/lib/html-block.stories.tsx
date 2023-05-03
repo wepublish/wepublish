@@ -1,5 +1,6 @@
 import {ComponentStory, Meta} from '@storybook/react'
 import {HtmlBlock} from './html-block'
+import {css} from '@emotion/react'
 
 export default {
   component: HtmlBlock,
@@ -25,3 +26,11 @@ WithClassName.args = {
   html: '<div style="color: red;">This is a html embed</div>',
   className: 'extra-classname'
 }
+
+export const WithEmotion = Template.bind({})
+WithEmotion.args = {
+  html: '<div style="color: red;">This is a html embed</div>',
+  css: css`
+    background-color: #eee;
+  `
+} as any // The css prop comes from the WithConditionalCSSProp type by the Emotion JSX Pragma

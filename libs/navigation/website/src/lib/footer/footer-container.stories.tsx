@@ -2,6 +2,7 @@ import {action} from '@storybook/addon-actions'
 import {ComponentStory, Meta} from '@storybook/react'
 import {Navigation, NavigationDocument} from '@wepublish/website/api'
 import {FooterContainer} from './footer-container'
+import {css} from '@emotion/react'
 
 const children = (
   <svg
@@ -15,6 +16,7 @@ const children = (
 )
 
 const navigation = {
+  __typename: 'Navigation',
   id: 'cldx7kcpi1168oapxftiqsh0p',
   key: 'main',
   name: 'main',
@@ -23,6 +25,7 @@ const navigation = {
       __typename: 'PageNavigationLink',
       label: 'Home',
       page: {
+        __typename: 'Page',
         url: '/'
       }
     },
@@ -30,6 +33,7 @@ const navigation = {
       __typename: 'ArticleNavigationLink',
       label: 'Impressum',
       article: {
+        __typename: 'Article',
         url: '/a/impressum'
       }
     },
@@ -85,6 +89,37 @@ WithClassName.args = {
 }
 
 WithClassName.parameters = {
+  apolloClient: {
+    mocks: [
+      {
+        request: {
+          query: NavigationDocument,
+          variables: {
+            slug: 'footer'
+          }
+        },
+        result: {
+          data: {
+            navigation
+          }
+        }
+      }
+    ]
+  }
+}
+
+export const WithEmotion = Template.bind({})
+
+WithEmotion.args = {
+  onQuery: action('onQuery'),
+  slug: 'footer',
+  children,
+  css: css`
+    background-color: #eee;
+  `
+} as any // The css prop comes from the WithConditionalCSSProp type by the Emotion JSX Pragma
+
+WithEmotion.parameters = {
   apolloClient: {
     mocks: [
       {
