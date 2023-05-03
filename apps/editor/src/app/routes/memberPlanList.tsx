@@ -7,7 +7,7 @@ import {
 } from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete, MdEdit, MdSearch} from 'react-icons/md'
+import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Button, IconButton as RIconButton, Input, InputGroup, Modal, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
