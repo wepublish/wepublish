@@ -100,13 +100,17 @@ const calculationPosition = (money: number): number => {
     return 0
   }
 
-  for (let i = 0; i < keys.length - 1; i++) {
-    const key = +keys[i]
-    const prevKey = +keys[i - 1]
+  try {
+    for (let i = 0; i < keys.length; i++) {
+      const key = +keys[i]
+      const prevKey = +keys[i - 1]
 
-    if (money <= key) {
-      return getPositon(money - prevKey)(key - prevKey, vales[i - 1].x, vales[i]?.x ?? 0)
+      if (money <= key) {
+        return getPositon(money - prevKey)(key - prevKey, vales[i - 1].x, vales[i]?.x ?? 0)
+      }
     }
+  } catch {
+    //
   }
 
   return 1
