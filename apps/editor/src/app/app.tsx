@@ -558,7 +558,7 @@ export function App() {
               }
             />
             <Route
-              path="mailTemplates"
+              path="mailtemplates"
               element={
                 <Base>
                   <MailTemplateList />

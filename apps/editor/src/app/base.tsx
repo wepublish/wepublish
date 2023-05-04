@@ -528,10 +528,10 @@ export function Base({children}: BaseProps) {
                       qualifyingPermissions={['CAN_GET_MAIL-TEMPLATES', 'CAN_SYNC_MAIL-TEMPLATES']}>
                       <Nav.Item
                         as={NavLink}
-                        href="/mailTemplates"
-                        active={path === 'mailTemplates'}
+                        href="/mailtemplates"
+                        active={path === 'mailtemplates'}
                         icon={<MdMail />}>
-                        {t('navbar.mailTemplates')}
+                        {t('navbar.mailtemplates')}
                       </Nav.Item>
                     </PermissionControl>
 
