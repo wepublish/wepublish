@@ -47,6 +47,10 @@ query Event($id: ID!) {
   }
 }
 
+query ImportedEventsIds {
+  importedEventsIds
+}
+
 mutation CreateEvent(
   $name: String!
   $description: RichText

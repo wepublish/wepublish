@@ -48,6 +48,18 @@ const parseAndCacheData = async (cacheManager: Cache, source: Providers) => {
   return importedEvents
 }
 
+interface ImportedEventsResolverParams {
+  filter: ImportedEventFilter
+  order: 1 | -1
+  skip: number
+  take: number
+  sort: string
+}
+
+interface ImportedEventResolverParams {
+  id: string
+}
+
 interface ImportedEventsParams {
   filter: ImportedEventFilter
   order: 1 | -1
@@ -72,9 +84,9 @@ interface EventsProvider {
     skip,
     take,
     sort
-  }: ImportedEventsParams): Promise<ImportedEventsDocument>
+  }: ImportedEventsResolverParams): Promise<ImportedEventsDocument>
 
-  importedEvent({id, source}: ImportedEventParams): Promise<Event>
+  importedEvent({id}: ImportedEventResolverParams): Promise<Event>
 }
 
 export enum EventStatus {
@@ -148,7 +160,7 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType, source: Providers) => {
 export class EventsImportService {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache, private prisma: PrismaClient) {}
 
-  async importedEvents({filter, order, skip, take, sort}: ImportedEventsParams) {
+  async importedEvents({filter, order, skip, take, sort}: ImportedEventsResolverParams) {
     const importableEvents = Promise.all(
       providers.map(provider =>
         provider.importedEvents({
@@ -190,9 +202,9 @@ class AgendaBasel implements EventsProvider {
     // sort,
     skip = 0,
     take = 10,
-    cacheManager,
-    source
-  }: ImportedEventsParams): Promise<ImportedEventsDocument> {
+    cacheManager
+  }: // source
+  ImportedEventsParams): Promise<ImportedEventsDocument> {
     let parsedEvents: Event[] = await cacheManager.get('parsedEvents')
 
     if (!parsedEvents) {

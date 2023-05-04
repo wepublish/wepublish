@@ -1,4 +1,4 @@
-fragment ImportabeEventRef on Event {
+fragment ImportableEventRef on Event {
   id
   name
   description
@@ -6,7 +6,9 @@ fragment ImportabeEventRef on Event {
   location
   externalSourceId
   externalSourceName
-  modifiedAt
+  # imageId {
+  #   ...ImageRef
+  # }
   startsAt
   endsAt
 }
@@ -21,7 +23,7 @@ query ImportedEventList(
 ) {
   importedEvents(filter: $filter, order: $order, skip: $skip, take: $take, sort: $sort) {
     nodes {
-      ...ImportabeEventRef
+      ...ImportableEventRef
     }
 
     pageInfo {

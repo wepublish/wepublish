@@ -1,6 +1,6 @@
 import {format as formatDate} from 'date-fns'
 import {ApolloError} from '@apollo/client'
-import {Event} from '@wepublish/editor/api'
+import {Event, useImportedEventsIdsQuery} from '@wepublish/editor/api'
 import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Link, useNavigate} from 'react-router-dom'
@@ -70,6 +70,13 @@ function ImportableEventListView() {
     onError: onErrorToast
   })
 
+  const {data: ids} = useImportedEventsIdsQuery({
+    fetchPolicy: 'no-cache'
+  })
+  const alreadyImported = ids?.importedEventsIds
+
+  console.log('ids', ids?.importedEventsIds)
+
   return (
     <>
       <ListViewContainer>
@@ -107,21 +114,22 @@ function ImportableEventListView() {
           <Column width={150} resizable>
             <HeaderCell>{t('event.list.source')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Event>) => (
-                <Button
-                  onClick={() => navigate(`/events/import/edit/${rowData.id}`)}
-                  appearance="primary">
-                  Import
-                </Button>
-
-                // todo check if already imported
-                // if (importedEvents.includes(rowData.id))....
-                // <Button
-                //   appearance="subtle"
-                //   disabled>
-                //   Imported
-                // </Button>
-              )}
+              {(rowData: RowDataType<Event>) =>
+                alreadyImported && alreadyImported.includes(rowData.id) ? (
+                  <Button
+                    // onClick={() => navigate(`/events/import/edit/${rowData.id}`)}
+                    appearance="ghost"
+                    disabled>
+                    Imported
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => navigate(`/events/import/edit/${rowData.id}`)}
+                    appearance="primary">
+                    Import
+                  </Button>
+                )
+              }
             </Cell>
           </Column>
         </Table>

@@ -1868,6 +1868,8 @@ export type Query = {
   events?: Maybe<EventConnection>;
   image?: Maybe<Image>;
   images: ImageConnection;
+  /** This query returns a list of original ids of imported events */
+  importedEventsIds?: Maybe<Array<Maybe<Scalars['String']>>>;
   invoice?: Maybe<Invoice>;
   invoices: InvoiceConnection;
   me?: Maybe<User>;
@@ -3087,6 +3089,11 @@ export type EventQueryVariables = Exact<{
 
 
 export type EventQuery = { __typename?: 'Query', event?: { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null } | null };
+
+export type ImportedEventsIdsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ImportedEventsIdsQuery = { __typename?: 'Query', importedEventsIds?: Array<string | null> | null };
 
 export type CreateEventMutationVariables = Exact<{
   name: Scalars['String'];
@@ -6048,6 +6055,38 @@ export function useEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Even
 export type EventQueryHookResult = ReturnType<typeof useEventQuery>;
 export type EventLazyQueryHookResult = ReturnType<typeof useEventLazyQuery>;
 export type EventQueryResult = Apollo.QueryResult<EventQuery, EventQueryVariables>;
+export const ImportedEventsIdsDocument = gql`
+    query ImportedEventsIds {
+  importedEventsIds
+}
+    `;
+
+/**
+ * __useImportedEventsIdsQuery__
+ *
+ * To run a query within a React component, call `useImportedEventsIdsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useImportedEventsIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useImportedEventsIdsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useImportedEventsIdsQuery(baseOptions?: Apollo.QueryHookOptions<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>(ImportedEventsIdsDocument, options);
+      }
+export function useImportedEventsIdsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>(ImportedEventsIdsDocument, options);
+        }
+export type ImportedEventsIdsQueryHookResult = ReturnType<typeof useImportedEventsIdsQuery>;
+export type ImportedEventsIdsLazyQueryHookResult = ReturnType<typeof useImportedEventsIdsLazyQuery>;
+export type ImportedEventsIdsQueryResult = Apollo.QueryResult<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>;
 export const CreateEventDocument = gql`
     mutation CreateEvent($name: String!, $description: RichText, $location: String, $startsAt: DateTime!, $endsAt: DateTime, $imageId: ID, $tagIds: [ID!], $externalSourceId: String, $externalSourceName: String) {
   createEvent(
