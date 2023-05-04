@@ -1,5 +1,5 @@
 import {PrismaClient} from '@prisma/client'
-import {articleWithRevisionsToPublicArticle, PublicArticle} from '../../db/article'
+import {articleWithRevisionsToPublicArticle} from '../../db/article'
 import {pageWithRevisionsToPublicPage} from '../../db/page'
 import {Context} from '../../context'
 
