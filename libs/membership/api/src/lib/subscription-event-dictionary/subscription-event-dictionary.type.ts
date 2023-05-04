@@ -29,7 +29,7 @@ export type Action = {
 
 export type LookupActionInput = {
   memberplanId: string
-  paymentmethodeId: string
+  paymentMethodId: string
   periodicity: PaymentPeriodicity
   autorenwal: boolean
   daysAwayFromEnding?: number

@@ -351,7 +351,7 @@ describe('SubscriptionEventDictionary', () => {
     let actions = sed.getActionFromStore({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.yearly,
-      paymentmethodeId: 'stripe',
+      paymentMethodId: 'stripe',
       autorenwal: true
     })
     let res =
@@ -362,7 +362,7 @@ describe('SubscriptionEventDictionary', () => {
     actions = sed.getActionFromStore({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.yearly,
-      paymentmethodeId: 'stripe',
+      paymentMethodId: 'stripe',
       autorenwal: true,
       daysAwayFromEnding: -7
     })
@@ -373,7 +373,7 @@ describe('SubscriptionEventDictionary', () => {
     actions = sed.getActionFromStore({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.yearly,
-      paymentmethodeId: 'stripe',
+      paymentMethodId: 'stripe',
       autorenwal: true,
       daysAwayFromEnding: -10
     })
@@ -383,7 +383,7 @@ describe('SubscriptionEventDictionary', () => {
     actions = sed.getActionFromStore({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.yearly,
-      paymentmethodeId: 'stripe',
+      paymentMethodId: 'stripe',
       autorenwal: true,
       daysAwayFromEnding: 7
     })
@@ -394,7 +394,7 @@ describe('SubscriptionEventDictionary', () => {
     actions = sed.getActionFromStore({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.yearly,
-      paymentmethodeId: 'stripe',
+      paymentMethodId: 'stripe',
       autorenwal: true,
       daysAwayFromEnding: 9
     })
@@ -404,7 +404,7 @@ describe('SubscriptionEventDictionary', () => {
     actions = sed.getActionFromStore({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.monthly,
-      paymentmethodeId: 'payrexx',
+      paymentMethodId: 'payrexx',
       autorenwal: false,
       daysAwayFromEnding: 9
     })
@@ -416,7 +416,7 @@ describe('SubscriptionEventDictionary', () => {
     actions = sed.getActionFromStore({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.biannual,
-      paymentmethodeId: 'payrexx',
+      paymentMethodId: 'payrexx',
       autorenwal: false
     })
     res =
@@ -428,7 +428,7 @@ describe('SubscriptionEventDictionary', () => {
     actions = sed.getActionFromStore({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.biannual,
-      paymentmethodeId: 'payrexx',
+      paymentMethodId: 'payrexx',
       autorenwal: false,
       daysAwayFromEnding: -15
     })
@@ -438,7 +438,7 @@ describe('SubscriptionEventDictionary', () => {
     actions = sed.getActionFromStore({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.biannual,
-      paymentmethodeId: 'payrexx',
+      paymentMethodId: 'payrexx',
       autorenwal: false,
       daysAwayFromEnding: -14
     })
@@ -449,7 +449,7 @@ describe('SubscriptionEventDictionary', () => {
     actions = sed.getActionFromStore({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.biannual,
-      paymentmethodeId: 'payrexx',
+      paymentMethodId: 'payrexx',
       autorenwal: false,
       daysAwayFromEnding: 5
     })
@@ -460,7 +460,7 @@ describe('SubscriptionEventDictionary', () => {
     actions = sed.getActionFromStore({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.biannual,
-      paymentmethodeId: 'payrexx',
+      paymentMethodId: 'payrexx',
       autorenwal: false,
       daysAwayFromEnding: 9
     })
@@ -471,7 +471,7 @@ describe('SubscriptionEventDictionary', () => {
       sed.getActionFromStore({
         memberplanId: customMemberPlan1.id,
         periodicity: PaymentPeriodicity.biannual,
-        paymentmethodeId: 'payrexx',
+        paymentMethodId: 'payrexx',
         autorenwal: false,
         daysAwayFromEnding: 10,
         events: [SubscriptionEvent.INVOICE_CREATION]
@@ -488,7 +488,7 @@ describe('SubscriptionEventDictionary', () => {
     actions = sed.getActionFromStore({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.yearly,
-      paymentmethodeId: 'stripe',
+      paymentMethodId: 'stripe',
       autorenwal: false,
       events: [SubscriptionEvent.INVOICE_CREATION, SubscriptionEvent.DEACTIVATION_UNPAID]
     })
@@ -500,7 +500,7 @@ describe('SubscriptionEventDictionary', () => {
     actions = sed.getActionFromStore({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.biannual,
-      paymentmethodeId: 'stripe',
+      paymentMethodId: 'stripe',
       autorenwal: false,
       events: [SubscriptionEvent.INVOICE_CREATION, SubscriptionEvent.DEACTIVATION_UNPAID]
     })
@@ -680,7 +680,7 @@ describe('SubscriptionEventDictionary', () => {
     try {
       sed['getActionFromStore']({
         memberplanId: '2',
-        paymentmethodeId: '1',
+        paymentMethodId: '1',
         periodicity: PaymentPeriodicity.biannual,
         autorenwal: true
       })

@@ -150,7 +150,7 @@ export class PeriodicJobController {
     )
     const subscriptionDictionary = this.subscriptionEventDictionary.getActionFromStore({
       memberplanId: subscriptionsWithEvent.memberPlanID,
-      paymentmethodeId: subscriptionsWithEvent.paymentMethodID,
+      paymentMethodId: subscriptionsWithEvent.paymentMethodID,
       periodicity: subscriptionsWithEvent.paymentPeriodicity,
       autorenwal: subscriptionsWithEvent.autoRenew,
       daysAwayFromEnding
@@ -179,7 +179,7 @@ export class PeriodicJobController {
   ) {
     const eventInvoiceCreation = this.subscriptionEventDictionary.getActionFromStore({
       memberplanId: subscriptionToCreateInvoice.memberPlanID,
-      paymentmethodeId: subscriptionToCreateInvoice.paymentMethodID,
+      paymentMethodId: subscriptionToCreateInvoice.paymentMethodID,
       periodicity: subscriptionToCreateInvoice.paymentPeriodicity,
       autorenwal: subscriptionToCreateInvoice.autoRenew,
       events: [SubscriptionEvent.INVOICE_CREATION, SubscriptionEvent.DEACTIVATION_UNPAID]
@@ -238,7 +238,7 @@ export class PeriodicJobController {
 
     const eventsRenewal = this.subscriptionEventDictionary.getActionFromStore({
       memberplanId: invoiceToCharge.subscription.memberPlanID,
-      paymentmethodeId: invoiceToCharge.subscription.paymentMethodID,
+      paymentMethodId: invoiceToCharge.subscription.paymentMethodID,
       periodicity: invoiceToCharge.subscription.paymentPeriodicity,
       autorenwal: invoiceToCharge.subscription.autoRenew,
       events: [SubscriptionEvent.RENEWAL_SUCCESS, SubscriptionEvent.RENEWAL_FAILED]
@@ -273,7 +273,7 @@ export class PeriodicJobController {
     }
     const eventDeactivationUnpaid = this.subscriptionEventDictionary.getActionFromStore({
       memberplanId: unpaidInvoice.subscription.memberPlanID,
-      paymentmethodeId: unpaidInvoice.subscription.paymentMethodID,
+      paymentMethodId: unpaidInvoice.subscription.paymentMethodID,
       periodicity: unpaidInvoice.subscription.paymentPeriodicity,
       autorenwal: unpaidInvoice.subscription.autoRenew,
       events: [SubscriptionEvent.DEACTIVATION_UNPAID]

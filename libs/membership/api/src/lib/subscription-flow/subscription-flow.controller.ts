@@ -80,7 +80,7 @@ export class SubscriptionFlowController {
           }
         },
         paymentMethods: {
-          connect: flow.paymentMethodIds.map(paymentMethodeId => ({id: paymentMethodeId}))
+          connect: flow.paymentMethodIds.map(paymentMethodId => ({id: paymentMethodId}))
         },
         periodicities: flow.periodicities,
         autoRenewal: flow.autoRenewal,
@@ -140,7 +140,7 @@ export class SubscriptionFlowController {
         where: {id: flow.id},
         data: {
           paymentMethods: {
-            connect: flow.paymentMethodIds.map(paymentMethodeId => ({id: paymentMethodeId}))
+            connect: flow.paymentMethodIds.map(paymentMethodId => ({id: paymentMethodId}))
           },
           periodicities: flow.periodicities,
           autoRenewal: flow.autoRenewal
