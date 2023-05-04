@@ -1,8 +1,8 @@
 # Email Templates
 
 We.Publish sends emails using remote templates. The templates can be configured
-on the platform of the mail provider. See the provider documentations for more
-informations:
+on the platform of the mail provider. See the provider's documentation for more
+information:
 
 * Mandrill: https://mailchimp.com/developer/transactional/docs/templates-dynamic-content
 * Mailgun: https://www.mailgun.com/resources/tools/email-templates/
