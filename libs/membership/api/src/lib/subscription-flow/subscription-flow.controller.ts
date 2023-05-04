@@ -68,7 +68,7 @@ export class SubscriptionFlowController {
     }
 
     if (await this.filterHasOverlap(flow.memberPlanId, flow)) {
-      throw new Error('You cant create this flow because there is a filter overlap!')
+      throw new Error("You can't create this flow because there is a filter overlap!")
     }
 
     await this.prismaService.subscriptionFlow.create({
@@ -124,7 +124,7 @@ export class SubscriptionFlowController {
     if (!originalFlow) throw new Error('The given filter is not found!')
 
     if (await this.filterHasOverlap(originalFlow.memberPlanId, flow)) {
-      throw new Error('You cant update this flow because there is a filter overlap!')
+      throw new Error("You can't update this flow because there is a filter overlap!")
     }
 
     await this.prismaService.$transaction([
