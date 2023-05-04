@@ -46,6 +46,36 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Event {
+  createdAt: DateTime!
+  description: String!
+  endsAt: DateTime
+  id: String!
+  imageId: String!
+  location: String!
+  modifiedAt: DateTime!
+  name: String!
+  startsAt: DateTime!
+  status: EventStatus!
+}
+
+enum EventStatus {
+  Cancelled
+  Postponed
+  Rescheduled
+  Scheduled
+}
+
+type ImportedEventDocument {
+  nodes: [Event!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input ImportedEventFilter {
+  name: String
+}
+
 type Mutation {
   """
   
@@ -93,6 +123,13 @@ type Mutation {
   updateUserConsent(id: String!, userConsent: UpdateUserConsentInput!): UserConsent!
 }
 
+type PageInfo {
+  endCursor: String!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String!
+}
+
 enum PaymentPeriodicity {
   biannual
   monthly
@@ -130,6 +167,13 @@ type Query {
       
   """
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+
+  """
+  
+        Returns a list of imported events from external sources, transformed to match our model.
+      
+  """
+  importedEvents(filter: ImportedEventFilter, order: Int, skip: Int, sort: String, take: Int): ImportedEventDocument!
 
   """
   

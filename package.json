@@ -159,7 +159,9 @@
     "typescript": "~4.6.0",
     "url": "^0.11.0",
     "url-loader": "^4.1.1",
-    "util": "^0.12.5"
+    "util": "^0.12.5",
+    "xml-fetch": "^1.1.91",
+    "xml2js": "^0.4.23"
   },
   "prisma": {
     "schema": "libs/api/prisma/schema.prisma",
@@ -186,6 +188,7 @@
     "@prisma/client": "^3.14.0",
     "@types/js-cookie": "^3.0.2",
     "@types/node-fetch": "^2.6.2",
+    "@types/xml2js": "^0.4.11",
     "@wepublish/analytics": "1.0.0-alpha.3",
     "abort-controller": "^3.0.0",
     "algebraic-captcha": "^1.0.1",

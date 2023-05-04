@@ -725,7 +725,8 @@
       "users": "Users",
       "usersAndMembers": "Users & Members",
       "consents": "Consents",
-      "userConsents": "User Consents"
+      "userConsents": "User Consents",
+      "importableEvents": "Importable Events"
     },
     "navigation": {
       "overview": {
@@ -1375,6 +1376,9 @@
         "body": "Do you really want to delete the event \"{{name}}\"?",
         "delete": "Yes, delete the event"
       }
+    },
+    "importableEvent": {
+      "title": "Importable events"
     },
     "toast": {
       "deletedSuccess": "Deleted successfully",

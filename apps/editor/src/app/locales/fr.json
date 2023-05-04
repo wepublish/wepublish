@@ -1068,7 +1068,8 @@
       "peerArticles": "Articles pairables",
       "subscriptions": "Abonnements",
       "consents": "Consentement",
-      "userConsents": "Consentement de l'utilisateur"
+      "userConsents": "Consentement de l'utilisateur",
+      "importableEvents": "Importable Events"
     },
     "navigation": {
       "overview": {
