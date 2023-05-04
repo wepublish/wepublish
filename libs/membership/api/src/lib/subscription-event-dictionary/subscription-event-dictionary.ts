@@ -16,7 +16,6 @@ import {
  * list of event names.
  */
 export class SubscriptionEventDictionary {
-  private storeIsBuilt = false
   private allFlows: (SubscriptionFlow & {
     actions: Action[]
     paymentMethods: PaymentMethod[]
@@ -26,10 +25,98 @@ export class SubscriptionEventDictionary {
   constructor(private readonly prismaService: PrismaClient) {}
 
   /**
-   * Load all subscription flows. This is required before calling
-   * {@link getActionFromStore}.
+   * Get the earliest date when an invoice must be created.
+   * @param date The current date.
+   * @returns The earliest date.
    */
-  public async initialize() {
+  public async getEarliestInvoiceCreationDate(date: Date): Promise<Date> {
+    await this.initialize()
+    const allIntervals = this.allFlows.map(flow => flow.intervals).flat()
+    const allCreationEvents = allIntervals.filter(
+      interval => interval.event === SubscriptionEvent.INVOICE_CREATION
+    )
+
+    if (allCreationEvents.length === 0) {
+      throw new Error('No invoice creation date found!')
+    }
+
+    let earliest = Number.MAX_SAFE_INTEGER
+    for (const event of allCreationEvents) {
+      if (event.daysAwayFromEnding !== null && event.daysAwayFromEnding < earliest) {
+        earliest = event.daysAwayFromEnding
+      }
+    }
+    return subDays(this.normalizeDate(date), earliest)
+  }
+
+  /**
+   * Get an array of the dates where custom events have been defined.
+   * @param date The current date.
+   * @returns An array of dates.
+   */
+  public async getDatesWithCustomEvent(date: Date): Promise<Date[]> {
+    await this.initialize()
+    const customEventDaysAwayFromEnding: number[] = []
+    const allIntervals = this.allFlows.map(flow => flow.intervals).flat()
+    const allCustomEvents = allIntervals.filter(
+      interval => interval.event === SubscriptionEvent.CUSTOM
+    )
+    for (const event of allCustomEvents) {
+      if (
+        event.daysAwayFromEnding !== null &&
+        !customEventDaysAwayFromEnding.includes(event.daysAwayFromEnding)
+      ) {
+        customEventDaysAwayFromEnding.push(event.daysAwayFromEnding)
+      }
+    }
+    return customEventDaysAwayFromEnding.map(daysAwayFromEnding =>
+      subDays(this.normalizeDate(date), daysAwayFromEnding)
+    )
+  }
+
+  /**
+   * Try to get the MailTemplates for a specific filter of [memberPlan,
+   * paymentMethod, periodicity, autoRenewal]. You additionally need to pass
+   * either `daysAwayFromEnding` or `events` to filter further. If any
+   * filter leads to an empty result set, the templates of the default flow are
+   * returned.
+   * @param query The filter of the above properties.
+   * @returns An array of MailTemplates.
+   */
+  public async getActionsForSubscriptions(query: LookupActionInput): Promise<Action[]> {
+    await this.initialize()
+    if (query.daysAwayFromEnding && query.events) {
+      throw new Error(
+        'Its not supported to query for daysAwayFromEnding combined with an event list'
+      )
+    }
+
+    const defaultFlow = this.allFlows.find(flow => flow.default)
+
+    if (!defaultFlow) {
+      throw new Error('Default flow is missing!')
+    }
+
+    const filteredFlows = this.allFlows.filter(
+      flow =>
+        flow.memberPlanId === query.memberplanId &&
+        flow.paymentMethods.map(pm => pm.id).includes(query.paymentmethodeId) &&
+        flow.periodicities.includes(query.periodicity) &&
+        flow.autoRenewal.includes(query.autorenwal)
+    )
+
+    if (filteredFlows.length === 0) {
+      return this.getActionByDay(defaultFlow.actions, query.daysAwayFromEnding, query.events)
+    }
+
+    return this.getActionByDay(filteredFlows[0].actions, query.daysAwayFromEnding, query.events)
+  }
+
+  /**
+   * Load all subscription flows. This is automatically called once per instance.
+   * {@link getActionsForSubscriptions}.
+   */
+  private async initialize() {
     this.allFlows = (
       await this.prismaService.subscriptionFlow.findMany({
         include: {
@@ -68,102 +155,6 @@ export class SubscriptionEventDictionary {
         'Subscription Flow with no memberplan found that is not default! This is a data integrity error!'
       )
     }
-
-    this.storeIsBuilt = true
-  }
-
-  /**
-   * Get the earliest date when an invoice must be created.
-   * @param date The current date.
-   * @returns The earliest date.
-   */
-  public getEarliestInvoiceCreationDate(date: Date) {
-    if (!this.storeIsBuilt) {
-      throw new Error('Tried to access store before it was successfully initialized!')
-    }
-    const allIntervals = this.allFlows.map(flow => flow.intervals).flat()
-    const allCreationEvents = allIntervals.filter(
-      interval => interval.event === SubscriptionEvent.INVOICE_CREATION
-    )
-
-    if (allCreationEvents.length === 0) {
-      throw new Error('No invoice creation date found!')
-    }
-
-    let earliest = Number.MAX_SAFE_INTEGER
-    for (const event of allCreationEvents) {
-      if (event.daysAwayFromEnding !== null && event.daysAwayFromEnding < earliest) {
-        earliest = event.daysAwayFromEnding
-      }
-    }
-    return subDays(this.normalizeDate(date), earliest)
-  }
-
-  /**
-   * Get an array of the dates where custom events have been defined.
-   * @param date The current date.
-   * @returns An array of dates.
-   */
-  public getDatesWithCustomEvent(date: Date): Date[] {
-    if (!this.storeIsBuilt) {
-      throw new Error('Tried to access store before it was successfully initialized!')
-    }
-    const customEventDaysAwayFromEnding: number[] = []
-    const allIntervals = this.allFlows.map(flow => flow.intervals).flat()
-    const allCustomEvents = allIntervals.filter(
-      interval => interval.event === SubscriptionEvent.CUSTOM
-    )
-    for (const event of allCustomEvents) {
-      if (
-        event.daysAwayFromEnding !== null &&
-        !customEventDaysAwayFromEnding.includes(event.daysAwayFromEnding)
-      ) {
-        customEventDaysAwayFromEnding.push(event.daysAwayFromEnding)
-      }
-    }
-    return customEventDaysAwayFromEnding.map(daysAwayFromEnding =>
-      subDays(this.normalizeDate(date), daysAwayFromEnding)
-    )
-  }
-
-  /**
-   * Try to get the MailTemplates for a specific filter of [memberPlan,
-   * paymentMethod, periodicity, autoRenewal]. You additionally need to pass
-   * either `daysAwayFromEnding` or `events` to filter further. If any
-   * filter leads to an empty result set, the templates of the default flow are
-   * returned.
-   * @param query The filter of the above properties.
-   * @returns An array of MailTemplates.
-   */
-  public getActionFromStore(query: LookupActionInput): Action[] {
-    if (!this.storeIsBuilt) {
-      throw new Error('Tried to access store before it was successfully initialized!')
-    }
-    if (query.daysAwayFromEnding && query.events) {
-      throw new Error(
-        'Its not supported to query for daysAwayFromEnding combined with an event list'
-      )
-    }
-
-    const defaultFlow = this.allFlows.find(flow => flow.default)
-
-    if (!defaultFlow) {
-      throw new Error('Default flow is missing!')
-    }
-
-    const filteredFlows = this.allFlows.filter(
-      flow =>
-        flow.memberPlanId === query.memberplanId &&
-        flow.paymentMethods.map(pm => pm.id).includes(query.paymentmethodeId) &&
-        flow.periodicities.includes(query.periodicity) &&
-        flow.autoRenewal.includes(query.autorenwal)
-    )
-
-    if (filteredFlows.length === 0) {
-      return this.getActionByDay(defaultFlow.actions, query.daysAwayFromEnding, query.events)
-    }
-
-    return this.getActionByDay(filteredFlows[0].actions, query.daysAwayFromEnding, query.events)
   }
 
   /**
