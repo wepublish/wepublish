@@ -797,9 +797,9 @@ describe('SubscriptionController', () => {
 
   it('Charge invoice: Stripe offsession payment customer deleted or no default', async () => {
     const {testableInvoice, actions} = await createDataForChargeFunction()
-    const stripGetCustomersDeletedCustomer = await nock('https://api.stripe.com')
+    const stripeGetCustomersDeletedCustomer = await nock('https://api.stripe.com')
       .get('/v1/customers/stripeCustomerId')
-      .replyWithFile(200, __dirname + '/__fixtures__/stripGetDeletedCustomers.json', {
+      .replyWithFile(200, __dirname + '/__fixtures__/stripeGetDeletedCustomers.json', {
         'Content-Type': 'application/json'
       })
     const stripePaymentIntentDeletedCustomer = await nock('https://api.stripe.com', {
@@ -820,14 +820,14 @@ describe('SubscriptionController', () => {
     expect(answerDeletedCustomer.action?.type).toEqual('RENEWAL_SUCCESS')
     expect(answerDeletedCustomer.action?.externalMailTemplate).toEqual('success-template')
     expect(answerDeletedCustomer.errorCode).toEqual('')
-    expect(stripGetCustomersDeletedCustomer.isDone()).toBeTruthy()
+    expect(stripeGetCustomersDeletedCustomer.isDone()).toBeTruthy()
     expect(stripePaymentIntentDeletedCustomer.isDone()).toBeTruthy()
-    const stripGetCustomersNoDefault = await nock('https://api.stripe.com')
+    const stripeGetCustomersNoDefault = await nock('https://api.stripe.com')
       .get('/v1/customers/stripeCustomerId')
       .replyWithFile(
         200,
         __dirname +
-          '/__fixtures__/stripGetMissingDefaultPaymentMethodeOrDefaultSourceCustomers.json',
+          '/__fixtures__/stripeGetCustomersNoDefault.json',
         {
           'Content-Type': 'application/json'
         }
@@ -847,7 +847,7 @@ describe('SubscriptionController', () => {
     expect(answerNoDefault.action?.type).toEqual('RENEWAL_SUCCESS')
     expect(answerNoDefault.action?.externalMailTemplate).toEqual('success-template')
     expect(answerNoDefault.errorCode).toEqual('')
-    expect(stripGetCustomersNoDefault.isDone()).toBeTruthy()
+    expect(stripeGetCustomersNoDefault.isDone()).toBeTruthy()
     expect(stripePaymentIntentNoDefault.isDone()).toBeTruthy()
 
     const payments = await prismaClient.payment.findMany({
@@ -863,9 +863,9 @@ describe('SubscriptionController', () => {
 
   it('Charge invoice: Stripe offsession payment card declined', async () => {
     const {testableInvoice, actions} = await createDataForChargeFunction()
-    const stripGetCustomers = await nock('https://api.stripe.com')
+    const stripeGetCustomers = await nock('https://api.stripe.com')
       .get('/v1/customers/stripeCustomerId')
-      .replyWithFile(200, __dirname + '/__fixtures__/stripGetCustomers.json', {
+      .replyWithFile(200, __dirname + '/__fixtures__/stripeGetCustomers.json', {
         'Content-Type': 'application/json'
       })
     const stripePaymentIntent = await nock('https://api.stripe.com', {encodedQueryParams: true})
@@ -874,7 +874,7 @@ describe('SubscriptionController', () => {
         'Content-Type': 'application/json'
       })
     const answer = await subscriptionController.chargeInvoice(testableInvoice!, actions)
-    expect(stripGetCustomers.isDone()).toBeTruthy()
+    expect(stripeGetCustomers.isDone()).toBeTruthy()
     expect(stripePaymentIntent.isDone()).toBeTruthy()
     expect(answer.action?.daysAwayFromEnding).toEqual(999)
     expect(answer.action?.type).toEqual('RENEWAL_FAILED')
@@ -894,9 +894,9 @@ describe('SubscriptionController', () => {
 
   it('Charge invoice: Stripe offsession successful', async () => {
     const {testableInvoice, actions} = await createDataForChargeFunction()
-    const stripGetCustomers = await nock('https://api.stripe.com')
+    const stripeGetCustomers = await nock('https://api.stripe.com')
       .get('/v1/customers/stripeCustomerId')
-      .replyWithFile(200, __dirname + '/__fixtures__/stripGetCustomers.json', {
+      .replyWithFile(200, __dirname + '/__fixtures__/stripeGetCustomers.json', {
         'Content-Type': 'application/json'
       })
     const stripePaymentIntent = await nock('https://api.stripe.com', {encodedQueryParams: true})
@@ -905,7 +905,7 @@ describe('SubscriptionController', () => {
         'Content-Type': 'application/json'
       })
     const answer = await subscriptionController.chargeInvoice(testableInvoice!, actions)
-    expect(stripGetCustomers.isDone()).toBeTruthy()
+    expect(stripeGetCustomers.isDone()).toBeTruthy()
     expect(stripePaymentIntent.isDone()).toBeTruthy()
     expect(answer.action?.daysAwayFromEnding).toEqual(999)
     expect(answer.action?.type).toEqual('RENEWAL_SUCCESS')

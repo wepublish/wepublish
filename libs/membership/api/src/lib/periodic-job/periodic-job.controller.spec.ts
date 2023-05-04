@@ -386,9 +386,9 @@ describe('PeriodicJobController', () => {
   }
 
   it('charge invoice offsession', async () => {
-    const stripGetCustomers = await nock('https://api.stripe.com')
+    const stripeGetCustomers = await nock('https://api.stripe.com')
       .get('/v1/customers/testId')
-      .replyWithFile(200, __dirname + '/__fixtures__/stripGetCustomers.json', {
+      .replyWithFile(200, __dirname + '/__fixtures__/stripeGetCustomers.json', {
         'Content-Type': 'application/json'
       })
 
@@ -436,7 +436,7 @@ describe('PeriodicJobController', () => {
     expect(payment.intentData).not.toBeNull()
 
     expect(mandrillNockScope.isDone()).toBeTruthy()
-    expect(stripGetCustomers.isDone()).toBeTruthy()
+    expect(stripeGetCustomers.isDone()).toBeTruthy()
     expect(stripPostPaymentIntent.isDone()).toBeTruthy()
 
     // Check that subscription is no canceled
@@ -450,9 +450,9 @@ describe('PeriodicJobController', () => {
     const mandrillNockScope = await nock('https://mandrillapp.com:443')
       .post('/api/1.0/messages/send-template')
       .reply(500)
-    const stripGetCustomers = await nock('https://api.stripe.com')
+    const stripeGetCustomers = await nock('https://api.stripe.com')
       .get('/v1/customers/testId')
-      .replyWithFile(200, __dirname + '/__fixtures__/stripGetCustomers.json', {
+      .replyWithFile(200, __dirname + '/__fixtures__/stripeGetCustomers.json', {
         'Content-Type': 'application/json'
       })
 
@@ -488,7 +488,7 @@ describe('PeriodicJobController', () => {
     expect(payments.length).toEqual(0)
 
     expect(mandrillNockScope.isDone()).toBeFalsy()
-    expect(stripGetCustomers.isDone()).toBeFalsy()
+    expect(stripeGetCustomers.isDone()).toBeFalsy()
     expect(stripPostPaymentIntent.isDone()).toBeFalsy()
 
     // Check that subscription is no canceled
