@@ -1,7 +1,6 @@
 import {MailLogState} from '@prisma/client'
 import crypto from 'crypto'
 import FormData from 'form-data'
-import Mailgun from 'mailgun.js'
 import Client from 'mailgun.js/client'
 
 import {
@@ -21,6 +20,7 @@ export interface MailgunMailProviderProps extends MailProviderProps {
   mailDomain: string
   webhookEndpointSecret: string
   fromAddress: string
+  mailgunClient: Client
 }
 
 interface VerifyWebhookSignatureProps {
@@ -63,7 +63,7 @@ export class MailgunMailProvider extends BaseMailProvider {
     this.baseDomain = props.baseDomain
     this.mailDomain = props.mailDomain
     this.webhookEndpointSecret = props.webhookEndpointSecret
-    this.mailgunClient = new Mailgun(FormData).client({username: 'api', key: props.apiKey})
+    this.mailgunClient = props.mailgunClient
   }
 
   verifyWebhookSignature(props: VerifyWebhookSignatureProps): boolean {

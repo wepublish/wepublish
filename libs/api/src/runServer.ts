@@ -19,6 +19,8 @@ import {Author} from './lib/db/author'
 import {PublicComment} from './lib/db/comment'
 import {KarmaMediaAdapter} from './lib/media/karmaMediaAdapter'
 import {PayrexxSubscriptionPaymentProvider} from './lib/payments/payrexxSubscriptionPaymentProvider'
+import Mailgun from 'mailgun.js'
+import FormData from 'form-data'
 
 interface WepublishURLAdapterProps {
   websiteURL: string
@@ -125,6 +127,7 @@ export async function runServer() {
     process.env.MAILGUN_MAIL_DOMAIN &&
     process.env.MAILGUN_WEBHOOK_SECRET
   ) {
+    const mailgunClient = new Mailgun(FormData).client({username: 'api', key: process.env.MAILGUN_API_KEY})
     mailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
@@ -133,7 +136,8 @@ export async function runServer() {
       baseDomain: process.env.MAILGUN_BASE_DOMAIN,
       mailDomain: process.env.MAILGUN_MAIL_DOMAIN,
       apiKey: process.env.MAILGUN_API_KEY,
-      incomingRequestHandler: bodyParser.json()
+      incomingRequestHandler: bodyParser.json(),
+      mailgunClient
     })
   }
   // left here intentionally for testing
