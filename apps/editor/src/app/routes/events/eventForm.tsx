@@ -46,6 +46,17 @@ export const EventForm = ({event, onChange, create}: EventFormProps) => {
             />
           </Form.Group>
 
+          {event.externalSourceName && (
+            <Form.Group controlId="externalSourceName">
+              <Form.ControlLabel>{t('event.form.externalSource')}</Form.ControlLabel>
+              <Form.Control
+                name="externalSourceName"
+                value={event.externalSourceName ?? ''}
+                disabled
+              />
+            </Form.Group>
+          )}
+
           <Form.Group controlId="location">
             <Form.ControlLabel>{t('event.form.location')}</Form.ControlLabel>
             <Form.Control

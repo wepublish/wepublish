@@ -43,6 +43,9 @@ export const GraphQLEvent = new GraphQLObjectType<Event, Context>({
     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
     endsAt: {type: GraphQLDateTime},
 
+    externalSourceId: {type: GraphQLString},
+    externalSourceName: {type: GraphQLString},
+
     tags: {
       type: GraphQLList(GraphQLNonNull(GraphQLTag)),
       resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {

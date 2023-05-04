@@ -17,6 +17,8 @@ export type Scalars = {
   Float: number;
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: string;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSON: any;
 };
 
 export type Consent = {
@@ -64,8 +66,10 @@ export type DashboardSubscription = {
 export type Event = {
   __typename?: 'Event';
   createdAt: Scalars['DateTime'];
-  description: Scalars['String'];
+  description: Scalars['JSON'];
   endsAt?: Maybe<Scalars['DateTime']>;
+  externalSourceId: Scalars['String'];
+  externalSourceName: Scalars['String'];
   id: Scalars['String'];
   imageId: Scalars['String'];
   location: Scalars['String'];
@@ -76,21 +80,21 @@ export type Event = {
 };
 
 export enum EventStatus {
-  Cancelled = 'Cancelled',
-  Postponed = 'Postponed',
-  Rescheduled = 'Rescheduled',
-  Scheduled = 'Scheduled'
+  Cancelled = 'CANCELLED',
+  Postponed = 'POSTPONED',
+  Rescheduled = 'RESCHEDULED',
+  Scheduled = 'SCHEDULED'
 }
-
-export type ImportedEventDocument = {
-  __typename?: 'ImportedEventDocument';
-  nodes: Array<Event>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
 
 export type ImportedEventFilter = {
   name?: InputMaybe<Scalars['String']>;
+};
+
+export type ImportedEventsDocument = {
+  __typename?: 'ImportedEventsDocument';
+  nodes: Array<Event>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
 };
 
 export type Mutation = {
@@ -165,6 +169,10 @@ export enum PaymentPeriodicity {
   Yearly = 'yearly'
 }
 
+export enum Providers {
+  AgendaBasel = 'AgendaBasel'
+}
+
 export type Query = {
   __typename?: 'Query';
   /**
@@ -181,8 +189,10 @@ export type Query = {
    * Excludes cancelled or manually set as paid invoices.
    */
   expectedRevenue: Array<DashboardInvoice>;
+  /** Returns a more detailed version of a single importable event, by id and source (e.g. AgendaBasel). */
+  importedEvent: Event;
   /** Returns a list of imported events from external sources, transformed to match our model. */
-  importedEvents: ImportedEventDocument;
+  importedEvents: ImportedEventsDocument;
   /**
    * Returns all new deactivations in a given timeframe.
    * This considers the time the deactivation was made, not when the subscription runs out.
@@ -221,6 +231,11 @@ export type QueryConsentsArgs = {
 export type QueryExpectedRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+
+export type QueryImportedEventArgs = {
+  filter: SingleEventFilter;
 };
 
 
@@ -264,6 +279,11 @@ export type QueryUserConsentArgs = {
 
 export type QueryUserConsentsArgs = {
   filter?: InputMaybe<UserConsentFilter>;
+};
+
+export type SingleEventFilter = {
+  id: Scalars['String'];
+  source: Providers;
 };
 
 export enum SubscriptionDeactivationReason {
@@ -388,7 +408,7 @@ export type DeleteUserConsentMutationVariables = Exact<{
 
 export type DeleteUserConsentMutation = { __typename?: 'Mutation', deleteUserConsent: { __typename?: 'UserConsent', id: string } };
 
-export type ImportabeEventRefFragment = { __typename?: 'Event', id: string, name: string, description: string, status: EventStatus, location: string, modifiedAt: string, startsAt: string, endsAt?: string | null };
+export type ImportabeEventRefFragment = { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, modifiedAt: string, startsAt: string, endsAt?: string | null };
 
 export type ImportedEventListQueryVariables = Exact<{
   filter?: InputMaybe<ImportedEventFilter>;
@@ -399,7 +419,21 @@ export type ImportedEventListQueryVariables = Exact<{
 }>;
 
 
-export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'ImportedEventDocument', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description: string, status: EventStatus, location: string, modifiedAt: string, startsAt: string, endsAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor: string, endCursor: string, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'ImportedEventsDocument', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, modifiedAt: string, startsAt: string, endsAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor: string, endCursor: string, hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type ImportedEventQueryVariables = Exact<{
+  filter: SingleEventFilter;
+}>;
+
+
+export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, modifiedAt: string, startsAt: string, endsAt?: string | null } };
+
+export type ImportedEventQueryVariables = Exact<{
+  filter: SingleEventFilter;
+}>;
+
+
+export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: string, status: EventStatus, location: string, modifiedAt: string, startsAt: string, endsAt?: string | null } };
 
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -413,6 +447,8 @@ export const ImportabeEventRefFragmentDoc = gql`
   description
   status
   location
+  externalSourceId
+  externalSourceName
   modifiedAt
   startsAt
   endsAt
@@ -873,6 +909,41 @@ export function useImportedEventListLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type ImportedEventListQueryHookResult = ReturnType<typeof useImportedEventListQuery>;
 export type ImportedEventListLazyQueryHookResult = ReturnType<typeof useImportedEventListLazyQuery>;
 export type ImportedEventListQueryResult = Apollo.QueryResult<ImportedEventListQuery, ImportedEventListQueryVariables>;
+export const ImportedEventDocument = gql`
+    query ImportedEvent($filter: SingleEventFilter!) {
+  importedEvent(filter: $filter) {
+    ...ImportabeEventRef
+  }
+}
+    ${ImportabeEventRefFragmentDoc}`;
+
+/**
+ * __useImportedEventQuery__
+ *
+ * To run a query within a React component, call `useImportedEventQuery` and pass it any options that fit your needs.
+ * When your component renders, `useImportedEventQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useImportedEventQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useImportedEventQuery(baseOptions: Apollo.QueryHookOptions<ImportedEventQuery, ImportedEventQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ImportedEventQuery, ImportedEventQueryVariables>(ImportedEventDocument, options);
+      }
+export function useImportedEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImportedEventQuery, ImportedEventQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ImportedEventQuery, ImportedEventQueryVariables>(ImportedEventDocument, options);
+        }
+export type ImportedEventQueryHookResult = ReturnType<typeof useImportedEventQuery>;
+export type ImportedEventLazyQueryHookResult = ReturnType<typeof useImportedEventLazyQuery>;
+export type ImportedEventQueryResult = Apollo.QueryResult<ImportedEventQuery, ImportedEventQueryVariables>;
 export const VersionInformationDocument = gql`
     query VersionInformation {
   versionInformation {

@@ -1,14 +1,19 @@
-fragment ImportabeEventRef on Event {
+fragment ImportableEventRef on Event {
   id
   name
   description
   status
   location
-  modifiedAt
+  externalSourceId
+  externalSourceName
+  # imageId {
+  #   ...ImageRef
+  # }
   startsAt
   endsAt
 }
 
+# queries
 query ImportedEventList(
   $filter: ImportedEventFilter
   $order: Int
@@ -18,7 +23,7 @@ query ImportedEventList(
 ) {
   importedEvents(filter: $filter, order: $order, skip: $skip, take: $take, sort: $sort) {
     nodes {
-      ...ImportabeEventRef
+      ...ImportableEventRef
     }
 
     pageInfo {
@@ -29,5 +34,11 @@ query ImportedEventList(
     }
 
     totalCount
+  }
+}
+
+query ImportedEvent($filter: SingleEventFilter!) {
+  importedEvent(filter: $filter) {
+    ...ImportabeEventRef
   }
 }

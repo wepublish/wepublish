@@ -1,62 +1,63 @@
-import {Injectable} from '@nestjs/common'
+import {Inject, Injectable} from '@nestjs/common'
+import {CACHE_MANAGER} from '@nestjs/cache-manager'
+import {Cache} from 'cache-manager'
 import {PrismaClient} from '@prisma/client'
 import fetch from 'node-fetch'
 import xml2js from 'xml2js'
 import {
-  ImportedEventDocument,
-  ImportedEventFilter /* , ImportedEventSort */
+  ImportedEventsDocument,
+  ImportedEventFilter,
+  Event,
+  Providers,
+  SingleEventFilter
 } from './events-import.model'
+import {htmlToSlate} from 'slate-serializers'
 
-type XMLEventOrigin = {
-  ownerid: string
-  owner: string
-  originId: string
-  lastUpdate: string
-  languageCode: string
-  startDate: string
-  endDate: string
+import {XMLEventType} from './xmlTypes'
+
+const parseAndCacheData = async (cacheManager: Cache, source: Providers) => {
+  const parser = new xml2js.Parser()
+  const urlToQuery = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
+
+  async function getXMLfromURL(url: string) {
+    try {
+      const response = await fetch(url)
+      const content = await response.text()
+      const data = await parser.parseStringPromise(content)
+
+      return data
+    } catch (e) {
+      console.error({e})
+    }
+  }
+
+  const eventsParsedXML = await getXMLfromURL(urlToQuery)
+  const events = eventsParsedXML['kdz:exportActivities']?.Activities[0]?.Activity
+
+  // only take events that take time in the future
+  const upcomingEvents = events.filter((event: XMLEventType) => upcomingOnly(event))
+
+  // parse their structure to ours
+  const importedEvents = upcomingEvents?.map((a: XMLEventType) => {
+    return parseXMLEventToWpEvent(a, source)
+  })
+
+  // save in cache
+  const ttl = 8 * 60 * 60 * 1000 // 8 hours
+  await cacheManager.set('parsedEvents', importedEvents, ttl)
+  return importedEvents
 }
 
-type XMLEventLocation = {
-  LocationId: string[]
-  LocationName: string[]
-  LocationAdress: string[]
+interface ImportedEventsResolverParams {
+  filter: ImportedEventFilter
+  order: 1 | -1
+  skip: number
+  take: number
+  sort: string
 }
 
-type XMLEventActivityDate = {
-  ActivityDate: XMLEventMisc[]
-}
-
-type XMLEventMisc = {
-  $: XMLEventOrigin
-}
-
-type XMLEventMultimedia = {
-  Images: string[]
-  Videos: string[]
-}
-
-type XMLEventSettings = {
-  Branches: string[]
-  Genres: string[]
-  EventTypes: string[]
-}
-
-type XMLEventType = {
-  Title: string
-  Subtitle: string
-  ShortDescription: string
-  LongDescription: string
-  $: XMLEventOrigin
-  CastInformation: string[] // I think it's rich text
-  PriceInformation: string[]
-  TicketInformation: string[]
-  ExternalURL: string[]
-  OriginURL: string[]
-  Location: XMLEventLocation[]
-  ActivityDates: XMLEventActivityDate[]
-  ActivityMultimedia: XMLEventMultimedia[]
-  ActivitySettings: XMLEventSettings[]
+interface ImportedEventResolverParams {
+  id: string
 }
 
 interface ImportedEventsParams {
@@ -65,8 +66,37 @@ interface ImportedEventsParams {
   skip: number
   take: number
   sort: string
+  cacheManager: Cache
+  source: typeof Providers[keyof typeof Providers]
 }
 
+interface ImportedEventParams {
+  id: string
+  // source: typeof Providers[keyof typeof Providers]
+  cacheManager: Cache
+}
+
+interface EventsProvider {
+  name: Providers
+  importedEvents({
+    filter,
+    order,
+    skip,
+    take,
+    sort
+  }: ImportedEventsResolverParams): Promise<ImportedEventsDocument>
+
+  importedEvent({id}: ImportedEventResolverParams): Promise<Event>
+}
+
+export enum EventStatus {
+  Cancelled = 'CANCELLED',
+  Postponed = 'POSTPONED',
+  Rescheduled = 'RESCHEDULED',
+  Scheduled = 'SCHEDULED'
+}
+
+const today = new Date()
 const upcomingOnly = (XMLEvent: XMLEventType) => {
   const startDate =
     XMLEvent &&
@@ -80,42 +110,47 @@ const upcomingOnly = (XMLEvent: XMLEventType) => {
     return
   }
 
-  if (new Date(startDate) < new Date()) return
+  if (new Date(startDate) < today) return
   return XMLEvent
 }
 
-const parseXMLEventToWpEvent = (XMLEvent: XMLEventType) => {
-  const startDate =
-    XMLEvent &&
-    XMLEvent.ActivityDates &&
-    typeof XMLEvent.ActivityDates[0] !== 'string' &&
-    XMLEvent.ActivityDates[0]?.ActivityDate &&
-    XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$'] &&
-    XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$'].startDate
+const parseXMLEventToWpEvent = (XMLEvent: XMLEventType, source: Providers) => {
+  const activityDate =
+    (XMLEvent &&
+      XMLEvent.ActivityDates &&
+      typeof XMLEvent.ActivityDates[0] !== 'string' &&
+      XMLEvent.ActivityDates[0]?.ActivityDate &&
+      XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$'] &&
+      XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$']) ||
+    null
 
-  const endDate =
-    XMLEvent &&
-    XMLEvent.ActivityDates &&
-    typeof XMLEvent.ActivityDates[0] !== 'string' &&
-    XMLEvent.ActivityDates[0]?.ActivityDate &&
-    XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$'] &&
-    XMLEvent.ActivityDates[0]?.ActivityDate[0]?.['$'].endDate
+  const startDate = activityDate?.startDate
+  const startTime = activityDate?.startTime
+  const endDate = activityDate?.endDate
+  const endTime = activityDate?.endTime
+
+  const start = `${startDate} ${startTime}`
+  const end = endDate ? `${endDate} ${endTime}` : null
+
+  const castInfo = XMLEvent.CastInformation[0].replace(/(<([^>]+)>)/gi, '')
+  const longDescription = XMLEvent.LongDescription[0].replace(/(<([^>]+)>)/gi, '')
+  const shortDescription = XMLEvent.ShortDescription[0].replace(/(<([^>]+)>)/gi, '')
+  const parsedDescription = htmlToSlate(longDescription || shortDescription || castInfo)
+
+  // we need to add type: 'paragraph' because that's how it was done in WP in the past
+  parsedDescription[0] = {...parsedDescription[0], type: 'paragraph'}
 
   const parsedEvent = {
     id: XMLEvent['$'].originId,
-    // createdAt: '',
     modifiedAt: new Date(XMLEvent['$'].lastUpdate || ''),
-    name: XMLEvent.Title[0] || '',
-    description:
-      XMLEvent.CastInformation[0] ||
-      XMLEvent.LongDescription[0] ||
-      XMLEvent.ShortDescription[0] ||
-      '',
-    status: 'Scheduled',
-
-    location: XMLEvent.Location[0]?.LocationAdress[0] || '',
-    startsAt: startDate ? new Date(startDate) : null,
-    endsAt: endDate ? new Date(endDate) : null
+    name: XMLEvent.Title[0].replace(/(<([^>]+)>)/gi, ''),
+    description: parsedDescription,
+    status: EventStatus.Scheduled,
+    externalSourceId: XMLEvent['$'].originId,
+    externalSourceName: source,
+    location: XMLEvent.Location[0]?.LocationAdress[0].replace(/(<([^>]+)>)/gi, '') || '',
+    startsAt: start ? new Date(start.trim()) : null,
+    endsAt: end ? new Date(end.trim()) : null
   }
 
   return parsedEvent
@@ -123,11 +158,21 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType) => {
 
 @Injectable()
 export class EventsImportService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache, private prisma: PrismaClient) {}
 
-  async importedEvents({filter, order, skip, take, sort}: ImportedEventsParams) {
+  async importedEvents({filter, order, skip, take, sort}: ImportedEventsResolverParams) {
     const importableEvents = Promise.all(
-      providers.map(provider => provider.importedEvents({filter, order, skip, take, sort}))
+      providers.map(provider =>
+        provider.importedEvents({
+          filter,
+          order,
+          skip,
+          take,
+          sort,
+          cacheManager: this.cacheManager,
+          source: provider.name
+        })
+      )
     )
 
     try {
@@ -135,66 +180,51 @@ export class EventsImportService {
       // for now we have only one provider, to be extended in the future when needed
       return values[0]
     } catch (e) {
-      console.log(e)
+      console.error(e)
+    }
+  }
+
+  async importedEvent(filter: SingleEventFilter) {
+    const {id, source} = filter
+    switch (source) {
+      case Providers.AgendaBasel: {
+        return new AgendaBasel().importedEvent({id, cacheManager: this.cacheManager})
+      }
     }
   }
 }
 
-interface EventsProvider {
-  importedEvents({
-    filter,
-    order,
-    skip,
-    take,
-    sort
-  }: ImportedEventsParams): Promise<ImportedEventDocument>
-}
-
-class AgendaBaselEventsProvider implements EventsProvider {
+class AgendaBasel implements EventsProvider {
+  name = Providers.AgendaBasel
   async importedEvents({
-    filter,
-    order,
+    // filter,
+    // order,
+    // sort,
     skip = 0,
     take = 10,
-    sort
-  }: ImportedEventsParams): Promise<ImportedEventDocument> {
-    const parser = new xml2js.Parser()
-    const urlToQuery = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
+    cacheManager
+  }: // source
+  ImportedEventsParams): Promise<ImportedEventsDocument> {
+    let parsedEvents: Event[] = await cacheManager.get('parsedEvents')
 
-    async function getXMLfromURL(url: string) {
-      try {
-        const response = await fetch(url)
-        const content = await response.text()
-        const data = await parser.parseStringPromise(content)
-
-        return data
-      } catch (e) {
-        console.error({e})
-      }
+    if (!parsedEvents) {
+      parsedEvents = await parseAndCacheData(cacheManager, Providers.AgendaBasel)
     }
 
-    const eventsParsedXML = await getXMLfromURL(urlToQuery)
+    // todo split into separate functions?
+    const sortedEvents = parsedEvents.sort((a: any, b: any) => {
+      return a.startsAt - b.startsAt
+    })
 
-    const events = eventsParsedXML['kdz:exportActivities']?.Activities[0]?.Activity
+    // todo split into separate functions?
+    const paginatedEvents = sortedEvents.slice(skip, skip + take)
 
-    // only take events that take time in the future
-    const upcomingEvents = events.filter((event: XMLEventType) => upcomingOnly(event))
-
-    const importedEvents = upcomingEvents
-      ?.map((a: any) => {
-        return parseXMLEventToWpEvent(a)
-      })
-      .sort((a: any, b: any) => {
-        return a.startsAt - b.startsAt
-      })
-      .slice(skip, skip + take)
-
-    const firstEvent = importedEvents[0]
-    const lastEvent = importedEvents[importedEvents.length - 1]
+    const firstEvent = parsedEvents[0]
+    const lastEvent = parsedEvents[parsedEvents.length - 1]
 
     return {
-      nodes: importedEvents,
-      totalCount: upcomingEvents.length,
+      nodes: paginatedEvents,
+      totalCount: parsedEvents.length,
       pageInfo: {
         hasPreviousPage: false,
         hasNextPage: false,
@@ -203,6 +233,22 @@ class AgendaBaselEventsProvider implements EventsProvider {
       }
     }
   }
+
+  async importedEvent({id, cacheManager}: ImportedEventParams): Promise<Event> {
+    let parsedEvents: Event[] = await cacheManager.get('parsedEvents')
+
+    if (!parsedEvents) {
+      parsedEvents = await parseAndCacheData(cacheManager, Providers.AgendaBasel)
+    }
+
+    const event = parsedEvents.find(e => e.id === id)
+
+    if (!event) {
+      throw Error(`Event with id ${id} not found.`)
+    }
+
+    return event
+  }
 }
 
-const providers = [new AgendaBaselEventsProvider()]
+const providers = [new AgendaBasel()]

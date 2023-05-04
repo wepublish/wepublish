@@ -1,0 +1,28 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../dist/out-tsc",
+    "types": ["node"]
+  },
+  "files": [
+    "../../../node_modules/@nrwl/react/typings/cssmodule.d.ts",
+    "../../../node_modules/@nrwl/react/typings/image.d.ts"
+  ],
+  "exclude": [
+    "../../../events/import/editor/jest.config.ts",
+    "../../../events/import/editor/src/**/*.spec.ts",
+    "../../../events/import/editor/src/**/*.test.ts",
+    "../../../events/import/editor/src/**/*.spec.tsx",
+    "../../../events/import/editor/src/**/*.test.tsx",
+    "../../../events/import/editor/src/**/*.spec.js",
+    "../../../events/import/editor/src/**/*.test.js",
+    "../../../events/import/editor/src/**/*.spec.jsx",
+    "../../../events/import/editor/src/**/*.test.jsx"
+  ],
+  "include": [
+    "../../../events/import/editor/src/**/*.js",
+    "../../../events/import/editor/src/**/*.jsx",
+    "../../../events/import/editor/src/**/*.ts",
+    "../../../events/import/editor/src/**/*.tsx"
+  ]
+}

@@ -17,6 +17,8 @@ export type Scalars = {
   Float: number
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: string
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSON: any
 }
 
 export type Consent = {
@@ -64,8 +66,10 @@ export type DashboardSubscription = {
 export type Event = {
   __typename?: 'Event'
   createdAt: Scalars['DateTime']
-  description: Scalars['String']
+  description: Scalars['JSON']
   endsAt?: Maybe<Scalars['DateTime']>
+  externalSourceId: Scalars['String']
+  externalSourceName: Scalars['String']
   id: Scalars['String']
   imageId: Scalars['String']
   location: Scalars['String']
@@ -76,21 +80,21 @@ export type Event = {
 }
 
 export enum EventStatus {
-  Cancelled = 'Cancelled',
-  Postponed = 'Postponed',
-  Rescheduled = 'Rescheduled',
-  Scheduled = 'Scheduled'
-}
-
-export type ImportedEventDocument = {
-  __typename?: 'ImportedEventDocument'
-  nodes: Array<Event>
-  pageInfo: PageInfo
-  totalCount: Scalars['Int']
+  Cancelled = 'CANCELLED',
+  Postponed = 'POSTPONED',
+  Rescheduled = 'RESCHEDULED',
+  Scheduled = 'SCHEDULED'
 }
 
 export type ImportedEventFilter = {
   name?: InputMaybe<Scalars['String']>
+}
+
+export type ImportedEventsDocument = {
+  __typename?: 'ImportedEventsDocument'
+  nodes: Array<Event>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
 }
 
 export type Mutation = {
@@ -159,6 +163,10 @@ export enum PaymentPeriodicity {
   Yearly = 'yearly'
 }
 
+export enum Providers {
+  AgendaBasel = 'AgendaBasel'
+}
+
 export type Query = {
   __typename?: 'Query'
   /**
@@ -175,8 +183,10 @@ export type Query = {
    * Excludes cancelled or manually set as paid invoices.
    */
   expectedRevenue: Array<DashboardInvoice>
+  /** Returns a more detailed version of a single importable event, by id and source (e.g. AgendaBasel). */
+  importedEvent: Event
   /** Returns a list of imported events from external sources, transformed to match our model. */
-  importedEvents: ImportedEventDocument
+  importedEvents: ImportedEventsDocument
   /**
    * Returns all new deactivations in a given timeframe.
    * This considers the time the deactivation was made, not when the subscription runs out.
@@ -214,6 +224,10 @@ export type QueryExpectedRevenueArgs = {
   start: Scalars['DateTime']
 }
 
+export type QueryImportedEventArgs = {
+  filter: SingleEventFilter
+}
+
 export type QueryImportedEventsArgs = {
   filter?: InputMaybe<ImportedEventFilter>
   order?: InputMaybe<Scalars['Int']>
@@ -248,6 +262,11 @@ export type QueryUserConsentArgs = {
 
 export type QueryUserConsentsArgs = {
   filter?: InputMaybe<UserConsentFilter>
+}
+
+export type SingleEventFilter = {
+  id: Scalars['String']
+  source: Providers
 }
 
 export enum SubscriptionDeactivationReason {
