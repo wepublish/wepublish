@@ -24,7 +24,11 @@ import {BuilderPayInvoicesProps} from './pay-invoices.interface'
 import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
 import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
-import {BuilderEventProps} from './event.interface'
+import {
+  BuilderEventListItemProps,
+  BuilderEventListProps,
+  BuilderEventProps
+} from './event.interface'
 
 const NoComponent = () => null
 
@@ -38,6 +42,8 @@ export type WebsiteBuilderComponents = {
   Page: ComponentType<BuilderPageProps>
   Article: ComponentType<BuilderArticleProps>
   Event: ComponentType<BuilderEventProps>
+  EventList: ComponentType<BuilderEventListProps>
+  EventListItem: ComponentType<BuilderEventListItemProps>
 
   elements: {
     Button: ComponentType<BuilderButtonProps>
@@ -79,6 +85,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   Page: NoComponent,
   Article: NoComponent,
   Event: NoComponent,
+  EventList: NoComponent,
+  EventListItem: NoComponent,
 
   elements: {
     Button: NoComponent,

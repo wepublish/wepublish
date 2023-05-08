@@ -1,8 +1,7 @@
-import {ComponentStory, Meta} from '@storybook/react'
-import {Event} from './event'
-import {EventQuery, EventStatus} from '@wepublish/website/api'
-import {ApolloError} from '@apollo/client'
 import {css} from '@emotion/react'
+import {ComponentStory, Meta} from '@storybook/react'
+import {EventQuery, EventStatus} from '@wepublish/website/api'
+import {EventListItem} from './event-list-item'
 
 const event = {
   id: '16ca80ce-a2d0-44dc-8c87-b735e4b08877',
@@ -175,46 +174,25 @@ const event = {
 } as EventQuery['event']
 
 export default {
-  component: Event,
-  title: 'Components/Event'
+  component: EventListItem,
+  title: 'Components/EventList/Item'
 } as Meta
 
-const Template: ComponentStory<typeof Event> = args => <Event {...args} />
+const Template: ComponentStory<typeof EventListItem> = args => <EventListItem {...args} />
 export const Default = Template.bind({})
 Default.args = {
-  data: {
-    event
-  }
-}
-
-export const WithLoading = Template.bind({})
-WithLoading.args = {
-  data: undefined,
-  loading: true
-}
-
-export const WithError = Template.bind({})
-WithError.args = {
-  data: undefined,
-  loading: false,
-  error: new ApolloError({
-    errorMessage: 'Foobar'
-  })
+  ...event
 }
 
 export const WithClassName = Template.bind({})
 WithClassName.args = {
-  data: {
-    event
-  },
+  ...event,
   className: 'extra-classname'
 }
 
 export const WithEmotion = Template.bind({})
 WithEmotion.args = {
-  data: {
-    event
-  },
+  ...event,
   css: css`
     background-color: #eee;
   `
@@ -222,7 +200,5 @@ WithEmotion.args = {
 
 export const WithoutImage = Template.bind({})
 WithoutImage.args = {
-  data: {
-    event: {...event, image: null}
-  }
+  ...{...event, image: null}
 }

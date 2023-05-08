@@ -3,7 +3,7 @@ import {MemberPlans} from './member-plans'
 
 export default {
   component: MemberPlans,
-  title: 'MemberPlans'
+  title: 'Components/MemberPlans'
 } as Meta
 
 const Template: ComponentStory<typeof MemberPlans> = args => <MemberPlans {...args} />

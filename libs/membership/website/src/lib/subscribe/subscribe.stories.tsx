@@ -3,7 +3,7 @@ import {Subscribe} from './subscribe'
 
 export default {
   component: Subscribe,
-  title: 'Subscribe'
+  title: 'Components/Subscribe'
 } as Meta
 
 const Template: ComponentStory<typeof Subscribe> = args => <Subscribe {...args} />

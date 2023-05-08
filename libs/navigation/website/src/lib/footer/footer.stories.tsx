@@ -43,7 +43,7 @@ const navigation = {
 
 export default {
   component: Footer,
-  title: 'Footer'
+  title: 'Components/Footer'
 } as Meta
 
 const Template: ComponentStory<typeof Footer> = args => <Footer {...args} />

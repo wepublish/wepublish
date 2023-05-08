@@ -3,7 +3,7 @@ import {PayInvoices} from './pay-invoices'
 
 export default {
   component: PayInvoices,
-  title: 'PayInvoices'
+  title: 'Components/PayInvoices'
 } as Meta
 
 const Template: ComponentStory<typeof PayInvoices> = args => <PayInvoices {...args} />

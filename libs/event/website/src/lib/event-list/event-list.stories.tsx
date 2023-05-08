@@ -1,8 +1,10 @@
 import {ComponentStory, Meta} from '@storybook/react'
-import {Event} from './event'
+import {EventList} from './event-list'
 import {EventQuery, EventStatus} from '@wepublish/website/api'
 import {ApolloError} from '@apollo/client'
 import {css} from '@emotion/react'
+import {action} from '@storybook/addon-actions'
+import {EventListItem} from './event-list-item'
 
 const event = {
   id: '16ca80ce-a2d0-44dc-8c87-b735e4b08877',
@@ -175,22 +177,34 @@ const event = {
 } as EventQuery['event']
 
 export default {
-  component: Event,
-  title: 'Components/Event'
+  component: EventList,
+  title: 'Components/EventList'
 } as Meta
 
-const Template: ComponentStory<typeof Event> = args => <Event {...args} />
+const Template: ComponentStory<typeof EventList> = args => <EventList {...args} />
 export const Default = Template.bind({})
 Default.args = {
   data: {
-    event
-  }
+    events: {
+      nodes: [event, event, event, event, event],
+      pageInfo: {
+        hasNextPage: true,
+        hasPreviousPage: false
+      },
+      totalCount: 1
+    }
+  },
+  variables: {
+    take: 10
+  },
+  onVariablesChange: action('onVariablesChange')
 }
 
 export const WithLoading = Template.bind({})
 WithLoading.args = {
   data: undefined,
-  loading: true
+  loading: true,
+  onVariablesChange: action('onVariablesChange')
 }
 
 export const WithError = Template.bind({})
@@ -199,30 +213,61 @@ WithError.args = {
   loading: false,
   error: new ApolloError({
     errorMessage: 'Foobar'
-  })
+  }),
+  onVariablesChange: action('onVariablesChange')
 }
 
 export const WithClassName = Template.bind({})
 WithClassName.args = {
   data: {
-    event
+    events: {
+      nodes: [event, event, event, event, event],
+      pageInfo: {
+        hasNextPage: true,
+        hasPreviousPage: false
+      },
+      totalCount: 1
+    }
   },
-  className: 'extra-classname'
+  className: 'extra-classname',
+  onVariablesChange: action('onVariablesChange')
 }
 
 export const WithEmotion = Template.bind({})
 WithEmotion.args = {
   data: {
-    event
+    events: {
+      nodes: [event, event, event, event, event],
+      pageInfo: {
+        hasNextPage: true,
+        hasPreviousPage: false
+      },
+      totalCount: 1
+    }
   },
   css: css`
     background-color: #eee;
-  `
+  `,
+  onVariablesChange: action('onVariablesChange')
 } as any // The css prop comes from the WithConditionalCSSProp type by the Emotion JSX Pragma
 
 export const WithoutImage = Template.bind({})
 WithoutImage.args = {
   data: {
-    event: {...event, image: null}
-  }
+    events: {
+      nodes: [
+        {...event, image: null},
+        event,
+        {...event, image: null},
+        event,
+        {...event, image: null}
+      ],
+      pageInfo: {
+        hasNextPage: true,
+        hasPreviousPage: false
+      },
+      totalCount: 1
+    }
+  },
+  onVariablesChange: action('onVariablesChange')
 }

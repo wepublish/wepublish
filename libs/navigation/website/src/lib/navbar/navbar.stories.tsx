@@ -34,7 +34,7 @@ const navigations = [
 
 export default {
   component: Navbar,
-  title: 'Navbar'
+  title: 'Components/Navbar'
 } as Meta
 
 const Template: ComponentStory<typeof Navbar> = args => <Navbar {...args} />

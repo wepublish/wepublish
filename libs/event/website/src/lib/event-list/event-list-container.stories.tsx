@@ -1,7 +1,7 @@
+import {EventDocument, EventQuery, EventStatus} from '@wepublish/website/api'
+import {action} from '@storybook/addon-actions'
 import {ComponentStory, Meta} from '@storybook/react'
-import {Event} from './event'
-import {EventQuery, EventStatus} from '@wepublish/website/api'
-import {ApolloError} from '@apollo/client'
+import {EventContainer} from './event-list-container'
 import {css} from '@emotion/react'
 
 const event = {
@@ -175,54 +175,90 @@ const event = {
 } as EventQuery['event']
 
 export default {
-  component: Event,
-  title: 'Components/Event'
+  component: EventContainer,
+  title: 'Container/Event'
 } as Meta
 
-const Template: ComponentStory<typeof Event> = args => <Event {...args} />
+const Template: ComponentStory<typeof EventContainer> = args => <EventContainer {...args} />
+
 export const Default = Template.bind({})
+
 Default.args = {
-  data: {
-    event
+  onQuery: action('onQuery')
+}
+
+Default.parameters = {
+  apolloClient: {
+    mocks: [
+      {
+        request: {
+          query: EventDocument,
+          variables: {
+            id: event.id
+          }
+        },
+        result: {
+          data: {
+            event
+          }
+        }
+      }
+    ]
   }
 }
 
-export const WithLoading = Template.bind({})
-WithLoading.args = {
-  data: undefined,
-  loading: true
-}
-
-export const WithError = Template.bind({})
-WithError.args = {
-  data: undefined,
-  loading: false,
-  error: new ApolloError({
-    errorMessage: 'Foobar'
-  })
-}
-
 export const WithClassName = Template.bind({})
+
 WithClassName.args = {
-  data: {
-    event
-  },
+  onQuery: action('onQuery'),
   className: 'extra-classname'
 }
 
+WithClassName.parameters = {
+  apolloClient: {
+    mocks: [
+      {
+        request: {
+          query: EventDocument,
+          variables: {
+            id: event.id
+          }
+        },
+        result: {
+          data: {
+            event
+          }
+        }
+      }
+    ]
+  }
+}
+
 export const WithEmotion = Template.bind({})
+
 WithEmotion.args = {
-  data: {
-    event
-  },
+  onQuery: action('onQuery'),
   css: css`
     background-color: #eee;
   `
 } as any // The css prop comes from the WithConditionalCSSProp type by the Emotion JSX Pragma
 
-export const WithoutImage = Template.bind({})
-WithoutImage.args = {
-  data: {
-    event: {...event, image: null}
+WithEmotion.parameters = {
+  apolloClient: {
+    mocks: [
+      {
+        request: {
+          query: EventDocument,
+          variables: {
+            id: event.id
+          }
+        },
+        result: {
+          data: {
+            event
+          }
+        }
+      }
+    ]
   }
 }

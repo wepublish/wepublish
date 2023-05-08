@@ -951,7 +951,7 @@ const article = {
 
 export default {
   component: Article,
-  title: 'Article'
+  title: 'Components/Article'
 } as Meta
 
 const Template: ComponentStory<typeof Article> = args => <Article {...args} />

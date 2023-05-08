@@ -1,10 +1,10 @@
 import {render} from '@testing-library/react'
-import * as stories from './event.stories'
+import * as stories from './event-list-item.stories'
 import {composeStories} from '@storybook/react'
 
 const storiesCmp = composeStories(stories)
 
-describe('Event', () => {
+describe('EventListItem', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, () => {
       const {asFragment} = render(<Component />)
