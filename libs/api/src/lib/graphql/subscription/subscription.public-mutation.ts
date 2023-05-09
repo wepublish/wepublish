@@ -33,8 +33,8 @@ export const updatePublicSubscription = async (
   const paymentMethod = await activePaymentMethodsByID.load(paymentMethodID as string)
   if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID as string)
 
-  if (!monthlyAmount || monthlyAmount < memberPlan.amountPerMonthMin)
-    throw new MonthlyAmountNotEnough()
+  // if (!monthlyAmount || monthlyAmount < memberPlan.amountPerMonthMin)
+  //   throw new MonthlyAmountNotEnough()
 
   if (
     !memberPlan.availablePaymentMethods.some(apm => {

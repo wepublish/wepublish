@@ -50,6 +50,9 @@ exports[`Image Block should render WithEmotion 1`] = `
       title="An image title"
       width="500"
     />
+    <figcaption>
+      Image caption
+    </figcaption>
   </figure>
 </DocumentFragment>
 `;
@@ -57,7 +60,7 @@ exports[`Image Block should render WithEmotion 1`] = `
 exports[`Image Block should render WithoutCaption 1`] = `
 <DocumentFragment>
   <figure
-    class="extra-classname css-umync8"
+    class="css-umync8"
   >
     <img
       alt="An image description"

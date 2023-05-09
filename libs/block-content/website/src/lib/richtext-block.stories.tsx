@@ -1,4 +1,4 @@
-import {ComponentStory, Meta} from '@storybook/react'
+import {Meta} from '@storybook/react'
 import {RichTextBlock} from './richtext-block'
 import {css} from '@emotion/react'
 
@@ -202,22 +202,24 @@ const richText = [
   }
 ]
 
-const Template: ComponentStory<typeof RichTextBlock> = args => <RichTextBlock {...args} />
-export const Default = Template.bind({})
-Default.args = {
-  richText
+export const Default = {
+  args: {
+    richText
+  }
 }
 
-export const WithClassName = Template.bind({})
-WithClassName.args = {
-  richText,
-  className: 'extra-classname'
+export const WithClassName = {
+  args: {
+    richText,
+    className: 'extra-classname'
+  }
 }
 
-export const WithEmotion = Template.bind({})
-WithEmotion.args = {
-  richText,
-  css: css`
-    background-color: #eee;
-  `
-} as any // The css prop comes from the WithConditionalCSSProp type by the Emotion JSX Pragma
+export const WithEmotion = {
+  args: {
+    richText,
+    css: css`
+      background-color: #eee;
+    `
+  }
+}

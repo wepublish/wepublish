@@ -1,5 +1,5 @@
 import {ApolloError} from '@apollo/client'
-import {ComponentStory, Meta} from '@storybook/react'
+import {Meta} from '@storybook/react'
 import {Navigation} from '@wepublish/website/api'
 import {Navbar} from './navbar'
 
@@ -37,31 +37,32 @@ export default {
   title: 'Components/Navbar'
 } as Meta
 
-const Template: ComponentStory<typeof Navbar> = args => <Navbar {...args} />
-
-export const Default = Template.bind({})
-Default.args = {
-  data: {
-    navigations
-  },
-  loading: false
+export const Default = {
+  args: {
+    data: {
+      navigations
+    },
+    loading: false
+  }
 }
 
-export const WithLoading = Template.bind({})
-WithLoading.args = {
-  data: {
-    navigations: null
-  },
-  loading: true
+export const WithLoading = {
+  args: {
+    data: {
+      navigations: null
+    },
+    loading: true
+  }
 }
 
-export const WithError = Template.bind({})
-WithError.args = {
-  data: {
-    navigations: null
-  },
-  loading: false,
-  error: new ApolloError({
-    errorMessage: 'Foobar'
-  })
+export const WithError = {
+  args: {
+    data: {
+      navigations: null
+    },
+    loading: false,
+    error: new ApolloError({
+      errorMessage: 'Foobar'
+    })
+  }
 }

@@ -1,5 +1,5 @@
 import {action} from '@storybook/addon-actions'
-import {ComponentStory, Meta} from '@storybook/react'
+import {Meta} from '@storybook/react'
 import {ArticleDocument, ArticleQuery} from '@wepublish/website/api'
 import {ArticleContainer} from './article-container'
 import {css} from '@emotion/react'
@@ -957,116 +957,114 @@ export default {
   title: 'Container/Article'
 } as Meta
 
-const Template: ComponentStory<typeof ArticleContainer> = args => <ArticleContainer {...args} />
+export const ById = {
+  args: {
+    onQuery: action('onQuery'),
+    id: article.id
+  },
 
-export const ById = Template.bind({})
-
-ById.args = {
-  onQuery: action('onQuery'),
-  id: article.id
-}
-
-ById.parameters = {
-  apolloClient: {
-    mocks: [
-      {
-        request: {
-          query: ArticleDocument,
-          variables: {
-            id: article.id
-          }
-        },
-        result: {
-          data: {
-            article
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: ArticleDocument,
+            variables: {
+              id: article.id
+            }
+          },
+          result: {
+            data: {
+              article
+            }
           }
         }
-      }
-    ]
+      ]
+    }
   }
 }
 
-export const BySlug = Template.bind({})
+export const BySlug = {
+  args: {
+    onQuery: action('onQuery'),
+    slug: article.slug
+  },
 
-BySlug.args = {
-  onQuery: action('onQuery'),
-  slug: article.slug
-}
-
-BySlug.parameters = {
-  apolloClient: {
-    mocks: [
-      {
-        request: {
-          query: ArticleDocument,
-          variables: {
-            slug: article.slug
-          }
-        },
-        result: {
-          data: {
-            article
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: ArticleDocument,
+            variables: {
+              slug: article.slug
+            }
+          },
+          result: {
+            data: {
+              article
+            }
           }
         }
-      }
-    ]
+      ]
+    }
   }
 }
 
-export const WithClassName = Template.bind({})
+export const WithClassName = {
+  args: {
+    onQuery: action('onQuery'),
+    id: article.id,
+    className: 'extra-classname'
+  },
 
-WithClassName.args = {
-  onQuery: action('onQuery'),
-  id: article.id,
-  className: 'extra-classname'
-}
-
-WithClassName.parameters = {
-  apolloClient: {
-    mocks: [
-      {
-        request: {
-          query: ArticleDocument,
-          variables: {
-            id: article.id
-          }
-        },
-        result: {
-          data: {
-            article
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: ArticleDocument,
+            variables: {
+              id: article.id
+            }
+          },
+          result: {
+            data: {
+              article
+            }
           }
         }
-      }
-    ]
+      ]
+    }
   }
 }
 
-export const WithEmotion = Template.bind({})
+export const WithEmotion = {
+  args: {
+    onQuery: action('onQuery'),
+    id: article.id,
+    css: css`
+      background-color: #eee;
+    `
+  },
 
-WithEmotion.args = {
-  onQuery: action('onQuery'),
-  id: article.id,
-  css: css`
-    background-color: #eee;
-  `
-} as any // The css prop comes from the WithConditionalCSSProp type by the Emotion JSX Pragma
-
-WithEmotion.parameters = {
-  apolloClient: {
-    mocks: [
-      {
-        request: {
-          query: ArticleDocument,
-          variables: {
-            id: article.id
-          }
-        },
-        result: {
-          data: {
-            article
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: ArticleDocument,
+            variables: {
+              id: article.id
+            }
+          },
+          result: {
+            data: {
+              article
+            }
           }
         }
-      }
-    ]
+      ]
+    }
   }
 }

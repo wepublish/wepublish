@@ -1,60 +1,56 @@
 import {action} from '@storybook/addon-actions'
-import {ComponentStory, Meta} from '@storybook/react'
+import {Meta} from '@storybook/react'
 import {MemberPlanListDocument} from '@wepublish/website/api'
-import {MemberPlans} from './member-plans'
 import {MemberPlansContainer} from './member-plans-container'
 
 export default {
-  component: MemberPlans,
+  component: MemberPlansContainer,
   title: 'Container/MemberPlans'
 } as Meta
 
-const Template: ComponentStory<typeof MemberPlansContainer> = args => (
-  <MemberPlansContainer {...args} />
-)
-export const Default = Template.bind({})
+export const Default = {
+  args: {
+    onQuery: action('onQuery')
+  },
 
-Default.args = {
-  onQuery: action('onQuery')
-}
-
-Default.parameters = {
-  apolloClient: {
-    mocks: [
-      {
-        request: {
-          query: MemberPlanListDocument
-        },
-        result: {
-          data: {
-            memberplans: {}
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: MemberPlanListDocument
+          },
+          result: {
+            data: {
+              memberplans: {}
+            }
           }
         }
-      }
-    ]
+      ]
+    }
   }
 }
 
-export const WithClassName = Template.bind({})
+export const WithClassName = {
+  args: {
+    onQuery: action('onQuery'),
+    className: 'extra-classname'
+  },
 
-WithClassName.args = {
-  onQuery: action('onQuery'),
-  className: 'extra-classname'
-}
-
-WithClassName.parameters = {
-  apolloClient: {
-    mocks: [
-      {
-        request: {
-          query: MemberPlanListDocument
-        },
-        result: {
-          data: {
-            memberplans: {}
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: MemberPlanListDocument
+          },
+          result: {
+            data: {
+              memberplans: {}
+            }
           }
         }
-      }
-    ]
+      ]
+    }
   }
 }

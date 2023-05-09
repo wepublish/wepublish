@@ -1,4 +1,4 @@
-import {ComponentStory, Meta} from '@storybook/react'
+import {Meta} from '@storybook/react'
 import {ImageBlock} from './image-block'
 import {css} from '@emotion/react'
 
@@ -24,43 +24,48 @@ const image = {
   url: 'https://unsplash.it/500/500'
 }
 
-const Template: ComponentStory<typeof ImageBlock> = args => <ImageBlock {...args} />
-export const Default = Template.bind({})
-Default.args = {
-  image,
-  caption: 'Image caption'
+export const Default = {
+  args: {
+    image,
+    caption: 'Image caption'
+  }
 }
 
-export const WithClassName = Template.bind({})
-WithClassName.args = {
-  image,
-  caption: 'Image caption',
-  className: 'extra-classname'
+export const WithClassName = {
+  args: {
+    image,
+    caption: 'Image caption',
+    className: 'extra-classname'
+  }
 }
 
-export const WithEmotion = Template.bind({})
-WithEmotion.args = {
-  image,
-  css: css`
-    background-color: #eee;
-  `
-} as any // The css prop comes from the WithConditionalCSSProp type by the Emotion JSX Pragma
-
-export const WithoutCaption = Template.bind({})
-WithoutCaption.args = {
-  image,
-  caption: '',
-  className: 'extra-classname'
+export const WithEmotion = {
+  args: {
+    image,
+    caption: 'Image caption',
+    css: css`
+      background-color: #eee;
+    `
+  }
 }
 
-export const WithoutDescription = Template.bind({})
-WithoutDescription.args = {
-  image: {...image, description: undefined},
-  caption: 'Image caption'
+export const WithoutCaption = {
+  args: {
+    image,
+    caption: ''
+  }
 }
 
-export const WithoutTitle = Template.bind({})
-WithoutTitle.args = {
-  image: {...image, title: undefined},
-  caption: 'Image caption'
+export const WithoutDescription = {
+  args: {
+    image: {...image, description: undefined},
+    caption: 'Image caption'
+  }
+}
+
+export const WithoutTitle = {
+  args: {
+    image: {...image, title: undefined},
+    caption: 'Image caption'
+  }
 }

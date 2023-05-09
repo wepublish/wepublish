@@ -13,6 +13,7 @@ fragment FullEvent on Event {
   }
   startsAt
   endsAt
+  url
 }
 
 query EventList(

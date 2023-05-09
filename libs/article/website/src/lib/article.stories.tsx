@@ -1,5 +1,5 @@
 import {ApolloError} from '@apollo/client'
-import {ComponentStory, Meta} from '@storybook/react'
+import {Meta} from '@storybook/react'
 import {ArticleQuery} from '@wepublish/website/api'
 import {Article} from './article'
 
@@ -954,28 +954,30 @@ export default {
   title: 'Components/Article'
 } as Meta
 
-const Template: ComponentStory<typeof Article> = args => <Article {...args} />
-export const Default = Template.bind({})
-Default.args = {
-  data: {article},
-  loading: false
+export const Default = {
+  args: {
+    data: {article},
+    loading: false
+  }
 }
 
-export const WithLoading = Template.bind({})
-WithLoading.args = {
-  data: {
-    article: null
-  },
-  loading: true
+export const WithLoading = {
+  args: {
+    data: {
+      article: null
+    },
+    loading: true
+  }
 }
 
-export const WithError = Template.bind({})
-WithError.args = {
-  data: {
-    article: null
-  },
-  loading: false,
-  error: new ApolloError({
-    errorMessage: 'Foobar'
-  })
+export const WithError = {
+  args: {
+    data: {
+      article: null
+    },
+    loading: false,
+    error: new ApolloError({
+      errorMessage: 'Foobar'
+    })
+  }
 }

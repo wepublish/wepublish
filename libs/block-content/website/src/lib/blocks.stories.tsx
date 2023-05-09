@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {ComponentStory, Meta} from '@storybook/react'
+import {Meta, StoryFn} from '@storybook/react'
 import {Block} from '@wepublish/website/api'
 import {Blocks} from './blocks'
 
@@ -950,10 +950,10 @@ const blocks = [
   }
 ] as Block[]
 
-const Template: ComponentStory<typeof Blocks> = args => <Blocks {...args} />
-export const Default = Template.bind({})
-Default.args = {
-  blocks
+export const Default = {
+  args: {
+    blocks
+  }
 }
 
 const Layout = styled.div`
@@ -961,13 +961,16 @@ const Layout = styled.div`
   gap: 24px;
 `
 
-const LayoutTemplate: ComponentStory<typeof Blocks> = args => (
+const LayoutTemplate: StoryFn<typeof Blocks> = args => (
   <Layout>
     <Blocks {...args} />
   </Layout>
 )
 
-export const WithLayout = LayoutTemplate.bind({})
-WithLayout.args = {
-  blocks
+export const WithLayout = {
+  render: LayoutTemplate,
+
+  args: {
+    blocks
+  }
 }

@@ -1,10 +1,9 @@
-import {ComponentStory, Meta} from '@storybook/react'
+import {Meta} from '@storybook/react'
 import {EventList} from './event-list'
 import {EventQuery, EventStatus} from '@wepublish/website/api'
 import {ApolloError} from '@apollo/client'
 import {css} from '@emotion/react'
 import {action} from '@storybook/addon-actions'
-import {EventListItem} from './event-list-item'
 
 const event = {
   id: '16ca80ce-a2d0-44dc-8c87-b735e4b08877',
@@ -181,93 +180,98 @@ export default {
   title: 'Components/EventList'
 } as Meta
 
-const Template: ComponentStory<typeof EventList> = args => <EventList {...args} />
-export const Default = Template.bind({})
-Default.args = {
-  data: {
-    events: {
-      nodes: [event, event, event, event, event],
-      pageInfo: {
-        hasNextPage: true,
-        hasPreviousPage: false
-      },
-      totalCount: 1
-    }
-  },
-  variables: {
-    take: 10
-  },
-  onVariablesChange: action('onVariablesChange')
+export const Default = {
+  args: {
+    data: {
+      events: {
+        nodes: [event, event, event, event, event],
+        pageInfo: {
+          hasNextPage: true,
+          hasPreviousPage: false
+        },
+        totalCount: 1
+      }
+    },
+    variables: {
+      take: 10
+    },
+    onVariablesChange: action('onVariablesChange')
+  }
 }
 
-export const WithLoading = Template.bind({})
-WithLoading.args = {
-  data: undefined,
-  loading: true,
-  onVariablesChange: action('onVariablesChange')
+export const WithLoading = {
+  args: {
+    data: undefined,
+    loading: true,
+    onVariablesChange: action('onVariablesChange')
+  }
 }
 
-export const WithError = Template.bind({})
-WithError.args = {
-  data: undefined,
-  loading: false,
-  error: new ApolloError({
-    errorMessage: 'Foobar'
-  }),
-  onVariablesChange: action('onVariablesChange')
+export const WithError = {
+  args: {
+    data: undefined,
+    loading: false,
+    error: new ApolloError({
+      errorMessage: 'Foobar'
+    }),
+    onVariablesChange: action('onVariablesChange')
+  }
 }
 
-export const WithClassName = Template.bind({})
-WithClassName.args = {
-  data: {
-    events: {
-      nodes: [event, event, event, event, event],
-      pageInfo: {
-        hasNextPage: true,
-        hasPreviousPage: false
-      },
-      totalCount: 1
-    }
-  },
-  className: 'extra-classname',
-  onVariablesChange: action('onVariablesChange')
+export const WithClassName = {
+  args: {
+    data: {
+      events: {
+        nodes: [event, event, event, event, event],
+        pageInfo: {
+          hasNextPage: true,
+          hasPreviousPage: false
+        },
+        totalCount: 1
+      }
+    },
+    className: 'extra-classname',
+    onVariablesChange: action('onVariablesChange')
+  }
 }
 
-export const WithEmotion = Template.bind({})
-WithEmotion.args = {
-  data: {
-    events: {
-      nodes: [event, event, event, event, event],
-      pageInfo: {
-        hasNextPage: true,
-        hasPreviousPage: false
-      },
-      totalCount: 1
-    }
-  },
-  css: css`
-    background-color: #eee;
-  `,
-  onVariablesChange: action('onVariablesChange')
-} as any // The css prop comes from the WithConditionalCSSProp type by the Emotion JSX Pragma
+export const WithEmotion = {
+  args: {
+    data: {
+      events: {
+        nodes: [event, event, event, event, event],
+        pageInfo: {
+          hasNextPage: true,
+          hasPreviousPage: false
+        },
+        totalCount: 1
+      }
+    },
+    css: css`
+      background-color: #eee;
+    `,
+    onVariablesChange: action('onVariablesChange')
+  }
+}
 
-export const WithoutImage = Template.bind({})
-WithoutImage.args = {
-  data: {
-    events: {
-      nodes: [
-        {...event, image: null},
-        event,
-        {...event, image: null},
-        event,
-        {...event, image: null}
-      ],
-      pageInfo: {
-        hasNextPage: true,
-        hasPreviousPage: false
-      },
-      totalCount: 1
-    }
-  },
-  onVariablesChange: action('onVariablesChange')
+export const WithoutImage = {
+  args: {
+    data: {
+      events: {
+        nodes: [
+          {...event, image: null},
+          event,
+          {...event, image: null},
+          event,
+          {...event, image: null}
+        ],
+        pageInfo: {
+          hasNextPage: true,
+          hasPreviousPage: false
+        },
+        totalCount: 1
+      }
+    },
+    onVariablesChange: action('onVariablesChange')
+  }
 }

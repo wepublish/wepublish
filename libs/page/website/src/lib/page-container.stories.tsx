@@ -1,5 +1,5 @@
 import {action} from '@storybook/addon-actions'
-import {ComponentStory, Meta} from '@storybook/react'
+import {Meta} from '@storybook/react'
 import {PageDocument, PageQuery} from '@wepublish/website/api'
 import {PageContainer} from './page-container'
 import {css} from '@emotion/react'
@@ -957,116 +957,114 @@ export default {
   title: 'Container/Page'
 } as Meta
 
-const Template: ComponentStory<typeof PageContainer> = args => <PageContainer {...args} />
+export const ById = {
+  args: {
+    onQuery: action('onQuery'),
+    id: page.id
+  },
 
-export const ById = Template.bind({})
-
-ById.args = {
-  onQuery: action('onQuery'),
-  id: page.id
-}
-
-ById.parameters = {
-  apolloClient: {
-    mocks: [
-      {
-        request: {
-          query: PageDocument,
-          variables: {
-            id: page.id
-          }
-        },
-        result: {
-          data: {
-            page
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: PageDocument,
+            variables: {
+              id: page.id
+            }
+          },
+          result: {
+            data: {
+              page
+            }
           }
         }
-      }
-    ]
+      ]
+    }
   }
 }
 
-export const BySlug = Template.bind({})
+export const BySlug = {
+  args: {
+    onQuery: action('onQuery'),
+    slug: page.slug
+  },
 
-BySlug.args = {
-  onQuery: action('onQuery'),
-  slug: page.slug
-}
-
-BySlug.parameters = {
-  apolloClient: {
-    mocks: [
-      {
-        request: {
-          query: PageDocument,
-          variables: {
-            slug: page.slug
-          }
-        },
-        result: {
-          data: {
-            page
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: PageDocument,
+            variables: {
+              slug: page.slug
+            }
+          },
+          result: {
+            data: {
+              page
+            }
           }
         }
-      }
-    ]
+      ]
+    }
   }
 }
 
-export const WithClassName = Template.bind({})
+export const WithClassName = {
+  args: {
+    onQuery: action('onQuery'),
+    id: page.id,
+    className: 'extra-classname'
+  },
 
-WithClassName.args = {
-  onQuery: action('onQuery'),
-  id: page.id,
-  className: 'extra-classname'
-}
-
-WithClassName.parameters = {
-  apolloClient: {
-    mocks: [
-      {
-        request: {
-          query: PageDocument,
-          variables: {
-            id: page.id
-          }
-        },
-        result: {
-          data: {
-            page
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: PageDocument,
+            variables: {
+              id: page.id
+            }
+          },
+          result: {
+            data: {
+              page
+            }
           }
         }
-      }
-    ]
+      ]
+    }
   }
 }
 
-export const WithEmotion = Template.bind({})
+export const WithEmotion = {
+  args: {
+    onQuery: action('onQuery'),
+    id: page.id,
+    css: css`
+      background-color: #eee;
+    `
+  },
 
-WithEmotion.args = {
-  onQuery: action('onQuery'),
-  id: page.id,
-  css: css`
-    background-color: #eee;
-  `
-} as any // The css prop comes from the WithConditionalCSSProp type by the Emotion JSX Pragma
-
-WithEmotion.parameters = {
-  apolloClient: {
-    mocks: [
-      {
-        request: {
-          query: PageDocument,
-          variables: {
-            id: page.id
-          }
-        },
-        result: {
-          data: {
-            page
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: PageDocument,
+            variables: {
+              id: page.id
+            }
+          },
+          result: {
+            data: {
+              page
+            }
           }
         }
-      }
-    ]
+      ]
+    }
   }
 }

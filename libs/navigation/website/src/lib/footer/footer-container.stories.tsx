@@ -1,5 +1,5 @@
 import {action} from '@storybook/addon-actions'
-import {ComponentStory, Meta} from '@storybook/react'
+import {Meta} from '@storybook/react'
 import {Navigation, NavigationDocument} from '@wepublish/website/api'
 import {FooterContainer} from './footer-container'
 import {css} from '@emotion/react'
@@ -50,91 +50,90 @@ export default {
   title: 'Container/Footer'
 } as Meta
 
-const Template: ComponentStory<typeof FooterContainer> = args => <FooterContainer {...args} />
-export const Default = Template.bind({})
+export const Default = {
+  args: {
+    onQuery: action('onQuery'),
+    slug: 'footer',
+    children
+  },
 
-Default.args = {
-  onQuery: action('onQuery'),
-  slug: 'footer',
-  children
-}
-
-Default.parameters = {
-  apolloClient: {
-    mocks: [
-      {
-        request: {
-          query: NavigationDocument,
-          variables: {
-            slug: 'footer'
-          }
-        },
-        result: {
-          data: {
-            navigation
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: NavigationDocument,
+            variables: {
+              slug: 'footer'
+            }
+          },
+          result: {
+            data: {
+              navigation
+            }
           }
         }
-      }
-    ]
+      ]
+    }
   }
 }
 
-export const WithClassName = Template.bind({})
+export const WithClassName = {
+  args: {
+    onQuery: action('onQuery'),
+    slug: 'footer',
+    children,
+    className: 'extra-classname'
+  },
 
-WithClassName.args = {
-  onQuery: action('onQuery'),
-  slug: 'footer',
-  children,
-  className: 'extra-classname'
-}
-
-WithClassName.parameters = {
-  apolloClient: {
-    mocks: [
-      {
-        request: {
-          query: NavigationDocument,
-          variables: {
-            slug: 'footer'
-          }
-        },
-        result: {
-          data: {
-            navigation
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: NavigationDocument,
+            variables: {
+              slug: 'footer'
+            }
+          },
+          result: {
+            data: {
+              navigation
+            }
           }
         }
-      }
-    ]
+      ]
+    }
   }
 }
 
-export const WithEmotion = Template.bind({})
+export const WithEmotion = {
+  args: {
+    onQuery: action('onQuery'),
+    slug: 'footer',
+    children,
+    css: css`
+      background-color: #eee;
+    `
+  },
 
-WithEmotion.args = {
-  onQuery: action('onQuery'),
-  slug: 'footer',
-  children,
-  css: css`
-    background-color: #eee;
-  `
-} as any // The css prop comes from the WithConditionalCSSProp type by the Emotion JSX Pragma
-
-WithEmotion.parameters = {
-  apolloClient: {
-    mocks: [
-      {
-        request: {
-          query: NavigationDocument,
-          variables: {
-            slug: 'footer'
-          }
-        },
-        result: {
-          data: {
-            navigation
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: NavigationDocument,
+            variables: {
+              slug: 'footer'
+            }
+          },
+          result: {
+            data: {
+              navigation
+            }
           }
         }
-      }
-    ]
+      ]
+    }
   }
 }

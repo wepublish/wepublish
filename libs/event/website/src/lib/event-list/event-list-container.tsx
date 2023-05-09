@@ -15,7 +15,7 @@ export type EventListContainerProps = {
 } & BuilderContainerProps &
   Pick<BuilderEventListProps, 'variables' | 'onVariablesChange'>
 
-export function EventContainer({
+export function EventListContainer({
   onQuery,
   className,
   variables,

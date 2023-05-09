@@ -308,6 +308,7 @@ export type Event = {
   startsAt: Scalars['DateTime']
   status: EventStatus
   tags?: Maybe<Array<Tag>>
+  url: Scalars['String']
 }
 
 export type EventBlock = {
@@ -1947,6 +1948,7 @@ export type FullEventFragment = {
   location?: string | null
   startsAt: string
   endsAt?: string | null
+  url: string
   image?: {
     __typename?: 'Image'
     id: string
@@ -2001,6 +2003,7 @@ export type EventListQuery = {
       location?: string | null
       startsAt: string
       endsAt?: string | null
+      url: string
       image?: {
         __typename?: 'Image'
         id: string
@@ -2056,6 +2059,7 @@ export type EventQuery = {
     location?: string | null
     startsAt: string
     endsAt?: string | null
+    url: string
     image?: {
       __typename?: 'Image'
       id: string
@@ -3089,6 +3093,7 @@ export const FullEventFragmentDoc = gql`
     }
     startsAt
     endsAt
+    url
   }
   ${FullImageFragmentDoc}
 `

@@ -1,4 +1,4 @@
-import {ComponentStory, Meta} from '@storybook/react'
+import {Meta} from '@storybook/react'
 import {Subscribe} from './subscribe'
 
 export default {
@@ -6,5 +6,4 @@ export default {
   title: 'Components/Subscribe'
 } as Meta
 
-const Template: ComponentStory<typeof Subscribe> = args => <Subscribe {...args} />
-export const Default = Template.bind({})
+export const Default = {}

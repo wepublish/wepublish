@@ -31,9 +31,8 @@ const FooterLinks = styled('nav')`
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
-      grid-template-columns: initial;
-      grid-auto-flow: column;
-      grid-auto-rows: min-content;
+      display: flex;
+      flex-flow: row wrap;
     }
   `}
 `

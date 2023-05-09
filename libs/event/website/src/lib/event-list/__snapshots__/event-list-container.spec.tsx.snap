@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EventList Container should render Default 1`] = `
+<DocumentFragment>
+  <div
+    class="css-1ul8u7n"
+  />
+</DocumentFragment>
+`;
+
+exports[`EventList Container should render WithClassName 1`] = `
+<DocumentFragment>
+  <div
+    class="extra-classname css-1ul8u7n"
+  />
+</DocumentFragment>
+`;
+
+exports[`EventList Container should render WithEmotion 1`] = `
+<DocumentFragment>
+  <div
+    class="css-1ul8u7n"
+  />
+</DocumentFragment>
+`;

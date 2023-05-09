@@ -1,19 +1,20 @@
-import {css, styled} from '@mui/material'
+import {Theme, css, styled, useTheme} from '@mui/material'
 import {Event} from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {format} from 'date-fns'
 import {MdDateRange} from 'react-icons/md'
 
-export const EventListItemWrapper = styled('article')`
+export const eventListItemStyles = (theme: Theme) => css`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${theme.spacing(2)};
   grid-template-columns: 1fr;
+  align-content: start;
+  color: inherit;
+  text-decoration: inherit;
 
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      grid-template-columns: minmax(30%, 200px) auto;
-    }
-  `}
+  ${theme.breakpoints.up('md')} {
+    grid-template-columns: minmax(30%, 200px) auto;
+  }
 `
 
 export const EventListItemContent = styled('div')`
@@ -38,6 +39,7 @@ const EventListItemDate = styled('div')`
 `
 
 export const EventListItem = ({
+  url,
   description,
   name,
   image,
@@ -45,13 +47,15 @@ export const EventListItem = ({
   endsAt,
   className
 }: Event & {className?: string}) => {
+  const theme = useTheme()
+
   const {
-    elements: {H4},
+    elements: {H4, Link},
     blocks: {RichText, Image}
   } = useWebsiteBuilder()
 
   return (
-    <EventListItemWrapper className={className}>
+    <Link role={'article'} href={url} css={eventListItemStyles(theme)} className={className}>
       <Image image={image} />
 
       <EventListItemContent>
@@ -71,6 +75,6 @@ export const EventListItem = ({
         <H4 component="h1">{name}</H4>
         <RichText richText={description ?? []} />
       </EventListItemContent>
-    </EventListItemWrapper>
+    </Link>
   )
 }

@@ -1,5 +1,5 @@
 import {ApolloError} from '@apollo/client'
-import {ComponentStory, Meta} from '@storybook/react'
+import {Meta} from '@storybook/react'
 import {Navigation} from '@wepublish/website/api'
 import {Footer} from './footer'
 
@@ -46,34 +46,35 @@ export default {
   title: 'Components/Footer'
 } as Meta
 
-const Template: ComponentStory<typeof Footer> = args => <Footer {...args} />
-
-export const Default = Template.bind({})
-Default.args = {
-  data: {
-    navigation
-  },
-  loading: false,
-  children
+export const Default = {
+  args: {
+    data: {
+      navigation
+    },
+    loading: false,
+    children
+  }
 }
 
-export const WithLoading = Template.bind({})
-WithLoading.args = {
-  data: {
-    navigation: null
-  },
-  loading: true,
-  children
+export const WithLoading = {
+  args: {
+    data: {
+      navigation: null
+    },
+    loading: true,
+    children
+  }
 }
 
-export const WithError = Template.bind({})
-WithError.args = {
-  data: {
-    navigation: null
-  },
-  loading: false,
-  error: new ApolloError({
-    errorMessage: 'Foobar'
-  }),
-  children
+export const WithError = {
+  args: {
+    data: {
+      navigation: null
+    },
+    loading: false,
+    error: new ApolloError({
+      errorMessage: 'Foobar'
+    }),
+    children
+  }
 }

@@ -1,4 +1,4 @@
-import {ComponentStory, Meta} from '@storybook/react'
+import {Meta} from '@storybook/react'
 import {Event} from './event'
 import {EventQuery, EventStatus} from '@wepublish/website/api'
 import {ApolloError} from '@apollo/client'
@@ -179,50 +179,55 @@ export default {
   title: 'Components/Event'
 } as Meta
 
-const Template: ComponentStory<typeof Event> = args => <Event {...args} />
-export const Default = Template.bind({})
-Default.args = {
-  data: {
-    event
+export const Default = {
+  args: {
+    data: {
+      event
+    }
   }
 }
 
-export const WithLoading = Template.bind({})
-WithLoading.args = {
-  data: undefined,
-  loading: true
+export const WithLoading = {
+  args: {
+    data: undefined,
+    loading: true
+  }
 }
 
-export const WithError = Template.bind({})
-WithError.args = {
-  data: undefined,
-  loading: false,
-  error: new ApolloError({
-    errorMessage: 'Foobar'
-  })
+export const WithError = {
+  args: {
+    data: undefined,
+    loading: false,
+    error: new ApolloError({
+      errorMessage: 'Foobar'
+    })
+  }
 }
 
-export const WithClassName = Template.bind({})
-WithClassName.args = {
-  data: {
-    event
-  },
-  className: 'extra-classname'
+export const WithClassName = {
+  args: {
+    data: {
+      event
+    },
+    className: 'extra-classname'
+  }
 }
 
-export const WithEmotion = Template.bind({})
-WithEmotion.args = {
-  data: {
-    event
-  },
-  css: css`
-    background-color: #eee;
-  `
-} as any // The css prop comes from the WithConditionalCSSProp type by the Emotion JSX Pragma
+export const WithEmotion = {
+  args: {
+    data: {
+      event
+    },
+    css: css`
+      background-color: #eee;
+    `
+  }
+}
 
-export const WithoutImage = Template.bind({})
-WithoutImage.args = {
-  data: {
-    event: {...event, image: null}
+export const WithoutImage = {
+  args: {
+    data: {
+      event: {...event, image: null}
+    }
   }
 }

@@ -1,18 +1,9 @@
+import {StorybookConfig} from '@storybook/react-webpack5'
 import rootMain from '../../../.storybook/main'
 
 export default {
   ...rootMain,
   core: {...rootMain.core, builder: 'webpack5'},
   stories: ['../src/lib/**/*.stories.mdx', '../src/lib/**/*.stories.@(js|jsx|ts|tsx)'],
-  addons: [...rootMain.addons, '@nrwl/react/plugins/storybook'],
-  webpackFinal: async (config: any, {configType}: any) => {
-    // apply any global webpack configs that might have been specified in .storybook/main.js
-    if (rootMain.webpackFinal) {
-      config = await rootMain.webpackFinal(config, {configType})
-    }
-
-    // add your own webpack tweaks if needed
-
-    return config
-  }
-}
+  addons: [...(rootMain.addons ?? []), '@nx/react/plugins/storybook']
+} as StorybookConfig

@@ -1,3 +1,7 @@
+import type {StorybookConfig} from '@storybook/react-webpack5'
+
+require('util').inspect.defaultOptions.depth = null
+
 export default {
   addons: [
     '@storybook/addon-essentials',
@@ -22,14 +26,14 @@ export default {
     '@storybook/addon-a11y',
     '@storybook/addon-docs'
   ],
-  babel: async (options: any) => {
-    options.overrides.push({
-      presets: [['@babel/preset-react', {runtime: 'automatic', importSource: '@emotion/react'}]],
-      test: '*' // This says "for all files, use this override".
-    })
+  // babel: (config, options) => {
+  //   console.log(config)
 
-    return options
-  }
+  //   return {
+  //     ...config,
+  //     presets: [...(config.presets ?? []), '@emotion/babel-preset-css-prop']
+  //   }
+  // },
   // uncomment the property below if you want to apply some webpack config globally
   // webpackFinal: async (config, { configType }) => {
   //   // Make whatever fine-grained changes you need that should apply to all storybook configs
@@ -37,4 +41,15 @@ export default {
   //   // Return the altered config
   //   return config;
   // },
-} as any
+  framework: {
+    name: '@storybook/react-webpack5',
+    options: {}
+  },
+  docs: {
+    autodocs: true
+  },
+  features: {
+    storyStoreV7: false, // 👈 Opt out of on-demand story loading
+    emotionAlias: false
+  }
+} as Partial<StorybookConfig>

@@ -1,4 +1,4 @@
-import {ComponentStory, Meta} from '@storybook/react'
+import {Meta} from '@storybook/react'
 import {PayInvoicesContainer} from './pay-invoices-container'
 import {css} from '@emotion/react'
 
@@ -7,41 +7,38 @@ export default {
   title: 'Container/PayInvoices'
 } as Meta
 
-const Template: ComponentStory<typeof PayInvoicesContainer> = args => (
-  <PayInvoicesContainer {...args} />
-)
-export const Default = Template.bind({})
+export const Default = {
+  args: {},
 
-Default.args = {}
-
-Default.parameters = {
-  apolloClient: {
-    mocks: []
+  parameters: {
+    apolloClient: {
+      mocks: []
+    }
   }
 }
 
-export const WithClassName = Template.bind({})
+export const WithClassName = {
+  args: {
+    className: 'extra-classname'
+  },
 
-WithClassName.args = {
-  className: 'extra-classname'
-}
-
-WithClassName.parameters = {
-  apolloClient: {
-    mocks: []
+  parameters: {
+    apolloClient: {
+      mocks: []
+    }
   }
 }
 
-export const WithEmotion = Template.bind({})
+export const WithEmotion = {
+  args: {
+    css: css`
+      background-color: #eee;
+    `
+  },
 
-WithEmotion.args = {
-  css: css`
-    background-color: #eee;
-  `
-} as any // The css prop comes from the WithConditionalCSSProp type by the Emotion JSX Pragma
-
-WithEmotion.parameters = {
-  apolloClient: {
-    mocks: []
+  parameters: {
+    apolloClient: {
+      mocks: []
+    }
   }
 }

@@ -1,5 +1,5 @@
 import {css} from '@emotion/react'
-import {ComponentStory, Meta} from '@storybook/react'
+import {Meta} from '@storybook/react'
 import {EventQuery, EventStatus} from '@wepublish/website/api'
 import {EventListItem} from './event-list-item'
 
@@ -178,27 +178,31 @@ export default {
   title: 'Components/EventList/Item'
 } as Meta
 
-const Template: ComponentStory<typeof EventListItem> = args => <EventListItem {...args} />
-export const Default = Template.bind({})
-Default.args = {
-  ...event
+export const Default = {
+  args: {
+    ...event
+  }
 }
 
-export const WithClassName = Template.bind({})
-WithClassName.args = {
-  ...event,
-  className: 'extra-classname'
+export const WithClassName = {
+  args: {
+    ...event,
+    className: 'extra-classname'
+  }
 }
 
-export const WithEmotion = Template.bind({})
-WithEmotion.args = {
-  ...event,
-  css: css`
-    background-color: #eee;
-  `
-} as any // The css prop comes from the WithConditionalCSSProp type by the Emotion JSX Pragma
+export const WithEmotion = {
+  args: {
+    ...event,
+    css: css`
+      background-color: #eee;
+    `
+  }
+}
 
-export const WithoutImage = Template.bind({})
-WithoutImage.args = {
-  ...{...event, image: null}
+export const WithoutImage = {
+  args: {
+    ...event,
+    image: null
+  }
 }
