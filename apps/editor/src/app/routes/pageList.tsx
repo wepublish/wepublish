@@ -11,6 +11,16 @@ import {
   usePageListQuery,
   useUnpublishPageMutation
 } from '@wepublish/editor/api'
+import {
+  IconButtonCell,
+  ListFilters,
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  StatusBadge,
+  Table,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdComment, MdContentCopy, MdDelete, MdPreview, MdUnpublished} from 'react-icons/md'
@@ -22,16 +32,6 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
-import {
-  IconButtonCell,
-  ListFilters,
-  ListViewActions,
-  ListViewContainer,
-  ListViewHeader,
-  StatusBadge,
-  Table,
-  TableWrapper
-} from '../ui/listView'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,

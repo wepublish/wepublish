@@ -170,6 +170,16 @@ function SettingList() {
       value: false,
       name: SettingName.MakeRevenueApiPublic,
       label: 'settingList.revenueApiPublic'
+    },
+    [SettingName.CommentCharLimit]: {
+      value: 0,
+      name: SettingName.CommentCharLimit,
+      label: 'settingList.commentCharLimit'
+    },
+    [SettingName.AllowCommentEditing]: {
+      value: false,
+      name: SettingName.AllowCommentEditing,
+      label: 'settingList.allowCommentEditing'
     }
   } as Record<SettingName, SettingWithLabel>)
 
@@ -276,6 +286,16 @@ function SettingList() {
           min: settings[SettingName.InvoiceReminderFreq].settingRestriction?.minValue ?? 0,
           max: settings[SettingName.InvoiceReminderFreq].settingRestriction?.maxValue ?? 30
         })
+      ),
+    [SettingName.CommentCharLimit]: NumberType()
+      .isRequired(t('errorMessages.required'))
+      .range(
+        settings[SettingName.CommentCharLimit].settingRestriction?.minValue ?? 0,
+        settings[SettingName.CommentCharLimit].settingRestriction?.maxValue ?? 10000,
+        t('errorMessages.invalidRange', {
+          min: settings[SettingName.CommentCharLimit].settingRestriction?.minValue ?? 0,
+          max: settings[SettingName.CommentCharLimit].settingRestriction?.maxValue ?? 10000
+        })
       )
   })
 
@@ -376,6 +396,47 @@ function SettingList() {
                           })
                         }
                       />
+                    </Form.Group>
+
+                    {/* Allow editing of a comment */}
+                    <Form.Group controlId={SettingName.AllowCommentEditing}>
+                      <Form.ControlLabel>
+                        {t(settings[SettingName.AllowCommentEditing].label)}
+                        <SettingInfo text={t('settingList.warnings.allowCommentEditing')} />
+                      </Form.ControlLabel>
+
+                      <Toggle
+                        disabled={isDisabled}
+                        checked={settings[SettingName.AllowCommentEditing].value}
+                        onChange={checked =>
+                          setSetting({
+                            ...settings[SettingName.AllowCommentEditing],
+                            value: checked
+                          })
+                        }
+                      />
+                    </Form.Group>
+
+                    {/* Comment char limit */}
+                    <Form.Group controlId={SettingName.CommentCharLimit}>
+                      <Form.ControlLabel>
+                        {t(settings[SettingName.CommentCharLimit].label)}
+                        <SettingInfo text={t('settingList.warnings.commentCharLimit')} />
+                      </Form.ControlLabel>
+
+                      <InputGroup>
+                        <FormControl
+                          name={SettingName.CommentCharLimit}
+                          accepter={InputNumber}
+                          value={settings[SettingName.CommentCharLimit].value}
+                          onChange={(value: string) =>
+                            setSetting({
+                              ...settings[SettingName.CommentCharLimit],
+                              value: +value
+                            })
+                          }
+                        />
+                      </InputGroup>
                     </Form.Group>
                   </Panel>
                 </Col>

@@ -6,6 +6,15 @@ import {
   useDeleteSubscriptionMutation,
   useSubscriptionListQuery
 } from '@wepublish/editor/api'
+import {
+  ListViewActions,
+  ListViewContainer,
+  ListViewFilterArea,
+  ListViewHeader,
+  PaddedCell,
+  Table,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import React, {useEffect, useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdInfo} from 'react-icons/md'
@@ -30,15 +39,6 @@ import {
 } from '../atoms/permissionControl'
 import {SubscriptionListFilter} from '../atoms/searchAndFilter/subscriptionListFilter'
 import {ExportSubscriptionsAsCsv} from '../panel/ExportSubscriptionsAsCsv'
-import {
-  ListViewActions,
-  ListViewContainer,
-  ListViewFilterArea,
-  ListViewHeader,
-  PaddedCell,
-  Table,
-  TableWrapper
-} from '../ui/listView'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,

@@ -2237,9 +2237,11 @@ export type Setting = {
 };
 
 export enum SettingName {
+  AllowCommentEditing = 'ALLOW_COMMENT_EDITING',
   AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
+  CommentCharLimit = 'COMMENT_CHAR_LIMIT',
   InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
   InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES',
   MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
