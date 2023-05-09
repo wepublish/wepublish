@@ -5,7 +5,6 @@ import Marlen from '../src/2212_Marlen Reusser030_396 1.png'
 import Marlen2 from '../src/2212_Marlen Reusser030_396 2.png'
 import {BreakImage} from '../src/components/break'
 import {BreakText} from '../src/components/break-text'
-import {CrowdfundingChart} from '../src/components/crowdfunding/crowdfunding-chart'
 import {Donate} from '../src/components/crowdfunding/donate'
 import {Intro} from '../src/components/intro'
 
@@ -14,9 +13,9 @@ export function Index() {
     <>
       <Intro />
 
-      <CrowdfundingChart id={'unterstuetze-uns'} />
-
-      <Donate />
+      <div id={'unterstuetze-uns'}>
+        <Donate />
+      </div>
 
       <BreakImage id={'ueber-uns'}>
         <div>
@@ -27,19 +26,17 @@ export function Index() {
           <Typography variant="body1" marginBottom={2}>
             Wir sind vor zwei Jahren mit einer Idee losgerollt, die uns seither nicht mehr loslässt.
             Wir wollen ein hochwertiges Radsport-Magazin herausgeben, das man gerne in den Händen
-            hält und dabei ein Gefühl der Freiheit spürt. Das «Gruppetto» soll ab 2024 viermal im
-            Jahr erscheinen und allen Abonnent:innen nachhause geliefert werden. Damit wir dieses
-            Ziel erreichen, erscheint pünktlich zur Tour de Suisse im kommenden Juni die erste
-            Ausgabe des «Gruppetto». Es soll alle Radsportbegeisterte erreichen und sie dazu
-            animieren, das Magazin zu abonnieren. Nun benötigen wir Geld, um das Magazin in einer
-            möglichst hohen Auflage zu drucken und möglichst breit zu verteilen.
+            hält und dabei ein Gefühl der Freiheit spürt. Die erste Nummer des «Gruppetto» ist um
+            Juni erschienen. Nun entscheidet sich, ob es ab 2024 viermal im Jahr allen
+            Abonnent:innen nachhause geliefert werden soll.
           </Typography>
 
           <Typography variant="body1">
-            Bereits arbeiten mehrere Dutzend Journalist:innen, Fotograf:innen, Grafiker:innen,
-            Layouter:innen zusammen mit uns an der ersten Ausgabe. So haben wir die beiden neuen
-            Schweizer Teams Tudor und Q36,5 begleitet und liefern Hintergründe. Wir waren in Uganda
-            unterwegs und haben zur Korruption im afrikanischen Radsport recherchiert. Und wir haben
+            An der ersten Ausgabe haben mehrere Dutzend Journalist:innen, Fotograf:innen,
+            Grafiker:innen, Layouter:innen zusammen mit uns gearbeitet. Dabei ist ein vielfältiges
+            Heft entstanden. Wir haben die beiden neuen Schweizer Teams Tudor und Q36,5 begleitet
+            und Hintergründe geliefert. Wir haben das Leiden von Robin Gemperle, einem Schweizer
+            Ultracycling-Fahrer beschrieben, der sich von nichts stoppen lässt. Oder wir haben
             Marlen Reusser getroffen, um ein Porträt über die Olympia-Silbermedaillen-Gewinnerin und
             amtierende Europameisterin im Zeitfahren zu schreiben, die mit 25 Jahren noch nicht
             einmal mit dem Gedanken spielte, Radprofi zu werden.
