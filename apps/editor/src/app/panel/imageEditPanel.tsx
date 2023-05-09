@@ -91,7 +91,6 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
   const isAuthorized = useAuthorisation('CAN_CREATE_IMAGE')
   const isDisabled = isLoading || isUpdating || isUploading || !isAuthorized
   const isUpload = file !== undefined
-  console.log('isLoading', isLoading)
   const {t} = useTranslation()
 
   useEffect(() => {

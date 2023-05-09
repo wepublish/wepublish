@@ -25,7 +25,7 @@ type XMLEventMisc = {
 }
 
 type XMLEventMultimedia = {
-  Images: string[]
+  Images: any[]
   Videos: string[]
 }
 

@@ -68,8 +68,8 @@ export class Event {
   @Field(type => EventStatus)
   status!: EventStatus
 
-  @Field()
-  imageId!: string
+  @Field({nullable: true})
+  imageUrl?: string
 
   @Field()
   location!: string

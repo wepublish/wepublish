@@ -8,8 +8,17 @@ import {
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Drawer, Form, Panel, SelectPicker} from 'rsuite'
-import {DateTimePicker, RichTextBlock, SelectTags} from '@wepublish/ui/editor'
-import {RichTextBlockValue} from 'libs/ui/editor/src/lib/Blocks/types'
+import {Node} from 'slate'
+import {
+  ChooseEditImage,
+  DateTimePicker,
+  RichTextBlock,
+  SelectTags,
+  ImageSelectPanel,
+  ImageEditPanel
+} from '@wepublish/ui/editor'
+
+type RichTextBlockValue = Node[]
 
 type EventFormData = (MutationCreateEventArgs | MutationUpdateEventArgs) & {
   image?: ImageRefFragment | null
@@ -24,6 +33,7 @@ type EventFormProps = {
 export const ImportableEventForm = ({event, onChange, create}: EventFormProps) => {
   const {t} = useTranslation()
 
+  console.log('event', event)
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
@@ -82,7 +92,6 @@ export const ImportableEventForm = ({event, onChange, create}: EventFormProps) =
             <Panel bordered>
               <Form.Control
                 name="description"
-                // value={serializedToSlate || []}
                 value={event.description || []}
                 onChange={(description: RichTextBlockValue) => onChange({description})}
                 accepter={RichTextBlock}
@@ -137,7 +146,7 @@ export const ImportableEventForm = ({event, onChange, create}: EventFormProps) =
               removeImage={() => {
                 onChange({imageId: undefined, image: undefined})
               }}
-              // accepter={ChooseEditImage}
+              accepter={ChooseEditImage}
               minHeight={200}
             />
           </Form.Group>
@@ -150,18 +159,18 @@ export const ImportableEventForm = ({event, onChange, create}: EventFormProps) =
         onClose={() => {
           setChooseModalOpen(false)
         }}>
-        {/* <ImageSelectPanel
+        <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={image => {
             setChooseModalOpen(false)
             onChange({imageId: image.id, image})
           }}
-        /> */}
+        />
       </Drawer>
 
       {event.imageId && (
         <Drawer open={isEditModalOpen} size={'sm'} onClose={() => setEditModalOpen(false)}>
-          {/* <ImageEditPanel id={event.imageId} onClose={() => setEditModalOpen(false)} /> */}
+          <ImageEditPanel id={event.imageId} onClose={() => setEditModalOpen(false)} />
         </Drawer>
       )}
     </>

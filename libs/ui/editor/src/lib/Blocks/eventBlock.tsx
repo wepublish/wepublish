@@ -7,8 +7,24 @@ import {Drawer, IconButton, Panel} from 'rsuite'
 import {BlockProps} from '../Atoms/blockList'
 import {PlaceholderInput} from '../Atoms/placeholderInput'
 import {SelectEventPanel} from '../Panel/selectEventsPanel'
-import {EventEndsAtView, EventStartsAtView} from '../routes/events/eventListView'
 import {EventBlockValue} from './types'
+
+export function EventStartsAtView({startsAt}: {startsAt: string}) {
+  const startsAtDate = new Date(startsAt)
+  const {t} = useTranslation()
+
+  return <>{t('event.list.startsAt', {startsAt: startsAtDate})}</>
+}
+
+export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
+  const endsAtDate = endsAt ? new Date(endsAt) : undefined
+  const {t} = useTranslation()
+
+  if (endsAt) {
+    return <>{t('event.list.endsAt', {endsAt: endsAtDate})}</>
+  }
+  return <>{t('event.list.endsAtNone')}</>
+}
 
 const EventPreview = ({event}: {event: EventRefFragment}) => (
   <Panel

@@ -71,7 +71,7 @@ export type Event = {
   externalSourceId: Scalars['String']
   externalSourceName: Scalars['String']
   id: Scalars['String']
-  imageId: Scalars['String']
+  imageUrl: Scalars['String']
   location: Scalars['String']
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']

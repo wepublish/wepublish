@@ -53,7 +53,7 @@ type Event {
   externalSourceId: String!
   externalSourceName: String!
   id: String!
-  imageId: String!
+  imageUrl: String
   location: String!
   modifiedAt: DateTime!
   name: String!
@@ -90,6 +90,14 @@ type Mutation {
       
   """
   createConsent(consent: ConsentInput!): Consent!
+
+  """
+  
+        Creates and event based on data from importable events list and an id.
+        Also, uploads an image to WePublish image library.
+      
+  """
+  createEvent(id: String!): Event!
 
   """
   

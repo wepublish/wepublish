@@ -6,9 +6,7 @@ fragment ImportableEventRef on Event {
   location
   externalSourceId
   externalSourceName
-  # imageId {
-  #   ...ImageRef
-  # }
+  imageUrl
   startsAt
   endsAt
 }
@@ -39,6 +37,13 @@ query ImportedEventList(
 
 query ImportedEvent($filter: SingleEventFilter!) {
   importedEvent(filter: $filter) {
-    ...ImportabeEventRef
+    ...ImportableEventRef
+  }
+}
+
+# mutations
+mutation createEvent($id: String!) {
+  createEvent(id: $id) {
+    ...ImportableEventRef
   }
 }

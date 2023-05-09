@@ -3,6 +3,7 @@ import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {Cache} from 'cache-manager'
 import {PrismaClient} from '@prisma/client'
 import fetch from 'node-fetch'
+// import axios from 'Axios'
 import xml2js from 'xml2js'
 import {
   ImportedEventsDocument,
@@ -12,12 +13,20 @@ import {
   SingleEventFilter
 } from './events-import.model'
 import {htmlToSlate} from 'slate-serializers'
+// import {
+//   Event,
+//   useCreateEventMutation,
+//   useImportedEventsIdsQuery,
+//   useUploadImageMutation
+// } from '@wepublish/editor/api'
 
 import {XMLEventType} from './xmlTypes'
 
+const AGENDA_BASEL_URL = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
+
 const parseAndCacheData = async (cacheManager: Cache, source: Providers) => {
   const parser = new xml2js.Parser()
-  const urlToQuery = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
+  const urlToQuery = AGENDA_BASEL_URL
 
   async function getXMLfromURL(url: string) {
     try {
@@ -72,7 +81,6 @@ interface ImportedEventsParams {
 
 interface ImportedEventParams {
   id: string
-  // source: typeof Providers[keyof typeof Providers]
   cacheManager: Cache
 }
 
@@ -114,6 +122,16 @@ const upcomingOnly = (XMLEvent: XMLEventType) => {
   return XMLEvent
 }
 
+const getImageUrl = (event: XMLEventType) => {
+  return (
+    (event?.ActivityMultimedia.length &&
+      event?.ActivityMultimedia[0]?.Images.length &&
+      event?.ActivityMultimedia[0]?.Images[0]?.Image?.length &&
+      event?.ActivityMultimedia[0]?.Images[0]?.Image[0].$?.url) ||
+    ''
+  )
+}
+
 const parseXMLEventToWpEvent = (XMLEvent: XMLEventType, source: Providers) => {
   const activityDate =
     (XMLEvent &&
@@ -140,12 +158,14 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType, source: Providers) => {
   // we need to add type: 'paragraph' because that's how it was done in WP in the past
   parsedDescription[0] = {...parsedDescription[0], type: 'paragraph'}
 
+  console.log('getImageUrl', getImageUrl(XMLEvent))
   const parsedEvent = {
     id: XMLEvent['$'].originId,
     modifiedAt: new Date(XMLEvent['$'].lastUpdate || ''),
     name: XMLEvent.Title[0].replace(/(<([^>]+)>)/gi, ''),
     description: parsedDescription,
     status: EventStatus.Scheduled,
+    imageUrl: getImageUrl(XMLEvent),
     externalSourceId: XMLEvent['$'].originId,
     externalSourceName: source,
     location: XMLEvent.Location[0]?.LocationAdress[0].replace(/(<([^>]+)>)/gi, '') || '',
@@ -191,6 +211,49 @@ export class EventsImportService {
         return new AgendaBasel().importedEvent({id, cacheManager: this.cacheManager})
       }
     }
+  }
+
+  async createEvent(id: string) {
+    let parsedEvents: Event[] = await this.cacheManager.get('parsedEvents')
+    let createdImage = null
+
+    if (!parsedEvents) {
+      parsedEvents = await parseAndCacheData(this.cacheManager, Providers.AgendaBasel)
+    }
+
+    const event = parsedEvents.find(e => e.id === id)
+    console.log('event', event)
+    if (!event) {
+      throw Error(`Event with id ${id} not found.`)
+    }
+
+    if (event.imageUrl) {
+      // const response = await axios.get(event.imageUrl, {
+      //   method: 'GET',
+      //   responseType: 'stream'
+      // })
+      // how to get mediaAdapter?
+      createdImage = await this.prisma.image.create({data: response.data})
+    }
+
+    const eventInput = {
+      name: event.name,
+      description: event.description,
+      location: event.location,
+      startsAt: event.startsAt,
+      imageId: createdImage?.id || '',
+      endsAt: event.endsAt,
+      externalSourceName: event.externalSourceName,
+      externalSourceId: event.externalSourceId
+    }
+
+    console.log('eventInput', eventInput)
+    console.log('createdImage', createdImage)
+
+    const createdEvent = await this.prisma.event.create({data: eventInput})
+    console.log('createdEvent', createdEvent)
+
+    return event
   }
 }
 

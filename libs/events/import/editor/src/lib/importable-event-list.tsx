@@ -3,7 +3,6 @@ import {ApolloError} from '@apollo/client'
 import {Event, useImportedEventsIdsQuery} from '@wepublish/editor/api'
 import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Link, useNavigate} from 'react-router-dom'
 import {Message, Pagination, Table as RTable, toaster, Button} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 import {useImportedEventListQuery} from '@wepublish/editor/api-v2'
@@ -56,11 +55,10 @@ const onErrorToast = (error: ApolloError) => {
 function ImportableEventListView() {
   const client = useMemo(() => getApiClientV2(), [])
   const {t} = useTranslation()
-  const navigate = useNavigate()
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
 
-  const {data, loading} = useImportedEventListQuery({
+  const {data, loading: queryLoading} = useImportedEventListQuery({
     client,
     fetchPolicy: 'no-cache',
     variables: {
@@ -75,7 +73,9 @@ function ImportableEventListView() {
   })
   const alreadyImported = ids?.importedEventsIds
 
-  console.log('ids', ids?.importedEventsIds)
+  const importEvent = async (event: any) => {
+    // todo call api
+  }
 
   return (
     <>
@@ -86,7 +86,11 @@ function ImportableEventListView() {
       </ListViewContainer>
 
       <TableWrapper>
-        <Table fillHeight rowHeight={60} loading={loading} data={data?.importedEvents.nodes || []}>
+        <Table
+          fillHeight
+          rowHeight={60}
+          loading={queryLoading}
+          data={data?.importedEvents.nodes || []}>
           <Column width={200} resizable>
             <HeaderCell>{t('event.list.name')}</HeaderCell>
             <Cell>{(rowData: RowDataType<Event>) => rowData.name}</Cell>
@@ -116,16 +120,11 @@ function ImportableEventListView() {
             <Cell>
               {(rowData: RowDataType<Event>) =>
                 alreadyImported && alreadyImported.includes(rowData.id) ? (
-                  <Button
-                    // onClick={() => navigate(`/events/import/edit/${rowData.id}`)}
-                    appearance="ghost"
-                    disabled>
+                  <Button appearance="ghost" disabled>
                     Imported
                   </Button>
                 ) : (
-                  <Button
-                    onClick={() => navigate(`/events/import/edit/${rowData.id}`)}
-                    appearance="primary">
+                  <Button onClick={() => importEvent(rowData)} appearance="primary">
                     Import
                   </Button>
                 )

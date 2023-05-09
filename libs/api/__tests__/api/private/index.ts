@@ -2243,6 +2243,7 @@ export type Setting = {
 };
 
 export enum SettingName {
+  AllowCommentEditing = 'ALLOW_COMMENT_EDITING',
   AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',

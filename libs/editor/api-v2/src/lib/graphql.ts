@@ -71,7 +71,7 @@ export type Event = {
   externalSourceId: Scalars['String'];
   externalSourceName: Scalars['String'];
   id: Scalars['String'];
-  imageId: Scalars['String'];
+  imageUrl: Scalars['String'];
   location: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
@@ -408,7 +408,7 @@ export type DeleteUserConsentMutationVariables = Exact<{
 
 export type DeleteUserConsentMutation = { __typename?: 'Mutation', deleteUserConsent: { __typename?: 'UserConsent', id: string } };
 
-export type ImportabeEventRefFragment = { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, modifiedAt: string, startsAt: string, endsAt?: string | null };
+export type ImportableEventRefFragment = { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl: string, startsAt: string, endsAt?: string | null };
 
 export type ImportedEventListQueryVariables = Exact<{
   filter?: InputMaybe<ImportedEventFilter>;
@@ -419,29 +419,22 @@ export type ImportedEventListQueryVariables = Exact<{
 }>;
 
 
-export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'ImportedEventsDocument', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, modifiedAt: string, startsAt: string, endsAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor: string, endCursor: string, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'ImportedEventsDocument', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl: string, startsAt: string, endsAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor: string, endCursor: string, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type ImportedEventQueryVariables = Exact<{
   filter: SingleEventFilter;
 }>;
 
 
-export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, modifiedAt: string, startsAt: string, endsAt?: string | null } };
-
-export type ImportedEventQueryVariables = Exact<{
-  filter: SingleEventFilter;
-}>;
-
-
-export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: string, status: EventStatus, location: string, modifiedAt: string, startsAt: string, endsAt?: string | null } };
+export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl: string, startsAt: string, endsAt?: string | null } };
 
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type VersionInformationQuery = { __typename?: 'Query', versionInformation: { __typename?: 'VersionInformation', version: string } };
 
-export const ImportabeEventRefFragmentDoc = gql`
-    fragment ImportabeEventRef on Event {
+export const ImportableEventRefFragmentDoc = gql`
+    fragment ImportableEventRef on Event {
   id
   name
   description
@@ -449,7 +442,7 @@ export const ImportabeEventRefFragmentDoc = gql`
   location
   externalSourceId
   externalSourceName
-  modifiedAt
+  imageUrl
   startsAt
   endsAt
 }
@@ -865,7 +858,7 @@ export const ImportedEventListDocument = gql`
     sort: $sort
   ) {
     nodes {
-      ...ImportabeEventRef
+      ...ImportableEventRef
     }
     pageInfo {
       startCursor
@@ -876,7 +869,7 @@ export const ImportedEventListDocument = gql`
     totalCount
   }
 }
-    ${ImportabeEventRefFragmentDoc}`;
+    ${ImportableEventRefFragmentDoc}`;
 
 /**
  * __useImportedEventListQuery__
@@ -912,10 +905,10 @@ export type ImportedEventListQueryResult = Apollo.QueryResult<ImportedEventListQ
 export const ImportedEventDocument = gql`
     query ImportedEvent($filter: SingleEventFilter!) {
   importedEvent(filter: $filter) {
-    ...ImportabeEventRef
+    ...ImportableEventRef
   }
 }
-    ${ImportabeEventRefFragmentDoc}`;
+    ${ImportableEventRefFragmentDoc}`;
 
 /**
  * __useImportedEventQuery__

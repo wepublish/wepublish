@@ -11,7 +11,6 @@ const Image = styled.svg`
 
 export const PlaceholderImage = forwardRef<SVGSVGElement>(function PlaceholderImage(props, ref) {
   return (
-    /* eslint-disable-next-line i18next/no-literal-string */
     <Image ref={ref} viewBox={'0 0 64 64'} preserveAspectRatio="none">
       <line
         x1="0"

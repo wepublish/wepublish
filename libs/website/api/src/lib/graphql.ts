@@ -198,7 +198,7 @@ export type Comment = {
   itemID: Scalars['ID']
   itemType: CommentItemType
   lead?: Maybe<Scalars['String']>
-  modifiedAt: Scalars['DateTime']
+  modifiedAt?: Maybe<Scalars['DateTime']>
   overriddenRatings: Array<OverriddenRating>
   parentID?: Maybe<Scalars['ID']>
   peerId?: Maybe<Scalars['ID']>

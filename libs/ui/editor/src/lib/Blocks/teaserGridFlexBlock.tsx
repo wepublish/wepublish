@@ -20,8 +20,12 @@ import {IconButtonTooltip} from '../Atoms/iconButtonTooltip'
 import {PlaceholderInput} from '../Atoms/placeholderInput'
 import {TeaserEditPanel} from '../Panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../Panel/teaserSelectAndEditPanel'
-import {ContentForTeaser, IconButton, IconWrapper, Teaser} from './teaserGridBlock'
+import {ContentForTeaser, IconWrapper, Teaser} from './teaserGridBlock'
 import {FlexAlignment, FlexTeaser, Teaser as TeaserType, TeaserGridFlexBlockValue} from './types'
+
+const IconButton = styled(RIconButton)`
+  margin: 10px;
+`
 
 // Fixes that pre React 18, all components had the children prop.
 // With React 18 this is not the case anymore, so some types are wrong
@@ -33,7 +37,7 @@ const ButtonToolbar = styled(RButtonToolbar)`
   position: absolute;
 `
 
-export const Panel = styled(RPanel)<{showGrabCursor: boolean}>`
+const Panel = styled(RPanel)<{showGrabCursor: boolean}>`
   display: grid;
   cursor: ${({showGrabCursor}) => showGrabCursor && 'grab'};
   height: inherit;

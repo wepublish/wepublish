@@ -1,4 +1,4 @@
-import {Args, Int, Query, Resolver} from '@nestjs/graphql'
+import {Args, Int, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {
   ImportedEventFilter,
   ImportedEventsDocument,
@@ -35,5 +35,27 @@ export class EventsImportResolver {
   })
   importedEvent(@Args('filter') filter: SingleEventFilter) {
     return this.events.importedEvent(filter)
+  }
+
+  /*
+  Mutations
+ */
+  @Mutation(returns => Event, {
+    name: 'createEvent',
+    description: `
+      Creates and event based on data from importable events list and an id.
+      Also, uploads an image to WePublish image library.
+    `
+  })
+  // @UseGuards(AuthenticationGuard)
+  createEvent(
+    // @CurrentUser() user: UserSession,
+    @Args('id') id: string
+  ) {
+    // only allow creating for admin or affected user
+    // if (!user.user.roleIDs.includes('admin') && user.user.id !== userConsent.userId) {
+    //   throw Error(`Unauthorized`)
+    // }
+    return this.events.createEvent(id)
   }
 }

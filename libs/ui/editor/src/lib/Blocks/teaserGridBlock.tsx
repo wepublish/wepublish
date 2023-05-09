@@ -17,7 +17,7 @@ import {TeaserEditPanel} from '../Panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../Panel/teaserSelectAndEditPanel'
 import {Teaser as TeaserTypeMixed, TeaserGridBlockValue, TeaserType} from './types'
 
-export const IconButton = styled(RIconButton)`
+const IconButton = styled(RIconButton)`
   margin: 10px;
 `
 
@@ -28,7 +28,7 @@ const SortableContainerComponent = styled.div<{numColumns: number}>`
   user-select: none;
 `
 
-export const Panel = styled(RPanel)<{showGrabCursor: boolean}>`
+const Panel = styled(RPanel)<{showGrabCursor: boolean}>`
   display: grid;
   cursor: ${({showGrabCursor}) => showGrabCursor && 'grab'};
   height: 300px;
