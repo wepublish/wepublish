@@ -1340,6 +1340,7 @@
       "form": {
         "name": "Name",
         "location": "Veranstaltungsort",
+        "externalSource": "External source (for imported events)",
         "status": "Status",
         "startsAt": "Startet um",
         "endsAt": "Ended um",
@@ -1356,6 +1357,12 @@
         "body": "Willst Du das Event \"{{name}}\" wirklich löschen?",
         "delete": "Ja, lösche das Event"
       }
+    },
+    "importableEvent": {
+      "title": "Importable events",
+      "editTitle": "Edit importable event",
+      "import": "Import",
+      "imported": "Imported"
     },
     "general": {
       "deletedSuccess": "Erfolgreich gelöscht",

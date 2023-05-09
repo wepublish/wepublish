@@ -1381,7 +1381,9 @@
     },
     "importableEvent": {
       "title": "Importable events",
-      "editTitle": "Edit importable event"
+      "editTitle": "Edit importable event",
+      "import": "Import",
+      "imported": "Imported"
     },
     "toast": {
       "deletedSuccess": "Deleted successfully",

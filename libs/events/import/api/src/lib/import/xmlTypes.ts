@@ -41,7 +41,7 @@ type XMLEventType = {
   ShortDescription: string
   LongDescription: string
   $: XMLEventOrigin
-  CastInformation: string[] // I think it's rich text
+  CastInformation: string[]
   PriceInformation: string[]
   TicketInformation: string[]
   ExternalURL: string[]

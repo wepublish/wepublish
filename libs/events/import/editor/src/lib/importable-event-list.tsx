@@ -14,7 +14,8 @@ import {
   Table,
   TableWrapper,
   DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES
+  DEFAULT_TABLE_PAGE_SIZES,
+  createCheckedPermissionComponent
 } from '@wepublish/ui/editor'
 import styled from '@emotion/styled'
 
@@ -121,11 +122,11 @@ function ImportableEventListView() {
               {(rowData: RowDataType<Event>) =>
                 alreadyImported && alreadyImported.includes(rowData.id) ? (
                   <Button appearance="ghost" disabled>
-                    Imported
+                    {t('importableEvent.imported')}
                   </Button>
                 ) : (
                   <Button onClick={() => importEvent(rowData)} appearance="primary">
-                    Import
+                    {t('importableEvent.import')}
                   </Button>
                 )
               }
@@ -154,14 +155,11 @@ function ImportableEventListView() {
   )
 }
 
-// todo
-// const CheckedPermissionComponent = createCheckedPermissionComponent([
-//   'CAN_GET_EVENT',
-//   'CAN_CREATE_EVENT',
-//   'CAN_UPDATE_EVENT',
-//   'CAN_DELETE_EVENT'
-// ])(ImportableEventListView)
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_EVENT',
+  'CAN_CREATE_EVENT',
+  'CAN_UPDATE_EVENT',
+  'CAN_DELETE_EVENT'
+])(ImportableEventListView)
 
-// export {CheckedPermissionComponent as ImportableEventListView}
-
-export {ImportableEventListView}
+export {CheckedPermissionComponent as ImportableEventListView}
