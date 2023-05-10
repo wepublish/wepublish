@@ -19,16 +19,27 @@ import {
 } from '@wepublish/ui/editor'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdDelete, MdEdit, MdOutlineAddPhotoAlternate, MdSearch} from 'react-icons/md'
+import {
+  MdDelete,
+  MdEdit,
+  MdOutlineAddPhotoAlternate,
+  MdSearch,
+  MdViewList,
+  MdViewModule
+} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Button,
+  ButtonGroup,
+  Col as RCol,
   Drawer,
+  Grid as RGrid,
   IconButton as RIconButton,
   Input,
   InputGroup,
   Modal,
   Pagination,
+  Row,
   Table as RTable
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
@@ -46,6 +57,64 @@ const Img = styled.img`
   width: auto;
   display: block;
   margin: 0 auto;
+`
+const GridImg = styled.img`
+  height: 120px;
+  width: auto;
+  display: block;
+  margin: 0 auto;
+`
+const ImgTitle = styled.p`
+  text-align: center;
+  font-weight: bold;
+`
+const ImgDesc = styled.p`
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  text-shadow: 1px 1px white;
+`
+const GridIcon = styled(IconButton)`
+  position: absolute;
+  top: 5px;
+  right: 15px;
+`
+
+const Overlay = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+`
+
+const OverlayContainer = styled.div`
+position: relative;
+& a {
+  color: unset;
+  }
+&:hover {
+  & img {
+    height: 130px;
+    transition: .2s ease;
+  }
+  & div {
+  opacity: 0.8;
+    }
+  }
+}
+
+`
+const Col = styled(RCol)`
+  height: 200px;
+  overflow: hidden;
+  &:hover {
+    overflow: visible;
+  }
+`
+const Grid = styled(RGrid)`
+  height: 100%;
 `
 
 function ImageList() {
@@ -65,12 +134,17 @@ function ImageList() {
   const [currentImage, setCurrentImage] = useState<ImageRefFragment>()
 
   const [activePage, setActivePage] = useState(1)
-  const [limit, setLimit] = useState(5)
+  const [limit, setLimit] = useState(10)
 
   const [isUploadModalOpen, setUploadModalOpen] = useState(isUploadRoute)
   const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute)
 
   const [editID, setEditID] = useState<string | undefined>(isEditRoute ? id : undefined)
+
+  const isGridKey = 'isGrid'
+  const [isGrid, setIsGrid] = useState<boolean>(
+    JSON.parse(localStorage.getItem(isGridKey) || 'true')
+  )
 
   const listVariables = {
     filter: filter || undefined,
@@ -112,6 +186,122 @@ function ImageList() {
     }
   }, [location])
 
+  const ImageListView = () => (
+    <Table
+      fillHeight
+      data={images}
+      rowHeight={100}
+      loading={isLoading}
+      wordWrap
+      className={'displayThreeLinesOnly'}>
+      <Column width={160} align="left" resizable>
+        <HeaderCell>{t('images.overview.image')}</HeaderCell>
+        <RCell>
+          {(rowData: RowDataType<ImageRefFragment>) => (
+            <Link to={`/images/edit/${rowData.id}`}>
+              <Img src={rowData.thumbURL || ''} />
+            </Link>
+          )}
+        </RCell>
+      </Column>
+      <Column width={160} align="left" resizable>
+        <HeaderCell>{t('images.overview.title')}</HeaderCell>
+        <RCell className="displayThreeLinesOnly">
+          {(rowData: RowDataType<ImageRefFragment>) => (
+            <p className={'displayThreeLinesOnly'}>
+              {rowData.title ? rowData.title : t('images.overview.untitled')}
+            </p>
+          )}
+        </RCell>
+      </Column>
+      <Column width={340} align="left" resizable>
+        <HeaderCell>{t('images.overview.description')}</HeaderCell>
+        <RCell className={'displayThreeLinesOnly'}>
+          {(rowData: RowDataType<ImageRefFragment>) => (
+            <p className={'displayThreeLinesOnly'}>
+              {rowData.description ? rowData.description : t('images.overview.noDescription')}
+            </p>
+          )}
+        </RCell>
+      </Column>
+
+      <Column width={250} align="left" resizable>
+        <HeaderCell>{t('images.overview.filename')}</HeaderCell>
+        <RCell>
+          {(rowData: RowDataType<ImageRefFragment>) => (
+            <p className={'displayThreeLinesOnly'}>{rowData.filename ? rowData.filename : ''}</p>
+          )}
+        </RCell>
+      </Column>
+
+      <Column width={100} align="center" resizable fixed="right">
+        <HeaderCell>{t('images.overview.actions')}</HeaderCell>
+        <PaddedCell>
+          {(rowData: RowDataType<ImageRefFragment>) => (
+            <>
+              <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
+                <IconButtonTooltip caption={t('images.overview.edit')}>
+                  <Link to={`/images/edit/${rowData.id}`}>
+                    <IconButton icon={<MdEdit />} circle size="sm" />
+                  </Link>
+                </IconButtonTooltip>
+              </PermissionControl>
+              <PermissionControl qualifyingPermissions={['CAN_DELETE_IMAGE']}>
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    icon={<MdDelete />}
+                    circle
+                    size="sm"
+                    appearance="ghost"
+                    color="red"
+                    onClick={event => {
+                      event.preventDefault()
+                      setCurrentImage(rowData as ImageRefFragment)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                </IconButtonTooltip>
+              </PermissionControl>
+            </>
+          )}
+        </PaddedCell>
+      </Column>
+    </Table>
+  )
+  const ImageGridView = () => (
+    <Grid fluid>
+      <Row gutter={20}>
+        {images.map(image => {
+          return (
+            <Col xs={24} sm={12} md={6} lg={4}>
+              <OverlayContainer>
+                <Link to={`/images/edit/${image.id}`}>
+                  <Overlay>
+                    <GridIcon
+                      icon={<MdDelete />}
+                      circle
+                      size="md"
+                      appearance="default"
+                      onClick={event => {
+                        event.preventDefault()
+                        setCurrentImage(image as ImageRefFragment)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+
+                    <ImgDesc>{image?.title}</ImgDesc>
+                  </Overlay>
+                  <GridImg src={image?.squareURL || ''} />
+                </Link>
+              </OverlayContainer>
+              <ImgTitle>{image?.filename || ''}</ImgTitle>
+            </Col>
+          )
+        })}
+      </Row>
+    </Grid>
+  )
+
   return (
     <>
       <ListViewContainer>
@@ -141,89 +331,29 @@ function ImageList() {
         </ListViewFilterArea>
       </ListViewContainer>
 
+      <ButtonGroup size="lg">
+        <RIconButton
+          active={isGrid}
+          onClick={() => {
+            setIsGrid(true)
+            localStorage.setItem(isGridKey, 'true')
+          }}
+          appearance={isGrid ? 'ghost' : 'default'}
+          icon={<MdViewModule />}
+        />
+        <RIconButton
+          onClick={() => {
+            setIsGrid(false)
+            localStorage.setItem(isGridKey, 'false')
+          }}
+          appearance={!isGrid ? 'ghost' : 'default'}
+          active={!isGrid}
+          icon={<MdViewList />}
+        />
+      </ButtonGroup>
+
       <TableWrapper>
-        <Table
-          fillHeight
-          data={images}
-          rowHeight={100}
-          loading={isLoading}
-          wordWrap
-          className={'displayThreeLinesOnly'}>
-          <Column width={160} align="left" resizable>
-            <HeaderCell>{t('images.overview.image')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<ImageRefFragment>) => (
-                <Link to={`/images/edit/${rowData.id}`}>
-                  <Img src={rowData.thumbURL || ''} />
-                </Link>
-              )}
-            </RCell>
-          </Column>
-          <Column width={160} align="left" resizable>
-            <HeaderCell>{t('images.overview.title')}</HeaderCell>
-            <RCell className="displayThreeLinesOnly">
-              {(rowData: RowDataType<ImageRefFragment>) => (
-                <p className={'displayThreeLinesOnly'}>
-                  {rowData.title ? rowData.title : t('images.overview.untitled')}
-                </p>
-              )}
-            </RCell>
-          </Column>
-          <Column width={340} align="left" resizable>
-            <HeaderCell>{t('images.overview.description')}</HeaderCell>
-            <RCell className={'displayThreeLinesOnly'}>
-              {(rowData: RowDataType<ImageRefFragment>) => (
-                <p className={'displayThreeLinesOnly'}>
-                  {rowData.description ? rowData.description : t('images.overview.noDescription')}
-                </p>
-              )}
-            </RCell>
-          </Column>
-
-          <Column width={250} align="left" resizable>
-            <HeaderCell>{t('images.overview.filename')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<ImageRefFragment>) => (
-                <p className={'displayThreeLinesOnly'}>
-                  {rowData.filename ? rowData.filename : ''}
-                </p>
-              )}
-            </RCell>
-          </Column>
-
-          <Column width={100} align="center" resizable fixed="right">
-            <HeaderCell>{t('images.overview.actions')}</HeaderCell>
-            <PaddedCell>
-              {(rowData: RowDataType<ImageRefFragment>) => (
-                <>
-                  <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
-                    <IconButtonTooltip caption={t('images.overview.edit')}>
-                      <Link to={`/images/edit/${rowData.id}`}>
-                        <IconButton icon={<MdEdit />} circle size="sm" />
-                      </Link>
-                    </IconButtonTooltip>
-                  </PermissionControl>
-                  <PermissionControl qualifyingPermissions={['CAN_DELETE_IMAGE']}>
-                    <IconButtonTooltip caption={t('delete')}>
-                      <IconButton
-                        icon={<MdDelete />}
-                        circle
-                        size="sm"
-                        appearance="ghost"
-                        color="red"
-                        onClick={event => {
-                          event.preventDefault()
-                          setCurrentImage(rowData as ImageRefFragment)
-                          setConfirmationDialogOpen(true)
-                        }}
-                      />
-                    </IconButtonTooltip>
-                  </PermissionControl>
-                </>
-              )}
-            </PaddedCell>
-          </Column>
-        </Table>
+        {!isGrid ? <ImageListView /> : <ImageGridView />}
 
         <Pagination
           limit={limit}
@@ -242,7 +372,6 @@ function ImageList() {
           onChangeLimit={limit => setLimit(limit)}
         />
       </TableWrapper>
-
       <Drawer
         open={isUploadModalOpen}
         size="sm"
@@ -285,7 +414,6 @@ function ImageList() {
               '-'}
           </p>
           <p>{currentImage?.title || t('images.panels.untitled')}</p>
-          <p>{currentImage?.description || '-'}</p>
         </Modal.Body>
 
         <Modal.Footer>
