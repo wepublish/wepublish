@@ -1,8 +1,6 @@
 import {css, styled} from '@mui/material'
 import {useWebsiteBuilder} from '@wepublish/website'
-import {differenceInDays} from 'date-fns'
 import Link from 'next/link'
-import Script from 'next/script'
 import {memo} from 'react'
 
 const IntroWrapper = styled('article')`
@@ -30,23 +28,36 @@ const UnstyledLink = styled(Link)`
 
 const Intro = () => {
   const {
-    elements: {Button, Paragraph, H3}
+    elements: {Button, Paragraph, H3, Link}
   } = useWebsiteBuilder()
-
-  const difference = Math.max(0, differenceInDays(new Date('2023-05-11'), new Date()))
 
   return (
     <IntroWrapper>
-      <H3 component="h1">Unterstütze das neue Radsport-Magazin aus der Schweiz</H3>
+      <H3 component="h1">Das neue Magazin für Radsport und Velokultur erscheint im Juni</H3>
 
       <Paragraph>
-        Das «Gruppetto»-Magazin will packende Radsport-Geschichten erzählen, weniger bekannte
-        Hintergründe beleuchten und die Velobegeisterung der Leser:innen widerspiegeln. Diese
-        Begeisterung besteht aus einem Gefühl der Freiheit. Es entsteht beim Rollen über
-        Landstrassen und Hügel oder beim Anblick von Serpentinen eines Alpenpasses. Es entsteht
-        durch den Geruch nach Asphalt und Sonnencreme, durch den Klang von Hochfelgen, die im Wind
-        rauschen. Verhelfe dem «Gruppetto» jetzt zum Erfolg{' '}
-        {(difference && <strong>und unterstütze uns noch {difference} Tage!</strong>) || <>.</>}
+        Das «Gruppetto»-Magazin erzählt packende Radsport-Geschichten, beleuchtet weniger bekannte
+        Hintergründe und widerspiegelt die Velobegeisterung der Leser:innen. Das Crowdfunding haben
+        wir erfolgreich abgeschlossen und die erste Ausgabe erscheint im Juni. Dies feiern wir mit
+        einem Launch-Event inkusive Social Ride am 2. Juni in der Zitrone Manegg, Allmendstrasse 91,
+        8041 Zürich. Wer sich unverbindlich anmelden möchte,{' '}
+        <Link
+          href={
+            'https://docs.google.com/forms/d/e/1FAIpQLSeydk0djDKZsAD--MdGiKCljaSc_lNi4s2kqg-3aNjTa9EtCw/viewform'
+          }
+          target="_blank">
+          kann das hier tun.
+        </Link>
+      </Paragraph>
+
+      <Paragraph>
+        Wer das «Gruppetto» abonnieren möchte, kann dies ab Juni hier auf der Website tun. Werden
+        mindestens 3000 Abos abgeschlossen, erscheint das «Gruppetto» ab 2024 viermal jährlich.
+      </Paragraph>
+
+      <Paragraph>
+        Du hast das Crowdfunding und damit die erste Ausgabe verpasst? Löse ein Ticket für den
+        Besenwagen und wir schicken dir die Nummer 1 noch per Post nachhause.
       </Paragraph>
 
       <Paragraph>
@@ -55,22 +66,6 @@ const Intro = () => {
         <Link href="mailto:redaktion@gruppetto-magazin.ch">redaktion@gruppetto-magazin.ch</Link> und
         wir erarbeiten zusammen eine passende Lösung.
       </Paragraph>
-
-      <div style={{padding: '56.25% 0 0 0', position: 'relative'}}>
-        <iframe
-          src="https://player.vimeo.com/video/812916971?h=ee3ad2232d&color=ffffff&title=0&byline=0&portrait=0"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%'
-          }}
-          allow="autoplay; fullscreen; picture-in-picture"
-          allowFullScreen></iframe>
-      </div>
-
-      <Script async src="https://player.vimeo.com/api/player.js" />
 
       <ActionWrapper>
         <UnstyledLink href="#unterstuetze-uns" scroll={false} shallow>
