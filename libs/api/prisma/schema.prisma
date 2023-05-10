@@ -413,6 +413,26 @@ enum MailLogState {
   rejected  @map("rejected")
 }
 
+model MailLog {
+  id                      String   @id @default(cuid())
+  createdAt               DateTime @default(now())
+  modifiedAt              DateTime @updatedAt
+
+  recipientID             String
+  recipient               User   @relation(fields: [recipientID], references: [id], onDelete: Cascade)
+  state                   MailLogState
+  sentDate                DateTime
+  mailProviderID          String
+  mailIdentifier          String @unique
+  mailTemplate            MailTemplate @relation(fields: [mailTemplateId], references: [id])
+  mailTemplateId          String @db.Uuid
+  mailData                String?
+  subject                 String?
+
+  @@index([mailIdentifier])
+  @@map("mail.log")
+}
+
 enum PaymentPeriodicity {
   monthly   @map("monthly")
   quarterly @map("quarterly")
@@ -798,7 +818,7 @@ model User {
   Subscription  Subscription[]
   CommentRating CommentRating[]
   PollVote      PollVote[]
-  //mailSent      MailLog[]
+  mailSent      MailLog[]
 
   @@map("users")
 }
@@ -1054,7 +1074,7 @@ model MailTemplate {
 
 	userFlowMails               UserFlowMail[]
 
-	//mailLog                     MailLog[]
+	mailLog                     MailLog[]
 
 
   @@map("mail_templates")
