@@ -1281,8 +1281,6 @@
       "loginMinutes": "Email-Login token validity period",
       "passwordToken": "Email-Password reset token validity period",
       "peerToken": "Peering timeout",
-      "invoiceReminders": "Invoice reminder attempts",
-      "invoiceFrequency": "Invoice reminder frequency",
       "minutes": "minutes",
       "ms": "milliseconds",
       "days": "days",
