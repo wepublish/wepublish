@@ -414,7 +414,7 @@ enum MailLogState {
 }
 
 model MailLog {
-  id                      String   @id @default(cuid())
+  id                      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt               DateTime @default(now())
   modifiedAt              DateTime @updatedAt
 
@@ -425,7 +425,7 @@ model MailLog {
   mailProviderID          String
   mailIdentifier          String @unique
   mailTemplate            MailTemplate @relation(fields: [mailTemplateId], references: [id])
-  mailTemplateId          Int
+  mailTemplateId          String @db.Uuid
   mailData                String?
   subject                 String?
 
@@ -1003,14 +1003,14 @@ enum UserEvent {
 }
 
 model UserFlowMail {
-  id                    Int @id @default(autoincrement())
+  id                    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 	createdAt             DateTime @default(now())
 	modifiedAt            DateTime @updatedAt
 
   event                 UserEvent @unique
 
   mailTemplate       MailTemplate @relation(fields: [mailTemplateId], references: [id]) // user creates a new account
-	mailTemplateId     Int
+	mailTemplateId     String @db.Uuid
 
   @@map("user_communication_flows")
 }
@@ -1027,7 +1027,7 @@ enum SubscriptionEvent {
 }
 
 model SubscriptionFlow {
-	id                    Int @id @default(autoincrement())
+	id                    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 	createdAt             DateTime @default(now())
 	modifiedAt            DateTime @updatedAt
 
@@ -1046,22 +1046,22 @@ model SubscriptionFlow {
 }
 
 model SubscriptionInterval {
-	id                      Int @id @default(autoincrement())
+	id                      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 	createdAt               DateTime @default(now())
     modifiedAt              DateTime @updatedAt
     event                   SubscriptionEvent
 	daysAwayFromEnding      Int? @db.SmallInt
 	mailTemplate            MailTemplate? @relation(fields: [mailTemplateId], references: [id])
-	mailTemplateId          Int?
+	mailTemplateId          String? @db.Uuid
 
 	subscriptionFlow   SubscriptionFlow @relation(fields: [subscriptionFlowId], references: [id], onDelete: Cascade)
-  subscriptionFlowId Int
+  subscriptionFlowId String @db.Uuid
 
   @@map("subscriptions.intervals")
 }
 
 model MailTemplate {
-	id                          Int @id @default(autoincrement())
+	id                          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 	createdAt                   DateTime @default(now())
   modifiedAt                  DateTime @updatedAt
 
@@ -1081,7 +1081,7 @@ model MailTemplate {
 }
 
 model PeriodicJob {
-	id                          Int @id @default(autoincrement())
+	id                          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 	createdAt                   DateTime @default(now())
     modifiedAt                  DateTime @updatedAt
 

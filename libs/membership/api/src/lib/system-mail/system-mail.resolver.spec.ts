@@ -4,17 +4,17 @@ import {OldContextService, PrismaService} from '@wepublish/api'
 import {SystemMailResolver} from './system-mail.resolver'
 
 const mockTemplate1: UserFlowMail = {
-  id: 1,
+  id: 'c29a088f-40f0-4578-a6c4-810249902495',
   event: UserEvent.ACCOUNT_CREATION,
-  mailTemplateId: 123,
+  mailTemplateId: 'ef054424-8749-408c-bff8-198260ddf9ee',
   createdAt: new Date(),
   modifiedAt: new Date()
 }
 
 const mockTemplate2: UserFlowMail = {
-  id: 2,
+  id: 'e57efaa2-afd4-42b0-81f0-f22278b45f1e',
   event: UserEvent.LOGIN_LINK,
-  mailTemplateId: 234,
+  mailTemplateId: '7df91a48-f12c-477c-be37-25b5490a65d3',
   createdAt: new Date(),
   modifiedAt: new Date()
 }
@@ -85,7 +85,7 @@ describe('SystemMailResolver', () => {
   it('returns all templates for update action', async () => {
     const result = await resolver.updateSystemMail({
       event: UserEvent.ACCOUNT_CREATION,
-      mailTemplateId: 234
+      mailTemplateId: '0c517621-4707-49e2-8994-1eeb4cc13b01'
     })
     expect(result.length).toEqual(2)
     expect(result[0].event).toEqual(UserEvent.ACCOUNT_CREATION)

@@ -150,7 +150,7 @@ export class SubscriptionFlowController {
     return this.getFlows(false)
   }
 
-  async deleteFlow(subscriptionFlowId: number) {
+  async deleteFlow(subscriptionFlowId: string) {
     const originalFlow = await this.prismaService.subscriptionFlow.findUnique({
       where: {
         id: subscriptionFlowId
@@ -220,7 +220,14 @@ export class SubscriptionFlowController {
     if (!eventToUpdate) {
       throw new Error('The given interval not found!')
     }
-    await this.isIntervalValid({event: eventToUpdate.event, ...interval}, false)
+    await this.isIntervalValid(
+      {
+        event: eventToUpdate.event,
+        subscriptionFlowId: eventToUpdate.subscriptionFlowId,
+        ...interval
+      },
+      false
+    )
 
     await this.prismaService.$transaction([
       this.prismaService.subscriptionInterval.update({

@@ -32,7 +32,7 @@ const syncTemplatesMutation = `
 `
 
 const mockTemplate1: MailTemplate = {
-  id: 1,
+  id: '8056eda4-9013-42eb-b584-55a4f450eaf3',
   name: 'Mock Template 1',
   description: 'Mock Desc 1',
   externalMailTemplateId: '123',
@@ -42,7 +42,7 @@ const mockTemplate1: MailTemplate = {
 }
 
 const mockTemplate2: MailTemplate = {
-  id: 2,
+  id: '400764ac-babf-4662-bc6b-225260ac7f70',
   name: 'Mock Template 2',
   description: 'Mock Desc 2',
   externalMailTemplateId: '124',

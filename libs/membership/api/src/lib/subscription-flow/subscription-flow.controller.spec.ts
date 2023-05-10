@@ -112,7 +112,7 @@ describe('SubscriptionFlowController', () => {
 
   it('prevents deletion of nonexistent flow', async () => {
     const t = async () => {
-      await controller.deleteFlow(-1)
+      await controller.deleteFlow('ba5add58-3c64-443c-87f9-7480a4b03a5c')
     }
 
     expect(t).rejects.toThrow(Error)
@@ -309,8 +309,8 @@ describe('SubscriptionFlowController', () => {
     const t = async () => {
       await controller.updateIntervals([
         {
-          id: 9999,
-          mailTemplateId: 1,
+          id: '314745e7-54f7-4549-856d-959ce4400929',
+          mailTemplateId: '61b3f64c-e667-4528-8eb3-f853a9ad1e80',
           daysAwayFromEnding: -5
         }
       ])
@@ -328,8 +328,12 @@ describe('SubscriptionFlowController', () => {
     })
     expect(existingFlow?.intervals.length).toEqual(0)
 
+    if (!existingFlow) {
+      fail()
+    }
+
     await controller.createInterval({
-      subscriptionFlowId: existingFlow?.id,
+      subscriptionFlowId: existingFlow.id,
       mailTemplateId: template.id,
       event: 'SUBSCRIBE'
     })
@@ -486,7 +490,7 @@ describe('SubscriptionFlowController', () => {
   it('prevents deletion of nonexisting interval', async () => {
     const t = async () => {
       await controller.deleteInterval({
-        id: 9999
+        id: '960c635f-b157-414b-a865-b3e31afd9c3f'
       })
     }
     expect(t).rejects.toThrow(Error)

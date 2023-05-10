@@ -1,15 +1,16 @@
-import { Injectable } from "@nestjs/common"
-import { SubscriptionFlow } from "@prisma/client"
-import { PrismaService } from "@wepublish/api"
-import { PaymentMethodRef } from "./subscription-flow.model"
+import {Injectable} from '@nestjs/common'
+import {SubscriptionFlow} from '@prisma/client'
+import {PrismaService} from '@wepublish/api'
+import {PaymentMethodRef} from './subscription-flow.model'
 
 interface SubscriptionFlowWithSubscriptionCount {
-  subscriptionFlowId: number
+  subscriptionFlowId: string
   subscriptionCount: number
 }
 
-export type SubscriptionFlowWithPaymentMethod = SubscriptionFlow & { paymentMethods: PaymentMethodRef[] }
-
+export type SubscriptionFlowWithPaymentMethod = SubscriptionFlow & {
+  paymentMethods: PaymentMethodRef[]
+}
 
 @Injectable()
 export class SubscriptionFlowHelper {
@@ -21,23 +22,26 @@ export class SubscriptionFlowHelper {
    * @param subscriptionsFlows The subscription flows to calculate the count for
    * @returns a hashmap of the flow id and the number of subscriptions
    */
-  async numberOfSubscriptionsFor(subscriptionsFlows: SubscriptionFlowWithPaymentMethod[]): Promise<SubscriptionFlowWithSubscriptionCount[]> {
+  async numberOfSubscriptionsFor(
+    subscriptionsFlows: SubscriptionFlowWithPaymentMethod[]
+  ): Promise<SubscriptionFlowWithSubscriptionCount[]> {
     const subscriptionCount = await this.prismaService.subscription.groupBy({
       by: ['memberPlanID', 'paymentPeriodicity', 'autoRenew', 'paymentMethodID'],
       _count: true
     })
 
     return subscriptionsFlows.map(f => {
-      const matches = subscriptionCount.filter(sc =>
-        sc.memberPlanID === f.memberPlanId &&
-        f.periodicities.includes(sc.paymentPeriodicity) &&
-        f.autoRenewal.includes(sc.autoRenew) &&
-        f.paymentMethods.map(pm => pm.id).includes(sc.paymentMethodID)
+      const matches = subscriptionCount.filter(
+        sc =>
+          sc.memberPlanID === f.memberPlanId &&
+          f.periodicities.includes(sc.paymentPeriodicity) &&
+          f.autoRenewal.includes(sc.autoRenew) &&
+          f.paymentMethods.map(pm => pm.id).includes(sc.paymentMethodID)
       )
 
       let count = matches.reduce((acc, item) => acc + item._count, 0)
 
-      if(f.default) {
+      if (f.default) {
         count = subscriptionCount.reduce((sum, item) => sum + item._count, 0)
       }
 
