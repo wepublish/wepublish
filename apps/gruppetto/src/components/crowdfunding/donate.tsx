@@ -415,11 +415,15 @@ const CustomSubscribe = ({
             <strong>
               Bezahlen kannst du momentan nur mit Twint. Alternativ kannst du eine Zahlung an
               Megaprint AG, Hohlstrasse 207, 8004, CH5404835055588231000 mit dem Zahlunszweck
-              Bezeichnung des Benefits z.B. &quot;Domestik&quot; machen und uns per Mail an{' '}
+              Bezeichnung des Benefits z.B. &quot;Besenwagen&quot; machen, und uns per Mail an{' '}
               <Link href="mailto:redaktion@gruppetto-magazin.ch">
                 redaktion@gruppetto-magazin.ch
               </Link>{' '}
-              informieren.
+              informieren. Du möchtest mit der Kreditkarte bezahlen. Das kannst du unter folgendem{' '}
+              <Link href="https://checkout.stripe.com/c/pay/cs_live_a1xb9r1hgcEmqRJAOQ18XRTgyK8OMpR7Twco5FpWhXqzU4y3HYOXiM5Slf#fidkdWxOYHwnPyd1blppbHNgWjA0SHFEY2FNdUtiN0tPYmJoR1A2Z3Q2d19wMExuRGlNaE5WTWJKSERPSTxOQm11cjNdSU1oaTFzY2FEdkMyZjxyQm48TDNLdWZgdmNjNzExQ0ZLaGxBZ11dNTUyR0ROcmlpSycpJ3VpbGtuQH11anZgYUxhJz8nPERUPEFXYEZtPElBZ21oPERGJ3gl">
+                Link bei Stripe
+              </Link>
+              . Informiere uns per Mail, welchen Benefit du gerne möchtest.
             </strong>
           </Typography>
 
