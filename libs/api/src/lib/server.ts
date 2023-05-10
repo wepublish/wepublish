@@ -5,7 +5,7 @@ import pinoHttp from 'pino-http'
 import {contextFromRequest, ContextOptions} from './context'
 import {onInvoiceUpdate, onFindArticle, onFindPage} from './events'
 import {GraphQLWepublishPublicSchema, GraphQLWepublishSchema} from './graphql/schema'
-import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
+import {MAIL_WEBHOOK_PATH_PREFIX} from '@wepublish/mails'
 import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments/paymentProvider'
 import {MAX_PAYLOAD_SIZE} from './utility'
 import {
@@ -14,6 +14,7 @@ import {
 } from 'apollo-server-core'
 import {graphqlUploadExpress} from 'graphql-upload'
 import {Context} from './context'
+import {setupMailProvider} from './mails'
 import {serverLogger, logger} from '@wepublish/utils'
 
 declare global {

@@ -9,7 +9,7 @@ import {AlgebraicCaptchaChallenge} from './lib/challenges/algebraicCaptchaChalle
 import {WepublishServer} from './lib/server'
 import {StripePaymentProvider} from './lib/payments/stripePaymentProvider'
 import {StripeCheckoutPaymentProvider} from './lib/payments/stripeCheckoutPaymentProvider'
-import {MailgunMailProvider} from './lib/mails/MailgunMailProvider'
+import {MailgunMailProvider} from '@wepublish/mails'
 import {PayrexxPaymentProvider} from './lib/payments/payrexxPaymentProvider'
 import {Oauth2Provider} from './lib/context'
 import {URLAdapter} from './lib/urlAdapter'
