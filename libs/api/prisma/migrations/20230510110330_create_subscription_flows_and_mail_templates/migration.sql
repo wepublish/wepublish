@@ -1,6 +1,8 @@
 /*
   Warnings:
 
+  - You are about to drop the column `sentReminderAt` on the `invoices` table. All the data in the column will be lost.
+  - You are about to drop the column `userID` on the `invoices` table. All the data in the column will be lost.
   - You are about to drop the column `recipient` on the `mail.log` table. All the data in the column will be lost.
   - A unique constraint covering the columns `[mailIdentifier]` on the table `mail.log` will be added. If there are existing duplicate values, this will fail.
   - Added the required column `mailIdentifier` to the `mail.log` table without a default value. This is not possible if the table is not empty.
@@ -15,34 +17,39 @@ CREATE TYPE "UserEvent" AS ENUM ('ACCOUNT_CREATION', 'PASSWORD_RESET', 'LOGIN_LI
 -- CreateEnum
 CREATE TYPE "SubscriptionEvent" AS ENUM ('SUBSCRIBE', 'INVOICE_CREATION', 'RENEWAL_SUCCESS', 'RENEWAL_FAILED', 'DEACTIVATION_UNPAID', 'DEACTIVATION_BY_USER', 'REACTIVATION', 'CUSTOM');
 
+-- DropForeignKey
+ALTER TABLE "invoices" DROP CONSTRAINT "invoices_userID_fkey";
+
 -- DropIndex
 DROP INDEX "mail.log_subject_idx";
 
 -- AlterTable
-ALTER TABLE "invoices" ADD COLUMN     "scheduledDeactivationAt" TIMESTAMP(3);
+ALTER TABLE "invoices" DROP COLUMN "sentReminderAt",
+DROP COLUMN "userID",
+ADD COLUMN     "scheduledDeactivationAt" TIMESTAMP(3);
 
 -- AlterTable
 ALTER TABLE "mail.log" DROP COLUMN "recipient",
 ADD COLUMN     "mailIdentifier" TEXT NOT NULL,
-ADD COLUMN     "mailTemplateId" INTEGER NOT NULL,
+ADD COLUMN     "mailTemplateId" UUID NOT NULL,
 ADD COLUMN     "recipientID" TEXT NOT NULL,
 ADD COLUMN     "sentDate" TIMESTAMP(3) NOT NULL,
 ALTER COLUMN "subject" DROP NOT NULL;
 
 -- CreateTable
 CREATE TABLE "user_communication_flows" (
-    "id" SERIAL NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "modifiedAt" TIMESTAMP(3) NOT NULL,
     "event" "UserEvent" NOT NULL,
-    "mailTemplateId" INTEGER NOT NULL,
+    "mailTemplateId" UUID NOT NULL,
 
     CONSTRAINT "user_communication_flows_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "subscription_communication_flows" (
-    "id" SERIAL NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "modifiedAt" TIMESTAMP(3) NOT NULL,
     "default" BOOLEAN NOT NULL DEFAULT false,
@@ -55,20 +62,20 @@ CREATE TABLE "subscription_communication_flows" (
 
 -- CreateTable
 CREATE TABLE "subscriptions.intervals" (
-    "id" SERIAL NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "modifiedAt" TIMESTAMP(3) NOT NULL,
     "event" "SubscriptionEvent" NOT NULL,
     "daysAwayFromEnding" SMALLINT,
-    "mailTemplateId" INTEGER,
-    "subscriptionFlowId" INTEGER NOT NULL,
+    "mailTemplateId" UUID,
+    "subscriptionFlowId" UUID NOT NULL,
 
     CONSTRAINT "subscriptions.intervals_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "mail_templates" (
-    "id" SERIAL NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "modifiedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT NOT NULL,
@@ -81,7 +88,7 @@ CREATE TABLE "mail_templates" (
 
 -- CreateTable
 CREATE TABLE "periodic_jobs" (
-    "id" SERIAL NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "modifiedAt" TIMESTAMP(3) NOT NULL,
     "date" DATE NOT NULL,
@@ -97,7 +104,7 @@ CREATE TABLE "periodic_jobs" (
 -- CreateTable
 CREATE TABLE "_PaymentMethodToSubscriptionFlow" (
     "A" TEXT NOT NULL,
-    "B" INTEGER NOT NULL
+    "B" UUID NOT NULL
 );
 
 -- CreateIndex

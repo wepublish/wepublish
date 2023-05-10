@@ -20,7 +20,7 @@ import {SubscriptionEventDictionary} from './subscription-event-dictionary'
 import nock from 'nock'
 
 type SubscriptionFlowInterval = {
-  subscriptionFlowId: number
+  subscriptionFlowId: string
   mailTemplateName: string
   event: SubscriptionEvent
   daysAwayFromEnding: null | number
