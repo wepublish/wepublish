@@ -10,7 +10,7 @@ import {
 import fetch from 'node-fetch'
 import crypto from 'crypto'
 import qs from 'qs'
-import {logger} from '../server'
+import {logger} from '@wepublish/utils'
 import {PaymentState} from '@prisma/client'
 
 export interface PayrexxPaymentProviderProps extends PaymentProviderProps {
