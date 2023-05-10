@@ -134,7 +134,7 @@ function ImageList() {
   const [currentImage, setCurrentImage] = useState<ImageRefFragment>()
 
   const [activePage, setActivePage] = useState(1)
-  const [limit, setLimit] = useState(10)
+  const [limit, setLimit] = useState(DEFAULT_TABLE_IMAGE_PAGE_SIZES[0])
 
   const [isUploadModalOpen, setUploadModalOpen] = useState(isUploadRoute)
   const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute)
@@ -372,6 +372,7 @@ function ImageList() {
           onChangeLimit={limit => setLimit(limit)}
         />
       </TableWrapper>
+
       <Drawer
         open={isUploadModalOpen}
         size="sm"
@@ -414,6 +415,7 @@ function ImageList() {
               '-'}
           </p>
           <p>{currentImage?.title || t('images.panels.untitled')}</p>
+          <p>{currentImage?.description || '-'}</p>
         </Modal.Body>
 
         <Modal.Footer>
