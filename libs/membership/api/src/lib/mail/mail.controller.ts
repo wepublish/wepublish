@@ -1,4 +1,4 @@
-import {OldContextService, PrismaService} from '@wepublish/api'
+import {OldContextService, PrismaService} from '@wepublish/nest-modules'
 import {Injectable, Logger} from '@nestjs/common'
 import {MailLogState, User} from '@prisma/client'
 

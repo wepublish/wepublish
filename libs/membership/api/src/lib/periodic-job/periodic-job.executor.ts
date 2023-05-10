@@ -1,7 +1,7 @@
 import {Cron} from '@nestjs/schedule'
 import {Injectable} from '@nestjs/common'
 import {PeriodicJobController, SubscriptionController} from '@wepublish/membership/api'
-import {OldContextService, PrismaService} from '@wepublish/api'
+import {OldContextService, PrismaService} from '@wepublish/nest-modules'
 
 const SCHEDULE = process.env.PERIODIC_JOB_EXECUTION_SCHEDULE || '0 * * * * *'
 

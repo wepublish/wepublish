@@ -1,4 +1,4 @@
-import {OldContextService, PaymentProvider, PrismaService} from '@wepublish/api'
+import {PaymentProvider} from '@wepublish/api'
 import {
   Invoice,
   Subscription,
@@ -17,6 +17,7 @@ import {
 import {add, endOfDay, startOfDay, sub} from 'date-fns'
 import {Injectable, Logger} from '@nestjs/common'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
+import {OldContextService, PrismaService} from '@wepublish/nest-modules'
 
 export type SubscriptionControllerConfig = {
   subscription: Subscription

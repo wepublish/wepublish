@@ -1,4 +1,4 @@
-import {OldContextService, PrismaService} from '@wepublish/api'
+import {OldContextService, PrismaService} from '@wepublish/nest-modules'
 import {add, addDays, differenceInDays, endOfDay, set, startOfDay, sub, subMinutes} from 'date-fns'
 import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subscription-event-dictionary'
 import {
