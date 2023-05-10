@@ -71,7 +71,7 @@ export type Event = {
   externalSourceId: Scalars['String'];
   externalSourceName: Scalars['String'];
   id: Scalars['String'];
-  imageUrl: Scalars['String'];
+  imageUrl?: Maybe<Scalars['String']>;
   location: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
@@ -102,6 +102,11 @@ export type Mutation = {
   /** Create a new consent. */
   createConsent: Consent;
   /**
+   * Creates and event based on data from importable events list and an id.
+   * Also, uploads an image to WePublish image library.
+   */
+  createEvent: Scalars['String'];
+  /**
    * Creates a new userConsent based on input.
    * Returns created userConsent.
    */
@@ -125,6 +130,11 @@ export type Mutation = {
 
 export type MutationCreateConsentArgs = {
   consent: ConsentInput;
+};
+
+
+export type MutationCreateEventArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -408,7 +418,7 @@ export type DeleteUserConsentMutationVariables = Exact<{
 
 export type DeleteUserConsentMutation = { __typename?: 'Mutation', deleteUserConsent: { __typename?: 'UserConsent', id: string } };
 
-export type ImportableEventRefFragment = { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl: string, startsAt: string, endsAt?: string | null };
+export type ImportableEventRefFragment = { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl?: string | null, startsAt: string, endsAt?: string | null };
 
 export type ImportedEventListQueryVariables = Exact<{
   filter?: InputMaybe<ImportedEventFilter>;
@@ -419,14 +429,21 @@ export type ImportedEventListQueryVariables = Exact<{
 }>;
 
 
-export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'ImportedEventsDocument', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl: string, startsAt: string, endsAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor: string, endCursor: string, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'ImportedEventsDocument', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl?: string | null, startsAt: string, endsAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor: string, endCursor: string, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type ImportedEventQueryVariables = Exact<{
   filter: SingleEventFilter;
 }>;
 
 
-export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl: string, startsAt: string, endsAt?: string | null } };
+export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl?: string | null, startsAt: string, endsAt?: string | null } };
+
+export type CreateEventMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type CreateEventMutation = { __typename?: 'Mutation', createEvent: string };
 
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -937,6 +954,37 @@ export function useImportedEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type ImportedEventQueryHookResult = ReturnType<typeof useImportedEventQuery>;
 export type ImportedEventLazyQueryHookResult = ReturnType<typeof useImportedEventLazyQuery>;
 export type ImportedEventQueryResult = Apollo.QueryResult<ImportedEventQuery, ImportedEventQueryVariables>;
+export const CreateEventDocument = gql`
+    mutation createEvent($id: String!) {
+  createEvent(id: $id)
+}
+    `;
+export type CreateEventMutationFn = Apollo.MutationFunction<CreateEventMutation, CreateEventMutationVariables>;
+
+/**
+ * __useCreateEventMutation__
+ *
+ * To run a mutation, you first call `useCreateEventMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateEventMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createEventMutation, { data, loading, error }] = useCreateEventMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCreateEventMutation(baseOptions?: Apollo.MutationHookOptions<CreateEventMutation, CreateEventMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateEventMutation, CreateEventMutationVariables>(CreateEventDocument, options);
+      }
+export type CreateEventMutationHookResult = ReturnType<typeof useCreateEventMutation>;
+export type CreateEventMutationResult = Apollo.MutationResult<CreateEventMutation>;
+export type CreateEventMutationOptions = Apollo.BaseMutationOptions<CreateEventMutation, CreateEventMutationVariables>;
 export const VersionInformationDocument = gql`
     query VersionInformation {
   versionInformation {

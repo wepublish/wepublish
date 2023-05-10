@@ -13,12 +13,7 @@ import {
   SingleEventFilter
 } from './events-import.model'
 import {htmlToSlate} from 'slate-serializers'
-// import {
-//   Event,
-//   useCreateEventMutation,
-//   useImportedEventsIdsQuery,
-//   useUploadImageMutation
-// } from '@wepublish/editor/api'
+import moment from 'moment'
 
 import {XMLEventType} from './xmlTypes'
 
@@ -104,7 +99,7 @@ export enum EventStatus {
   Scheduled = 'SCHEDULED'
 }
 
-const today = new Date()
+const today = moment().startOf('day')
 const upcomingOnly = (XMLEvent: XMLEventType) => {
   const startDate =
     XMLEvent &&
@@ -117,8 +112,7 @@ const upcomingOnly = (XMLEvent: XMLEventType) => {
   if (!startDate) {
     return
   }
-
-  if (new Date(startDate) < today) return
+  if (moment(startDate).isBefore(today)) return
   return XMLEvent
 }
 
@@ -158,7 +152,6 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType, source: Providers) => {
   // we need to add type: 'paragraph' because that's how it was done in WP in the past
   parsedDescription[0] = {...parsedDescription[0], type: 'paragraph'}
 
-  console.log('getImageUrl', getImageUrl(XMLEvent))
   const parsedEvent = {
     id: XMLEvent['$'].originId,
     modifiedAt: new Date(XMLEvent['$'].lastUpdate || ''),
@@ -215,45 +208,43 @@ export class EventsImportService {
 
   async createEvent(id: string) {
     let parsedEvents: Event[] = await this.cacheManager.get('parsedEvents')
-    let createdImage = null
+    // let createdImage = null
 
     if (!parsedEvents) {
       parsedEvents = await parseAndCacheData(this.cacheManager, Providers.AgendaBasel)
     }
 
     const event = parsedEvents.find(e => e.id === id)
-    console.log('event', event)
     if (!event) {
       throw Error(`Event with id ${id} not found.`)
     }
 
-    if (event.imageUrl) {
-      // const response = await axios.get(event.imageUrl, {
-      //   method: 'GET',
-      //   responseType: 'stream'
-      // })
-      // how to get mediaAdapter?
-      createdImage = await this.prisma.image.create({data: response.data})
-    }
+    // if (event.imageUrl) {
+    // const response = await axios.get(event.imageUrl, {
+    //   method: 'GET',
+    //   responseType: 'stream'
+    // })
+    // how to get mediaAdapter?
+    // createdImage = await this.prisma.image.create({data: response.data})
+    // }
 
     const eventInput = {
       name: event.name,
       description: event.description,
       location: event.location,
       startsAt: event.startsAt,
-      imageId: createdImage?.id || '',
+      // imageId: createdImage?.id || '',
       endsAt: event.endsAt,
       externalSourceName: event.externalSourceName,
       externalSourceId: event.externalSourceId
     }
 
     console.log('eventInput', eventInput)
-    console.log('createdImage', createdImage)
+    // console.log('createdImage', createdImage)
 
     const createdEvent = await this.prisma.event.create({data: eventInput})
-    console.log('createdEvent', createdEvent)
 
-    return event
+    return createdEvent.id
   }
 }
 

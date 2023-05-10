@@ -97,7 +97,7 @@ type Mutation {
         Also, uploads an image to WePublish image library.
       
   """
-  createEvent(id: String!): Event!
+  createEvent(id: String!): String!
 
   """
   

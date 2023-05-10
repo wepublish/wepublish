@@ -71,7 +71,7 @@ export type Event = {
   externalSourceId: Scalars['String']
   externalSourceName: Scalars['String']
   id: Scalars['String']
-  imageUrl: Scalars['String']
+  imageUrl?: Maybe<Scalars['String']>
   location: Scalars['String']
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
@@ -102,6 +102,11 @@ export type Mutation = {
   /** Create a new consent. */
   createConsent: Consent
   /**
+   * Creates and event based on data from importable events list and an id.
+   * Also, uploads an image to WePublish image library.
+   */
+  createEvent: Scalars['String']
+  /**
    * Creates a new userConsent based on input.
    * Returns created userConsent.
    */
@@ -124,6 +129,10 @@ export type Mutation = {
 
 export type MutationCreateConsentArgs = {
   consent: ConsentInput
+}
+
+export type MutationCreateEventArgs = {
+  id: Scalars['String']
 }
 
 export type MutationCreateUserConsentArgs = {

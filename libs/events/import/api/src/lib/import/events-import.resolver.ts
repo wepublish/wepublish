@@ -40,7 +40,7 @@ export class EventsImportResolver {
   /*
   Mutations
  */
-  @Mutation(returns => Event, {
+  @Mutation(returns => String, {
     name: 'createEvent',
     description: `
       Creates and event based on data from importable events list and an id.

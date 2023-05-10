@@ -5,7 +5,7 @@ import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Message, Pagination, Table as RTable, toaster, Button} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
-import {useImportedEventListQuery} from '@wepublish/editor/api-v2'
+import {useImportedEventListQuery, useCreateEventMutation} from '@wepublish/editor/api-v2'
 import {getApiClientV2} from '../apiClientv2'
 
 import {
@@ -18,6 +18,7 @@ import {
   createCheckedPermissionComponent
 } from '@wepublish/ui/editor'
 import styled from '@emotion/styled'
+import {useNavigate} from 'react-router-dom'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 
@@ -55,6 +56,7 @@ const onErrorToast = (error: ApolloError) => {
 
 function ImportableEventListView() {
   const client = useMemo(() => getApiClientV2(), [])
+  const navigate = useNavigate()
   const {t} = useTranslation()
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
@@ -69,13 +71,26 @@ function ImportableEventListView() {
     onError: onErrorToast
   })
 
+  const [createEvent, {loading: mutationLoading}] = useCreateEventMutation({
+    client,
+    onCompleted: data => {
+      toaster.push(
+        <Message type="success" showIcon closable duration={3000}>
+          {t('toast.createdSuccess')}
+        </Message>
+      )
+      navigate(`/events/edit/${data.createEvent}`)
+    },
+    onError: onErrorToast
+  })
+
   const {data: ids} = useImportedEventsIdsQuery({
     fetchPolicy: 'no-cache'
   })
   const alreadyImported = ids?.importedEventsIds
 
-  const importEvent = async (event: any) => {
-    // todo call api
+  const importEvent = async (id: string) => {
+    createEvent({variables: {id}})
   }
 
   return (
@@ -90,7 +105,7 @@ function ImportableEventListView() {
         <Table
           fillHeight
           rowHeight={60}
-          loading={queryLoading}
+          loading={queryLoading || mutationLoading}
           data={data?.importedEvents.nodes || []}>
           <Column width={200} resizable>
             <HeaderCell>{t('event.list.name')}</HeaderCell>
@@ -125,7 +140,7 @@ function ImportableEventListView() {
                     {t('importableEvent.imported')}
                   </Button>
                 ) : (
-                  <Button onClick={() => importEvent(rowData)} appearance="primary">
+                  <Button onClick={() => importEvent(rowData.id)} appearance="primary">
                     {t('importableEvent.import')}
                   </Button>
                 )
