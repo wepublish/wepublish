@@ -125,8 +125,7 @@ export const onFindPage =
 
 /**
  * This event listener is used after invoice has been marked as paid. The following logic is responsible to
- * update the subscription periode, eventually create a permanent user out of the temp user and sending mails
- * to the user.
+ * update the subscription periode and sending mails to the user.
  */
 export const onInvoiceUpdate =
   (context: Context): Prisma.Middleware =>
@@ -220,11 +219,6 @@ export const onInvoiceUpdate =
         logger('events').warn(`User not found %s`, subscription.userID)
         return model
       }
-
-      const token = context.generateJWT({
-        id: user.id,
-        expiresInMinutes: jwtExpires
-      })
 
       const remoteTemplate = await context.mailContext.getSubsciptionTemplateIdentifier(
         subscription,
