@@ -45,8 +45,58 @@ describe('SubscriptionController', () => {
       intervals: {connect: []}
     }
   })
+  const SubscriptionFactory = defineSubscriptionFactory({
+    defaultData: {
+      paymentMethod: {
+        connectOrCreate: {
+          where: {
+            id: 'pp'
+          },
+          create: {
+            id: 'pp',
+            name: 'pp',
+            slug: 'pp',
+            description: 'pp',
+            paymentProviderID: 'pp',
+            active: true
+          }
+        }
+      },
+      memberPlan: {
+        connectOrCreate: {
+          where: {
+            slug: 'memberplan'
+          },
+          create: {
+            name: 'memberplan',
+            slug: 'memberplan',
+            description: 'memberplan',
+            active: true,
+            amountPerMonthMin: 100
+          }
+        }
+      },
+      user: {
+        connectOrCreate: {
+          where: {
+            email: 'test@wepublish.com'
+          },
+          create: {
+            email: 'test@wepublish.com',
+            name: 'user',
+            password: 'xxx',
+            active: true
+          }
+        }
+      }
+    }
+  })
   const UserFactory = defineUserFactory()
-  const InvoiceFactory = defineInvoiceFactory()
+  const InvoiceFactory = defineInvoiceFactory({
+    defaultData: {
+      subscription: SubscriptionFactory
+    }
+  })
   const SubscriptionIntervalFactory = defineSubscriptionIntervalFactory({
     defaultData: {
       subscriptionFlow: SubscriptionFlowFactory
@@ -263,52 +313,6 @@ describe('SubscriptionController', () => {
     })
   }
 
-  const SubscriptionFactory = defineSubscriptionFactory({
-    defaultData: {
-      paymentMethod: {
-        connectOrCreate: {
-          where: {
-            id: 'pp'
-          },
-          create: {
-            id: 'pp',
-            name: 'pp',
-            slug: 'pp',
-            description: 'pp',
-            paymentProviderID: 'pp',
-            active: true
-          }
-        }
-      },
-      memberPlan: {
-        connectOrCreate: {
-          where: {
-            slug: 'memberplan'
-          },
-          create: {
-            name: 'memberplan',
-            slug: 'memberplan',
-            description: 'memberplan',
-            active: true,
-            amountPerMonthMin: 100
-          }
-        }
-      },
-      user: {
-        connectOrCreate: {
-          where: {
-            email: 'test@wepublish.com'
-          },
-          create: {
-            email: 'test@wepublish.com',
-            name: 'user',
-            password: 'xxx',
-            active: true
-          }
-        }
-      }
-    }
-  })
   beforeAll(async () => {
     await clearFullDatabase(prismaClient)
   })
@@ -500,6 +504,25 @@ describe('SubscriptionController', () => {
     })
     invoicesToCharge = await subscriptionController.getInvoicesToCharge(new Date())
     expect(invoicesToCharge.length).toEqual(2)
+  })
+
+  it('skips invoices without subscription', async () => {
+    const inv1 = await InvoiceFactory.create({
+      dueAt: sub(new Date(), {days: 1})
+    })
+    expect(inv1.subscriptionID).not.toEqual(null)
+    let invoicesToCharge = await subscriptionController.getInvoicesToCharge(new Date())
+    expect(invoicesToCharge.length).toEqual(1)
+    expect(invoicesToCharge[0].id).toEqual(inv1.id)
+
+    const inv2 = await InvoiceFactory.create({
+      dueAt: add(new Date(), {days: 1}),
+      subscription: undefined
+    })
+    expect(inv2.subscriptionID).toEqual(null)
+    invoicesToCharge = await subscriptionController.getInvoicesToCharge(new Date())
+    expect(invoicesToCharge.length).toEqual(1)
+    expect(invoicesToCharge[0].id).toEqual(inv1.id)
   })
 
   it('invoices of subscriptions to deactivate', async () => {
