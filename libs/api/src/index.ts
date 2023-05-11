@@ -56,7 +56,6 @@ export * from './lib/mails/mailContext'
 export * from './lib/challenges/challengeProvider'
 export * from './lib/challenges/algebraicCaptchaChallenge'
 export * from './lib/payments/payrexxSubscriptionPaymentProvider'
-export * from './__generated__/fabbrica/index'
 
 export {getUserForCredentials} from './lib/graphql/user/user.queries'
 
