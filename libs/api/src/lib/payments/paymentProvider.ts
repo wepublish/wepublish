@@ -4,7 +4,8 @@ import {NextHandleFunction} from 'connect'
 import express, {Router} from 'express'
 import {Context, contextFromRequest} from '../context'
 import {InvoiceWithItems} from '../db/invoice'
-import {logger, WepublishServerOpts} from '../server'
+import {WepublishServerOpts} from '../server'
+import {logger} from '@wepublish/utils'
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks'
 

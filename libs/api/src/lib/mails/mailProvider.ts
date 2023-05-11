@@ -3,7 +3,8 @@ import bodyParser from 'body-parser'
 import {NextHandleFunction} from 'connect'
 import express, {Router} from 'express'
 import {contextFromRequest} from '../context'
-import {logger, WepublishServerOpts} from '../server'
+import {WepublishServerOpts} from '../server'
+import {logger} from '@wepublish/utils'
 
 export const MAIL_WEBHOOK_PATH_PREFIX = 'mail-webhooks'
 
