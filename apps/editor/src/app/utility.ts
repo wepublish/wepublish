@@ -8,7 +8,8 @@ import {ElementID} from '../shared/elementID'
 import {ClientSettings} from '../shared/types'
 
 export enum LocalStorageKey {
-  SessionToken = 'sessionToken'
+  SessionToken = 'sessionToken',
+  isGridView = 'isGrid'
 }
 
 export const addOrUpdateOneInArray = (

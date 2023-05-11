@@ -30,10 +30,10 @@ import {
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Button,
-  ButtonGroup,
+  ButtonGroup as RButtonGroup,
   Col as RCol,
   Drawer,
-  Grid as RGrid,
+  Grid,
   IconButton as RIconButton,
   Input,
   InputGroup,
@@ -48,7 +48,7 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {ImageEditPanel} from '../panel/imageEditPanel'
 import {ImageUploadAndEditPanel} from '../panel/imageUploadAndEditPanel'
-import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_IMAGE_PAGE_SIZES} from '../utility'
+import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_IMAGE_PAGE_SIZES, LocalStorageKey} from '../utility'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 
@@ -58,16 +58,17 @@ const Img = styled.img`
   display: block;
   margin: 0 auto;
 `
+const ButtonGroup = styled(RButtonGroup)`
+  margin-top: 10px;
+`
+
 const GridImg = styled.img`
   height: 120px;
   width: auto;
   display: block;
   margin: 0 auto;
 `
-const ImgTitle = styled.p`
-  text-align: center;
-  font-weight: bold;
-`
+
 const ImgDesc = styled.p`
   position: absolute;
   bottom: 10px;
@@ -104,7 +105,6 @@ position: relative;
     }
   }
 }
-
 `
 const Col = styled(RCol)`
   height: 200px;
@@ -112,9 +112,6 @@ const Col = styled(RCol)`
   &:hover {
     overflow: visible;
   }
-`
-const Grid = styled(RGrid)`
-  height: 100%;
 `
 
 function ImageList() {
@@ -141,9 +138,8 @@ function ImageList() {
 
   const [editID, setEditID] = useState<string | undefined>(isEditRoute ? id : undefined)
 
-  const isGridKey = 'isGrid'
   const [isGrid, setIsGrid] = useState<boolean>(
-    JSON.parse(localStorage.getItem(isGridKey) || 'true')
+    JSON.parse(localStorage.getItem(LocalStorageKey.isGridView) || 'true')
   )
 
   const listVariables = {
@@ -269,7 +265,7 @@ function ImageList() {
     </Table>
   )
   const ImageGridView = () => (
-    <Grid fluid>
+    <Grid>
       <Row gutter={20}>
         {images.map(image => {
           return (
@@ -294,7 +290,6 @@ function ImageList() {
                   <GridImg src={image?.squareURL || ''} />
                 </Link>
               </OverlayContainer>
-              <ImgTitle>{image?.filename || ''}</ImgTitle>
             </Col>
           )
         })}
@@ -336,7 +331,7 @@ function ImageList() {
           active={isGrid}
           onClick={() => {
             setIsGrid(true)
-            localStorage.setItem(isGridKey, 'true')
+            localStorage.setItem(LocalStorageKey.isGridView, 'true')
           }}
           appearance={isGrid ? 'ghost' : 'default'}
           icon={<MdViewModule />}
@@ -344,7 +339,7 @@ function ImageList() {
         <RIconButton
           onClick={() => {
             setIsGrid(false)
-            localStorage.setItem(isGridKey, 'false')
+            localStorage.setItem(LocalStorageKey.isGridView, 'false')
           }}
           appearance={!isGrid ? 'ghost' : 'default'}
           active={!isGrid}
