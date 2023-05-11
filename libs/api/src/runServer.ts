@@ -9,7 +9,7 @@ import {AlgebraicCaptchaChallenge} from './lib/challenges/algebraicCaptchaChalle
 import {WepublishServer} from './lib/server'
 import {StripePaymentProvider} from './lib/payments/stripePaymentProvider'
 import {StripeCheckoutPaymentProvider} from './lib/payments/stripeCheckoutPaymentProvider'
-import {MailgunMailProvider} from './lib/mails/MailgunMailProvider'
+import {MailgunMailProvider} from '@wepublish/mails'
 import {PayrexxPaymentProvider} from './lib/payments/payrexxPaymentProvider'
 import {Oauth2Provider} from './lib/context'
 import {URLAdapter} from './lib/urlAdapter'
@@ -127,7 +127,10 @@ export async function runServer() {
     process.env.MAILGUN_MAIL_DOMAIN &&
     process.env.MAILGUN_WEBHOOK_SECRET
   ) {
-    const mailgunClient = new Mailgun(FormData).client({username: 'api', key: process.env.MAILGUN_API_KEY})
+    const mailgunClient = new Mailgun(FormData).client({
+      username: 'api',
+      key: process.env.MAILGUN_API_KEY
+    })
     mailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
@@ -153,8 +156,8 @@ export async function runServer() {
       })
     } */
 
-  if(!mailProvider) {
-    throw new Error("A MailProvider must be configured.")
+  if (!mailProvider) {
+    throw new Error('A MailProvider must be configured.')
   }
 
   const paymentProviders = []

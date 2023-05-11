@@ -155,7 +155,7 @@ import {
   UpdateOrCreateEventInput
 } from './event/event.private-mutation'
 import {CanSendJWTLogin} from '@wepublish/permissions/api'
-import {mailLogType} from '@wepublish/membership/mail'
+import {mailLogType} from '@wepublish/mails'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null

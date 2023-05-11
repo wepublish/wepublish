@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common'
 import {MailTemplate} from '@prisma/client'
-import {MailProviderTemplate} from '@wepublish/api'
+import {MailProviderTemplate} from '@wepublish/mails'
 import {OldContextService, PrismaService} from '@wepublish/nest-modules'
 
 export interface MailTemplateSyncDiff {

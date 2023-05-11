@@ -1,14 +1,9 @@
-import {PrismaClient, Subscription, SubscriptionEvent, UserEvent} from '@prisma/client'
-import {
-  BaseMailProvider,
-  MailProviderError,
-  MailProviderTemplate
-} from './mailProvider'
+import {PrismaClient, UserEvent} from '@prisma/client'
+import {BaseMailProvider, MailProviderError, MailProviderTemplate} from './mailProvider'
 
-import {MailController, MailControllerConfig} from '@wepublish/membership/mail'
 import {PrismaService} from '@wepublish/nest-modules'
-import {SubscriptionEventDictionary} from '@wepublish/membership/subscription-event-dictionary'
-import {OldContextService} from '@wepublish/nest-modules'
+import {Injectable} from '@nestjs/common'
+import {MailController, MailControllerConfig} from './mail.controller'
 
 export interface SendRemoteEMailProps {
   readonly remoteTemplate: string
@@ -22,10 +17,7 @@ export interface MailContextOptions {
   readonly defaultReplyToAddress?: string
 }
 
-export interface MailContext {
-  mailProvider: BaseMailProvider
-  prisma: PrismaClient
-
+export interface MailContextInterface {
   defaultFromAddress: string
   defaultReplyToAddress?: string
 
@@ -37,9 +29,10 @@ export interface MailContextProps extends MailContextOptions {
   readonly prisma: PrismaClient
 }
 
-export class MailContext implements MailContext {
+@Injectable()
+export class MailContext implements MailContextInterface {
   mailProvider: BaseMailProvider
-
+  prisma: PrismaClient
   defaultFromAddress: string
   defaultReplyToAddress?: string
 
@@ -53,11 +46,7 @@ export class MailContext implements MailContext {
 
   async sendMail(opts: MailControllerConfig) {
     if (opts.externalMailTemplateId) {
-      await new MailController(
-        this.prisma as PrismaService,
-        {context: global.oldContext} as OldContextService,
-        opts
-      ).sendMail()
+      await new MailController(this.prisma as PrismaService, this, opts).sendMail()
     }
   }
 
@@ -109,16 +98,5 @@ export class MailContext implements MailContext {
       }
     })
     return intervals.map(i => i.mailTemplate?.externalMailTemplateId || '')
-  }
-
-  async getSubsciptionTemplateIdentifier(
-    subsciption: Subscription,
-    subscriptionEvent: SubscriptionEvent
-  ): Promise<string | undefined> {
-    return SubscriptionEventDictionary.getSubsciptionTemplateIdentifier(
-      this.prisma,
-      subsciption,
-      subscriptionEvent
-    )
   }
 }

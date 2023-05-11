@@ -1,6 +1,6 @@
 import {Mutation, Query, Resolver} from '@nestjs/graphql'
 import {MailTemplate} from '@prisma/client'
-import {MailTemplateStatus, WithUrlAndStatus} from '@wepublish/api'
+import {MailTemplateStatus, WithUrlAndStatus} from '@wepublish/mails'
 import {MailTemplateSyncService} from './mail-template-sync.service'
 import {MailProviderModel, MailTemplateWithUrlAndStatusModel} from './mail-template.model'
 import {CanGetMailTemplates, CanSyncMailTemplates, Permissions} from '@wepublish/permissions/api'

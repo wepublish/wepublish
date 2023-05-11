@@ -71,7 +71,7 @@ import {rateComment} from './comment-rating/comment-rating.public-mutation'
 import {SubscriptionWithRelations} from '../db/subscription'
 import {GraphQLUploadImageInput} from './image'
 
-import {mailLogType} from '@wepublish/membership/mail'
+import {mailLogType} from '@wepublish/mails'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',

@@ -3,7 +3,7 @@ import {Context} from './context'
 import {unselectPassword} from '@wepublish/user/api'
 import {logger} from '@wepublish/utils'
 import {SettingName} from '@wepublish/settings/api'
-import {mailLogType} from '@wepublish/membership/mail'
+import {mailLogType} from '@wepublish/mails'
 
 // @TODO: move into cron job
 export const onFindArticle =
@@ -220,7 +220,7 @@ export const onInvoiceUpdate =
         return model
       }
 
-      const remoteTemplate = await context.mailContext.getSubsciptionTemplateIdentifier(
+      const remoteTemplate = await context.memberContext.getSubscriptionTemplateIdentifier(
         subscription,
         subscriptionEvent
       )

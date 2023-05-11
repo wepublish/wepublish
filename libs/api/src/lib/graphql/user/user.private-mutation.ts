@@ -7,7 +7,7 @@ import {Validator} from '../../validator'
 import {authorise} from '../permissions'
 import {CanCreateUser, CanDeleteUser, CanResetUserPassword} from '@wepublish/permissions/api'
 import {createUser, CreateUserInput} from './user.mutation'
-import {mailLogType} from '@wepublish/membership/mail'
+import {mailLogType} from '@wepublish/mails'
 
 export const deleteUserById = (
   id: string,

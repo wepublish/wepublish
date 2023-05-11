@@ -1,4 +1,4 @@
-import { MailTemplate } from '@prisma/client'
+import {MailTemplate} from '@prisma/client'
 import {
   BaseMailProvider,
   MailLogStatus,
@@ -6,7 +6,7 @@ import {
   MailProviderTemplate,
   SendMailProps,
   WebhookForSendMailProps
-} from '@wepublish/api'
+} from '@wepublish/mails'
 
 export class FakeMailProvider extends BaseMailProvider {
   constructor(props: MailProviderProps) {
@@ -26,6 +26,6 @@ export class FakeMailProvider extends BaseMailProvider {
   }
 
   getTemplateUrl(template: MailTemplate): string {
-    return "http://example.com/"
+    return 'http://example.com/'
   }
 }

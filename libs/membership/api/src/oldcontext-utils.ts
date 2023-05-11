@@ -3,7 +3,6 @@ import {
   Author,
   contextFromRequest,
   KarmaMediaAdapter,
-  MailchimpMailProvider,
   Oauth2Provider,
   PaymentProvider,
   PayrexxPaymentProvider,
@@ -15,9 +14,9 @@ import {
   StripePaymentProvider,
   URLAdapter
 } from '@wepublish/api'
+import {MailchimpMailProvider} from '@wepublish/mails'
 import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
 import process from 'process'
-import path from 'path'
 import {URL} from 'url'
 import bodyParser from 'body-parser'
 

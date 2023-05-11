@@ -1,5 +1,4 @@
 import {Injectable} from '@nestjs/common'
-import {PrismaService} from '@wepublish/nest-modules'
 import {
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
@@ -13,6 +12,7 @@ import {
   subscriptionFlowRequiredEvents
 } from './subscription-flow.type'
 import {SubscriptionEvent} from '@prisma/client'
+import {PrismaService} from '@wepublish/nest-modules'
 const SUBSCRIPTION_EVENT_MAX_DAYS_BEFORE = -25
 const SUBSCRIPTION_EVENT_MAX_DAYS_AFTER = 90
 
