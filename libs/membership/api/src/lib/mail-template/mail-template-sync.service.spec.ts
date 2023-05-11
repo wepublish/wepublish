@@ -6,7 +6,7 @@ import {MailTemplateSyncService} from './mail-template-sync.service'
 import {OldContextService, PrismaService} from '@wepublish/nest-modules'
 
 const mockTemplate1: MailTemplate = {
-  id: 1,
+  id: 'b9172f6b-b650-4053-a013-5a9430c95b9f',
   name: 'Mock Template 1',
   description: 'Mock Desc 1',
   externalMailTemplateId: 'slug-123',
@@ -16,7 +16,7 @@ const mockTemplate1: MailTemplate = {
 }
 
 const mockTemplate2: MailTemplate = {
-  id: 1,
+  id: '3cb7a082-750d-4573-a95d-df8b2b480a80',
   name: 'Mock Template 2',
   description: 'Mock Desc 2',
   externalMailTemplateId: 'slug-234',

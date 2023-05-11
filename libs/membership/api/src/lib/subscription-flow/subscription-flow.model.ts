@@ -11,8 +11,8 @@ registerEnumType(SubscriptionEvent, {
 
 @ObjectType()
 export class MailTemplateRef {
-  @Field(() => Int)
-  id!: number
+  @Field()
+  id!: string
   @Field()
   name!: string
 }
@@ -35,8 +35,8 @@ export class PaymentMethodRef {
 
 @ObjectType()
 export class SubscriptionInterval {
-  @Field(() => Int)
-  id!: number
+  @Field()
+  id!: string
   @Field(() => Int, {nullable: true})
   daysAwayFromEnding?: number
   @Field(type => MailTemplateRef, {nullable: true})
@@ -47,8 +47,8 @@ export class SubscriptionInterval {
 
 @ObjectType()
 export class SubscriptionFlowModel {
-  @Field(() => Int)
-  id!: number
+  @Field()
+  id!: string
   @Field()
   default!: boolean
   @Field(type => MemberPlanRef, {nullable: true})
@@ -67,24 +67,24 @@ export class SubscriptionFlowModel {
 
 @InputType()
 export class SubscriptionIntervalCreateInput {
-  @Field(() => Int)
-  subscriptionFlowId?: number
+  @Field()
+  subscriptionFlowId!: string
   @Field(() => Int, {nullable: true})
   daysAwayFromEnding?: number
-  @Field(() => Int, {nullable: true})
-  mailTemplateId!: number | null
+  @Field({nullable: true})
+  mailTemplateId?: string
   @Field(() => SubscriptionEvent)
   event!: SubscriptionEvent
 }
 
 @InputType()
 export class SubscriptionIntervalUpdateInput {
-  @Field(() => Int)
-  id!: number
+  @Field()
+  id!: string
   @Field(() => Int, {nullable: true})
   daysAwayFromEnding?: number
-  @Field(() => Int, {nullable: true})
-  mailTemplateId!: number | null
+  @Field({nullable: true})
+  mailTemplateId?: string
 }
 
 @InputType()
@@ -98,8 +98,8 @@ export class SubscriptionIntervalsUpdateInput {
 
 @InputType()
 export class SubscriptionIntervalDeleteInput {
-  @Field(() => Int)
-  id!: number
+  @Field()
+  id!: string
 }
 
 @InputType()
@@ -116,8 +116,8 @@ export class SubscriptionFlowModelCreateInput {
 
 @InputType()
 export class SubscriptionFlowModelUpdateInput {
-  @Field(() => Int)
-  id!: number
+  @Field()
+  id!: string
   @Field(type => [String])
   paymentMethodIds!: string[]
   @Field(type => [PaymentPeriodicity])

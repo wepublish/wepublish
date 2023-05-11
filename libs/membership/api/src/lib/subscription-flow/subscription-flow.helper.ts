@@ -4,7 +4,7 @@ import {PrismaService} from '@wepublish/nest-modules'
 import {PaymentMethodRef} from './subscription-flow.model'
 
 interface SubscriptionFlowWithSubscriptionCount {
-  subscriptionFlowId: number
+  subscriptionFlowId: string
   subscriptionCount: number
 }
 

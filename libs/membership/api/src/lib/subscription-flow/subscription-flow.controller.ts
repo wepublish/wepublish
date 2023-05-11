@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common'
-import {PrismaService} from '@wepublish/api'
+import {PrismaService} from '@wepublish/nest-modules'
 import {
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
@@ -87,12 +87,12 @@ export class SubscriptionFlowController {
         intervals: {
           create: [
             {
-              daysAwayFromEnding: -7,
+              daysAwayFromEnding: -14,
               event: SubscriptionEvent.INVOICE_CREATION,
               mailTemplate: undefined
             },
             {
-              daysAwayFromEnding: 7,
+              daysAwayFromEnding: 5,
               event: SubscriptionEvent.DEACTIVATION_UNPAID,
               mailTemplate: undefined
             }
@@ -150,7 +150,7 @@ export class SubscriptionFlowController {
     return this.getFlows(false)
   }
 
-  async deleteFlow(subscriptionFlowId: number) {
+  async deleteFlow(subscriptionFlowId: string) {
     const originalFlow = await this.prismaService.subscriptionFlow.findUnique({
       where: {
         id: subscriptionFlowId
@@ -220,7 +220,14 @@ export class SubscriptionFlowController {
     if (!eventToUpdate) {
       throw new Error('The given interval not found!')
     }
-    await this.isIntervalValid({event: eventToUpdate.event, ...interval}, false)
+    await this.isIntervalValid(
+      {
+        event: eventToUpdate.event,
+        subscriptionFlowId: eventToUpdate.subscriptionFlowId,
+        ...interval
+      },
+      false
+    )
 
     await this.prismaService.$transaction([
       this.prismaService.subscriptionInterval.update({

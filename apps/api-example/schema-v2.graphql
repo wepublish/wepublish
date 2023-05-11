@@ -30,14 +30,14 @@ type MailProviderModel {
 }
 
 type MailTemplateRef {
-  id: Int!
+  id: String!
   name: String!
 }
 
 type MailTemplateWithUrlAndStatusModel {
   description: String
   externalMailTemplateId: String!
-  id: Int!
+  id: String!
   name: String!
   remoteMissing: Boolean!
   status: String!
@@ -52,7 +52,7 @@ type MemberPlanRef {
 type Mutation {
   createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): [SubscriptionFlowModel!]!
   createSubscriptionInterval(subscriptionInterval: SubscriptionIntervalCreateInput!): [SubscriptionFlowModel!]!
-  deleteSubscriptionFlow(subscriptionFlowId: Int!): [SubscriptionFlowModel!]!
+  deleteSubscriptionFlow(subscriptionFlowId: String!): [SubscriptionFlowModel!]!
   deleteSubscriptionInterval(subscriptionInterval: SubscriptionIntervalDeleteInput!): [SubscriptionFlowModel!]!
   syncTemplates: Boolean!
   testSystemMail(systemMail: SystemMailTestInput!): [SystemMailModel!]!
@@ -149,7 +149,7 @@ enum SubscriptionEvent {
 type SubscriptionFlowModel {
   autoRenewal: [Boolean!]!
   default: Boolean!
-  id: Int!
+  id: String!
   intervals: [SubscriptionInterval!]!
   memberPlan: MemberPlanRef
   numberOfSubscriptions: Int!
@@ -166,7 +166,7 @@ input SubscriptionFlowModelCreateInput {
 
 input SubscriptionFlowModelUpdateInput {
   autoRenewal: [Boolean!]!
-  id: Int!
+  id: String!
   paymentMethodIds: [String!]!
   periodicities: [PaymentPeriodicity!]!
 }
@@ -174,30 +174,30 @@ input SubscriptionFlowModelUpdateInput {
 type SubscriptionInterval {
   daysAwayFromEnding: Int
   event: SubscriptionEvent!
-  id: Int!
+  id: String!
   mailTemplate: MailTemplateRef
 }
 
 input SubscriptionIntervalCreateInput {
   daysAwayFromEnding: Int
   event: SubscriptionEvent!
-  mailTemplateId: Int
-  subscriptionFlowId: Int!
+  mailTemplateId: String
+  subscriptionFlowId: String!
 }
 
 input SubscriptionIntervalDeleteInput {
-  id: Int!
+  id: String!
 }
 
 input SubscriptionIntervalUpdateInput {
   daysAwayFromEnding: Int
-  id: Int!
-  mailTemplateId: Int
+  id: String!
+  mailTemplateId: String
 }
 
 type SystemMailModel {
   event: UserEvent!
-  mailTemplate: MailTemplateRef!
+  mailTemplate: MailTemplateRef
 }
 
 input SystemMailTestInput {
@@ -206,7 +206,7 @@ input SystemMailTestInput {
 
 input SystemMailUpdateInput {
   event: UserEvent!
-  mailTemplateId: Int!
+  mailTemplateId: String!
 }
 
 enum UserEvent {

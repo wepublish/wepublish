@@ -3,7 +3,7 @@ import {SubscriptionFlowController} from './subscription-flow.controller'
 import {SubscriptionFlowHelper} from './subscription-flow.helper'
 import {SubscriptionFlowResolver} from './subscription-flow.resolver'
 import {SubscriptionController} from '../subscription/subscription.controller'
-import {OldContextService, PrismaModule} from '@wepublish/nest-modules'
+import {OldContextService, PrismaModule, PrismaService} from '@wepublish/nest-modules'
 
 @Module({
   controllers: [],
@@ -11,9 +11,11 @@ import {OldContextService, PrismaModule} from '@wepublish/nest-modules'
     SubscriptionFlowResolver,
     SubscriptionFlowController,
     SubscriptionController,
-    SubscriptionFlowHelper
+    SubscriptionFlowHelper,
+    OldContextService,
+    PrismaService
   ],
   exports: [],
-  imports: [PrismaModule, OldContextService]
+  imports: [PrismaModule]
 })
 export class SubscriptionFlowModule {}

@@ -92,7 +92,11 @@ export class SubscriptionController {
           lte: endOfDay(runDate)
         },
         canceledAt: null,
-        paidAt: null
+        paidAt: null,
+        // skip invoices where the subscription has been deleted
+        subscriptionID: {
+          not: null
+        }
       },
       include: {
         subscription: {
@@ -124,7 +128,11 @@ export class SubscriptionController {
           lte: startOfDay(runDate)
         },
         canceledAt: null,
-        paidAt: null
+        paidAt: null,
+        // skip invoices where the subscription has been deleted
+        subscriptionID: {
+          not: null
+        }
       },
       include: {
         subscription: {

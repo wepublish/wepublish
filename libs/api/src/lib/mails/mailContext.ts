@@ -93,6 +93,9 @@ export class MailContext implements MailContext {
     if (!userFlowMail) {
       throw new Error(`No UserFlowMail defined for event ${event}`)
     }
+    if (!userFlowMail.mailTemplate) {
+      throw new Error(`No email template defined for event ${event}`)
+    }
     return userFlowMail.mailTemplate.externalMailTemplateId
   }
 

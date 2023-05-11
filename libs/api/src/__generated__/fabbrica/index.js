@@ -4975,7 +4975,7 @@ function defineUserFlowMailFactoryInternal({defaultData: defaultDataResolver}) {
  * @param options
  * @returns factory {@link UserFlowMailFactoryInterface}
  */
-export function defineUserFlowMailFactory(options) {
+export function defineUserFlowMailFactory(options = {}) {
   return defineUserFlowMailFactoryInternal(options)
 }
 function isSubscriptionFlowmemberPlanFactory(x) {
