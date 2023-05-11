@@ -1,10 +1,10 @@
 import {Module} from '@nestjs/common'
 import {PeriodicJobExecutor} from './periodic-job.executor'
-import {OldContextService, PrismaService} from '@wepublish/api'
+import {OldContextModule, PrismaModule} from '@wepublish/nest-modules'
 @Module({
   controllers: [],
-  providers: [PeriodicJobExecutor, PrismaService, OldContextService],
+  providers: [PeriodicJobExecutor],
   exports: [],
-  imports: []
+  imports: [PrismaModule, OldContextModule]
 })
 export class PeriodicJobModule {}

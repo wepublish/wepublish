@@ -1,6 +1,6 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {User, UserFlowMail} from '@prisma/client'
-import {OldContextService, PrismaService} from '@wepublish/api'
+import {OldContextService, PrismaService} from '@wepublish/nest-modules'
 import {CurrentUser} from '../user.decorator'
 import {SystemMailModel, SystemMailTestInput, SystemMailUpdateInput} from './system-mail.model'
 

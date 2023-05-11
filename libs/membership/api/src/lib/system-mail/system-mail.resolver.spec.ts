@@ -1,6 +1,6 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {UserEvent, UserFlowMail} from '@prisma/client'
-import {OldContextService, PrismaService} from '@wepublish/api'
+import {OldContextService, PrismaService} from '@wepublish/nest-modules'
 import {SystemMailResolver} from './system-mail.resolver'
 
 const mockTemplate1: UserFlowMail = {

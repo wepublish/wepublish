@@ -2,7 +2,7 @@ import {Test, TestingModule} from '@nestjs/testing'
 import {SubscriptionFlowHelper} from './subscription-flow.helper'
 import {clearDatabase} from '../../prisma-utils'
 import {PrismaModule} from '@wepublish/nest-modules'
-import {PrismaService} from '@wepublish/api'
+import {PrismaService} from '@wepublish/nest-modules'
 import {PaymentPeriodicity, PrismaClient, SubscriptionFlow} from '@prisma/client'
 import {
   initialize,

@@ -1,5 +1,4 @@
 import {PrismaClient, Subscription, SubscriptionEvent, UserEvent} from '@prisma/client'
-import Email from 'email-templates'
 import {
   BaseMailProvider,
   MailProvider,
@@ -8,9 +7,9 @@ import {
 } from './mailProvider'
 
 import {MailController, MailControllerConfig} from '@wepublish/membership/mail'
-import {PrismaService} from '@wepublish/api'
-import {OldContextService} from '../oldContext.service'
+import {PrismaService} from '@wepublish/nest-modules'
 import {SubscriptionEventDictionary} from '@wepublish/membership/subscription-event-dictionary'
+import {OldContextService} from '@wepublish/nest-modules'
 
 export interface SendRemoteEMailProps {
   readonly remoteTemplate: string
