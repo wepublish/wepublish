@@ -3,12 +3,16 @@ import {
   FullUserFragment,
   InvoiceFragment,
   InvoiceItem,
+  UpdateInvoiceDocument,
+  UpdateInvoiceMutation,
+  UpdateInvoiceMutationVariables,
   useUpdateInvoiceMutation
 } from '@wepublish/editor/api'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdDone, MdMail} from 'react-icons/md'
 import {Button as RButton, FlexboxGrid, Message, Modal, Panel, toaster} from 'rsuite'
+import * as Apollo from '@apollo/client'
 
 const Button = styled(RButton)`
   margin-top: 20px;

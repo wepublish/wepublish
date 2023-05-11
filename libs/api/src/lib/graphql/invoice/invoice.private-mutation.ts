@@ -117,7 +117,8 @@ export const markInvoiceAsPaid = async (
   return prismaClient.invoice.update({
     where: {id},
     data: {
-      manuallySetAsPaidByUserId: user.id
+      manuallySetAsPaidByUserId: user.id,
+      paidAt: new Date()
     },
     include: {
       items: true
