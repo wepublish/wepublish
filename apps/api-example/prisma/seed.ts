@@ -263,6 +263,7 @@ async function seed() {
       },
       update: {},
       create: {
+        id: ids[eventIndex],
         event: UserEvent[event as UserEvent],
         mailTemplate: {connect: {id: mailTemplates[eventIndex % 5].id}}
       }
