@@ -3,7 +3,7 @@ import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {Cache} from 'cache-manager'
 import {PrismaClient} from '@prisma/client'
 import fetch from 'node-fetch'
-// import axios from 'Axios'
+import axios from 'Axios'
 import xml2js from 'xml2js'
 import {
   ImportedEventsDocument,
@@ -16,6 +16,7 @@ import {htmlToSlate} from 'slate-serializers'
 import moment from 'moment'
 
 import {XMLEventType} from './xmlTypes'
+import {MediaAdapterService} from '@wepublish/image/api'
 
 const AGENDA_BASEL_URL = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
 
@@ -171,7 +172,11 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType, source: Providers) => {
 
 @Injectable()
 export class EventsImportService {
-  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache, private prisma: PrismaClient) {}
+  constructor(
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private prisma: PrismaClient,
+    private mediaAdapter: MediaAdapterService
+  ) {}
 
   async importedEvents({filter, order, skip, take, sort}: ImportedEventsResolverParams) {
     const importableEvents = Promise.all(
@@ -219,14 +224,21 @@ export class EventsImportService {
       throw Error(`Event with id ${id} not found.`)
     }
 
-    // if (event.imageUrl) {
-    // const response = await axios.get(event.imageUrl, {
-    //   method: 'GET',
-    //   responseType: 'stream'
-    // })
-    // how to get mediaAdapter?
-    // createdImage = await this.prisma.image.create({data: response.data})
-    // }
+    console.log('event', event)
+    console.log('this.mediaAdapter', this.mediaAdapter)
+
+    // this.mediaAdapter.uploadImage()
+
+    if (event.imageUrl) {
+      const response = await axios.get(event.imageUrl, {
+        method: 'GET',
+        responseType: 'stream'
+      })
+      // todo how to get mediaAdapter?
+      const {id, ...image} = await this.mediaAdapter.uploadImage(response.data)
+      console.log('id', id)
+      console.log('image', image)
+    }
 
     const eventInput = {
       name: event.name,
