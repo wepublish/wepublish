@@ -73,7 +73,7 @@ export type Mutation = {
   createSubscriptionInterval: Array<SubscriptionFlowModel>;
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   deleteSubscriptionInterval: Array<SubscriptionFlowModel>;
-  syncTemplates: Scalars['Boolean'];
+  syncTemplates?: Maybe<Scalars['Boolean']>;
   testSystemMail: Array<SystemMailModel>;
   updateSubscriptionFlow: Array<SubscriptionFlowModel>;
   updateSubscriptionInterval: Array<SubscriptionFlowModel>;
@@ -315,7 +315,7 @@ export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ _
 export type SynchronizeMailTemplatesMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SynchronizeMailTemplatesMutation = { __typename?: 'Mutation', syncTemplates: boolean };
+export type SynchronizeMailTemplatesMutation = { __typename?: 'Mutation', syncTemplates?: boolean | null };
 
 export type FullMailTemplateFragment = { __typename?: 'MailTemplateWithUrlAndStatusModel', id: number, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string, status: string };
 

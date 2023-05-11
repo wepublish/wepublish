@@ -152,7 +152,7 @@ describe('MailTemplatesResolver', () => {
 
   it('synchronizes the mail templates', async () => {
     const result = await resolver.syncTemplates()
-    expect(result).toEqual(true)
+    expect(result).toEqual(undefined)
   })
 
   it('computes the template status', async () => {
@@ -206,7 +206,7 @@ describe('MailTemplatesResolver', () => {
         expect(!!body.errors.find((error: any) => error.message === 'Forbidden resource')).toEqual(
           true
         )
-        expect(body.data).toBeNull()
+        expect(body.data).toEqual({syncTemplates: null})
       })
   })
 })

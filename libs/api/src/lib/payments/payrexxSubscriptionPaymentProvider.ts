@@ -338,7 +338,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
           amount: payedAmount
         }
       })
-      if (!invoice) throw new Error('Cant create Invoice')
+      if (!invoice) throw new Error("Can't create Invoice")
 
       // Add subscription Period
 
@@ -352,7 +352,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
           invoiceID: invoice.id
         }
       })
-      if (!subscriptionPeriod) throw new Error('Cant create subscription period')
+      if (!subscriptionPeriod) throw new Error("Can't create subscription period")
 
       // Create Payment
       const payment = await paymentClient.create({
@@ -362,7 +362,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
           invoiceID: invoice.id
         }
       })
-      if (!payment) throw new Error('Cant create Payment')
+      if (!payment) throw new Error("Can't create Payment")
 
       // Update subscription
       await subscriptionClient.update({

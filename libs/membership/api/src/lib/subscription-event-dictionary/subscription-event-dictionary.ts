@@ -156,7 +156,7 @@ export class SubscriptionEventDictionary {
     const filteredFlows = this.allFlows.filter(
       flow =>
         flow.memberPlanId === query.memberplanId &&
-        flow.paymentMethods.map(pm => pm.id).includes(query.paymentmethodeId) &&
+        flow.paymentMethods.map(pm => pm.id).includes(query.paymentMethodId) &&
         flow.periodicities.includes(query.periodicity) &&
         flow.autoRenewal.includes(query.autorenwal)
     )
