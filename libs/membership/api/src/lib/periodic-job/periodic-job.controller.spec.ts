@@ -1021,7 +1021,6 @@ describe('PeriodicJobController', () => {
       autoRenew: true,
       paymentPeriodicity: PaymentPeriodicity.biannual
     }
-    await controller['loadEnvironment']()
     try {
       await controller['createInvoice'](pjo, invoice)
       throw Error('This execution should fail!')
@@ -1037,7 +1036,6 @@ describe('PeriodicJobController', () => {
       daysAwayFromEnding: -10,
       event: SubscriptionEvent.INVOICE_CREATION
     })
-    await controller['loadEnvironment']()
     try {
       await controller['createInvoice'](pjo, invoice)
       throw Error('This execution should fail!')
@@ -1052,7 +1050,6 @@ describe('PeriodicJobController', () => {
       },
       event: SubscriptionEvent.DEACTIVATION_UNPAID
     })
-    await controller['loadEnvironment']()
     invoice.paidUntil = add(runDate, {days: 11})
     await controller['createInvoice'](pjo, invoice)
     try {
@@ -1124,7 +1121,6 @@ describe('PeriodicJobController', () => {
       autoRenew: true,
       paymentPeriodicity: PaymentPeriodicity.biannual
     }
-    await controller['loadEnvironment']()
     try {
       await controller['deactivateSubscription'](pjo, invoice)
       throw Error('This execution should fail!')

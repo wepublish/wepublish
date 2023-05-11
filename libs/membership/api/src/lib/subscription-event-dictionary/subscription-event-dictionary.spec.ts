@@ -345,10 +345,9 @@ describe('SubscriptionEventDictionary', () => {
     }
 
     const sed = new SubscriptionEventDictionary(prismaClient)
-    await sed.initialize()
 
     // Test custom static Actions
-    let actions = sed.getActionFromStore({
+    let actions = await sed.getActionsForSubscriptions({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.yearly,
       paymentMethodId: 'stripe',
@@ -359,7 +358,7 @@ describe('SubscriptionEventDictionary', () => {
     expect(JSON.stringify(actions)).toEqual(res)
 
     // Test custom variable actions
-    actions = sed.getActionFromStore({
+    actions = await sed.getActionsForSubscriptions({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.yearly,
       paymentMethodId: 'stripe',
@@ -370,7 +369,7 @@ describe('SubscriptionEventDictionary', () => {
       '[{"type":"INVOICE_CREATION","daysAwayFromEnding":-7,"externalMailTemplate":"custom1-INVOICE_CREATION"},{"type":"CUSTOM","daysAwayFromEnding":-7,"externalMailTemplate":"custom1-CUSTOM2"}]'
     expect(JSON.stringify(actions)).toEqual(res)
 
-    actions = sed.getActionFromStore({
+    actions = await sed.getActionsForSubscriptions({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.yearly,
       paymentMethodId: 'stripe',
@@ -380,7 +379,7 @@ describe('SubscriptionEventDictionary', () => {
     res = '[{"type":"CUSTOM","daysAwayFromEnding":-10,"externalMailTemplate":"custom1-CUSTOM1"}]'
     expect(JSON.stringify(actions)).toEqual(res)
 
-    actions = sed.getActionFromStore({
+    actions = await sed.getActionsForSubscriptions({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.yearly,
       paymentMethodId: 'stripe',
@@ -391,7 +390,7 @@ describe('SubscriptionEventDictionary', () => {
       '[{"type":"DEACTIVATION_UNPAID","daysAwayFromEnding":7,"externalMailTemplate":"custom1-DEACTIVATION_UNPAID"}]'
     expect(JSON.stringify(actions)).toEqual(res)
 
-    actions = sed.getActionFromStore({
+    actions = await sed.getActionsForSubscriptions({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.yearly,
       paymentMethodId: 'stripe',
@@ -401,7 +400,7 @@ describe('SubscriptionEventDictionary', () => {
     res = '[]'
     expect(JSON.stringify(actions)).toEqual(res)
 
-    actions = sed.getActionFromStore({
+    actions = await sed.getActionsForSubscriptions({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.monthly,
       paymentMethodId: 'payrexx',
@@ -413,7 +412,7 @@ describe('SubscriptionEventDictionary', () => {
 
     // Test default static Actions
 
-    actions = sed.getActionFromStore({
+    actions = await sed.getActionsForSubscriptions({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.biannual,
       paymentMethodId: 'payrexx',
@@ -425,7 +424,7 @@ describe('SubscriptionEventDictionary', () => {
 
     // Test custom variable actions
 
-    actions = sed.getActionFromStore({
+    actions = await sed.getActionsForSubscriptions({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.biannual,
       paymentMethodId: 'payrexx',
@@ -435,7 +434,7 @@ describe('SubscriptionEventDictionary', () => {
     res = '[{"type":"CUSTOM","daysAwayFromEnding":-15,"externalMailTemplate":"default-CUSTOM1"}]'
     expect(JSON.stringify(actions)).toEqual(res)
 
-    actions = sed.getActionFromStore({
+    actions = await sed.getActionsForSubscriptions({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.biannual,
       paymentMethodId: 'payrexx',
@@ -446,7 +445,7 @@ describe('SubscriptionEventDictionary', () => {
       '[{"type":"INVOICE_CREATION","daysAwayFromEnding":-14,"externalMailTemplate":"default-INVOICE_CREATION"}]'
     expect(JSON.stringify(actions)).toEqual(res)
 
-    actions = sed.getActionFromStore({
+    actions = await sed.getActionsForSubscriptions({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.biannual,
       paymentMethodId: 'payrexx',
@@ -457,7 +456,7 @@ describe('SubscriptionEventDictionary', () => {
       '[{"type":"DEACTIVATION_UNPAID","daysAwayFromEnding":5,"externalMailTemplate":"default-DEACTIVATION_UNPAID"}]'
     expect(JSON.stringify(actions)).toEqual(res)
 
-    actions = sed.getActionFromStore({
+    actions = await sed.getActionsForSubscriptions({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.biannual,
       paymentMethodId: 'payrexx',
@@ -468,7 +467,7 @@ describe('SubscriptionEventDictionary', () => {
     expect(JSON.stringify(actions)).toEqual(res)
 
     try {
-      sed.getActionFromStore({
+      await sed.getActionsForSubscriptions({
         memberplanId: customMemberPlan1.id,
         periodicity: PaymentPeriodicity.biannual,
         paymentMethodId: 'payrexx',
@@ -485,7 +484,7 @@ describe('SubscriptionEventDictionary', () => {
 
     // Lookup events custom
 
-    actions = sed.getActionFromStore({
+    actions = await sed.getActionsForSubscriptions({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.yearly,
       paymentMethodId: 'stripe',
@@ -497,7 +496,7 @@ describe('SubscriptionEventDictionary', () => {
     expect(JSON.stringify(actions)).toEqual(res)
 
     // Lookup events default
-    actions = sed.getActionFromStore({
+    actions = await sed.getActionsForSubscriptions({
       memberplanId: customMemberPlan1.id,
       periodicity: PaymentPeriodicity.biannual,
       paymentMethodId: 'stripe',
@@ -531,7 +530,6 @@ describe('SubscriptionEventDictionary', () => {
 
     let testDate = new Date()
     const sed = new SubscriptionEventDictionary(prismaClient)
-    await sed.initialize()
     let res = await sed.getEarliestInvoiceCreationDate(testDate)
     expect(format(res, 'dd-MM-yyyy')).toEqual(format(add(testDate, {days: 14}), 'dd-MM-yyyy'))
 
@@ -543,12 +541,10 @@ describe('SubscriptionEventDictionary', () => {
         daysAwayFromEnding: -20
       }
     })
-    await sed.initialize()
     res = await sed.getEarliestInvoiceCreationDate(testDate)
     expect(format(res, 'dd-MM-yyyy')).toEqual(format(add(testDate, {days: 20}), 'dd-MM-yyyy'))
 
     testDate = sub(new Date(), {days: 10})
-    await sed.initialize()
     res = await sed.getEarliestInvoiceCreationDate(testDate)
     expect(format(res, 'dd-MM-yyyy')).toEqual(format(add(testDate, {days: 20}), 'dd-MM-yyyy'))
   })
@@ -605,8 +601,7 @@ describe('SubscriptionEventDictionary', () => {
     const sed = new SubscriptionEventDictionary(prismaClient)
 
     let testDate = new Date()
-    await sed.initialize()
-    let res = sed.getDatesWithCustomEvent(testDate)
+    let res = await sed.getDatesWithCustomEvent(testDate)
     let dateRes = res.map(r => {
       return format(r, 'dd-MM-yyyy')
     })
@@ -635,8 +630,7 @@ describe('SubscriptionEventDictionary', () => {
     expect(dateRes.find(d => d === format(sub(testDate, {days: 7}), 'dd-MM-yyyy'))).toBeUndefined()
 
     testDate = sub(new Date(), {days: 12})
-    await sed.initialize()
-    res = sed.getDatesWithCustomEvent(testDate)
+    res = await sed.getDatesWithCustomEvent(testDate)
     dateRes = res.map(r => {
       return format(r, 'dd-MM-yyyy')
     })
@@ -663,33 +657,6 @@ describe('SubscriptionEventDictionary', () => {
     ).not.toBeUndefined()
     expect(dateRes.find(d => d === format(sub(testDate, {days: 15}), 'dd-MM-yyyy'))).toBeUndefined()
     expect(dateRes.find(d => d === format(sub(testDate, {days: 7}), 'dd-MM-yyyy'))).toBeUndefined()
-
-    try {
-      const evd = new SubscriptionEventDictionary(prismaClient)
-      evd.getDatesWithCustomEvent(new Date())
-      throw Error('This execution should fail!')
-    } catch (e) {
-      expect((e as Error).toString()).toEqual(
-        'Error: Tried to access store before it was successfully initialized!'
-      )
-    }
-  })
-
-  it('Get action before store is fully initialized', async () => {
-    const sed = new SubscriptionEventDictionary(prismaClient)
-    try {
-      sed['getActionFromStore']({
-        memberplanId: '2',
-        paymentMethodId: '1',
-        periodicity: PaymentPeriodicity.biannual,
-        autorenwal: true
-      })
-      throw Error('This execution should fail!')
-    } catch (e) {
-      expect((e as Error).toString()).toEqual(
-        'Error: Tried to access store before it was successfully initialized!'
-      )
-    }
   })
 
   it('No default flow defined', async () => {
@@ -700,7 +667,12 @@ describe('SubscriptionEventDictionary', () => {
     })
     const sed = new SubscriptionEventDictionary(prismaClient)
     try {
-      await sed.initialize()
+      await sed.getActionsForSubscriptions({
+        memberplanId: customMemberPlan1.id,
+        periodicity: PaymentPeriodicity.yearly,
+        paymentMethodId: 'stripe',
+        autorenwal: true
+      })
       throw Error('This execution should fail!')
     } catch (e) {
       expect((e as Error).toString()).toEqual('Error: Default user subscription flow not found!')
@@ -714,7 +686,12 @@ describe('SubscriptionEventDictionary', () => {
     })
     const sed = new SubscriptionEventDictionary(prismaClient)
     try {
-      await sed.initialize()
+      await sed.getActionsForSubscriptions({
+        memberplanId: customMemberPlan1.id,
+        periodicity: PaymentPeriodicity.yearly,
+        paymentMethodId: 'stripe',
+        autorenwal: true
+      })
       throw Error('This execution should fail!')
     } catch (e) {
       expect((e as Error).toString()).toEqual(
@@ -730,7 +707,12 @@ describe('SubscriptionEventDictionary', () => {
     })
     const sed = new SubscriptionEventDictionary(prismaClient)
     try {
-      await sed.initialize()
+      await sed.getActionsForSubscriptions({
+        memberplanId: customMemberPlan1.id,
+        periodicity: PaymentPeriodicity.yearly,
+        paymentMethodId: 'stripe',
+        autorenwal: true
+      })
       throw Error('This execution should fail!')
     } catch (e) {
       expect((e as Error).toString()).toEqual(
