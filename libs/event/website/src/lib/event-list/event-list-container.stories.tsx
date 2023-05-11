@@ -1,4 +1,4 @@
-import {EventDocument, EventQuery, EventStatus} from '@wepublish/website/api'
+import {EventListDocument, EventQuery, EventStatus} from '@wepublish/website/api'
 import {action} from '@storybook/addon-actions'
 import {Meta} from '@storybook/react'
 import {EventListContainer} from './event-list-container'
@@ -190,14 +190,14 @@ export const Default = {
       mocks: [
         {
           request: {
-            query: EventDocument,
-            variables: {
-              id: event.id
-            }
+            query: EventListDocument,
+            variables: {}
           },
           result: {
             data: {
-              event
+              events: {
+                nodes: [event, event, event]
+              }
             }
           }
         }
@@ -217,14 +217,14 @@ export const WithClassName = {
       mocks: [
         {
           request: {
-            query: EventDocument,
-            variables: {
-              id: event.id
-            }
+            query: EventListDocument,
+            variables: {}
           },
           result: {
             data: {
-              event
+              events: {
+                nodes: [event, event, event]
+              }
             }
           }
         }
@@ -246,14 +246,14 @@ export const WithEmotion = {
       mocks: [
         {
           request: {
-            query: EventDocument,
-            variables: {
-              id: event.id
-            }
+            query: EventListDocument,
+            variables: {}
           },
           result: {
             data: {
-              event
+              events: {
+                nodes: [event, event, event]
+              }
             }
           }
         }
