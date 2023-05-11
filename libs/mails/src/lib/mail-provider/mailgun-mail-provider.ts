@@ -2,17 +2,15 @@ import {MailLogState} from '@prisma/client'
 import crypto from 'crypto'
 import FormData from 'form-data'
 import Client from 'mailgun.js/client'
-
 import {
-  BaseMailProvider,
   MailLogStatus,
   MailProviderError,
-  MailProviderProps,
   MailProviderTemplate,
   SendMailProps,
   WebhookForSendMailProps,
   WithExternalId
-} from './mailProvider'
+} from './mail-provider.interface'
+import {BaseMailProvider, MailProviderProps} from './base-mail-provider'
 
 export interface MailgunMailProviderProps extends MailProviderProps {
   apiKey: string
