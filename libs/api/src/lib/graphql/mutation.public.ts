@@ -24,7 +24,7 @@ import {
   UserInputError,
   UserSubscriptionAlreadyDeactivated
 } from '../error'
-import {logger} from '../server'
+import {logger} from '@wepublish/utils'
 import {FIFTEEN_MINUTES_IN_MILLISECONDS, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '../utility'
 import {Validator} from '../validator'
 import {

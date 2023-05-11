@@ -8,7 +8,7 @@ import {
   UpdatePaymentWithIntentStateProps,
   WebhookForPaymentIntentProps
 } from './paymentProvider'
-import {logger} from '../server'
+import {logger} from '@wepublish/utils'
 import {
   PaymentState,
   PaymentPeriodicity,

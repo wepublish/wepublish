@@ -57,7 +57,7 @@ import {BaseMailProvider} from './mails/mailProvider'
 import {MediaAdapter} from './media/mediaAdapter'
 import {MemberContext} from './memberContext'
 import {PaymentProvider} from './payments/paymentProvider'
-import {logger} from './server'
+import {logger} from '@wepublish/utils'
 import {URLAdapter} from './urlAdapter'
 import {SettingName} from '@wepublish/settings/api'
 

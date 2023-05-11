@@ -8,7 +8,7 @@ import {
   WebhookForPaymentIntentProps
 } from './paymentProvider'
 import Stripe from 'stripe'
-import {logger} from '../server'
+import {logger} from '@wepublish/utils'
 import {PaymentState} from '@prisma/client'
 
 export interface StripeCheckoutPaymentProviderProps extends PaymentProviderProps {
