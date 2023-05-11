@@ -3,10 +3,10 @@ import {MailTemplate, PrismaClient} from '@prisma/client'
 import {
   initialize,
   defineMailTemplateFactory,
-  defineUserFactory,
-  MailgunMailProvider,
-  PrismaService
-} from '@wepublish/api'
+  defineUserFactory
+} from '../../__generated__/fabbrica'
+import {MailgunMailProvider} from '@wepublish/api'
+import {PrismaService} from '@wepublish/nest-modules'
 import {initOldContextForTest} from '../../oldcontext-utils'
 import {MailController, mailLogType} from './mail.controller'
 import {Test, TestingModule} from '@nestjs/testing'

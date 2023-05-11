@@ -16,7 +16,7 @@ import {
   defineSubscriptionIntervalFactory,
   defineInvoiceFactory,
   definePeriodicJobFactory
-} from '@wepublish/api'
+} from '../../__generated__/fabbrica'
 import {add, startOfDay, sub} from 'date-fns'
 import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
 import {forwardRef} from '@nestjs/common'

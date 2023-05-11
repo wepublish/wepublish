@@ -17,10 +17,11 @@ import {
   defineMemberPlanFactory,
   defineSubscriptionFlowFactory,
   definePaymentMethodFactory
-} from '@wepublish/api'
+} from '../../__generated__/fabbrica'
 import {PermissionsGuard} from '@wepublish/permissions/api'
 import {clearDatabase} from '../../prisma-utils'
 import {initOldContextForTest} from '../../oldcontext-utils'
+import * as util from 'util'
 
 @Injectable()
 export class TestPermissionsGuard implements CanActivate {
@@ -55,7 +56,7 @@ const updateSubscriptionFlowMutation = `
 `
 
 const deleteSubscriptionFlowMutation = `
-  mutation UpdateSubscriptionFlow($subscriptionFlowId: Int!) {
+  mutation UpdateSubscriptionFlow($subscriptionFlowId: String!) {
   deleteSubscriptionFlow(subscriptionFlowId: $subscriptionFlowId) {
     id
   }

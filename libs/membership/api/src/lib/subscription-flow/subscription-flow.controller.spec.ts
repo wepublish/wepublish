@@ -12,7 +12,7 @@ import {
   defineMailTemplateFactory,
   defineSubscriptionFlowFactory,
   definePaymentMethodFactory
-} from '@wepublish/api'
+} from '../../__generated__/fabbrica'
 import {initOldContextForTest} from '../../oldcontext-utils'
 
 describe('SubscriptionFlowController', () => {

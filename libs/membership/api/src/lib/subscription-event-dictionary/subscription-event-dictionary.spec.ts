@@ -13,7 +13,7 @@ import {
   defineSubscriptionFlowFactory,
   definePaymentMethodFactory,
   defineSubscriptionIntervalFactory
-} from '@wepublish/api'
+} from '../../__generated__/fabbrica'
 import {add, format, sub} from 'date-fns'
 import {initOldContextForTest} from '../../oldcontext-utils'
 import {SubscriptionEventDictionary} from './subscription-event-dictionary'

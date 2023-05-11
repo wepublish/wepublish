@@ -11,7 +11,7 @@ import {
   defineSubscriptionFactory,
   defineUserFactory,
   definePaymentMethodFactory
-} from '@wepublish/api'
+} from '../../__generated__/fabbrica'
 
 describe('SubscriptionFlowHelper', () => {
   let helper: SubscriptionFlowHelper
