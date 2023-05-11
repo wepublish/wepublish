@@ -2,6 +2,7 @@ import {styled, css, Theme, useTheme} from '@mui/material'
 import {BuilderEventProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdDateRange, MdLocationCity} from 'react-icons/md'
 import {format} from 'date-fns'
+import {EventSEO} from './event-seo'
 
 export const EventWrapper = styled('div')`
   display: grid;
@@ -48,6 +49,7 @@ export const Event = ({data, loading, error, className}: BuilderEventProps) => {
 
   return (
     <EventWrapper className={className}>
+      {data?.event && <EventSEO event={data.event} />}
       {data?.event.image && <Image css={eventImage(theme)} image={data.event.image} />}
 
       {data?.event && (

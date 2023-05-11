@@ -33,6 +33,8 @@
       "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"],
       "@wepublish/page/website": ["libs/page/website/src/index.ts"],
       "@wepublish/permissions/api": ["libs/permissions/api/src/index.ts"],
+      "@wepublish/richtext": ["libs/richtext/src/index.ts"],
+      "@wepublish/richtext/server": ["libs/richtext/src/server.ts"],
       "@wepublish/richtext/website": ["libs/richtext/website/src/index.ts"],
       "@wepublish/settings/api": ["libs/settings/api/src/index.ts"],
       "@wepublish/storybook": ["tools/storybook/index.tsx"],

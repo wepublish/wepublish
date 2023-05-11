@@ -8,81 +8,81 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
 @@ -34,13 +34,14 @@
         </h4>
         <div
-          class=\\"rs-drawer-actions\\"
+          class="rs-drawer-actions"
         >
           <button
--           aria-disabled=\\"false\\"
--           class=\\"rs-btn rs-btn-primary\\"
-+           aria-disabled=\\"true\\"
-+           class=\\"rs-btn rs-btn-primary rs-btn-disabled\\"
-            data-testid=\\"saveButton\\"
-+           disabled=\\"\\"
-            type=\\"submit\\"
+-           aria-disabled="false"
+-           class="rs-btn rs-btn-primary"
++           aria-disabled="true"
++           class="rs-btn rs-btn-primary rs-btn-disabled"
+            data-testid="saveButton"
++           disabled=""
+            type="submit"
           >
             create
             <span
-              class=\\"rs-ripple-pond\\"
+              class="rs-ripple-pond"
 @@ -84,14 +85,15 @@
           >
             <input
-              aria-describedby=\\"name-help-text\\"
-              aria-labelledby=\\"name-control-label\\"
-              class=\\"rs-input\\"
-+             disabled=\\"\\"
-              id=\\"name\\"
-              name=\\"name\\"
-              type=\\"text\\"
--             value=\\"\\"
-+             value=\\"Brand New User Role\\"
+              aria-describedby="name-help-text"
+              aria-labelledby="name-control-label"
+              class="rs-input"
++             disabled=""
+              id="name"
+              name="name"
+              type="text"
+-             value=""
++             value="Brand New User Role"
             />
           </div>
         </div>
         <div
-          class=\\"rs-form-group\\"
+          class="rs-form-group"
 @@ -109,14 +111,15 @@
           >
             <input
-              aria-describedby=\\"description-help-text\\"
-              aria-labelledby=\\"description-control-label\\"
-              class=\\"rs-input\\"
-+             disabled=\\"\\"
-              id=\\"description\\"
-              name=\\"userRoles.panels.description\\"
-              type=\\"text\\"
--             value=\\"\\"
-+             value=\\"A user role to be added to snapshot\\"
+              aria-describedby="description-help-text"
+              aria-labelledby="description-control-label"
+              class="rs-input"
++             disabled=""
+              id="description"
+              name="userRoles.panels.description"
+              type="text"
+-             value=""
++             value="A user role to be added to snapshot"
             />
           </div>
         </div>
         <div
-          class=\\"rs-form-group\\"
+          class="rs-form-group"
 @@ -128,23 +131,24 @@
-            id=\\"permissions-control-label\\"
+            id="permissions-control-label"
           >
             userRoles.panels.permissions
           </label>
           <div
--           class=\\"rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-cleanable rs-picker-block rs-picker-countable\\"
-+           class=\\"rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-cleanable rs-picker-block rs-picker-disabled rs-picker-countable\\"
+-           class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-cleanable rs-picker-block rs-picker-countable"
++           class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-cleanable rs-picker-block rs-picker-disabled rs-picker-countable"
           >
             <div
--             aria-disabled=\\"false\\"
-+             aria-disabled=\\"true\\"
-              aria-expanded=\\"false\\"
-              aria-haspopup=\\"listbox\\"
--             class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-+             class=\\"rs-picker-toggle rs-btn rs-btn-default rs-btn-disabled\\"
-+             disabled=\\"\\"
-              role=\\"combobox\\"
--             tabindex=\\"0\\"
+-             aria-disabled="false"
++             aria-disabled="true"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+-             class="rs-picker-toggle rs-btn rs-btn-default"
++             class="rs-picker-toggle rs-btn rs-btn-default rs-btn-disabled"
++             disabled=""
+              role="combobox"
+-             tabindex="0"
             >
               <input
-                aria-hidden=\\"true\\"
-                class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
-+               disabled=\\"\\"
-                readonly=\\"\\"
-                tabindex=\\"-1\\"
-                value=\\"\\"
+                aria-hidden="true"
+                class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
++               disabled=""
+                readonly=""
+                tabindex="-1"
+                value=""
               />
               <span"
 `;

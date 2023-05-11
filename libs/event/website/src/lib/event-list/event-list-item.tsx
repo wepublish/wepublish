@@ -1,6 +1,6 @@
 import {Theme, css, styled, useTheme} from '@mui/material'
+import {useWebsiteBuilder} from '@wepublish/website'
 import {Event} from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {format} from 'date-fns'
 import {MdDateRange} from 'react-icons/md'
 

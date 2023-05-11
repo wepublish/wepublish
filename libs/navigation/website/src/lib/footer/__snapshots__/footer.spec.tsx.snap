@@ -23,7 +23,7 @@ exports[`Footer should render Default 1`] = `
         />
       </svg>
       <nav
-        class="css-1hew1jc"
+        class="css-1y3cie6"
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
@@ -72,7 +72,7 @@ exports[`Footer should render WithError 1`] = `
         />
       </svg>
       <nav
-        class="css-1hew1jc"
+        class="css-1y3cie6"
       />
     </div>
   </footer>
@@ -102,7 +102,7 @@ exports[`Footer should render WithLoading 1`] = `
         />
       </svg>
       <nav
-        class="css-1hew1jc"
+        class="css-1y3cie6"
       />
     </div>
   </footer>

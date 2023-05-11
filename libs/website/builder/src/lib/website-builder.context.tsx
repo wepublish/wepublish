@@ -1,5 +1,13 @@
 import {mergeDeepRight} from 'ramda'
-import {ComponentType, createContext, memo, PropsWithChildren, ReactNode, useContext} from 'react'
+import {
+  ComponentType,
+  createContext,
+  memo,
+  PropsWithChildren,
+  ReactNode,
+  ScriptHTMLAttributes,
+  useContext
+} from 'react'
 import {PartialDeep} from 'type-fest'
 import {BuilderArticleProps} from './article.interface'
 import {
@@ -11,6 +19,12 @@ import {
   BuilderTitleBlockProps
 } from './blocks.interface'
 import {BuilderButtonProps} from './button.interface'
+import {
+  BuilderEventListItemProps,
+  BuilderEventListProps,
+  BuilderEventProps,
+  BuilderEventSEOProps
+} from './event.interface'
 import {BuilderFooterProps} from './footer.interface'
 import {
   BuilderListItemProps,
@@ -24,16 +38,12 @@ import {BuilderPayInvoicesProps} from './pay-invoices.interface'
 import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
 import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
-import {
-  BuilderEventListItemProps,
-  BuilderEventListProps,
-  BuilderEventProps
-} from './event.interface'
 
 const NoComponent = () => null
 
 export type WebsiteBuilderComponents = {
   Head: ComponentType<{children: ReactNode}>
+  Script: ComponentType<{children: ReactNode} & ScriptHTMLAttributes<HTMLScriptElement>>
   Navbar: ComponentType<BuilderNavbarProps>
   Footer: ComponentType<BuilderFooterProps>
   MemberPlans: ComponentType<BuilderMemberPlansProps>
@@ -42,6 +52,7 @@ export type WebsiteBuilderComponents = {
   Page: ComponentType<BuilderPageProps>
   Article: ComponentType<BuilderArticleProps>
   Event: ComponentType<BuilderEventProps>
+  EventSEO: ComponentType<BuilderEventSEOProps>
   EventList: ComponentType<BuilderEventListProps>
   EventListItem: ComponentType<BuilderEventListItemProps>
 
@@ -77,6 +88,7 @@ export type WebsiteBuilderComponents = {
 
 const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   Head: NoComponent,
+  Script: NoComponent,
   Navbar: NoComponent,
   Footer: NoComponent,
   MemberPlans: NoComponent,
@@ -85,6 +97,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   Page: NoComponent,
   Article: NoComponent,
   Event: NoComponent,
+  EventSEO: NoComponent,
   EventList: NoComponent,
   EventListItem: NoComponent,
 

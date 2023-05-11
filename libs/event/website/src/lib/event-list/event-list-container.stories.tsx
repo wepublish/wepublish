@@ -196,7 +196,7 @@ export const Default = {
           result: {
             data: {
               events: {
-                nodes: [event, event, event]
+                nodes: [event, {...event, id: '2'}, {...event, id: '3'}]
               }
             }
           }
@@ -223,7 +223,7 @@ export const WithClassName = {
           result: {
             data: {
               events: {
-                nodes: [event, event, event]
+                nodes: [event, {...event, id: '2'}, {...event, id: '3'}]
               }
             }
           }
@@ -252,7 +252,7 @@ export const WithEmotion = {
           result: {
             data: {
               events: {
-                nodes: [event, event, event]
+                nodes: [event, {...event, id: '2'}, {...event, id: '3'}]
               }
             }
           }

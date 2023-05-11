@@ -27,7 +27,7 @@ import {
   theme,
   UnorderedList
 } from '@wepublish/ui'
-import {Event, EventList, EventListItem} from '@wepublish/event/website'
+import {Event, EventSEO, EventList, EventListItem} from '@wepublish/event/website'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {memo, PropsWithChildren} from 'react'
 import {IconContext} from 'react-icons'
@@ -56,6 +56,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         Page={Page}
         Article={Article}
         Event={Event}
+        EventSEO={EventSEO}
         EventList={EventList}
         EventListItem={EventListItem}
         elements={{

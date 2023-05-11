@@ -18,6 +18,7 @@ import {PartialDeep} from 'type-fest'
 import {Header} from '../src/components/header'
 import {Link} from '../src/components/link'
 import {ReactComponent as Logo} from '../src/logo.svg'
+import Script from 'next/script'
 
 setDefaultOptions({
   locale: de
@@ -61,7 +62,7 @@ const MainSpacer = styled('div')`
 function CustomApp({Component, pageProps}: AppProps) {
   return (
     <WebsiteProvider>
-      <WebsiteBuilderProvider Head={Head} elements={{Link}}>
+      <WebsiteBuilderProvider Head={Head} Script={Script} elements={{Link}}>
         <ThemeProvider theme={gruppettoTheme}>
           <CssBaseline />
 

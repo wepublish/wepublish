@@ -2,8 +2,11 @@
 
 exports[`EventListItem should render Default 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1sjbxom"
+  <a
+    class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+    css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+    href="https://example.com"
+    role="article"
   >
     <figure
       class="css-umync8"
@@ -43,12 +46,12 @@ exports[`EventListItem should render Default 1`] = `
             />
           </svg>
           <span>
-            24.02.2023 10:00
+            24.02.2023 09:00
           </span>
         </div>
         – 
         <span>
-          25.02.2023 08:30
+          25.02.2023 07:30
         </span>
       </div>
       <h1
@@ -404,14 +407,17 @@ exports[`EventListItem should render Default 1`] = `
         </div>
       </div>
     </div>
-  </article>
+  </a>
 </DocumentFragment>
 `;
 
 exports[`EventListItem should render WithClassName 1`] = `
 <DocumentFragment>
-  <article
-    class="extra-classname css-1sjbxom"
+  <a
+    class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways extra-classname css-jj9aj1-MuiTypography-root-MuiLink-root"
+    css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+    href="https://example.com"
+    role="article"
   >
     <figure
       class="css-umync8"
@@ -451,12 +457,12 @@ exports[`EventListItem should render WithClassName 1`] = `
             />
           </svg>
           <span>
-            24.02.2023 10:00
+            24.02.2023 09:00
           </span>
         </div>
         – 
         <span>
-          25.02.2023 08:30
+          25.02.2023 07:30
         </span>
       </div>
       <h1
@@ -812,14 +818,17 @@ exports[`EventListItem should render WithClassName 1`] = `
         </div>
       </div>
     </div>
-  </article>
+  </a>
 </DocumentFragment>
 `;
 
 exports[`EventListItem should render WithEmotion 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1sjbxom"
+  <a
+    class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+    css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+    href="https://example.com"
+    role="article"
   >
     <figure
       class="css-umync8"
@@ -859,12 +868,12 @@ exports[`EventListItem should render WithEmotion 1`] = `
             />
           </svg>
           <span>
-            24.02.2023 10:00
+            24.02.2023 09:00
           </span>
         </div>
         – 
         <span>
-          25.02.2023 08:30
+          25.02.2023 07:30
         </span>
       </div>
       <h1
@@ -1220,14 +1229,17 @@ exports[`EventListItem should render WithEmotion 1`] = `
         </div>
       </div>
     </div>
-  </article>
+  </a>
 </DocumentFragment>
 `;
 
 exports[`EventListItem should render WithoutImage 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1sjbxom"
+  <a
+    class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+    css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+    href="https://example.com"
+    role="article"
   >
     <figure
       class="css-umync8"
@@ -1259,12 +1271,12 @@ exports[`EventListItem should render WithoutImage 1`] = `
             />
           </svg>
           <span>
-            24.02.2023 10:00
+            24.02.2023 09:00
           </span>
         </div>
         – 
         <span>
-          25.02.2023 08:30
+          25.02.2023 07:30
         </span>
       </div>
       <h1
@@ -1620,6 +1632,6 @@ exports[`EventListItem should render WithoutImage 1`] = `
         </div>
       </div>
     </div>
-  </article>
+  </a>
 </DocumentFragment>
 `;

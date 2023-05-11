@@ -185,7 +185,13 @@ export const Default = {
   args: {
     data: {
       events: {
-        nodes: [event, event, event, event, event],
+        nodes: [
+          event,
+          {...event, id: '2'},
+          {...event, id: '3'},
+          {...event, id: '4'},
+          {...event, id: '5'}
+        ],
         pageInfo: {
           hasNextPage: true,
           hasPreviousPage: false
@@ -223,7 +229,13 @@ export const WithClassName = {
   args: {
     data: {
       events: {
-        nodes: [event, event, event, event, event],
+        nodes: [
+          event,
+          {...event, id: '2'},
+          {...event, id: '3'},
+          {...event, id: '4'},
+          {...event, id: '5'}
+        ],
         pageInfo: {
           hasNextPage: true,
           hasPreviousPage: false
@@ -240,7 +252,13 @@ export const WithEmotion = {
   args: {
     data: {
       events: {
-        nodes: [event, event, event, event, event],
+        nodes: [
+          event,
+          {...event, id: '2'},
+          {...event, id: '3'},
+          {...event, id: '4'},
+          {...event, id: '5'}
+        ],
         pageInfo: {
           hasNextPage: true,
           hasPreviousPage: false
@@ -261,10 +279,10 @@ export const WithoutImage = {
       events: {
         nodes: [
           {...event, image: null},
-          event,
-          {...event, image: null},
-          event,
-          {...event, image: null}
+          {...event, id: '2'},
+          {...event, id: '3', image: null},
+          {...event, id: '4'},
+          {...event, id: '5', image: null}
         ],
         pageInfo: {
           hasNextPage: true,
