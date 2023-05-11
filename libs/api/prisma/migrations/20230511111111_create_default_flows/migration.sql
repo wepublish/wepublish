@@ -13,6 +13,11 @@ BEGIN
     INSERT INTO "subscriptions.intervals" ("modifiedAt", "event", "daysAwayFromEnding", "subscriptionFlowId") VALUES (CURRENT_TIMESTAMP, 'DEACTIVATION_BY_USER', NULL, communication_flow_id);
     INSERT INTO "subscriptions.intervals" ("modifiedAt", "event", "daysAwayFromEnding", "subscriptionFlowId") VALUES (CURRENT_TIMESTAMP, 'REACTIVATION', NULL, communication_flow_id);
   END IF;
+
+  INSERT INTO user_communication_flows ("modifiedAt", "event") VALUES (CURRENT_TIMESTAMP, 'ACCOUNT_CREATION') ON CONFLICT ("event") DO NOTHING;
+  INSERT INTO user_communication_flows ("modifiedAt", "event") VALUES (CURRENT_TIMESTAMP, 'LOGIN_LINK') ON CONFLICT ("event") DO NOTHING;
+  INSERT INTO user_communication_flows ("modifiedAt", "event") VALUES (CURRENT_TIMESTAMP, 'PASSWORD_RESET') ON CONFLICT ("event") DO NOTHING;
+  INSERT INTO user_communication_flows ("modifiedAt", "event") VALUES (CURRENT_TIMESTAMP, 'TEST_MAIL') ON CONFLICT ("event") DO NOTHING;
 END;
 $$ LANGUAGE plpgsql;
 
