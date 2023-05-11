@@ -18,6 +18,8 @@ import {SubscriptionController} from '../subscription/subscription.controller'
 import {clearDatabase, clearFullDatabase} from '../../prisma-utils'
 import {matches} from 'lodash'
 import bodyParser from 'body-parser'
+import Mailgun from 'mailgun.js'
+import FormData from 'form-data'
 
 describe('MailController', () => {
   let controller: OldContextService
@@ -122,7 +124,13 @@ describe('MailController', () => {
           key: 'key'
         })
       )
-      .reply(500)
+      .replyWithFile(
+        200,
+        __dirname + '/__fixtures__/mailchimp-messages-send-success-response.json',
+        {
+          'Content-Type': 'application/json'
+        }
+      )
 
     const deeplyNestedObject = {
       root1: {
@@ -168,6 +176,7 @@ describe('MailController', () => {
         'Content-Type': 'application/json'
       })
 
+    const mailgunClient = new Mailgun(FormData).client({username: 'api', key: 'fake-key'})
     controller.context.mailContext.mailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
@@ -176,7 +185,8 @@ describe('MailController', () => {
       baseDomain: 'api.eu.mailgun.net',
       mailDomain: 'test.wepublish.com',
       apiKey: 'key',
-      incomingRequestHandler: bodyParser.json()
+      incomingRequestHandler: bodyParser.json(),
+      mailgunClient
     })
 
     const periodicJobRunDate = new Date()

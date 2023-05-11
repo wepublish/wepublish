@@ -1,7 +1,6 @@
 import {PrismaClient, Subscription, SubscriptionEvent, UserEvent} from '@prisma/client'
 import {
   BaseMailProvider,
-  MailProvider,
   MailProviderError,
   MailProviderTemplate
 } from './mailProvider'
@@ -24,7 +23,7 @@ export interface MailContextOptions {
 }
 
 export interface MailContext {
-  mailProvider: BaseMailProvider | null
+  mailProvider: BaseMailProvider
   prisma: PrismaClient
 
   defaultFromAddress: string
@@ -34,18 +33,18 @@ export interface MailContext {
 }
 
 export interface MailContextProps extends MailContextOptions {
-  readonly mailProvider?: BaseMailProvider
+  readonly mailProvider: BaseMailProvider
   readonly prisma: PrismaClient
 }
 
 export class MailContext implements MailContext {
-  mailProvider: BaseMailProvider | null
+  mailProvider: BaseMailProvider
 
   defaultFromAddress: string
   defaultReplyToAddress?: string
 
   constructor(props: MailContextProps) {
-    this.mailProvider = props.mailProvider ?? null
+    this.mailProvider = props.mailProvider
     this.prisma = props.prisma
 
     this.defaultFromAddress = props.defaultFromAddress
@@ -99,17 +98,8 @@ export class MailContext implements MailContext {
     return userFlowMail.mailTemplate.externalMailTemplateId
   }
 
-  getProvider(): MailProvider {
-    if (!this.mailProvider) {
-      throw new Error(
-        'MailProvider in MailContext must be defined! Did you forget to set a provider? See `runServer.ts:121` for information.'
-      )
-    }
-    return this.mailProvider
-  }
-
   async getTemplates(): Promise<MailProviderTemplate[] | MailProviderError> {
-    return this.getProvider().getTemplates()
+    return this.mailProvider.getTemplates()
   }
 
   async getUsedTemplateIdentifiers(): Promise<string[]> {

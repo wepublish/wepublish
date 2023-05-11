@@ -1,7 +1,6 @@
 import {MailLogState} from '@prisma/client'
 import crypto from 'crypto'
 import FormData from 'form-data'
-import Mailgun from 'mailgun.js'
 import Client from 'mailgun.js/client'
 
 import {
@@ -21,6 +20,7 @@ export interface MailgunMailProviderProps extends MailProviderProps {
   mailDomain: string
   webhookEndpointSecret: string
   fromAddress: string
+  mailgunClient: Client
 }
 
 interface VerifyWebhookSignatureProps {
@@ -63,7 +63,7 @@ export class MailgunMailProvider extends BaseMailProvider {
     this.baseDomain = props.baseDomain
     this.mailDomain = props.mailDomain
     this.webhookEndpointSecret = props.webhookEndpointSecret
-    this.mailgunClient = new Mailgun(FormData).client({username: 'api', key: props.apiKey})
+    this.mailgunClient = props.mailgunClient
   }
 
   verifyWebhookSignature(props: VerifyWebhookSignatureProps): boolean {
@@ -141,7 +141,7 @@ export class MailgunMailProvider extends BaseMailProvider {
     })
   }
 
-  async getTemplates(): Promise<MailProviderTemplate[] | MailProviderError> {
+  async getTemplates(): Promise<MailProviderTemplate[]> {
     try {
       const response = await this.mailgunClient.domains.domainTemplates.list(this.mailDomain)
       const templates: MailProviderTemplate[] = response.items.map(mailTemplateResponse => {
@@ -155,9 +155,9 @@ export class MailgunMailProvider extends BaseMailProvider {
       return templates
     } catch (e: unknown) {
       if (this.isMailgunApiError(e)) {
-        return new MailProviderError(e.details)
+        throw new MailProviderError(e.details)
       } else {
-        return new MailProviderError(String(e))
+        throw new MailProviderError(String(e))
       }
     }
   }

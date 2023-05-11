@@ -2,7 +2,6 @@ import { MailTemplate } from '@prisma/client'
 import {
   BaseMailProvider,
   MailLogStatus,
-  MailProviderError,
   MailProviderProps,
   MailProviderTemplate,
   SendMailProps,
@@ -48,7 +47,7 @@ export class SlackMailProvider extends BaseMailProvider {
     })
   }
 
-  async getTemplates(): Promise<MailProviderTemplate[] | MailProviderError> {
+  async getTemplates(): Promise<MailProviderTemplate[]> {
     return [
       {
         name: 'SlackEmptyTemplate',

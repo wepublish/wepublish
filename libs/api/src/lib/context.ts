@@ -189,7 +189,7 @@ export interface ContextOptions {
   readonly prisma: PrismaClient
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
-  readonly mailProvider?: BaseMailProvider
+  readonly mailProvider: BaseMailProvider
   readonly mailContextOptions: MailContextOptions
   readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]

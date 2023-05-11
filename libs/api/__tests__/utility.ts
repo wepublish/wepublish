@@ -17,6 +17,9 @@ import {
   DefaultSessionTTL
 } from '../src'
 import {createUserSession} from '../src/lib/graphql/session/session.mutation'
+import {
+  FakeMailProvider
+} from '@wepublish/api'
 
 export interface TestClient {
   testServerPublic: ApolloServer
@@ -80,6 +83,12 @@ export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
     }
   })
 
+  const mailProvider = new FakeMailProvider({
+    id: 'fakeMail',
+    name: 'Fake Mail',
+    fromAddress: 'fakeMail@wepublish.media'
+  })
+
   const mediaAdapter: KarmaMediaAdapter = {
     url: new URL('https://fakeurl.com'),
     token: 'fake',
@@ -116,6 +125,7 @@ export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
         websiteURL: 'https://fakeurl',
         prisma,
         mediaAdapter,
+        mailProvider,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
           defaultReplyToAddress: 'reply-to@fake.org'
@@ -136,6 +146,7 @@ export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
         websiteURL: 'https://fakeurl',
         prisma,
         mediaAdapter,
+        mailProvider,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
           defaultReplyToAddress: 'reply-to@fake.org'

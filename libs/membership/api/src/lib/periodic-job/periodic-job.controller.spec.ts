@@ -205,7 +205,13 @@ describe('PeriodicJobController', () => {
   it('create invoice', async () => {
     const mandrillNockScope = await nock('https://mandrillapp.com:443')
       .post('/api/1.0/messages/send-template', matches({template_name: 'default-INVOICE_CREATION'}))
-      .reply(500)
+      .replyWithFile(
+        200,
+        __dirname + '/__fixtures__/mailchimp-messages-send-success-response.json',
+        {
+          'Content-Type': 'application/json'
+        }
+      )
     const mail = 'dev-mail@test.wepublish.com'
     const renewalDate = add(new Date(), {days: 13})
     const invoice = await InvoiceFactory.create({
@@ -399,7 +405,13 @@ describe('PeriodicJobController', () => {
       })
     const mandrillNockScope = await nock('https://mandrillapp.com:443')
       .post('/api/1.0/messages/send-template', matches({template_name: 'default-RENEWAL_SUCCESS'}))
-      .reply(500)
+      .replyWithFile(
+        200,
+        __dirname + '/__fixtures__/mailchimp-messages-send-success-response.json',
+        {
+          'Content-Type': 'application/json'
+        }
+      )
     const mail = 'dev-mail@test.wepublish.com'
     const renewalDate = new Date()
     await generateInvoiceToCharge(renewalDate, mail, 'stripe')
@@ -449,7 +461,13 @@ describe('PeriodicJobController', () => {
 
     const mandrillNockScope = await nock('https://mandrillapp.com:443')
       .post('/api/1.0/messages/send-template')
-      .reply(500)
+      .replyWithFile(
+        200,
+        __dirname + '/__fixtures__/mailchimp-messages-send-success-response.json',
+        {
+          'Content-Type': 'application/json'
+        }
+      )
     const stripGetCustomers = await nock('https://api.stripe.com')
       .get('/v1/customers/testId')
       .replyWithFile(200, __dirname + '/__fixtures__/stripGetCustomers.json', {
@@ -498,14 +516,26 @@ describe('PeriodicJobController', () => {
   it('disable subscription', async () => {
     const mandrillNockScopeFailedCharging = await nock('https://mandrillapp.com:443')
       .post('/api/1.0/messages/send-template', matches({template_name: 'default-RENEWAL_FAILED'}))
-      .reply(500)
+      .replyWithFile(
+        200,
+        __dirname + '/__fixtures__/mailchimp-messages-send-success-response.json',
+        {
+          'Content-Type': 'application/json'
+        }
+      )
 
     const mandrillNockScopeDeactivationUnpaid = await nock('https://mandrillapp.com:443')
       .post(
         '/api/1.0/messages/send-template',
         matches({template_name: 'default-DEACTIVATION_UNPAID'})
       )
-      .reply(500)
+      .replyWithFile(
+        200,
+        __dirname + '/__fixtures__/mailchimp-messages-send-success-response.json',
+        {
+          'Content-Type': 'application/json'
+        }
+      )
     const mail = 'dev-mail@test.wepublish.com'
     const renewalDate = sub(new Date(), {days: 1})
     const subscriptionValidUntil = sub(renewalDate, {days: 5})
@@ -585,7 +615,13 @@ describe('PeriodicJobController', () => {
   it('send custom email', async () => {
     const mandrillNockScopeCustomMessage = await nock('https://mandrillapp.com:443')
       .post('/api/1.0/messages/send-template', matches({template_name: 'default-CUSTOM1'}))
-      .reply(500)
+      .replyWithFile(
+        200,
+        __dirname + '/__fixtures__/mailchimp-messages-send-success-response.json',
+        {
+          'Content-Type': 'application/json'
+        }
+      )
 
     const mail = 'dev-mail@test.wepublish.com'
     const renewalDate = add(new Date(), {days: 15})
@@ -682,6 +718,15 @@ describe('PeriodicJobController', () => {
       tries: 1
     })
 
+    await nock('https://mandrillapp.com:443')
+      .post('/api/1.0/messages/send-template', matches({template_name: 'default-INVOICE_CREATION'}))
+      .replyWithFile(
+        200,
+        __dirname + '/__fixtures__/mailchimp-messages-send-success-response.json',
+        {
+          'Content-Type': 'application/json'
+        }
+      )
     const mail = 'dev-mail@test.wepublish.com'
     const renewalDate = add(new Date(), {days: 13})
     const invoice = await InvoiceFactory.create({

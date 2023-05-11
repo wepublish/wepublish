@@ -21,6 +21,8 @@ import {URL} from 'url'
 import {SlackMailProvider} from './slack-mail-provider'
 import {ExampleURLAdapter} from './url-adapter'
 import {Application} from 'express'
+import Mailgun from 'mailgun.js'
+import FormData from 'form-data'
 
 export async function runServer(app?: Application | undefined) {
   if (!process.env.DATABASE_URL) throw new Error('No DATABASE_URL defined in environment.')
@@ -75,6 +77,7 @@ export async function runServer(app?: Application | undefined) {
     process.env.MAILGUN_MAIL_DOMAIN &&
     process.env.MAILGUN_WEBHOOK_SECRET
   ) {
+    const mailgunClient = new Mailgun(FormData).client({username: 'api', key: process.env.MAILGUN_API_KEY})
     mailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
@@ -83,7 +86,8 @@ export async function runServer(app?: Application | undefined) {
       baseDomain: process.env.MAILGUN_BASE_DOMAIN,
       mailDomain: process.env.MAILGUN_MAIL_DOMAIN,
       apiKey: process.env.MAILGUN_API_KEY,
-      incomingRequestHandler: bodyParser.json()
+      incomingRequestHandler: bodyParser.json(),
+      mailgunClient
     })
   }
   // left here intentionally for testing
@@ -106,6 +110,10 @@ export async function runServer(app?: Application | undefined) {
       fromAddress: 'fakeMail@wepublish.media',
       webhookURL: process.env.SLACK_DEV_MAIL_WEBHOOK_URL
     })
+  }
+
+  if(!mailProvider) {
+    throw new Error("A MailProvider must be configured.")
   }
 
   const paymentProviders = []

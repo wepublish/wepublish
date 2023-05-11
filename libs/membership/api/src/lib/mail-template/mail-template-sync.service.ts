@@ -23,7 +23,7 @@ export class MailTemplateSyncService {
   async synchronizeTemplates(): Promise<void> {
     const localTemplates = await this.prismaService.mailTemplate.findMany()
 
-    const mailProvider = await this.oldContextService.context.mailContext.getProvider()
+    const mailProvider = await this.oldContextService.context.mailContext.mailProvider
     const remoteTemplates = (await mailProvider.getTemplates()) as MailProviderTemplate[]
 
     const updatedRemoteTemplates = this.findUpdatedRemoteTemplates(localTemplates, remoteTemplates)

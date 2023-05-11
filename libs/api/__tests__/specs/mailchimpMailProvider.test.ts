@@ -1,5 +1,5 @@
 import nock from 'nock'
-import {MailchimpMailProvider, MailProviderError, MailProviderTemplate} from '../../src'
+import {MailchimpMailProvider, MailProviderTemplate} from '../../src'
 
 let mailChimpMailProvider: MailchimpMailProvider
 
@@ -122,10 +122,9 @@ describe('Mailchimp Mail Provider', () => {
       name: 'Mailchimp'
     })
 
-    const response = await mailChimpMailProvider.getTemplates()
-    expect(response).toBeInstanceOf(MailProviderError)
-    const error = response as MailProviderError
-    expect(error.message).toEqual('Invalid API key')
+    await expect(mailChimpMailProvider.getTemplates())
+    .rejects
+    .toThrow('Invalid API key')
     expect(listTemplatesInvalidKey.isDone()).toEqual(true)
   })
 })

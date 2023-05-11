@@ -1,5 +1,7 @@
 import nock from 'nock'
-import {MailgunMailProvider, MailProviderError, MailProviderTemplate} from '../../src'
+import {MailgunMailProvider, MailProviderTemplate} from '../../src'
+import Mailgun from 'mailgun.js'
+import FormData from 'form-data'
 
 let mockSubmit = jest.fn()
 const mockAppend = jest.fn()
@@ -12,6 +14,8 @@ jest.mock('form-data', () => {
     }
   })
 })
+
+jest.mock('mailgun.js')
 
 let mailgunMailProvider: MailgunMailProvider
 
@@ -42,6 +46,7 @@ describe('Mailgun Mail Provider', () => {
   })
 
   test('can be created', () => {
+    const mailgunClient = new Mailgun(FormData).client({username: 'api', key: 'test-api-key'})
     mailgunMailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
@@ -49,7 +54,8 @@ describe('Mailgun Mail Provider', () => {
       baseDomain: 'https://mailgun.com',
       mailDomain: 'https://mailgun.com',
       webhookEndpointSecret: 'fakeSecret',
-      fromAddress: 'dev@wepublish.ch'
+      fromAddress: 'dev@wepublish.ch',
+      mailgunClient
     })
     expect(mailgunMailProvider).toBeDefined()
   })
@@ -79,6 +85,7 @@ describe('Mailgun Mail Provider', () => {
   })
 
   test('loads templates', async () => {
+    const mailgunClient = new Mailgun(FormData).client({username: 'api', key: 'test-api-key'})
     mailgunMailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
@@ -86,7 +93,8 @@ describe('Mailgun Mail Provider', () => {
       baseDomain: 'https://mailgun.com',
       mailDomain: 'sandbox8a2185cfb29c48d4941d51c261fc3e03.mailgun.org',
       webhookEndpointSecret: 'fakeSecret',
-      fromAddress: 'dev@wepublish.ch'
+      fromAddress: 'dev@wepublish.ch',
+      mailgunClient
     })
 
     const response = await mailgunMailProvider.getTemplates()
@@ -99,6 +107,7 @@ describe('Mailgun Mail Provider', () => {
   })
 
   test('returns error when using invalid key', async () => {
+    const mailgunClient = new Mailgun(FormData).client({username: 'api', key: 'test-api-key'})
     mailgunMailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
@@ -106,13 +115,13 @@ describe('Mailgun Mail Provider', () => {
       baseDomain: 'https://mailgun.com',
       mailDomain: 'sandbox8a2185cfb29c48d4941d51c261fc3e03.mailgun.org',
       webhookEndpointSecret: 'fakeSecret',
-      fromAddress: 'dev@wepublish.ch'
+      fromAddress: 'dev@wepublish.ch',
+      mailgunClient
     })
 
-    const response = await mailgunMailProvider.getTemplates()
-    expect(response).toBeInstanceOf(MailProviderError)
-    const error = response as MailProviderError
-    expect(error.message).toEqual('Invalid private key')
+    await expect(mailgunMailProvider.getTemplates())
+    .rejects
+    .toThrow('Invalid private key')
     expect(listTemplatesInvalidKey.isDone()).toEqual(true)
   })
 })

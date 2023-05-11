@@ -65,9 +65,9 @@ export interface MailProvider {
 
   webhookForSendMail(props: WebhookForSendMailProps): Promise<MailLogStatus[]>
 
-  sendMail(props: SendMailProps): Promise<void | MailProviderError>
+  sendMail(props: SendMailProps): Promise<void>
 
-  getTemplates(): Promise<MailProviderTemplate[] | MailProviderError>
+  getTemplates(): Promise<MailProviderTemplate[]>
 
   getTemplateUrl(template: WithExternalId): string
 }
@@ -95,9 +95,9 @@ export abstract class BaseMailProvider implements MailProvider {
 
   abstract webhookForSendMail(props: WebhookForSendMailProps): Promise<MailLogStatus[]>
 
-  abstract sendMail(props: SendMailProps): Promise<void | MailProviderError>
+  abstract sendMail(props: SendMailProps): Promise<void>
 
-  abstract getTemplates(): Promise<MailProviderTemplate[] | MailProviderError>
+  abstract getTemplates(): Promise<MailProviderTemplate[]>
 
   abstract getTemplateUrl(template: WithExternalId): string
 }
