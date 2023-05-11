@@ -14,18 +14,12 @@ import {
 } from 'apollo-server-core'
 import {graphqlUploadExpress} from 'graphql-upload'
 import {Context} from './context'
-import {SubscriptionEvent} from '@prisma/client'
+import {serverLogger, logger} from '@wepublish/utils'
 
 declare global {
   // Workaround not working with let or const https://stackoverflow.com/questions/68481686/type-typeof-globalthis-has-no-index-signature
   // eslint-disable-next-line no-var
   var oldContext: Context
-}
-
-let serverLogger: pino.Logger
-
-export function logger(moduleName: string): pino.Logger {
-  return (serverLogger || pino({name: 'we.publish'})).child({module: moduleName})
 }
 
 export interface WepublishServerOpts extends ContextOptions {
@@ -42,7 +36,7 @@ export class WepublishServer {
 
     this.setupPrismaMiddlewares()
 
-    serverLogger = this.opts.logger ? this.opts.logger : pino({name: 'we.publish'})
+    serverLogger.logger = this.opts.logger ? this.opts.logger : pino({name: 'we.publish'})
 
     const adminServer = new ApolloServer({
       schema: GraphQLWepublishSchema,
@@ -84,7 +78,7 @@ export class WepublishServer {
 
     app.use(
       pinoHttp({
-        logger: serverLogger,
+        logger: serverLogger.logger,
         useLevel: 'debug'
       })
     )

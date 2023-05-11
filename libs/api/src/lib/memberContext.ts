@@ -22,7 +22,7 @@ import {SubscriptionWithRelations} from './db/subscription'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
 import {MailContext} from './mails/mailContext'
 import {PaymentProvider} from './payments/paymentProvider'
-import {logger} from './server'
+import {logger} from '@wepublish/utils'
 import {ONE_DAY_IN_MILLISECONDS, ONE_MONTH_IN_MILLISECONDS} from './utility'
 
 export interface HandleSubscriptionChangeProps {
