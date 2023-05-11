@@ -1,5 +1,9 @@
 import {PrismaClient, UserEvent} from '@prisma/client'
-import {BaseMailProvider, MailProviderError, MailProviderTemplate} from './mailProvider'
+import {BaseMailProvider} from './mail-provider/base-mail-provider'
+import {
+  MailProviderError,
+  MailProviderTemplate
+} from './mail-provider/mail-provider.interface'
 
 import {PrismaService} from '@wepublish/nest-modules'
 import {Injectable} from '@nestjs/common'

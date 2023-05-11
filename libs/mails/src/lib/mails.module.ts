@@ -1,7 +1,7 @@
 import {DynamicModule, Module} from '@nestjs/common'
 import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
-import {MailContext} from './mailContext'
-import {BaseMailProvider} from './mailProvider'
+import {MailContext} from './mail-context'
+import {BaseMailProvider} from './mail-provider/base-mail-provider'
 
 type MailsModuleProps = {
   defaultFromAddress: string

@@ -5,15 +5,14 @@ import {AxiosError} from 'axios'
 
 import {MailLogState} from '@prisma/client'
 import {
-  BaseMailProvider,
   MailLogStatus,
   MailProviderError,
-  MailProviderProps,
   MailProviderTemplate,
   SendMailProps,
   WebhookForSendMailProps,
   WithExternalId
-} from './mailProvider'
+} from './mail-provider.interface'
+import {BaseMailProvider, MailProviderProps} from './base-mail-provider'
 
 export interface MailchimpMailProviderProps extends MailProviderProps {
   readonly apiKey: string
