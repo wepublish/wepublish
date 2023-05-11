@@ -4,6 +4,7 @@ import {initialize, defineMailTemplateFactory, defineUserFactory} from '@wepubli
 import {initOldContextForTest} from '../../oldcontext-utils'
 import {Test, TestingModule} from '@nestjs/testing'
 import {forwardRef} from '@nestjs/common'
+import {MailContext} from '@wepublish/mails'
 import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
 import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
 import {clearDatabase, clearFullDatabase} from '../../prisma-utils'
