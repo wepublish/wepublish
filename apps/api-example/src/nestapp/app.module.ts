@@ -3,13 +3,7 @@ import {Module} from '@nestjs/common'
 import {GraphQLModule} from '@nestjs/graphql'
 import {DashboardModule, MembershipModule} from '@wepublish/membership/api'
 import {ApiModule} from '@wepublish/nest-modules'
-import {
-  SettingModule,
-  AuthenticationModule,
-  PermissionModule,
-  OldContextService,
-  PrismaService
-} from '@wepublish/api'
+import {SettingModule, AuthenticationModule, PermissionModule} from '@wepublish/api'
 import {ScheduleModule} from '@nestjs/schedule'
 
 @Module({
@@ -33,6 +27,6 @@ import {ScheduleModule} from '@nestjs/schedule'
     ScheduleModule.forRoot()
   ],
   controllers: [],
-  providers: [PrismaService, OldContextService]
+  providers: []
 })
 export class AppModule {}

@@ -10,7 +10,7 @@ import {
 } from './subscription-flow.model'
 import {SubscriptionFlowController} from './subscription-flow.controller'
 import {SubscriptionFlow} from '@prisma/client'
-import {PrismaService} from '@wepublish/api'
+import {PrismaService} from '@wepublish/nest-modules'
 import {SubscriptionFlowHelper, SubscriptionFlowWithPaymentMethod} from './subscription-flow.helper'
 
 type WithNumberOfSubscriptions<T> = T & {

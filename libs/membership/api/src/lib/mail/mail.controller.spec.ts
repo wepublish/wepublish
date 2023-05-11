@@ -5,14 +5,13 @@ import {
   defineMailTemplateFactory,
   defineUserFactory,
   MailgunMailProvider,
-  OldContextService,
   PrismaService
 } from '@wepublish/api'
 import {initOldContextForTest} from '../../oldcontext-utils'
 import {MailController, mailLogType} from './mail.controller'
 import {Test, TestingModule} from '@nestjs/testing'
 import {forwardRef} from '@nestjs/common'
-import {PrismaModule} from '@wepublish/nest-modules'
+import {OldContextService, PrismaModule} from '@wepublish/nest-modules'
 import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
 import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
 import {SubscriptionController} from '../subscription/subscription.controller'

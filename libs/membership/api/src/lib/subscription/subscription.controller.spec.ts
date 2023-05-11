@@ -7,8 +7,6 @@ import {
   SubscriptionEvent
 } from '@prisma/client'
 import {
-  OldContextService,
-  PrismaService,
   initialize,
   defineMemberPlanFactory,
   defineSubscriptionFlowFactory,
@@ -24,7 +22,7 @@ import {
 import {initOldContextForTest} from '../../oldcontext-utils'
 import {Test, TestingModule} from '@nestjs/testing'
 import {forwardRef} from '@nestjs/common'
-import {PrismaModule} from '@wepublish/nest-modules'
+import {OldContextService, PrismaModule, PrismaService} from '@wepublish/nest-modules'
 import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
 import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
 import {SubscriptionController} from '../subscription/subscription.controller'
