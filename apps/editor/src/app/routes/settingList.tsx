@@ -114,14 +114,6 @@ function SettingList() {
       value: 0,
       name: SettingName.PeeringTimeoutMs
     },
-    [SettingName.InvoiceReminderFreq]: {
-      value: 0,
-      name: SettingName.InvoiceReminderFreq
-    },
-    [SettingName.InvoiceReminderMaxTries]: {
-      value: 0,
-      name: SettingName.InvoiceReminderMaxTries
-    },
     [SettingName.MakeActiveSubscribersApiPublic]: {
       value: false,
       name: SettingName.MakeActiveSubscribersApiPublic
@@ -212,26 +204,6 @@ function SettingList() {
         t('errorMessages.invalidRange', {
           min: settings[SettingName.PeeringTimeoutMs].settingRestriction?.minValue ?? 1000,
           max: settings[SettingName.PeeringTimeoutMs].settingRestriction?.maxValue ?? 10000
-        })
-      ),
-    [SettingName.InvoiceReminderMaxTries]: NumberType()
-      .isRequired(t('errorMessages.required'))
-      .range(
-        settings[SettingName.InvoiceReminderMaxTries].settingRestriction?.minValue ?? 0,
-        settings[SettingName.InvoiceReminderMaxTries].settingRestriction?.maxValue ?? 10,
-        t('errorMessages.invalidRange', {
-          min: settings[SettingName.InvoiceReminderMaxTries].settingRestriction?.minValue ?? 0,
-          max: settings[SettingName.InvoiceReminderMaxTries].settingRestriction?.maxValue ?? 10
-        })
-      ),
-    [SettingName.InvoiceReminderFreq]: NumberType()
-      .isRequired(t('errorMessages.required'))
-      .range(
-        settings[SettingName.InvoiceReminderFreq].settingRestriction?.minValue ?? 0,
-        settings[SettingName.InvoiceReminderFreq].settingRestriction?.maxValue ?? 30,
-        t('errorMessages.invalidRange', {
-          min: settings[SettingName.InvoiceReminderFreq].settingRestriction?.minValue ?? 0,
-          max: settings[SettingName.InvoiceReminderFreq].settingRestriction?.maxValue ?? 30
         })
       )
   })
@@ -526,36 +498,6 @@ function SettingList() {
                           }}
                         />
                         <InputGroupAddon>{t('settingList.ms')}</InputGroupAddon>
-                      </InputGroup>
-                    </Form.Group>
-                  </Panel>
-                </Col>
-
-                {/* payment */}
-                <Col xs={24}>
-                  <Panel
-                    bordered
-                    header={
-                      <>
-                        {t('settingList.payment')}
-                        <SettingInfo text={t('settingList.warnings.invoiceReminders')} />
-                      </>
-                    }>
-                    <Form.Group controlId={SettingName.InvoiceReminderFreq}>
-                      <Form.ControlLabel>{t('settingList.invoiceReminders')}</Form.ControlLabel>
-                      <InputGroup>
-                        <Form.Control
-                          name={SettingName.InvoiceReminderFreq}
-                          accepter={InputNumber}
-                          value={settings[SettingName.InvoiceReminderFreq].value}
-                          onChange={(value: string) =>
-                            setSetting({
-                              ...settings[SettingName.InvoiceReminderFreq],
-                              value: +value
-                            })
-                          }
-                        />
-                        <InputGroupAddon>{t('settingList.days')}</InputGroupAddon>
                       </InputGroup>
                     </Form.Group>
                   </Panel>
