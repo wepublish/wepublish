@@ -15,9 +15,10 @@ import {
 } from '@prisma/client'
 import {PeriodicJobRunObject} from './periodic-job.type'
 import {Injectable, Logger} from '@nestjs/common'
-import {MailController, mailLogType} from '../mail/mail.controller'
+import {MailController, mailLogType} from '@wepublish/mails'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {SubscriptionController} from '../subscription/subscription.controller'
+
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
 
 /**
@@ -30,6 +31,7 @@ export class PeriodicJobController {
   private runningJob: PeriodicJob | undefined
   private readonly logger = new Logger('PeriodicJobController')
   private randomNumberRangeForConcurrency = FIVE_MINUTES_IN_MS
+
   constructor(
     private readonly prismaService: PrismaService,
     private readonly oldContextService: OldContextService,
@@ -452,7 +454,7 @@ export class PeriodicJobController {
     periodicJobRunDate: Date
   ) {
     if (action.externalMailTemplate && user) {
-      await new MailController(this.prismaService, this.oldContextService, {
+      await new MailController(this.prismaService, this.oldContextService.context.mailContext, {
         daysAwayFromEnding: action.daysAwayFromEnding,
         externalMailTemplateId: action.externalMailTemplate,
         recipient: user,

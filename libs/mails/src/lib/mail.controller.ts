@@ -1,6 +1,8 @@
-import {OldContextService, PrismaService} from '@wepublish/nest-modules'
 import {Injectable, Logger} from '@nestjs/common'
 import {MailLogState, User} from '@prisma/client'
+import {MailContext} from './mailContext'
+import {generateJWT} from '@wepublish/utils'
+import {PrismaService} from '@wepublish/nest-modules'
 
 const ONE_WEEK_IN_MINUTES = 7 * 24 * 60 * 60
 
@@ -22,9 +24,10 @@ export type MailControllerConfig = {
 @Injectable()
 export class MailController {
   private readonly logger = new Logger('MailController')
+
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly oldContextService: OldContextService,
+    private readonly mailContext: MailContext,
     private readonly config: MailControllerConfig
   ) {}
 
@@ -64,7 +67,9 @@ export class MailController {
     return {
       user: this.config.recipient,
       optional: this.config.optionalData,
-      jwt: this.oldContextService.context.generateJWT({
+      jwt: generateJWT({
+        issuer: 'mailer',
+        audience: 'audience',
         id: this.generateMailIdentifier(),
         expiresInMinutes: ONE_WEEK_IN_MINUTES
       })
@@ -85,7 +90,7 @@ export class MailController {
       return
     }
 
-    await this.oldContextService.context.mailContext.sendRemoteTemplateDirect({
+    await this.mailContext.sendRemoteTemplateDirect({
       mailLogID: this.generateMailIdentifier(),
       remoteTemplate: this.config.externalMailTemplateId,
       recipient: this.config.recipient.email,
@@ -100,7 +105,7 @@ export class MailController {
         },
         state: MailLogState.submitted,
         sentDate: new Date(),
-        mailProviderID: oldContext.mailContext.mailProvider!.id || '',
+        mailProviderID: this.mailContext.mailProvider!.id || '',
         mailIdentifier: this.generateMailIdentifier(),
         mailTemplate: {
           connect: {

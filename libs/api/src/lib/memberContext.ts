@@ -13,7 +13,7 @@ import {
   SubscriptionEvent,
   User
 } from '@prisma/client'
-import {mailLogType} from '@wepublish/membership/mail'
+import {mailLogType} from '@wepublish/mails'
 import {unselectPassword} from '@wepublish/user/api'
 import {DataLoaderContext} from './context'
 import {InvoiceWithItems} from './db/invoice'
@@ -24,6 +24,7 @@ import {MailContext} from '@wepublish/mails'
 import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from '@wepublish/utils'
 import {ONE_DAY_IN_MILLISECONDS, ONE_MONTH_IN_MILLISECONDS} from './utility'
+import {SubscriptionEventDictionary} from '@wepublish/membership/api'
 
 export interface HandleSubscriptionChangeProps {
   subscription: SubscriptionWithRelations
@@ -52,6 +53,7 @@ export interface MemberContext {
   paymentProviders: PaymentProvider[]
 
   mailContext: MailContext
+
   getLoginUrlForUser(user: User): string
 
   handleSubscriptionChange(props: HandleSubscriptionChangeProps): Promise<Subscription>
@@ -68,6 +70,7 @@ export interface MemberContextProps {
   readonly loaders: DataLoaderContext
   readonly paymentProviders: PaymentProvider[]
   readonly mailContext: MailContext
+
   getLoginUrlForUser(user: User): string
 }
 
@@ -377,7 +380,7 @@ export class MemberContext implements MemberContext {
         logger('memberContext').error('No subscription found with ID %s', invoice.subscriptionID)
         return false
       }
-      const remoteTemplate = await this.mailContext.getSubsciptionTemplateIdentifier(
+      const remoteTemplate = await this.getSubscriptionTemplateIdentifier(
         subscription,
         SubscriptionEvent.RENEWAL_FAILED
       )
@@ -605,5 +608,15 @@ export class MemberContext implements MemberContext {
     }
 
     return subscription
+  }
+
+  async getSubscriptionTemplateIdentifier(
+    subscription: Subscription,
+    subscriptionEvent: SubscriptionEvent
+  ): Promise<string | undefined> {
+    return new SubscriptionEventDictionary(this.prisma).getSubsciptionTemplateIdentifier(
+      subscription,
+      subscriptionEvent
+    )
   }
 }

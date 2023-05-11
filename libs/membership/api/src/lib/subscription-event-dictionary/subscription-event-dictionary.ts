@@ -9,12 +9,14 @@ import {
   SubscriptionFlow,
   SubscriptionInterval
 } from '@prisma/client'
+import {Injectable} from '@nestjs/common'
 
 /**
  * This class loads all subscription flows and allows filtering by member plan,
  * payment method, periodicity, renewal and EITHER the daysAwayFromEnding or a
  * list of event names.
  */
+@Injectable()
 export class SubscriptionEventDictionary {
   private storeIsBuilt = false
   private allFlows: (SubscriptionFlow & {
@@ -200,12 +202,11 @@ export class SubscriptionEventDictionary {
    * @param subscriptionEvent The event to search for.
    * @returns The external template identifier OR undefined of none was found.
    */
-  public static async getSubsciptionTemplateIdentifier(
-    prisma: PrismaClient,
+  public async getSubsciptionTemplateIdentifier(
     subsciption: Subscription,
     subscriptionEvent: SubscriptionEvent
   ): Promise<string | undefined> {
-    let flow = await prisma.subscriptionFlow.findFirst({
+    let flow = await this.prismaService.subscriptionFlow.findFirst({
       where: {
         default: false,
         memberPlan: {
@@ -235,7 +236,7 @@ export class SubscriptionEventDictionary {
       }
     })
     if (!flow) {
-      flow = await prisma.subscriptionFlow.findFirst({
+      flow = await this.prismaService.subscriptionFlow.findFirst({
         where: {
           default: true
         },

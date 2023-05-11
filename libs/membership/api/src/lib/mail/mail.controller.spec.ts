@@ -1,22 +1,17 @@
 import nock from 'nock'
 import {MailTemplate, PrismaClient} from '@prisma/client'
 import {initialize, defineMailTemplateFactory, defineUserFactory} from '@wepublish/api'
-import {MailgunMailProvider} from '@wepublish/mails'
-
 import {initOldContextForTest} from '../../oldcontext-utils'
-import {MailController, mailLogType} from './mail.controller'
 import {Test, TestingModule} from '@nestjs/testing'
 import {forwardRef} from '@nestjs/common'
-import {OldContextService, PrismaModule, PrismaService} from '@wepublish/nest-modules'
+import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
 import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
-import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
-import {SubscriptionController} from '../subscription/subscription.controller'
 import {clearDatabase, clearFullDatabase} from '../../prisma-utils'
 import {matches} from 'lodash'
 import bodyParser from 'body-parser'
 
 describe('MailController', () => {
-  let controller: OldContextService
+  let mailContext: MailContext
   const prismaClient = new PrismaClient()
   initialize({prisma: prismaClient})
 
@@ -31,15 +26,9 @@ describe('MailController', () => {
     await initOldContextForTest(prismaClient)
     const module: TestingModule = await Test.createTestingModule({
       imports: [forwardRef(() => PrismaModule.forTest(prismaClient))],
-      providers: [
-        PrismaService,
-        SubscriptionFlowController,
-        PeriodicJobController,
-        OldContextService,
-        SubscriptionController
-      ]
+      providers: [PrismaService, SubscriptionFlowController, MailContext]
     }).compile()
-    controller = module.get<OldContextService>(OldContextService)
+    mailContext = module.get<MailContext>(MailContext)
     await clearDatabase(prismaClient, ['mail_templates', 'mail.log'])
     mailTemplate1 = await MailTemplateFactory.create({
       name: 'template1',
@@ -62,7 +51,7 @@ describe('MailController', () => {
   })
 
   it('is defined', () => {
-    expect(controller).toBeDefined()
+    expect(mailContext).toBeDefined()
   })
 
   it('send mail', async () => {
@@ -137,7 +126,7 @@ describe('MailController', () => {
       root3: 'ok'
     }
 
-    await new MailController(prismaClient as PrismaService, controller, {
+    await new MailController(prismaClient as PrismaService, mailContext, {
       daysAwayFromEnding: 1,
       externalMailTemplateId: mailTemplate1.externalMailTemplateId,
       recipient: user,
@@ -164,7 +153,7 @@ describe('MailController', () => {
         'Content-Type': 'application/json'
       })
 
-    controller.context.mailContext.mailProvider = new MailgunMailProvider({
+    mailContext.context.mailContext.mailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
       fromAddress: 'dev@wepublish.ch',
@@ -176,7 +165,7 @@ describe('MailController', () => {
     })
 
     const periodicJobRunDate = new Date()
-    await new MailController(prismaClient as PrismaService, controller, {
+    await new MailController(prismaClient as PrismaService, mailContext, {
       daysAwayFromEnding: 1,
       externalMailTemplateId: mailTemplate2.externalMailTemplateId,
       recipient: user,
@@ -201,7 +190,7 @@ describe('MailController', () => {
         'Content-Type': 'application/json'
       })
 
-    await new MailController(prismaClient as PrismaService, controller, {
+    await new MailController(prismaClient as PrismaService, mailContext, {
       daysAwayFromEnding: 1,
       externalMailTemplateId: mailTemplate2.externalMailTemplateId,
       recipient: user,
