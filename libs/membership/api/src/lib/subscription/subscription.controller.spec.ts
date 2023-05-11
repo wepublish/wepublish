@@ -17,7 +17,7 @@ import {
   defineSubscriptionFactory,
   defineInvoiceItemFactory,
   defineSubscriptionPeriodFactory
-} from '@wepublish/api'
+} from '../../__generated__/fabbrica'
 
 import {initOldContextForTest} from '../../oldcontext-utils'
 import {Test, TestingModule} from '@nestjs/testing'

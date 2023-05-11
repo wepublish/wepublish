@@ -5,6 +5,7 @@ generator client {
 
 generator fabbrica {
   provider = "prisma-fabbrica"
+  output = "../../membership/api/src/__generated__/fabbrica"
 }
 
 datasource db {

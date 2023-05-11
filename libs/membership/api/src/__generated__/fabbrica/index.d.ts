@@ -2431,15 +2431,16 @@ declare type UserFlowMailmailTemplateFactory = {
   build: () => PromiseLike<Prisma.MailTemplateCreateNestedOneWithoutUserFlowMailsInput['create']>
 }
 declare type UserFlowMailFactoryDefineInput = {
+  id?: string
   createdAt?: Date
   modifiedAt?: Date
   event?: UserEvent
-  mailTemplate:
+  mailTemplate?:
     | UserFlowMailmailTemplateFactory
     | Prisma.MailTemplateCreateNestedOneWithoutUserFlowMailsInput
 }
 declare type UserFlowMailFactoryDefineOptions = {
-  defaultData: Resolver<UserFlowMailFactoryDefineInput, BuildDataOptions>
+  defaultData?: Resolver<UserFlowMailFactoryDefineInput, BuildDataOptions>
 }
 export interface UserFlowMailFactoryInterface {
   readonly _factoryFor: 'UserFlowMail'
@@ -2468,13 +2469,14 @@ export interface UserFlowMailFactoryInterface {
  * @returns factory {@link UserFlowMailFactoryInterface}
  */
 export declare function defineUserFlowMailFactory(
-  options: UserFlowMailFactoryDefineOptions
+  options?: UserFlowMailFactoryDefineOptions
 ): UserFlowMailFactoryInterface
 declare type SubscriptionFlowmemberPlanFactory = {
   _factoryFor: 'MemberPlan'
   build: () => PromiseLike<Prisma.MemberPlanCreateNestedOneWithoutSubscriptionFlowsInput['create']>
 }
 declare type SubscriptionFlowFactoryDefineInput = {
+  id?: string
   createdAt?: Date
   modifiedAt?: Date
   default?: boolean
@@ -2531,6 +2533,7 @@ declare type SubscriptionIntervalsubscriptionFlowFactory = {
   build: () => PromiseLike<Prisma.SubscriptionFlowCreateNestedOneWithoutIntervalsInput['create']>
 }
 declare type SubscriptionIntervalFactoryDefineInput = {
+  id?: string
   createdAt?: Date
   modifiedAt?: Date
   event?: SubscriptionEvent
@@ -2577,6 +2580,7 @@ export declare function defineSubscriptionIntervalFactory(
   options: SubscriptionIntervalFactoryDefineOptions
 ): SubscriptionIntervalFactoryInterface
 declare type MailTemplateFactoryDefineInput = {
+  id?: string
   createdAt?: Date
   modifiedAt?: Date
   name?: string
@@ -2620,6 +2624,7 @@ export declare function defineMailTemplateFactory(
   options?: MailTemplateFactoryDefineOptions
 ): MailTemplateFactoryInterface
 declare type PeriodicJobFactoryDefineInput = {
+  id?: string
   createdAt?: Date
   modifiedAt?: Date
   date?: Date
