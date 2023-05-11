@@ -87,12 +87,12 @@ export class SubscriptionFlowController {
         intervals: {
           create: [
             {
-              daysAwayFromEnding: -7,
+              daysAwayFromEnding: -14,
               event: SubscriptionEvent.INVOICE_CREATION,
               mailTemplate: undefined
             },
             {
-              daysAwayFromEnding: 7,
+              daysAwayFromEnding: 5,
               event: SubscriptionEvent.DEACTIVATION_UNPAID,
               mailTemplate: undefined
             }
