@@ -1,4 +1,4 @@
-import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
+import {CommentItemType, Event, Peer, PrismaClient} from '@prisma/client'
 import bodyParser from 'body-parser'
 import path from 'path'
 import pinoMultiStream from 'pino-multi-stream'
@@ -21,6 +21,7 @@ import {Author} from './lib/db/author'
 import {PublicComment} from './lib/db/comment'
 import {KarmaMediaAdapter} from './lib/media/karmaMediaAdapter'
 import {PayrexxSubscriptionPaymentProvider} from './lib/payments/payrexxSubscriptionPaymentProvider'
+import {getEvent} from './lib/graphql/event/event.query'
 
 interface WepublishURLAdapterProps {
   websiteURL: string
@@ -51,6 +52,10 @@ class WepublishURLAdapter implements URLAdapter {
 
   getAuthorURL(author: Author): string {
     return `${this.websiteURL}/author/${author.slug || author.id}`
+  }
+
+  getEventURL(event: Event): string {
+    return `${this.websiteURL}/events/${event.id}`
   }
 
   getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment) {
