@@ -9,7 +9,6 @@ import {
   TeaserGridFlexBlock,
   TitleBlock
 } from '@wepublish/block-content/website'
-import {MemberPlans, PayInvoices, Subscribe} from '@wepublish/membership/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page} from '@wepublish/page/website'
 import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
@@ -54,9 +53,6 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
       <WebsiteBuilderProvider
         Navbar={Navbar}
         Footer={Footer}
-        MemberPlans={MemberPlans}
-        Subscribe={Subscribe}
-        PayInvoices={PayInvoices}
         Page={Page}
         Article={Article}
         Event={Event}

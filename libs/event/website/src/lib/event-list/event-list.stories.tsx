@@ -172,7 +172,8 @@ const event = {
   ],
   startsAt: '2023-02-24T09:00:00.000Z',
   endsAt: '2023-02-25T07:30:00.000Z',
-  __typename: 'Event'
+  __typename: 'Event',
+  url: 'https://example.com'
 } as EventQuery['event']
 
 export default {

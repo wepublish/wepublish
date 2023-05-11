@@ -170,6 +170,7 @@ const event = {
   ],
   startsAt: '2023-02-24T09:00:00.000Z',
   endsAt: '2023-02-25T07:30:00.000Z',
+  url: 'https://example.com',
   __typename: 'Event'
 } as EventQuery['event']
 

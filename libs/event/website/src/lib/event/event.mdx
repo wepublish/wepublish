@@ -1,0 +1,13 @@
+import {Meta, Story, Canvas} from '@storybook/blocks'
+import * as EventStories from './event.stories'
+
+<Meta title="MDX/Event" of={EventStories} />
+
+# Event
+
+With `MDX` we can include a story for `Event` right in the middle of our
+markdown documentation.
+
+<Canvas>
+  <Story of={EventStories.Default} />
+</Canvas>

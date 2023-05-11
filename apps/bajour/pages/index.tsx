@@ -4,10 +4,8 @@ import {BajourEventList} from '../src/components/bajour-event-list'
 export function Index() {
   return (
     <>
-      <PageContainer slug="" />
-
       <BajourEventList
-        variables={{filter: {upcomingOnly: true}, take: 100, sort: ApiV1.EventSort.StartsAt}}
+        variables={{filter: {upcomingOnly: false}, take: 100, sort: ApiV1.EventSort.StartsAt}}
       />
     </>
   )

@@ -24,16 +24,17 @@ export default {
       }
     },
     '@storybook/addon-a11y',
-    '@storybook/addon-docs'
+    '@storybook/addon-docs',
+    '@storybook/addon-styling'
   ],
-  // babel: (config, options) => {
-  //   console.log(config)
+  babel: (config, options) => {
+    config.overrides?.push({
+      presets: [['@babel/preset-react', {runtime: 'automatic', importSource: '@emotion/react'}]],
+      test: '*'
+    })
 
-  //   return {
-  //     ...config,
-  //     presets: [...(config.presets ?? []), '@emotion/babel-preset-css-prop']
-  //   }
-  // },
+    return config
+  },
   // uncomment the property below if you want to apply some webpack config globally
   // webpackFinal: async (config, { configType }) => {
   //   // Make whatever fine-grained changes you need that should apply to all storybook configs
@@ -46,10 +47,6 @@ export default {
     options: {}
   },
   docs: {
-    autodocs: true
-  },
-  features: {
-    storyStoreV7: false, // 👈 Opt out of on-demand story loading
-    emotionAlias: false
+    autodocs: false
   }
 } as Partial<StorybookConfig>
