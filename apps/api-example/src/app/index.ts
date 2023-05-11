@@ -2,7 +2,6 @@ import {PrismaClient} from '@prisma/client'
 import {
   AlgebraicCaptchaChallenge,
   JobType,
-  KarmaMediaAdapter,
   MailchimpMailProvider,
   MailgunMailProvider,
   MediaAdapter,
