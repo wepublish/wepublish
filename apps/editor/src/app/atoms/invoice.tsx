@@ -3,16 +3,12 @@ import {
   FullUserFragment,
   InvoiceFragment,
   InvoiceItem,
-  UpdateInvoiceDocument,
-  UpdateInvoiceMutation,
-  UpdateInvoiceMutationVariables,
-  useUpdateInvoiceMutation
+  useMarkInvoiceAsPaidMutation
 } from '@wepublish/editor/api'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdDone, MdMail} from 'react-icons/md'
 import {Button as RButton, FlexboxGrid, Message, Modal, Panel, toaster} from 'rsuite'
-import * as Apollo from '@apollo/client'
 
 const Button = styled(RButton)`
   margin-top: 20px;
@@ -48,7 +44,7 @@ export interface InvoiceProps {
 export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: InvoiceProps) {
   // variable definitions
   const [modalOpen, setModalOpen] = useState<boolean>(false)
-  const [updateInvoice] = useUpdateInvoiceMutation()
+  const [markInvoiceAsPaid] = useMarkInvoiceAsPaidMutation()
   const {t} = useTranslation()
 
   /**
@@ -67,17 +63,10 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
 
     // talk with the private api
     const items = prepareInvoiceItemsForApi(invoice.items)
-    await updateInvoice({
+
+    await markInvoiceAsPaid({
       variables: {
-        updateInvoiceId: invoice.id,
-        input: {
-          items: items.map(({total, ...item}) => item),
-          mail: invoice.mail,
-          paidAt: new Date().toISOString(),
-          description: invoice.description,
-          subscriptionID: subscriptionId,
-          manuallySetAsPaidByUserId: myId
-        }
+        id: invoice.id
       }
     })
     onInvoicePaid()
