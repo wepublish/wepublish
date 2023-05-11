@@ -184,6 +184,7 @@
     "@nestjs/apollo": "^10.1.7",
     "@nestjs/cache-manager": "^1.0.0",
     "@nestjs/common": "^9.0.0",
+    "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
     "@nestjs/graphql": "^10.1.7",
     "@nestjs/passport": "^9.0.1",

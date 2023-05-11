@@ -9,8 +9,13 @@ import {
   AuthenticationModule,
   PermissionModule,
   ConsentModule,
-  EventsImportModule
+  EventsImportModule,
+  MediaAdapterModule,
+  MediaAdapterService,
+  KarmaMediaAdapter
 } from '@wepublish/api'
+import {ConfigModule, ConfigService} from '@nestjs/config'
+import {URL} from 'url'
 
 @Module({
   imports: [
@@ -31,9 +36,24 @@ import {
     PermissionModule,
     ConsentModule,
     SettingModule,
-    EventsImportModule
+    EventsImportModule,
+    MediaAdapterModule,
+    ConfigModule.forRoot()
   ],
-  controllers: [],
-  providers: []
+  providers: [
+    {
+      provide: MediaAdapterService,
+      useFactory: (config: ConfigService) => {
+        const internalUrl = config.get('MEDIA_SERVER_INTERNAL_URL')
+
+        return new KarmaMediaAdapter(
+          new URL(config.getOrThrow('MEDIA_SERVER_URL')),
+          config.getOrThrow('MEDIA_SERVER_TOKEN'),
+          internalUrl ? new URL(internalUrl) : undefined
+        )
+      },
+      inject: [ConfigService]
+    }
+  ]
 })
 export class AppModule {}
