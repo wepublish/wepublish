@@ -11,8 +11,8 @@ export class SystemMailModel {
   @Field(() => UserEvent)
   event!: UserEvent
 
-  @Field(() => MailTemplateRef)
-  mailTemplate!: MailTemplateRef
+  @Field(() => MailTemplateRef, {nullable: true})
+  mailTemplate!: MailTemplateRef | null
 }
 
 @InputType()

@@ -99,7 +99,7 @@ function SystemMailList() {
                         value: mailTemplate.id
                       }))}
                       cleanable={false}
-                      defaultValue={systemMail.mailTemplate.id}
+                      defaultValue={systemMail.mailTemplate?.id}
                       onSelect={(value: number) =>
                         updateSystemMail({
                           variables: {systemMail: {event: systemMail.event, mailTemplateId: value}}

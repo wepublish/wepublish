@@ -42,7 +42,7 @@ CREATE TABLE "user_communication_flows" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "modifiedAt" TIMESTAMP(3) NOT NULL,
     "event" "UserEvent" NOT NULL,
-    "mailTemplateId" UUID NOT NULL,
+    "mailTemplateId" UUID,
 
     CONSTRAINT "user_communication_flows_pkey" PRIMARY KEY ("id")
 );

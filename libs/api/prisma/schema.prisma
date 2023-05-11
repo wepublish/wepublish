@@ -1009,8 +1009,8 @@ model UserFlowMail {
 
   event                 UserEvent @unique
 
-  mailTemplate       MailTemplate @relation(fields: [mailTemplateId], references: [id]) // user creates a new account
-	mailTemplateId     String @db.Uuid
+  mailTemplate       MailTemplate? @relation(fields: [mailTemplateId], references: [id]) // user creates a new account
+	mailTemplateId     String? @db.Uuid
 
   @@map("user_communication_flows")
 }
