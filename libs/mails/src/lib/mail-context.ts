@@ -1,9 +1,6 @@
 import {PrismaClient, UserEvent} from '@prisma/client'
 import {BaseMailProvider} from './mail-provider/base-mail-provider'
-import {
-  MailProviderError,
-  MailProviderTemplate
-} from './mail-provider/mail-provider.interface'
+import {MailProviderTemplate} from './mail-provider/mail-provider.interface'
 
 import {PrismaService} from '@wepublish/nest-modules'
 import {Injectable} from '@nestjs/common'
@@ -91,7 +88,7 @@ export class MailContext implements MailContextInterface {
     return userFlowMail.mailTemplate.externalMailTemplateId
   }
 
-  async getTemplates(): Promise<MailProviderTemplate[] | MailProviderError> {
+  async getTemplates(): Promise<MailProviderTemplate[]> {
     return this.mailProvider.getTemplates()
   }
 
