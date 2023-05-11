@@ -3,7 +3,7 @@ import {INestApplication, Module} from '@nestjs/common'
 import request from 'supertest'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
-import {PrismaClient, Prisma} from '@prisma/client'
+import {PrismaClient, Prisma, Subscription} from '@prisma/client'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {DashboardSubscriptionResolver} from './dashboard-subscription.resolver'
 import {DashboardSubscriptionService} from './dashboard-subscription.service'
@@ -76,6 +76,7 @@ const newDeactivationsQuery = `
 `
 
 describe('DashboardSubscriptionResolver', () => {
+  let subscriptionsToDelete: Subscription[] = []
   let app: INestApplication
   let prisma: PrismaClient
 
@@ -90,7 +91,19 @@ describe('DashboardSubscriptionResolver', () => {
   })
 
   beforeEach(async () => {
-    await prisma.subscription.deleteMany({})
+    subscriptionsToDelete = []
+  })
+
+  afterEach(async () => {
+    const ids = subscriptionsToDelete.map(sub => sub.id)
+
+    await prisma.subscription.deleteMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    })
   })
 
   afterAll(async () => {
@@ -198,7 +211,9 @@ describe('DashboardSubscriptionResolver', () => {
       }
     ]
 
-    await Promise.all(mockData.map(data => prisma.subscription.create({data})))
+    subscriptionsToDelete = await Promise.all(
+      mockData.map(data => prisma.subscription.create({data}))
+    )
 
     await request(app.getHttpServer())
       .post('')
@@ -316,7 +331,9 @@ describe('DashboardSubscriptionResolver', () => {
       }
     ]
 
-    await Promise.all(mockData.map(data => prisma.subscription.create({data})))
+    subscriptionsToDelete = await Promise.all(
+      mockData.map(data => prisma.subscription.create({data}))
+    )
 
     await request(app.getHttpServer())
       .post('')
@@ -455,7 +472,9 @@ describe('DashboardSubscriptionResolver', () => {
       }
     ]
 
-    await Promise.all(mockData.map(data => prisma.subscription.create({data})))
+    subscriptionsToDelete = await Promise.all(
+      mockData.map(data => prisma.subscription.create({data}))
+    )
 
     await request(app.getHttpServer())
       .post('')
@@ -553,7 +572,9 @@ describe('DashboardSubscriptionResolver', () => {
       }
     ]
 
-    await Promise.all(mockData.map(data => prisma.subscription.create({data})))
+    subscriptionsToDelete = await Promise.all(
+      mockData.map(data => prisma.subscription.create({data}))
+    )
 
     await request(app.getHttpServer())
       .post('')
