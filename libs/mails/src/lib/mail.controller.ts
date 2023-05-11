@@ -1,6 +1,6 @@
 import {Injectable, Logger} from '@nestjs/common'
 import {MailLogState, User} from '@prisma/client'
-import {MailContext} from './mailContext'
+import {MailContext} from './mail-context'
 import {generateJWT} from '@wepublish/utils'
 import {PrismaService} from '@wepublish/nest-modules'
 
