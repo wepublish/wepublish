@@ -11,7 +11,7 @@ import {
   MailgunMailProvider
 } from '@wepublish/api'
 import {ScheduleModule} from '@nestjs/schedule'
-import {MailsModule} from '../../../../libs/mails/src/lib/mails.module'
+import {MailsModule} from '@wepublish/mails'
 import process from 'process'
 import bodyParser from 'body-parser'
 
