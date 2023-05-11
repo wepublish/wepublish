@@ -14,6 +14,8 @@ import {ScheduleModule} from '@nestjs/schedule'
 import {MailsModule} from '@wepublish/mails'
 import process from 'process'
 import bodyParser from 'body-parser'
+import Mailgun from 'mailgun.js'
+import FormData from 'form-data'
 
 @Module({
   imports: [
@@ -52,7 +54,11 @@ import bodyParser from 'body-parser'
           baseDomain: process.env.MAILGUN_BASE_DOMAIN!,
           mailDomain: process.env.MAILGUN_MAIL_DOMAIN!,
           apiKey: process.env.MAILGUN_API_KEY!,
-          incomingRequestHandler: bodyParser.json()
+          incomingRequestHandler: bodyParser.json(),
+          mailgunClient: new Mailgun(FormData).client({
+            username: 'api',
+            key: process.env.MAILGUN_API_KEY || 'dev-api-key'
+          })
         })
     }
   ]
