@@ -3,8 +3,17 @@ import {Module} from '@nestjs/common'
 import {GraphQLModule} from '@nestjs/graphql'
 import {DashboardModule, MembershipModule} from '@wepublish/membership/api'
 import {ApiModule} from '@wepublish/nest-modules'
-import {SettingModule, AuthenticationModule, PermissionModule} from '@wepublish/api'
+import {
+  SettingModule,
+  AuthenticationModule,
+  PermissionModule,
+  BaseMailProvider,
+  MailgunMailProvider
+} from '@wepublish/api'
 import {ScheduleModule} from '@nestjs/schedule'
+import {MailsModule} from '../../../../libs/mails/src/lib/mails.module'
+import process from 'process'
+import bodyParser from 'body-parser'
 
 @Module({
   imports: [
@@ -18,6 +27,10 @@ import {ScheduleModule} from '@nestjs/schedule'
         origin: true
       }
     }),
+    MailsModule.forRoot({
+      defaultReplyToAddress: process.env.MAILS_DEFAULT_REPLY_ADDRESS ?? '',
+      defaultFromAddress: process.env.MAILS_DEFAULT_FROM_ADDRESS ?? ''
+    }),
     ApiModule,
     MembershipModule,
     DashboardModule,
@@ -27,6 +40,21 @@ import {ScheduleModule} from '@nestjs/schedule'
     ScheduleModule.forRoot()
   ],
   controllers: [],
-  providers: []
+  providers: [
+    {
+      provide: BaseMailProvider,
+      useFactory: () =>
+        new MailgunMailProvider({
+          id: 'mailgun',
+          name: 'Mailgun',
+          fromAddress: 'dev@wepublish.ch',
+          webhookEndpointSecret: process.env.MAILGUN_WEBHOOK_SECRET!,
+          baseDomain: process.env.MAILGUN_BASE_DOMAIN!,
+          mailDomain: process.env.MAILGUN_MAIL_DOMAIN!,
+          apiKey: process.env.MAILGUN_API_KEY!,
+          incomingRequestHandler: bodyParser.json()
+        })
+    }
+  ]
 })
 export class AppModule {}

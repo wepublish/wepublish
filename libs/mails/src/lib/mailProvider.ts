@@ -56,10 +56,12 @@ export class MailProviderError extends Error {
 }
 
 export interface MailProvider {
-  id: string
-  name: string
+  readonly id: string
+  readonly name: string
 
-  incomingRequestHandler: NextHandleFunction
+  readonly fromAddress: string
+
+  readonly incomingRequestHandler: NextHandleFunction
 
   webhookForSendMail(props: WebhookForSendMailProps): Promise<MailLogStatus[]>
 

@@ -10,6 +10,7 @@ import {MailController, MailControllerConfig} from '@wepublish/membership/mail'
 import {PrismaService} from '@wepublish/nest-modules'
 import {SubscriptionEventDictionary} from '@wepublish/membership/subscription-event-dictionary'
 import {OldContextService} from '@wepublish/nest-modules'
+import {Injectable} from '@nestjs/common'
 
 export interface SendRemoteEMailProps {
   readonly remoteTemplate: string
@@ -23,13 +24,9 @@ export interface MailContextOptions {
   readonly defaultReplyToAddress?: string
 }
 
-export interface MailContext {
-  mailProvider: BaseMailProvider | null
-  prisma: PrismaClient
-
+export interface MailContextInterface {
   defaultFromAddress: string
   defaultReplyToAddress?: string
-
   sendMail(opts: MailControllerConfig): Promise<void>
 }
 
@@ -38,9 +35,10 @@ export interface MailContextProps extends MailContextOptions {
   readonly prisma: PrismaClient
 }
 
-export class MailContext implements MailContext {
+@Injectable()
+export class MailContext implements MailContextInterface {
   mailProvider: BaseMailProvider | null
-
+  prisma: PrismaClient
   defaultFromAddress: string
   defaultReplyToAddress?: string
 
