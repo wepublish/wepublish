@@ -1,8 +1,8 @@
 import {Injectable, Logger} from '@nestjs/common'
 import {MailLogState, User} from '@prisma/client'
 import {MailContext} from './mail-context'
-import {generateJWT} from '@wepublish/utils'
 import {PrismaService} from '@wepublish/nest-modules'
+import {generateJWT} from '@wepublish/utils/api'
 
 const ONE_WEEK_IN_MINUTES = 7 * 24 * 60 * 60
 
