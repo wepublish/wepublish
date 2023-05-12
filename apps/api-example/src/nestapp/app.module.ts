@@ -1,4 +1,4 @@
-import {Module} from '@nestjs/common'
+import {Module, Global} from '@nestjs/common'
 import {ApiModule} from '@wepublish/nest-modules'
 import {GraphQLModule} from '@nestjs/graphql'
 import GraphQLJSON from 'graphql-type-json'
@@ -10,13 +10,13 @@ import {
   PermissionModule,
   ConsentModule,
   EventsImportModule,
-  MediaAdapterModule,
   MediaAdapterService,
   KarmaMediaAdapter
 } from '@wepublish/api'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {URL} from 'url'
 
+@Global()
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -37,7 +37,6 @@ import {URL} from 'url'
     ConsentModule,
     SettingModule,
     EventsImportModule,
-    MediaAdapterModule,
     ConfigModule.forRoot()
   ],
   providers: [
@@ -54,6 +53,7 @@ import {URL} from 'url'
       },
       inject: [ConfigService]
     }
-  ]
+  ],
+  exports: [MediaAdapterService]
 })
 export class AppModule {}

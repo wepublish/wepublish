@@ -8,9 +8,7 @@ import {MediaAdapterService} from '@wepublish/api'
 
 async function bootstrap() {
   const nestApp = await NestFactory.create(AppModule)
-  const mediaAdapter = nestApp.select(AppModule).get(MediaAdapterService, {
-    strict: true
-  })
+  const mediaAdapter = nestApp.get(MediaAdapterService)
   const port = process.env.PORT ?? 4000
 
   const expressApp = nestApp.getHttpAdapter().getInstance()

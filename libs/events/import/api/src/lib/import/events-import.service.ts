@@ -1,22 +1,22 @@
-import {Inject, Injectable} from '@nestjs/common'
 import {CACHE_MANAGER} from '@nestjs/cache-manager'
-import {Cache} from 'cache-manager'
+import {Inject, Injectable} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
-import fetch from 'node-fetch'
 import axios from 'Axios'
+import {Cache} from 'cache-manager'
+import moment from 'moment'
+import fetch from 'node-fetch'
+import {htmlToSlate} from 'slate-serializers'
 import xml2js from 'xml2js'
 import {
-  ImportedEventsDocument,
-  ImportedEventFilter,
   Event,
+  ImportedEventFilter,
+  ImportedEventsDocument,
   Providers,
   SingleEventFilter
 } from './events-import.model'
-import {htmlToSlate} from 'slate-serializers'
-import moment from 'moment'
 
-import {XMLEventType} from './xmlTypes'
 import {MediaAdapterService} from '@wepublish/image/api'
+import {XMLEventType} from './xmlTypes'
 
 const AGENDA_BASEL_URL = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
 
@@ -212,14 +212,15 @@ export class EventsImportService {
   }
 
   async createEvent(id: string) {
-    let parsedEvents: Event[] = await this.cacheManager.get('parsedEvents')
+    let parsedEvents: Event[] | undefined = await this.cacheManager.get('parsedEvents')
     // let createdImage = null
 
     if (!parsedEvents) {
       parsedEvents = await parseAndCacheData(this.cacheManager, Providers.AgendaBasel)
     }
 
-    const event = parsedEvents.find(e => e.id === id)
+    const event = parsedEvents?.find(e => e.id === id)
+
     if (!event) {
       throw Error(`Event with id ${id} not found.`)
     }

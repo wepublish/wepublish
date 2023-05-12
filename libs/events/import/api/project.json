@@ -4,17 +4,6 @@
   "sourceRoot": "libs/events/import/api/src",
   "projectType": "library",
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/libs/events/import/api",
-        "tsConfig": "libs/events/import/api/tsconfig.lib.json",
-        "packageJson": "libs/events/import/api/package.json",
-        "main": "libs/events/import/api/src/index.ts",
-        "assets": ["libs/events/import/api/*.md"]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
