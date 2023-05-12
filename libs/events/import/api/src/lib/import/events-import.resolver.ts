@@ -3,7 +3,8 @@ import {
   ImportedEventFilter,
   ImportedEventsDocument,
   Event,
-  SingleEventFilter
+  SingleEventFilter,
+  CreateEventArgs
 } from './events-import.model'
 import {EventsImportService} from './events-import.service'
 
@@ -43,19 +44,11 @@ export class EventsImportResolver {
   @Mutation(returns => String, {
     name: 'createEvent',
     description: `
-      Creates and event based on data from importable events list and an id.
-      Also, uploads an image to WePublish image library.
+      Creates and event based on data from importable events list and an id and provider.
+      Also, uploads an image to WePublish Image library.
     `
   })
-  // @UseGuards(AuthenticationGuard)
-  createEvent(
-    // @CurrentUser() user: UserSession,
-    @Args('id') id: string
-  ) {
-    // only allow creating for admin or affected user
-    // if (!user.user.roleIDs.includes('admin') && user.user.id !== userConsent.userId) {
-    //   throw Error(`Unauthorized`)
-    // }
-    return this.events.createEvent(id)
+  createEvent(@Args('filter') filter: CreateEventArgs) {
+    return this.events.createEvent(filter)
   }
 }

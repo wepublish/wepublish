@@ -8,6 +8,7 @@ import fetch from 'node-fetch'
 import {htmlToSlate} from 'slate-serializers'
 import xml2js from 'xml2js'
 import {
+  CreateEventArgs,
   Event,
   ImportedEventFilter,
   ImportedEventsDocument,
@@ -15,43 +16,12 @@ import {
   SingleEventFilter
 } from './events-import.model'
 
-import {MediaAdapterService} from '@wepublish/image/api'
+import {ArrayBufferUpload, MediaAdapterService} from '@wepublish/image/api'
 import {XMLEventType} from './xmlTypes'
 
 const AGENDA_BASEL_URL = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
 
-const parseAndCacheData = async (cacheManager: Cache, source: Providers) => {
-  const parser = new xml2js.Parser()
-  const urlToQuery = AGENDA_BASEL_URL
-
-  async function getXMLfromURL(url: string) {
-    try {
-      const response = await fetch(url)
-      const content = await response.text()
-      const data = await parser.parseStringPromise(content)
-
-      return data
-    } catch (e) {
-      console.error({e})
-    }
-  }
-
-  const eventsParsedXML = await getXMLfromURL(urlToQuery)
-  const events = eventsParsedXML['kdz:exportActivities']?.Activities[0]?.Activity
-
-  // only take events that take time in the future
-  const upcomingEvents = events.filter((event: XMLEventType) => upcomingOnly(event))
-
-  // parse their structure to ours
-  const importedEvents = upcomingEvents?.map((a: XMLEventType) => {
-    return parseXMLEventToWpEvent(a, source)
-  })
-
-  // save in cache
-  const ttl = 8 * 60 * 60 * 1000 // 8 hours
-  await cacheManager.set('parsedEvents', importedEvents, ttl)
-  return importedEvents
-}
+const getFallbackDesc = (source: Providers) => `<p>Event imported from ${source}</p>`
 
 interface ImportedEventsResolverParams {
   filter: ImportedEventFilter
@@ -80,6 +50,13 @@ interface ImportedEventParams {
   cacheManager: Cache
 }
 
+interface CreateEventParams {
+  id: string
+  cacheManager: Cache
+  prisma: PrismaClient
+  mediaAdapter: MediaAdapterService
+}
+
 interface EventsProvider {
   name: Providers
   importedEvents({
@@ -91,6 +68,8 @@ interface EventsProvider {
   }: ImportedEventsResolverParams): Promise<ImportedEventsDocument>
 
   importedEvent({id}: ImportedEventResolverParams): Promise<Event>
+
+  createEvent({id}: ImportedEventResolverParams): Promise<string>
 }
 
 export enum EventStatus {
@@ -98,6 +77,39 @@ export enum EventStatus {
   Postponed = 'POSTPONED',
   Rescheduled = 'RESCHEDULED',
   Scheduled = 'SCHEDULED'
+}
+
+const parseAndCacheData = async (cacheManager: Cache, source: Providers): Promise<Event[]> => {
+  const parser = new xml2js.Parser()
+  const urlToQuery = AGENDA_BASEL_URL
+
+  async function getXMLfromURL(url: string) {
+    try {
+      const response = await fetch(url)
+      const content = await response.text()
+      const data = await parser.parseStringPromise(content)
+
+      return data
+    } catch (e) {
+      throw Error('Unable to get any data from the provided xml.')
+    }
+  }
+
+  const eventsParsedXML = await getXMLfromURL(urlToQuery)
+  const events = eventsParsedXML['kdz:exportActivities']?.Activities[0]?.Activity
+
+  // only take events that take time in the future
+  const upcomingEvents = events.filter((event: XMLEventType) => upcomingOnly(event))
+
+  // parse their structure to ours
+  const importedEvents = upcomingEvents?.map((a: XMLEventType) => {
+    return parseXMLEventToWpEvent(a, source)
+  })
+
+  // save in cache
+  const ttl = 8 * 60 * 60 * 1000 // 8 hours
+  await cacheManager.set('parsedEvents', importedEvents, ttl)
+  return importedEvents
 }
 
 const today = moment().startOf('day')
@@ -148,7 +160,10 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType, source: Providers) => {
   const castInfo = XMLEvent.CastInformation[0].replace(/(<([^>]+)>)/gi, '')
   const longDescription = XMLEvent.LongDescription[0].replace(/(<([^>]+)>)/gi, '')
   const shortDescription = XMLEvent.ShortDescription[0].replace(/(<([^>]+)>)/gi, '')
-  const parsedDescription = htmlToSlate(longDescription || shortDescription || castInfo)
+  const fallbackDescription = getFallbackDesc(source)
+  const parsedDescription = htmlToSlate(
+    longDescription || shortDescription || castInfo || fallbackDescription
+  )
 
   // we need to add type: 'paragraph' because that's how it was done in WP in the past
   parsedDescription[0] = {...parsedDescription[0], type: 'paragraph'}
@@ -168,6 +183,27 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType, source: Providers) => {
   }
 
   return parsedEvent
+}
+
+const fetchAndTransformImage = async (url: string): Promise<ArrayBufferUpload> => {
+  try {
+    const response = await axios.get(url, {responseType: 'arraybuffer'})
+    const {data, headers} = response
+
+    const filename = 'transformed-image.jpg'
+    const mimetype = headers['content-type']
+    const arrayBuffer = data
+
+    const arrayBufferUpload = {
+      filename,
+      mimetype,
+      arrayBuffer
+    }
+
+    return arrayBufferUpload
+  } catch (error) {
+    throw Error('Error fetching and transforming image')
+  }
 }
 
 @Injectable()
@@ -211,79 +247,39 @@ export class EventsImportService {
     }
   }
 
-  async createEvent(id: string) {
-    let parsedEvents: Event[] | undefined = await this.cacheManager.get('parsedEvents')
-    // let createdImage = null
-
-    if (!parsedEvents) {
-      parsedEvents = await parseAndCacheData(this.cacheManager, Providers.AgendaBasel)
+  async createEvent(filter: CreateEventArgs) {
+    const {id, source} = filter
+    switch (source) {
+      case Providers.AgendaBasel: {
+        return new AgendaBasel().createEvent({
+          id,
+          cacheManager: this.cacheManager,
+          prisma: this.prisma,
+          mediaAdapter: this.mediaAdapter
+        })
+      }
     }
-
-    const event = parsedEvents?.find(e => e.id === id)
-
-    if (!event) {
-      throw Error(`Event with id ${id} not found.`)
-    }
-
-    console.log('event', event)
-    console.log('this.mediaAdapter', this.mediaAdapter)
-
-    // this.mediaAdapter.uploadImage()
-
-    if (event.imageUrl) {
-      const response = await axios.get(event.imageUrl, {
-        method: 'GET',
-        responseType: 'stream'
-      })
-      // todo how to get mediaAdapter?
-      const {id, ...image} = await this.mediaAdapter.uploadImage(response.data)
-      console.log('id', id)
-      console.log('image', image)
-    }
-
-    const eventInput = {
-      name: event.name,
-      description: event.description,
-      location: event.location,
-      startsAt: event.startsAt,
-      // imageId: createdImage?.id || '',
-      endsAt: event.endsAt,
-      externalSourceName: event.externalSourceName,
-      externalSourceId: event.externalSourceId
-    }
-
-    console.log('eventInput', eventInput)
-    // console.log('createdImage', createdImage)
-
-    const createdEvent = await this.prisma.event.create({data: eventInput})
-
-    return createdEvent.id
   }
 }
 
 class AgendaBasel implements EventsProvider {
-  name = Providers.AgendaBasel
+  readonly name = Providers.AgendaBasel
+
   async importedEvents({
-    // filter,
-    // order,
-    // sort,
     skip = 0,
     take = 10,
     cacheManager
-  }: // source
-  ImportedEventsParams): Promise<ImportedEventsDocument> {
-    let parsedEvents: Event[] = await cacheManager.get('parsedEvents')
+  }: ImportedEventsParams): Promise<ImportedEventsDocument> {
+    let parsedEvents: Event[] | undefined = await cacheManager.get('parsedEvents')
 
-    if (!parsedEvents) {
+    if (parsedEvents === undefined) {
       parsedEvents = await parseAndCacheData(cacheManager, Providers.AgendaBasel)
     }
 
-    // todo split into separate functions?
     const sortedEvents = parsedEvents.sort((a: any, b: any) => {
       return a.startsAt - b.startsAt
     })
 
-    // todo split into separate functions?
     const paginatedEvents = sortedEvents.slice(skip, skip + take)
 
     const firstEvent = parsedEvents[0]
@@ -302,7 +298,7 @@ class AgendaBasel implements EventsProvider {
   }
 
   async importedEvent({id, cacheManager}: ImportedEventParams): Promise<Event> {
-    let parsedEvents: Event[] = await cacheManager.get('parsedEvents')
+    let parsedEvents: Event[] | undefined = await cacheManager.get('parsedEvents')
 
     if (!parsedEvents) {
       parsedEvents = await parseAndCacheData(cacheManager, Providers.AgendaBasel)
@@ -315,6 +311,57 @@ class AgendaBasel implements EventsProvider {
     }
 
     return event
+  }
+
+  async createEvent({id, cacheManager, prisma, mediaAdapter}: CreateEventParams): Promise<string> {
+    let parsedEvents: Event[] | undefined = await cacheManager.get('parsedEvents')
+    let createdImageId = null
+
+    if (!parsedEvents) {
+      parsedEvents = await parseAndCacheData(cacheManager, Providers.AgendaBasel)
+    }
+
+    const event = parsedEvents?.find(e => e.id === id)
+
+    if (!event) {
+      throw Error(`Event with id ${id} not found.`)
+    }
+
+    if (event.imageUrl) {
+      const file = fetchAndTransformImage(event.imageUrl)
+
+      if (file) {
+        const {id, ...image} = await mediaAdapter.uploadImageFromArrayBuffer(file)
+
+        const createdImage = await prisma.image.create({
+          data: {
+            id,
+            ...image,
+            filename: image.filename
+          },
+          include: {
+            focalPoint: true
+          }
+        })
+
+        createdImageId = createdImage.id
+      }
+    }
+
+    const eventInput = {
+      name: event.name,
+      description: event.description,
+      location: event.location,
+      startsAt: event.startsAt,
+      imageId: createdImageId || '',
+      endsAt: event.endsAt,
+      externalSourceName: event.externalSourceName,
+      externalSourceId: event.externalSourceId
+    }
+
+    const createdEvent = await prisma.event.create({data: eventInput})
+
+    return createdEvent.id
   }
 }
 

@@ -43,6 +43,11 @@ export type ConsentInput = {
   slug: Scalars['String']
 }
 
+export type CreateEventArgs = {
+  id: Scalars['String']
+  source: Providers
+}
+
 export type DashboardInvoice = {
   __typename?: 'DashboardInvoice'
   amount: Scalars['Int']
@@ -102,8 +107,8 @@ export type Mutation = {
   /** Create a new consent. */
   createConsent: Consent
   /**
-   * Creates and event based on data from importable events list and an id.
-   * Also, uploads an image to WePublish image library.
+   * Creates and event based on data from importable events list and an id and provider.
+   * Also, uploads an image to WePublish Image library.
    */
   createEvent: Scalars['String']
   /**
@@ -132,7 +137,7 @@ export type MutationCreateConsentArgs = {
 }
 
 export type MutationCreateEventArgs = {
-  id: Scalars['String']
+  filter: CreateEventArgs
 }
 
 export type MutationCreateUserConsentArgs = {

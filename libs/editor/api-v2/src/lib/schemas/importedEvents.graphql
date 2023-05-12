@@ -42,6 +42,6 @@ query ImportedEvent($filter: SingleEventFilter!) {
 }
 
 # mutations
-mutation createEvent($id: String!) {
-  createEvent(id: $id)
+mutation createEvent($filter: CreateEventArgs!) {
+  createEvent(filter: $filter)
 }

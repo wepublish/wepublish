@@ -43,6 +43,11 @@ export type ConsentInput = {
   slug: Scalars['String'];
 };
 
+export type CreateEventArgs = {
+  id: Scalars['String'];
+  source: Providers;
+};
+
 export type DashboardInvoice = {
   __typename?: 'DashboardInvoice';
   amount: Scalars['Int'];
@@ -102,8 +107,8 @@ export type Mutation = {
   /** Create a new consent. */
   createConsent: Consent;
   /**
-   * Creates and event based on data from importable events list and an id.
-   * Also, uploads an image to WePublish image library.
+   * Creates and event based on data from importable events list and an id and provider.
+   * Also, uploads an image to WePublish Image library.
    */
   createEvent: Scalars['String'];
   /**
@@ -134,7 +139,7 @@ export type MutationCreateConsentArgs = {
 
 
 export type MutationCreateEventArgs = {
-  id: Scalars['String'];
+  filter: CreateEventArgs;
 };
 
 
@@ -439,7 +444,7 @@ export type ImportedEventQueryVariables = Exact<{
 export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl?: string | null, startsAt: string, endsAt?: string | null } };
 
 export type CreateEventMutationVariables = Exact<{
-  id: Scalars['String'];
+  filter: CreateEventArgs;
 }>;
 
 
@@ -955,8 +960,8 @@ export type ImportedEventQueryHookResult = ReturnType<typeof useImportedEventQue
 export type ImportedEventLazyQueryHookResult = ReturnType<typeof useImportedEventLazyQuery>;
 export type ImportedEventQueryResult = Apollo.QueryResult<ImportedEventQuery, ImportedEventQueryVariables>;
 export const CreateEventDocument = gql`
-    mutation createEvent($id: String!) {
-  createEvent(id: $id)
+    mutation createEvent($filter: CreateEventArgs!) {
+  createEvent(filter: $filter)
 }
     `;
 export type CreateEventMutationFn = Apollo.MutationFunction<CreateEventMutation, CreateEventMutationVariables>;
@@ -974,7 +979,7 @@ export type CreateEventMutationFn = Apollo.MutationFunction<CreateEventMutation,
  * @example
  * const [createEventMutation, { data, loading, error }] = useCreateEventMutation({
  *   variables: {
- *      id: // value for 'id'
+ *      filter: // value for 'filter'
  *   },
  * });
  */

@@ -23,6 +23,11 @@ input ConsentInput {
   slug: String!
 }
 
+input CreateEventArgs {
+  id: String!
+  source: Providers!
+}
+
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -93,11 +98,11 @@ type Mutation {
 
   """
   
-        Creates and event based on data from importable events list and an id.
-        Also, uploads an image to WePublish image library.
+        Creates and event based on data from importable events list and an id and provider.
+        Also, uploads an image to WePublish Image library.
       
   """
-  createEvent(id: String!): String!
+  createEvent(filter: CreateEventArgs!): String!
 
   """
   

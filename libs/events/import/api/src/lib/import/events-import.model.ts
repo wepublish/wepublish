@@ -113,3 +113,12 @@ export class SingleEventFilter {
   @Field(type => Providers)
   source!: Providers
 }
+
+@InputType()
+export class CreateEventArgs {
+  @Field()
+  id!: string
+
+  @Field(type => Providers)
+  source!: Providers
+}
