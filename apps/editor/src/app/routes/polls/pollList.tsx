@@ -1,5 +1,13 @@
 import {ApolloError} from '@apollo/client'
 import {Poll, usePollsQuery} from '@wepublish/editor/api'
+import {
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  PaddedCell,
+  Table,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdDelete} from 'react-icons/md'
@@ -11,14 +19,6 @@ import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {CreatePollBtn} from '../../atoms/poll/createPollBtn'
 import {DeletePollModal} from '../../atoms/poll/deletePollModal'
 import {PollStateIndication} from '../../atoms/poll/pollStateIndication'
-import {
-  ListViewActions,
-  ListViewContainer,
-  ListViewHeader,
-  PaddedCell,
-  Table,
-  TableWrapper
-} from '../../ui/listView'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
 
 const {Column, HeaderCell, Cell: RCell} = RTable

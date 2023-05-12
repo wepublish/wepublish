@@ -7,6 +7,16 @@ import {
   useDeleteImageMutation,
   useImageListQuery
 } from '@wepublish/editor/api'
+import {
+  IconButton,
+  ListViewActions,
+  ListViewContainer,
+  ListViewFilterArea,
+  ListViewHeader,
+  PaddedCell,
+  Table,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdDelete, MdEdit, MdOutlineAddPhotoAlternate, MdSearch} from 'react-icons/md'
@@ -27,16 +37,6 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {ImageEditPanel} from '../panel/imageEditPanel'
 import {ImageUploadAndEditPanel} from '../panel/imageUploadAndEditPanel'
-import {
-  IconButton,
-  ListViewActions,
-  ListViewContainer,
-  ListViewFilterArea,
-  ListViewHeader,
-  PaddedCell,
-  Table,
-  TableWrapper
-} from '../ui/listView'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_IMAGE_PAGE_SIZES} from '../utility'
 
 const {Column, HeaderCell, Cell: RCell} = RTable

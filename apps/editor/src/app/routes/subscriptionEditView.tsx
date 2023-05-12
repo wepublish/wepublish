@@ -17,6 +17,12 @@ import {
   useUpdateSubscriptionMutation,
   useUserQuery
 } from '@wepublish/editor/api'
+import {
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdChevronLeft, MdUnpublished} from 'react-icons/md'
@@ -50,7 +56,6 @@ import {UserSearch} from '../atoms/searchAndFilter/userSearch'
 import {InvoiceListPanel} from '../panel/invoiceListPanel'
 import {UserSubscriptionDeactivatePanel} from '../panel/userSubscriptionDeactivatePanel'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {ListViewActions, ListViewContainer, ListViewHeader, TableWrapper} from '../ui/listView'
 import {ALL_PAYMENT_PERIODICITIES} from '../utility'
 
 const {Group, ControlLabel, Control, HelpText} = RForm
