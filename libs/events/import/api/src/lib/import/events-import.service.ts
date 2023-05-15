@@ -166,7 +166,7 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType, source: Providers) => {
   )
 
   // we need to add type: 'paragraph' because that's how it was done in WP in the past
-  parsedDescription[0] = {...parsedDescription[0], type: 'paragraph'}
+  // parsedDescription[0] = {...parsedDescription[0], type: 'paragraph'}
 
   const parsedEvent = {
     id: XMLEvent['$'].originId,
@@ -350,7 +350,7 @@ class AgendaBasel implements EventsProvider {
 
     const eventInput = {
       name: event.name,
-      description: event.description,
+      description: event.description as unknown as any, // ehh
       location: event.location,
       startsAt: event.startsAt,
       imageId: createdImageId || '',
