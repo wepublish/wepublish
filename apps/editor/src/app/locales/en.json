@@ -1302,6 +1302,7 @@
       "newDeactivationsApiPublic": "Make the new deactivations API accessible by the public",
       "expectedRevenueApiPublic": "Make the expected revenue API accessible by the public",
       "revenueApiPublic": "Make the revenue API accessible by the public",
+      "commentCharLimit": "Comment character limit",
       "enabled": "enabled",
       "disabled": "disabled",
       "warnings": {
@@ -1320,7 +1321,8 @@
         "renewingSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "newDeactivationsApiPublic": "Exposes subscriptions anonymized to the public.",
         "expectedRevenueApiPublic": "Exposes invoices anonymized to the public.",
-        "revenueApiPublic": "Exposes invoices anonymized to the public."
+        "revenueApiPublic": "Exposes invoices anonymized to the public.",
+        "commentCharLimit": "Maximum comment length"
       }
     },
     "tags": {
