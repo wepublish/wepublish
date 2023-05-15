@@ -5,6 +5,7 @@ import {css} from '@mui/material'
 import {Global} from '@emotion/react'
 import Head from 'next/head'
 import Script from 'next/script'
+import {Preview} from '@storybook/react'
 
 export const parameters = {
   apolloClient: {
@@ -13,11 +14,22 @@ export const parameters = {
   },
   options: {
     storySort: {
+      includeName: true,
       method: 'alphabetical',
-      order: ['Containers', '*', 'Item']
+      order: [
+        'Getting Started',
+        'Overview',
+        'Installation',
+        'Usage',
+        'Learn',
+        'FAQ',
+        'Glossary',
+        '*',
+        'Item'
+      ]
     }
   }
-}
+} as Preview['parameters']
 
 const withWebsiteProvider = (Story: ComponentType) => (
   <WebsiteProvider>
@@ -43,4 +55,4 @@ const withExtraClassname = (Story: ComponentType) => {
   )
 }
 
-export const decorators = [withWebsiteProvider, withExtraClassname]
+export const decorators = [withWebsiteProvider, withExtraClassname] as Preview['decorators']

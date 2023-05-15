@@ -20,7 +20,8 @@
         "tsConfig": "libs/ui/tsconfig.lib.json",
         "packageJson": "libs/ui/package.json",
         "main": "libs/ui/src/index.ts",
-        "assets": ["libs/ui/*.md"]
+        "assets": ["libs/ui/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     },
     "test": {

@@ -12,17 +12,6 @@
         "lintFilePatterns": ["libs/website/api-v2/**/*.{ts,tsx,js,jsx}"]
       }
     },
-    "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/libs/website-api-v2",
-        "tsConfig": "libs/website/api-v2/tsconfig.lib.json",
-        "packageJson": "libs/website/api-v2/package.json",
-        "main": "libs/website/api-v2/src/index.ts",
-        "assets": ["libs/website/api-v2/*.md"]
-      }
-    },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
