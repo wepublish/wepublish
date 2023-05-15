@@ -19,7 +19,7 @@
     {
       "cli": "nx",
       "version": "16.0.0-beta.0",
-      "description": "Replace @nx/nx-cloud with nx-cloud",
+      "description": "Replace @nrwl/nx-cloud with nx-cloud",
       "implementation": "./src/migrations/update-16-0-0/update-nx-cloud-runner",
       "package": "nx",
       "name": "16.0.0-update-nx-cloud-runner"
