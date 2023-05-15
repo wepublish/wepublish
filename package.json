@@ -25,7 +25,8 @@
     "prettier": "prettier --write \"{packages,services}/**/*.{js,ts,tsx,json}\"",
     "e2e:chromium": "node -r dotenv/config node_modules/.bin/testcafe chrome ./tests/e2e.ts -s takeOnFails=true --compiler-options typescript.customCompilerModulePath=../typescript --assertion-timeout 10000",
     "e2e:firefox": "node -r dotenv/config node_modules/.bin/testcafe firefox ./tests/e2e.ts -s takeOnFails=true --compiler-options typescript.customCompilerModulePath=../typescript --assertion-timeout 10000",
-    "prepare": "prisma generate"
+    "prepare": "prisma generate",
+    "postinstall": "patch-package"
   },
   "devDependencies": {
     "@babel/core": "7.12.13",
@@ -143,6 +144,7 @@
     "npm-run-all": "^4.1.5",
     "nx": "15.3.0",
     "passport": "^0.6.0",
+    "patch-package": "^7.0.0",
     "prettier": "^2.8.1",
     "pretty-quick": "^1.11.1",
     "prisma": "^3.14.0",
