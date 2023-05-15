@@ -31,15 +31,12 @@ import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Button,
   ButtonGroup as RButtonGroup,
-  Col as RCol,
   Drawer,
-  Grid,
   IconButton as RIconButton,
   Input,
   InputGroup,
   Modal,
   Pagination,
-  Row,
   Table as RTable
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
@@ -63,7 +60,7 @@ const ButtonGroup = styled(RButtonGroup)`
 `
 
 const GridImg = styled.img`
-  height: 120px;
+  height: 140px;
   width: auto;
   display: block;
   margin: 0 auto;
@@ -76,11 +73,33 @@ const ImgDesc = styled.p`
   text-align: center;
   font-size: 12px;
   text-shadow: 1px 1px white;
+  display: inline-block;
+  background: white;
+  padding: 2px;
 `
 const GridIcon = styled(IconButton)`
   position: absolute;
   top: 5px;
-  right: 15px;
+  right: 5px;
+`
+
+const GridView = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  row-gap: 20px;
+  margin: 20px 0;
+`
+
+const ImageWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  height: 150px;
+  @media (max-width: 1080px) {
+    width: 25%;
+  }
 `
 
 const Overlay = styled.div`
@@ -91,26 +110,18 @@ const Overlay = styled.div`
 `
 
 const OverlayContainer = styled.div`
-position: relative;
-& a {
-  color: unset;
+  position: relative;
+  & a {
+    color: unset;
   }
-&:hover {
-  & img {
-    height: 130px;
-    transition: .2s ease;
-  }
-  & div {
-  opacity: 0.8;
-    }
-  }
-}
-`
-const Col = styled(RCol)`
-  height: 200px;
-  overflow: hidden;
   &:hover {
-    overflow: visible;
+    & img {
+      height: 145px;
+      transition: 0.2s ease;
+    }
+    & div {
+      opacity: 0.8;
+    }
   }
 `
 
@@ -265,36 +276,33 @@ function ImageList() {
     </Table>
   )
   const ImageGridView = () => (
-    <Grid>
-      <Row gutter={20}>
-        {images.map(image => {
-          return (
-            <Col xs={24} sm={12} md={6} lg={4}>
-              <OverlayContainer>
-                <Link to={`/images/edit/${image.id}`}>
-                  <Overlay>
-                    <GridIcon
-                      icon={<MdDelete />}
-                      circle
-                      size="md"
-                      appearance="default"
-                      onClick={event => {
-                        event.preventDefault()
-                        setCurrentImage(image as ImageRefFragment)
-                        setConfirmationDialogOpen(true)
-                      }}
-                    />
-
-                    <ImgDesc>{image?.title}</ImgDesc>
-                  </Overlay>
-                  <GridImg src={image?.squareURL || ''} />
-                </Link>
-              </OverlayContainer>
-            </Col>
-          )
-        })}
-      </Row>
-    </Grid>
+    <GridView>
+      {images.map(image => {
+        return (
+          <ImageWrapper>
+            <OverlayContainer>
+              <Link to={`/images/edit/${image.id}`}>
+                <Overlay>
+                  <GridIcon
+                    icon={<MdDelete />}
+                    circle
+                    size="md"
+                    appearance="default"
+                    onClick={event => {
+                      event.preventDefault()
+                      setCurrentImage(image as ImageRefFragment)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                  {image?.title && <ImgDesc>{image?.title}</ImgDesc>}
+                </Overlay>
+                <GridImg src={image?.squareURL || ''} />
+              </Link>
+            </OverlayContainer>
+          </ImageWrapper>
+        )
+      })}
+    </GridView>
   )
 
   return (
