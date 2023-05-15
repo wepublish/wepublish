@@ -100,6 +100,12 @@ const ImageWrapper = styled.div`
   @media (max-width: 1080px) {
     width: 25%;
   }
+  @media (max-width: 900px) {
+    width: 50%;
+  }
+  @media (max-width: 600px) {
+    width: 100%;
+  }
 `
 
 const Overlay = styled.div`
