@@ -320,12 +320,15 @@ class AgendaBasel implements EventsProvider {
     if (!parsedEvents) {
       parsedEvents = await parseAndCacheData(cacheManager, Providers.AgendaBasel)
     }
-
+    console.log('parsedEventsdupa', parsedEvents)
     const event = parsedEvents?.find(e => e.id === id)
 
     if (!event) {
       throw Error(`Event with id ${id} not found.`)
     }
+    console.log('event.imageUrl', event.imageUrl)
+    console.log('event', event)
+
     if (event.imageUrl) {
       const file = fetchAndTransformImage(event.imageUrl)
 

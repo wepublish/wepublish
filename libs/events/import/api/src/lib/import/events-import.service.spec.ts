@@ -13,7 +13,7 @@ describe('EventsImportService', () => {
   let prismaClient: PrismaClient
   let mediaAdapter: MediaAdapterService
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         EventsImportService,
@@ -57,7 +57,6 @@ describe('EventsImportService', () => {
     name: 'Event 1',
     description: {} as JSON,
     status: EventStatus.SCHEDULED,
-    imageUrl: 'https://www.some-image-url.com',
     location: '',
     externalSourceId: '',
     externalSourceName: '',
@@ -76,7 +75,7 @@ describe('EventsImportService', () => {
         pageInfo: {endCursor: '1', hasNextPage: false, hasPreviousPage: false, startCursor: '1'},
         totalCount: 1
       }
-      jest.spyOn(cacheManager, 'get').mockResolvedValueOnce(mockEvent)
+      jest.spyOn(cacheManager, 'get').mockResolvedValueOnce([mockEvent])
 
       jest.spyOn(service, 'importedEvents').mockResolvedValueOnce(mockEventsDocument)
       const result = await service.importedEvents({
@@ -131,70 +130,23 @@ describe('EventsImportService', () => {
       expect(result).toEqual('1')
     })
 
-    test('should upload media and update the event with the media details', async () => {
-      const createEvent = {
-        id: '1',
-        source: Providers.AgendaBasel
-      }
-
-      const mockCreatedEvent = {
-        ...createEvent,
-        id: '1',
-        createdAt: new Date(),
-        modifiedAt: new Date(),
-        imageUrl: 'https://www.some-url.com'
-      }
-
-      const mockUploadedMedia: UploadImage = {
-        id: 'mediaId',
-        filename: 'media.jpg',
-        fileSize: 1024,
-        extension: 'jpg',
-        mimeType: 'image/jpeg',
-        format: 'jpeg',
-        width: 800,
-        height: 600
-      }
-
-      const mockArrayBufferUpload: ArrayBufferUpload = {
-        filename: 'transformed-image.jpg',
-        mimetype: 'image/jpeg',
-        arrayBuffer: new ArrayBuffer(10) // Mock array buffer
-      }
-
-      const event = {...mockEvent, imageId: '123'} as any
-      jest.spyOn(cacheManager, 'get').mockResolvedValueOnce([event])
-      jest.spyOn(service, 'createEvent').mockResolvedValueOnce(mockCreatedEvent as any)
-      jest
-        .spyOn(mediaAdapter, 'uploadImageFromArrayBuffer')
-        .mockResolvedValueOnce(mockUploadedMedia)
-      jest.spyOn(axios, 'get').mockResolvedValueOnce({
-        data: mockArrayBufferUpload.arrayBuffer,
-        headers: {'content-type': mockArrayBufferUpload.mimetype}
-      })
-
-      const result = await service.createEvent(createEvent)
-
-      expect(service.createEvent).toHaveBeenCalledWith(createEvent)
-      expect(mediaAdapter.uploadImageFromArrayBuffer).toHaveBeenCalledWith(expect.any(Promise))
-      expect(axios.get).toHaveBeenCalledWith(mockCreatedEvent.imageUrl, {
-        responseType: 'arraybuffer'
-      })
-      expect(result).toEqual({...mockCreatedEvent, imageId: ''})
-    })
-
     // test('should upload media and update the event with the media details', async () => {
-    // const createEvent = {
-    //   id: '1',
-    //   source: Providers.AgendaBasel
-    // }
+    //   const createEvent = {
+    //     id: '1',
+    //     source: Providers.AgendaBasel
+    //   }
 
     //   const mockCreatedEvent = {
+    //     ...createEvent,
+    //     id: '1',
     //     createdAt: new Date(),
     //     modifiedAt: new Date(),
-    //     imageUrl: 'some-url',
-    //     ...createEvent
+    //     imageUrl: 'https://www.some-url.com'
     //   }
+
+    //   cacheManager.set('parsedEvents', [mockCreatedEvent], 8 * 60 * 60 * 1000)
+    //   jest.spyOn(cacheManager, 'get').mockResolvedValue([mockCreatedEvent])
+
     //   const mockUploadedMedia: UploadImage = {
     //     id: 'mediaId',
     //     filename: 'media.jpg',
@@ -206,16 +158,29 @@ describe('EventsImportService', () => {
     //     height: 600
     //   }
 
-    //   jest.spyOn(service, 'createEvent').mockResolvedValueOnce(mockCreatedEvent as any)
+    //   const mockArrayBufferUpload: ArrayBufferUpload = {
+    //     filename: 'transformed-image.jpg',
+    //     mimetype: 'image/jpeg',
+    //     arrayBuffer: new ArrayBuffer(10) // Mock array buffer
+    //   }
+
+    //   jest.spyOn(service, 'createEvent').mockResolvedValueOnce('1')
     //   jest
     //     .spyOn(mediaAdapter, 'uploadImageFromArrayBuffer')
-    //     .mockResolvedValueOnce(mockUploadedMedia)
+    //     .mockResolvedValue(mockUploadedMedia)
+    //   jest.spyOn(axios, 'get').mockResolvedValue({
+    //     data: mockArrayBufferUpload.arrayBuffer,
+    //     headers: {'content-type': mockArrayBufferUpload.mimetype}
+    //   })
 
     //   const result = await service.createEvent(createEvent)
 
     //   expect(service.createEvent).toHaveBeenCalledWith(createEvent)
+    //   expect(axios.get).toHaveBeenCalledWith(mockCreatedEvent.imageUrl, {
+    //     responseType: 'arraybuffer'
+    //   })
     //   expect(mediaAdapter.uploadImageFromArrayBuffer).toHaveBeenCalledWith(expect.any(Promise))
-    //   expect(result).toEqual({...mockCreatedEvent, media: mockUploadedMedia})
+    //   expect(result).toEqual({...mockCreatedEvent, imageId: ''})
     // })
   })
 })

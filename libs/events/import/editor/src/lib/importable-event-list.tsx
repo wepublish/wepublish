@@ -88,7 +88,7 @@ function ImportableEventListView() {
     onError: onErrorToast
   })
 
-  const {data: ids} = useImportedEventsIdsQuery({
+  const {data: ids, error} = useImportedEventsIdsQuery({
     fetchPolicy: 'no-cache'
   })
   const alreadyImported = ids?.importedEventsIds
@@ -96,6 +96,9 @@ function ImportableEventListView() {
   const importEvent = async (id: string, source: Providers) => {
     createEvent({variables: {filter: {id, source}}})
   }
+
+  console.log('errordupa', error)
+  console.log('datadupa', data)
 
   return (
     <>
