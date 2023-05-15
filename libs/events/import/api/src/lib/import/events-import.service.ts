@@ -326,26 +326,23 @@ class AgendaBasel implements EventsProvider {
     if (!event) {
       throw Error(`Event with id ${id} not found.`)
     }
-
     if (event.imageUrl) {
       const file = fetchAndTransformImage(event.imageUrl)
 
-      if (file) {
-        const {id, ...image} = await mediaAdapter.uploadImageFromArrayBuffer(file)
+      const {id, ...image} = await mediaAdapter.uploadImageFromArrayBuffer(file)
 
-        const createdImage = await prisma.image.create({
-          data: {
-            id,
-            ...image,
-            filename: image.filename
-          },
-          include: {
-            focalPoint: true
-          }
-        })
+      const createdImage = await prisma.image.create({
+        data: {
+          id,
+          ...image,
+          filename: image.filename
+        },
+        include: {
+          focalPoint: true
+        }
+      })
 
-        createdImageId = createdImage.id
-      }
+      createdImageId = createdImage.id
     }
 
     const eventInput = {

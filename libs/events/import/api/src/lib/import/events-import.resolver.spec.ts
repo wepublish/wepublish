@@ -1,18 +1,16 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {INestApplication, Module} from '@nestjs/common'
-import request from 'supertest'
 import * as crypto from 'crypto'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
-import {PrismaClient /*, Prisma, Consent */} from '@prisma/client'
 import {CacheModule} from '@nestjs/cache-manager'
 import {htmlToSlate} from 'slate-serializers'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {EventsImportResolver} from './events-import.resolver'
 import {EventsImportService} from './events-import.service'
-import {Event, ImportedEventsDocument} from './events-import.model'
+import {Event, ImportedEventsDocument, Providers} from './events-import.model'
 import {EventStatus} from './events-import.model'
-import {MediaAdapter, MediaAdapterService} from '@wepublish/image/api'
+import {MediaAdapterService} from '@wepublish/image/api'
 
 export const generateRandomString = () => crypto.randomBytes(20).toString('hex')
 
@@ -29,63 +27,6 @@ export const generateRandomString = () => crypto.randomBytes(20).toString('hex')
   providers: [EventsImportResolver, EventsImportService, MediaAdapterService]
 })
 export class AppModule {}
-
-const eventRef = `
-  fragment ImportableEventRef on Event {
-    id
-    name
-    description
-    status
-    location
-    externalSourceId
-    externalSourceName
-    imageUrl
-    startsAt
-    endsAt
-  }
-`
-
-const eventListQuery = `
-  ${eventRef}
-  query ImportedEventList(
-    $filter: ImportedEventFilter
-    $order: Int
-    $skip: Int
-    $take: Int
-    $sort: String
-  ) {
-    importedEvents(filter: $filter, order: $order, skip: $skip, take: $take, sort: $sort) {
-      nodes {
-        ...ImportableEventRef
-      }
-
-      pageInfo {
-        startCursor
-        endCursor
-        hasNextPage
-        hasPreviousPage
-      }
-
-      totalCount
-    }
-  }
-`
-
-const importedEventQuery = `
-  ${eventRef}
-  query ImportedEvent($filter: SingleEventFilter!) {
-    importedEvent(filter: $filter) {
-      ...ImportableEventRef
-    }
-  }
-`
-
-const createEventMutation = `
-  ${eventRef}
-  mutation createEvent($filter: CreateEventArgs!) {
-    createEvent(filter: $filter)
-  }
-`
 
 export const mockImportableEvents: Event[] = [
   {
@@ -117,20 +58,18 @@ export const mockImportableEventsDocument: ImportedEventsDocument = {
 
 describe('EventsImportResolver', () => {
   let app: INestApplication
-  let prisma: PrismaClient
-  let cacheManager: CacheModule
-  let eventsService: EventsImportService
-  const importableEvents: Event[] = mockImportableEvents
+  let resolver: EventsImportResolver
+  let service: EventsImportService
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [AppModule]
     }).compile()
 
-    prisma = module.get<PrismaClient>(PrismaClient)
     app = module.createNestApplication()
 
-    eventsService = new EventsImportService(cacheManager, prisma, mediaAdapter)
+    resolver = module.get<EventsImportResolver>(EventsImportResolver)
+    service = module.get<EventsImportService>(EventsImportService)
 
     await app.init()
   })
@@ -139,77 +78,40 @@ describe('EventsImportResolver', () => {
     await app.close()
   })
 
-  test('importable event list query', async () => {
-    jest
-      .spyOn(eventsService, 'importedEvents')
-      .mockImplementation(async () => mockImportableEventsDocument)
+  test('importedEvents query should call importedEvents method of EventsImportService with the provided arguments', async () => {
+    const filter = {}
+    const order = 1
+    const skip = 0
+    const take = 10
+    const sort = ''
 
-    await request(app.getHttpServer())
-      .post('')
-      .send({
-        query: eventListQuery,
-        variables: {take: 10, skip: 0}
-      })
-      .expect(200)
-      .expect(res => {
-        expect(res.body.data.importableEvents).toMatchObject(importableEvents)
-      })
+    jest
+      .spyOn(service, 'importedEvents')
+      .mockReturnValueOnce(Promise.resolve(mockImportableEventsDocument))
+
+    expect(resolver.importedEvents(filter, order, skip, take, sort)).resolves.toEqual(
+      mockImportableEventsDocument
+    )
+    expect(service.importedEvents).toHaveBeenCalledWith({filter, order, skip, take, sort})
   })
 
-  // test('create consent mutation', async () => {
-  //   const toCreate = {
-  //     name: 'some-name',
-  //     slug: generateRandomString(),
-  //     defaultValue: true
-  //   }
+  test('importedEvent query should call importedEvent method of EventsImportService with the provided filter', async () => {
+    const filter = {id: 'some-id', source: Providers.AgendaBasel}
 
-  //   await request(app.getHttpServer())
-  //     .post('/')
-  //     .send({
-  //       query: createConsentMutation,
-  //       variables: {
-  //         consent: toCreate
-  //       }
-  //     })
-  //     .set('Accept', 'application/json')
-  //     .expect(200)
-  //     .expect(res => {
-  //       expect(res.body.data.createConsent).toMatchObject({
-  //         id: expect.any(String),
-  //         name: 'some-name',
-  //         slug: toCreate.slug,
-  //         defaultValue: true
-  //       })
-  //     })
-  // })
+    jest
+      .spyOn(service, 'importedEvent')
+      .mockReturnValueOnce(Promise.resolve(mockImportableEvents[0]))
 
-  // test('update consent mutation', async () => {
-  //   const idToUpdate = consents[0].id
+    expect(resolver.importedEvent(filter)).resolves.toEqual(mockImportableEvents[0])
+    expect(service.importedEvent).toHaveBeenCalledWith(filter)
+  })
 
-  //   const toUpdate = {
-  //     name: 'changed name',
-  //     slug: generateRandomString(),
-  //     defaultValue: true
-  //   }
+  test('createEvent mutation should call createEvent method of EventsImportService with the provided filter', () => {
+    const filter = {id: 'some-id', source: Providers.AgendaBasel}
 
-  //   await request(app.getHttpServer())
-  //     .post('/')
-  //     .send({
-  //       query: updateConsentMutation,
-  //       variables: {
-  //         id: idToUpdate,
-  //         consent: toUpdate
-  //       }
-  //     })
-  //     .set('Accept', 'application/json')
-  //     .expect(200)
-  //     .expect(res => {
-  //       expect(res.body.data.updateConsent).toMatchObject({
-  //         id: idToUpdate,
-  //         name: 'changed name',
-  //         slug: toUpdate.slug,
-  //         defaultValue: true
-  //       })
-  //     })
-  // })
+    jest.spyOn(service, 'createEvent').mockReturnValueOnce(Promise.resolve('some-id'))
+
+    expect(resolver.createEvent(filter)).resolves.toEqual('some-id')
+    expect(service.createEvent).toHaveBeenCalledWith(filter)
+  })
 })
