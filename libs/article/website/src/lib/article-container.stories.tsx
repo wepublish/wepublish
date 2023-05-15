@@ -8,6 +8,7 @@ const article = {
   __typename: 'Article',
   id: 'clgp1hfio50331801rejmrk6sj3',
   slug: 'slug',
+  url: 'https://example.com',
   blocks: [
     {
       __typename: 'TitleBlock',
@@ -217,6 +218,8 @@ const article = {
       image: {
         __typename: 'Image',
         id: 'ljh9FHAvHAs0AxC',
+        mimeType: 'image/jpg',
+        format: 'jpg',
         createdAt: '2023-04-18T12:38:56.369Z',
         modifiedAt: '2023-04-18T12:38:56.371Z',
         filename: 'DSC07717',
@@ -282,6 +285,8 @@ const article = {
             style: 'DEFAULT',
             image: {
               id: 'ljh9FHAvHAs0AxC',
+              mimeType: 'image/jpg',
+              format: 'jpg',
               filename: 'DSC07717',
               extension: '.JPG',
               title: null,
@@ -430,6 +435,8 @@ const article = {
             style: 'DEFAULT',
             image: {
               id: 'ljh9FHAvHAs0AxC',
+              mimeType: 'image/jpg',
+              format: 'jpg',
               filename: 'DSC07717',
               extension: '.JPG',
               title: null,
@@ -912,6 +919,8 @@ const article = {
             style: 'DEFAULT',
             image: {
               id: 'ljh9FHAvHAs0AxC',
+              mimeType: 'image/jpg',
+              format: 'jpg',
               filename: 'DSC07717',
               extension: '.JPG',
               title: null,

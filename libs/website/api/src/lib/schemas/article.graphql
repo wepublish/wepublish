@@ -1,6 +1,7 @@
 fragment FullArticle on Article {
   id
   slug
+  url
   blocks {
     __typename
 

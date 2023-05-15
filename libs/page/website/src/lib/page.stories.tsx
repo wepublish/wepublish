@@ -6,6 +6,7 @@ import {Page} from './page'
 const page = {
   id: 'clgoyl8n042780301remhfw9cqj',
   slug: 'slug',
+  url: 'https://example.com',
   blocks: [
     {
       __typename: 'TitleBlock',

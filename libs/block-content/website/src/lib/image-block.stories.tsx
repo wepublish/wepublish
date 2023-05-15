@@ -16,7 +16,7 @@ const image = {
   format: '',
   height: 500,
   width: 500,
-  mimeType: '',
+  mimeType: 'image/jpg',
   tags: [],
   description: 'An image description',
   title: 'An image title',

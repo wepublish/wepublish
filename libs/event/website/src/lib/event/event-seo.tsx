@@ -1,9 +1,10 @@
 import {firstParagraphToPlaintext} from '@wepublish/richtext'
-import {ApiV1, BuilderEventSEOProps, useWebsiteBuilder} from '@wepublish/website'
+import {Event} from '@wepublish/website/api'
+import {BuilderEventSEOProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {formatISO, formatISODuration, intervalToDuration} from 'date-fns'
 import {useMemo} from 'react'
 
-export const getEventSEO = (event: ApiV1.Event) => {
+export const getEventSEO = (event: Event) => {
   const description = firstParagraphToPlaintext(event.description)
   const image = event.image?.url
   const startDate = formatISO(new Date(event.startsAt))

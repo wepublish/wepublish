@@ -6,6 +6,7 @@ import {Article} from './article'
 const article = {
   id: 'clgp1hfio50331801rejmrk6sj3',
   slug: 'slug',
+  url: 'https://example.com',
   blocks: [
     {
       __typename: 'TitleBlock',

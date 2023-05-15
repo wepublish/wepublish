@@ -23,6 +23,7 @@
         "assets": ["libs/website/*.md"],
         "external": "all",
         "rootDir": ".",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
         "clean": false
       }
     },

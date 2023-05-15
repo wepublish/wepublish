@@ -25,7 +25,8 @@ export default {
     },
     '@storybook/addon-a11y',
     '@storybook/addon-docs',
-    '@storybook/addon-styling'
+    '@storybook/addon-styling',
+    '@storybook/addon-links'
   ],
   babel: (config, options) => {
     config.overrides?.push({

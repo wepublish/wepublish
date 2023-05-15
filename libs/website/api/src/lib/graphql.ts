@@ -198,7 +198,7 @@ export type Comment = {
   itemID: Scalars['ID']
   itemType: CommentItemType
   lead?: Maybe<Scalars['String']>
-  modifiedAt: Scalars['DateTime']
+  modifiedAt?: Maybe<Scalars['DateTime']>
   overriddenRatings: Array<OverriddenRating>
   parentID?: Maybe<Scalars['ID']>
   peerId?: Maybe<Scalars['ID']>
@@ -1355,6 +1355,7 @@ export type FullArticleFragment = {
   __typename?: 'Article'
   id: string
   slug: string
+  url: string
   blocks: Array<
     | {__typename: 'BildwurfAdBlock'}
     | {__typename: 'CommentBlock'}
@@ -1637,6 +1638,7 @@ export type ArticleQuery = {
     __typename?: 'Article'
     id: string
     slug: string
+    url: string
     blocks: Array<
       | {__typename: 'BildwurfAdBlock'}
       | {__typename: 'CommentBlock'}
@@ -1926,6 +1928,439 @@ export type CreateSessionMutation = {
     user: {__typename?: 'User'; email: string}
   }
 }
+
+type BlockWithoutTeaser_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'}
+
+type BlockWithoutTeaser_CommentBlock_Fragment = {__typename: 'CommentBlock'}
+
+type BlockWithoutTeaser_EmbedBlock_Fragment = {__typename: 'EmbedBlock'}
+
+type BlockWithoutTeaser_EventBlock_Fragment = {__typename: 'EventBlock'}
+
+type BlockWithoutTeaser_FacebookPostBlock_Fragment = {__typename: 'FacebookPostBlock'}
+
+type BlockWithoutTeaser_HtmlBlock_Fragment = {__typename: 'HTMLBlock'; html?: string | null}
+
+type BlockWithoutTeaser_ImageBlock_Fragment = {
+  __typename: 'ImageBlock'
+  caption?: string | null
+  image?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    title?: string | null
+    url?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    thumbURL?: string | null
+    squareURL?: string | null
+    previewURL?: string | null
+    column1URL?: string | null
+    column6URL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
+}
+
+type BlockWithoutTeaser_ImageGalleryBlock_Fragment = {__typename: 'ImageGalleryBlock'}
+
+type BlockWithoutTeaser_InstagramPostBlock_Fragment = {__typename: 'InstagramPostBlock'}
+
+type BlockWithoutTeaser_LinkPageBreakBlock_Fragment = {__typename: 'LinkPageBreakBlock'}
+
+type BlockWithoutTeaser_ListicleBlock_Fragment = {__typename: 'ListicleBlock'}
+
+type BlockWithoutTeaser_PolisConversationBlock_Fragment = {__typename: 'PolisConversationBlock'}
+
+type BlockWithoutTeaser_PollBlock_Fragment = {__typename: 'PollBlock'}
+
+type BlockWithoutTeaser_QuoteBlock_Fragment = {
+  __typename: 'QuoteBlock'
+  quote?: string | null
+  author?: string | null
+}
+
+type BlockWithoutTeaser_RichTextBlock_Fragment = {__typename: 'RichTextBlock'; richText: Node[]}
+
+type BlockWithoutTeaser_SoundCloudTrackBlock_Fragment = {__typename: 'SoundCloudTrackBlock'}
+
+type BlockWithoutTeaser_TeaserGridBlock_Fragment = {__typename: 'TeaserGridBlock'}
+
+type BlockWithoutTeaser_TeaserGridFlexBlock_Fragment = {__typename: 'TeaserGridFlexBlock'}
+
+type BlockWithoutTeaser_TikTokVideoBlock_Fragment = {__typename: 'TikTokVideoBlock'}
+
+type BlockWithoutTeaser_TitleBlock_Fragment = {
+  __typename: 'TitleBlock'
+  title?: string | null
+  lead?: string | null
+}
+
+type BlockWithoutTeaser_TwitterTweetBlock_Fragment = {__typename: 'TwitterTweetBlock'}
+
+type BlockWithoutTeaser_VimeoVideoBlock_Fragment = {__typename: 'VimeoVideoBlock'}
+
+type BlockWithoutTeaser_YouTubeVideoBlock_Fragment = {__typename: 'YouTubeVideoBlock'}
+
+export type BlockWithoutTeaserFragment =
+  | BlockWithoutTeaser_BildwurfAdBlock_Fragment
+  | BlockWithoutTeaser_CommentBlock_Fragment
+  | BlockWithoutTeaser_EmbedBlock_Fragment
+  | BlockWithoutTeaser_EventBlock_Fragment
+  | BlockWithoutTeaser_FacebookPostBlock_Fragment
+  | BlockWithoutTeaser_HtmlBlock_Fragment
+  | BlockWithoutTeaser_ImageBlock_Fragment
+  | BlockWithoutTeaser_ImageGalleryBlock_Fragment
+  | BlockWithoutTeaser_InstagramPostBlock_Fragment
+  | BlockWithoutTeaser_LinkPageBreakBlock_Fragment
+  | BlockWithoutTeaser_ListicleBlock_Fragment
+  | BlockWithoutTeaser_PolisConversationBlock_Fragment
+  | BlockWithoutTeaser_PollBlock_Fragment
+  | BlockWithoutTeaser_QuoteBlock_Fragment
+  | BlockWithoutTeaser_RichTextBlock_Fragment
+  | BlockWithoutTeaser_SoundCloudTrackBlock_Fragment
+  | BlockWithoutTeaser_TeaserGridBlock_Fragment
+  | BlockWithoutTeaser_TeaserGridFlexBlock_Fragment
+  | BlockWithoutTeaser_TikTokVideoBlock_Fragment
+  | BlockWithoutTeaser_TitleBlock_Fragment
+  | BlockWithoutTeaser_TwitterTweetBlock_Fragment
+  | BlockWithoutTeaser_VimeoVideoBlock_Fragment
+  | BlockWithoutTeaser_YouTubeVideoBlock_Fragment
+
+type FullBlock_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'}
+
+type FullBlock_CommentBlock_Fragment = {__typename: 'CommentBlock'}
+
+type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'}
+
+type FullBlock_EventBlock_Fragment = {__typename: 'EventBlock'}
+
+type FullBlock_FacebookPostBlock_Fragment = {__typename: 'FacebookPostBlock'}
+
+type FullBlock_HtmlBlock_Fragment = {__typename: 'HTMLBlock'; html?: string | null}
+
+type FullBlock_ImageBlock_Fragment = {
+  __typename: 'ImageBlock'
+  caption?: string | null
+  image?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    title?: string | null
+    url?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    thumbURL?: string | null
+    squareURL?: string | null
+    previewURL?: string | null
+    column1URL?: string | null
+    column6URL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
+}
+
+type FullBlock_ImageGalleryBlock_Fragment = {__typename: 'ImageGalleryBlock'}
+
+type FullBlock_InstagramPostBlock_Fragment = {__typename: 'InstagramPostBlock'}
+
+type FullBlock_LinkPageBreakBlock_Fragment = {__typename: 'LinkPageBreakBlock'}
+
+type FullBlock_ListicleBlock_Fragment = {__typename: 'ListicleBlock'}
+
+type FullBlock_PolisConversationBlock_Fragment = {__typename: 'PolisConversationBlock'}
+
+type FullBlock_PollBlock_Fragment = {__typename: 'PollBlock'}
+
+type FullBlock_QuoteBlock_Fragment = {
+  __typename: 'QuoteBlock'
+  quote?: string | null
+  author?: string | null
+}
+
+type FullBlock_RichTextBlock_Fragment = {__typename: 'RichTextBlock'; richText: Node[]}
+
+type FullBlock_SoundCloudTrackBlock_Fragment = {__typename: 'SoundCloudTrackBlock'}
+
+type FullBlock_TeaserGridBlock_Fragment = {__typename: 'TeaserGridBlock'}
+
+type FullBlock_TeaserGridFlexBlock_Fragment = {
+  __typename: 'TeaserGridFlexBlock'
+  flexTeasers: Array<{
+    __typename?: 'FlexTeaser'
+    alignment: {__typename?: 'FlexAlignment'; x: number; y: number; w: number; h: number}
+    teaser?:
+      | {
+          __typename?: 'ArticleTeaser'
+          style: TeaserStyle
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            filename?: string | null
+            extension: string
+            title?: string | null
+            description?: string | null
+            width: number
+            height: number
+            url?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            thumbURL?: string | null
+            squareURL?: string | null
+            previewURL?: string | null
+            column1URL?: string | null
+            column6URL?: string | null
+          } | null
+          article?: {
+            __typename?: 'Article'
+            id: string
+            title: string
+            preTitle?: string | null
+            lead?: string | null
+            url: string
+            blocks: Array<
+              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'CommentBlock'}
+              | {__typename: 'EmbedBlock'}
+              | {__typename: 'EventBlock'}
+              | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'HTMLBlock'; html?: string | null}
+              | {
+                  __typename: 'ImageBlock'
+                  caption?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    title?: string | null
+                    url?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    thumbURL?: string | null
+                    squareURL?: string | null
+                    previewURL?: string | null
+                    column1URL?: string | null
+                    column6URL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                }
+              | {__typename: 'ImageGalleryBlock'}
+              | {__typename: 'InstagramPostBlock'}
+              | {__typename: 'LinkPageBreakBlock'}
+              | {__typename: 'ListicleBlock'}
+              | {__typename: 'PolisConversationBlock'}
+              | {__typename: 'PollBlock'}
+              | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+              | {__typename: 'RichTextBlock'; richText: Node[]}
+              | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'TeaserGridBlock'}
+              | {__typename: 'TeaserGridFlexBlock'}
+              | {__typename: 'TikTokVideoBlock'}
+              | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+              | {__typename: 'TwitterTweetBlock'}
+              | {__typename: 'VimeoVideoBlock'}
+              | {__typename: 'YouTubeVideoBlock'}
+            >
+          } | null
+        }
+      | {
+          __typename?: 'CustomTeaser'
+          style: TeaserStyle
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          contentUrl?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            filename?: string | null
+            extension: string
+            title?: string | null
+            description?: string | null
+            width: number
+            height: number
+            url?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            thumbURL?: string | null
+            squareURL?: string | null
+            previewURL?: string | null
+            column1URL?: string | null
+            column6URL?: string | null
+          } | null
+          properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+        }
+      | {
+          __typename?: 'PageTeaser'
+          style: TeaserStyle
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            filename?: string | null
+            extension: string
+            title?: string | null
+            description?: string | null
+            width: number
+            height: number
+            url?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            thumbURL?: string | null
+            squareURL?: string | null
+            previewURL?: string | null
+            column1URL?: string | null
+            column6URL?: string | null
+          } | null
+          page?: {
+            __typename?: 'Page'
+            id: string
+            title: string
+            description?: string | null
+            url: string
+            blocks: Array<
+              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'CommentBlock'}
+              | {__typename: 'EmbedBlock'}
+              | {__typename: 'EventBlock'}
+              | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'HTMLBlock'; html?: string | null}
+              | {
+                  __typename: 'ImageBlock'
+                  caption?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    title?: string | null
+                    url?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    thumbURL?: string | null
+                    squareURL?: string | null
+                    previewURL?: string | null
+                    column1URL?: string | null
+                    column6URL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                }
+              | {__typename: 'ImageGalleryBlock'}
+              | {__typename: 'InstagramPostBlock'}
+              | {__typename: 'LinkPageBreakBlock'}
+              | {__typename: 'ListicleBlock'}
+              | {__typename: 'PolisConversationBlock'}
+              | {__typename: 'PollBlock'}
+              | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+              | {__typename: 'RichTextBlock'; richText: Node[]}
+              | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'TeaserGridBlock'}
+              | {__typename: 'TeaserGridFlexBlock'}
+              | {__typename: 'TikTokVideoBlock'}
+              | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+              | {__typename: 'TwitterTweetBlock'}
+              | {__typename: 'VimeoVideoBlock'}
+              | {__typename: 'YouTubeVideoBlock'}
+            >
+          } | null
+        }
+      | {__typename?: 'PeerArticleTeaser'}
+      | null
+  }>
+}
+
+type FullBlock_TikTokVideoBlock_Fragment = {__typename: 'TikTokVideoBlock'}
+
+type FullBlock_TitleBlock_Fragment = {
+  __typename: 'TitleBlock'
+  title?: string | null
+  lead?: string | null
+}
+
+type FullBlock_TwitterTweetBlock_Fragment = {__typename: 'TwitterTweetBlock'}
+
+type FullBlock_VimeoVideoBlock_Fragment = {__typename: 'VimeoVideoBlock'}
+
+type FullBlock_YouTubeVideoBlock_Fragment = {__typename: 'YouTubeVideoBlock'}
+
+export type FullBlockFragment =
+  | FullBlock_BildwurfAdBlock_Fragment
+  | FullBlock_CommentBlock_Fragment
+  | FullBlock_EmbedBlock_Fragment
+  | FullBlock_EventBlock_Fragment
+  | FullBlock_FacebookPostBlock_Fragment
+  | FullBlock_HtmlBlock_Fragment
+  | FullBlock_ImageBlock_Fragment
+  | FullBlock_ImageGalleryBlock_Fragment
+  | FullBlock_InstagramPostBlock_Fragment
+  | FullBlock_LinkPageBreakBlock_Fragment
+  | FullBlock_ListicleBlock_Fragment
+  | FullBlock_PolisConversationBlock_Fragment
+  | FullBlock_PollBlock_Fragment
+  | FullBlock_QuoteBlock_Fragment
+  | FullBlock_RichTextBlock_Fragment
+  | FullBlock_SoundCloudTrackBlock_Fragment
+  | FullBlock_TeaserGridBlock_Fragment
+  | FullBlock_TeaserGridFlexBlock_Fragment
+  | FullBlock_TikTokVideoBlock_Fragment
+  | FullBlock_TitleBlock_Fragment
+  | FullBlock_TwitterTweetBlock_Fragment
+  | FullBlock_VimeoVideoBlock_Fragment
+  | FullBlock_YouTubeVideoBlock_Fragment
 
 export type ChallengeQueryVariables = Exact<{[key: string]: never}>
 
@@ -2292,13 +2727,597 @@ export type FullNavigationFragment = {
     | {
         __typename?: 'ArticleNavigationLink'
         label: string
-        article?: {__typename?: 'Article'; url: string} | null
+        article?: {
+          __typename?: 'Article'
+          id: string
+          slug: string
+          url: string
+          blocks: Array<
+            | {__typename: 'BildwurfAdBlock'}
+            | {__typename: 'CommentBlock'}
+            | {__typename: 'EmbedBlock'}
+            | {__typename: 'EventBlock'}
+            | {__typename: 'FacebookPostBlock'}
+            | {__typename: 'HTMLBlock'; html?: string | null}
+            | {
+                __typename: 'ImageBlock'
+                caption?: string | null
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  title?: string | null
+                  url?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  thumbURL?: string | null
+                  squareURL?: string | null
+                  previewURL?: string | null
+                  column1URL?: string | null
+                  column6URL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+              }
+            | {__typename: 'ImageGalleryBlock'}
+            | {__typename: 'InstagramPostBlock'}
+            | {__typename: 'LinkPageBreakBlock'}
+            | {__typename: 'ListicleBlock'}
+            | {__typename: 'PolisConversationBlock'}
+            | {__typename: 'PollBlock'}
+            | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+            | {__typename: 'RichTextBlock'; richText: Node[]}
+            | {__typename: 'SoundCloudTrackBlock'}
+            | {__typename: 'TeaserGridBlock'}
+            | {
+                __typename: 'TeaserGridFlexBlock'
+                flexTeasers: Array<{
+                  __typename?: 'FlexTeaser'
+                  alignment: {
+                    __typename?: 'FlexAlignment'
+                    x: number
+                    y: number
+                    w: number
+                    h: number
+                  }
+                  teaser?:
+                    | {
+                        __typename?: 'ArticleTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          filename?: string | null
+                          extension: string
+                          title?: string | null
+                          description?: string | null
+                          width: number
+                          height: number
+                          url?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          thumbURL?: string | null
+                          squareURL?: string | null
+                          previewURL?: string | null
+                          column1URL?: string | null
+                          column6URL?: string | null
+                        } | null
+                        article?: {
+                          __typename?: 'Article'
+                          id: string
+                          title: string
+                          preTitle?: string | null
+                          lead?: string | null
+                          url: string
+                          blocks: Array<
+                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'CommentBlock'}
+                            | {__typename: 'EmbedBlock'}
+                            | {__typename: 'EventBlock'}
+                            | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'HTMLBlock'}
+                            | {
+                                __typename: 'ImageBlock'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  title?: string | null
+                                  url?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  thumbURL?: string | null
+                                  squareURL?: string | null
+                                  previewURL?: string | null
+                                  column1URL?: string | null
+                                  column6URL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }
+                            | {__typename: 'ImageGalleryBlock'}
+                            | {__typename: 'InstagramPostBlock'}
+                            | {__typename: 'LinkPageBreakBlock'}
+                            | {__typename: 'ListicleBlock'}
+                            | {__typename: 'PolisConversationBlock'}
+                            | {__typename: 'PollBlock'}
+                            | {__typename: 'QuoteBlock'}
+                            | {__typename: 'RichTextBlock'}
+                            | {__typename: 'SoundCloudTrackBlock'}
+                            | {__typename: 'TeaserGridBlock'}
+                            | {__typename: 'TeaserGridFlexBlock'}
+                            | {__typename: 'TikTokVideoBlock'}
+                            | {
+                                __typename: 'TitleBlock'
+                                title?: string | null
+                                lead?: string | null
+                              }
+                            | {__typename: 'TwitterTweetBlock'}
+                            | {__typename: 'VimeoVideoBlock'}
+                            | {__typename: 'YouTubeVideoBlock'}
+                          >
+                        } | null
+                      }
+                    | {
+                        __typename?: 'CustomTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        contentUrl?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          filename?: string | null
+                          extension: string
+                          title?: string | null
+                          description?: string | null
+                          width: number
+                          height: number
+                          url?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          thumbURL?: string | null
+                          squareURL?: string | null
+                          previewURL?: string | null
+                          column1URL?: string | null
+                          column6URL?: string | null
+                        } | null
+                        properties: Array<{
+                          __typename?: 'PublicProperties'
+                          key: string
+                          value: string
+                        }>
+                      }
+                    | {
+                        __typename?: 'PageTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          filename?: string | null
+                          extension: string
+                          title?: string | null
+                          description?: string | null
+                          width: number
+                          height: number
+                          url?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          thumbURL?: string | null
+                          squareURL?: string | null
+                          previewURL?: string | null
+                          column1URL?: string | null
+                          column6URL?: string | null
+                        } | null
+                        page?: {
+                          __typename?: 'Page'
+                          id: string
+                          title: string
+                          description?: string | null
+                          url: string
+                          blocks: Array<
+                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'CommentBlock'}
+                            | {__typename: 'EmbedBlock'}
+                            | {__typename: 'EventBlock'}
+                            | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'HTMLBlock'}
+                            | {
+                                __typename: 'ImageBlock'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  title?: string | null
+                                  url?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  thumbURL?: string | null
+                                  squareURL?: string | null
+                                  previewURL?: string | null
+                                  column1URL?: string | null
+                                  column6URL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }
+                            | {__typename: 'ImageGalleryBlock'}
+                            | {__typename: 'InstagramPostBlock'}
+                            | {__typename: 'LinkPageBreakBlock'}
+                            | {__typename: 'ListicleBlock'}
+                            | {__typename: 'PolisConversationBlock'}
+                            | {__typename: 'PollBlock'}
+                            | {__typename: 'QuoteBlock'}
+                            | {__typename: 'RichTextBlock'}
+                            | {__typename: 'SoundCloudTrackBlock'}
+                            | {__typename: 'TeaserGridBlock'}
+                            | {__typename: 'TeaserGridFlexBlock'}
+                            | {__typename: 'TikTokVideoBlock'}
+                            | {
+                                __typename: 'TitleBlock'
+                                title?: string | null
+                                lead?: string | null
+                              }
+                            | {__typename: 'TwitterTweetBlock'}
+                            | {__typename: 'VimeoVideoBlock'}
+                            | {__typename: 'YouTubeVideoBlock'}
+                          >
+                        } | null
+                      }
+                    | {__typename?: 'PeerArticleTeaser'}
+                    | null
+                }>
+              }
+            | {__typename: 'TikTokVideoBlock'}
+            | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+            | {__typename: 'TwitterTweetBlock'}
+            | {__typename: 'VimeoVideoBlock'}
+            | {__typename: 'YouTubeVideoBlock'}
+          >
+        } | null
       }
     | {__typename?: 'ExternalNavigationLink'; label: string; url: string}
     | {
         __typename?: 'PageNavigationLink'
         label: string
-        page?: {__typename?: 'Page'; url: string} | null
+        page?: {
+          __typename?: 'Page'
+          id: string
+          slug: string
+          url: string
+          blocks: Array<
+            | {__typename: 'BildwurfAdBlock'}
+            | {__typename: 'CommentBlock'}
+            | {__typename: 'EmbedBlock'}
+            | {__typename: 'EventBlock'}
+            | {__typename: 'FacebookPostBlock'}
+            | {__typename: 'HTMLBlock'; html?: string | null}
+            | {
+                __typename: 'ImageBlock'
+                caption?: string | null
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  title?: string | null
+                  url?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  thumbURL?: string | null
+                  squareURL?: string | null
+                  previewURL?: string | null
+                  column1URL?: string | null
+                  column6URL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+              }
+            | {__typename: 'ImageGalleryBlock'}
+            | {__typename: 'InstagramPostBlock'}
+            | {__typename: 'LinkPageBreakBlock'}
+            | {__typename: 'ListicleBlock'}
+            | {__typename: 'PolisConversationBlock'}
+            | {__typename: 'PollBlock'}
+            | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+            | {__typename: 'RichTextBlock'; richText: Node[]}
+            | {__typename: 'SoundCloudTrackBlock'}
+            | {__typename: 'TeaserGridBlock'}
+            | {
+                __typename: 'TeaserGridFlexBlock'
+                flexTeasers: Array<{
+                  __typename?: 'FlexTeaser'
+                  alignment: {
+                    __typename?: 'FlexAlignment'
+                    x: number
+                    y: number
+                    w: number
+                    h: number
+                  }
+                  teaser?:
+                    | {
+                        __typename?: 'ArticleTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          filename?: string | null
+                          extension: string
+                          title?: string | null
+                          description?: string | null
+                          width: number
+                          height: number
+                          url?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          thumbURL?: string | null
+                          squareURL?: string | null
+                          previewURL?: string | null
+                          column1URL?: string | null
+                          column6URL?: string | null
+                        } | null
+                        article?: {
+                          __typename?: 'Article'
+                          id: string
+                          title: string
+                          preTitle?: string | null
+                          lead?: string | null
+                          url: string
+                          blocks: Array<
+                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'CommentBlock'}
+                            | {__typename: 'EmbedBlock'}
+                            | {__typename: 'EventBlock'}
+                            | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'HTMLBlock'}
+                            | {
+                                __typename: 'ImageBlock'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  title?: string | null
+                                  url?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  thumbURL?: string | null
+                                  squareURL?: string | null
+                                  previewURL?: string | null
+                                  column1URL?: string | null
+                                  column6URL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }
+                            | {__typename: 'ImageGalleryBlock'}
+                            | {__typename: 'InstagramPostBlock'}
+                            | {__typename: 'LinkPageBreakBlock'}
+                            | {__typename: 'ListicleBlock'}
+                            | {__typename: 'PolisConversationBlock'}
+                            | {__typename: 'PollBlock'}
+                            | {__typename: 'QuoteBlock'}
+                            | {__typename: 'RichTextBlock'}
+                            | {__typename: 'SoundCloudTrackBlock'}
+                            | {__typename: 'TeaserGridBlock'}
+                            | {__typename: 'TeaserGridFlexBlock'}
+                            | {__typename: 'TikTokVideoBlock'}
+                            | {
+                                __typename: 'TitleBlock'
+                                title?: string | null
+                                lead?: string | null
+                              }
+                            | {__typename: 'TwitterTweetBlock'}
+                            | {__typename: 'VimeoVideoBlock'}
+                            | {__typename: 'YouTubeVideoBlock'}
+                          >
+                        } | null
+                      }
+                    | {
+                        __typename?: 'CustomTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        contentUrl?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          filename?: string | null
+                          extension: string
+                          title?: string | null
+                          description?: string | null
+                          width: number
+                          height: number
+                          url?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          thumbURL?: string | null
+                          squareURL?: string | null
+                          previewURL?: string | null
+                          column1URL?: string | null
+                          column6URL?: string | null
+                        } | null
+                        properties: Array<{
+                          __typename?: 'PublicProperties'
+                          key: string
+                          value: string
+                        }>
+                      }
+                    | {
+                        __typename?: 'PageTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          filename?: string | null
+                          extension: string
+                          title?: string | null
+                          description?: string | null
+                          width: number
+                          height: number
+                          url?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          thumbURL?: string | null
+                          squareURL?: string | null
+                          previewURL?: string | null
+                          column1URL?: string | null
+                          column6URL?: string | null
+                        } | null
+                        page?: {
+                          __typename?: 'Page'
+                          id: string
+                          title: string
+                          description?: string | null
+                          url: string
+                          blocks: Array<
+                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'CommentBlock'}
+                            | {__typename: 'EmbedBlock'}
+                            | {__typename: 'EventBlock'}
+                            | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'HTMLBlock'}
+                            | {
+                                __typename: 'ImageBlock'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  title?: string | null
+                                  url?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  thumbURL?: string | null
+                                  squareURL?: string | null
+                                  previewURL?: string | null
+                                  column1URL?: string | null
+                                  column6URL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }
+                            | {__typename: 'ImageGalleryBlock'}
+                            | {__typename: 'InstagramPostBlock'}
+                            | {__typename: 'LinkPageBreakBlock'}
+                            | {__typename: 'ListicleBlock'}
+                            | {__typename: 'PolisConversationBlock'}
+                            | {__typename: 'PollBlock'}
+                            | {__typename: 'QuoteBlock'}
+                            | {__typename: 'RichTextBlock'}
+                            | {__typename: 'SoundCloudTrackBlock'}
+                            | {__typename: 'TeaserGridBlock'}
+                            | {__typename: 'TeaserGridFlexBlock'}
+                            | {__typename: 'TikTokVideoBlock'}
+                            | {
+                                __typename: 'TitleBlock'
+                                title?: string | null
+                                lead?: string | null
+                              }
+                            | {__typename: 'TwitterTweetBlock'}
+                            | {__typename: 'VimeoVideoBlock'}
+                            | {__typename: 'YouTubeVideoBlock'}
+                          >
+                        } | null
+                      }
+                    | {__typename?: 'PeerArticleTeaser'}
+                    | null
+                }>
+              }
+            | {__typename: 'TikTokVideoBlock'}
+            | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+            | {__typename: 'TwitterTweetBlock'}
+            | {__typename: 'VimeoVideoBlock'}
+            | {__typename: 'YouTubeVideoBlock'}
+          >
+        } | null
       }
   >
 }
@@ -2316,13 +3335,597 @@ export type NavigationListQuery = {
       | {
           __typename?: 'ArticleNavigationLink'
           label: string
-          article?: {__typename?: 'Article'; url: string} | null
+          article?: {
+            __typename?: 'Article'
+            id: string
+            slug: string
+            url: string
+            blocks: Array<
+              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'CommentBlock'}
+              | {__typename: 'EmbedBlock'}
+              | {__typename: 'EventBlock'}
+              | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'HTMLBlock'; html?: string | null}
+              | {
+                  __typename: 'ImageBlock'
+                  caption?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    title?: string | null
+                    url?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    thumbURL?: string | null
+                    squareURL?: string | null
+                    previewURL?: string | null
+                    column1URL?: string | null
+                    column6URL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                }
+              | {__typename: 'ImageGalleryBlock'}
+              | {__typename: 'InstagramPostBlock'}
+              | {__typename: 'LinkPageBreakBlock'}
+              | {__typename: 'ListicleBlock'}
+              | {__typename: 'PolisConversationBlock'}
+              | {__typename: 'PollBlock'}
+              | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+              | {__typename: 'RichTextBlock'; richText: Node[]}
+              | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'TeaserGridBlock'}
+              | {
+                  __typename: 'TeaserGridFlexBlock'
+                  flexTeasers: Array<{
+                    __typename?: 'FlexTeaser'
+                    alignment: {
+                      __typename?: 'FlexAlignment'
+                      x: number
+                      y: number
+                      w: number
+                      h: number
+                    }
+                    teaser?:
+                      | {
+                          __typename?: 'ArticleTeaser'
+                          style: TeaserStyle
+                          preTitle?: string | null
+                          title?: string | null
+                          lead?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            filename?: string | null
+                            extension: string
+                            title?: string | null
+                            description?: string | null
+                            width: number
+                            height: number
+                            url?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            thumbURL?: string | null
+                            squareURL?: string | null
+                            previewURL?: string | null
+                            column1URL?: string | null
+                            column6URL?: string | null
+                          } | null
+                          article?: {
+                            __typename?: 'Article'
+                            id: string
+                            title: string
+                            preTitle?: string | null
+                            lead?: string | null
+                            url: string
+                            blocks: Array<
+                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'CommentBlock'}
+                              | {__typename: 'EmbedBlock'}
+                              | {__typename: 'EventBlock'}
+                              | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'HTMLBlock'}
+                              | {
+                                  __typename: 'ImageBlock'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    title?: string | null
+                                    url?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    thumbURL?: string | null
+                                    squareURL?: string | null
+                                    previewURL?: string | null
+                                    column1URL?: string | null
+                                    column6URL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }
+                              | {__typename: 'ImageGalleryBlock'}
+                              | {__typename: 'InstagramPostBlock'}
+                              | {__typename: 'LinkPageBreakBlock'}
+                              | {__typename: 'ListicleBlock'}
+                              | {__typename: 'PolisConversationBlock'}
+                              | {__typename: 'PollBlock'}
+                              | {__typename: 'QuoteBlock'}
+                              | {__typename: 'RichTextBlock'}
+                              | {__typename: 'SoundCloudTrackBlock'}
+                              | {__typename: 'TeaserGridBlock'}
+                              | {__typename: 'TeaserGridFlexBlock'}
+                              | {__typename: 'TikTokVideoBlock'}
+                              | {
+                                  __typename: 'TitleBlock'
+                                  title?: string | null
+                                  lead?: string | null
+                                }
+                              | {__typename: 'TwitterTweetBlock'}
+                              | {__typename: 'VimeoVideoBlock'}
+                              | {__typename: 'YouTubeVideoBlock'}
+                            >
+                          } | null
+                        }
+                      | {
+                          __typename?: 'CustomTeaser'
+                          style: TeaserStyle
+                          preTitle?: string | null
+                          title?: string | null
+                          lead?: string | null
+                          contentUrl?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            filename?: string | null
+                            extension: string
+                            title?: string | null
+                            description?: string | null
+                            width: number
+                            height: number
+                            url?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            thumbURL?: string | null
+                            squareURL?: string | null
+                            previewURL?: string | null
+                            column1URL?: string | null
+                            column6URL?: string | null
+                          } | null
+                          properties: Array<{
+                            __typename?: 'PublicProperties'
+                            key: string
+                            value: string
+                          }>
+                        }
+                      | {
+                          __typename?: 'PageTeaser'
+                          style: TeaserStyle
+                          preTitle?: string | null
+                          title?: string | null
+                          lead?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            filename?: string | null
+                            extension: string
+                            title?: string | null
+                            description?: string | null
+                            width: number
+                            height: number
+                            url?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            thumbURL?: string | null
+                            squareURL?: string | null
+                            previewURL?: string | null
+                            column1URL?: string | null
+                            column6URL?: string | null
+                          } | null
+                          page?: {
+                            __typename?: 'Page'
+                            id: string
+                            title: string
+                            description?: string | null
+                            url: string
+                            blocks: Array<
+                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'CommentBlock'}
+                              | {__typename: 'EmbedBlock'}
+                              | {__typename: 'EventBlock'}
+                              | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'HTMLBlock'}
+                              | {
+                                  __typename: 'ImageBlock'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    title?: string | null
+                                    url?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    thumbURL?: string | null
+                                    squareURL?: string | null
+                                    previewURL?: string | null
+                                    column1URL?: string | null
+                                    column6URL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }
+                              | {__typename: 'ImageGalleryBlock'}
+                              | {__typename: 'InstagramPostBlock'}
+                              | {__typename: 'LinkPageBreakBlock'}
+                              | {__typename: 'ListicleBlock'}
+                              | {__typename: 'PolisConversationBlock'}
+                              | {__typename: 'PollBlock'}
+                              | {__typename: 'QuoteBlock'}
+                              | {__typename: 'RichTextBlock'}
+                              | {__typename: 'SoundCloudTrackBlock'}
+                              | {__typename: 'TeaserGridBlock'}
+                              | {__typename: 'TeaserGridFlexBlock'}
+                              | {__typename: 'TikTokVideoBlock'}
+                              | {
+                                  __typename: 'TitleBlock'
+                                  title?: string | null
+                                  lead?: string | null
+                                }
+                              | {__typename: 'TwitterTweetBlock'}
+                              | {__typename: 'VimeoVideoBlock'}
+                              | {__typename: 'YouTubeVideoBlock'}
+                            >
+                          } | null
+                        }
+                      | {__typename?: 'PeerArticleTeaser'}
+                      | null
+                  }>
+                }
+              | {__typename: 'TikTokVideoBlock'}
+              | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+              | {__typename: 'TwitterTweetBlock'}
+              | {__typename: 'VimeoVideoBlock'}
+              | {__typename: 'YouTubeVideoBlock'}
+            >
+          } | null
         }
       | {__typename?: 'ExternalNavigationLink'; label: string; url: string}
       | {
           __typename?: 'PageNavigationLink'
           label: string
-          page?: {__typename?: 'Page'; url: string} | null
+          page?: {
+            __typename?: 'Page'
+            id: string
+            slug: string
+            url: string
+            blocks: Array<
+              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'CommentBlock'}
+              | {__typename: 'EmbedBlock'}
+              | {__typename: 'EventBlock'}
+              | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'HTMLBlock'; html?: string | null}
+              | {
+                  __typename: 'ImageBlock'
+                  caption?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    title?: string | null
+                    url?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    thumbURL?: string | null
+                    squareURL?: string | null
+                    previewURL?: string | null
+                    column1URL?: string | null
+                    column6URL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                }
+              | {__typename: 'ImageGalleryBlock'}
+              | {__typename: 'InstagramPostBlock'}
+              | {__typename: 'LinkPageBreakBlock'}
+              | {__typename: 'ListicleBlock'}
+              | {__typename: 'PolisConversationBlock'}
+              | {__typename: 'PollBlock'}
+              | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+              | {__typename: 'RichTextBlock'; richText: Node[]}
+              | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'TeaserGridBlock'}
+              | {
+                  __typename: 'TeaserGridFlexBlock'
+                  flexTeasers: Array<{
+                    __typename?: 'FlexTeaser'
+                    alignment: {
+                      __typename?: 'FlexAlignment'
+                      x: number
+                      y: number
+                      w: number
+                      h: number
+                    }
+                    teaser?:
+                      | {
+                          __typename?: 'ArticleTeaser'
+                          style: TeaserStyle
+                          preTitle?: string | null
+                          title?: string | null
+                          lead?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            filename?: string | null
+                            extension: string
+                            title?: string | null
+                            description?: string | null
+                            width: number
+                            height: number
+                            url?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            thumbURL?: string | null
+                            squareURL?: string | null
+                            previewURL?: string | null
+                            column1URL?: string | null
+                            column6URL?: string | null
+                          } | null
+                          article?: {
+                            __typename?: 'Article'
+                            id: string
+                            title: string
+                            preTitle?: string | null
+                            lead?: string | null
+                            url: string
+                            blocks: Array<
+                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'CommentBlock'}
+                              | {__typename: 'EmbedBlock'}
+                              | {__typename: 'EventBlock'}
+                              | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'HTMLBlock'}
+                              | {
+                                  __typename: 'ImageBlock'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    title?: string | null
+                                    url?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    thumbURL?: string | null
+                                    squareURL?: string | null
+                                    previewURL?: string | null
+                                    column1URL?: string | null
+                                    column6URL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }
+                              | {__typename: 'ImageGalleryBlock'}
+                              | {__typename: 'InstagramPostBlock'}
+                              | {__typename: 'LinkPageBreakBlock'}
+                              | {__typename: 'ListicleBlock'}
+                              | {__typename: 'PolisConversationBlock'}
+                              | {__typename: 'PollBlock'}
+                              | {__typename: 'QuoteBlock'}
+                              | {__typename: 'RichTextBlock'}
+                              | {__typename: 'SoundCloudTrackBlock'}
+                              | {__typename: 'TeaserGridBlock'}
+                              | {__typename: 'TeaserGridFlexBlock'}
+                              | {__typename: 'TikTokVideoBlock'}
+                              | {
+                                  __typename: 'TitleBlock'
+                                  title?: string | null
+                                  lead?: string | null
+                                }
+                              | {__typename: 'TwitterTweetBlock'}
+                              | {__typename: 'VimeoVideoBlock'}
+                              | {__typename: 'YouTubeVideoBlock'}
+                            >
+                          } | null
+                        }
+                      | {
+                          __typename?: 'CustomTeaser'
+                          style: TeaserStyle
+                          preTitle?: string | null
+                          title?: string | null
+                          lead?: string | null
+                          contentUrl?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            filename?: string | null
+                            extension: string
+                            title?: string | null
+                            description?: string | null
+                            width: number
+                            height: number
+                            url?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            thumbURL?: string | null
+                            squareURL?: string | null
+                            previewURL?: string | null
+                            column1URL?: string | null
+                            column6URL?: string | null
+                          } | null
+                          properties: Array<{
+                            __typename?: 'PublicProperties'
+                            key: string
+                            value: string
+                          }>
+                        }
+                      | {
+                          __typename?: 'PageTeaser'
+                          style: TeaserStyle
+                          preTitle?: string | null
+                          title?: string | null
+                          lead?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            filename?: string | null
+                            extension: string
+                            title?: string | null
+                            description?: string | null
+                            width: number
+                            height: number
+                            url?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            thumbURL?: string | null
+                            squareURL?: string | null
+                            previewURL?: string | null
+                            column1URL?: string | null
+                            column6URL?: string | null
+                          } | null
+                          page?: {
+                            __typename?: 'Page'
+                            id: string
+                            title: string
+                            description?: string | null
+                            url: string
+                            blocks: Array<
+                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'CommentBlock'}
+                              | {__typename: 'EmbedBlock'}
+                              | {__typename: 'EventBlock'}
+                              | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'HTMLBlock'}
+                              | {
+                                  __typename: 'ImageBlock'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    title?: string | null
+                                    url?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    thumbURL?: string | null
+                                    squareURL?: string | null
+                                    previewURL?: string | null
+                                    column1URL?: string | null
+                                    column6URL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }
+                              | {__typename: 'ImageGalleryBlock'}
+                              | {__typename: 'InstagramPostBlock'}
+                              | {__typename: 'LinkPageBreakBlock'}
+                              | {__typename: 'ListicleBlock'}
+                              | {__typename: 'PolisConversationBlock'}
+                              | {__typename: 'PollBlock'}
+                              | {__typename: 'QuoteBlock'}
+                              | {__typename: 'RichTextBlock'}
+                              | {__typename: 'SoundCloudTrackBlock'}
+                              | {__typename: 'TeaserGridBlock'}
+                              | {__typename: 'TeaserGridFlexBlock'}
+                              | {__typename: 'TikTokVideoBlock'}
+                              | {
+                                  __typename: 'TitleBlock'
+                                  title?: string | null
+                                  lead?: string | null
+                                }
+                              | {__typename: 'TwitterTweetBlock'}
+                              | {__typename: 'VimeoVideoBlock'}
+                              | {__typename: 'YouTubeVideoBlock'}
+                            >
+                          } | null
+                        }
+                      | {__typename?: 'PeerArticleTeaser'}
+                      | null
+                  }>
+                }
+              | {__typename: 'TikTokVideoBlock'}
+              | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+              | {__typename: 'TwitterTweetBlock'}
+              | {__typename: 'VimeoVideoBlock'}
+              | {__typename: 'YouTubeVideoBlock'}
+            >
+          } | null
         }
     >
   }> | null
@@ -2343,13 +3946,597 @@ export type NavigationQuery = {
       | {
           __typename?: 'ArticleNavigationLink'
           label: string
-          article?: {__typename?: 'Article'; url: string} | null
+          article?: {
+            __typename?: 'Article'
+            id: string
+            slug: string
+            url: string
+            blocks: Array<
+              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'CommentBlock'}
+              | {__typename: 'EmbedBlock'}
+              | {__typename: 'EventBlock'}
+              | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'HTMLBlock'; html?: string | null}
+              | {
+                  __typename: 'ImageBlock'
+                  caption?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    title?: string | null
+                    url?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    thumbURL?: string | null
+                    squareURL?: string | null
+                    previewURL?: string | null
+                    column1URL?: string | null
+                    column6URL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                }
+              | {__typename: 'ImageGalleryBlock'}
+              | {__typename: 'InstagramPostBlock'}
+              | {__typename: 'LinkPageBreakBlock'}
+              | {__typename: 'ListicleBlock'}
+              | {__typename: 'PolisConversationBlock'}
+              | {__typename: 'PollBlock'}
+              | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+              | {__typename: 'RichTextBlock'; richText: Node[]}
+              | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'TeaserGridBlock'}
+              | {
+                  __typename: 'TeaserGridFlexBlock'
+                  flexTeasers: Array<{
+                    __typename?: 'FlexTeaser'
+                    alignment: {
+                      __typename?: 'FlexAlignment'
+                      x: number
+                      y: number
+                      w: number
+                      h: number
+                    }
+                    teaser?:
+                      | {
+                          __typename?: 'ArticleTeaser'
+                          style: TeaserStyle
+                          preTitle?: string | null
+                          title?: string | null
+                          lead?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            filename?: string | null
+                            extension: string
+                            title?: string | null
+                            description?: string | null
+                            width: number
+                            height: number
+                            url?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            thumbURL?: string | null
+                            squareURL?: string | null
+                            previewURL?: string | null
+                            column1URL?: string | null
+                            column6URL?: string | null
+                          } | null
+                          article?: {
+                            __typename?: 'Article'
+                            id: string
+                            title: string
+                            preTitle?: string | null
+                            lead?: string | null
+                            url: string
+                            blocks: Array<
+                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'CommentBlock'}
+                              | {__typename: 'EmbedBlock'}
+                              | {__typename: 'EventBlock'}
+                              | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'HTMLBlock'}
+                              | {
+                                  __typename: 'ImageBlock'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    title?: string | null
+                                    url?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    thumbURL?: string | null
+                                    squareURL?: string | null
+                                    previewURL?: string | null
+                                    column1URL?: string | null
+                                    column6URL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }
+                              | {__typename: 'ImageGalleryBlock'}
+                              | {__typename: 'InstagramPostBlock'}
+                              | {__typename: 'LinkPageBreakBlock'}
+                              | {__typename: 'ListicleBlock'}
+                              | {__typename: 'PolisConversationBlock'}
+                              | {__typename: 'PollBlock'}
+                              | {__typename: 'QuoteBlock'}
+                              | {__typename: 'RichTextBlock'}
+                              | {__typename: 'SoundCloudTrackBlock'}
+                              | {__typename: 'TeaserGridBlock'}
+                              | {__typename: 'TeaserGridFlexBlock'}
+                              | {__typename: 'TikTokVideoBlock'}
+                              | {
+                                  __typename: 'TitleBlock'
+                                  title?: string | null
+                                  lead?: string | null
+                                }
+                              | {__typename: 'TwitterTweetBlock'}
+                              | {__typename: 'VimeoVideoBlock'}
+                              | {__typename: 'YouTubeVideoBlock'}
+                            >
+                          } | null
+                        }
+                      | {
+                          __typename?: 'CustomTeaser'
+                          style: TeaserStyle
+                          preTitle?: string | null
+                          title?: string | null
+                          lead?: string | null
+                          contentUrl?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            filename?: string | null
+                            extension: string
+                            title?: string | null
+                            description?: string | null
+                            width: number
+                            height: number
+                            url?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            thumbURL?: string | null
+                            squareURL?: string | null
+                            previewURL?: string | null
+                            column1URL?: string | null
+                            column6URL?: string | null
+                          } | null
+                          properties: Array<{
+                            __typename?: 'PublicProperties'
+                            key: string
+                            value: string
+                          }>
+                        }
+                      | {
+                          __typename?: 'PageTeaser'
+                          style: TeaserStyle
+                          preTitle?: string | null
+                          title?: string | null
+                          lead?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            filename?: string | null
+                            extension: string
+                            title?: string | null
+                            description?: string | null
+                            width: number
+                            height: number
+                            url?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            thumbURL?: string | null
+                            squareURL?: string | null
+                            previewURL?: string | null
+                            column1URL?: string | null
+                            column6URL?: string | null
+                          } | null
+                          page?: {
+                            __typename?: 'Page'
+                            id: string
+                            title: string
+                            description?: string | null
+                            url: string
+                            blocks: Array<
+                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'CommentBlock'}
+                              | {__typename: 'EmbedBlock'}
+                              | {__typename: 'EventBlock'}
+                              | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'HTMLBlock'}
+                              | {
+                                  __typename: 'ImageBlock'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    title?: string | null
+                                    url?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    thumbURL?: string | null
+                                    squareURL?: string | null
+                                    previewURL?: string | null
+                                    column1URL?: string | null
+                                    column6URL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }
+                              | {__typename: 'ImageGalleryBlock'}
+                              | {__typename: 'InstagramPostBlock'}
+                              | {__typename: 'LinkPageBreakBlock'}
+                              | {__typename: 'ListicleBlock'}
+                              | {__typename: 'PolisConversationBlock'}
+                              | {__typename: 'PollBlock'}
+                              | {__typename: 'QuoteBlock'}
+                              | {__typename: 'RichTextBlock'}
+                              | {__typename: 'SoundCloudTrackBlock'}
+                              | {__typename: 'TeaserGridBlock'}
+                              | {__typename: 'TeaserGridFlexBlock'}
+                              | {__typename: 'TikTokVideoBlock'}
+                              | {
+                                  __typename: 'TitleBlock'
+                                  title?: string | null
+                                  lead?: string | null
+                                }
+                              | {__typename: 'TwitterTweetBlock'}
+                              | {__typename: 'VimeoVideoBlock'}
+                              | {__typename: 'YouTubeVideoBlock'}
+                            >
+                          } | null
+                        }
+                      | {__typename?: 'PeerArticleTeaser'}
+                      | null
+                  }>
+                }
+              | {__typename: 'TikTokVideoBlock'}
+              | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+              | {__typename: 'TwitterTweetBlock'}
+              | {__typename: 'VimeoVideoBlock'}
+              | {__typename: 'YouTubeVideoBlock'}
+            >
+          } | null
         }
       | {__typename?: 'ExternalNavigationLink'; label: string; url: string}
       | {
           __typename?: 'PageNavigationLink'
           label: string
-          page?: {__typename?: 'Page'; url: string} | null
+          page?: {
+            __typename?: 'Page'
+            id: string
+            slug: string
+            url: string
+            blocks: Array<
+              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'CommentBlock'}
+              | {__typename: 'EmbedBlock'}
+              | {__typename: 'EventBlock'}
+              | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'HTMLBlock'; html?: string | null}
+              | {
+                  __typename: 'ImageBlock'
+                  caption?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    title?: string | null
+                    url?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    thumbURL?: string | null
+                    squareURL?: string | null
+                    previewURL?: string | null
+                    column1URL?: string | null
+                    column6URL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                }
+              | {__typename: 'ImageGalleryBlock'}
+              | {__typename: 'InstagramPostBlock'}
+              | {__typename: 'LinkPageBreakBlock'}
+              | {__typename: 'ListicleBlock'}
+              | {__typename: 'PolisConversationBlock'}
+              | {__typename: 'PollBlock'}
+              | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+              | {__typename: 'RichTextBlock'; richText: Node[]}
+              | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'TeaserGridBlock'}
+              | {
+                  __typename: 'TeaserGridFlexBlock'
+                  flexTeasers: Array<{
+                    __typename?: 'FlexTeaser'
+                    alignment: {
+                      __typename?: 'FlexAlignment'
+                      x: number
+                      y: number
+                      w: number
+                      h: number
+                    }
+                    teaser?:
+                      | {
+                          __typename?: 'ArticleTeaser'
+                          style: TeaserStyle
+                          preTitle?: string | null
+                          title?: string | null
+                          lead?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            filename?: string | null
+                            extension: string
+                            title?: string | null
+                            description?: string | null
+                            width: number
+                            height: number
+                            url?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            thumbURL?: string | null
+                            squareURL?: string | null
+                            previewURL?: string | null
+                            column1URL?: string | null
+                            column6URL?: string | null
+                          } | null
+                          article?: {
+                            __typename?: 'Article'
+                            id: string
+                            title: string
+                            preTitle?: string | null
+                            lead?: string | null
+                            url: string
+                            blocks: Array<
+                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'CommentBlock'}
+                              | {__typename: 'EmbedBlock'}
+                              | {__typename: 'EventBlock'}
+                              | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'HTMLBlock'}
+                              | {
+                                  __typename: 'ImageBlock'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    title?: string | null
+                                    url?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    thumbURL?: string | null
+                                    squareURL?: string | null
+                                    previewURL?: string | null
+                                    column1URL?: string | null
+                                    column6URL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }
+                              | {__typename: 'ImageGalleryBlock'}
+                              | {__typename: 'InstagramPostBlock'}
+                              | {__typename: 'LinkPageBreakBlock'}
+                              | {__typename: 'ListicleBlock'}
+                              | {__typename: 'PolisConversationBlock'}
+                              | {__typename: 'PollBlock'}
+                              | {__typename: 'QuoteBlock'}
+                              | {__typename: 'RichTextBlock'}
+                              | {__typename: 'SoundCloudTrackBlock'}
+                              | {__typename: 'TeaserGridBlock'}
+                              | {__typename: 'TeaserGridFlexBlock'}
+                              | {__typename: 'TikTokVideoBlock'}
+                              | {
+                                  __typename: 'TitleBlock'
+                                  title?: string | null
+                                  lead?: string | null
+                                }
+                              | {__typename: 'TwitterTweetBlock'}
+                              | {__typename: 'VimeoVideoBlock'}
+                              | {__typename: 'YouTubeVideoBlock'}
+                            >
+                          } | null
+                        }
+                      | {
+                          __typename?: 'CustomTeaser'
+                          style: TeaserStyle
+                          preTitle?: string | null
+                          title?: string | null
+                          lead?: string | null
+                          contentUrl?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            filename?: string | null
+                            extension: string
+                            title?: string | null
+                            description?: string | null
+                            width: number
+                            height: number
+                            url?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            thumbURL?: string | null
+                            squareURL?: string | null
+                            previewURL?: string | null
+                            column1URL?: string | null
+                            column6URL?: string | null
+                          } | null
+                          properties: Array<{
+                            __typename?: 'PublicProperties'
+                            key: string
+                            value: string
+                          }>
+                        }
+                      | {
+                          __typename?: 'PageTeaser'
+                          style: TeaserStyle
+                          preTitle?: string | null
+                          title?: string | null
+                          lead?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            filename?: string | null
+                            extension: string
+                            title?: string | null
+                            description?: string | null
+                            width: number
+                            height: number
+                            url?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            thumbURL?: string | null
+                            squareURL?: string | null
+                            previewURL?: string | null
+                            column1URL?: string | null
+                            column6URL?: string | null
+                          } | null
+                          page?: {
+                            __typename?: 'Page'
+                            id: string
+                            title: string
+                            description?: string | null
+                            url: string
+                            blocks: Array<
+                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'CommentBlock'}
+                              | {__typename: 'EmbedBlock'}
+                              | {__typename: 'EventBlock'}
+                              | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'HTMLBlock'}
+                              | {
+                                  __typename: 'ImageBlock'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    title?: string | null
+                                    url?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    thumbURL?: string | null
+                                    squareURL?: string | null
+                                    previewURL?: string | null
+                                    column1URL?: string | null
+                                    column6URL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }
+                              | {__typename: 'ImageGalleryBlock'}
+                              | {__typename: 'InstagramPostBlock'}
+                              | {__typename: 'LinkPageBreakBlock'}
+                              | {__typename: 'ListicleBlock'}
+                              | {__typename: 'PolisConversationBlock'}
+                              | {__typename: 'PollBlock'}
+                              | {__typename: 'QuoteBlock'}
+                              | {__typename: 'RichTextBlock'}
+                              | {__typename: 'SoundCloudTrackBlock'}
+                              | {__typename: 'TeaserGridBlock'}
+                              | {__typename: 'TeaserGridFlexBlock'}
+                              | {__typename: 'TikTokVideoBlock'}
+                              | {
+                                  __typename: 'TitleBlock'
+                                  title?: string | null
+                                  lead?: string | null
+                                }
+                              | {__typename: 'TwitterTweetBlock'}
+                              | {__typename: 'VimeoVideoBlock'}
+                              | {__typename: 'YouTubeVideoBlock'}
+                            >
+                          } | null
+                        }
+                      | {__typename?: 'PeerArticleTeaser'}
+                      | null
+                  }>
+                }
+              | {__typename: 'TikTokVideoBlock'}
+              | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+              | {__typename: 'TwitterTweetBlock'}
+              | {__typename: 'VimeoVideoBlock'}
+              | {__typename: 'YouTubeVideoBlock'}
+            >
+          } | null
         }
     >
   } | null
@@ -2359,6 +4546,7 @@ export type FullPageFragment = {
   __typename?: 'Page'
   id: string
   slug: string
+  url: string
   blocks: Array<
     | {__typename: 'BildwurfAdBlock'}
     | {__typename: 'CommentBlock'}
@@ -2641,6 +4829,7 @@ export type PageQuery = {
     __typename?: 'Page'
     id: string
     slug: string
+    url: string
     blocks: Array<
       | {__typename: 'BildwurfAdBlock'}
       | {__typename: 'CommentBlock'}
@@ -2963,118 +5152,102 @@ export const FullImageFragmentDoc = gql`
   }
   ${ImageRefFragmentDoc}
 `
-export const FullArticleFragmentDoc = gql`
-  fragment FullArticle on Article {
-    id
-    slug
-    blocks {
-      __typename
-      ... on TitleBlock {
-        title
-        lead
+export const BlockWithoutTeaserFragmentDoc = gql`
+  fragment BlockWithoutTeaser on Block {
+    __typename
+    ... on TitleBlock {
+      title
+      lead
+    }
+    ... on ImageBlock {
+      caption
+      image {
+        ...FullImage
       }
-      ... on ImageBlock {
-        caption
-        image {
-          ...FullImage
+    }
+    ... on QuoteBlock {
+      quote
+      author
+    }
+    ... on RichTextBlock {
+      richText
+    }
+    ... on HTMLBlock {
+      html
+    }
+  }
+  ${FullImageFragmentDoc}
+`
+export const FullBlockFragmentDoc = gql`
+  fragment FullBlock on Block {
+    __typename
+    ...BlockWithoutTeaser
+    ... on TeaserGridFlexBlock {
+      flexTeasers {
+        alignment {
+          x
+          y
+          w
+          h
         }
-      }
-      ... on QuoteBlock {
-        quote
-        author
-      }
-      ... on RichTextBlock {
-        richText
-      }
-      ... on HTMLBlock {
-        html
-      }
-      ... on TeaserGridFlexBlock {
-        flexTeasers {
-          alignment {
-            x
-            y
-            w
-            h
+        teaser {
+          ... on ArticleTeaser {
+            style
+            image {
+              ...ImageRef
+            }
+            preTitle
+            title
+            lead
+            article {
+              id
+              title
+              preTitle
+              lead
+              url
+              blocks {
+                ...BlockWithoutTeaser
+              }
+            }
           }
-          teaser {
-            ... on ArticleTeaser {
-              style
-              image {
-                ...ImageRef
-              }
-              preTitle
+          ... on PageTeaser {
+            style
+            image {
+              ...ImageRef
+            }
+            preTitle
+            title
+            lead
+            page {
+              id
               title
-              lead
-              article {
-                id
-                title
-                preTitle
-                lead
-                url
-                blocks {
-                  __typename
-                  ... on TitleBlock {
-                    title
-                    lead
-                  }
-                  ... on ImageBlock {
-                    caption
-                    image {
-                      ...FullImage
-                    }
-                  }
-                }
+              description
+              url
+              blocks {
+                __typename
+                ...BlockWithoutTeaser
               }
             }
-            ... on PageTeaser {
-              style
-              image {
-                ...ImageRef
-              }
-              preTitle
-              title
-              lead
-              page {
-                id
-                title
-                description
-                url
-                blocks {
-                  __typename
-                  ... on TitleBlock {
-                    title
-                    lead
-                  }
-                  ... on ImageBlock {
-                    caption
-                    image {
-                      ...FullImage
-                    }
-                  }
-                }
-              }
+          }
+          ... on CustomTeaser {
+            style
+            image {
+              ...ImageRef
             }
-            ... on CustomTeaser {
-              style
-              image {
-                ...ImageRef
-              }
-              preTitle
-              title
-              lead
-              contentUrl
-              properties {
-                key
-                value
-              }
+            preTitle
+            title
+            lead
+            contentUrl
+            properties {
+              key
+              value
             }
           }
         }
       }
     }
   }
-  ${FullImageFragmentDoc}
+  ${BlockWithoutTeaserFragmentDoc}
   ${ImageRefFragmentDoc}
 `
 export const FullEventFragmentDoc = gql`
@@ -3097,35 +5270,11 @@ export const FullEventFragmentDoc = gql`
   }
   ${FullImageFragmentDoc}
 `
-export const FullNavigationFragmentDoc = gql`
-  fragment FullNavigation on Navigation {
-    id
-    key
-    name
-    links {
-      ... on PageNavigationLink {
-        label
-        page {
-          url
-        }
-      }
-      ... on ArticleNavigationLink {
-        label
-        article {
-          url
-        }
-      }
-      ... on ExternalNavigationLink {
-        label
-        url
-      }
-    }
-  }
-`
 export const FullPageFragmentDoc = gql`
   fragment FullPage on Page {
     id
     slug
+    url
     blocks {
       __typename
       ... on TitleBlock {
@@ -3235,6 +5384,148 @@ export const FullPageFragmentDoc = gql`
   }
   ${FullImageFragmentDoc}
   ${ImageRefFragmentDoc}
+`
+export const FullArticleFragmentDoc = gql`
+  fragment FullArticle on Article {
+    id
+    slug
+    url
+    blocks {
+      __typename
+      ... on TitleBlock {
+        title
+        lead
+      }
+      ... on ImageBlock {
+        caption
+        image {
+          ...FullImage
+        }
+      }
+      ... on QuoteBlock {
+        quote
+        author
+      }
+      ... on RichTextBlock {
+        richText
+      }
+      ... on HTMLBlock {
+        html
+      }
+      ... on TeaserGridFlexBlock {
+        flexTeasers {
+          alignment {
+            x
+            y
+            w
+            h
+          }
+          teaser {
+            ... on ArticleTeaser {
+              style
+              image {
+                ...ImageRef
+              }
+              preTitle
+              title
+              lead
+              article {
+                id
+                title
+                preTitle
+                lead
+                url
+                blocks {
+                  __typename
+                  ... on TitleBlock {
+                    title
+                    lead
+                  }
+                  ... on ImageBlock {
+                    caption
+                    image {
+                      ...FullImage
+                    }
+                  }
+                }
+              }
+            }
+            ... on PageTeaser {
+              style
+              image {
+                ...ImageRef
+              }
+              preTitle
+              title
+              lead
+              page {
+                id
+                title
+                description
+                url
+                blocks {
+                  __typename
+                  ... on TitleBlock {
+                    title
+                    lead
+                  }
+                  ... on ImageBlock {
+                    caption
+                    image {
+                      ...FullImage
+                    }
+                  }
+                }
+              }
+            }
+            ... on CustomTeaser {
+              style
+              image {
+                ...ImageRef
+              }
+              preTitle
+              title
+              lead
+              contentUrl
+              properties {
+                key
+                value
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  ${FullImageFragmentDoc}
+  ${ImageRefFragmentDoc}
+`
+export const FullNavigationFragmentDoc = gql`
+  fragment FullNavigation on Navigation {
+    id
+    key
+    name
+    links {
+      ... on PageNavigationLink {
+        label
+        page {
+          ...FullPage
+        }
+      }
+      ... on ArticleNavigationLink {
+        label
+        article {
+          ...FullArticle
+        }
+      }
+      ... on ExternalNavigationLink {
+        label
+        url
+      }
+    }
+  }
+  ${FullPageFragmentDoc}
+  ${FullArticleFragmentDoc}
 `
 export const ArticleDocument = gql`
   query Article($slug: Slug, $id: ID) {

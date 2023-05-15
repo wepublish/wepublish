@@ -1,94 +1,109 @@
-# fragment FullTeaser on Teaser {
-#   ... on ArticleTeaser {
-#     style
+fragment BlockWithoutTeaser on Block {
+  __typename
 
-#     image {
-#       ...ImageRef
-#     }
+  ... on TitleBlock {
+    title
+    lead
+  }
 
-#     preTitle
-#     title
-#     lead
+  ... on ImageBlock {
+    caption
+    image {
+      ...FullImage
+    }
+  }
 
-#     article {
-#       id
-#     }
-#   }
+  ... on QuoteBlock {
+    quote
+    author
+  }
 
-#   ... on PageTeaser {
-#     style
+  ... on RichTextBlock {
+    richText
+  }
 
-#     image {
-#       ...ImageRef
-#     }
+  ... on HTMLBlock {
+    html
+  }
+}
 
-#     preTitle
-#     title
-#     lead
+fragment FullBlock on Block {
+  __typename
+  ...BlockWithoutTeaser
 
-#     page {
-#       id
-#     }
-#   }
+  ... on TeaserGridFlexBlock {
+    flexTeasers {
+      alignment {
+        x
+        y
+        w
+        h
+      }
 
-#   ... on CustomTeaser {
-#     style
+      teaser {
+        ... on ArticleTeaser {
+          style
 
-#     image {
-#       ...ImageRef
-#     }
+          image {
+            ...ImageRef
+          }
 
-#     preTitle
-#     title
-#     lead
-#     contentUrl
-#     properties {
-#       key
-#       value
-#     }
-#   }
-# }
+          preTitle
+          title
+          lead
 
-# fragment FullBlock on Block {
-#   __typename
+          article {
+            id
+            title
+            preTitle
+            lead
+            url
+            blocks {
+              ...BlockWithoutTeaser
+            }
+          }
+        }
 
-#   ... on TitleBlock {
-#     title
-#     lead
-#   }
+        ... on PageTeaser {
+          style
 
-#   ... on ImageBlock {
-#     caption
-#     image {
-#       ...FullImage
-#     }
-#   }
+          image {
+            ...ImageRef
+          }
 
-#   ... on QuoteBlock {
-#     quote
-#     author
-#   }
+          preTitle
+          title
+          lead
 
-#   ... on RichTextBlock {
-#     richText
-#   }
+          page {
+            id
+            title
+            description
+            url
+            blocks {
+              __typename
+              ...BlockWithoutTeaser
+            }
+          }
+        }
 
-#   ... on HTMLBlock {
-#     html
-#   }
+        ... on CustomTeaser {
+          style
 
-#   ... on TeaserGridFlexBlock {
-#     flexTeasers {
-#       alignment {
-#         x
-#         y
-#         w
-#         h
-#       }
+          image {
+            ...ImageRef
+          }
 
-#       teaser {
-#         ...FullTeaser
-#       }
-#     }
-#   }
-# }
+          preTitle
+          title
+          lead
+          contentUrl
+          properties {
+            key
+            value
+          }
+        }
+      }
+    }
+  }
+}
