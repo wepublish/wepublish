@@ -166,7 +166,7 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType, source: Providers) => {
   )
 
   // we need to add type: 'paragraph' because that's how it was done in WP in the past
-  // parsedDescription[0] = {...parsedDescription[0], type: 'paragraph'}
+  parsedDescription[0] = {...parsedDescription[0], type: 'paragraph'} as any
 
   const parsedEvent = {
     id: XMLEvent['$'].originId,

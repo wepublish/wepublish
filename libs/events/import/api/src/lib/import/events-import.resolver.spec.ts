@@ -1,32 +1,14 @@
 import {Test, TestingModule} from '@nestjs/testing'
-import {INestApplication, Module} from '@nestjs/common'
 import * as crypto from 'crypto'
-import {GraphQLModule} from '@nestjs/graphql'
-import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
-import {CacheModule} from '@nestjs/cache-manager'
 import {htmlToSlate} from 'slate-serializers'
-import {PrismaModule} from '@wepublish/nest-modules'
 import {EventsImportResolver} from './events-import.resolver'
 import {EventsImportService} from './events-import.service'
-import {Event, ImportedEventsDocument, Providers} from './events-import.model'
-import {EventStatus} from './events-import.model'
+import {Event, ImportedEventsDocument, Providers, EventStatus} from './events-import.model'
+import {CACHE_MANAGER} from '@nestjs/cache-manager'
+import {PrismaClient} from '@prisma/client'
 import {MediaAdapterService} from '@wepublish/image/api'
 
 export const generateRandomString = () => crypto.randomBytes(20).toString('hex')
-
-@Module({
-  imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: true,
-      path: '/'
-    }),
-    PrismaModule,
-    CacheModule.register()
-  ],
-  providers: [EventsImportResolver, EventsImportService, MediaAdapterService]
-})
-export class AppModule {}
 
 export const mockImportableEvents: Event[] = [
   {
@@ -57,25 +39,43 @@ export const mockImportableEventsDocument: ImportedEventsDocument = {
 }
 
 describe('EventsImportResolver', () => {
-  let app: INestApplication
   let resolver: EventsImportResolver
   let service: EventsImportService
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [AppModule]
+      providers: [
+        EventsImportService,
+        EventsImportResolver,
+        {
+          provide: CACHE_MANAGER,
+          useValue: {
+            get: jest.fn(),
+            set: jest.fn()
+          }
+        },
+        {
+          provide: PrismaClient,
+          useValue: {
+            event: {
+              create: jest.fn()
+            },
+            image: {
+              create: jest.fn()
+            }
+          }
+        },
+        {
+          provide: MediaAdapterService,
+          useValue: {
+            uploadImageFromArrayBuffer: jest.fn()
+          }
+        }
+      ]
     }).compile()
-
-    app = module.createNestApplication()
 
     resolver = module.get<EventsImportResolver>(EventsImportResolver)
     service = module.get<EventsImportService>(EventsImportService)
-
-    await app.init()
-  })
-
-  afterAll(async () => {
-    await app.close()
   })
 
   test('importedEvents query should call importedEvents method of EventsImportService with the provided arguments', async () => {
