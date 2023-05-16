@@ -1,16 +1,12 @@
 import {Cron} from '@nestjs/schedule'
 import {Injectable} from '@nestjs/common'
-import {PeriodicJobController, SubscriptionController} from '@wepublish/membership/api'
-import {OldContextService, PrismaService} from '@wepublish/nest-modules'
+import {PeriodicJobController} from './periodic-job.controller'
 
 const SCHEDULE = process.env.PERIODIC_JOB_EXECUTION_SCHEDULE || '0 * * * * *'
 
 @Injectable()
 export class PeriodicJobExecutor {
-  constructor(
-    private readonly prismaService: PrismaService,
-    private readonly oldContextService: OldContextService
-  ) {}
+  constructor(private readonly periodicJobController: PeriodicJobController) {}
 
   @Cron(
     SCHEDULE,
@@ -20,15 +16,6 @@ export class PeriodicJobExecutor {
     }
   )
   async handleCron() {
-    const subscriptionController = new SubscriptionController(
-      this.prismaService,
-      this.oldContextService
-    )
-    const periodicJobController = new PeriodicJobController(
-      this.prismaService,
-      this.oldContextService,
-      subscriptionController
-    )
-    await periodicJobController.concurrentExecute()
+    await this.periodicJobController.concurrentExecute()
   }
 }

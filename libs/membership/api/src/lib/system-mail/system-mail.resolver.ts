@@ -1,15 +1,13 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {User, UserFlowMail} from '@prisma/client'
-import {OldContextService, PrismaService} from '@wepublish/nest-modules'
+import {PrismaService} from '@wepublish/nest-modules'
 import {CurrentUser} from '../user.decorator'
 import {SystemMailModel, SystemMailTestInput, SystemMailUpdateInput} from './system-mail.model'
+import {MailContext} from '@wepublish/mails'
 
 @Resolver(() => SystemMailModel)
 export class SystemMailResolver {
-  constructor(
-    private prismaService: PrismaService,
-    private readonly oldContextService: OldContextService
-  ) {}
+  constructor(private prismaService: PrismaService, private readonly mailContext: MailContext) {}
 
   @Query(() => [SystemMailModel])
   async getSystemMails() {
@@ -45,10 +43,8 @@ export class SystemMailResolver {
     @CurrentUser() user: User,
     @Args('systemMail') systemMail: SystemMailTestInput
   ) {
-    const remoteTemplate = await this.oldContextService.context.mailContext.getUserTemplateName(
-      systemMail.event
-    )
-    await this.oldContextService.context.mailContext.sendRemoteTemplateDirect({
+    const remoteTemplate = await this.mailContext.getUserTemplateName(systemMail.event)
+    await this.mailContext.sendRemoteTemplateDirect({
       remoteTemplate,
       recipient: user.email,
       data: {user},

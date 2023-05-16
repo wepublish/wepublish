@@ -1,4 +1,4 @@
-import {OldContextService, PrismaService} from '@wepublish/nest-modules'
+import {PrismaService} from '@wepublish/nest-modules'
 import {add, addDays, differenceInDays, endOfDay, set, startOfDay, sub, subMinutes} from 'date-fns'
 import {SubscriptionEventDictionary} from '../subscription-event-dictionary/subscription-event-dictionary'
 import {
@@ -15,7 +15,7 @@ import {
 } from '@prisma/client'
 import {PeriodicJobRunObject} from './periodic-job.type'
 import {Injectable, Logger} from '@nestjs/common'
-import {MailController, mailLogType} from '@wepublish/mails'
+import {MailContext, MailController, mailLogType} from '@wepublish/mails'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {SubscriptionController} from '../subscription/subscription.controller'
 
@@ -34,7 +34,7 @@ export class PeriodicJobController {
 
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly oldContextService: OldContextService,
+    private readonly mailContext: MailContext,
     private readonly subscriptionController: SubscriptionController
   ) {
     this.subscriptionEventDictionary = new SubscriptionEventDictionary(this.prismaService)
@@ -453,7 +453,7 @@ export class PeriodicJobController {
     periodicJobRunDate: Date
   ) {
     if (action.externalMailTemplate && user) {
-      await new MailController(this.prismaService, this.oldContextService.context.mailContext, {
+      await new MailController(this.prismaService, this.mailContext, {
         daysAwayFromEnding: action.daysAwayFromEnding,
         externalMailTemplateId: action.externalMailTemplate,
         recipient: user,

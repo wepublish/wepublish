@@ -1,17 +1,17 @@
 import {Mutation, Query, Resolver} from '@nestjs/graphql'
 import {MailTemplate} from '@prisma/client'
-import {MailTemplateStatus, WithUrlAndStatus} from '@wepublish/mails'
+import {MailContext, MailTemplateStatus, WithUrlAndStatus} from '@wepublish/mails'
 import {MailTemplateSyncService} from './mail-template-sync.service'
 import {MailProviderModel, MailTemplateWithUrlAndStatusModel} from './mail-template.model'
 import {CanGetMailTemplates, CanSyncMailTemplates, Permissions} from '@wepublish/permissions/api'
-import {OldContextService, PrismaService} from '@wepublish/nest-modules'
+import {PrismaService} from '@wepublish/nest-modules'
 
 @Resolver(() => MailTemplateWithUrlAndStatusModel)
 export class MailTemplatesResolver {
   constructor(
     private prismaService: PrismaService,
     private syncService: MailTemplateSyncService,
-    private oldContextService: OldContextService
+    private mailContext: MailContext
   ) {}
 
   @Permissions(CanGetMailTemplates)
@@ -26,7 +26,7 @@ export class MailTemplatesResolver {
   @Permissions(CanGetMailTemplates)
   @Query(() => MailProviderModel)
   async provider() {
-    const provider = await this.oldContextService.context.mailContext.mailProvider
+    const provider = await this.mailContext.mailProvider
     return {name: provider.name}
   }
 
@@ -37,9 +37,8 @@ export class MailTemplatesResolver {
   }
 
   private async decorate(templates: MailTemplate[]): Promise<WithUrlAndStatus<MailTemplate>[]> {
-    const provider = await this.oldContextService.context.mailContext.mailProvider
-    const usedTemplates =
-      await this.oldContextService.context.mailContext.getUsedTemplateIdentifiers()
+    const provider = await this.mailContext.mailProvider
+    const usedTemplates = await this.mailContext.getUsedTemplateIdentifiers()
 
     return templates.map(t => {
       let status = MailTemplateStatus.Ok
