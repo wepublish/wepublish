@@ -947,6 +947,7 @@ export type Mutation = {
   deleteUserRole?: Maybe<UserRole>;
   duplicateArticle: Article;
   duplicatePage: Page;
+  markInvoiceAsPaid?: Maybe<Invoice>;
   publishArticle?: Maybe<Article>;
   publishPage?: Maybe<Page>;
   rejectComment: Comment;
@@ -1231,6 +1232,11 @@ export type MutationDuplicateArticleArgs = {
 
 
 export type MutationDuplicatePageArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationMarkInvoiceAsPaidArgs = {
   id: Scalars['ID'];
 };
 
