@@ -6,7 +6,6 @@ import {NotFound} from '../../error'
 import {authorise} from '../permissions'
 import {CanGetPage, CanGetPagePreviewLink, CanGetPages} from '@wepublish/permissions/api'
 import {getPages} from './page.queries'
-import {generateJWT} from '@wepublish/utils'
 
 export const getPageById = (
   id: string,
@@ -22,8 +21,8 @@ export const getPageById = (
 export const getPagePreviewLink = async (
   id: string,
   hours: number,
-  hostURL: string,
   authenticate: Context['authenticate'],
+  generateJWT: Context['generateJWT'],
   urlAdapter: Context['urlAdapter'],
   pagesLoader: Context['loaders']['pages']
 ) => {
@@ -38,7 +37,6 @@ export const getPagePreviewLink = async (
 
   const token = generateJWT({
     id: page.id,
-    hostURL,
     expiresInMinutes: hours * 60
   })
 
