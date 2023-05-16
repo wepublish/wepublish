@@ -1,1 +1,1 @@
-export * from './lib/generateJWT'
+export * from './lib/utils-api'
