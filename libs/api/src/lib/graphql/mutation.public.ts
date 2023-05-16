@@ -143,8 +143,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       description:
         'This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text.',
-      resolve: (_, {input}, {prisma: {comment}, authenticateUser}) =>
-        updatePublicComment(input, authenticateUser, comment)
+      resolve: (_, {input}, {prisma: {comment, setting}, authenticateUser}) =>
+        updatePublicComment(input, authenticateUser, comment, setting)
     },
 
     rateComment: {

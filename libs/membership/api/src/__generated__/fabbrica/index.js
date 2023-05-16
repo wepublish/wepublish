@@ -760,6 +760,11 @@ const modelFieldDefinitions = [
         name: 'mailSent',
         type: 'MailLog',
         relationName: 'MailLogToUser'
+      },
+      {
+        name: 'UserConsent',
+        type: 'UserConsent',
+        relationName: 'UserToUserConsent'
       }
     ]
   },
@@ -903,6 +908,31 @@ const modelFieldDefinitions = [
         name: 'tag',
         type: 'Tag',
         relationName: 'TagToTaggedEvents'
+      }
+    ]
+  },
+  {
+    name: 'Consent',
+    fields: [
+      {
+        name: 'userConsents',
+        type: 'UserConsent',
+        relationName: 'ConsentToUserConsent'
+      }
+    ]
+  },
+  {
+    name: 'UserConsent',
+    fields: [
+      {
+        name: 'consent',
+        type: 'Consent',
+        relationName: 'ConsentToUserConsent'
+      },
+      {
+        name: 'user',
+        type: 'User',
+        relationName: 'UserToUserConsent'
       }
     ]
   },
@@ -4910,6 +4940,165 @@ function defineTaggedEventsFactoryInternal({defaultData: defaultDataResolver}) {
  */
 export function defineTaggedEventsFactory(options) {
   return defineTaggedEventsFactoryInternal(options)
+}
+function autoGenerateConsentScalarsOrEnums({seq}) {
+  return {
+    name: getScalarFieldValueGenerator().String({
+      modelName: 'Consent',
+      fieldName: 'name',
+      isId: false,
+      isUnique: false,
+      seq
+    }),
+    slug: getScalarFieldValueGenerator().String({
+      modelName: 'Consent',
+      fieldName: 'slug',
+      isId: false,
+      isUnique: true,
+      seq
+    }),
+    defaultValue: getScalarFieldValueGenerator().Boolean({
+      modelName: 'Consent',
+      fieldName: 'defaultValue',
+      isId: false,
+      isUnique: false,
+      seq
+    })
+  }
+}
+function defineConsentFactoryInternal({defaultData: defaultDataResolver}) {
+  const seqKey = {}
+  const getSeq = () => getSequenceCounter(seqKey)
+  const screen = createScreener('Consent', modelFieldDefinitions)
+  const build = (inputData = {}) =>
+    __awaiter(this, void 0, void 0, function* () {
+      const seq = getSeq()
+      const requiredScalarData = autoGenerateConsentScalarsOrEnums({seq})
+      const resolveValue = normalizeResolver(
+        defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {}
+      )
+      const defaultData = yield resolveValue({seq})
+      const defaultAssociations = {}
+      const data = Object.assign(
+        Object.assign(
+          Object.assign(Object.assign({}, requiredScalarData), defaultData),
+          defaultAssociations
+        ),
+        inputData
+      )
+      return data
+    })
+  const buildList = inputData => Promise.all(normalizeList(inputData).map(data => build(data)))
+  const pickForConnect = inputData => ({
+    id: inputData.id
+  })
+  const create = (inputData = {}) =>
+    __awaiter(this, void 0, void 0, function* () {
+      const data = yield build(inputData).then(screen)
+      return yield getClient().consent.create({data})
+    })
+  const createList = inputData => Promise.all(normalizeList(inputData).map(data => create(data)))
+  const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect)
+  return {
+    _factoryFor: 'Consent',
+    build,
+    buildList,
+    buildCreateInput: build,
+    pickForConnect,
+    create,
+    createList,
+    createForConnect
+  }
+}
+/**
+ * Define factory for {@link Consent} model.
+ *
+ * @param options
+ * @returns factory {@link ConsentFactoryInterface}
+ */
+export function defineConsentFactory(options = {}) {
+  return defineConsentFactoryInternal(options)
+}
+function isUserConsentconsentFactory(x) {
+  return (x === null || x === void 0 ? void 0 : x._factoryFor) === 'Consent'
+}
+function isUserConsentuserFactory(x) {
+  return (x === null || x === void 0 ? void 0 : x._factoryFor) === 'User'
+}
+function autoGenerateUserConsentScalarsOrEnums({seq}) {
+  return {
+    value: getScalarFieldValueGenerator().Boolean({
+      modelName: 'UserConsent',
+      fieldName: 'value',
+      isId: false,
+      isUnique: false,
+      seq
+    })
+  }
+}
+function defineUserConsentFactoryInternal({defaultData: defaultDataResolver}) {
+  const seqKey = {}
+  const getSeq = () => getSequenceCounter(seqKey)
+  const screen = createScreener('UserConsent', modelFieldDefinitions)
+  const build = (inputData = {}) =>
+    __awaiter(this, void 0, void 0, function* () {
+      const seq = getSeq()
+      const requiredScalarData = autoGenerateUserConsentScalarsOrEnums({seq})
+      const resolveValue = normalizeResolver(
+        defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {}
+      )
+      const defaultData = yield resolveValue({seq})
+      const defaultAssociations = {
+        consent: isUserConsentconsentFactory(defaultData.consent)
+          ? {
+              create: yield defaultData.consent.build()
+            }
+          : defaultData.consent,
+        user: isUserConsentuserFactory(defaultData.user)
+          ? {
+              create: yield defaultData.user.build()
+            }
+          : defaultData.user
+      }
+      const data = Object.assign(
+        Object.assign(
+          Object.assign(Object.assign({}, requiredScalarData), defaultData),
+          defaultAssociations
+        ),
+        inputData
+      )
+      return data
+    })
+  const buildList = inputData => Promise.all(normalizeList(inputData).map(data => build(data)))
+  const pickForConnect = inputData => ({
+    id: inputData.id
+  })
+  const create = (inputData = {}) =>
+    __awaiter(this, void 0, void 0, function* () {
+      const data = yield build(inputData).then(screen)
+      return yield getClient().userConsent.create({data})
+    })
+  const createList = inputData => Promise.all(normalizeList(inputData).map(data => create(data)))
+  const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect)
+  return {
+    _factoryFor: 'UserConsent',
+    build,
+    buildList,
+    buildCreateInput: build,
+    pickForConnect,
+    create,
+    createList,
+    createForConnect
+  }
+}
+/**
+ * Define factory for {@link UserConsent} model.
+ *
+ * @param options
+ * @returns factory {@link UserConsentFactoryInterface}
+ */
+export function defineUserConsentFactory(options) {
+  return defineUserConsentFactoryInternal(options)
 }
 function isUserFlowMailmailTemplateFactory(x) {
   return (x === null || x === void 0 ? void 0 : x._factoryFor) === 'MailTemplate'

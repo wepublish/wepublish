@@ -119,7 +119,8 @@ async function deleteUnpaidInvoices(
   const unpaidInvoices = await invoiceClient.findMany({
     where: {
       subscriptionID: subscription.id,
-      paidAt: null
+      paidAt: null,
+      canceledAt: null
     }
   })
   for (const unpaidInvoice of unpaidInvoices) {

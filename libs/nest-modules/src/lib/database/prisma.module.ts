@@ -6,10 +6,11 @@ import {PrismaClient} from '@prisma/client'
   providers: [
     {
       provide: PrismaClient,
-      useClass: PrismaService
-    }
+      useExisting: PrismaService
+    },
+    PrismaService
   ],
-  exports: [PrismaClient]
+  exports: [PrismaClient, PrismaService]
 })
 export class PrismaModule {
   // https://github.com/prisma/prisma/discussions/4399#discussioncomment-3126122
@@ -18,7 +19,7 @@ export class PrismaModule {
       module: PrismaModule,
       providers: [
         {
-          provide: PrismaService,
+          provide: PrismaClient,
           useFactory: () => prismaClient as PrismaService
         }
       ],

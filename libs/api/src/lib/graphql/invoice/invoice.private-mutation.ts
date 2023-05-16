@@ -80,3 +80,52 @@ export const updateInvoice = async (
     }
   })
 }
+
+export const markInvoiceAsPaid = async (
+  id: string,
+  authenticate: Context['authenticate'],
+  userSession: Context['authenticateUser'],
+  prismaClient: PrismaClient
+): Promise<InvoiceWithItems> => {
+  const {roles} = authenticate()
+  authorise(CanCreateInvoice, roles)
+  const user = userSession()
+
+  const invoice = await prismaClient.invoice.findUnique({
+    where: {
+      id
+    },
+    include: {
+      subscriptionPeriods: true
+    }
+  })
+  if (!invoice) {
+    throw new Error('Invoice not found')
+  }
+  // Should not happen since an invoice is limited to one subscription
+  if (invoice.subscriptionPeriods.length !== 1) {
+    throw new Error('Not one period is linked to the invoice')
+  }
+  if (!invoice.subscriptionID) {
+    throw new Error('Invoice has no subscriptionID')
+  }
+  await prismaClient.subscription.update({
+    where: {
+      id: invoice.subscriptionID
+    },
+    data: {
+      paidUntil: invoice.subscriptionPeriods[0].endsAt
+    }
+  })
+
+  return prismaClient.invoice.update({
+    where: {id},
+    data: {
+      manuallySetAsPaidByUserId: user.id,
+      paidAt: new Date()
+    },
+    include: {
+      items: true
+    }
+  })
+}

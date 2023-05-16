@@ -89,14 +89,14 @@ export function SelectPollPanel({selectedPoll, onClose, onSelect}: SelectPollPan
           <Table.Column width={250} resizable>
             <Table.HeaderCell>{t('pollList.opensAt')}</Table.HeaderCell>
             <Table.Cell>
-              {(rowData: RowDataType<Poll>) => <PollOpensAtView poll={rowData} />}
+              {(rowData: RowDataType<Poll>) => <PollOpensAtView poll={rowData as Poll} />}
             </Table.Cell>
           </Table.Column>
 
           <Table.Column width={250} resizable>
             <Table.HeaderCell>{t('pollList.closedAt')}</Table.HeaderCell>
             <Table.Cell>
-              {(rowData: RowDataType<Poll>) => <PollClosedAtView poll={rowData} />}
+              {(rowData: RowDataType<Poll>) => <PollClosedAtView poll={rowData as Poll} />}
             </Table.Cell>
           </Table.Column>
 

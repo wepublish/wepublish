@@ -465,6 +465,21 @@ Object {
         },
         Object {
           "deprecated": false,
+          "description": "Allows to create a consent",
+          "id": "CAN_CREATE_CONSENT",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to update a consent",
+          "id": "CAN_UPDATE_CONSENT",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to delete a consent",
+          "id": "CAN_DELETE_CONSENT",
+        },
+        Object {
+          "deprecated": false,
           "description": "Allows to get subscription flows.",
           "id": "CAN_GET_SUBSCRIPTION_FLOWS",
         },
@@ -994,6 +1009,21 @@ Object {
           "deprecated": false,
           "description": "Allows to create an event",
           "id": "CAN_CREATE_EVENT",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to create a consent",
+          "id": "CAN_CREATE_CONSENT",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to update a consent",
+          "id": "CAN_UPDATE_CONSENT",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to delete a consent",
+          "id": "CAN_DELETE_CONSENT",
         },
         Object {
           "deprecated": false,
@@ -1539,6 +1569,21 @@ Object {
         "deprecated": false,
         "description": "Allows to create an event",
         "id": "CAN_CREATE_EVENT",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to create a consent",
+        "id": "CAN_CREATE_CONSENT",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to update a consent",
+        "id": "CAN_UPDATE_CONSENT",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to delete a consent",
+        "id": "CAN_DELETE_CONSENT",
       },
       Object {
         "deprecated": false,

@@ -30,7 +30,7 @@ export const getRemotePeerProfile = async (
 ) => {
   const {roles} = authenticate()
   authorise(CanCreatePeer, roles)
-  const link = new URL('/admin', hostURL)
+  const link = new URL('v1/admin', hostURL)
 
   const peerTimeoutSetting = await setting.findUnique({
     where: {

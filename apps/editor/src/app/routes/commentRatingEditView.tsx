@@ -9,6 +9,12 @@ import {
   useRatingSystemLazyQuery,
   useUpdateRatingSystemMutation
 } from '@wepublish/editor/api'
+import {
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdOutlineSave, MdReplay} from 'react-icons/md'
@@ -26,7 +32,6 @@ import {
 
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent} from '../atoms/permissionControl'
-import {ListViewActions, ListViewContainer, ListViewHeader, TableWrapper} from '../ui/listView'
 
 const Content = styled.div`
   margin-top: 2rem;
@@ -241,34 +246,38 @@ type PollAnswersProps = {
 export function RatingAnswers({answers, onDeleteAnswer, onUpdateAnswer}: PollAnswersProps) {
   const {t} = useTranslation()
 
-  return answers?.map(answer => (
-    <AnswerGrid key={answer.id}>
-      <Form.Control
-        name={`answer-${answer.id}`}
-        placeholder={t('comments.ratingEdit.placeholder')}
-        value={answer.answer || ''}
-        onChange={(value: string) => onUpdateAnswer(answer.id, value, answer.type)}
-      />
+  return (
+    <>
+      {answers?.map(answer => (
+        <AnswerGrid key={answer.id}>
+          <Form.Control
+            name={`answer-${answer.id}`}
+            placeholder={t('comments.ratingEdit.placeholder')}
+            value={answer.answer || ''}
+            onChange={(value: string) => onUpdateAnswer(answer.id, value, answer.type)}
+          />
 
-      <SelectPicker
-        cleanable={false}
-        value={answer.type}
-        onChange={(value: RatingSystemType) => onUpdateAnswer(answer.id, answer.answer, value)}
-        data={Object.entries(RatingSystemType).map(([label, value]) => ({label, value}))}
-      />
+          <SelectPicker
+            cleanable={false}
+            value={answer.type}
+            onChange={(value: RatingSystemType) => onUpdateAnswer(answer.id, answer.answer, value)}
+            data={Object.entries(RatingSystemType).map(([label, value]) => ({label, value}))}
+          />
 
-      <IconButtonTooltip caption={t('delete')}>
-        <RIconButton
-          icon={<MdDelete />}
-          circle
-          size="sm"
-          appearance="ghost"
-          color="red"
-          onClick={() => onDeleteAnswer(answer.id)}
-        />
-      </IconButtonTooltip>
-    </AnswerGrid>
-  ))
+          <IconButtonTooltip caption={t('delete')}>
+            <RIconButton
+              icon={<MdDelete />}
+              circle
+              size="sm"
+              appearance="ghost"
+              color="red"
+              onClick={() => onDeleteAnswer(answer.id)}
+            />
+          </IconButtonTooltip>
+        </AnswerGrid>
+      ))}
+    </>
+  )
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([

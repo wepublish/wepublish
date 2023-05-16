@@ -3,6 +3,16 @@ import {
   useDeleteNavigationMutation,
   useNavigationListQuery
 } from '@wepublish/editor/api'
+import {
+  IconButton,
+  ListViewActions,
+  ListViewContainer,
+  ListViewFilterArea,
+  ListViewHeader,
+  PaddedCell,
+  Table,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
@@ -14,16 +24,6 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {NavigationEditPanel} from '../panel/navigationEditPanel'
-import {
-  IconButton,
-  ListViewActions,
-  ListViewContainer,
-  ListViewFilterArea,
-  ListViewHeader,
-  PaddedCell,
-  Table,
-  TableWrapper
-} from '../ui/listView'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 

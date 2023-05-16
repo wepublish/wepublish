@@ -2,6 +2,27 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Consent {
+  createdAt: DateTime!
+  defaultValue: Boolean!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+  slug: String!
+}
+
+input ConsentFilter {
+  defaultValue: Boolean
+  name: String
+  slug: String
+}
+
+input ConsentInput {
+  defaultValue: Boolean!
+  name: String!
+  slug: String!
+}
+
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -50,16 +71,60 @@ type MemberPlanRef {
 }
 
 type Mutation {
+  """
+  
+        Create a new consent.
+      
+  """
+  createConsent(consent: ConsentInput!): Consent!
   createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): [SubscriptionFlowModel!]!
   createSubscriptionInterval(subscriptionInterval: SubscriptionIntervalCreateInput!): [SubscriptionFlowModel!]!
+
+  """
+  
+        Creates a new userConsent based on input.
+        Returns created userConsent.
+      
+  """
+  createUserConsent(userConsent: UserConsentInput!): UserConsent!
+
+  """
+  
+        Deletes an existing consent.
+      
+  """
+  deleteConsent(id: String!): Consent!
   deleteSubscriptionFlow(subscriptionFlowId: String!): [SubscriptionFlowModel!]!
   deleteSubscriptionInterval(subscriptionInterval: SubscriptionIntervalDeleteInput!): [SubscriptionFlowModel!]!
+
+  """
+  
+        Delete an existing userConsent by id.
+        Returns deleted userConsent.
+      
+  """
+  deleteUserConsent(id: String!): UserConsent!
   syncTemplates: Boolean
   testSystemMail(systemMail: SystemMailTestInput!): [SystemMailModel!]!
+
+  """
+  
+        Updates an existing consent.
+      
+  """
+  updateConsent(consent: ConsentInput!, id: String!): Consent!
   updateSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelUpdateInput!): [SubscriptionFlowModel!]!
   updateSubscriptionInterval(subscriptionInterval: SubscriptionIntervalUpdateInput!): [SubscriptionFlowModel!]!
   updateSubscriptionIntervals(subscriptionIntervals: [SubscriptionIntervalUpdateInput!]!): [SubscriptionFlowModel!]!
   updateSystemMail(systemMail: SystemMailUpdateInput!): [SystemMailModel!]!
+
+  """
+  
+        Updates an existing userConsent based on input.
+        Returns updated userConsent.
+      
+  """
+  updateUserConsent(id: String!, userConsent: UpdateUserConsentInput!): UserConsent!
 }
 
 type PaymentMethodRef {
@@ -82,6 +147,20 @@ type Query {
       
   """
   activeSubscribers: [DashboardSubscription!]!
+
+  """
+  
+        Returns a consent by id.
+      
+  """
+  consent(id: String!): Consent!
+
+  """
+  
+        Returns all consents.
+      
+  """
+  consents(filter: ConsentFilter): [Consent!]!
 
   """
   
@@ -126,6 +205,20 @@ type Query {
   """
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
   subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
+
+  """
+  
+        Returns a single userConsent by id.
+      
+  """
+  userConsent(id: String!): UserConsent!
+
+  """
+  
+        Returns a list of userConsents. Possible to filter.
+      
+  """
+  userConsents(filter: UserConsentFilter): [UserConsent!]!
   versionInformation: VersionInformation!
 }
 
@@ -207,6 +300,47 @@ input SystemMailTestInput {
 input SystemMailUpdateInput {
   event: UserEvent!
   mailTemplateId: String!
+}
+
+input UpdateUserConsentInput {
+  value: Boolean!
+}
+
+type User {
+  active: Boolean!
+  createdAt: DateTime!
+  email: String!
+  emailVerifiedAt: DateTime
+  firstName: String
+  id: String!
+  lastLogin: DateTime
+  modifiedAt: DateTime!
+  name: String!
+  password: String!
+  preferredName: String
+  roleIDs: [String!]!
+  userImageID: String
+}
+
+type UserConsent {
+  consent: Consent!
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  user: User!
+  value: Boolean!
+}
+
+input UserConsentFilter {
+  name: String
+  slug: String
+  value: Boolean
+}
+
+input UserConsentInput {
+  consentId: String!
+  userId: String!
+  value: Boolean!
 }
 
 enum UserEvent {

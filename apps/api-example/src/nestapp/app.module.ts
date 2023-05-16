@@ -1,9 +1,9 @@
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
-import {Module} from '@nestjs/common'
+import {Global, Module} from '@nestjs/common'
 import {GraphQLModule} from '@nestjs/graphql'
 import {DashboardModule, MembershipModule} from '@wepublish/membership/api'
-import {ApiModule, PrismaService} from '@wepublish/nest-modules'
-import {SettingModule, AuthenticationModule, PermissionModule} from '@wepublish/api'
+import {ApiModule, PrismaModule, PrismaService} from '@wepublish/nest-modules'
+import {SettingModule, AuthenticationModule, PermissionModule, ConsentModule} from '@wepublish/api'
 import {ScheduleModule} from '@nestjs/schedule'
 import {MailsModule, BaseMailProvider, MailgunMailProvider} from '@wepublish/mails'
 import process from 'process'
@@ -19,6 +19,7 @@ import {
   StripePaymentProvider
 } from '@wepublish/payments'
 
+@Global()
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -31,20 +32,19 @@ import {
         origin: true
       }
     }),
-    MailsModule.forRoot({
-      defaultReplyToAddress: process.env.MAILS_DEFAULT_REPLY_ADDRESS ?? '',
-      defaultFromAddress: process.env.MAILS_DEFAULT_FROM_ADDRESS ?? ''
-    }),
+    PrismaModule,
+    MailsModule,
     PaymentsModule,
     ApiModule,
     MembershipModule,
     DashboardModule,
     AuthenticationModule,
     PermissionModule,
+    ConsentModule,
     SettingModule,
     ScheduleModule.forRoot()
   ],
-  controllers: [],
+  exports: [BaseMailProvider, PaymentProviders],
   providers: [
     {
       provide: BaseMailProvider,

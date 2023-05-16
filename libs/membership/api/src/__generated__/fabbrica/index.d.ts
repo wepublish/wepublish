@@ -46,6 +46,8 @@ import type {PollExternalVoteSource} from '@prisma/client'
 import type {PollExternalVote} from '@prisma/client'
 import type {Event} from '@prisma/client'
 import type {TaggedEvents} from '@prisma/client'
+import type {Consent} from '@prisma/client'
+import type {UserConsent} from '@prisma/client'
 import type {UserFlowMail} from '@prisma/client'
 import type {SubscriptionFlow} from '@prisma/client'
 import type {SubscriptionInterval} from '@prisma/client'
@@ -159,6 +161,7 @@ declare type ArticleRevisionFactoryDefineInput = {
   seoTitle?: string | null
   slug?: string | null
   tags?: Prisma.ArticleRevisionCreatetagsInput | Prisma.Enumerable<string>
+  (): any
   canonicalUrl?: string | null
   properties?: Prisma.MetadataPropertyCreateNestedManyWithoutArticleRevisionInput
   image?: ArticleRevisionimageFactory | Prisma.ImageCreateNestedOneWithoutArticleRevisionImagesInput
@@ -527,6 +530,7 @@ declare type ImageFactoryDefineInput = {
   modifiedAt?: Date
   source?: string | null
   tags?: Prisma.ImageCreatetagsInput | Prisma.Enumerable<string>
+  (): any
   title?: string | null
   height?: number
   width?: number
@@ -1079,9 +1083,11 @@ declare type AvailablePaymentMethodFactoryDefineInput = {
   paymentMethodIDs?:
     | Prisma.AvailablePaymentMethodCreatepaymentMethodIDsInput
     | Prisma.Enumerable<string>
+  (): any
   paymentPeriodicities?:
     | Prisma.AvailablePaymentMethodCreatepaymentPeriodicitiesInput
     | Prisma.Enumerable<PaymentPeriodicity>
+  (): any
   forceAutoRenewal?: boolean
   MemberPlan?:
     | AvailablePaymentMethodMemberPlanFactory
@@ -1132,6 +1138,7 @@ declare type MemberPlanFactoryDefineInput = {
   name?: string
   slug?: string
   tags?: Prisma.MemberPlanCreatetagsInput | Prisma.Enumerable<string>
+  (): any
   description?: Prisma.JsonNullValueInput | Prisma.InputJsonValue
   active?: boolean
   amountPerMonthMin?: number
@@ -1289,6 +1296,7 @@ declare type PageRevisionFactoryDefineInput = {
   title?: string
   description?: string | null
   tags?: Prisma.PageRevisionCreatetagsInput | Prisma.Enumerable<string>
+  (): any
   properties?: Prisma.MetadataPropertyCreateNestedManyWithoutPageRevisionInput
   image?: PageRevisionimageFactory | Prisma.ImageCreateNestedOneWithoutPageRevisionImagesInput
   socialMediaTitle?: string | null
@@ -1554,6 +1562,7 @@ declare type TokenFactoryDefineInput = {
   name?: string
   token?: string
   roleIDs?: Prisma.TokenCreateroleIDsInput | Prisma.Enumerable<string>
+  (): any
 }
 declare type TokenFactoryDefineOptions = {
   defaultData?: Resolver<TokenFactoryDefineInput, BuildDataOptions>
@@ -1966,6 +1975,7 @@ declare type UserFactoryDefineInput = {
   active?: boolean
   lastLogin?: Date | null
   roleIDs?: Prisma.UserCreateroleIDsInput | Prisma.Enumerable<string>
+  (): any
   userImage?: UseruserImageFactory | Prisma.ImageCreateNestedOneWithoutUsersInput
   address?: UseraddressFactory | Prisma.UserAddressCreateNestedOneWithoutUserInput
   properties?: Prisma.MetadataPropertyCreateNestedManyWithoutUserInput
@@ -1977,6 +1987,7 @@ declare type UserFactoryDefineInput = {
   CommentRating?: Prisma.CommentRatingCreateNestedManyWithoutUserInput
   PollVote?: Prisma.PollVoteCreateNestedManyWithoutUserInput
   mailSent?: Prisma.MailLogCreateNestedManyWithoutRecipientInput
+  UserConsent?: Prisma.UserConsentCreateNestedManyWithoutUserInput
 }
 declare type UserFactoryDefineOptions = {
   defaultData?: Resolver<UserFactoryDefineInput, BuildDataOptions>
@@ -2007,6 +2018,7 @@ declare type UserRoleFactoryDefineInput = {
   description?: string | null
   name?: string
   permissionIDs?: Prisma.UserRoleCreatepermissionIDsInput | Prisma.Enumerable<string>
+  (): any
   systemRole?: boolean
 }
 declare type UserRoleFactoryDefineOptions = {
@@ -2347,6 +2359,7 @@ declare type EventFactoryDefineInput = {
   modifiedAt?: Date
   name?: string
   description?: Prisma.EventCreatedescriptionInput | Prisma.Enumerable<Prisma.InputJsonValue>
+  (): any
   status?: EventStatus
   image?: EventimageFactory | Prisma.ImageCreateNestedOneWithoutEventsInput
   location?: string | null
@@ -2426,6 +2439,91 @@ export interface TaggedEventsFactoryInterface {
 export declare function defineTaggedEventsFactory(
   options: TaggedEventsFactoryDefineOptions
 ): TaggedEventsFactoryInterface
+declare type ConsentFactoryDefineInput = {
+  id?: string
+  createdAt?: Date
+  modifiedAt?: Date
+  name?: string
+  slug?: string
+  defaultValue?: boolean
+  userConsents?: Prisma.UserConsentCreateNestedManyWithoutConsentInput
+}
+declare type ConsentFactoryDefineOptions = {
+  defaultData?: Resolver<ConsentFactoryDefineInput, BuildDataOptions>
+}
+export interface ConsentFactoryInterface {
+  readonly _factoryFor: 'Consent'
+  build(inputData?: Partial<Prisma.ConsentCreateInput>): PromiseLike<Prisma.ConsentCreateInput>
+  buildCreateInput(
+    inputData?: Partial<Prisma.ConsentCreateInput>
+  ): PromiseLike<Prisma.ConsentCreateInput>
+  buildList(
+    inputData: number | readonly Partial<Prisma.ConsentCreateInput>[]
+  ): PromiseLike<Prisma.ConsentCreateInput[]>
+  pickForConnect(inputData: Consent): Pick<Consent, 'id'>
+  create(inputData?: Partial<Prisma.ConsentCreateInput>): PromiseLike<Consent>
+  createList(
+    inputData: number | readonly Partial<Prisma.ConsentCreateInput>[]
+  ): PromiseLike<Consent[]>
+  createForConnect(inputData?: Partial<Prisma.ConsentCreateInput>): PromiseLike<Pick<Consent, 'id'>>
+}
+/**
+ * Define factory for {@link Consent} model.
+ *
+ * @param options
+ * @returns factory {@link ConsentFactoryInterface}
+ */
+export declare function defineConsentFactory(
+  options?: ConsentFactoryDefineOptions
+): ConsentFactoryInterface
+declare type UserConsentconsentFactory = {
+  _factoryFor: 'Consent'
+  build: () => PromiseLike<Prisma.ConsentCreateNestedOneWithoutUserConsentsInput['create']>
+}
+declare type UserConsentuserFactory = {
+  _factoryFor: 'User'
+  build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutUserConsentInput['create']>
+}
+declare type UserConsentFactoryDefineInput = {
+  id?: string
+  createdAt?: Date
+  modifiedAt?: Date
+  consent: UserConsentconsentFactory | Prisma.ConsentCreateNestedOneWithoutUserConsentsInput
+  user: UserConsentuserFactory | Prisma.UserCreateNestedOneWithoutUserConsentInput
+  value?: boolean
+}
+declare type UserConsentFactoryDefineOptions = {
+  defaultData: Resolver<UserConsentFactoryDefineInput, BuildDataOptions>
+}
+export interface UserConsentFactoryInterface {
+  readonly _factoryFor: 'UserConsent'
+  build(
+    inputData?: Partial<Prisma.UserConsentCreateInput>
+  ): PromiseLike<Prisma.UserConsentCreateInput>
+  buildCreateInput(
+    inputData?: Partial<Prisma.UserConsentCreateInput>
+  ): PromiseLike<Prisma.UserConsentCreateInput>
+  buildList(
+    inputData: number | readonly Partial<Prisma.UserConsentCreateInput>[]
+  ): PromiseLike<Prisma.UserConsentCreateInput[]>
+  pickForConnect(inputData: UserConsent): Pick<UserConsent, 'id'>
+  create(inputData?: Partial<Prisma.UserConsentCreateInput>): PromiseLike<UserConsent>
+  createList(
+    inputData: number | readonly Partial<Prisma.UserConsentCreateInput>[]
+  ): PromiseLike<UserConsent[]>
+  createForConnect(
+    inputData?: Partial<Prisma.UserConsentCreateInput>
+  ): PromiseLike<Pick<UserConsent, 'id'>>
+}
+/**
+ * Define factory for {@link UserConsent} model.
+ *
+ * @param options
+ * @returns factory {@link UserConsentFactoryInterface}
+ */
+export declare function defineUserConsentFactory(
+  options: UserConsentFactoryDefineOptions
+): UserConsentFactoryInterface
 declare type UserFlowMailmailTemplateFactory = {
   _factoryFor: 'MailTemplate'
   build: () => PromiseLike<Prisma.MailTemplateCreateNestedOneWithoutUserFlowMailsInput['create']>
@@ -2487,7 +2585,9 @@ declare type SubscriptionFlowFactoryDefineInput = {
   periodicities?:
     | Prisma.SubscriptionFlowCreateperiodicitiesInput
     | Prisma.Enumerable<PaymentPeriodicity>
+  (): any
   autoRenewal?: Prisma.SubscriptionFlowCreateautoRenewalInput | Prisma.Enumerable<boolean>
+  (): any
   intervals?: Prisma.SubscriptionIntervalCreateNestedManyWithoutSubscriptionFlowInput
 }
 declare type SubscriptionFlowFactoryDefineOptions = {

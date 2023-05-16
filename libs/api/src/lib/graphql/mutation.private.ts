@@ -54,7 +54,12 @@ import {
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
 import {createImage, deleteImageById, updateImage} from './image/image.private-mutation'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
-import {createInvoice, deleteInvoiceById, updateInvoice} from './invoice/invoice.private-mutation'
+import {
+  createInvoice,
+  deleteInvoiceById,
+  markInvoiceAsPaid,
+  updateInvoice
+} from './invoice/invoice.private-mutation'
 import {
   createMemberPlan,
   deleteMemberPlanById,
@@ -861,6 +866,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {id}, {authenticate, prisma: {invoice}}) =>
         deleteInvoiceById(id, authenticate, invoice)
+    },
+
+    markInvoiceAsPaid: {
+      type: GraphQLInvoice,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {id}, {authenticate, prisma, authenticateUser}) =>
+        markInvoiceAsPaid(id, authenticate, authenticateUser, prisma)
     },
 
     // Comment

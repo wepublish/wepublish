@@ -562,6 +562,54 @@ export const CanDeleteEvent: Permission = {
   deprecated: false
 }
 
+export const CanGetConsent: Permission = {
+  id: 'CAN_GET_CONSENT',
+  description: 'Allows to get a consent',
+  deprecated: false
+}
+
+export const CanCreateConsent: Permission = {
+  id: 'CAN_CREATE_CONSENT',
+  description: 'Allows to create a consent',
+  deprecated: false
+}
+
+export const CanUpdateConsent: Permission = {
+  id: 'CAN_UPDATE_CONSENT',
+  description: 'Allows to update a consent',
+  deprecated: false
+}
+
+export const CanDeleteConsent: Permission = {
+  id: 'CAN_DELETE_CONSENT',
+  description: 'Allows to delete a consent',
+  deprecated: false
+}
+
+export const CanGetUserConsent: Permission = {
+  id: 'CAN_GET_USER_CONSENT',
+  description: 'Allows to get a consent',
+  deprecated: false
+}
+
+export const CanCreateUserConsent: Permission = {
+  id: 'CAN_CREATE_USER_CONSENT',
+  description: 'Allows to create a consent',
+  deprecated: false
+}
+
+export const CanUpdateUserConsent: Permission = {
+  id: 'CAN_UPDATE_USER_CONSENT',
+  description: 'Allows to update a consent',
+  deprecated: false
+}
+
+export const CanDeleteUserConsent: Permission = {
+  id: 'CAN_DELETE_USER_CONSENT',
+  description: 'Allows to delete a consent',
+  deprecated: false
+}
+
 /**
  * Subscription Settings
  */
@@ -711,6 +759,10 @@ export const AllPermissions: Permission[] = [
   CanUpdateEvent,
   CanDeleteEvent,
   CanCreateEvent,
+  CanCreateConsent,
+  CanUpdateConsent,
+  CanDeleteConsent,
+  CanCreateEvent,
   CanGetSubscriptionFlows,
   CanUpdateSubscriptionFlow,
   CanCreateSubscriptionFlow,
@@ -761,6 +813,10 @@ export const EditorPermissions: Permission[] = [
   CanGetEvent,
   CanUpdateEvent,
   CanDeleteEvent,
+  CanCreateEvent,
+  CanCreateConsent,
+  CanUpdateConsent,
+  CanDeleteConsent,
   CanCreateEvent,
   CanGetSubscriptionFlows,
   CanGetMailTemplates

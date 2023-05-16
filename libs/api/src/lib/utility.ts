@@ -9,7 +9,6 @@ import {SubscriptionWithRelations} from './db/subscription'
 import {UserWithRelations} from './db/user'
 import {InvalidSettingValueError} from './error'
 
-export const MAX_COMMENT_LENGTH = 1000
 export const MAX_PAYLOAD_SIZE = '1MB'
 
 export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000

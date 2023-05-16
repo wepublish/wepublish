@@ -5,7 +5,7 @@ import {
   Oauth2Provider,
   WepublishServer
 } from '@wepublish/api'
-import {MailgunMailProvider} from '@wepublish/mails'
+import {MailgunMailProvider, MailchimpMailProvider} from '@wepublish/mails'
 import {
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
@@ -74,8 +74,7 @@ export async function runServer(app?: Application | undefined) {
   if (
     process.env.MAILGUN_API_KEY &&
     process.env.MAILGUN_BASE_DOMAIN &&
-    process.env.MAILGUN_MAIL_DOMAIN &&
-    process.env.MAILGUN_WEBHOOK_SECRET
+    process.env.MAILGUN_MAIL_DOMAIN
   ) {
     const mailgunClient = new Mailgun(FormData).client({
       username: 'api',
@@ -84,8 +83,9 @@ export async function runServer(app?: Application | undefined) {
     mailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
-      fromAddress: 'dev@wepublish.ch',
-      webhookEndpointSecret: process.env.MAILGUN_WEBHOOK_SECRET,
+      fromAddress:
+        process.env.MAILGUN_FROM_ADDRESS || process.env.DEFAULT_FROM_ADDRESS || 'dev@wepublish.ch',
+      webhookEndpointSecret: process.env.MAILGUN_WEBHOOK_SECRET || '',
       baseDomain: process.env.MAILGUN_BASE_DOMAIN,
       mailDomain: process.env.MAILGUN_MAIL_DOMAIN,
       apiKey: process.env.MAILGUN_API_KEY,
@@ -93,18 +93,21 @@ export async function runServer(app?: Application | undefined) {
       mailgunClient
     })
   }
-  // left here intentionally for testing
-  /* if (process.env.MAILCHIMP_API_KEY && process.env.MAILCHIMP_WEBHOOK_SECRET) {
+
+  if (process.env.MAILCHIMP_API_KEY) {
     mailProvider = new MailchimpMailProvider({
       id: 'mailchimp',
       name: 'Mailchimp',
-      fromAddress: 'dev@wepublish.ch',
-      webhookEndpointSecret: process.env.MAILCHIMP_WEBHOOK_SECRET,
+      fromAddress:
+        process.env.MAILCHIMP_FROM_ADDRESS ||
+        process.env.DEFAULT_FROM_ADDRESS ||
+        'dev@wepublish.ch',
+      webhookEndpointSecret: process.env.MAILCHIMP_WEBHOOK_SECRET || '',
       apiKey: process.env.MAILCHIMP_API_KEY,
       baseURL: '',
       incomingRequestHandler: bodyParser.urlencoded({extended: true})
     })
-  } */
+  }
 
   if (process.env.SLACK_DEV_MAIL_WEBHOOK_URL) {
     mailProvider = new SlackMailProvider({
@@ -149,8 +152,11 @@ export async function runServer(app?: Application | undefined) {
   if (
     process.env.PAYREXX_INSTANCE_NAME &&
     process.env.PAYREXX_API_SECRET &&
-    process.env.PAYREXX_WEBHOOK_SECRET
+    process.env.PAYREXX_WEBHOOK_SECRET &&
+    process.env.PAYREXX_PAYMENT_METHODS
   ) {
+    const paymentMethods = process.env.PAYREXX_PAYMENT_METHODS.split(',').map(pm => pm.trim())
+
     paymentProviders.push(
       new PayrexxPaymentProvider({
         id: 'payrexx',
@@ -159,15 +165,7 @@ export async function runServer(app?: Application | undefined) {
         instanceName: process.env.PAYREXX_INSTANCE_NAME,
         instanceAPISecret: process.env.PAYREXX_API_SECRET,
         psp: [0, 15, 17, 2, 3, 36],
-        pm: [
-          'postfinance_card',
-          'postfinance_efinance',
-          // "mastercard",
-          // "visa",
-          'twint',
-          // "invoice",
-          'paypal'
-        ],
+        pm: paymentMethods,
         vatRate: 7.7,
         incomingRequestHandler: bodyParser.json()
       })
@@ -176,7 +174,7 @@ export async function runServer(app?: Application | undefined) {
       new PayrexxSubscriptionPaymentProvider({
         id: 'payrexx-subscription',
         name: 'Payrexx Subscription',
-        offSessionPayments: false,
+        offSessionPayments: true,
         instanceName: process.env.PAYREXX_INSTANCE_NAME,
         instanceAPISecret: process.env.PAYREXX_API_SECRET,
         incomingRequestHandler: bodyParser.json(),
@@ -236,8 +234,8 @@ export async function runServer(app?: Application | undefined) {
       oauth2Providers,
       mailProvider,
       mailContextOptions: {
-        defaultFromAddress: process.env.DEFAULT_FROM_ADDRESS ?? 'dev@wepublish.ch',
-        defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch'
+        defaultFromAddress: process.env.DEFAULT_FROM_ADDRESS || 'dev@wepublish.ch',
+        defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS || 'reply-to@wepublish.ch'
       },
       paymentProviders,
       urlAdapter: new ExampleURLAdapter({websiteURL}),

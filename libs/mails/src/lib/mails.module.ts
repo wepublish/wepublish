@@ -10,7 +10,20 @@ type MailsModuleProps = {
 
 @Module({
   imports: [PrismaModule],
-  providers: [MailContext],
+  providers: [
+    {
+      provide: MailContext,
+      useFactory: (prisma: PrismaService, mailProvider: BaseMailProvider) => {
+        return new MailContext({
+          prisma,
+          mailProvider,
+          defaultFromAddress: 'ff',
+          defaultReplyToAddress: 'ff'
+        })
+      },
+      inject: [PrismaService, BaseMailProvider]
+    }
+  ],
   exports: [MailContext]
 })
 export class MailsModule {

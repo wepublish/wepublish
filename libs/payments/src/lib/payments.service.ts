@@ -2,7 +2,7 @@ import {Inject, Injectable, OnModuleInit} from '@nestjs/common'
 import {PaymentProvider} from './payment-provider/paymentProvider'
 import {Payment, PaymentState, PrismaClient} from '@prisma/client'
 
-export const PaymentProviders = Symbol('PaymentProvider[]')
+export const PaymentProviders = Symbol('PaymentProviders')
 
 @Injectable()
 export class PaymentsService implements OnModuleInit {

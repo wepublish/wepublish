@@ -4,17 +4,6 @@
   "sourceRoot": "libs/mails/src",
   "projectType": "library",
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/libs/mails",
-        "tsConfig": "libs/mails/tsconfig.lib.json",
-        "packageJson": "libs/mails/package.json",
-        "main": "libs/mails/src/index.ts",
-        "assets": ["libs/mails/*.md"]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
