@@ -1,7 +1,7 @@
 import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {Inject, Injectable} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
-import axios from 'Axios'
+import axios from 'axios'
 import {Cache} from 'cache-manager'
 import moment from 'moment'
 import fetch from 'node-fetch'
@@ -320,14 +320,11 @@ class AgendaBasel implements EventsProvider {
     if (!parsedEvents) {
       parsedEvents = await parseAndCacheData(cacheManager, Providers.AgendaBasel)
     }
-    console.log('parsedEventsdupa', parsedEvents)
     const event = parsedEvents?.find(e => e.id === id)
 
     if (!event) {
       throw Error(`Event with id ${id} not found.`)
     }
-    console.log('event.imageUrl', event.imageUrl)
-    console.log('event', event)
 
     if (event.imageUrl) {
       const file = fetchAndTransformImage(event.imageUrl)
