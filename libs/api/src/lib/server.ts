@@ -13,15 +13,8 @@ import {
   ApolloServerPluginLandingPageDisabled
 } from 'apollo-server-core'
 import {graphqlUploadExpress} from 'graphql-upload'
-import {Context} from './context'
 import {setupMailProvider} from './mails'
 import {serverLogger, logger} from '@wepublish/utils'
-
-declare global {
-  // Workaround not working with let or const https://stackoverflow.com/questions/68481686/type-typeof-globalthis-has-no-index-signature
-  // eslint-disable-next-line no-var
-  var oldContext: Context
-}
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -111,8 +104,6 @@ export class WepublishServer {
         res.status(500).end()
       }
     })
-    // Only as workaround until everything is migrated to NESTJS
-    global.oldContext = await contextFromRequest(null, this.opts)
     this.app = app
   }
 
