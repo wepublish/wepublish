@@ -947,6 +947,7 @@ export type Mutation = {
   deleteUserRole?: Maybe<UserRole>;
   duplicateArticle: Article;
   duplicatePage: Page;
+  markInvoiceAsPaid?: Maybe<Invoice>;
   publishArticle?: Maybe<Article>;
   publishPage?: Maybe<Page>;
   rejectComment: Comment;
@@ -1229,6 +1230,11 @@ export type MutationDuplicateArticleArgs = {
 
 
 export type MutationDuplicatePageArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationMarkInvoiceAsPaidArgs = {
   id: Scalars['ID'];
 };
 
@@ -3187,6 +3193,13 @@ export type UpdateInvoiceMutationVariables = Exact<{
 
 
 export type UpdateInvoiceMutation = { __typename?: 'Mutation', updateInvoice?: { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> } | null };
+
+export type MarkInvoiceAsPaidMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type MarkInvoiceAsPaidMutation = { __typename?: 'Mutation', markInvoiceAsPaid?: { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> } | null };
 
 export type MemberPlanRefFragment = { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
@@ -6439,6 +6452,39 @@ export function useUpdateInvoiceMutation(baseOptions?: Apollo.MutationHookOption
 export type UpdateInvoiceMutationHookResult = ReturnType<typeof useUpdateInvoiceMutation>;
 export type UpdateInvoiceMutationResult = Apollo.MutationResult<UpdateInvoiceMutation>;
 export type UpdateInvoiceMutationOptions = Apollo.BaseMutationOptions<UpdateInvoiceMutation, UpdateInvoiceMutationVariables>;
+export const MarkInvoiceAsPaidDocument = gql`
+    mutation MarkInvoiceAsPaid($id: ID!) {
+  markInvoiceAsPaid(id: $id) {
+    ...Invoice
+  }
+}
+    ${InvoiceFragmentDoc}`;
+export type MarkInvoiceAsPaidMutationFn = Apollo.MutationFunction<MarkInvoiceAsPaidMutation, MarkInvoiceAsPaidMutationVariables>;
+
+/**
+ * __useMarkInvoiceAsPaidMutation__
+ *
+ * To run a mutation, you first call `useMarkInvoiceAsPaidMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMarkInvoiceAsPaidMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [markInvoiceAsPaidMutation, { data, loading, error }] = useMarkInvoiceAsPaidMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useMarkInvoiceAsPaidMutation(baseOptions?: Apollo.MutationHookOptions<MarkInvoiceAsPaidMutation, MarkInvoiceAsPaidMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MarkInvoiceAsPaidMutation, MarkInvoiceAsPaidMutationVariables>(MarkInvoiceAsPaidDocument, options);
+      }
+export type MarkInvoiceAsPaidMutationHookResult = ReturnType<typeof useMarkInvoiceAsPaidMutation>;
+export type MarkInvoiceAsPaidMutationResult = Apollo.MutationResult<MarkInvoiceAsPaidMutation>;
+export type MarkInvoiceAsPaidMutationOptions = Apollo.BaseMutationOptions<MarkInvoiceAsPaidMutation, MarkInvoiceAsPaidMutationVariables>;
 export const MemberPlanListDocument = gql`
     query MemberPlanList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
   memberPlans(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
