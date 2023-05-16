@@ -1,8 +1,8 @@
-import {Payment, PaymentState} from '@prisma/client'
 import {Router} from 'express'
 import {contextFromRequest} from './context'
 import {WepublishServerOpts} from './server'
 import {logger} from '@wepublish/utils'
+import {PaymentsService} from '../../../payments/src/lib/payments.service'
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks'
 
@@ -10,50 +10,8 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
   const {paymentProviders, prisma} = opts
   const paymentProviderWebhookRouter = Router()
 
-  prisma.$use(async (params, next) => {
-    if (params.model !== 'Payment') {
-      return next(params)
-    }
-
-    if (params.action !== 'update') {
-      return next(params)
-    }
-
-    const model: Payment = await next(params)
-
-    if (model.state === PaymentState.paid) {
-      const invoice = await prisma.invoice.findUnique({
-        where: {id: model.invoiceID},
-        include: {
-          items: true
-        }
-      })
-
-      if (!invoice) {
-        console.warn(`No invoice with id ${model.invoiceID}`)
-        return
-      }
-
-      const {items, ...invoiceData} = invoice
-
-      await prisma.invoice.update({
-        where: {id: invoice.id},
-        data: {
-          ...invoiceData,
-          items: {
-            deleteMany: {
-              invoiceId: invoiceData.id
-            },
-            create: items.map(({invoiceId, ...item}) => item)
-          },
-          paidAt: new Date(),
-          canceledAt: null
-        }
-      })
-    }
-
-    return model
-  })
+  const paymentsService = new PaymentsService(prisma, paymentProviders)
+  paymentsService.onModuleInit()
 
   // setup webhook routes for each payment provider
   paymentProviders.forEach(paymentProvider => {
