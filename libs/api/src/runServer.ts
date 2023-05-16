@@ -211,18 +211,20 @@ export async function runServer() {
         incomingRequestHandler: bodyParser.json()
       })
     )
-    paymentProviders.push(
-      new PayrexxSubscriptionPaymentProvider({
-        id: 'payrexx-subscription',
-        name: 'Payrexx Subscription',
-        offSessionPayments: true,
-        instanceName: process.env.PAYREXX_INSTANCE_NAME,
-        instanceAPISecret: process.env.PAYREXX_API_SECRET,
-        incomingRequestHandler: bodyParser.json(),
-        webhookSecret: process.env.PAYREXX_WEBHOOK_SECRET,
-        prisma
-      })
-    )
+    if (process.env.PAYREXX_WEBHOOK_SECRET) {
+      paymentProviders.push(
+        new PayrexxSubscriptionPaymentProvider({
+          id: 'payrexx-subscription',
+          name: 'Payrexx Subscription',
+          offSessionPayments: true,
+          instanceName: process.env.PAYREXX_INSTANCE_NAME,
+          instanceAPISecret: process.env.PAYREXX_API_SECRET,
+          incomingRequestHandler: bodyParser.json(),
+          webhookSecret: process.env.PAYREXX_WEBHOOK_SECRET,
+          prisma
+        })
+      )
+    }
   }
 
   const prettyStream = pinoMultiStream.prettyStream()
