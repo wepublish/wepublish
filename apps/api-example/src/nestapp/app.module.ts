@@ -8,7 +8,6 @@ import {
   AuthenticationModule,
   PermissionModule,
   ConsentModule,
-  MediaAdapterModule,
   MediaAdapterService,
   KarmaMediaAdapter
 } from '@wepublish/api'
@@ -34,7 +33,6 @@ import {URL} from 'url'
     PermissionModule,
     ConsentModule,
     SettingModule,
-    MediaAdapterModule,
     ConfigModule.forRoot()
   ],
   providers: [
