@@ -15,7 +15,6 @@ import {
   defineSubscriptionIntervalFactory
 } from '../../__generated__/fabbrica'
 import {add, format, sub} from 'date-fns'
-import {initOldContextForTest} from '../../oldcontext-utils'
 import {SubscriptionEventDictionary} from './subscription-event-dictionary'
 import nock from 'nock'
 
@@ -72,7 +71,6 @@ describe('SubscriptionEventDictionary', () => {
 
   beforeEach(async () => {
     await nock.disableNetConnect()
-    await initOldContextForTest(prismaClient)
 
     await clearDatabase(prismaClient, [
       'subscription_communication_flows',

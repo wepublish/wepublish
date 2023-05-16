@@ -5,7 +5,6 @@ import {
   defineMailTemplateFactory,
   defineUserFactory
 } from '../../__generated__/fabbrica'
-import {initOldContextForTest} from '../../oldcontext-utils'
 import {Test, TestingModule} from '@nestjs/testing'
 import {forwardRef} from '@nestjs/common'
 import {
@@ -36,7 +35,6 @@ describe('MailController', () => {
 
   beforeEach(async () => {
     await nock.disableNetConnect()
-    await initOldContextForTest(prismaClient)
     const module: TestingModule = await Test.createTestingModule({
       imports: [forwardRef(() => PrismaModule.forTest(prismaClient))],
       providers: [

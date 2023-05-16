@@ -1,7 +1,8 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {UserEvent, UserFlowMail} from '@prisma/client'
-import {OldContextService, PrismaService} from '@wepublish/nest-modules'
+import {PrismaService} from '@wepublish/nest-modules'
 import {SystemMailResolver} from './system-mail.resolver'
+import {MailContext} from '@wepublish/mails'
 
 const mockTemplate1: UserFlowMail = {
   id: 'c29a088f-40f0-4578-a6c4-810249902495',
@@ -30,13 +31,9 @@ const prismaServiceMock = {
   }
 }
 
-const oldContextServiceMock = {
-  context: {
-    mailContext: {
-      getUserTemplateName: jest.fn((): string => 'test-template'),
-      sendRemoteTemplateDirect: jest.fn((): void => undefined)
-    }
-  }
+const mailContestMock = {
+  getUserTemplateName: jest.fn((): string => 'test-template'),
+  sendRemoteTemplateDirect: jest.fn((): void => undefined)
 }
 
 const FAKE_USER = {
@@ -62,9 +59,8 @@ describe('SystemMailResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SystemMailResolver,
-        OldContextService,
         {provide: PrismaService, useValue: prismaServiceMock},
-        {provide: OldContextService, useValue: oldContextServiceMock}
+        {provide: MailContext, useValue: mailContestMock}
       ]
     }).compile()
 

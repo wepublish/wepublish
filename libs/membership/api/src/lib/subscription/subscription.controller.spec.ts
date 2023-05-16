@@ -19,19 +19,18 @@ import {
   defineSubscriptionPeriodFactory
 } from '../../__generated__/fabbrica'
 
-import {initOldContextForTest} from '../../oldcontext-utils'
 import {Test, TestingModule} from '@nestjs/testing'
 import {forwardRef} from '@nestjs/common'
-import {OldContextService, PrismaModule, PrismaService} from '@wepublish/nest-modules'
+import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
 import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
 import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
 import {SubscriptionController} from '../subscription/subscription.controller'
 import {clearDatabase, clearFullDatabase} from '../../prisma-utils'
 import {add, sub} from 'date-fns'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
+import {PaymentsService} from '@wepublish/payments'
 
 describe('SubscriptionController', () => {
-  let controller: OldContextService
   const prismaClient = new PrismaClient()
   initialize({prisma: prismaClient})
 
@@ -319,18 +318,16 @@ describe('SubscriptionController', () => {
 
   beforeEach(async () => {
     await nock.disableNetConnect()
-    await initOldContextForTest(prismaClient)
     const module: TestingModule = await Test.createTestingModule({
       imports: [forwardRef(() => PrismaModule.forTest(prismaClient))],
       providers: [
         PrismaService,
         SubscriptionFlowController,
         PeriodicJobController,
-        OldContextService,
         SubscriptionController
       ]
     }).compile()
-    controller = module.get<OldContextService>(OldContextService)
+    const paymentsService = module.get<PaymentsService>(PaymentsService)
 
     await clearDatabase(prismaClient, [
       'payments',
@@ -346,7 +343,10 @@ describe('SubscriptionController', () => {
       'users'
     ])
 
-    subscriptionController = new SubscriptionController(prismaClient as PrismaService, controller)
+    subscriptionController = new SubscriptionController(
+      prismaClient as PrismaService,
+      paymentsService
+    )
 
     // Create deactivated subscription
     await SubscriptionFactory.create({
@@ -420,10 +420,6 @@ describe('SubscriptionController', () => {
     await nock.cleanAll()
     await nock.enableNetConnect()
     await prismaClient.$disconnect()
-  })
-
-  it('is defined', () => {
-    expect(controller).toBeDefined()
   })
 
   it('get subscriptions for invoice creation', async () => {

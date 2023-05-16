@@ -2,7 +2,7 @@ import {Test, TestingModule} from '@nestjs/testing'
 import {SubscriptionFlowController} from './subscription-flow.controller'
 import {clearDatabase} from '../../prisma-utils'
 import {PrismaModule} from '@wepublish/nest-modules'
-import {OldContextService, PrismaService} from '@wepublish/nest-modules'
+import {PrismaService} from '@wepublish/nest-modules'
 import {PrismaClient} from '@prisma/client'
 import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
 import {SubscriptionController} from '../subscription/subscription.controller'
@@ -40,7 +40,6 @@ describe('SubscriptionFlowController', () => {
         PrismaService,
         SubscriptionFlowController,
         PeriodicJobController,
-        OldContextService,
         SubscriptionController
       ]
     }).compile()

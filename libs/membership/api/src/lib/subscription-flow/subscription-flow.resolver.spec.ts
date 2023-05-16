@@ -6,7 +6,7 @@ import {Test, TestingModule} from '@nestjs/testing'
 import request from 'supertest'
 import {SubscriptionFlowResolver} from './subscription-flow.resolver'
 import {SubscriptionFlowController} from './subscription-flow.controller'
-import {OldContextService, PrismaService} from '@wepublish/nest-modules'
+import {PrismaService} from '@wepublish/nest-modules'
 import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
 import {SubscriptionController} from '../subscription/subscription.controller'
 import {APP_GUARD} from '@nestjs/core'
@@ -20,8 +20,6 @@ import {
 } from '../../__generated__/fabbrica'
 import {PermissionsGuard} from '@wepublish/permissions/api'
 import {clearDatabase} from '../../prisma-utils'
-import {initOldContextForTest} from '../../oldcontext-utils'
-import * as util from 'util'
 
 @Injectable()
 export class TestPermissionsGuard implements CanActivate {
@@ -108,7 +106,6 @@ const paymentMethodsQuery = `
     SubscriptionFlowResolver,
     PrismaService,
     SubscriptionFlowController,
-    OldContextService,
     PeriodicJobController,
     SubscriptionController,
     SubscriptionFlowHelper,
@@ -119,6 +116,7 @@ const paymentMethodsQuery = `
   ]
 })
 export class AppUnauthenticatedModule {}
+
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -132,7 +130,6 @@ export class AppUnauthenticatedModule {}
     SubscriptionFlowResolver,
     PrismaService,
     SubscriptionFlowController,
-    OldContextService,
     PeriodicJobController,
     SubscriptionController,
     SubscriptionFlowHelper,
@@ -362,11 +359,9 @@ describe('Subscription Flow Resolver', () => {
     })
 
     beforeEach(async () => {
-      await initOldContextForTest(prismaClient)
       const module: TestingModule = await Test.createTestingModule({
         imports: [PrismaModule.forTest(prismaClient)],
         providers: [
-          OldContextService,
           PeriodicJobController,
           PrismaService,
           SubscriptionController,

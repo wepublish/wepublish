@@ -1,7 +1,7 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {MailTemplate} from '@prisma/client'
-import {MailProvider, MailTemplateStatus} from '@wepublish/mails'
-import {OldContextService, PrismaService} from '@wepublish/nest-modules'
+import {MailContext, MailProvider, MailTemplateStatus} from '@wepublish/mails'
+import {PrismaService} from '@wepublish/nest-modules'
 import {MailTemplateSyncService} from './mail-template-sync.service'
 import {MailTemplatesResolver} from './mail-template.resolver'
 import {INestApplication, Module} from '@nestjs/common'
@@ -63,13 +63,9 @@ const mailProviderServiceMock = {
   getTemplateUrl: jest.fn((): string => 'https://example.com/template.html')
 }
 
-const oldContextServiceMock = {
-  context: {
-    mailContext: {
-      mailProvider: mailProviderServiceMock as unknown as MailProvider,
-      getUsedTemplateIdentifiers: jest.fn((): string[] => [])
-    }
-  }
+const mailContextMock = {
+  mailProvider: mailProviderServiceMock as unknown as MailProvider,
+  getUsedTemplateIdentifiers: jest.fn((): string[] => [])
 }
 
 const syncServiceMock = {
@@ -87,7 +83,7 @@ const syncServiceMock = {
   ],
   providers: [
     PrismaService,
-    OldContextService,
+    MailContext,
     MailTemplatesResolver,
     MailTemplateSyncService,
     {
@@ -116,7 +112,7 @@ describe('MailTemplatesResolver', () => {
         MailTemplatesResolver,
         {provide: PrismaService, useValue: prismaServiceMock},
         {provide: MailTemplateSyncService, useValue: syncServiceMock},
-        {provide: OldContextService, useValue: oldContextServiceMock}
+        {provide: MailContext, useValue: mailContextMock}
       ]
     }).compile()
 
