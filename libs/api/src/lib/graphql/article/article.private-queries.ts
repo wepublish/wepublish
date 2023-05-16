@@ -12,6 +12,7 @@ import {ArticleFilter, ArticleSort, ArticleWithRevisions} from '../../db/article
 import {NotAuthorisedError, NotFound, UserInputError} from '../../error'
 import {authorise} from '../permissions'
 import {getArticles} from './article.queries'
+import {generateJWT} from '@wepublish/utils'
 
 export const getArticleById = async (
   id: string,
@@ -39,8 +40,8 @@ export const getArticleById = async (
 export const getArticlePreviewLink = async (
   id: string,
   hours: number,
+  hostURL: string,
   authenticate: Context['authenticate'],
-  generateJWT: Context['generateJWT'],
   urlAdapter: Context['urlAdapter'],
   articles: Context['loaders']['articles']
 ): Promise<string> => {
@@ -55,6 +56,7 @@ export const getArticlePreviewLink = async (
 
   const token = generateJWT({
     id: article.id,
+    hostURL,
     expiresInMinutes: hours * 60
   })
 

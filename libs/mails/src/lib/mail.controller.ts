@@ -2,7 +2,7 @@ import {Injectable, Logger} from '@nestjs/common'
 import {MailLogState, User} from '@prisma/client'
 import {MailContext} from './mail-context'
 import {PrismaService} from '@wepublish/nest-modules'
-import {generateJWT} from '@wepublish/utils/api'
+import {generateJWT} from '@wepublish/utils'
 
 const ONE_WEEK_IN_MINUTES = 7 * 24 * 60 * 60
 
@@ -68,7 +68,7 @@ export class MailController {
       user: this.config.recipient,
       optional: this.config.optionalData,
       jwt: generateJWT({
-        issuer: 'mailer',
+        hostURL: 'mailer',
         audience: 'audience',
         id: this.generateMailIdentifier(),
         expiresInMinutes: ONE_WEEK_IN_MINUTES

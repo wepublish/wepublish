@@ -219,6 +219,7 @@ export interface CreatePaymentWithProvider {
 
 export interface GenerateJWTProps {
   id: string
+  hostURL: string
   audience?: string
   expiresInMinutes?: number
 }
@@ -876,7 +877,7 @@ export async function contextFromRequest(
     return typeof ver === 'object' && 'sub' in ver ? (ver as Record<string, any>).sub : ''
   }
 
-  const memberContext = new MemberContext({
+  const memberContext: MemberContext = new MemberContext({
     loaders,
     prisma,
     paymentProviders,
@@ -884,6 +885,7 @@ export async function contextFromRequest(
     getLoginUrlForUser(user: User): string {
       const jwt = generateJWT({
         id: user.id,
+        hostURL,
         expiresInMinutes: 10080 // One week in minutes
       })
 

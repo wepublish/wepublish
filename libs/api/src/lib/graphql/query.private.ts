@@ -151,6 +151,7 @@ import {
 } from './userRole'
 import {GraphQLAction} from './action'
 import {getActions} from './action/action.private-queries'
+import {generateJWT} from '@wepublish/utils'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -174,7 +175,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         userId: {type: GraphQLNonNull(GraphQLString)},
         expiresInMinutes: {type: GraphQLNonNull(GraphQLInt)}
       },
-      async resolve(root, {userId, expiresInMinutes}, {authenticate, generateJWT, prisma}, info) {
+      async resolve(root, {userId, expiresInMinutes}, {authenticate, prisma, hostURL}, info) {
         const THIRTY_DAYS_IN_MIN = 30 * 24 * 60
         const {roles} = authenticate()
         authorise(CanLoginAsOtherUser, roles)
@@ -195,7 +196,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           new Date().getTime() + expiresInMinutes * 60 * 1000
         ).toISOString()
 
-        const token = generateJWT({id: userId, expiresInMinutes})
+        const token = generateJWT({id: userId, hostURL, expiresInMinutes})
 
         return {
           token,
@@ -537,8 +538,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       resolve: async (
         root,
         {id, hours},
-        {authenticate, loaders: {articles}, urlAdapter, generateJWT}
-      ) => getArticlePreviewLink(id, hours, authenticate, generateJWT, urlAdapter, articles)
+        {authenticate, loaders: {articles}, urlAdapter, generateJWT, hostURL}
+      ) => getArticlePreviewLink(id, hours, hostURL, authenticate, urlAdapter, articles)
     },
 
     // Page
@@ -568,8 +569,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     pagePreviewLink: {
       type: GraphQLString,
       args: {id: {type: GraphQLNonNull(GraphQLID)}, hours: {type: GraphQLNonNull(GraphQLInt)}},
-      resolve: (root, {id, hours}, {authenticate, loaders: {pages}, urlAdapter, generateJWT}) =>
-        getPagePreviewLink(id, hours, authenticate, generateJWT, urlAdapter, pages)
+      resolve: (root, {id, hours}, {authenticate, loaders: {pages}, urlAdapter, hostURL}) =>
+        getPagePreviewLink(id, hours, hostURL, authenticate, urlAdapter, pages)
     },
 
     // MemberPlan
