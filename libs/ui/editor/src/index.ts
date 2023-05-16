@@ -6,3 +6,4 @@ export * from './lib/Blocks'
 export * from './lib/Panel'
 
 export * from './lib/testUtils'
+export * from './lib/authContext'

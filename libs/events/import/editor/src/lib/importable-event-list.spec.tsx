@@ -1,7 +1,6 @@
 import {render, screen, fireEvent, waitFor} from '@testing-library/react'
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import '@testing-library/jest-dom'
-import {useCreateEventMutation} from '@wepublish/editor/api-v2'
 import {ImportableEventListView} from './importable-event-list'
 import {format} from 'date-fns'
 import {BrowserRouter} from 'react-router-dom'
@@ -11,7 +10,7 @@ import {
   ImportedEventListQuery
 } from '@wepublish/editor/api-v2'
 import {actWait, sessionWithPermissions} from '@wepublish/ui/editor'
-import {AuthContext} from 'libs/ui/editor/src/lib/authContext'
+import {AuthContext} from '@wepublish/ui/editor'
 import {CreateEventDocument, ImportedEventsIdsDocument} from '@wepublish/editor/api'
 import fetch from 'jest-fetch-mock'
 jest.setMock('node-fetch', fetch)
