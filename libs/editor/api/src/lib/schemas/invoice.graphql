@@ -43,3 +43,9 @@ mutation UpdateInvoice($updateInvoiceId: ID!, $input: InvoiceInput!) {
     ...Invoice
   }
 }
+
+mutation MarkInvoiceAsPaid($id: ID!) {
+  markInvoiceAsPaid(id: $id) {
+    ...Invoice
+  }
+}

@@ -945,6 +945,7 @@ export type Mutation = {
   deleteUserRole?: Maybe<UserRole>;
   duplicateArticle: Article;
   duplicatePage: Page;
+  markInvoiceAsPaid?: Maybe<Invoice>;
   publishArticle?: Maybe<Article>;
   publishPage?: Maybe<Page>;
   rejectComment: Comment;
@@ -1227,6 +1228,11 @@ export type MutationDuplicateArticleArgs = {
 
 
 export type MutationDuplicatePageArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationMarkInvoiceAsPaidArgs = {
   id: Scalars['ID'];
 };
 
@@ -2235,6 +2241,7 @@ export type Setting = {
 };
 
 export enum SettingName {
+  AllowCommentEditing = 'ALLOW_COMMENT_EDITING',
   AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
