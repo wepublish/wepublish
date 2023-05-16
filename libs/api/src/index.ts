@@ -43,14 +43,9 @@ export * from './lib/utility'
 export * from './lib/error'
 export * from './lib/context'
 export * from './lib/server'
-export * from './lib/payments/paymentProvider'
-export * from './lib/payments/stripeCheckoutPaymentProvider'
-export * from './lib/payments/stripePaymentProvider'
-export * from './lib/payments/payrexxPaymentProvider'
 
 export * from './lib/challenges/challengeProvider'
 export * from './lib/challenges/algebraicCaptchaChallenge'
-export * from './lib/payments/payrexxSubscriptionPaymentProvider'
 
 export {getUserForCredentials} from './lib/graphql/user/user.queries'
 

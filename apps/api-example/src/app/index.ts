@@ -2,17 +2,17 @@ import {PrismaClient} from '@prisma/client'
 import {
   AlgebraicCaptchaChallenge,
   KarmaMediaAdapter,
-  MailchimpMailProvider,
-  MailgunMailProvider,
   Oauth2Provider,
+  WepublishServer
+} from '@wepublish/api'
+import {MailgunMailProvider} from '@wepublish/mails'
+import {
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   StripeCheckoutPaymentProvider,
-  StripePaymentProvider,
-  WepublishServer
-} from '@wepublish/api'
+  StripePaymentProvider
+} from '@wepublish/payments'
 import bodyParser from 'body-parser'
-import path from 'path'
 import pinoMultiStream from 'pino-multi-stream'
 import {createWriteStream} from 'pino-sentry'
 import pinoStackdriver from 'pino-stackdriver'
@@ -77,7 +77,10 @@ export async function runServer(app?: Application | undefined) {
     process.env.MAILGUN_MAIL_DOMAIN &&
     process.env.MAILGUN_WEBHOOK_SECRET
   ) {
-    const mailgunClient = new Mailgun(FormData).client({username: 'api', key: process.env.MAILGUN_API_KEY})
+    const mailgunClient = new Mailgun(FormData).client({
+      username: 'api',
+      key: process.env.MAILGUN_API_KEY
+    })
     mailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
@@ -112,8 +115,8 @@ export async function runServer(app?: Application | undefined) {
     })
   }
 
-  if(!mailProvider) {
-    throw new Error("A MailProvider must be configured.")
+  if (!mailProvider) {
+    throw new Error('A MailProvider must be configured.')
   }
 
   const paymentProviders = []

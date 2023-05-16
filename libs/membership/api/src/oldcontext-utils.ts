@@ -4,14 +4,9 @@ import {
   contextFromRequest,
   KarmaMediaAdapter,
   Oauth2Provider,
-  PaymentProvider,
-  PayrexxPaymentProvider,
-  PayrexxSubscriptionPaymentProvider,
   PublicArticle,
   PublicComment,
   PublicPage,
-  StripeCheckoutPaymentProvider,
-  StripePaymentProvider,
   URLAdapter
 } from '@wepublish/api'
 import {MailchimpMailProvider} from '@wepublish/mails'
@@ -19,6 +14,13 @@ import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
 import process from 'process'
 import {URL} from 'url'
 import bodyParser from 'body-parser'
+import {
+  PaymentProvider,
+  PayrexxPaymentProvider,
+  PayrexxSubscriptionPaymentProvider,
+  StripeCheckoutPaymentProvider,
+  StripePaymentProvider
+} from '@wepublish/payments'
 
 export interface ExampleURLAdapterProps {
   websiteURL: string

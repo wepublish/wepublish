@@ -55,7 +55,7 @@ import {Hooks} from './hooks'
 import {BaseMailProvider, MailContext, MailContextOptions} from '@wepublish/mails'
 import {MediaAdapter} from './media/mediaAdapter'
 import {MemberContext} from './memberContext'
-import {PaymentProvider} from './payments/paymentProvider'
+import {PaymentProvider} from '@wepublish/payments'
 import {logger} from '@wepublish/utils'
 import {URLAdapter} from './urlAdapter'
 import {SettingName} from '@wepublish/settings/api'
@@ -145,11 +145,15 @@ export interface Context {
   getOauth2Clients(): Promise<OAuth2Clients[]>
 
   authenticate(): AuthSession
+
   authenticateToken(): TokenSession
+
   authenticateUser(): UserSession
+
   optionalAuthenticateUser(): UserSession | null
 
   generateJWT(props: GenerateJWTProps): string
+
   verifyJWT(token: string): string
 
   createPaymentWithProvider(props: CreatePaymentWithProvider): Promise<Payment>

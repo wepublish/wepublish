@@ -6,7 +6,7 @@ import {contextFromRequest, ContextOptions} from './context'
 import {onInvoiceUpdate, onFindArticle, onFindPage} from './events'
 import {GraphQLWepublishPublicSchema, GraphQLWepublishSchema} from './graphql/schema'
 import {MAIL_WEBHOOK_PATH_PREFIX} from '@wepublish/mails'
-import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments/paymentProvider'
+import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments'
 import {MAX_PAYLOAD_SIZE} from './utility'
 import {
   ApolloServerPluginLandingPageGraphQLPlayground,
