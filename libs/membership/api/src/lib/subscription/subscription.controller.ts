@@ -1,4 +1,4 @@
-import {PaymentProvider} from '@wepublish/payments'
+import {PaymentProvider, PaymentsService} from '@wepublish/payments'
 import {
   Invoice,
   Subscription,
@@ -17,7 +17,7 @@ import {
 import {add, endOfDay, startOfDay, sub} from 'date-fns'
 import {Injectable, Logger} from '@nestjs/common'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
-import {OldContextService, PrismaService} from '@wepublish/nest-modules'
+import {PrismaService} from '@wepublish/nest-modules'
 
 export type SubscriptionControllerConfig = {
   subscription: Subscription
@@ -36,9 +36,10 @@ interface PeriodBounds {
 @Injectable()
 export class SubscriptionController {
   private readonly logger = new Logger('SubscriptionController')
+
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly oldContextService: OldContextService
+    private readonly payments: PaymentsService
   ) {}
 
   public async getSubscriptionsForInvoiceCreation(
@@ -328,8 +329,8 @@ export class SubscriptionController {
     },
     mailActions: Action[]
   ): Promise<ChargeStatus> {
-    const paymentProvider = this.oldContextService.context.paymentProviders.find(
-      pp => pp.id === invoice.subscription?.paymentMethod.paymentProviderID
+    const paymentProvider = this.payments.findById(
+      invoice.subscription!.paymentMethod.paymentProviderID
     )
     if (!paymentProvider) {
       throw new Error(
