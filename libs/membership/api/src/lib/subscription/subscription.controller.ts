@@ -1,4 +1,4 @@
-import {PaymentProvider} from '@wepublish/api'
+import {PaymentProvider} from '@wepublish/payments'
 import {
   Invoice,
   Subscription,

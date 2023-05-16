@@ -7,10 +7,7 @@ import * as process from 'process'
 import {URL} from 'url'
 import {AlgebraicCaptchaChallenge} from './lib/challenges/algebraicCaptchaChallenge'
 import {WepublishServer} from './lib/server'
-import {StripePaymentProvider} from './lib/payments/stripePaymentProvider'
-import {StripeCheckoutPaymentProvider} from './lib/payments/stripeCheckoutPaymentProvider'
 import {MailgunMailProvider} from '@wepublish/mails'
-import {PayrexxPaymentProvider} from './lib/payments/payrexxPaymentProvider'
 import {Oauth2Provider} from './lib/context'
 import {URLAdapter} from './lib/urlAdapter'
 import {PublicArticle} from './lib/db/article'
@@ -18,9 +15,14 @@ import {PublicPage} from './lib/db/page'
 import {Author} from './lib/db/author'
 import {PublicComment} from './lib/db/comment'
 import {KarmaMediaAdapter} from './lib/media/karmaMediaAdapter'
-import {PayrexxSubscriptionPaymentProvider} from './lib/payments/payrexxSubscriptionPaymentProvider'
 import Mailgun from 'mailgun.js'
 import FormData from 'form-data'
+import {
+  PayrexxPaymentProvider,
+  PayrexxSubscriptionPaymentProvider,
+  StripeCheckoutPaymentProvider,
+  StripePaymentProvider
+} from '@wepublish/payments'
 
 interface WepublishURLAdapterProps {
   websiteURL: string
