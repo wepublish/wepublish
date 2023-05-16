@@ -3,14 +3,14 @@ import {NavigationContainer} from './navigation-container'
 import {action} from '@storybook/addon-actions'
 import {ComponentStory, ComponentMeta} from '@storybook/react'
 import {NavigationListDocument} from '@wepublish/website/api'
-import {NavigationProps} from '@wepublish/website-builder'
+import {BuilderNavigationProps} from '@wepublish/website-builder'
 
 export default {
   component: Navigation,
   title: 'Navigation'
 } as ComponentMeta<typeof Navigation>
 
-const Template = (args: NavigationProps) => <Navigation {...args} />
+const Template = (args: BuilderNavigationProps) => <Navigation {...args} />
 export const Default = Template.bind({})
 
 const ContainerTemplate: ComponentStory<typeof NavigationContainer> = args => (
