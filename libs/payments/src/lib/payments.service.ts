@@ -1,10 +1,15 @@
-import {Injectable, OnModuleInit} from '@nestjs/common'
+import {Inject, Injectable, OnModuleInit} from '@nestjs/common'
 import {PaymentProvider} from './payment-provider/paymentProvider'
 import {Payment, PaymentState, PrismaClient} from '@prisma/client'
 
+export const PaymentProviders = Symbol('PaymentProvider[]')
+
 @Injectable()
 export class PaymentsService implements OnModuleInit {
-  constructor(readonly prisma: PrismaClient, readonly paymentProviders: PaymentProvider[]) {}
+  constructor(
+    readonly prisma: PrismaClient,
+    @Inject(PaymentProviders) readonly paymentProviders: PaymentProvider[]
+  ) {}
 
   onModuleInit() {
     this.installPrismaHooks()
@@ -55,5 +60,13 @@ export class PaymentsService implements OnModuleInit {
 
       return model
     })
+  }
+
+  getProviders() {
+    return this.paymentProviders
+  }
+
+  findById(id: string) {
+    return this.paymentProviders.find(p => p.id === id)
   }
 }
