@@ -1,11 +1,10 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {PrismaClient} from '@prisma/client'
-import {ArrayBufferUpload, MediaAdapterService, UploadImage} from '@wepublish/image/api'
+import {MediaAdapterService} from '@wepublish/image/api'
 import {EventsImportService} from './events-import.service'
 import {Event, Providers, EventStatus} from './events-import.model'
 import {Cache} from 'cache-manager'
-import axios from 'axios'
 
 describe('EventsImportService', () => {
   let service: EventsImportService
