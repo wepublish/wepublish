@@ -104,6 +104,7 @@ function UserEditView() {
   const [name, setName] = useState('')
   const [firstName, setFirstName] = useState<string | undefined | null>()
   const [preferredName, setPreferredName] = useState<string | undefined>()
+  const [designation, setDesignation] = useState<string | undefined>()
   const [email, setEmail] = useState('')
   const [emailVerifiedAt, setEmailVerifiedAt] = useState<Date | null>(null)
   const [password, setPassword] = useState('')
@@ -146,6 +147,7 @@ function UserEditView() {
     setFirstName(tmpUser.firstName)
     setName(tmpUser.name)
     setPreferredName(tmpUser.preferredName ?? undefined)
+    setDesignation(tmpUser.designation || undefined)
     setEmail(tmpUser.email)
     setMetadataProperties(
       tmpUser?.properties
@@ -238,6 +240,7 @@ function UserEditView() {
               name,
               firstName: firstName || undefined,
               preferredName,
+              designation,
               email,
               emailVerifiedAt: emailVerifiedAt ? emailVerifiedAt.toISOString() : null,
               active,
@@ -285,6 +288,7 @@ function UserEditView() {
               name,
               firstName,
               preferredName,
+              designation,
               email,
               emailVerifiedAt: null,
               active,
@@ -451,8 +455,23 @@ function UserEditView() {
                         />
                       </Form.Group>
                     </Col>
+                    {/* designation */}
+                    <Col xs={12}>
+                      <Form.Group controlId="designation">
+                        <Form.ControlLabel>
+                          {t('userCreateOrEditView.designation')}
+                        </Form.ControlLabel>
+                        <Form.Control
+                          name="designation"
+                          value={designation}
+                          disabled={isDisabled}
+                          onChange={(value: string) => setDesignation(value)}
+                        />
+                      </Form.Group>
+                    </Col>
+
                     {/* company */}
-                    <Col xs={24}>
+                    <Col xs={12}>
                       <Form.Group controlId="company">
                         <Form.ControlLabel>{t('userCreateOrEditView.company')}</Form.ControlLabel>
                         <Form.Control

@@ -791,6 +791,7 @@ model User {
   name            String
   firstName       String?
   preferredName   String?
+  designation     String?
   password        String
   active          Boolean
   lastLogin       DateTime?

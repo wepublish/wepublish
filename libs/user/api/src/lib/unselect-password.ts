@@ -27,6 +27,7 @@ export const unselectPassword: Record<
   name: true,
   firstName: true,
   preferredName: true,
+  designation: true,
   userImageID: true,
   password: false,
   active: true,
