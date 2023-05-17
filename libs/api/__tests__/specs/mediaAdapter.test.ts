@@ -3,8 +3,8 @@ import {URL} from 'url'
 import * as fs from 'fs'
 import {
   ArrayBufferUpload,
-  ImageOutput,
   ImageRotation,
+  ImageOutput,
   ImageTransformation
 } from '@wepublish/image/api'
 import {ImageWithFocalPoint} from '../../src/lib/db/image'
