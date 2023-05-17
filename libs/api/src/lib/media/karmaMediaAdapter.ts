@@ -1,9 +1,14 @@
 import {URL} from 'url'
 import FormData from 'form-data'
-import {ImageTransformation, ImageWithFocalPoint, UploadImage} from '../db/image'
+import {ImageWithFocalPoint} from '../db/image'
 import fetch from 'node-fetch'
 import type {FileUpload} from 'graphql-upload'
-import {ArrayBufferUpload, MediaAdapter} from './mediaAdapter'
+import {
+  ArrayBufferUpload,
+  MediaAdapter,
+  UploadImage,
+  ImageTransformation
+} from '@wepublish/image/api'
 
 export class MediaServerError extends Error {
   constructor(message: string) {
