@@ -97,7 +97,7 @@ export interface IntervalColoring {
   fg: TypeAttributes.Color | string
 }
 export interface DecoratedSubscriptionInterval<T extends SubscriptionInterval> {
-  subscriptionFlowId: number
+  subscriptionFlowId: string
   title: string
   object: T
   icon: JSX.Element

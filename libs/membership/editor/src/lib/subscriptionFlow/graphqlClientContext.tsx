@@ -71,7 +71,7 @@ export const GraphqlClientContext = createContext({
   deleteSubscriptionFlow: (
     options: MutationFunctionOptions<
       DeleteSubscriptionFlowMutation,
-      Exact<{subscriptionFlowId: number}>
+      Exact<{subscriptionFlowId: string}>
     >
   ): Promise<any> => {
     throw new Error('Default context must be overriden!')

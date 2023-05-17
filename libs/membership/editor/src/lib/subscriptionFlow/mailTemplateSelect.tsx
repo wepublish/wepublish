@@ -40,7 +40,7 @@ export default function MailTemplateSelect({
 
   const client = useContext(GraphqlClientContext)
 
-  const updateMailTemplate = async (value: number) => {
+  const updateMailTemplate = async (value: string) => {
     if (subscriptionInterval) {
       // MailTemplate existed before, was changed
       await client.updateSubscriptionInterval({
