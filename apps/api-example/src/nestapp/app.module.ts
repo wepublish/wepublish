@@ -1,9 +1,16 @@
-import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
-import {Global, Module} from '@nestjs/common'
-import {GraphQLModule} from '@nestjs/graphql'
-import {DashboardModule, MembershipModule} from '@wepublish/membership/api'
+import {Module, Global} from '@nestjs/common'
 import {ApiModule, PrismaModule, PrismaService} from '@wepublish/nest-modules'
-import {SettingModule, AuthenticationModule, PermissionModule, ConsentModule} from '@wepublish/api'
+import {GraphQLModule} from '@nestjs/graphql'
+import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
+import {DashboardModule, MembershipModule} from '@wepublish/membership/api'
+import {
+  SettingModule,
+  AuthenticationModule,
+  PermissionModule,
+  ConsentModule,
+  MediaAdapterService,
+  KarmaMediaAdapter
+} from '@wepublish/api'
 import {ScheduleModule} from '@nestjs/schedule'
 import {MailsModule, BaseMailProvider, MailgunMailProvider} from '@wepublish/mails'
 import process from 'process'
@@ -18,6 +25,8 @@ import {
   StripeCheckoutPaymentProvider,
   StripePaymentProvider
 } from '@wepublish/payments'
+import {ConfigModule, ConfigService} from '@nestjs/config'
+import {URL} from 'url'
 
 @Global()
 @Module({
@@ -42,9 +51,10 @@ import {
     PermissionModule,
     ConsentModule,
     SettingModule,
-    ScheduleModule.forRoot()
+    ScheduleModule.forRoot(),
+    ConfigModule.forRoot()
   ],
-  exports: [BaseMailProvider, PaymentProviders],
+  exports: [BaseMailProvider, PaymentProviders, MediaAdapterService],
   providers: [
     {
       provide: BaseMailProvider,
@@ -136,6 +146,19 @@ import {
         return paymentProviders
       },
       inject: [PrismaService]
+    },
+    {
+      provide: MediaAdapterService,
+      useFactory: (config: ConfigService) => {
+        const internalUrl = config.get('MEDIA_SERVER_INTERNAL_URL')
+
+        return new KarmaMediaAdapter(
+          new URL(config.getOrThrow('MEDIA_SERVER_URL')),
+          config.getOrThrow('MEDIA_SERVER_TOKEN'),
+          internalUrl ? new URL(internalUrl) : undefined
+        )
+      },
+      inject: [ConfigService]
     }
   ]
 })
