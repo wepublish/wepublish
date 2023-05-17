@@ -9,7 +9,7 @@ import {ClientSettings} from '../shared/types'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken',
-  isGridView = 'isGrid'
+  ImageListLayout = 'imageListLayout'
 }
 
 export const addOrUpdateOneInArray = (
@@ -169,7 +169,6 @@ export function mapTableSortTypeToGraphQLSortOrder(sortType: SortType): SortOrde
 }
 
 export const DEFAULT_TABLE_PAGE_SIZES = [10, 20, 50, 100]
-export const DEFAULT_TABLE_IMAGE_PAGE_SIZES = [10, 20, 50, 100]
 export const DEFAULT_MAX_TABLE_PAGES = 5
 
 export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [

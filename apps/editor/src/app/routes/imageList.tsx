@@ -45,7 +45,12 @@ import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {ImageEditPanel} from '../panel/imageEditPanel'
 import {ImageUploadAndEditPanel} from '../panel/imageUploadAndEditPanel'
-import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_IMAGE_PAGE_SIZES, LocalStorageKey} from '../utility'
+import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES, LocalStorageKey} from '../utility'
+
+export enum ImageListLayout {
+  Grid = 'grid',
+  List = 'list'
+}
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 
@@ -148,15 +153,15 @@ function ImageList() {
   const [currentImage, setCurrentImage] = useState<ImageRefFragment>()
 
   const [activePage, setActivePage] = useState(1)
-  const [limit, setLimit] = useState(DEFAULT_TABLE_IMAGE_PAGE_SIZES[0])
+  const [limit, setLimit] = useState(DEFAULT_TABLE_PAGE_SIZES[0])
 
   const [isUploadModalOpen, setUploadModalOpen] = useState(isUploadRoute)
   const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute)
 
   const [editID, setEditID] = useState<string | undefined>(isEditRoute ? id : undefined)
 
-  const [isGrid, setIsGrid] = useState<boolean>(
-    JSON.parse(localStorage.getItem(LocalStorageKey.isGridView) || 'true')
+  const [layout, setLayout] = useState(
+    localStorage.getItem(LocalStorageKey.ImageListLayout) || ImageListLayout.Grid
   )
 
   const listVariables = {
@@ -199,118 +204,6 @@ function ImageList() {
     }
   }, [location])
 
-  const ImageListView = () => (
-    <Table
-      fillHeight
-      data={images}
-      rowHeight={100}
-      loading={isLoading}
-      wordWrap
-      className={'displayThreeLinesOnly'}>
-      <Column width={160} align="left" resizable>
-        <HeaderCell>{t('images.overview.image')}</HeaderCell>
-        <RCell>
-          {(rowData: RowDataType<ImageRefFragment>) => (
-            <Link to={`/images/edit/${rowData.id}`}>
-              <Img src={rowData.thumbURL || ''} />
-            </Link>
-          )}
-        </RCell>
-      </Column>
-      <Column width={160} align="left" resizable>
-        <HeaderCell>{t('images.overview.title')}</HeaderCell>
-        <RCell className="displayThreeLinesOnly">
-          {(rowData: RowDataType<ImageRefFragment>) => (
-            <p className={'displayThreeLinesOnly'}>
-              {rowData.title ? rowData.title : t('images.overview.untitled')}
-            </p>
-          )}
-        </RCell>
-      </Column>
-      <Column width={340} align="left" resizable>
-        <HeaderCell>{t('images.overview.description')}</HeaderCell>
-        <RCell className={'displayThreeLinesOnly'}>
-          {(rowData: RowDataType<ImageRefFragment>) => (
-            <p className={'displayThreeLinesOnly'}>
-              {rowData.description ? rowData.description : t('images.overview.noDescription')}
-            </p>
-          )}
-        </RCell>
-      </Column>
-
-      <Column width={250} align="left" resizable>
-        <HeaderCell>{t('images.overview.filename')}</HeaderCell>
-        <RCell>
-          {(rowData: RowDataType<ImageRefFragment>) => (
-            <p className={'displayThreeLinesOnly'}>{rowData.filename ? rowData.filename : ''}</p>
-          )}
-        </RCell>
-      </Column>
-
-      <Column width={100} align="center" resizable fixed="right">
-        <HeaderCell>{t('images.overview.actions')}</HeaderCell>
-        <PaddedCell>
-          {(rowData: RowDataType<ImageRefFragment>) => (
-            <>
-              <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
-                <IconButtonTooltip caption={t('images.overview.edit')}>
-                  <Link to={`/images/edit/${rowData.id}`}>
-                    <IconButton icon={<MdEdit />} circle size="sm" />
-                  </Link>
-                </IconButtonTooltip>
-              </PermissionControl>
-              <PermissionControl qualifyingPermissions={['CAN_DELETE_IMAGE']}>
-                <IconButtonTooltip caption={t('delete')}>
-                  <IconButton
-                    icon={<MdDelete />}
-                    circle
-                    size="sm"
-                    appearance="ghost"
-                    color="red"
-                    onClick={event => {
-                      event.preventDefault()
-                      setCurrentImage(rowData as ImageRefFragment)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                </IconButtonTooltip>
-              </PermissionControl>
-            </>
-          )}
-        </PaddedCell>
-      </Column>
-    </Table>
-  )
-  const ImageGridView = () => (
-    <GridView>
-      {images.map(image => {
-        return (
-          <ImageWrapper>
-            <OverlayContainer>
-              <Link to={`/images/edit/${image.id}`}>
-                <Overlay>
-                  <GridIcon
-                    icon={<MdDelete />}
-                    circle
-                    size="md"
-                    appearance="default"
-                    onClick={event => {
-                      event.preventDefault()
-                      setCurrentImage(image as ImageRefFragment)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                  {image?.title && <ImgDesc>{image?.title}</ImgDesc>}
-                </Overlay>
-                <GridImg src={image?.squareURL || ''} />
-              </Link>
-            </OverlayContainer>
-          </ImageWrapper>
-        )
-      })}
-    </GridView>
-  )
-
   return (
     <>
       <ListViewContainer>
@@ -342,31 +235,44 @@ function ImageList() {
 
       <ButtonGroup size="lg">
         <RIconButton
-          active={isGrid}
+          active={layout === ImageListLayout.Grid}
           onClick={() => {
-            setIsGrid(true)
-            localStorage.setItem(LocalStorageKey.isGridView, 'true')
+            setLayout(ImageListLayout.Grid)
+            localStorage.setItem(LocalStorageKey.ImageListLayout, ImageListLayout.Grid)
           }}
-          appearance={isGrid ? 'ghost' : 'default'}
+          appearance={layout === ImageListLayout.Grid ? 'ghost' : 'default'}
           icon={<MdViewModule />}
         />
         <RIconButton
           onClick={() => {
-            setIsGrid(false)
-            localStorage.setItem(LocalStorageKey.isGridView, 'false')
+            setLayout(ImageListLayout.List)
+            localStorage.setItem(LocalStorageKey.ImageListLayout, ImageListLayout.List)
           }}
-          appearance={!isGrid ? 'ghost' : 'default'}
-          active={!isGrid}
+          appearance={layout === ImageListLayout.List ? 'ghost' : 'default'}
+          active={layout === ImageListLayout.List}
           icon={<MdViewList />}
         />
       </ButtonGroup>
 
       <TableWrapper>
-        {!isGrid ? <ImageListView /> : <ImageGridView />}
+        {layout === ImageListLayout.List ? (
+          <ImageListView
+            images={images}
+            isLoading={isLoading}
+            setConfirmationDialogOpen={setConfirmationDialogOpen}
+            setCurrentImage={setCurrentImage}
+          />
+        ) : (
+          <ImageGridView
+            images={images}
+            setConfirmationDialogOpen={setConfirmationDialogOpen}
+            setCurrentImage={setCurrentImage}
+          />
+        )}
 
         <Pagination
           limit={limit}
-          limitOptions={DEFAULT_TABLE_IMAGE_PAGE_SIZES}
+          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
           maxButtons={DEFAULT_MAX_TABLE_PAGES}
           first
           last
@@ -476,3 +382,138 @@ const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_CREATE_IMAGE'
 ])(ImageList)
 export {CheckedPermissionComponent as ImageList}
+
+interface ImageGridViewProps {
+  images: ImageRefFragment[]
+  isLoading?: boolean
+
+  setCurrentImage(image: ImageRefFragment): void
+  setConfirmationDialogOpen(isOpen: boolean): void
+}
+
+const ImageGridView = ({
+  images,
+  setCurrentImage,
+  setConfirmationDialogOpen
+}: ImageGridViewProps) => {
+  return (
+    <GridView>
+      {images.map(image => {
+        return (
+          <ImageWrapper>
+            <OverlayContainer>
+              <Link to={`/images/edit/${image.id}`}>
+                <Overlay>
+                  <GridIcon
+                    icon={<MdDelete />}
+                    circle
+                    size="md"
+                    appearance="default"
+                    onClick={event => {
+                      event.preventDefault()
+                      setCurrentImage(image)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                  {image?.title && <ImgDesc>{image?.title}</ImgDesc>}
+                </Overlay>
+                <GridImg src={image?.squareURL || ''} />
+              </Link>
+            </OverlayContainer>
+          </ImageWrapper>
+        )
+      })}
+    </GridView>
+  )
+}
+
+const ImageListView = ({
+  images,
+  isLoading,
+  setConfirmationDialogOpen,
+  setCurrentImage
+}: ImageGridViewProps) => {
+  const {t} = useTranslation()
+  return (
+    <Table
+      fillHeight
+      data={images}
+      rowHeight={100}
+      loading={isLoading}
+      wordWrap
+      className={'displayThreeLinesOnly'}>
+      <Column width={160} align="left" resizable>
+        <HeaderCell>{t('images.overview.image')}</HeaderCell>
+        <RCell>
+          {(rowData: RowDataType<ImageRefFragment>) => (
+            <Link to={`/images/edit/${rowData.id}`}>
+              <Img src={rowData.thumbURL || ''} />
+            </Link>
+          )}
+        </RCell>
+      </Column>
+      <Column width={160} align="left" resizable>
+        <HeaderCell>{t('images.overview.title')}</HeaderCell>
+        <RCell className="displayThreeLinesOnly">
+          {(rowData: RowDataType<ImageRefFragment>) => (
+            <p className={'displayThreeLinesOnly'}>
+              {rowData.title ? rowData.title : t('images.overview.untitled')}
+            </p>
+          )}
+        </RCell>
+      </Column>
+      <Column width={340} align="left" resizable>
+        <HeaderCell>{t('images.overview.description')}</HeaderCell>
+        <RCell className={'displayThreeLinesOnly'}>
+          {(rowData: RowDataType<ImageRefFragment>) => (
+            <p className={'displayThreeLinesOnly'}>
+              {rowData.description ? rowData.description : t('images.overview.noDescription')}
+            </p>
+          )}
+        </RCell>
+      </Column>
+
+      <Column width={250} align="left" resizable>
+        <HeaderCell>{t('images.overview.filename')}</HeaderCell>
+        <RCell>
+          {(rowData: RowDataType<ImageRefFragment>) => (
+            <p className={'displayThreeLinesOnly'}>{rowData.filename ? rowData.filename : ''}</p>
+          )}
+        </RCell>
+      </Column>
+
+      <Column width={100} align="center" resizable fixed="right">
+        <HeaderCell>{t('images.overview.actions')}</HeaderCell>
+        <PaddedCell>
+          {(rowData: RowDataType<ImageRefFragment>) => (
+            <>
+              <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
+                <IconButtonTooltip caption={t('images.overview.edit')}>
+                  <Link to={`/images/edit/${rowData.id}`}>
+                    <IconButton icon={<MdEdit />} circle size="sm" />
+                  </Link>
+                </IconButtonTooltip>
+              </PermissionControl>
+              <PermissionControl qualifyingPermissions={['CAN_DELETE_IMAGE']}>
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    icon={<MdDelete />}
+                    circle
+                    size="sm"
+                    appearance="ghost"
+                    color="red"
+                    onClick={event => {
+                      event.preventDefault()
+                      setCurrentImage(rowData as ImageRefFragment)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                </IconButtonTooltip>
+              </PermissionControl>
+            </>
+          )}
+        </PaddedCell>
+      </Column>
+    </Table>
+  )
+}
