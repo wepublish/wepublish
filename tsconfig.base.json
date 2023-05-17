@@ -26,6 +26,7 @@
       "@wepublish/consent/editor": ["libs/consent/editor/src/index.ts"],
       "@wepublish/editor/api": ["libs/editor/api/src/index.ts"],
       "@wepublish/editor/api-v2": ["libs/editor/api-v2/src/index.ts"],
+      "@wepublish/image/api": ["libs/image/api/src/index.ts"],
       "@wepublish/mails": ["libs/mails/src/index.ts"],
       "@wepublish/membership/api": ["libs/membership/api/src/index.ts"],
       "@wepublish/membership/editor": ["libs/membership/editor/src/index.ts"],

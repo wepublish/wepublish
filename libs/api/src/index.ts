@@ -32,7 +32,6 @@ export * from './lib/db/payment'
 export * from './lib/db/mailLog'
 export * from './lib/db/subscription'
 
-export * from './lib/media/mediaAdapter'
 export * from './lib/media/karmaMediaAdapter'
 export * from './lib/urlAdapter'
 
@@ -52,3 +51,4 @@ export * from '@wepublish/authentication/api'
 export * from '@wepublish/permissions/api'
 export * from '@wepublish/mails'
 export * from '@wepublish/consent/api'
+export * from '@wepublish/image/api'
