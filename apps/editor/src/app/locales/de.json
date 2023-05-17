@@ -1108,7 +1108,7 @@
       "city": "Stadt",
       "country": "Land",
       "selectUserImage": "Profilbild wählen",
-      "designation": "Funktionsbeschreibung"
+      "flair": "Funktionsbeschreibung"
     },
     "userSubscriptionList": {
       "deactivationReason": {

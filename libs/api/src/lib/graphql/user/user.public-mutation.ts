@@ -110,7 +110,7 @@ type UpdateUserInput = Prisma.UserUncheckedUpdateInput & {
 } & {uploadImageInput: CreateImageInput}
 
 export const updatePublicUser = async (
-  {address, name, email, firstName, preferredName, designation, uploadImageInput}: UpdateUserInput,
+  {address, name, email, firstName, preferredName, flair, uploadImageInput}: UpdateUserInput,
   authenticateUser: Context['authenticateUser'],
   mediaAdapter: Context['mediaAdapter'],
   userClient: PrismaClient['user'],
@@ -156,7 +156,7 @@ export const updatePublicUser = async (
             }
           }
         : undefined,
-      designation
+      flair
     },
     select: unselectPassword
   })

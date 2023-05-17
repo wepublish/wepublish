@@ -16,7 +16,7 @@ fragment FullUser on User {
     city
     country
   }
-  designation
+  flair
   userImage {
     ...ImageRef
   }

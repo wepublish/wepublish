@@ -1124,7 +1124,7 @@
       "city": "City",
       "country": "Country",
       "selectUserImage": "Choose profile picture",
-      "designation": "Designation"
+      "flair": "Flair"
     },
     "userSubscriptionList": {
       "deactivationReason": {

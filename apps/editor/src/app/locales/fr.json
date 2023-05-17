@@ -892,7 +892,7 @@
       "city": "Ville",
       "country": "Pays",
       "selectUserImage": "Choisir une photo de profil",
-      "designation": "Désignation"
+      "flair": "Flair"
     },
     "userSubscriptionList": {
       "deactivationReason": {

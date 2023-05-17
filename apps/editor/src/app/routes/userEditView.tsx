@@ -104,7 +104,7 @@ function UserEditView() {
   const [name, setName] = useState('')
   const [firstName, setFirstName] = useState<string | undefined | null>()
   const [preferredName, setPreferredName] = useState<string | undefined>()
-  const [designation, setDesignation] = useState<string | undefined>()
+  const [flair, setFlair] = useState<string | undefined>()
   const [email, setEmail] = useState('')
   const [emailVerifiedAt, setEmailVerifiedAt] = useState<Date | null>(null)
   const [password, setPassword] = useState('')
@@ -147,7 +147,7 @@ function UserEditView() {
     setFirstName(tmpUser.firstName)
     setName(tmpUser.name)
     setPreferredName(tmpUser.preferredName ?? undefined)
-    setDesignation(tmpUser.designation || undefined)
+    setFlair(tmpUser.flair || undefined)
     setEmail(tmpUser.email)
     setMetadataProperties(
       tmpUser?.properties
@@ -240,7 +240,7 @@ function UserEditView() {
               name,
               firstName: firstName || undefined,
               preferredName,
-              designation,
+              flair,
               email,
               emailVerifiedAt: emailVerifiedAt ? emailVerifiedAt.toISOString() : null,
               active,
@@ -288,7 +288,7 @@ function UserEditView() {
               name,
               firstName,
               preferredName,
-              designation,
+              flair,
               email,
               emailVerifiedAt: null,
               active,
@@ -455,17 +455,15 @@ function UserEditView() {
                         />
                       </Form.Group>
                     </Col>
-                    {/* designation */}
+                    {/* flair */}
                     <Col xs={12}>
-                      <Form.Group controlId="designation">
-                        <Form.ControlLabel>
-                          {t('userCreateOrEditView.designation')}
-                        </Form.ControlLabel>
+                      <Form.Group controlId="flair">
+                        <Form.ControlLabel>{t('userCreateOrEditView.flair')}</Form.ControlLabel>
                         <Form.Control
-                          name="designation"
-                          value={designation}
+                          name="flair"
+                          value={flair}
                           disabled={isDisabled}
-                          onChange={(value: string) => setDesignation(value)}
+                          onChange={(value: string) => setFlair(value)}
                         />
                       </Form.Group>
                     </Col>
