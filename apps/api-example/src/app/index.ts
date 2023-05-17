@@ -2,9 +2,9 @@ import {PrismaClient} from '@prisma/client'
 import {
   AlgebraicCaptchaChallenge,
   JobType,
-  KarmaMediaAdapter,
   MailchimpMailProvider,
   MailgunMailProvider,
+  MediaAdapter,
   Oauth2Provider,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
@@ -19,13 +19,12 @@ import pinoMultiStream from 'pino-multi-stream'
 import {createWriteStream} from 'pino-sentry'
 import pinoStackdriver from 'pino-stackdriver'
 import * as process from 'process'
-import {URL} from 'url'
 import {SlackMailProvider} from './slack-mail-provider'
 import {ExampleURLAdapter} from './url-adapter'
 import {Application} from 'express'
 import {CronJob} from 'cron'
 
-export async function runServer(app?: Application | undefined) {
+export async function runServer(app: Application, mediaAdapter: MediaAdapter) {
   if (!process.env.DATABASE_URL) throw new Error('No DATABASE_URL defined in environment.')
   if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
 
@@ -42,14 +41,6 @@ export async function runServer(app?: Application | undefined) {
   if (!process.env.MEDIA_SERVER_TOKEN) {
     throw new Error('No MEDIA_SERVER_TOKEN defined in environment.')
   }
-
-  const mediaAdapter = new KarmaMediaAdapter(
-    new URL(process.env.MEDIA_SERVER_URL),
-    process.env.MEDIA_SERVER_TOKEN,
-    process.env.MEDIA_SERVER_INTERNAL_URL
-      ? new URL(process.env.MEDIA_SERVER_INTERNAL_URL)
-      : undefined
-  )
 
   const prisma = new PrismaClient()
   await prisma.$connect()

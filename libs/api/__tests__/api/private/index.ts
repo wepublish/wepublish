@@ -475,6 +475,7 @@ export type Event = {
   startsAt: Scalars['DateTime'];
   status: EventStatus;
   tags?: Maybe<Array<Tag>>;
+  url: Scalars['String'];
 };
 
 export type EventBlock = {
@@ -945,6 +946,7 @@ export type Mutation = {
   deleteUserRole?: Maybe<UserRole>;
   duplicateArticle: Article;
   duplicatePage: Page;
+  markInvoiceAsPaid?: Maybe<Invoice>;
   publishArticle?: Maybe<Article>;
   publishPage?: Maybe<Page>;
   rejectComment: Comment;
@@ -1227,6 +1229,11 @@ export type MutationDuplicateArticleArgs = {
 
 
 export type MutationDuplicatePageArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationMarkInvoiceAsPaidArgs = {
   id: Scalars['ID'];
 };
 
@@ -2235,6 +2242,7 @@ export type Setting = {
 };
 
 export enum SettingName {
+  AllowCommentEditing = 'ALLOW_COMMENT_EDITING',
   AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
@@ -2556,6 +2564,7 @@ export type User = {
   email: Scalars['String'];
   emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   firstName?: Maybe<Scalars['String']>;
+  flair?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   lastLogin?: Maybe<Scalars['DateTime']>;
   modifiedAt: Scalars['DateTime'];
@@ -2613,6 +2622,7 @@ export type UserInput = {
   email: Scalars['String'];
   emailVerifiedAt?: InputMaybe<Scalars['DateTime']>;
   firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   preferredName?: InputMaybe<Scalars['String']>;
   properties: Array<PropertiesInput>;

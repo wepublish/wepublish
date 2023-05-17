@@ -3,7 +3,7 @@ import {
   FullUserFragment,
   InvoiceFragment,
   InvoiceItem,
-  useUpdateInvoiceMutation
+  useMarkInvoiceAsPaidMutation
 } from '@wepublish/editor/api'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -44,7 +44,7 @@ export interface InvoiceProps {
 export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: InvoiceProps) {
   // variable definitions
   const [modalOpen, setModalOpen] = useState<boolean>(false)
-  const [updateInvoice] = useUpdateInvoiceMutation()
+  const [markInvoiceAsPaid] = useMarkInvoiceAsPaidMutation()
   const {t} = useTranslation()
 
   /**
@@ -63,17 +63,10 @@ export function Invoice({subscriptionId, invoice, me, disabled, onInvoicePaid}: 
 
     // talk with the private api
     const items = prepareInvoiceItemsForApi(invoice.items)
-    await updateInvoice({
+
+    await markInvoiceAsPaid({
       variables: {
-        updateInvoiceId: invoice.id,
-        input: {
-          items: items.map(({total, ...item}) => item),
-          mail: invoice.mail,
-          paidAt: new Date().toISOString(),
-          description: invoice.description,
-          subscriptionID: subscriptionId,
-          manuallySetAsPaidByUserId: myId
-        }
+        id: invoice.id
       }
     })
     onInvoicePaid()
