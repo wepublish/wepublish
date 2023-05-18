@@ -3,7 +3,9 @@ import {
   ArticleFilter,
   ArticleSort,
   Event,
+  EventFilter,
   PageFilter,
+  PageInfo,
   PeerArticle,
   SortOrder,
   TeaserStyle,
@@ -103,6 +105,17 @@ const FormGroup = styled(Form.Group)`
   padding-left: 8px;
 `
 
+const EventFilterContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+`
+
+const ToggleLabel = styled.span`
+  margin-right: 8px;
+  margin-bottom: 4px;
+`
+
 export interface TeaserSelectPanelProps {
   onClose(): void
   onSelect(teaserLink: TeaserLink): void
@@ -129,6 +142,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   const [filter, setFilter] = useState<ArticleFilter>({title: '', published: true})
+  const [eventFilter, setEventFilter] = useState<boolean>(false)
   const [metaDataProperties, setMetadataProperties] = useState<ListValue<TeaserMetadataProperty>[]>(
     initialTeaser.type === TeaserType.Custom && initialTeaser.properties
       ? initialTeaser.properties.map(metaDataProperty => ({
@@ -192,64 +206,23 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   }, [peerArticleListData?.peerArticles])
 
   /**
-   * PEER ARTICLES
+   * EVENTS
    */
-  // const take = 20
-  // const [skipPeer, setSkipPeer] = useState<number>(0)
-  const [events, setEvents] = useState<Event[]>([])
-
   const eventVariables = {
-    filter: {},
-    take: 20,
-    skip: 0
-    // order: SortOrder.Descending,
-    // sort: ArticleSort.PublishedAt
+    filter: {upcomingOnly: eventFilter} as EventFilter,
+    take: 20
   }
-  // const {
-  // data: eventListData,
-  // fetchMore: fetchMoreEvents,
-  // error: eventListError
-  // } = usePeerArticleListQuery({
-  //   variables: eventVariables,
-  //   fetchPolicy: 'network-only'
-  // })
 
   const {
     data: eventListData,
     fetchMore: fetchMoreEvents,
     error: eventListError
   } = useEventListQuery({
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'network-only',
     variables: eventVariables
-    // onError: onErrorToast
   })
 
-  // async function loadMorePeerArticles() {
-  //   setSkipPeer(skipPeer + 1)
-
-  //   await fetchMorePeerArticles({
-  //     variables: {
-  //       ...peerListVariables,
-  //       skip: skipPeer * take
-  //     },
-  //     updateQuery: (prev, {fetchMoreResult}) => {
-  //       if (!fetchMoreResult?.peerArticles?.nodes) {
-  //         return fetchMoreResult
-  //       }
-
-  //       return {
-  //         peerArticles: {
-  //           ...fetchMoreResult.peerArticles,
-  //           nodes: [...(fetchMoreResult.peerArticles.nodes as PeerArticle[])]
-  //         }
-  //       }
-  //     }
-  //   })
-  // }
-
-  useEffect(() => {
-    setEvents([...events, ...((eventListData?.events?.nodes as Event[]) || [])])
-  }, [eventListData?.events])
+  const events = eventListData?.events?.nodes ?? []
 
   /**
    * PAGES & ARTICLES
@@ -281,19 +254,23 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (articleListError ?? pageListError ?? peerArticleListError) {
+    if (articleListError ?? pageListError ?? peerArticleListError ?? eventListError) {
       toaster.push(
         <Notification
           type="error"
           header={
-            articleListError?.message ?? pageListError?.message ?? peerArticleListError!.message
+            articleListError?.message ??
+            pageListError?.message ??
+            peerArticleListError?.message ??
+            eventListError?.message ??
+            t('toast.updateError')
           }
           duration={5000}
         />,
         {placement: 'topEnd'}
       )
     }
-  }, [articleListError, pageListError, peerArticleListError])
+  }, [articleListError, pageListError, peerArticleListError, eventListError])
 
   function loadMoreArticles() {
     fetchMoreArticles({
@@ -321,6 +298,27 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
           pages: {
             ...fetchMoreResult.pages,
             nodes: [...prev.pages.nodes, ...fetchMoreResult.pages.nodes]
+          }
+        }
+      }
+    })
+  }
+
+  function loadMoreEvents() {
+    fetchMoreEvents({
+      variables: {...eventVariables, cursor: eventListData?.events?.pageInfo.endCursor},
+      updateQuery: (prev, {fetchMoreResult}) => {
+        if (!fetchMoreResult) return prev
+
+        return {
+          events: {
+            ...fetchMoreResult.events,
+            nodes: [
+              ...(prev.events?.nodes || []),
+              ...((fetchMoreResult.events?.nodes as Event[]) || [])
+            ],
+            totalCount: fetchMoreResult.events?.totalCount as number,
+            pageInfo: fetchMoreResult.events?.pageInfo as PageInfo
           }
         }
       }
@@ -474,8 +472,8 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
                 </RList.Item>
               )
             })}
-            {pageListData?.pages.pageInfo.hasNextPage && (
-              <Button onClick={loadMorePages}>{t('articleEditor.panels.loadMore')}</Button>
+            {eventListData?.events?.pageInfo.hasNextPage && (
+              <Button onClick={loadMoreEvents}>{t('articleEditor.panels.loadMore')}</Button>
             )}
           </>
         )
@@ -648,14 +646,23 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
           </RNav.Item>
         </Nav>
 
-        {type !== TeaserType.Custom && type !== TeaserType.PeerArticle && (
-          <InputGroup>
-            <Input value={filter.title || ''} onChange={value => updateFilter(value as string)} />
-            <RInputGroup.Addon>
-              <MdSearch />
-            </RInputGroup.Addon>
-          </InputGroup>
+        {type === TeaserType.Event && (
+          <EventFilterContainer>
+            <ToggleLabel>{t('event.list.upcomingOnly')}</ToggleLabel>
+            <Toggle checked={eventFilter} onChange={value => setEventFilter(value)} />
+          </EventFilterContainer>
         )}
+
+        {type !== TeaserType.Custom &&
+          type !== TeaserType.PeerArticle &&
+          type !== TeaserType.Event && (
+            <InputGroup>
+              <Input value={filter.title || ''} onChange={value => updateFilter(value as string)} />
+              <RInputGroup.Addon>
+                <MdSearch />
+              </RInputGroup.Addon>
+            </InputGroup>
+          )}
 
         <List>{currentContent()}</List>
       </Drawer.Body>

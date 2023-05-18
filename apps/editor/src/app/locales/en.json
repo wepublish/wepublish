@@ -1350,7 +1350,8 @@
         "create": "Create new event",
         "startsAt": "Starts at {{startsAt, ccc PP p}}",
         "endsAt": "Ends at {{endsAt, ccc PP p}}",
-        "endsAtNone": "Open ended"
+        "endsAtNone": "Open ended",
+        "upcomingOnly": "Upcoming only"
       },
       "create": {
         "title": "Create Event"

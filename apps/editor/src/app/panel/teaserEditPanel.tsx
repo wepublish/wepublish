@@ -239,8 +239,6 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
   let title: string | undefined
   let lead: string | undefined
 
-  console.log('teaser', teaser)
-
   switch (teaser.type) {
     case TeaserType.Article:
       type = 'Article'

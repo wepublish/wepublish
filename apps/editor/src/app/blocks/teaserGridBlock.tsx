@@ -9,6 +9,7 @@ import {SortableContainer, SortableElement, SortEnd} from 'react-sortable-hoc'
 import {Avatar, Drawer, IconButton as RIconButton, Panel as RPanel} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {Overlay} from '../atoms/overlay'
 import {PlaceholderImage} from '../atoms/placeholderImage'
 import {PlaceholderInput} from '../atoms/placeholderInput'
@@ -111,7 +112,6 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
   const {teasers, numColumns} = value
 
   function handleTeaserLinkChange(index: number, teaserLink: TeaserTypeMixed | null) {
-    console.log('teaserLink', teaserLink)
     onChange({
       numColumns,
       teasers: Object.assign([], teasers, {
@@ -205,6 +205,7 @@ export function TeaserBlock({
   onChoose,
   onRemove
 }: TeaserBlockProps) {
+  const {t} = useTranslation()
   return (
     <Panel bodyFill showGrabCursor={showGrabCursor}>
       <PlaceholderInput onAddClick={onChoose}>
@@ -213,11 +214,17 @@ export function TeaserBlock({
             {ContentForTeaser(teaser, numColumns)}
 
             <IconWrapper>
-              <IconButton icon={<MdArticle />} onClick={onChoose} />
+              <IconButtonTooltip caption={t('blocks.flexTeaser.chooseTeaser')}>
+                <IconButton icon={<MdArticle />} onClick={onChoose} />
+              </IconButtonTooltip>
               {teaser.type !== TeaserType.PeerArticle || !teaser?.peer?.isDisabled ? (
-                <IconButton icon={<MdEdit />} onClick={onEdit} />
+                <IconButtonTooltip caption={t('blocks.flexTeaser.editTeaser')}>
+                  <IconButton icon={<MdEdit />} onClick={onEdit} />
+                </IconButtonTooltip>
               ) : null}
-              <IconButton icon={<MdDelete />} onClick={onRemove} />
+              <IconButtonTooltip caption={t('blocks.flexTeaser.deleteTeaser')}>
+                <IconButton icon={<MdDelete />} onClick={onRemove} />
+              </IconButtonTooltip>
             </IconWrapper>
           </Teaser>
         )}
