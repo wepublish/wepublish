@@ -45,7 +45,7 @@ model ArticleRevision {
   imageID                String?
   authors                ArticleRevisionAuthor[]
   breaking               Boolean
-  blocks                 Json[]
+  blocks                 Json
   hideAuthor             Boolean
   socialMediaTitle       String?
   socialMediaDescription String?
