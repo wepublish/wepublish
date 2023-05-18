@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import {TeaserStyle} from '@wepublish/editor/api'
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
 import {
   Button,
