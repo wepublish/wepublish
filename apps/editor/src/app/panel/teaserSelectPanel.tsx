@@ -2,11 +2,13 @@ import styled from '@emotion/styled'
 import {
   ArticleFilter,
   ArticleSort,
+  Event,
   PageFilter,
   PeerArticle,
   SortOrder,
   TeaserStyle,
   useArticleListQuery,
+  useEventListQuery,
   usePageListQuery,
   usePeerArticleListQuery
 } from '@wepublish/editor/api'
@@ -15,6 +17,7 @@ import {useTranslation} from 'react-i18next'
 import {
   MdDashboard,
   MdDescription,
+  MdEvent,
   MdFileCopy,
   MdPreview,
   MdSearch,
@@ -187,6 +190,66 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
       ...((peerArticleListData?.peerArticles?.nodes as PeerArticle[]) || [])
     ])
   }, [peerArticleListData?.peerArticles])
+
+  /**
+   * PEER ARTICLES
+   */
+  // const take = 20
+  // const [skipPeer, setSkipPeer] = useState<number>(0)
+  const [events, setEvents] = useState<Event[]>([])
+
+  const eventVariables = {
+    filter: {},
+    take: 20,
+    skip: 0
+    // order: SortOrder.Descending,
+    // sort: ArticleSort.PublishedAt
+  }
+  // const {
+  // data: eventListData,
+  // fetchMore: fetchMoreEvents,
+  // error: eventListError
+  // } = usePeerArticleListQuery({
+  //   variables: eventVariables,
+  //   fetchPolicy: 'network-only'
+  // })
+
+  const {
+    data: eventListData,
+    fetchMore: fetchMoreEvents,
+    error: eventListError
+  } = useEventListQuery({
+    fetchPolicy: 'no-cache',
+    variables: eventVariables
+    // onError: onErrorToast
+  })
+
+  // async function loadMorePeerArticles() {
+  //   setSkipPeer(skipPeer + 1)
+
+  //   await fetchMorePeerArticles({
+  //     variables: {
+  //       ...peerListVariables,
+  //       skip: skipPeer * take
+  //     },
+  //     updateQuery: (prev, {fetchMoreResult}) => {
+  //       if (!fetchMoreResult?.peerArticles?.nodes) {
+  //         return fetchMoreResult
+  //       }
+
+  //       return {
+  //         peerArticles: {
+  //           ...fetchMoreResult.peerArticles,
+  //           nodes: [...(fetchMoreResult.peerArticles.nodes as PeerArticle[])]
+  //         }
+  //       }
+  //     }
+  //   })
+  // }
+
+  useEffect(() => {
+    setEvents([...events, ...((eventListData?.events?.nodes as Event[]) || [])])
+  }, [eventListData?.events])
 
   /**
    * PAGES & ARTICLES
@@ -388,6 +451,35 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
           </>
         )
 
+      case TeaserType.Event:
+        return (
+          <>
+            {events.map(event => {
+              return (
+                <RList.Item key={event.id}>
+                  <H3 onClick={() => onSelect({type: TeaserType.Event, event})}>
+                    {event.name || t('articleEditor.panels.untitled')}
+                  </H3>
+                  <div>
+                    <InlineDiv>
+                      {t('pageEditor.panels.createdAt', {createdAt: new Date(event.startsAt)})}
+                    </InlineDiv>
+                    {event.endsAt && (
+                      <InlineDivWithMargin>
+                        - {t('pageEditor.panels.modifiedAt', {modifiedAt: new Date(event.endsAt)})}
+                      </InlineDivWithMargin>
+                    )}
+                    <InlineDivWithMargin>{event.status}</InlineDivWithMargin>
+                  </div>
+                </RList.Item>
+              )
+            })}
+            {pageListData?.pages.pageInfo.hasNextPage && (
+              <Button onClick={loadMorePages}>{t('articleEditor.panels.loadMore')}</Button>
+            )}
+          </>
+        )
+
       case TeaserType.Custom:
         return (
           <>
@@ -550,6 +642,9 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
           </RNav.Item>
           <RNav.Item eventKey={TeaserType.Custom} icon={<MdSettings />}>
             {t('articleEditor.panels.custom')}
+          </RNav.Item>
+          <RNav.Item eventKey={TeaserType.Event} icon={<MdEvent />}>
+            {t('articleEditor.panels.event')}
           </RNav.Item>
         </Nav>
 

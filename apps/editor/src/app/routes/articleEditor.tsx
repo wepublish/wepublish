@@ -388,6 +388,7 @@ function ArticleEditor() {
     const input = createInput()
 
     if (articleID) {
+      console.log('input', input)
       await updateArticle({variables: {id: articleID, input}})
 
       setChanged(false)

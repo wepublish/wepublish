@@ -111,6 +111,7 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
   const {teasers, numColumns} = value
 
   function handleTeaserLinkChange(index: number, teaserLink: TeaserTypeMixed | null) {
+    console.log('teaserLink', teaserLink)
     onChange({
       numColumns,
       teasers: Object.assign([], teasers, {
@@ -283,6 +284,18 @@ export function ContentForTeaser(teaser: TeaserTypeMixed, numColumns?: number) {
           title={teaser.title ?? teaser.page.latest.title ?? ''}
           lead={teaser.lead ?? teaser.page.latest.description ?? undefined}
           states={states}
+          numColumns={numColumns}
+        />
+      )
+    }
+
+    case TeaserType.Event: {
+      return (
+        <TeaserContent
+          style={teaser.style}
+          image={teaser.image ?? teaser.event.image ?? undefined}
+          title={teaser.title ?? teaser.event.name ?? ''}
+          lead={teaser.lead ?? teaser.event.location ?? undefined}
           numColumns={numColumns}
         />
       )

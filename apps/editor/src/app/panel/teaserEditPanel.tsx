@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import {TeaserStyle} from '@wepublish/editor/api'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
 import {
   Button,
@@ -239,6 +239,8 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
   let title: string | undefined
   let lead: string | undefined
 
+  console.log('teaser', teaser)
+
   switch (teaser.type) {
     case TeaserType.Article:
       type = 'Article'
@@ -261,6 +263,13 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
       imageURL = teaser.page.latest.image?.previewURL ?? undefined
       title = teaser.page.latest.title ?? undefined
       lead = teaser.page.latest.description ?? undefined
+      break
+
+    case TeaserType.Event:
+      type = 'Event'
+      imageURL = teaser.event.image?.previewURL ?? undefined
+      title = teaser.event.name ?? undefined
+      lead = teaser.event.location ?? undefined
       break
 
     case TeaserType.Custom:
