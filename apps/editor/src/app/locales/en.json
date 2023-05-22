@@ -90,6 +90,7 @@
         "outlined": "Outlined",
         "page": "Page",
         "custom": "Custom",
+        "event": "Event",
         "contentUrl": "Content URL",
         "pagePreviewLink": "Page Preview Link",
         "peerArticle": "Peer Article",
@@ -1351,7 +1352,8 @@
         "startsAt": "Starts at {{startsAt, ccc PP p}}",
         "endsAt": "Ends at {{endsAt, ccc PP p}}",
         "endsAtNone": "Open ended",
-        "source": "Source"
+        "source": "Source",
+        "upcomingOnly": "Upcoming only"
       },
       "create": {
         "title": "Create Event"

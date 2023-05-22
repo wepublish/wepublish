@@ -51,6 +51,22 @@ fragment FullTeaser on Teaser {
       ...PageRef
     }
   }
+
+  ... on EventTeaser {
+    style
+
+    image {
+      ...ImageRef
+    }
+
+    preTitle
+    title
+    lead
+
+    event {
+      ...EventRef
+    }
+  }
 }
 
 fragment FullBlock on Block {
