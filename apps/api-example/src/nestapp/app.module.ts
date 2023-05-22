@@ -25,7 +25,8 @@ import {URL} from 'url'
       cors: {
         credentials: true,
         origin: true
-      }
+      },
+      cache: 'bounded'
     }),
     ApiModule,
     DashboardModule,
