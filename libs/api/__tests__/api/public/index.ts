@@ -285,6 +285,7 @@ export type Event = {
   startsAt: Scalars['DateTime'];
   status: EventStatus;
   tags?: Maybe<Array<Tag>>;
+  url: Scalars['String'];
 };
 
 export type EventBlock = {
@@ -1311,6 +1312,7 @@ export type User = {
   address?: Maybe<UserAddress>;
   email: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
+  flair?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
   name: Scalars['String'];
@@ -1342,6 +1344,7 @@ export type UserInput = {
   address?: InputMaybe<UserAddressInput>;
   email: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   preferredName?: InputMaybe<Scalars['String']>;
   uploadImageInput?: InputMaybe<UploadImageInput>;

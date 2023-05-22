@@ -1108,7 +1108,8 @@
       "zipCode": "PLZ",
       "city": "Stadt",
       "country": "Land",
-      "selectUserImage": "Profilbild wählen"
+      "selectUserImage": "Profilbild wählen",
+      "flair": "Funktionsbeschreibung"
     },
     "userSubscriptionList": {
       "deactivationReason": {
