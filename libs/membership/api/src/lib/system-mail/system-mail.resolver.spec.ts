@@ -1,5 +1,5 @@
 import {Test, TestingModule} from '@nestjs/testing'
-import {UserEvent, UserFlowMail} from '@prisma/client'
+import {User, UserEvent, UserFlowMail} from '@prisma/client'
 import {PrismaService} from '@wepublish/nest-modules'
 import {SystemMailResolver} from './system-mail.resolver'
 import {MailContext} from '@wepublish/mails'
@@ -36,11 +36,12 @@ const mailContestMock = {
   sendRemoteTemplateDirect: jest.fn((): void => undefined)
 }
 
-const FAKE_USER = {
+const FAKE_USER: User = {
   id: 'u02rufq3n',
   createdAt: new Date(),
   modifiedAt: new Date(),
   email: 'test@example.com',
+  flair: null,
   name: 'Test User',
   active: false,
   roleIDs: [],

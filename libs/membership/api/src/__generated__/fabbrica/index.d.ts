@@ -1971,6 +1971,7 @@ declare type UserFactoryDefineInput = {
   name?: string
   firstName?: string | null
   preferredName?: string | null
+  flair?: string | null
   password?: string
   active?: boolean
   lastLogin?: Date | null
