@@ -109,6 +109,7 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
 
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddress},
+    flair: {type: GraphQLString},
 
     userImage: {
       type: GraphQLImage,
@@ -167,6 +168,7 @@ export const GraphQLPublicUser = new GraphQLObjectType<User, Context>({
     email: {type: GraphQLNonNull(GraphQLString)},
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddress},
+    flair: {type: GraphQLString},
     paymentProviderCustomers: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer)))
     },
@@ -238,6 +240,7 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
 
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddressInput},
+    flair: {type: GraphQLString},
 
     userImageID: {type: GraphQLID},
 
@@ -257,6 +260,7 @@ export const GraphQLPublicUserInput = new GraphQLInputObjectType({
     email: {type: GraphQLNonNull(GraphQLString)},
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddressInput},
+    flair: {type: GraphQLString},
     uploadImageInput: {type: GraphQLUploadImageInput}
   }
 })

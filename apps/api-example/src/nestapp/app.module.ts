@@ -39,7 +39,8 @@ import {URL} from 'url'
       cors: {
         credentials: true,
         origin: true
-      }
+      },
+      cache: 'bounded'
     }),
     PrismaModule,
     MailsModule,

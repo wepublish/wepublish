@@ -1149,7 +1149,8 @@
       "zipCode": "ZIP",
       "city": "City",
       "country": "Country",
-      "selectUserImage": "Choose profile picture"
+      "selectUserImage": "Choose profile picture",
+      "flair": "Flair"
     },
     "userSubscriptionList": {
       "deactivationReason": {

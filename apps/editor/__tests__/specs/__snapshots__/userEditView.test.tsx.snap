@@ -88,6 +88,18 @@ exports[`User edit view should allow a new user to be created 1`] = `
 @@ -364,10 +369,11 @@
                         >
                           <input
+                            aria-describedby=\\"flair-help-text\\"
+                            aria-labelledby=\\"flair-control-label\\"
+                            class=\\"rs-input\\"
++                           disabled=\\"\\"
+                            id=\\"flair\\"
+                            name=\\"flair\\"
+                            type=\\"text\\"
+                            value=\\"\\"
+                          />
+@@ -395,10 +401,11 @@
+                        >
+                          <input
                             aria-describedby=\\"company-help-text\\"
                             aria-labelledby=\\"company-control-label\\"
                             class=\\"rs-input\\"
@@ -97,7 +109,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -395,10 +401,11 @@
+@@ -426,10 +433,11 @@
                         >
                           <input
                             aria-describedby=\\"streetAddress-help-text\\"
@@ -109,7 +121,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -426,10 +433,11 @@
+@@ -457,10 +465,11 @@
                         >
                           <input
                             aria-describedby=\\"streetAddress2-help-text\\"
@@ -121,7 +133,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -457,10 +465,11 @@
+@@ -488,10 +497,11 @@
                         >
                           <input
                             aria-describedby=\\"zipCode-help-text\\"
@@ -133,7 +145,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -488,10 +497,11 @@
+@@ -519,10 +529,11 @@
                         >
                           <input
                             aria-describedby=\\"city-help-text\\"
@@ -145,7 +157,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -519,10 +529,11 @@
+@@ -550,10 +561,11 @@
                         >
                           <input
                             aria-describedby=\\"country-help-text\\"
@@ -157,7 +169,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type=\\"text\\"
                             value=\\"\\"
                           />
-@@ -723,14 +734,15 @@
+@@ -754,14 +766,15 @@
                         >
                           <input
                             aria-describedby=\\"password-help-text\\"
@@ -258,8 +270,8 @@ exports[`User edit view should allow user properties to be added 1`] = `
                       </div>
                     </div>
                     <div
-                      class=\\"rs-col rs-col-xs-24\\"
-@@ -645,12 +687,141 @@
+                      class=\\"rs-col rs-col-xs-12\\"
+@@ -676,12 +718,141 @@
                         >
                           articleEditor.panels.properties
                         </label>
@@ -401,7 +413,7 @@ exports[`User edit view should allow user properties to be added 1`] = `
                             >
                               <svg
                                 fill=\\"currentColor\\"
-@@ -721,17 +892,38 @@
+@@ -752,17 +923,38 @@
                         <div
                           class=\\"rs-form-control rs-form-control-wrapper\\"
                         >
@@ -447,7 +459,7 @@ exports[`User edit view should allow user role to be added 1`] = `
 - First value
 + Second value
 
-@@ -565,11 +565,11 @@
+@@ -596,11 +596,11 @@
                           id=\\"userRoles-control-label\\"
                         >
                           userCreateOrEditView.userRoles
@@ -460,7 +472,7 @@ exports[`User edit view should allow user role to be added 1`] = `
                             aria-expanded=\\"false\\"
                             aria-haspopup=\\"listbox\\"
                             class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -579,17 +579,54 @@
+@@ -610,17 +610,54 @@
                             <input
                               aria-hidden=\\"true\\"
                               class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -526,7 +538,7 @@ exports[`User edit view should allow user role to be removed 1`] = `
 - First value
 + Second value
 
-@@ -565,11 +565,11 @@
+@@ -596,11 +596,11 @@
                           id=\\"userRoles-control-label\\"
                         >
                           userCreateOrEditView.userRoles
@@ -539,7 +551,7 @@ exports[`User edit view should allow user role to be removed 1`] = `
                             aria-expanded=\\"false\\"
                             aria-haspopup=\\"listbox\\"
                             class=\\"rs-picker-toggle rs-btn rs-btn-default\\"
-@@ -579,17 +579,54 @@
+@@ -610,17 +610,54 @@
                             <input
                               aria-hidden=\\"true\\"
                               class=\\"rs-picker-toggle-textbox rs-picker-toggle-read-only\\"
@@ -947,7 +959,38 @@ exports[`User edit view should render 1`] = `
                     </div>
                   </div>
                   <div
-                    class="rs-col rs-col-xs-24"
+                    class="rs-col rs-col-xs-12"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                        for="flair"
+                        id="flair-control-label"
+                      >
+                        userCreateOrEditView.flair
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          aria-describedby="flair-help-text"
+                          aria-labelledby="flair-control-label"
+                          class="rs-input"
+                          id="flair"
+                          name="flair"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-12"
                     role="gridcell"
                     style="padding-left: 5px; padding-right: 5px;"
                   >
@@ -1694,7 +1737,38 @@ exports[`User edit view should render with ID 1`] = `
                     </div>
                   </div>
                   <div
-                    class="rs-col rs-col-xs-24"
+                    class="rs-col rs-col-xs-12"
+                    role="gridcell"
+                    style="padding-left: 5px; padding-right: 5px;"
+                  >
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
+                        class="rs-form-control-label"
+                        for="flair"
+                        id="flair-control-label"
+                      >
+                        userCreateOrEditView.flair
+                      </label>
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <input
+                          aria-describedby="flair-help-text"
+                          aria-labelledby="flair-control-label"
+                          class="rs-input"
+                          id="flair"
+                          name="flair"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-col rs-col-xs-12"
                     role="gridcell"
                     style="padding-left: 5px; padding-right: 5px;"
                   >

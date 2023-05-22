@@ -1,4 +1,4 @@
-import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
+import {CommentItemType, Event, Peer, PrismaClient} from '@prisma/client'
 import {ApolloServer} from 'apollo-server-express'
 import * as crypto from 'crypto'
 import {URL} from 'url'
@@ -42,6 +42,10 @@ class ExampleURLAdapter implements URLAdapter {
 
   getAuthorURL(author: Author): string {
     return `https://demo.wepublish.ch/author/${author.slug || author.id}`
+  }
+
+  getEventURL(event: Event): string {
+    return `https://demo.wepublish.ch/events/${event.id}`
   }
 
   getArticlePreviewURL(token: string): string {
