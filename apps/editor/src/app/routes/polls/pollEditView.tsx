@@ -119,7 +119,7 @@ function PollEditView() {
       variables: {
         pollId: poll.id,
         question: poll.question,
-        infoText: poll.infoText,
+        infoText: poll.infoText || undefined,
         opensAt,
         closedAt,
         answers: poll.answers?.map(answer => {
