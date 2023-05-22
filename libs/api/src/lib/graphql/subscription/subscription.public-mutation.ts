@@ -1,6 +1,6 @@
-import {Context} from '../../context'
 import {PaymentPeriodicity, Prisma, PrismaClient} from '@prisma/client'
-import {MonthlyAmountNotEnough, NotFound, PaymentConfigurationNotAllowed} from '../../error'
+import {Context} from '../../context'
+import {NotFound, PaymentConfigurationNotAllowed} from '../../error'
 
 export const updatePublicSubscription = async (
   id: string,

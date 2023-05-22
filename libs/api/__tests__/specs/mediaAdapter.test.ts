@@ -1,16 +1,16 @@
-import {KarmaMediaAdapter, MediaServerError} from '../../src'
-import {URL} from 'url'
-import * as fs from 'fs'
 import {
   ArrayBufferUpload,
-  ImageRotation,
   ImageOutput,
+  ImageRotation,
   ImageTransformation
 } from '@wepublish/image/api'
-import {ImageWithFocalPoint} from '../../src/lib/db/image'
+import * as fs from 'fs'
 import type {FileUpload} from 'graphql-upload'
 import fetch from 'node-fetch'
 import {resolve} from 'path'
+import {URL} from 'url'
+import {KarmaMediaAdapter, MediaServerError} from '../../src'
+import {ImageWithFocalPoint} from '../../src/lib/db/image'
 import FormData = require('form-data')
 
 jest.mock('node-fetch')
@@ -79,7 +79,7 @@ describe('Karma Media Adapter', () => {
           filename: 'test.jpg',
           mimetype: 'image/jpeg',
           encoding: 'fakeEncoding',
-          createReadStream: () => imageStream
+          createReadStream: () => imageStream as any
         })
       })
     })
