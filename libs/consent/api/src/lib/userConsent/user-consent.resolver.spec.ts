@@ -15,7 +15,8 @@ import {generateRandomString} from '../consent/consent.resolver.spec'
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      path: '/'
+      path: '/',
+      cache: 'bounded'
     }),
     PrismaModule,
     AuthenticationModule
