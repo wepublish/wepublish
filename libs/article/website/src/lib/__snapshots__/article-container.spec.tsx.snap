@@ -356,7 +356,7 @@ exports[`Article Container should render ById 1`] = `
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1ps4owl-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -423,25 +423,18 @@ exports[`Article Container should render ById 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt=""
-              class="css-sr2c7j"
-              height="6000"
-              src="https://unsplash.it/500/281"
-              width="4000"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                 
               </h1>
             </header>
           </div>
@@ -454,25 +447,18 @@ exports[`Article Container should render ById 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-sr2c7j"
-              height="2667"
-              src="https://unsplash.it/500/281"
-              width="4000"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                 
               </h1>
             </header>
           </div>
@@ -485,25 +471,18 @@ exports[`Article Container should render ById 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt=""
-              class="css-sr2c7j"
-              height="6000"
-              src="https://unsplash.it/500/281"
-              width="4000"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                 
               </h1>
             </header>
           </div>
@@ -516,25 +495,18 @@ exports[`Article Container should render ById 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt=""
-              class="css-sr2c7j"
-              height="2419"
-              src="https://unsplash.it/500/281"
-              width="1814"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                 
               </h1>
             </header>
           </div>
@@ -547,25 +519,18 @@ exports[`Article Container should render ById 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://google.com"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt=""
-              class="css-sr2c7j"
-              height="6000"
-              src="https://unsplash.it/500/281"
-              width="4000"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                 
               </h1>
             </header>
           </div>
@@ -946,7 +911,7 @@ exports[`Article Container should render BySlug 1`] = `
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1ps4owl-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -1013,25 +978,18 @@ exports[`Article Container should render BySlug 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt=""
-              class="css-sr2c7j"
-              height="6000"
-              src="https://unsplash.it/500/281"
-              width="4000"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                 
               </h1>
             </header>
           </div>
@@ -1044,25 +1002,18 @@ exports[`Article Container should render BySlug 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-sr2c7j"
-              height="2667"
-              src="https://unsplash.it/500/281"
-              width="4000"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                 
               </h1>
             </header>
           </div>
@@ -1075,25 +1026,18 @@ exports[`Article Container should render BySlug 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt=""
-              class="css-sr2c7j"
-              height="6000"
-              src="https://unsplash.it/500/281"
-              width="4000"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                 
               </h1>
             </header>
           </div>
@@ -1106,25 +1050,18 @@ exports[`Article Container should render BySlug 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt=""
-              class="css-sr2c7j"
-              height="2419"
-              src="https://unsplash.it/500/281"
-              width="1814"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                 
               </h1>
             </header>
           </div>
@@ -1137,25 +1074,18 @@ exports[`Article Container should render BySlug 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://google.com"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt=""
-              class="css-sr2c7j"
-              height="6000"
-              src="https://unsplash.it/500/281"
-              width="4000"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                 
               </h1>
             </header>
           </div>
@@ -1536,7 +1466,7 @@ exports[`Article Container should render WithClassName 1`] = `
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1ps4owl-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -1603,25 +1533,18 @@ exports[`Article Container should render WithClassName 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt=""
-              class="css-sr2c7j"
-              height="6000"
-              src="https://unsplash.it/500/281"
-              width="4000"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                 
               </h1>
             </header>
           </div>
@@ -1634,25 +1557,18 @@ exports[`Article Container should render WithClassName 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-sr2c7j"
-              height="2667"
-              src="https://unsplash.it/500/281"
-              width="4000"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                 
               </h1>
             </header>
           </div>
@@ -1665,25 +1581,18 @@ exports[`Article Container should render WithClassName 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt=""
-              class="css-sr2c7j"
-              height="6000"
-              src="https://unsplash.it/500/281"
-              width="4000"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                 
               </h1>
             </header>
           </div>
@@ -1696,25 +1605,18 @@ exports[`Article Container should render WithClassName 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt=""
-              class="css-sr2c7j"
-              height="2419"
-              src="https://unsplash.it/500/281"
-              width="1814"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                 
               </h1>
             </header>
           </div>
@@ -1727,25 +1629,18 @@ exports[`Article Container should render WithClassName 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://google.com"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt=""
-              class="css-sr2c7j"
-              height="6000"
-              src="https://unsplash.it/500/281"
-              width="4000"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                 
               </h1>
             </header>
           </div>
@@ -2126,7 +2021,7 @@ exports[`Article Container should render WithEmotion 1`] = `
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1ps4owl-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -2193,25 +2088,18 @@ exports[`Article Container should render WithEmotion 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt=""
-              class="css-sr2c7j"
-              height="6000"
-              src="https://unsplash.it/500/281"
-              width="4000"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                 
               </h1>
             </header>
           </div>
@@ -2224,25 +2112,18 @@ exports[`Article Container should render WithEmotion 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-sr2c7j"
-              height="2667"
-              src="https://unsplash.it/500/281"
-              width="4000"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                 
               </h1>
             </header>
           </div>
@@ -2255,25 +2136,18 @@ exports[`Article Container should render WithEmotion 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt=""
-              class="css-sr2c7j"
-              height="6000"
-              src="https://unsplash.it/500/281"
-              width="4000"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                 
               </h1>
             </header>
           </div>
@@ -2286,25 +2160,18 @@ exports[`Article Container should render WithEmotion 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt=""
-              class="css-sr2c7j"
-              height="2419"
-              src="https://unsplash.it/500/281"
-              width="1814"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                 
               </h1>
             </header>
           </div>
@@ -2317,25 +2184,18 @@ exports[`Article Container should render WithEmotion 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href="https://google.com"
+          href=""
         >
           <div
             class="css-rd719m"
           >
-            <img
-              alt=""
-              class="css-sr2c7j"
-              height="6000"
-              src="https://unsplash.it/500/281"
-              width="4000"
-            />
             <header
               class="css-0"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                 
               </h1>
             </header>
           </div>

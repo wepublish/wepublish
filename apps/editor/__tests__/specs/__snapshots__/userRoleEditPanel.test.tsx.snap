@@ -56,7 +56,7 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
         </div>
         <div
           class="rs-form-group"
-@@ -128,23 +131,24 @@
+@@ -128,19 +131,19 @@
             id="permissions-control-label"
           >
             userRoles.panels.permissions
@@ -76,15 +76,22 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
               role="combobox"
 -             tabindex="0"
             >
-              <input
-                aria-hidden="true"
-                class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
-+               disabled=""
-                readonly=""
-                tabindex="-1"
-                value=""
-              />
-              <span"
+              <div
+                class="rs-stack"
+                style="align-items: center;"
+              >
+@@ -149,10 +152,11 @@
+                  style="flex-grow: 1; overflow: hidden;"
+                >
+                  <input
+                    aria-hidden="true"
+                    class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
++                   disabled=""
+                    readonly=""
+                    style="pointer-events: none;"
+                    tabindex="-1"
+                    value=""
+                  />"
 `;
 
 exports[`User Role Edit Panel should have Toggle sliders disabled with System Role 1`] = `
@@ -236,59 +243,74 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
             disabled=""
             role="combobox"
           >
-            <input
-              aria-hidden="true"
-              class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
-              disabled=""
-              readonly=""
-              tabindex="-1"
-              value="permissionId1,permissionId2"
-            />
-            <span
-              class="rs-picker-toggle-value"
+            <div
+              class="rs-stack"
+              style="align-items: center;"
             >
-              <span
-                class="rs-picker-value-list"
-                title="permission description 1, permission description 2"
+              <div
+                class="rs-stack-item"
+                style="flex-grow: 1; overflow: hidden;"
               >
+                <input
+                  aria-hidden="true"
+                  class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
+                  disabled=""
+                  readonly=""
+                  style="pointer-events: none;"
+                  tabindex="-1"
+                  value="permissionId1,permissionId2"
+                />
                 <span
-                  class="rs-picker-value-item"
+                  class="rs-picker-toggle-value"
                 >
-                  permission description 1
+                  <span
+                    class="rs-picker-value-list"
+                    title="permission description 1, permission description 2"
+                  >
+                    <span
+                      class="rs-picker-value-item"
+                    >
+                      permission description 1
+                    </span>
+                    <span
+                      class="rs-picker-value-separator"
+                    >
+                      ,
+                    </span>
+                    <span
+                      class="rs-picker-value-item"
+                    >
+                      permission description 2
+                    </span>
+                  </span>
+                  <span
+                    class="rs-picker-value-count"
+                    title="2"
+                  >
+                    2
+                  </span>
                 </span>
-                <span
-                  class="rs-picker-value-separator"
-                >
-                  ,
-                </span>
-                <span
-                  class="rs-picker-value-item"
-                >
-                  permission description 2
-                </span>
-              </span>
-              <span
-                class="rs-picker-value-count"
-                title="2"
+              </div>
+              <div
+                class="rs-stack-item"
               >
-                2
-              </span>
-            </span>
-            <svg
-              aria-hidden="true"
-              aria-label="angle down"
-              class="rs-picker-toggle-caret rs-icon"
-              data-category="legacy"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="0 0 21 32"
-              width="1em"
-            >
-              <path
-                d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
-              />
-            </svg>
+                <svg
+                  aria-hidden="true"
+                  aria-label="angle down"
+                  class="rs-picker-toggle-caret rs-icon"
+                  data-category="legacy"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="0 0 21 32"
+                  width="1em"
+                >
+                  <path
+                    d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -440,34 +462,49 @@ exports[`User Role Edit Panel should render 1`] = `
             role="combobox"
             tabindex="0"
           >
-            <input
-              aria-hidden="true"
-              class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
-              readonly=""
-              tabindex="-1"
-              value=""
-            />
-            <span
-              aria-placeholder="Select"
-              class="rs-picker-toggle-placeholder"
+            <div
+              class="rs-stack"
+              style="align-items: center;"
             >
-              Select
-            </span>
-            <svg
-              aria-hidden="true"
-              aria-label="angle down"
-              class="rs-picker-toggle-caret rs-icon"
-              data-category="legacy"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="0 0 21 32"
-              width="1em"
-            >
-              <path
-                d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
-              />
-            </svg>
+              <div
+                class="rs-stack-item"
+                style="flex-grow: 1; overflow: hidden;"
+              >
+                <input
+                  aria-hidden="true"
+                  class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
+                  readonly=""
+                  style="pointer-events: none;"
+                  tabindex="-1"
+                  value=""
+                />
+                <span
+                  aria-placeholder="Select"
+                  class="rs-picker-toggle-placeholder"
+                >
+                  Select
+                </span>
+              </div>
+              <div
+                class="rs-stack-item"
+              >
+                <svg
+                  aria-hidden="true"
+                  aria-label="angle down"
+                  class="rs-picker-toggle-caret rs-icon"
+                  data-category="legacy"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="0 0 21 32"
+                  width="1em"
+                >
+                  <path
+                    d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -619,101 +656,101 @@ exports[`User Role Edit Panel should render with role 1`] = `
             role="combobox"
             tabindex="0"
           >
-            <input
-              aria-hidden="true"
-              class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
-              readonly=""
-              tabindex="-1"
-              value="permissionId1,permissionId2,permissionId3,permissionId4"
-            />
-            <span
-              class="rs-picker-toggle-value"
+            <div
+              class="rs-stack"
+              style="align-items: center;"
             >
-              <span
-                class="rs-picker-value-list"
-                title="permission description 1, permission description 2, permission description 3, permission description 4"
+              <div
+                class="rs-stack-item"
+                style="flex-grow: 1; overflow: hidden;"
               >
-                <span
-                  class="rs-picker-value-item"
-                >
-                  permission description 1
-                </span>
-                <span
-                  class="rs-picker-value-separator"
-                >
-                  ,
-                </span>
-                <span
-                  class="rs-picker-value-item"
-                >
-                  permission description 2
-                </span>
-                <span
-                  class="rs-picker-value-separator"
-                >
-                  ,
-                </span>
-                <span
-                  class="rs-picker-value-item"
-                >
-                  permission description 3
-                </span>
-                <span
-                  class="rs-picker-value-separator"
-                >
-                  ,
-                </span>
-                <span
-                  class="rs-picker-value-item"
-                >
-                  permission description 4
-                </span>
-              </span>
-              <span
-                class="rs-picker-value-count"
-                title="4"
-              >
-                4
-              </span>
-            </span>
-            <span
-              aria-label="Clear"
-              class="rs-picker-toggle-clean rs-btn-close"
-              role="button"
-              tabindex="-1"
-              title="Clear"
-            >
-              <svg
-                aria-hidden="true"
-                aria-label="close"
-                class="rs-icon"
-                data-category="application"
-                fill="currentColor"
-                focusable="false"
-                height="1em"
-                viewBox="0 0 16 16"
-                width="1em"
-              >
-                <path
-                  d="M2.784 2.089l.069.058 5.146 5.147 5.146-5.147a.5.5 0 01.765.638l-.058.069L8.705 8l5.147 5.146a.5.5 0 01-.638.765l-.069-.058-5.146-5.147-5.146 5.147a.5.5 0 01-.765-.638l.058-.069L7.293 8 2.146 2.854a.5.5 0 01.638-.765z"
+                <input
+                  aria-hidden="true"
+                  class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
+                  readonly=""
+                  style="pointer-events: none;"
+                  tabindex="-1"
+                  value="permissionId1,permissionId2,permissionId3,permissionId4"
                 />
-              </svg>
-            </span>
-            <svg
-              aria-hidden="true"
-              aria-label="angle down"
-              class="rs-picker-toggle-caret rs-icon"
-              data-category="legacy"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="0 0 21 32"
-              width="1em"
-            >
-              <path
-                d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
-              />
-            </svg>
+                <span
+                  class="rs-picker-toggle-value"
+                >
+                  <span
+                    class="rs-picker-value-list"
+                    title="permission description 1, permission description 2, permission description 3, permission description 4"
+                  >
+                    <span
+                      class="rs-picker-value-item"
+                    >
+                      permission description 1
+                    </span>
+                    <span
+                      class="rs-picker-value-separator"
+                    >
+                      ,
+                    </span>
+                    <span
+                      class="rs-picker-value-item"
+                    >
+                      permission description 2
+                    </span>
+                    <span
+                      class="rs-picker-value-separator"
+                    >
+                      ,
+                    </span>
+                    <span
+                      class="rs-picker-value-item"
+                    >
+                      permission description 3
+                    </span>
+                    <span
+                      class="rs-picker-value-separator"
+                    >
+                      ,
+                    </span>
+                    <span
+                      class="rs-picker-value-item"
+                    >
+                      permission description 4
+                    </span>
+                  </span>
+                  <span
+                    class="rs-picker-value-count"
+                    title="4"
+                  >
+                    4
+                  </span>
+                </span>
+              </div>
+              <div
+                class="rs-stack-item"
+              >
+                <span
+                  aria-label="Clear"
+                  class="rs-picker-toggle-clean rs-btn-close"
+                  role="button"
+                  tabindex="-1"
+                  title="Clear"
+                >
+                  <svg
+                    aria-hidden="true"
+                    aria-label="close"
+                    class="rs-icon"
+                    data-category="application"
+                    fill="currentColor"
+                    focusable="false"
+                    height="1em"
+                    viewBox="0 0 16 16"
+                    width="1em"
+                  >
+                    <path
+                      d="M2.784 2.089l.069.058 5.146 5.147 5.146-5.147a.5.5 0 01.765.638l-.058.069L8.705 8l5.147 5.146a.5.5 0 01-.638.765l-.069-.058-5.146-5.147-5.146 5.147a.5.5 0 01-.765-.638l.058-.069L7.293 8 2.146 2.854a.5.5 0 01.638-.765z"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -29,6 +29,7 @@
       "@wepublish/event/website": ["libs/event/website/src/index.ts"],
       "@wepublish/consent/api": ["libs/consent/api/src/index.ts"],
       "@wepublish/consent/editor": ["libs/consent/editor/src/index.ts"],
+      "@wepublish/image/api": ["libs/image/api/src/index.ts"],
       "@wepublish/membership/api": ["libs/membership/api/src/index.ts"],
       "@wepublish/membership/editor": ["libs/membership/editor/src/index.ts"],
       "@wepublish/navigation/website": ["libs/navigation/website/src/index.ts"],

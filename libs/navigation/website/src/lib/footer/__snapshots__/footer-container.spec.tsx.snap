@@ -27,16 +27,19 @@ exports[`Footer Container should render Default 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          href="/"
         >
           Home
         </a>
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          href="/a/impressum"
         >
           Impressum
         </a>
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          href="https://google.com"
         >
           FAQ
         </a>
@@ -73,16 +76,19 @@ exports[`Footer Container should render WithClassName 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          href="/"
         >
           Home
         </a>
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          href="/a/impressum"
         >
           Impressum
         </a>
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          href="https://google.com"
         >
           FAQ
         </a>
@@ -119,16 +125,19 @@ exports[`Footer Container should render WithEmotion 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          href="/"
         >
           Home
         </a>
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          href="/a/impressum"
         >
           Impressum
         </a>
         <a
           class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          href="https://google.com"
         >
           FAQ
         </a>

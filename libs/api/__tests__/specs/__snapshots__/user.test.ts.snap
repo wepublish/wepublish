@@ -6,6 +6,7 @@ exports[`Users can be created/updated/edited/deleted: can be created 1`] = `
     "createUser": {
       "email": Any<String>,
       "emailVerifiedAt": Any<Date>,
+      "flair": null,
       "id": Any<String>,
       "name": "Robin Wayne",
       "roles": [],
@@ -27,6 +28,7 @@ exports[`Users can be created/updated/edited/deleted: can be deleted 1`] = `
     "deleteUser": {
       "email": Any<String>,
       "emailVerifiedAt": null,
+      "flair": null,
       "id": Any<String>,
       "name": "Dark Knight",
       "roles": [],
@@ -48,6 +50,7 @@ exports[`Users can be created/updated/edited/deleted: can be read by id 1`] = `
     "user": {
       "email": Any<String>,
       "emailVerifiedAt": Any<Date>,
+      "flair": null,
       "id": Any<String>,
       "name": "Robin Wayne",
       "roles": [],
@@ -69,6 +72,7 @@ exports[`Users can be created/updated/edited/deleted: can be updated 1`] = `
     "updateUser": {
       "email": Any<String>,
       "emailVerifiedAt": null,
+      "flair": null,
       "id": Any<String>,
       "name": "Dark Knight",
       "roles": [],
@@ -110,6 +114,7 @@ exports[`Users can be created/updated/edited/deleted: can reset user password 2`
     "resetUserPassword": {
       "email": Any<String>,
       "emailVerifiedAt": Any<Date>,
+      "flair": null,
       "id": Any<String>,
       "name": "Robin Wayne",
       "roles": [],

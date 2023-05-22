@@ -16,7 +16,8 @@ export const generateRandomString = () => crypto.randomBytes(20).toString('hex')
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      path: '/'
+      path: '/',
+      cache: 'bounded'
     }),
     PrismaModule
   ],
