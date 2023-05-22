@@ -23,6 +23,7 @@ export const initI18N = () => {
           const myLocale = dateFormatMap.get(lng)
           return formatDate(value, format, {locale: myLocale})
         }
+
         return value
       }
     }

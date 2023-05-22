@@ -193,10 +193,12 @@ export const Default = {
           {...event, id: '5'}
         ],
         pageInfo: {
-          hasNextPage: true,
-          hasPreviousPage: false
+          hasNextPage: false,
+          hasPreviousPage: false,
+          endCursor: null,
+          startCursor: null
         },
-        totalCount: 1
+        totalCount: 5
       }
     },
     variables: {
@@ -237,10 +239,12 @@ export const WithClassName = {
           {...event, id: '5'}
         ],
         pageInfo: {
-          hasNextPage: true,
-          hasPreviousPage: false
+          hasNextPage: false,
+          hasPreviousPage: false,
+          endCursor: null,
+          startCursor: null
         },
-        totalCount: 1
+        totalCount: 5
       }
     },
     className: 'extra-classname',
@@ -260,10 +264,12 @@ export const WithEmotion = {
           {...event, id: '5'}
         ],
         pageInfo: {
-          hasNextPage: true,
-          hasPreviousPage: false
+          hasNextPage: false,
+          hasPreviousPage: false,
+          endCursor: null,
+          startCursor: null
         },
-        totalCount: 1
+        totalCount: 5
       }
     },
     css: css`
@@ -285,10 +291,12 @@ export const WithoutImage = {
           {...event, id: '5', image: null}
         ],
         pageInfo: {
-          hasNextPage: true,
-          hasPreviousPage: false
+          hasNextPage: false,
+          hasPreviousPage: false,
+          endCursor: null,
+          startCursor: null
         },
-        totalCount: 1
+        totalCount: 5
       }
     },
     onVariablesChange: action('onVariablesChange')

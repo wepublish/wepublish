@@ -196,7 +196,14 @@ export const Default = {
           result: {
             data: {
               events: {
-                nodes: [event, {...event, id: '2'}, {...event, id: '3'}]
+                nodes: [event, {...event, id: '2'}, {...event, id: '3'}],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  endCursor: null,
+                  startCursor: null
+                }
               }
             }
           }
@@ -223,7 +230,14 @@ export const WithClassName = {
           result: {
             data: {
               events: {
-                nodes: [event, {...event, id: '2'}, {...event, id: '3'}]
+                nodes: [event, {...event, id: '2'}, {...event, id: '3'}],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  endCursor: null,
+                  startCursor: null
+                }
               }
             }
           }
@@ -252,7 +266,14 @@ export const WithEmotion = {
           result: {
             data: {
               events: {
-                nodes: [event, {...event, id: '2'}, {...event, id: '3'}]
+                nodes: [event, {...event, id: '2'}, {...event, id: '3'}],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  endCursor: null,
+                  startCursor: null
+                }
               }
             }
           }

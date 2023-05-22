@@ -49,12 +49,12 @@ exports[`EventList should render Default 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -205,12 +205,12 @@ exports[`EventList should render Default 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -361,12 +361,12 @@ exports[`EventList should render Default 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -517,12 +517,12 @@ exports[`EventList should render Default 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -673,12 +673,12 @@ exports[`EventList should render Default 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -838,12 +838,12 @@ exports[`EventList should render WithClassName 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -994,12 +994,12 @@ exports[`EventList should render WithClassName 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -1150,12 +1150,12 @@ exports[`EventList should render WithClassName 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -1306,12 +1306,12 @@ exports[`EventList should render WithClassName 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -1462,12 +1462,12 @@ exports[`EventList should render WithClassName 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -1627,12 +1627,12 @@ exports[`EventList should render WithEmotion 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -1783,12 +1783,12 @@ exports[`EventList should render WithEmotion 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -1939,12 +1939,12 @@ exports[`EventList should render WithEmotion 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -2095,12 +2095,12 @@ exports[`EventList should render WithEmotion 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -2251,12 +2251,12 @@ exports[`EventList should render WithEmotion 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -2424,12 +2424,12 @@ exports[`EventList should render WithoutImage 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -2580,12 +2580,12 @@ exports[`EventList should render WithoutImage 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -2728,12 +2728,12 @@ exports[`EventList should render WithoutImage 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -2884,12 +2884,12 @@ exports[`EventList should render WithoutImage 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1
@@ -3032,12 +3032,12 @@ exports[`EventList should render WithoutImage 1`] = `
               />
             </svg>
             <span>
-              24.02.2023 10:00
+              24.02.2023 09:00
             </span>
           </div>
           – 
           <span>
-            25.02.2023 08:30
+            25.02.2023 07:30
           </span>
         </div>
         <h1

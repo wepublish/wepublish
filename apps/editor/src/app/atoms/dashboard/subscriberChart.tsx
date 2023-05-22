@@ -1,8 +1,8 @@
-import React, {useMemo} from 'react'
-import {useTranslation} from 'react-i18next'
-import {BarChart, Bar, XAxis, YAxis, ResponsiveContainer} from 'recharts'
 import styled from '@emotion/styled'
 import {useNewSubscribersPerMonthQuery} from '@wepublish/editor/api'
+import React, {useMemo} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Bar, BarChart, ResponsiveContainer, XAxis, YAxis} from 'recharts'
 import {Loader} from 'rsuite'
 
 const BarChartErrorText = styled.p`
