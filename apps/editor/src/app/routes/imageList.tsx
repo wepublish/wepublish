@@ -130,7 +130,7 @@ const OverlayContainer = styled.div`
       height: 145px;
       transition: 0.2s ease;
     }
-    & div {
+    ${Overlay} {
       opacity: 0.8;
     }
   }
