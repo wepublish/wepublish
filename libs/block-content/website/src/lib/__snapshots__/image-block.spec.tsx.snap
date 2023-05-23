@@ -1,0 +1,112 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Image Block should render Default 1`] = `
+<DocumentFragment>
+  <figure
+    class="css-umync8"
+  >
+    <img
+      alt="An image description"
+      height="500"
+      src="https://unsplash.it/500/500"
+      title="An image title"
+      width="500"
+    />
+    <figcaption>
+      Image caption
+    </figcaption>
+  </figure>
+</DocumentFragment>
+`;
+
+exports[`Image Block should render WithClassName 1`] = `
+<DocumentFragment>
+  <figure
+    class="extra-classname css-umync8"
+  >
+    <img
+      alt="An image description"
+      height="500"
+      src="https://unsplash.it/500/500"
+      title="An image title"
+      width="500"
+    />
+    <figcaption>
+      Image caption
+    </figcaption>
+  </figure>
+</DocumentFragment>
+`;
+
+exports[`Image Block should render WithEmotion 1`] = `
+<DocumentFragment>
+  <figure
+    class="css-umync8"
+  >
+    <img
+      alt="An image description"
+      height="500"
+      src="https://unsplash.it/500/500"
+      title="An image title"
+      width="500"
+    />
+    <figcaption>
+      Image caption
+    </figcaption>
+  </figure>
+</DocumentFragment>
+`;
+
+exports[`Image Block should render WithoutCaption 1`] = `
+<DocumentFragment>
+  <figure
+    class="css-umync8"
+  >
+    <img
+      alt="An image description"
+      height="500"
+      src="https://unsplash.it/500/500"
+      title="An image title"
+      width="500"
+    />
+  </figure>
+</DocumentFragment>
+`;
+
+exports[`Image Block should render WithoutDescription 1`] = `
+<DocumentFragment>
+  <figure
+    class="css-umync8"
+  >
+    <img
+      alt="An image title"
+      height="500"
+      src="https://unsplash.it/500/500"
+      title="An image title"
+      width="500"
+    />
+    <figcaption>
+      Image caption
+    </figcaption>
+  </figure>
+</DocumentFragment>
+`;
+
+exports[`Image Block should render WithoutTitle 1`] = `
+<DocumentFragment>
+  <figure
+    class="css-umync8"
+  >
+    <img
+      alt="An image description"
+      height="500"
+      src="https://unsplash.it/500/500"
+      title=""
+      width="500"
+    />
+    <figcaption>
+      Image caption
+    </figcaption>
+  </figure>
+</DocumentFragment>
+`;
