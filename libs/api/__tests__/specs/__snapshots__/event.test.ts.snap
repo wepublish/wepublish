@@ -1,21 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Events create can be created 1`] = `
-Object {
-  "data": Object {
-    "createEvent": Object {
-      "description": Array [
-        Object {
-          "children": Array [
-            Object {
+{
+  "data": {
+    "createEvent": {
+      "description": [
+        {
+          "children": [
+            {
               "text": "Event Bio Heading",
             },
           ],
           "type": "heading-one",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "text": "event bio text",
             },
           ],
@@ -40,19 +40,19 @@ Object {
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
 exports[`Events create can be created with bare minimum 1`] = `
-Object {
-  "data": Object {
-    "createEvent": Object {
-      "description": Array [],
+{
+  "data": {
+    "createEvent": {
+      "description": [],
       "endsAt": null,
       "id": Any<String>,
       "image": null,
@@ -60,47 +60,47 @@ Object {
       "name": "Test Event",
       "startsAt": 2020-11-25T20:00:00.000Z,
       "status": "SCHEDULED",
-      "tags": Array [],
+      "tags": [],
     },
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
 exports[`Events create can not be created with endsAt before startsAt 1`] = `
-Object {
-  "data": Object {
+{
+  "data": {
     "createEvent": null,
   },
-  "errors": Array [
+  "errors": [
     [GraphQLError: endsAt can not be earlier than startsAt],
   ],
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
 exports[`Events query private can query a list of events within a timeframe 1`] = `
-Array [
-  Object {
+[
+  {
     "endsAt": null,
     "startsAt": 2050-06-19T00:00:00.000Z,
   },
-  Object {
+  {
     "endsAt": 2050-06-19T00:00:00.000Z,
     "startsAt": 2036-10-10T00:00:00.000Z,
   },
-  Object {
+  {
     "endsAt": 2036-10-10T00:00:00.000Z,
     "startsAt": 2009-05-25T00:00:00.000Z,
   },
@@ -108,16 +108,16 @@ Array [
 `;
 
 exports[`Events query public can query a list of events within a timeframe 1`] = `
-Array [
-  Object {
+[
+  {
     "endsAt": null,
     "startsAt": 2050-06-19T00:00:00.000Z,
   },
-  Object {
+  {
     "endsAt": 2050-06-19T00:00:00.000Z,
     "startsAt": 2036-10-10T00:00:00.000Z,
   },
-  Object {
+  {
     "endsAt": 2036-10-10T00:00:00.000Z,
     "startsAt": 2009-05-25T00:00:00.000Z,
   },
@@ -125,34 +125,34 @@ Array [
 `;
 
 exports[`Events update can not be updated with endsAt before startsAt 1`] = `
-Object {
-  "data": Object {
+{
+  "data": {
     "updateEvent": null,
   },
-  "errors": Array [
+  "errors": [
     [GraphQLError: endsAt can not be earlier than startsAt],
   ],
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
 exports[`Events update can not be updated with endsAt before startsAt 2`] = `
-Object {
-  "data": Object {
+{
+  "data": {
     "updateEvent": null,
   },
-  "errors": Array [
+  "errors": [
     [GraphQLError: endsAt can not be earlier than startsAt],
   ],
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }

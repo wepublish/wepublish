@@ -62,7 +62,7 @@ export function LinkPageBreakEditPanel({value, onClose, onChange}: LinkPageBreak
               onChange={styleOption =>
                 onChange?.({
                   ...value,
-                  styleOption,
+                  styleOption: styleOption ?? undefined,
                   layoutOption:
                     styleOption === STYLE_OPTIONS[2].id ? LAYOUT_OPTIONS[0].id : value.layoutOption
                 })
@@ -82,7 +82,9 @@ export function LinkPageBreakEditPanel({value, onClose, onChange}: LinkPageBreak
                 label: t(`linkPageBreakEditPanel.layout.${layout.id}`)
               }))}
               value={layoutOption}
-              onChange={layoutOption => onChange?.({...value, layoutOption})}
+              onChange={layoutOption =>
+                onChange?.({...value, layoutOption: layoutOption ?? undefined})
+              }
             />
           </Form.Group>
 
@@ -96,7 +98,9 @@ export function LinkPageBreakEditPanel({value, onClose, onChange}: LinkPageBreak
                 label: t(`linkPageBreakEditPanel.template.${template?.id}`)
               }))}
               value={templateOption}
-              onChange={templateOption => onChange?.({...value, templateOption})}
+              onChange={templateOption =>
+                onChange?.({...value, templateOption: templateOption ?? undefined})
+              }
             />
           </Form.Group>
 
