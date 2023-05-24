@@ -1,5 +1,6 @@
 import {css, Global} from '@emotion/react'
 import {ThemeProvider} from '@mui/material'
+import {Article} from '@wepublish/article/website'
 import {
   HtmlBlock,
   ImageBlock,
@@ -48,6 +49,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
 
     <IconContext.Provider value={{}}>
       <WebsiteBuilderProvider
+        Article={Article}
         Navbar={Navbar}
         Footer={Footer}
         elements={{
