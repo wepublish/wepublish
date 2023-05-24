@@ -9,6 +9,7 @@ import {
   TitleBlock
 } from '@wepublish/block-content/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
+import {Page} from '@wepublish/page/website'
 import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
 import {
   Button,
@@ -50,6 +51,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
       <WebsiteBuilderProvider
         Navbar={Navbar}
         Footer={Footer}
+        Page={Page}
         elements={{
           Button,
           H1,
