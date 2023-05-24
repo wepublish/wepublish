@@ -1,5 +1,3 @@
-import {Attachment} from '@rsuite/icons'
-import TagIcon from '@rsuite/icons/Tag'
 import {
   CommentRevision,
   CommentRevisionUpdateInput,
@@ -7,7 +5,7 @@ import {
 } from '@wepublish/editor/api'
 import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdEdit, MdExpandLess, MdExpandMore} from 'react-icons/md'
+import {MdAttachFile, MdEdit, MdExpandLess, MdExpandMore, MdTag} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Col, FlexboxGrid, Form, Grid, IconButton, Panel, Row} from 'rsuite'
 import FlexboxGridItem from 'rsuite/esm/FlexboxGrid/FlexboxGridItem'
@@ -22,7 +20,7 @@ export function CommentRevisionView({revision}: {revision: CommentRevision | und
   if (!revision) {
     return (
       <h6>
-        <Attachment />
+        <MdAttachFile />
         <span style={{marginLeft: '5px'}}>{t('commentPreview.noContent')}</span>
       </h6>
     )
@@ -51,7 +49,7 @@ function CommentTags({comment}: {comment: FullCommentFragment | undefined}) {
       {tags &&
         tags.map(tag => (
           <div key={tag.id}>
-            <TagIcon /> {tag.tag}
+            <MdTag /> {tag.tag}
           </div>
         ))}
       {(!tags || !tags.length) && <p>{t('commentPreview.noTags')}</p>}

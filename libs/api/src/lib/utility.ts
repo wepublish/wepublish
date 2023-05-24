@@ -4,12 +4,11 @@ import {GraphQLFieldResolver, GraphQLIsTypeOfFn, GraphQLObjectType} from 'graphq
 import {delegateToSchema, ExecutionResult, IDelegateToSchemaOptions, Transform} from 'graphql-tools'
 import {Context} from './context'
 import {TeaserStyle} from './db/block'
-import {SettingRestriction} from './db/setting'
+import {SettingRestriction} from '@wepublish/settings/api'
 import {SubscriptionWithRelations} from './db/subscription'
 import {UserWithRelations} from './db/user'
 import {InvalidSettingValueError} from './error'
 
-export const MAX_COMMENT_LENGTH = 1000
 export const MAX_PAYLOAD_SIZE = '1MB'
 
 export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
@@ -212,6 +211,7 @@ export function mapEnumsBack(result: any) {
     result.__typename === 'ArticleTeaser' ||
     result.__typename === 'PeerArticleTeaser' ||
     result.__typename === 'PageTeaser' ||
+    result.__typename === 'EventTeaser' ||
     result.__typename === 'CustomTeaser'
   ) {
     switch (result.style) {

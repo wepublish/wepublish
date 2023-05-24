@@ -10,7 +10,7 @@ import {
 import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../context'
 import {Block, BlockMap, BlockType} from '../db/block'
-import {SettingName} from '../db/setting'
+import {SettingName} from '@wepublish/settings/api'
 import {unselectPassword} from '@wepublish/user/api'
 import {NotFound} from '../error'
 import {SendMailType} from '../mails/mailContext'
@@ -55,7 +55,12 @@ import {
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
 import {createImage, deleteImageById, updateImage} from './image/image.private-mutation'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
-import {createInvoice, deleteInvoiceById, updateInvoice} from './invoice/invoice.private-mutation'
+import {
+  createInvoice,
+  deleteInvoiceById,
+  markInvoiceAsPaid,
+  updateInvoice
+} from './invoice/invoice.private-mutation'
 import {
   createMemberPlan,
   deleteMemberPlanById,
@@ -876,6 +881,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         deleteInvoiceById(id, authenticate, invoice)
     },
 
+    markInvoiceAsPaid: {
+      type: GraphQLInvoice,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {id}, {authenticate, prisma, authenticateUser}) =>
+        markInvoiceAsPaid(id, authenticate, authenticateUser, prisma)
+    },
+
     // Comment
     // ======
     updateComment: {
@@ -1091,6 +1105,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         opensAt: {type: GraphQLDateTime},
         closedAt: {type: GraphQLDateTime},
         question: {type: GraphQLString},
+        infoText: {type: GraphQLRichText},
         answers: {type: GraphQLList(GraphQLNonNull(GraphQLUpdatePollAnswer))},
         externalVoteSources: {
           type: GraphQLList(GraphQLNonNull(GraphQLUpdatePollExternalVoteSources))

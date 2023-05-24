@@ -173,7 +173,7 @@ export type Comment = {
   itemID: Scalars['ID'];
   itemType: CommentItemType;
   lead?: Maybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
+  modifiedAt?: Maybe<Scalars['DateTime']>;
   overriddenRatings: Array<OverriddenRating>;
   parentID?: Maybe<Scalars['ID']>;
   peerId?: Maybe<Scalars['ID']>;
@@ -283,6 +283,7 @@ export type Event = {
   startsAt: Scalars['DateTime'];
   status: EventStatus;
   tags?: Maybe<Array<Tag>>;
+  url: Scalars['String'];
 };
 
 export type EventBlock = {
@@ -305,7 +306,9 @@ export type EventConnection = {
 };
 
 export type EventFilter = {
+  from?: InputMaybe<Scalars['DateTime']>;
   tags?: InputMaybe<Array<Scalars['ID']>>;
+  to?: InputMaybe<Scalars['DateTime']>;
   upcomingOnly?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -362,6 +365,7 @@ export type FullPoll = {
   closedAt?: Maybe<Scalars['DateTime']>;
   externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
   id: Scalars['ID'];
+  infoText?: Maybe<Scalars['RichText']>;
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
 };
@@ -965,6 +969,8 @@ export type Query = {
   memberPlans: MemberPlanConnection;
   /** This query takes either the ID or the key and returns the navigation. */
   navigation?: Maybe<Navigation>;
+  /** This query returns all navigations. */
+  navigations?: Maybe<Array<Navigation>>;
   /** This query takes either the ID, slug or token and returns the page. */
   page?: Maybe<Page>;
   /** This query returns the pages. */
@@ -982,6 +988,8 @@ export type Query = {
   ratingSystem: FullCommentRatingSystem;
   /** This query returns the subscriptions of the authenticated user. */
   subscriptions: Array<Subscription>;
+  /** This query returns a list of tags */
+  tags?: Maybe<TagConnection>;
   /** This query returns the value of a comments answer rating if the user has already rated it. */
   userCommentRatings: Array<Maybe<CommentRating>>;
   /** This query returns the answerId of a poll if the user has already voted on it. */
@@ -1116,6 +1124,16 @@ export type QueryPollArgs = {
 };
 
 
+export type QueryTagsArgs = {
+  cursor?: InputMaybe<Scalars['ID']>;
+  filter?: InputMaybe<TagFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<TagSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type QueryUserCommentRatingsArgs = {
   commentId: Scalars['ID'];
 };
@@ -1213,6 +1231,24 @@ export type Tag = {
   type?: Maybe<TagType>;
 };
 
+export type TagConnection = {
+  __typename?: 'TagConnection';
+  nodes: Array<Tag>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type TagFilter = {
+  tag?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TagType>;
+};
+
+export enum TagSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  Tag = 'TAG'
+}
+
 export enum TagType {
   Comment = 'Comment',
   Event = 'Event'
@@ -1272,6 +1308,7 @@ export type User = {
   address?: Maybe<UserAddress>;
   email: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
+  flair?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
   name: Scalars['String'];
@@ -1303,6 +1340,7 @@ export type UserInput = {
   address?: InputMaybe<UserAddressInput>;
   email: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   preferredName?: InputMaybe<Scalars['String']>;
   uploadImageInput?: InputMaybe<UploadImageInput>;
@@ -1446,7 +1484,7 @@ export type AddCommentMutationVariables = Exact<{
 
 export type AddCommentMutation = { __typename?: 'Mutation', addComment: { __typename?: 'Comment', itemID: string, itemType: CommentItemType, text?: Node[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null } };
 
-export type EventRefFragment = { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null };
+export type EventRefFragment = { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null };
 
 export type EventListQueryVariables = Exact<{
   filter?: InputMaybe<EventFilter>;
@@ -1458,14 +1496,14 @@ export type EventListQueryVariables = Exact<{
 }>;
 
 
-export type EventListQuery = { __typename?: 'Query', events?: { __typename?: 'EventConnection', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
+export type EventListQuery = { __typename?: 'Query', events?: { __typename?: 'EventConnection', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
 
 export type EventQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null } };
+export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null } };
 
 export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
@@ -1774,6 +1812,7 @@ export const EventRef = gql`
   name
   description
   status
+  location
   image {
     ...ImageRef
   }

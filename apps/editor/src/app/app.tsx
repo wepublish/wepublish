@@ -2,6 +2,14 @@ import 'rsuite/styles/index.less'
 
 import {gql, useMutation} from '@apollo/client'
 import {css, Global} from '@emotion/react'
+import {
+  ConsentCreateView,
+  ConsentEditView,
+  ConsentList,
+  UserConsentCreateView,
+  UserConsentEditView,
+  UserConsentList
+} from '@wepublish/consent/editor'
 import {TagType} from '@wepublish/editor/api'
 import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -20,6 +28,7 @@ import {AuthorList} from './routes/authorList'
 import {CommentRatingEditView} from './routes/commentRatingEditView'
 import {CommentEditView} from './routes/comments/commentEditView'
 import {CommentList} from './routes/comments/commentList'
+import {Dashboard} from './routes/dashboard'
 import {EventCreateView} from './routes/events/eventCreateView'
 import {EventEditView} from './routes/events/eventEditView'
 import {EventListView} from './routes/events/eventListView'
@@ -202,15 +211,24 @@ export function App() {
         <BrowserRouter>
           <Routes>
             <Route path="login" element={<Login />} />
-            {/* Articles Routes */}
+            {/* Dashboard Routes */}
+            <Route
+              path="dashboard"
+              element={
+                <Base>
+                  <Dashboard />
+                </Base>
+              }
+            />
             <Route
               path="/"
               element={
                 <Base>
-                  <ArticleList />
+                  <Dashboard />
                 </Base>
               }
             />
+            {/* Articles Routes */}
             <Route
               path="articles"
               element={
@@ -530,6 +548,56 @@ export function App() {
               element={
                 <Base>
                   <PaymentMethodList />
+                </Base>
+              }
+            />
+            {/* Consents Routes */}
+            <Route
+              path="consents"
+              element={
+                <Base>
+                  <ConsentList />
+                </Base>
+              }
+            />
+            <Route
+              path="consents/create"
+              element={
+                <Base>
+                  <ConsentCreateView />
+                </Base>
+              }
+            />
+            <Route
+              path="consents/edit/:id"
+              element={
+                <Base>
+                  <ConsentEditView />
+                </Base>
+              }
+            />
+            {/* Consents Routes */}
+            <Route
+              path="userConsents"
+              element={
+                <Base>
+                  <UserConsentList />
+                </Base>
+              }
+            />
+            <Route
+              path="userConsents/create"
+              element={
+                <Base>
+                  <UserConsentCreateView />
+                </Base>
+              }
+            />
+            <Route
+              path="userConsents/edit/:id"
+              element={
+                <Base>
+                  <UserConsentEditView />
                 </Base>
               }
             />

@@ -6,7 +6,7 @@ import {
   PollClosedError,
   PollNotOpenError
 } from '../../error'
-import {SettingName} from '../../db/setting'
+import {SettingName} from '@wepublish/settings/api'
 
 export const voteOnPoll = async (
   answerId: string,

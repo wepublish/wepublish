@@ -1,5 +1,107 @@
 # Change Log
 
+## 9.2.0 (2023-03-30)
+
+#### :heart: New Feature
+* [#866](https://github.com/wepublish/wepublish/pull/866) f/WPC-953-public-endpoint-switch ([@Itrulia](https://github.com/Itrulia))
+* [#819](https://github.com/wepublish/wepublish/pull/819) dashboard ([@penk85](https://github.com/penk85))
+* [#859](https://github.com/wepublish/wepublish/pull/859) feat(website): builder init ([@Itrulia](https://github.com/Itrulia))
+
+#### :bug: Bug Fix
+* [#875](https://github.com/wepublish/wepublish/pull/875) fix(editor): user filter being wrong after graphql changes ([@Itrulia](https://github.com/Itrulia))
+* [#873](https://github.com/wepublish/wepublish/pull/873) fix(api): add onDelete cascade for authors and revisions ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 2
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+
+
+## 9.1.0 (2023-03-16)
+
+#### :bug: Bug Fix
+* [#875](https://github.com/wepublish/wepublish/pull/875) fix(editor): user filter being wrong after graphql changes ([@Itrulia](https://github.com/Itrulia))
+* [#873](https://github.com/wepublish/wepublish/pull/873) fix(api): add onDelete cascade for authors and revisions ([@Itrulia](https://github.com/Itrulia))
+* [#868](https://github.com/wepublish/wepublish/pull/868) bugfix for tables disappearing in richtext block ([@penk85](https://github.com/penk85))
+* [#862](https://github.com/wepublish/wepublish/pull/862) Translation fix on event toast ([@penk85](https://github.com/penk85))
+* [#828](https://github.com/wepublish/wepublish/pull/828) B/wep 942 peering timeouts on production ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#833](https://github.com/wepublish/wepublish/pull/833) Fix pages and articles views ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### :memo: Documentation
+* [#841](https://github.com/wepublish/wepublish/pull/841) docs(*): Add deployment docs ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### :house: Internal
+* [#870](https://github.com/wepublish/wepublish/pull/870) fix: master broken from 9.0.0 merge ([@Itrulia](https://github.com/Itrulia))
+* [#842](https://github.com/wepublish/wepublish/pull/842) chore: Do not publish demo docker images ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#837](https://github.com/wepublish/wepublish/pull/837) add onDelete relation to session ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#838](https://github.com/wepublish/wepublish/pull/838) Rework update helm chart (prepare for nx, consolidate and simplify) ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#827](https://github.com/wepublish/wepublish/pull/827) chore: add no unused imports eslint rule ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 6
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Lukas Diener ([@LukasSkywalker](https://github.com/LukasSkywalker))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+
+
+## v9.0.0
+
+#### :boom: Breaking Change
+* Other
+  * [#810](https://github.com/wepublish/wepublish/pull/810) Implement nestjs mvp ([@tomaszdurka](https://github.com/tomaszdurka))
+  * [#796](https://github.com/wepublish/wepublish/pull/796) feat(example-website): migrated to nx ([@Itrulia](https://github.com/Itrulia))
+* `api`
+  * [#795](https://github.com/wepublish/wepublish/pull/795) feat(api/api-example): migrated to nx ([@Itrulia](https://github.com/Itrulia))
+* `api`, `editor`
+  * [#789](https://github.com/wepublish/wepublish/pull/789) feat(editor): migrated to nx ([@Itrulia](https://github.com/Itrulia))
+  * [#782](https://github.com/wepublish/wepublish/pull/782) chore: integrate nx into monorepo ([@Itrulia](https://github.com/Itrulia))
+
+#### :heart: New Feature
+* Other
+  * [#801](https://github.com/wepublish/wepublish/pull/801) feat(api): new phrase API to do full text search on articles and pages ([@Itrulia](https://github.com/Itrulia))
+  * [#805](https://github.com/wepublish/wepublish/pull/805) feat(editor/api): kulturagenda ([@Itrulia](https://github.com/Itrulia))
+* `api`, `editor`
+  * [#700](https://github.com/wepublish/wepublish/pull/700) F/wpc 880 add comment context ([@michael-scheurer](https://github.com/michael-scheurer))
+* `editor`
+  * [#787](https://github.com/wepublish/wepublish/pull/787) feat(editor): autofocus email input on login page ([@treflxyz](https://github.com/treflxyz))
+
+#### :bug: Bug Fix
+* Other
+  * [#804](https://github.com/wepublish/wepublish/pull/804) B/WPC-981-CancelationBugFixPayrexxSubscription ([@elias-summermatter](https://github.com/elias-summermatter))
+  * [#821](https://github.com/wepublish/wepublish/pull/821) fix(editor): membership create ([@Itrulia](https://github.com/Itrulia))
+  * [#809](https://github.com/wepublish/wepublish/pull/809) fix(api): make author name filter case insensitive ([@Itrulia](https://github.com/Itrulia))
+* `api`, `editor`
+  * [#770](https://github.com/wepublish/wepublish/pull/770) fix(api): slugs and titles of pages to be nullable ([@Itrulia](https://github.com/Itrulia))
+
+#### :house: Internal
+* Other
+  * [#820](https://github.com/wepublish/wepublish/pull/820) refactor(editor): split off api definitions into seperate libraries ([@Itrulia](https://github.com/Itrulia))
+  * [#810](https://github.com/wepublish/wepublish/pull/810) Implement nestjs mvp ([@tomaszdurka](https://github.com/tomaszdurka))
+  * [#807](https://github.com/wepublish/wepublish/pull/807) chore(deps): bump decode-uri-component from 0.2.0 to 0.2.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#802](https://github.com/wepublish/wepublish/pull/802) chore: replace yarn with npm ([@Itrulia](https://github.com/Itrulia))
+  * [#796](https://github.com/wepublish/wepublish/pull/796) feat(example-website): migrated to nx ([@Itrulia](https://github.com/Itrulia))
+  * [#781](https://github.com/wepublish/wepublish/pull/781) chore: removing things leftover from package removals ([@Itrulia](https://github.com/Itrulia))
+  * [#780](https://github.com/wepublish/wepublish/pull/780) chore(deps): bump decode-uri-component from 0.2.0 to 0.2.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#785](https://github.com/wepublish/wepublish/pull/785) chore(deps): bump express from 4.17.1 to 4.17.3 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#783](https://github.com/wepublish/wepublish/pull/783) chore(deps): bump qs from 6.9.3 to 6.9.7 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* `api`
+  * [#795](https://github.com/wepublish/wepublish/pull/795)     feat(api/api-example): migrated to nx ([@Itrulia](https://github.com/Itrulia))
+* `api`, `editor`
+  * [#789](https://github.com/wepublish/wepublish/pull/789) feat(editor): migrated to nx ([@Itrulia](https://github.com/Itrulia))
+  * [#782](https://github.com/wepublish/wepublish/pull/782) chore: integrate nx into monorepo ([@Itrulia](https://github.com/Itrulia))
+* `api`, `oauth2`
+  * [#728](https://github.com/wepublish/wepublish/pull/728) Remove Oauth2 service, example, package ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### Committers: 6
+- Damian Janus ([@treflxyz](https://github.com/treflxyz))
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
 ## v8.1.1 (2022-12-07)
 
 #### :bug: Bug Fix

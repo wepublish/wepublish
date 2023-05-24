@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, {useEffect, useRef} from 'react'
+import {useEffect, useRef} from 'react'
 import {OverlayTriggerInstance} from 'rsuite/esm/Picker'
 import {useSlate} from 'slate-react'
 

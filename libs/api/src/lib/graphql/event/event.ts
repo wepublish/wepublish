@@ -10,15 +10,15 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
+import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../../context'
 import {ConnectionResult} from '../../db/common'
 import {createProxyingResolver} from '../../utility'
 import {GraphQLPageInfo} from '../common'
 import {GraphQLImage} from '../image'
-import {GraphQLTag} from '../tag/tag'
-import {EventSort} from './event.queries'
 import {GraphQLRichText} from '../richText'
-import {GraphQLDateTime} from 'graphql-scalars'
+import {GraphQLTag} from '../tag/tag'
+import {EventSort} from './event.query'
 
 export const GraphQLEventStatus = new GraphQLEnumType({
   name: 'EventStatus',
@@ -64,6 +64,12 @@ export const GraphQLEvent = new GraphQLObjectType<Event, Context>({
       resolve: createProxyingResolver(({imageId}, args, {loaders}, info) => {
         return imageId ? loaders.images.load(imageId) : null
       })
+    },
+    url: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: createProxyingResolver((event, args, {urlAdapter}, info) => {
+        return urlAdapter.getEventURL(event)
+      })
     }
   }
 })
@@ -81,6 +87,8 @@ export const GraphQLEventFilter = new GraphQLInputObjectType({
   name: 'EventFilter',
   fields: {
     upcomingOnly: {type: GraphQLBoolean},
+    from: {type: GraphQLDateTime},
+    to: {type: GraphQLDateTime},
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
   }
 })

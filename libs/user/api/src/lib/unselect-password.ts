@@ -11,6 +11,7 @@ export const unselectPassword: Record<
     | 'CommentRating'
     | 'PollVote'
     | 'userImage'
+    | 'UserConsent'
   >,
   boolean
 > = {
@@ -26,6 +27,7 @@ export const unselectPassword: Record<
   name: true,
   firstName: true,
   preferredName: true,
+  flair: true,
   userImageID: true,
   password: false,
   active: true,

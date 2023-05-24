@@ -21,7 +21,7 @@ const onErrorToast = (error: ApolloError) => {
 const onCompletedToast = (t: TFunction) => () => {
   toaster.push(
     <Message type="success" showIcon closable duration={3000}>
-      {t('event.delete.deleted')}
+      {t('toast.deletedSuccess')}
     </Message>
   )
 }

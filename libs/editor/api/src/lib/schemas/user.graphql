@@ -16,6 +16,7 @@ fragment FullUser on User {
     city
     country
   }
+  flair
   userImage {
     ...ImageRef
   }
@@ -71,21 +72,14 @@ fragment UserSubscription on UserSubscription {
 }
 
 query UserList(
-  $filter: String
+  $filter: UserFilter
   $cursor: ID
   $take: Int
   $skip: Int
   $order: SortOrder
   $sort: UserSort
 ) {
-  users(
-    filter: {text: $filter}
-    cursor: $cursor
-    take: $take
-    skip: $skip
-    order: $order
-    sort: $sort
-  ) {
+  users(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullUser
     }

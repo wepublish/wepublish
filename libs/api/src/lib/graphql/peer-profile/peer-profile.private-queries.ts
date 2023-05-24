@@ -2,7 +2,7 @@ import {PrismaClient} from '@prisma/client'
 import {GraphQLResolveInfo} from 'graphql'
 import {delegateToSchema, introspectSchema, makeRemoteExecutableSchema} from 'graphql-tools'
 import {Context, createFetcher} from '../../context'
-import {SettingName} from '../../db/setting'
+import {SettingName} from '@wepublish/settings/api'
 import {PeerTokenInvalidError} from '../../error'
 import {markResultAsProxied} from '../../utility'
 import {authorise} from '../permissions'
@@ -30,7 +30,7 @@ export const getRemotePeerProfile = async (
 ) => {
   const {roles} = authenticate()
   authorise(CanCreatePeer, roles)
-  const link = new URL('/admin', hostURL)
+  const link = new URL('v1/admin', hostURL)
 
   const peerTimeoutSetting = await setting.findUnique({
     where: {

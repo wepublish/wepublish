@@ -5,6 +5,7 @@ import {APP_GUARD} from '@nestjs/core'
 import {OptionalAuthenticationGuard} from './optional-authentication.guard'
 import {AuthenticationService} from './authentication.service'
 import {PrismaModule} from '@wepublish/nest-modules'
+import {OneOfGuard} from './one-of.guard'
 
 @Module({
   imports: [
@@ -19,6 +20,10 @@ import {PrismaModule} from '@wepublish/nest-modules'
     {
       provide: APP_GUARD,
       useClass: OptionalAuthenticationGuard
+    },
+    {
+      provide: APP_GUARD,
+      useClass: OneOfGuard
     }
   ],
   exports: [AuthenticationService]

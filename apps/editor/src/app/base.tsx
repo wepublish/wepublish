@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
-import React, {ReactNode, useEffect, useState} from 'react'
+import {de, enUS, fr} from 'date-fns/locale'
+import {forwardRef, ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
   MdAccountCircle,
@@ -7,7 +8,9 @@ import {
   MdBadge,
   MdBookOnline,
   MdChat,
+  MdFactCheck,
   MdChevronLeft,
+  MdApproval,
   MdChevronRight,
   MdCreditCard,
   MdDashboard,
@@ -21,6 +24,7 @@ import {
   MdOutlineGridView,
   MdPersonAddAlt1,
   MdPhoto,
+  MdPieChartOutline,
   MdQueryStats,
   MdSell,
   MdSettings,
@@ -46,16 +50,16 @@ export interface BaseProps {
   children?: ReactNode
 }
 
-const NavLink = React.forwardRef<HTMLAnchorElement, any>(({href, children, ...rest}, ref) => (
+const NavLink = forwardRef<HTMLAnchorElement, any>(({href, children, ...rest}, ref) => (
   <Link ref={ref} to={href} {...rest}>
     {children}
   </Link>
 ))
 
-const AVAILABLE_LANG = [
-  {id: 'en', lang: 'en_US', name: 'English'},
-  {id: 'fr', lang: 'fr_FR', name: 'Français'},
-  {id: 'de', lang: 'de_CH', name: 'Deutsch'}
+export const AVAILABLE_LANG = [
+  {id: 'en', lang: 'en_US', name: 'English', locale: enUS},
+  {id: 'fr', lang: 'fr_FR', name: 'Français', locale: fr},
+  {id: 'de', lang: 'de_CH', name: 'Deutsch', locale: de}
 ]
 
 function useStickyState(defaultValue: string, key: string) {
@@ -84,6 +88,7 @@ const Sidebar = styled(RSidebar)`
 
 const Sidenav = styled(RSidenav)`
   flex: 1 1 auto;
+  overflow-y: auto;
 `
 
 const IconButton = styled(RIconButton)`
@@ -119,7 +124,7 @@ const Navigation = styled(Nav)`
 
 const ChildrenContainer = styled(Container)`
   padding: 60px 40px 40px 40px;
-  overflow-y: scroll;
+  overflow-y: auto;
 `
 
 export function Base({children}: BaseProps) {
@@ -152,6 +157,14 @@ export function Base({children}: BaseProps) {
               />
 
               <Navigation>
+                <Nav.Item
+                  as={NavLink}
+                  href="/dashboard"
+                  icon={<MdPieChartOutline />}
+                  active={path === 'dashboard' || path === ''}>
+                  {t('navbar.dashboard')}
+                </Nav.Item>
+
                 <PermissionControl
                   qualifyingPermissions={[
                     'CAN_GET_ARTICLES',
@@ -440,6 +453,28 @@ export function Base({children}: BaseProps) {
                         active={path === 'paymentmethods'}
                         icon={<MdCreditCard />}>
                         {t('navbar.paymentMethods')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_CREATE_CONSENT',
+                        'CAN_UPDATE_CONSENT',
+                        'CAN_DELETE_CONSENT'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/consents"
+                        active={path === 'consents'}
+                        icon={<MdApproval />}>
+                        {t('navbar.consents')}
+                      </Nav.Item>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/userConsents"
+                        active={path === 'userConsents'}
+                        icon={<MdFactCheck />}>
+                        {t('navbar.userConsents')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>

@@ -335,7 +335,12 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
 
       rejectionReason: {type: GraphQLString},
       createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-      modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+      modifiedAt: {
+        type: GraphQLDateTime,
+        resolve: createProxyingResolver(({revisions}) => {
+          return revisions?.length ? revisions[revisions?.length - 1].createdAt : undefined
+        })
+      },
       calculatedRatings: {
         type: GraphQLList(GraphQLCalculatedRating)
       },

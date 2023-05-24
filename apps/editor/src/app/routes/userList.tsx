@@ -1,18 +1,28 @@
 import {
   FullUserFragment,
   useDeleteUserMutation,
+  UserFilter,
+  UserRole,
   UserSort,
   useUserListQuery
 } from '@wepublish/editor/api'
+import {
+  IconButton,
+  ListFilters,
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  PaddedCell,
+  Table,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete, MdPassword, MdSearch} from 'react-icons/md'
+import {MdAdd, MdDelete, MdPassword} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {
   Button,
   IconButton as RIconButton,
-  Input,
-  InputGroup,
   Message,
   Modal,
   Pagination,
@@ -25,16 +35,6 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {ResetUserPasswordForm} from '../atoms/user/resetUserPasswordForm'
-import {
-  IconButton,
-  ListViewActions,
-  ListViewContainer,
-  ListViewFilterArea,
-  ListViewHeader,
-  PaddedCell,
-  Table,
-  TableWrapper
-} from '../ui/listView'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
@@ -59,7 +59,7 @@ function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
 }
 
 function UserList() {
-  const [filter, setFilter] = useState('')
+  const [filter, setFilter] = useState<UserFilter>({})
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
@@ -74,7 +74,8 @@ function UserList() {
   const {
     data,
     refetch,
-    loading: isLoading
+    loading: isLoading,
+    error: userListQueryError
   } = useUserListQuery({
     variables: {
       filter: filter || undefined,
@@ -86,6 +87,11 @@ function UserList() {
     fetchPolicy: 'network-only'
   })
 
+  const updateFilter = (filter: UserFilter) => {
+    setFilter(filter)
+    refetch()
+  }
+
   useEffect(() => {
     refetch({
       filter: filter || undefined,
@@ -94,7 +100,7 @@ function UserList() {
       sort: mapColumFieldToGraphQLField(sortField),
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
     })
-  }, [filter, page, limit, sortOrder, sortField])
+  }, [filter, page, limit, sortOrder, sortField, refetch])
 
   const [deleteUser, {loading: isDeleting}] = useDeleteUserMutation()
 
@@ -108,6 +114,10 @@ function UserList() {
       }
     }
   }, [data?.users])
+
+  if (userListQueryError) {
+    return <div>{userListQueryError.message}</div>
+  }
 
   /**
    * UI helpers
@@ -142,14 +152,12 @@ function UserList() {
             </Link>
           </ListViewActions>
         </PermissionControl>
-        <ListViewFilterArea>
-          <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
-            <InputGroup.Addon>
-              <MdSearch />
-            </InputGroup.Addon>
-          </InputGroup>
-        </ListViewFilterArea>
+        <ListFilters
+          fields={['userRole', 'text']}
+          filter={filter}
+          isLoading={isLoading}
+          onSetFilter={filter => updateFilter(filter)}
+        />
       </ListViewContainer>
 
       <TableWrapper>
@@ -197,12 +205,20 @@ function UserList() {
               )}
             </RCell>
           </Column>
-          <Column width={400} align="left" resizable>
-            <HeaderCell>{t('email')}</HeaderCell>
+          <Column width={200} align="left" resizable>
+            <HeaderCell>{t('userCreateOrEditView.email')}</HeaderCell>
             <RCell dataKey="email" />
           </Column>
+          <Column width={200} align="left" resizable>
+            <HeaderCell>{t('userCreateOrEditView.userRoles')}</HeaderCell>
+            <RCell dataKey="roles">
+              {(rowData: RowDataType<FullUserFragment>) =>
+                rowData.roles?.map((r: UserRole) => r.name).join(', ')
+              }
+            </RCell>
+          </Column>
           {/* subscription */}
-          <Column width={400} align="left" resizable>
+          <Column width={200} align="left" resizable>
             <HeaderCell>{t('userList.overview.subscriptions')}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<FullUserFragment>) => (
@@ -211,7 +227,7 @@ function UserList() {
             </RCell>
           </Column>
           <Column width={100} align="center" fixed="right">
-            <HeaderCell>{t('action')}</HeaderCell>
+            <HeaderCell>{t('userList.overview.action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<FullUserFragment>) => (
                 <>

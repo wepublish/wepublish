@@ -1,13 +1,13 @@
 import {KarmaMediaAdapter, MediaServerError} from '../../src'
 import {URL} from 'url'
 import * as fs from 'fs'
-import {ArrayBufferUpload} from '../../src/lib/media/mediaAdapter'
 import {
-  ImageWithFocalPoint,
-  ImageOutput,
+  ArrayBufferUpload,
   ImageRotation,
+  ImageOutput,
   ImageTransformation
-} from '../../src/lib/db/image'
+} from '@wepublish/image/api'
+import {ImageWithFocalPoint} from '../../src/lib/db/image'
 import type {FileUpload} from 'graphql-upload'
 import fetch from 'node-fetch'
 import {resolve} from 'path'

@@ -6,6 +6,13 @@ import {
   FullCommentFragment,
   useCommentListQuery
 } from '@wepublish/editor/api'
+import {
+  ListViewContainer,
+  ListViewFilterArea,
+  ListViewHeader,
+  Table,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
@@ -18,13 +25,6 @@ import {CreateCommentBtn} from '../../atoms/comment/createCommentBtn'
 import {IconButtonTooltip} from '../../atoms/iconButtonTooltip'
 import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
 import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
-import {
-  ListViewContainer,
-  ListViewFilterArea,
-  ListViewHeader,
-  Table,
-  TableWrapper
-} from '../../ui/listView'
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,

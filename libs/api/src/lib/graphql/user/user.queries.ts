@@ -33,17 +33,175 @@ export const createUserOrder = (
   }
 }
 
+const createUserRoleFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
+  if (filter?.userRole) {
+    return {
+      roleIDs: {
+        hasSome: filter.userRole
+      }
+    }
+  }
+
+  return {}
+}
+
 const createNameFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
   if (filter?.name) {
     return {
       name: {
-        contains: filter.text,
+        contains: filter.name,
         mode: 'insensitive'
       }
     }
   }
 
   return {}
+}
+const createUserNameFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
+  const splitedString = filter.text.split(' ')
+
+  if (splitedString.length === 1) {
+    return {
+      OR: [
+        {
+          firstName: {
+            contains: splitedString[0],
+            mode: 'insensitive'
+          }
+        },
+        {
+          name: {
+            contains: splitedString[0],
+            mode: 'insensitive'
+          }
+        }
+      ]
+    }
+  } else if (splitedString.length === 2) {
+    return {
+      // Double word first / last names
+      OR: [
+        {
+          firstName: {
+            contains: `${splitedString[0]} ${splitedString[1]}`,
+            mode: 'insensitive'
+          }
+        },
+        {
+          name: {
+            contains: `${splitedString[0]} ${splitedString[1]}`,
+            mode: 'insensitive'
+          }
+        },
+        // Single word first and lastname
+        {
+          AND: [
+            {
+              firstName: {
+                contains: splitedString[0],
+                mode: 'insensitive'
+              }
+            },
+            {
+              name: {
+                contains: splitedString[1],
+                mode: 'insensitive'
+              }
+            }
+          ]
+        },
+        {
+          AND: [
+            {
+              firstName: {
+                contains: splitedString[1],
+                mode: 'insensitive'
+              }
+            },
+            {
+              name: {
+                contains: splitedString[0],
+                mode: 'insensitive'
+              }
+            }
+          ]
+        }
+      ]
+    }
+  } else {
+    return {
+      OR: [
+        {
+          // Filter start with double firstname and ends with single or multi-word lastname
+          AND: [
+            {
+              firstName: {
+                contains: `${splitedString[0]} ${splitedString[1]}`,
+                mode: 'insensitive'
+              }
+            },
+            {
+              name: {
+                contains: splitedString.slice(2).join(' '),
+                mode: 'insensitive'
+              }
+            }
+          ]
+        },
+        {
+          // Filter start with single firstname and ends with multi-word lastname
+          AND: [
+            {
+              firstName: {
+                contains: `${splitedString[0]}`,
+                mode: 'insensitive'
+              }
+            },
+            {
+              name: {
+                contains: splitedString.slice(1).join(' '),
+                mode: 'insensitive'
+              }
+            }
+          ]
+        },
+        // Filter start with double lastname and ends with single or multi-word firstname
+        {
+          AND: [
+            {
+              name: {
+                contains: `${splitedString[0]} ${splitedString[1]}`,
+                mode: 'insensitive'
+              }
+            },
+            {
+              firstName: {
+                contains: splitedString.slice(2).join(' '),
+                mode: 'insensitive'
+              }
+            }
+          ]
+        },
+        // Filter start with single lastname and ends with multi-word firstname
+        {
+          AND: [
+            {
+              name: {
+                contains: `${splitedString[0]}`,
+                mode: 'insensitive'
+              }
+            },
+            {
+              firstName: {
+                contains: splitedString.slice(2).join(' '),
+                mode: 'insensitive'
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
 }
 
 const createTextFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
@@ -52,18 +210,6 @@ const createTextFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput =>
       OR: [
         {
           preferredName: {
-            contains: filter.text,
-            mode: 'insensitive'
-          }
-        },
-        {
-          firstName: {
-            contains: filter.text,
-            mode: 'insensitive'
-          }
-        },
-        {
-          name: {
             contains: filter.text,
             mode: 'insensitive'
           }
@@ -97,7 +243,8 @@ const createTextFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput =>
               }
             ]
           }
-        }
+        },
+        createUserNameFilter(filter)
       ]
     }
   }
@@ -105,9 +252,11 @@ const createTextFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput =>
   return {}
 }
 
-export const createUserFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => ({
-  AND: [createNameFilter(filter), createTextFilter(filter)]
-})
+export const createUserFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
+  return {
+    AND: [createNameFilter(filter), createTextFilter(filter), createUserRoleFilter(filter)]
+  }
+}
 
 export const getUsers = async (
   filter: Partial<UserFilter>,
