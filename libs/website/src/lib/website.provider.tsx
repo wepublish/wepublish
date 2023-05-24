@@ -8,6 +8,7 @@ import {
   TeaserGridFlexBlock,
   TitleBlock
 } from '@wepublish/block-content/website'
+import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
 import {
@@ -50,6 +51,10 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
       <WebsiteBuilderProvider
         Navbar={Navbar}
         Footer={Footer}
+        Event={Event}
+        EventSEO={EventSEO}
+        EventList={EventList}
+        EventListItem={EventListItem}
         elements={{
           Button,
           H1,
