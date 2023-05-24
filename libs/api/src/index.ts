@@ -12,9 +12,6 @@ export * from './lib/graphql/token'
 export * from './lib/graphql/richText'
 export * from './lib/graphql/slug'
 
-// export * from './lib/graphql/mutation.private'
-// export * from './lib/graphql/query.private'
-
 export * from './lib/graphql/schema'
 export * from './lib/graphql/permissions'
 
@@ -35,7 +32,6 @@ export * from './lib/db/payment'
 export * from './lib/db/mailLog'
 export * from './lib/db/subscription'
 
-export * from './lib/media/mediaAdapter'
 export * from './lib/media/karmaMediaAdapter'
 export * from './lib/urlAdapter'
 
@@ -63,3 +59,5 @@ export * from '@wepublish/settings/api'
 export * from '@wepublish/membership/api'
 export * from '@wepublish/authentication/api'
 export * from '@wepublish/permissions/api'
+export * from '@wepublish/consent/api'
+export * from '@wepublish/image/api'

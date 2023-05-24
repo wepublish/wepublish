@@ -1,8 +1,10 @@
 import {PrismaClient} from '@prisma/client'
 import {
   AlgebraicCaptchaChallenge,
-  KarmaMediaAdapter,
+  JobType,
+  MailchimpMailProvider,
   MailgunMailProvider,
+  MediaAdapter,
   Oauth2Provider,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
@@ -17,12 +19,12 @@ import pinoMultiStream from 'pino-multi-stream'
 import {createWriteStream} from 'pino-sentry'
 import pinoStackdriver from 'pino-stackdriver'
 import * as process from 'process'
-import {URL} from 'url'
 import {SlackMailProvider} from './slack-mail-provider'
 import {ExampleURLAdapter} from './url-adapter'
 import {Application} from 'express'
+import {CronJob} from 'cron'
 
-export async function runServer(app?: Application | undefined) {
+export async function runServer(app: Application, mediaAdapter: MediaAdapter) {
   if (!process.env.DATABASE_URL) throw new Error('No DATABASE_URL defined in environment.')
   if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
 
@@ -39,14 +41,6 @@ export async function runServer(app?: Application | undefined) {
   if (!process.env.MEDIA_SERVER_TOKEN) {
     throw new Error('No MEDIA_SERVER_TOKEN defined in environment.')
   }
-
-  const mediaAdapter = new KarmaMediaAdapter(
-    new URL(process.env.MEDIA_SERVER_URL),
-    process.env.MEDIA_SERVER_TOKEN,
-    process.env.MEDIA_SERVER_INTERNAL_URL
-      ? new URL(process.env.MEDIA_SERVER_INTERNAL_URL)
-      : undefined
-  )
 
   const prisma = new PrismaClient()
   await prisma.$connect()
@@ -72,13 +66,13 @@ export async function runServer(app?: Application | undefined) {
   if (
     process.env.MAILGUN_API_KEY &&
     process.env.MAILGUN_BASE_DOMAIN &&
-    process.env.MAILGUN_MAIL_DOMAIN &&
-    process.env.MAILGUN_WEBHOOK_SECRET
+    process.env.MAILGUN_MAIL_DOMAIN
   ) {
     mailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
-      fromAddress: 'dev@wepublish.ch',
+      fromAddress:
+        process.env.MAILGUN_FROM_ADDRESS || process.env.DEFAULT_FROM_ADDRESS || 'dev@wepublish.ch',
       webhookEndpointSecret: process.env.MAILGUN_WEBHOOK_SECRET,
       baseDomain: process.env.MAILGUN_BASE_DOMAIN,
       mailDomain: process.env.MAILGUN_MAIL_DOMAIN,
@@ -86,18 +80,21 @@ export async function runServer(app?: Application | undefined) {
       incomingRequestHandler: bodyParser.json()
     })
   }
-  // left here intentionally for testing
-  /* if (process.env.MAILCHIMP_API_KEY && process.env.MAILCHIMP_WEBHOOK_SECRET) {
+
+  if (process.env.MAILCHIMP_API_KEY) {
     mailProvider = new MailchimpMailProvider({
       id: 'mailchimp',
       name: 'Mailchimp',
-      fromAddress: 'dev@wepublish.ch',
+      fromAddress:
+        process.env.MAILCHIMP_FROM_ADDRESS ||
+        process.env.DEFAULT_FROM_ADDRESS ||
+        'dev@wepublish.ch',
       webhookEndpointSecret: process.env.MAILCHIMP_WEBHOOK_SECRET,
       apiKey: process.env.MAILCHIMP_API_KEY,
       baseURL: '',
       incomingRequestHandler: bodyParser.urlencoded({extended: true})
     })
-  } */
+  }
 
   if (process.env.SLACK_DEV_MAIL_WEBHOOK_URL) {
     mailProvider = new SlackMailProvider({
@@ -138,8 +135,11 @@ export async function runServer(app?: Application | undefined) {
   if (
     process.env.PAYREXX_INSTANCE_NAME &&
     process.env.PAYREXX_API_SECRET &&
-    process.env.PAYREXX_WEBHOOK_SECRET
+    process.env.PAYREXX_WEBHOOK_SECRET &&
+    process.env.PAYREXX_PAYMENT_METHODS
   ) {
+    const paymentMethods = process.env.PAYREXX_PAYMENT_METHODS.split(',').map(pm => pm.trim())
+
     paymentProviders.push(
       new PayrexxPaymentProvider({
         id: 'payrexx',
@@ -148,15 +148,7 @@ export async function runServer(app?: Application | undefined) {
         instanceName: process.env.PAYREXX_INSTANCE_NAME,
         instanceAPISecret: process.env.PAYREXX_API_SECRET,
         psp: [0, 15, 17, 2, 3, 36],
-        pm: [
-          'postfinance_card',
-          'postfinance_efinance',
-          // "mastercard",
-          // "visa",
-          'twint',
-          // "invoice",
-          'paypal'
-        ],
+        pm: paymentMethods,
         vatRate: 7.7,
         incomingRequestHandler: bodyParser.json()
       })
@@ -165,7 +157,7 @@ export async function runServer(app?: Application | undefined) {
       new PayrexxSubscriptionPaymentProvider({
         id: 'payrexx-subscription',
         name: 'Payrexx Subscription',
-        offSessionPayments: false,
+        offSessionPayments: true,
         instanceName: process.env.PAYREXX_INSTANCE_NAME,
         instanceAPISecret: process.env.PAYREXX_API_SECRET,
         incomingRequestHandler: bodyParser.json(),
@@ -225,8 +217,8 @@ export async function runServer(app?: Application | undefined) {
       oauth2Providers,
       mailProvider,
       mailContextOptions: {
-        defaultFromAddress: process.env.DEFAULT_FROM_ADDRESS ?? 'dev@wepublish.ch',
-        defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch',
+        defaultFromAddress: process.env.DEFAULT_FROM_ADDRESS || 'dev@wepublish.ch',
+        defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS || 'reply-to@wepublish.ch',
         mailTemplateMaps: [
           {
             type: SendMailType.LoginLink,
@@ -275,10 +267,7 @@ export async function runServer(app?: Application | undefined) {
             local: true
           }
         ],
-        mailTemplatesPath:
-          process.env.NODE_ENV === 'production'
-            ? path.resolve('apps', 'api-example', 'templates', 'emails')
-            : path.resolve('templates', 'emails')
+        mailTemplatesPath: path.resolve('apps', 'api-example', 'templates', 'emails')
       },
       paymentProviders,
       urlAdapter: new ExampleURLAdapter({websiteURL}),
@@ -289,6 +278,23 @@ export async function runServer(app?: Application | undefined) {
     },
     app
   )
+
+  const checkInvoiceCron = new CronJob('0 8 * * *', async function () {
+    await server.runJob(JobType.DailyInvoiceChecker, {})
+  })
+  checkInvoiceCron.start()
+
+  const chargeInvoiceCron = new CronJob('0 8 * * *', async function () {
+    await server.runJob(JobType.DailyInvoiceCharger, {})
+  })
+  chargeInvoiceCron.start()
+
+  const renewMemberships = new CronJob('0 8 * * *', async function () {
+    await server.runJob(JobType.DailyMembershipRenewal, {
+      startDate: new Date()
+    })
+  })
+  renewMemberships.start()
 
   await server.listen(port, address)
 }

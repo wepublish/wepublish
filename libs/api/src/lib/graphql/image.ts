@@ -14,7 +14,8 @@ import {GraphQLDateTime} from 'graphql-scalars'
 import {GraphQLUpload} from 'graphql-upload'
 
 import {Context} from '../context'
-import {ImageRotation, ImageOutput, ImageSort, ImageWithTransformURL} from '../db/image'
+import {ImageSort, ImageWithTransformURL} from '../db/image'
+import {ImageRotation, ImageOutput} from '@wepublish/image/api'
 import {GraphQLPageInfo} from './common'
 import {createProxyingResolver} from '../utility'
 

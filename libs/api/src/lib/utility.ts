@@ -9,7 +9,6 @@ import {SubscriptionWithRelations} from './db/subscription'
 import {UserWithRelations} from './db/user'
 import {InvalidSettingValueError} from './error'
 
-export const MAX_COMMENT_LENGTH = 1000
 export const MAX_PAYLOAD_SIZE = '1MB'
 
 export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
@@ -175,6 +174,7 @@ export function mapEnumsBack(result: any) {
     result.__typename === 'ArticleTeaser' ||
     result.__typename === 'PeerArticleTeaser' ||
     result.__typename === 'PageTeaser' ||
+    result.__typename === 'EventTeaser' ||
     result.__typename === 'CustomTeaser'
   ) {
     switch (result.style) {

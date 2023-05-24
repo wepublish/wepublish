@@ -1,4 +1,4 @@
-import {Module} from '@nestjs/common'
+import {Module, Global} from '@nestjs/common'
 import {ApiModule} from '@wepublish/nest-modules'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
@@ -6,9 +6,15 @@ import {
   SettingModule,
   DashboardModule,
   AuthenticationModule,
-  PermissionModule
+  PermissionModule,
+  ConsentModule,
+  MediaAdapterService,
+  KarmaMediaAdapter
 } from '@wepublish/api'
+import {ConfigModule, ConfigService} from '@nestjs/config'
+import {URL} from 'url'
 
+@Global()
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -19,15 +25,32 @@ import {
       cors: {
         credentials: true,
         origin: true
-      }
+      },
+      cache: 'bounded'
     }),
     ApiModule,
     DashboardModule,
     AuthenticationModule,
     PermissionModule,
-    SettingModule
+    ConsentModule,
+    SettingModule,
+    ConfigModule.forRoot()
   ],
-  controllers: [],
-  providers: []
+  providers: [
+    {
+      provide: MediaAdapterService,
+      useFactory: (config: ConfigService) => {
+        const internalUrl = config.get('MEDIA_SERVER_INTERNAL_URL')
+
+        return new KarmaMediaAdapter(
+          new URL(config.getOrThrow('MEDIA_SERVER_URL')),
+          config.getOrThrow('MEDIA_SERVER_TOKEN'),
+          internalUrl ? new URL(internalUrl) : undefined
+        )
+      },
+      inject: [ConfigService]
+    }
+  ],
+  exports: [MediaAdapterService]
 })
 export class AppModule {}

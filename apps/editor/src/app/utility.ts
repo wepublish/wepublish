@@ -8,7 +8,8 @@ import {ElementID} from '../shared/elementID'
 import {ClientSettings} from '../shared/types'
 
 export enum LocalStorageKey {
-  SessionToken = 'sessionToken'
+  SessionToken = 'sessionToken',
+  ImageListLayout = 'imageListLayout'
 }
 
 export const addOrUpdateOneInArray = (
@@ -125,7 +126,6 @@ export function mapTableSortTypeToGraphQLSortOrder(sortType: SortType): SortOrde
 }
 
 export const DEFAULT_TABLE_PAGE_SIZES = [10, 20, 50, 100]
-export const DEFAULT_TABLE_IMAGE_PAGE_SIZES = [5, 10, 15]
 export const DEFAULT_MAX_TABLE_PAGES = 5
 
 export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [

@@ -9,6 +9,7 @@ import {SortableContainer, SortableElement, SortEnd} from 'react-sortable-hoc'
 import {Avatar, Drawer, IconButton as RIconButton, Panel as RPanel} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {Overlay} from '../atoms/overlay'
 import {PlaceholderImage} from '../atoms/placeholderImage'
 import {PlaceholderInput} from '../atoms/placeholderInput'
@@ -89,7 +90,7 @@ const Status = styled.div`
   flex-shrink: 0;
 `
 
-const GridItem = SortableElement((props: TeaserBlockProps) => {
+const GridItem = SortableElement<TeaserBlockProps>((props: TeaserBlockProps) => {
   return <TeaserBlock {...props} />
 })
 
@@ -98,7 +99,7 @@ interface GridProps {
   children?: ReactNode
 }
 
-const Grid = SortableContainer(({children, numColumns}: GridProps) => {
+const Grid = SortableContainer<GridProps>(({children, numColumns}: GridProps) => {
   return <SortableContainerComponent numColumns={numColumns}>{children}</SortableContainerComponent>
 })
 
@@ -204,6 +205,7 @@ export function TeaserBlock({
   onChoose,
   onRemove
 }: TeaserBlockProps) {
+  const {t} = useTranslation()
   return (
     <Panel bodyFill showGrabCursor={showGrabCursor}>
       <PlaceholderInput onAddClick={onChoose}>
@@ -212,11 +214,17 @@ export function TeaserBlock({
             {ContentForTeaser(teaser, numColumns)}
 
             <IconWrapper>
-              <IconButton icon={<MdArticle />} onClick={onChoose} />
+              <IconButtonTooltip caption={t('blocks.flexTeaser.chooseTeaser')}>
+                <IconButton icon={<MdArticle />} onClick={onChoose} />
+              </IconButtonTooltip>
               {teaser.type !== TeaserType.PeerArticle || !teaser?.peer?.isDisabled ? (
-                <IconButton icon={<MdEdit />} onClick={onEdit} />
+                <IconButtonTooltip caption={t('blocks.flexTeaser.editTeaser')}>
+                  <IconButton icon={<MdEdit />} onClick={onEdit} />
+                </IconButtonTooltip>
               ) : null}
-              <IconButton icon={<MdDelete />} onClick={onRemove} />
+              <IconButtonTooltip caption={t('blocks.flexTeaser.deleteTeaser')}>
+                <IconButton icon={<MdDelete />} onClick={onRemove} />
+              </IconButtonTooltip>
             </IconWrapper>
           </Teaser>
         )}
@@ -283,6 +291,18 @@ export function ContentForTeaser(teaser: TeaserTypeMixed, numColumns?: number) {
           title={teaser.title ?? teaser.page.latest.title ?? ''}
           lead={teaser.lead ?? teaser.page.latest.description ?? undefined}
           states={states}
+          numColumns={numColumns}
+        />
+      )
+    }
+
+    case TeaserType.Event: {
+      return (
+        <TeaserContent
+          style={teaser.style}
+          image={teaser.image ?? teaser.event.image ?? undefined}
+          title={teaser.title ?? teaser.event.name ?? ''}
+          lead={teaser.lead ?? teaser.event.location ?? undefined}
           numColumns={numColumns}
         />
       )

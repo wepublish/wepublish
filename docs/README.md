@@ -25,16 +25,10 @@
 
 ## Table of Contents
 
+- [Write Automated Tests](testing.md)
 - [Setup Commenting](commenting.md)
 - [Email Templates](emailtemplates.md)
 - [Releases](Releases.md)
-
-## Automated Testing
-
-It might happen, that your tests are failing. Try to update your snapshots
-by running (eventually in the package in question) `npm run test -- -u`
-
-For more information: [https://jestjs.io/docs/cli#--updatesnapshot](https://jestjs.io/docs/cli#--updatesnapshot)
 
 ## apps/editor
 

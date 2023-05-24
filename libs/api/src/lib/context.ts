@@ -54,7 +54,7 @@ import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
 import {Hooks} from './hooks'
 import {MailContext, MailContextOptions} from './mails/mailContext'
 import {BaseMailProvider} from './mails/mailProvider'
-import {MediaAdapter} from './media/mediaAdapter'
+import {MediaAdapter} from '@wepublish/image/api'
 import {MemberContext} from './memberContext'
 import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
@@ -88,6 +88,8 @@ export interface DataLoaderContext {
   readonly pages: DataLoader<string, PageWithRevisions | null>
   readonly publicPagesByID: DataLoader<string, PublicPage | null>
   readonly publicPagesBySlug: DataLoader<string, PublicPage | null>
+
+  readonly events: DataLoader<string, Event | null>
 
   readonly userRolesByID: DataLoader<string, UserRole | null>
 
@@ -543,6 +545,20 @@ export async function contextFromRequest(
           })
         ).map(pageWithRevisionsToPublicPage),
         'slug'
+      )
+    ),
+
+    events: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.event.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
       )
     ),
 

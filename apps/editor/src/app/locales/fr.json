@@ -891,7 +891,8 @@
       "zipCode": "Code Postal",
       "city": "Ville",
       "country": "Pays",
-      "selectUserImage": "Choisir une photo de profil"
+      "selectUserImage": "Choisir une photo de profil",
+      "flair": "Flair"
     },
     "userSubscriptionList": {
       "deactivationReason": {
@@ -1066,7 +1067,9 @@
       "peers": "Peers",
       "settings": "Paramètres",
       "peerArticles": "Articles pairables",
-      "subscriptions": "Abonnements"
+      "subscriptions": "Abonnements",
+      "consents": "Consentement",
+      "userConsents": "Consentement de l'utilisateur"
     },
     "navigation": {
       "overview": {
@@ -1182,6 +1185,29 @@
     "yes": "Oui",
     "no": "Non",
     "untitled": "Sans titre",
+    "consents": {
+      "title": "Consentement",
+      "create": "Créer un nouveau consentement",
+      "name": "Nom",
+      "slug": "Slug",
+      "defaultValue": "Valeur par défaut",
+      "titleCreate": "Créer un consentement",
+      "titleEdit": "Modifier le consentement",
+      "uniqueConstraint": "A consent with slug '\"{{slug}}\"' already exists. Please choose a different slug.",
+      "defaultValueTitle": "Default value (checked by default)"
+    },
+    "userConsents": {
+      "title": "Consentement de l'utilisateur",
+      "create": "Créer un nouveau consentement de l'utilisateur",
+      "user": "User",
+      "consentName": "Consentement name",
+      "consentSlug": "Consentement slug",
+      "value": "Valeur",
+      "titleCreate": "Créer un consentement d'utilisateur",
+      "titleEdit": "Modifier le consentement de l'utilisateur",
+      "userId": "ID de l'utilisateur",
+      "consentId": "Consentement id"
+    },
     "errorMessages": {
       "noFirstNameErrorMessage": "Veuillez entrer un prénom",
       "noNameErrorMessage": "Veuillez entrer un nom",

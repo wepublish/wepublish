@@ -90,6 +90,7 @@
         "outlined": "Outlined",
         "page": "Page",
         "custom": "Custom",
+        "event": "Event",
         "contentUrl": "Content URL",
         "pagePreviewLink": "Page Preview Link",
         "peerArticle": "Peer Article",
@@ -723,7 +724,9 @@
       "subscriptions": "Subscriptions",
       "userRoles": "User Roles",
       "users": "Users",
-      "usersAndMembers": "Users & Members"
+      "usersAndMembers": "Users & Members",
+      "consents": "Consents",
+      "userConsents": "User Consents"
     },
     "navigation": {
       "overview": {
@@ -1121,7 +1124,8 @@
       "zipCode": "ZIP",
       "city": "City",
       "country": "Country",
-      "selectUserImage": "Choose profile picture"
+      "selectUserImage": "Choose profile picture",
+      "flair": "Flair"
     },
     "userSubscriptionList": {
       "deactivationReason": {
@@ -1203,6 +1207,30 @@
       "startsAt": "Subscription Start",
       "selectUser": "Select User"
     },
+    "consents": {
+      "title": "Consents",
+      "consent": "Consent",
+      "create": "Create new Consent",
+      "name": "Name",
+      "slug": "Slug",
+      "defaultValue": "Default value",
+      "titleCreate": "Create Consent",
+      "titleEdit": "Edit Consent",
+      "uniqueConstraint": "A consent with slug '\"{{slug}}\"' already exists. Please choose a different slug.",
+      "defaultValueTitle": "Default value (checked by default)"
+    },
+    "userConsents": {
+      "title": "User Consents",
+      "create": "Create new User Consent",
+      "user": "User",
+      "consentName": "Consent name",
+      "consentSlug": "Consent slug",
+      "value": "Value",
+      "titleCreate": "Create User Consent",
+      "titleEdit": "Edit User Consent",
+      "userId": "User id",
+      "consentId": "Consent id"
+    },
     "errorMessages": {
       "noFirstNameErrorMessage": "Please enter a firstname",
       "noNameErrorMessage": "Please enter a name",
@@ -1266,6 +1294,7 @@
       "peering": "Peering",
       "payment": "Payment",
       "allowGuestCommentRating": "Allow guest ratings on comments",
+      "allowCommentEditing": "Allow comment editing",
       "polls": "Polls",
       "guestPollVote": "Allow guest votes on polls",
       "memberships": "Memberships",
@@ -1275,21 +1304,27 @@
       "newDeactivationsApiPublic": "Make the new deactivations API accessible by the public",
       "expectedRevenueApiPublic": "Make the expected revenue API accessible by the public",
       "revenueApiPublic": "Make the revenue API accessible by the public",
+      "commentCharLimit": "Comment character limit",
+      "enabled": "enabled",
+      "disabled": "disabled",
       "warnings": {
         "guestCommenting": "Allow guest visitors (not logged in) to write and publish comments to articles.",
         "guestCommentRating": "Allow guest visitors (not logged in) to rate other people's comments.",
+        "allowCommentEditing": "Allow users to edit their comments",
         "guestPollVote": "Allow guest visitors (not logged in) to take a vote in polls.",
         "loginMinutes": "How long (in minutes) the link sent via email to create account will be valid. Defaults to one week (10080 / 60 / 24).",
         "passwordToken": "How long (in minutes) the link sent via email to reset password will be valid. Defaults to one day (1440 / 60 / 24).",
         "peerToken": "Timeout in milliseconds after which we will no longer try to pull peer articles. Defaults to 3 seconds.",
         "invoiceReminders": "How many times we will remind user to pay the subscription (once per day).",
+        "invoiceFrequency": "The interval in days between invoice reminder attempts.",
         "askOperators": "Warning: changing one or more of the settings may break the page or have other unpredictable consequences. If you are unsure, please try talking to the operators first. If you are sure, feel free to continue.",
         "newSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "activeSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "renewingSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "newDeactivationsApiPublic": "Exposes subscriptions anonymized to the public.",
         "expectedRevenueApiPublic": "Exposes invoices anonymized to the public.",
-        "revenueApiPublic": "Exposes invoices anonymized to the public."
+        "revenueApiPublic": "Exposes invoices anonymized to the public.",
+        "commentCharLimit": "Maximum comment length"
       }
     },
     "tags": {
@@ -1315,7 +1350,8 @@
         "create": "Create new event",
         "startsAt": "Starts at {{startsAt, ccc PP p}}",
         "endsAt": "Ends at {{endsAt, ccc PP p}}",
-        "endsAtNone": "Open ended"
+        "endsAtNone": "Open ended",
+        "upcomingOnly": "Upcoming only"
       },
       "create": {
         "title": "Create Event"

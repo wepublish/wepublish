@@ -723,7 +723,9 @@
       "myPeerInfo": "Meine Peer Infos",
       "peers": "Peers",
       "subscriptions": "Abonnements",
-      "peerArticles": "Peerbare Artikel"
+      "peerArticles": "Peerbare Artikel",
+      "consents": "Konsens",
+      "userConsents": "User-Konsens"
     },
     "navigation": {
       "overview": {
@@ -1105,7 +1107,8 @@
       "zipCode": "PLZ",
       "city": "Stadt",
       "country": "Land",
-      "selectUserImage": "Profilbild wählen"
+      "selectUserImage": "Profilbild wählen",
+      "flair": "Funktionsbeschreibung"
     },
     "userSubscriptionList": {
       "deactivationReason": {
@@ -1186,6 +1189,29 @@
         "isDeactivated": "Das Abonnement is seit {{date, ccc PP p}} deaktiviert und muss vor dem Bearbeiten reaktiviert werden."
       },
       "hasAddress": "User hat Adresse"
+    },
+    "consents": {
+      "title": "Konsens",
+      "create": "Neuer Konsens erstellen",
+      "name": "Name",
+      "slug": "Slug",
+      "defaultValue": "Standardwert",
+      "titleCreate": "Konsens erstellen",
+      "titleEdit": "Konsens bearbeiten",
+      "uniqueConstraint": "A consent with slug '\"{{slug}}\"' already exists. Please choose a different slug.",
+      "defaultValueTitle": "Default value (checked by default)"
+    },
+    "userConsents": {
+      "title": "User-Konsens",
+      "create": "Neuer User-Konsens erstellen",
+      "user": "Benutzer",
+      "consentName": "Konsensname",
+      "consentSlug": "Konsens-Slug",
+      "value": "Wert",
+      "titleCreate": "User-Konsens erstellen",
+      "titleEdit": "User-Konsens bearbeiten",
+      "userId": "Benutzer-ID",
+      "consentId": "Konsens-ID"
     },
     "errorMessages": {
       "noFirstNameErrorMessage": "Bitte Vornamen eingeben",

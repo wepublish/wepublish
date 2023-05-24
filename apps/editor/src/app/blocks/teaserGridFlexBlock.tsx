@@ -4,10 +4,10 @@ import 'react-resizable/css/styles.css'
 import styled from '@emotion/styled'
 import i18next from 'i18next'
 import nanoid from 'nanoid'
-import {useEffect, useState} from 'react'
-import GridLayout from 'react-grid-layout'
+import {ComponentType, PropsWithChildren, useEffect, useState} from 'react'
+import GridLayoutWithoutChildren, {ReactGridLayoutProps} from 'react-grid-layout'
 import {useTranslation} from 'react-i18next'
-import {MdAddBox, MdDelete, MdEdit, MdLock, MdLockOpen} from 'react-icons/md'
+import {MdAddBox, MdArticle, MdDelete, MdEdit, MdLock, MdLockOpen} from 'react-icons/md'
 import {
   ButtonToolbar as RButtonToolbar,
   Drawer,
@@ -22,6 +22,10 @@ import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 import {ContentForTeaser, IconButton, IconWrapper, Teaser} from './teaserGridBlock'
 import {FlexAlignment, FlexTeaser, Teaser as TeaserType, TeaserGridFlexBlockValue} from './types'
+
+// Fixes that pre React 18, all components had the children prop.
+// With React 18 this is not the case anymore, so some types are wrong
+const GridLayout: ComponentType<PropsWithChildren<ReactGridLayoutProps>> = GridLayoutWithoutChildren
 
 const ButtonToolbar = styled(RButtonToolbar)`
   top: 0;
@@ -53,7 +57,7 @@ export function FlexTeaserBlock({
 
             <IconWrapper>
               <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.chooseTeaser')}>
-                <IconButton icon={<MdEdit />} onClick={onChoose} />
+                <IconButton icon={<MdArticle />} onClick={onChoose} />
               </IconButtonTooltip>
               <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.editTeaser')}>
                 <IconButton icon={<MdEdit />} onClick={onEdit} />
