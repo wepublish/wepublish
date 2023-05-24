@@ -50,7 +50,8 @@ export function AuthorCheckPicker({list, disabled, onChange}: AuthorCheckPickerP
       variables: {
         input: {
           name: authorsFilter,
-          slug: slugify(authorsFilter)
+          slug: slugify(authorsFilter),
+          bio: []
         }
       }
     })
