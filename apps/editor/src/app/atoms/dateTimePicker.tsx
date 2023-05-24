@@ -116,6 +116,7 @@ export function DateTimePicker({
             border: none;
             box-shadow: 0 0 5px 0 gray;
             right: -10px;
+            min-width: 366px;
 
             &-popper {
               padding-top: 0;
