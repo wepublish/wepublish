@@ -6,7 +6,7 @@ import {
   MailProviderTemplate,
   SendMailProps,
   WebhookForSendMailProps
-} from '@wepublish/mails'
+} from './'
 
 export class FakeMailProvider extends BaseMailProvider {
   constructor(props: MailProviderProps) {
