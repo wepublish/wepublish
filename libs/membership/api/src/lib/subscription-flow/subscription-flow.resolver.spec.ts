@@ -20,6 +20,8 @@ import {
 } from '../../__generated__/fabbrica'
 import {PermissionsGuard} from '@wepublish/permissions/api'
 import {clearDatabase} from '../../prisma-utils'
+import {MailContext, MailProvider, MailProviderTemplate} from '@wepublish/mails'
+import {PaymentsService} from '@wepublish/payments'
 
 @Injectable()
 export class TestPermissionsGuard implements CanActivate {
@@ -90,6 +92,17 @@ const paymentMethodsQuery = `
   }
 `
 
+const mailProviderServiceMock = {
+  name: 'MockProvider',
+  getTemplateUrl: jest.fn((): string => 'https://example.com/template.html'),
+  getTemplates: jest.fn((): MailProviderTemplate[] => [])
+}
+
+const mailContextMock = {
+  mailProvider: mailProviderServiceMock as unknown as MailProvider,
+  getUsedTemplateIdentifiers: jest.fn((): string[] => [])
+}
+
 /**
  * Create App module to be able to create a NestJs application
  */
@@ -112,7 +125,9 @@ const paymentMethodsQuery = `
     {
       provide: APP_GUARD,
       useClass: PermissionsGuard
-    }
+    },
+    {provide: MailContext, useValue: mailContextMock},
+    {provide: PaymentsService, useValue: {}}
   ]
 })
 export class AppUnauthenticatedModule {}
@@ -136,7 +151,9 @@ export class AppUnauthenticatedModule {}
     {
       provide: APP_GUARD,
       useClass: TestPermissionsGuard
-    }
+    },
+    {provide: MailContext, useValue: mailContextMock},
+    {provide: PaymentsService, useValue: {}}
   ]
 })
 export class AppAuthenticatedModule {}
@@ -147,7 +164,8 @@ describe('Subscription Flow Resolver', () => {
 
     beforeAll(async () => {
       const module: TestingModule = await Test.createTestingModule({
-        imports: [AppUnauthenticatedModule]
+        imports: [AppUnauthenticatedModule],
+        providers: [{provide: MailContext, useValue: mailContextMock}]
       }).compile()
       app = module.createNestApplication()
       await app.init()
@@ -367,7 +385,9 @@ describe('Subscription Flow Resolver', () => {
           SubscriptionController,
           SubscriptionFlowController,
           SubscriptionFlowHelper,
-          SubscriptionFlowResolver
+          SubscriptionFlowResolver,
+          {provide: MailContext, useValue: mailContextMock},
+          {provide: PaymentsService, useValue: {}}
         ]
       }).compile()
 

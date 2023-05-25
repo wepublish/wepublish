@@ -13,6 +13,19 @@ import {
   defineSubscriptionFlowFactory,
   definePaymentMethodFactory
 } from '../../__generated__/fabbrica'
+import {MailProviderTemplate, MailProvider, MailContext} from '@wepublish/mails'
+import {PaymentsService} from '@wepublish/payments'
+
+const mailProviderServiceMock = {
+  name: 'MockProvider',
+  getTemplateUrl: jest.fn((): string => 'https://example.com/template.html'),
+  getTemplates: jest.fn((): MailProviderTemplate[] => [])
+}
+
+const mailContextMock = {
+  mailProvider: mailProviderServiceMock as unknown as MailProvider,
+  getUsedTemplateIdentifiers: jest.fn((): string[] => [])
+}
 
 describe('SubscriptionFlowController', () => {
   let controller: SubscriptionFlowController
@@ -36,7 +49,9 @@ describe('SubscriptionFlowController', () => {
         PrismaService,
         SubscriptionFlowController,
         PeriodicJobController,
-        SubscriptionController
+        SubscriptionController,
+        {provide: MailContext, useValue: mailContextMock},
+        {provide: PaymentsService, useValue: {}}
       ]
     }).compile()
 
