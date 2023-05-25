@@ -4,10 +4,7 @@ import {MailContext, MailProvider, MailTemplateStatus} from '@wepublish/mails'
 import {PrismaService} from '@wepublish/nest-modules'
 import {MailTemplateSyncService} from './mail-template-sync.service'
 import {MailTemplatesResolver} from './mail-template.resolver'
-import {INestApplication, Module} from '@nestjs/common'
-import {GraphQLModule} from '@nestjs/graphql'
-import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
-import {PrismaModule} from '@wepublish/nest-modules'
+import {INestApplication} from '@nestjs/common'
 import {APP_GUARD} from '@nestjs/core'
 import {PermissionsGuard} from '@wepublish/permissions/api'
 import request from 'supertest'
@@ -72,39 +69,9 @@ const syncServiceMock = {
   synchronizeTemplates: jest.fn((): void => undefined)
 }
 
-@Module({
-  imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: true,
-      path: '/'
-    }),
-    PrismaModule
-  ],
-  providers: [
-    PrismaService,
-    MailContext,
-    MailTemplatesResolver,
-    MailTemplateSyncService,
-    {
-      provide: APP_GUARD,
-      useClass: PermissionsGuard
-    }
-  ]
-})
-export class AppModule {}
-
 describe('MailTemplatesResolver', () => {
   let resolver: MailTemplatesResolver
   let app: INestApplication
-
-  beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      imports: [AppModule]
-    }).compile()
-    app = module.createNestApplication()
-    await app.init()
-  })
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -112,11 +79,18 @@ describe('MailTemplatesResolver', () => {
         MailTemplatesResolver,
         {provide: PrismaService, useValue: prismaServiceMock},
         {provide: MailTemplateSyncService, useValue: syncServiceMock},
-        {provide: MailContext, useValue: mailContextMock}
+        {provide: MailContext, useValue: mailContextMock},
+        {
+          provide: APP_GUARD,
+          useClass: PermissionsGuard
+        }
       ]
     }).compile()
 
     resolver = module.get<MailTemplatesResolver>(MailTemplatesResolver)
+
+    app = module.createNestApplication()
+    await app.init()
   })
 
   afterAll(async () => {
