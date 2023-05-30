@@ -69,6 +69,7 @@ const userDocumentQuery = {
         name: 'Parker',
         preferredName: 'Peter Parker',
         email: 'peter@parker.com',
+        flair: 'foobar',
         address: null,
         active: false,
         roles: [

@@ -1,21 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Authors can be created/edited/deleted: can be created 1`] = `
-Object {
-  "data": Object {
-    "createAuthor": Object {
-      "bio": Array [
-        Object {
-          "children": Array [
-            Object {
+{
+  "data": {
+    "createAuthor": {
+      "bio": [
+        {
+          "children": [
+            {
               "text": "Author Bio Heading",
             },
           ],
           "type": "heading-one",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "text": "author bio text",
             },
           ],
@@ -24,12 +24,12 @@ Object {
       ],
       "id": Any<String>,
       "image": null,
-      "links": Array [
-        Object {
+      "links": [
+        {
           "title": "link 1",
           "url": "www.link1.ch",
         },
-        Object {
+        {
           "title": "link 2",
           "url": "www.link2.ch",
         },
@@ -40,45 +40,45 @@ Object {
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
 exports[`Authors can be created/edited/deleted: can be deleted 1`] = `
-Object {
-  "data": Object {
+{
+  "data": {
     "deleteAuthor": Any<Object>,
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
 exports[`Authors can be created/edited/deleted: can be read by id 1`] = `
-Object {
-  "data": Object {
-    "author": Object {
-      "bio": Array [
-        Object {
-          "children": Array [
-            Object {
+{
+  "data": {
+    "author": {
+      "bio": [
+        {
+          "children": [
+            {
               "text": "Author Bio Heading",
             },
           ],
           "type": "heading-one",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "text": "author bio text",
             },
           ],
@@ -87,12 +87,12 @@ Object {
       ],
       "id": Any<String>,
       "image": null,
-      "links": Array [
-        Object {
+      "links": [
+        {
           "title": "link 1",
           "url": "www.link1.ch",
         },
-        Object {
+        {
           "title": "link 2",
           "url": "www.link2.ch",
         },
@@ -103,30 +103,30 @@ Object {
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
 exports[`Authors can be created/edited/deleted: can be updated 1`] = `
-Object {
-  "data": Object {
-    "updateAuthor": Object {
-      "bio": Array [
-        Object {
-          "children": Array [
-            Object {
+{
+  "data": {
+    "updateAuthor": {
+      "bio": [
+        {
+          "children": [
+            {
               "text": "Author Bio Heading",
             },
           ],
           "type": "heading-one",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "text": "author bio text",
             },
           ],
@@ -135,8 +135,8 @@ Object {
       ],
       "id": Any<String>,
       "image": null,
-      "links": Array [
-        Object {
+      "links": [
+        {
           "title": "homepage",
           "url": "www.j-a.com",
         },
@@ -147,9 +147,9 @@ Object {
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }

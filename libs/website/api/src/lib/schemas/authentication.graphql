@@ -1,0 +1,15 @@
+query Me {
+  me {
+    id
+  }
+}
+
+mutation CreateSession($email: String!, $password: String!) {
+  createSession(email: $email, password: $password) {
+    user {
+      email
+    }
+
+    token
+  }
+}

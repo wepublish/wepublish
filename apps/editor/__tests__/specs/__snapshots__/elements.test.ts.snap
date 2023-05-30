@@ -1,16 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`emptyCellsTable should match snapshot {"children": [Array], "type": "table"} 1`] = `
-Object {
-  "children": Array [
-    Object {
-      "children": Array [
-        Object {
+{
+  "children": [
+    {
+      "children": [
+        {
           "borderColor": "#000000",
-          "children": Array [
-            Object {
-              "children": Array [
-                Object {
+          "children": [
+            {
+              "children": [
+                {
                   "text": "",
                 },
               ],
@@ -28,16 +28,16 @@ Object {
 `;
 
 exports[`emptyCellsTable should match snapshot {"children": [Array], "type": "table"} 2`] = `
-Object {
-  "children": Array [
-    Object {
-      "children": Array [
-        Object {
+{
+  "children": [
+    {
+      "children": [
+        {
           "borderColor": "#000000",
-          "children": Array [
-            Object {
-              "children": Array [
-                Object {
+          "children": [
+            {
+              "children": [
+                {
                   "text": "",
                 },
               ],
@@ -46,12 +46,12 @@ Object {
           ],
           "type": "table-cell",
         },
-        Object {
+        {
           "borderColor": "#000000",
-          "children": Array [
-            Object {
-              "children": Array [
-                Object {
+          "children": [
+            {
+              "children": [
+                {
                   "text": "",
                 },
               ],
@@ -63,14 +63,14 @@ Object {
       ],
       "type": "table-row",
     },
-    Object {
-      "children": Array [
-        Object {
+    {
+      "children": [
+        {
           "borderColor": "#000000",
-          "children": Array [
-            Object {
-              "children": Array [
-                Object {
+          "children": [
+            {
+              "children": [
+                {
                   "text": "",
                 },
               ],
@@ -79,12 +79,12 @@ Object {
           ],
           "type": "table-cell",
         },
-        Object {
+        {
           "borderColor": "#000000",
-          "children": Array [
-            Object {
-              "children": Array [
-                Object {
+          "children": [
+            {
+              "children": [
+                {
                   "text": "",
                 },
               ],

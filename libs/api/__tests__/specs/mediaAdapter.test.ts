@@ -79,7 +79,7 @@ describe('Karma Media Adapter', () => {
           filename: 'test.jpg',
           mimetype: 'image/jpeg',
           encoding: 'fakeEncoding',
-          createReadStream: () => imageStream
+          createReadStream: () => imageStream as any
         })
       })
     })
