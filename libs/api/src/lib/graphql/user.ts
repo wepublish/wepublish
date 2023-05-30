@@ -9,8 +9,13 @@ import {
   GraphQLBoolean,
   GraphQLID
 } from 'graphql'
-import {UserSort} from '../db/user'
-import {GraphQLMetadataProperty, GraphQLMetadataPropertyInput, GraphQLPageInfo} from './common'
+import {UserSort, UserWithRelations} from '../db/user'
+import {
+  GraphQLMetadataProperty,
+  GraphQLMetadataPropertyPublic,
+  GraphQLMetadataPropertyInput,
+  GraphQLPageInfo
+} from './common'
 import {Context} from '../context'
 import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-scalars'
@@ -159,7 +164,7 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
   }
 })
 
-export const GraphQLPublicUser = new GraphQLObjectType<User, Context>({
+export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Context>({
   name: 'User',
   fields: {
     id: {type: GraphQLNonNull(GraphQLString)},
@@ -186,6 +191,12 @@ export const GraphQLPublicUser = new GraphQLObjectType<User, Context>({
             })
           : null
       )
+    },
+    properties: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublic))),
+      resolve: ({properties}) => {
+        return properties.filter(property => property.public).map(({key, value}) => ({key, value}))
+      }
     }
   }
 })
