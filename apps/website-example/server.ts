@@ -117,7 +117,7 @@ export async function runServerInstance() {
 
 if (process.env.NODE_ENV !== 'development') {
   if (cluster.isMaster) {
-    const numWorkers = process.env.NUM_WORKERS || os.cpus().length
+    const numWorkers = +(process.env.NUM_WORKERS || os.cpus().length)
 
     for (let i = 0; i < numWorkers; i++) {
       cluster.fork()
