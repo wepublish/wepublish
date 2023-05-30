@@ -12,7 +12,7 @@ import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Form, Message, Schema, toaster} from 'rsuite'
 
-import {ModelTitle} from '../../atoms/modelTitle'
+import {ModelTitle} from '@wepublish/ui/editor'
 import {EventForm} from './eventForm'
 
 const onErrorToast = (error: ApolloError) => {

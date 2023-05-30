@@ -31,7 +31,7 @@ import {
 import {Textarea} from '../atoms/textarea'
 import {MetaDataType} from '../blocks/types'
 import {generateID, slugify} from '../utility'
-import {AuthorCheckPicker} from './authorCheckPicker'
+import {AuthorCheckPicker} from '@wepublish/ui/editor'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 

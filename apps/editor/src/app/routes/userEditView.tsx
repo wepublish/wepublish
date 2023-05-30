@@ -17,19 +17,19 @@ import {
   Col,
   Drawer,
   Form,
-  Grid as RGrid,
   Input,
   Message,
-  Panel as RPanel,
+  Grid as RGrid,
   Row,
+  Panel as RPanel,
+  Toggle as RToggle,
   Schema,
-  toaster,
-  Toggle as RToggle
+  toaster
 } from 'rsuite'
 
+import {ModelTitle} from '@wepublish/ui/editor'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
-import {ModelTitle} from '../atoms/modelTitle'
 import {createCheckedPermissionComponent, useAuthorisation} from '../atoms/permissionControl'
 import {EditUserPassword} from '../atoms/user/editUserPassword'
 import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'

@@ -31,7 +31,7 @@ import {CommentDeleteBtn} from '../../atoms/comment/commentDeleteBtn'
 import {CommentHistory} from '../../atoms/comment/commentHistory'
 import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
 import {CommentUser} from '../../atoms/comment/commentUser'
-import {ModelTitle} from '../../atoms/modelTitle'
+import {ModelTitle} from '@wepublish/ui/editor'
 import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
 import {SelectTags} from '../../atoms/tag/selectTags'
 
