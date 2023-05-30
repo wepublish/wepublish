@@ -6,17 +6,17 @@ import {
   usePaymentProviderListQuery,
   useUpdatePaymentMethodMutation
 } from '@wepublish/editor/api'
+import {
+  createCheckedPermissionComponent,
+  PermissionControl,
+  slugify,
+  useAuthorisation
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, Message, Panel, Schema, SelectPicker, toaster, Toggle} from 'rsuite'
 
-import {
-  createCheckedPermissionComponent,
-  PermissionControl,
-  useAuthorisation
-} from '../atoms/permissionControl'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {slugify} from '../utility'
 
 export interface PaymentMethodEditPanelProps {
   id?: string

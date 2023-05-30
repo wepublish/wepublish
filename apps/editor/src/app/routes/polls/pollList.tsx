@@ -1,10 +1,16 @@
 import {ApolloError} from '@apollo/client'
 import {Poll, usePollsQuery} from '@wepublish/editor/api'
 import {
+  createCheckedPermissionComponent,
+  CreatePollBtn,
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  DeletePollModal,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
   PaddedCell,
+  PollStateIndication,
   Table,
   TableWrapper
 } from '@wepublish/ui/editor'
@@ -14,12 +20,6 @@ import {MdDelete} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {IconButton, Message, Pagination, Table as RTable, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
-
-import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
-import {CreatePollBtn} from '../../atoms/poll/createPollBtn'
-import {DeletePollModal} from '../../atoms/poll/deletePollModal'
-import {PollStateIndication} from '../../atoms/poll/pollStateIndication'
-import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 

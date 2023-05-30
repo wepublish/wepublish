@@ -11,6 +11,7 @@ import {
   UserConsentList
 } from '@wepublish/consent/editor'
 import {TagType} from '@wepublish/editor/api'
+import {LocalStorageKey} from '@wepublish/ui/editor'
 import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
@@ -50,7 +51,6 @@ import {TokenList} from './routes/tokenList'
 import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
-import {LocalStorageKey} from './utility'
 
 const LogoutMutation = gql`
   mutation Logout {

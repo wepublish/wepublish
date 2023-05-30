@@ -7,7 +7,18 @@ import {
   usePeerProfileQuery,
   useUpdatePeerMutation
 } from '@wepublish/editor/api'
-import {ListViewActions, ListViewContainer, ListViewHeader} from '@wepublish/ui/editor'
+import {
+  addOrUpdateOneInArray,
+  createCheckedPermissionComponent,
+  DescriptionList,
+  DescriptionListItem,
+  IconButtonTooltip,
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  NavigationBar,
+  PermissionControl
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSettings, MdVisibility, MdVisibilityOff} from 'react-icons/md'
@@ -25,13 +36,8 @@ import {
   toaster
 } from 'rsuite'
 
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {NavigationBar} from '../atoms/navigationBar'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {PeerEditPanel} from '../panel/peerEditPanel'
 import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
-import {addOrUpdateOneInArray} from '../utility'
 
 const MarginTop = styled.div`
   margin-top: 20px;

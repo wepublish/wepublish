@@ -7,15 +7,15 @@ import {
   useUpdateUserRoleMutation,
   useUserRoleQuery
 } from '@wepublish/editor/api'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, CheckPicker, Drawer, Form as RForm, Message, Schema, toaster} from 'rsuite'
-
 import {
   createCheckedPermissionComponent,
   PermissionControl,
   useAuthorisation
-} from '../atoms/permissionControl'
+} from '@wepublish/ui/editor'
+import {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, CheckPicker, Drawer, Form as RForm, Message, Schema, toaster} from 'rsuite'
+
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 const {Group, ControlLabel, Control} = RForm
