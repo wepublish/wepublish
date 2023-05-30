@@ -260,7 +260,9 @@ export function RatingAnswers({answers, onDeleteAnswer, onUpdateAnswer}: PollAns
           <SelectPicker
             cleanable={false}
             value={answer.type}
-            onChange={(value: RatingSystemType) => onUpdateAnswer(answer.id, answer.answer, value)}
+            onChange={(value: RatingSystemType | null) =>
+              onUpdateAnswer(answer.id, answer.answer, value!)
+            }
             data={Object.entries(RatingSystemType).map(([label, value]) => ({label, value}))}
           />
 

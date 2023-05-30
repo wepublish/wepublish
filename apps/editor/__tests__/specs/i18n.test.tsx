@@ -24,8 +24,10 @@ describe('i18n', () => {
   })
 
   test('should init i18next plugins', () => {
+    const initSpy = jest.spyOn(i18n, 'init').mockImplementation((): any => {
+      // do nothing
+    })
     const useSpy = jest.spyOn(i18n, 'use')
-    const initSpy = jest.spyOn(i18n, 'init')
 
     initI18N()
 

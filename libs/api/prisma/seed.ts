@@ -1,5 +1,4 @@
 import {PrismaClient} from '@prisma/client'
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {SettingName} from '../../settings/api/src/lib/setting'
 
 const seedSettings = (prisma: PrismaClient) => [
