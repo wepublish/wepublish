@@ -3,7 +3,7 @@
   "npmScope": "wepublish",
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/nx-cloud",
+      "runner": "nx-cloud",
       "options": {
         "cacheableOperations": [
           "build",
@@ -50,7 +50,7 @@
     "sharedGlobals": ["{workspaceRoot}/babel.config.json"]
   },
   "generators": {
-    "@nrwl/react": {
+    "@nx/react": {
       "application": {
         "style": "@emotion/styled",
         "linter": "eslint",
@@ -62,13 +62,15 @@
       },
       "library": {
         "style": "@emotion/styled",
-        "linter": "eslint"
+        "linter": "eslint",
+        "unitTestRunner": "jest"
       }
     },
-    "@nrwl/next": {
+    "@nx/next": {
       "application": {
         "style": "@emotion/styled",
-        "linter": "eslint"
+        "linter": "eslint",
+        "export": true
       }
     }
   },

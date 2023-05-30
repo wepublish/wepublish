@@ -337,6 +337,21 @@ export type VersionInformation = {
   version: Scalars['String']
 }
 
+export type RevenueQueryVariables = Exact<{
+  start: Scalars['DateTime']
+  end?: InputMaybe<Scalars['DateTime']>
+}>
+
+export type RevenueQuery = {
+  __typename?: 'Query'
+  revenue: Array<{
+    __typename?: 'DashboardInvoice'
+    amount: number
+    paidAt?: string | null
+    memberPlan?: string | null
+  }>
+}
+
 export type VersionInformationQueryVariables = Exact<{[key: string]: never}>
 
 export type VersionInformationQuery = {
@@ -344,6 +359,48 @@ export type VersionInformationQuery = {
   versionInformation: {__typename?: 'VersionInformation'; version: string}
 }
 
+export const RevenueDocument = gql`
+  query Revenue($start: DateTime!, $end: DateTime) {
+    revenue(start: $start, end: $end) {
+      amount
+      paidAt
+      memberPlan
+    }
+  }
+`
+
+/**
+ * __useRevenueQuery__
+ *
+ * To run a query within a React component, call `useRevenueQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRevenueQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRevenueQuery({
+ *   variables: {
+ *      start: // value for 'start'
+ *      end: // value for 'end'
+ *   },
+ * });
+ */
+export function useRevenueQuery(
+  baseOptions: Apollo.QueryHookOptions<RevenueQuery, RevenueQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<RevenueQuery, RevenueQueryVariables>(RevenueDocument, options)
+}
+export function useRevenueLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<RevenueQuery, RevenueQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<RevenueQuery, RevenueQueryVariables>(RevenueDocument, options)
+}
+export type RevenueQueryHookResult = ReturnType<typeof useRevenueQuery>
+export type RevenueLazyQueryHookResult = ReturnType<typeof useRevenueLazyQuery>
+export type RevenueQueryResult = Apollo.QueryResult<RevenueQuery, RevenueQueryVariables>
 export const VersionInformationDocument = gql`
   query VersionInformation {
     versionInformation {
