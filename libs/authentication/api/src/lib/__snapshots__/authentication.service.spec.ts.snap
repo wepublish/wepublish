@@ -1,19 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AuthenticationService should return a token session 1`] = `
-Object {
+{
   "id": "1234-1234",
   "name": "Foo Token",
-  "roles": Array [],
+  "roles": [],
   "token": "1234",
   "type": "token",
 }
 `;
 
 exports[`AuthenticationService should return a token session 2`] = `
-Array [
-  Object {
-    "where": Object {
+[
+  {
+    "where": {
       "token": "1234",
     },
   },
@@ -21,9 +21,9 @@ Array [
 `;
 
 exports[`AuthenticationService should return a token session 3`] = `
-Array [
-  Object {
-    "where": Object {
+[
+  {
+    "where": {
       "token": "1234",
     },
   },
@@ -31,11 +31,11 @@ Array [
 `;
 
 exports[`AuthenticationService should return a token session 4`] = `
-Array [
-  Object {
-    "where": Object {
-      "id": Object {
-        "in": Array [
+[
+  {
+    "where": {
+      "id": {
+        "in": [
           "1234",
           "12345",
         ],
@@ -46,15 +46,15 @@ Array [
 `;
 
 exports[`AuthenticationService should return a user session 1`] = `
-Object {
+{
   "createdAt": undefined,
   "expiresAt": undefined,
   "id": undefined,
-  "roles": Array [],
+  "roles": [],
   "token": undefined,
   "type": "user",
-  "user": Object {
-    "roleIDs": Array [
+  "user": {
+    "roleIDs": [
       "1111",
       "2222",
     ],
@@ -63,9 +63,9 @@ Object {
 `;
 
 exports[`AuthenticationService should return a user session 2`] = `
-Array [
-  Object {
-    "where": Object {
+[
+  {
+    "where": {
       "token": "1234",
     },
   },
@@ -73,9 +73,9 @@ Array [
 `;
 
 exports[`AuthenticationService should return a user session 3`] = `
-Array [
-  Object {
-    "where": Object {
+[
+  {
+    "where": {
       "token": "1234",
     },
   },
@@ -83,11 +83,11 @@ Array [
 `;
 
 exports[`AuthenticationService should return a user session 4`] = `
-Array [
-  Object {
-    "where": Object {
-      "id": Object {
-        "in": Array [
+[
+  {
+    "where": {
+      "id": {
+        "in": [
           "1111",
           "2222",
         ],
@@ -98,18 +98,18 @@ Array [
 `;
 
 exports[`AuthenticationService should return a user session 5`] = `
-Object {
+{
   "select": Any<Object>,
-  "where": Object {
+  "where": {
     "id": "12345",
   },
 }
 `;
 
 exports[`AuthenticationService should return null if user can't be found 1`] = `
-Array [
-  Object {
-    "where": Object {
+[
+  {
+    "where": {
       "token": "1234",
     },
   },
@@ -117,9 +117,9 @@ Array [
 `;
 
 exports[`AuthenticationService should return null if user can't be found 2`] = `
-Array [
-  Object {
-    "where": Object {
+[
+  {
+    "where": {
       "token": "1234",
     },
   },
@@ -129,9 +129,9 @@ Array [
 exports[`AuthenticationService should return null if user can't be found 3`] = `undefined`;
 
 exports[`AuthenticationService should return null if user can't be found 4`] = `
-Object {
+{
   "select": Any<Object>,
-  "where": Object {
+  "where": {
     "id": "12345",
   },
 }
