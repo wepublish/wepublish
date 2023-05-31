@@ -1,4 +1,4 @@
-import {emptyCellsTable} from '../../src/app/blocks/richTextBlock/editor/elements'
+import {emptyCellsTable} from '@wepublish/ui/editor'
 
 describe('emptyCellsTable', () => {
   test.each([emptyCellsTable(1, 1), emptyCellsTable(2, 2)])(

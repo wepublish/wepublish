@@ -5,47 +5,9 @@ exports[`User edit view should allow a new user to be created 1`] = `
 - First value
 + Second value
 
-@@ -210,18 +210,19 @@
-                          id="active-control-label"
-                        >
-                          userCreateOrEditView.active
-                        </label>
-                        <label
--                         class="rs-toggle rs-toggle-checked"
-+                         class="rs-toggle rs-toggle-checked rs-toggle-disabled"
-                        >
-                          <input
-                            aria-checked="true"
--                           aria-disabled="false"
-+                           aria-disabled="true"
-                            aria-label="Open"
-                            checked=""
-                            class="rs-toggle-input"
-+                           disabled=""
-                            role="switch"
-                            type="checkbox"
-                          />
-                          <span
-                            class="rs-toggle-presentation"
-@@ -260,10 +261,11 @@
-                        >
-                          <input
-                            aria-describedby="firstName-help-text"
-                            aria-labelledby="firstName-control-label"
-                            class="rs-input"
-+                           disabled=""
-                            id="firstName"
-                            name="firstName"
-                            type="text"
-                            value=""
-                          />
-@@ -291,14 +293,15 @@
-                        >
-                          <input
-                            aria-describedby="name-help-text"
+@@ -294,11 +294,11 @@
                             aria-labelledby="name-control-label"
                             class="rs-input"
-+                           disabled=""
                             id="name"
                             name="name"
                             type="text"
@@ -56,25 +18,9 @@ exports[`User edit view should allow a new user to be created 1`] = `
                       </div>
                     </div>
                     <div
-@@ -322,10 +325,11 @@
-                        >
-                          <input
-                            aria-describedby="preferredName-help-text"
-                            aria-labelledby="preferredName-control-label"
-                            class="rs-input"
-+                           disabled=""
-                            id="preferredName"
-                            name="preferredName"
-                            type="text"
-                            value=""
-                          />
-@@ -353,14 +357,15 @@
-                        >
-                          <input
-                            aria-describedby="email-help-text"
+@@ -356,11 +356,11 @@
                             aria-labelledby="email-control-label"
                             class="rs-input"
-+                           disabled=""
                             id="email"
                             name="email"
                             type="text"
@@ -85,107 +31,46 @@ exports[`User edit view should allow a new user to be created 1`] = `
                       </div>
                     </div>
                     <div
-@@ -384,10 +389,11 @@
-                        >
-                          <input
-                            aria-describedby="flair-help-text"
-                            aria-labelledby="flair-control-label"
-                            class="rs-input"
-+                           disabled=""
-                            id="flair"
-                            name="flair"
-                            type="text"
-                            value=""
-                          />
-@@ -415,10 +421,11 @@
-                        >
-                          <input
-                            aria-describedby="company-help-text"
-                            aria-labelledby="company-control-label"
-                            class="rs-input"
-+                           disabled=""
-                            id="company"
-                            name="company"
-                            type="text"
-                            value=""
-                          />
-@@ -446,10 +453,11 @@
-                        >
-                          <input
-                            aria-describedby="streetAddress-help-text"
-                            aria-labelledby="streetAddress-control-label"
-                            class="rs-input"
-+                           disabled=""
-                            id="streetAddress"
-                            name="streetAddress"
-                            type="text"
-                            value=""
-                          />
-@@ -477,10 +485,11 @@
-                        >
-                          <input
-                            aria-describedby="streetAddress2-help-text"
-                            aria-labelledby="streetAddress2-control-label"
-                            class="rs-input"
-+                           disabled=""
-                            id="streetAddress2"
-                            name="streetAddress2"
-                            type="text"
-                            value=""
-                          />
-@@ -508,10 +517,11 @@
-                        >
-                          <input
-                            aria-describedby="zipCode-help-text"
-                            aria-labelledby="zipCode-control-label"
-                            class="rs-input"
-+                           disabled=""
-                            id="zipCode"
-                            name="zipCode"
-                            type="text"
-                            value=""
-                          />
-@@ -539,10 +549,11 @@
-                        >
-                          <input
-                            aria-describedby="city-help-text"
-                            aria-labelledby="city-control-label"
-                            class="rs-input"
-+                           disabled=""
-                            id="city"
-                            name="city"
-                            type="text"
-                            value=""
-                          />
-@@ -570,10 +581,11 @@
-                        >
-                          <input
-                            aria-describedby="country-help-text"
-                            aria-labelledby="country-control-label"
-                            class="rs-input"
-+                           disabled=""
-                            id="country"
-                            name="country"
-                            type="text"
-                            value=""
-                          />
-@@ -819,14 +831,15 @@
+@@ -817,18 +817,39 @@
+                        <div
+                          class="rs-form-control rs-form-control-wrapper"
                         >
                           <input
                             aria-describedby="password-help-text"
++                           aria-errormessage="password-error-message"
++                           aria-invalid="true"
                             aria-labelledby="password-control-label"
                             class="rs-input"
-+                           disabled=""
+                            disabled=""
                             id="password"
                             name="password"
                             type="password"
--                           value=""
-+                           value="superSecret"
+                            value=""
                           />
++                         <div
++                           aria-relevant="all"
++                           class="rs-form-control-message-wrapper rs-form-error-message-wrapper rs-form-error-message-placement-bottom-start"
++                           id="password-error-message"
++                           role="alert"
++                         >
++                           <span
++                             class="rs-form-error-message rs-form-error-message-show"
++                           >
++                             <span
++                               class="rs-form-error-message-arrow"
++                             />
++                             <span
++                               class="rs-form-error-message-inner"
++                             >
++                               errorMessages.noPasswordErrorMessage
++                             </span>
++                           </span>
++                         </div>
                         </div>
                       </div>
                     </div>
-                  </div>"
+                  </div>
+                </div>"
 `;
 
 exports[`User edit view should allow user properties to be added 1`] = `
@@ -278,10 +163,10 @@ exports[`User edit view should allow user properties to be added 1`] = `
                         <div>
                           <div>
 +                           <div
-+                             class="css-1wzl9qf-ListItemWrapper e1g7b9o10"
++                             class="css-1c4wd4"
 +                           >
 +                             <div
-+                               class="css-1ax8cc3-DragHandleWrapper e1g7b9o11"
++                               class="css-12frltk"
 +                             >
 +                               <button
 +                                 class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default"
@@ -314,14 +199,14 @@ exports[`User edit view should allow user properties to be added 1`] = `
 +                               </button>
 +                             </div>
 +                             <div
-+                               class="css-8n2042-Panel e1g7b9o12 rs-panel"
++                               class="css-1ago99h rs-panel"
 +                             >
 +                               <div
 +                                 class="rs-panel-body rs-panel-body-fill"
 +                                 role="region"
 +                               >
 +                                 <div
-+                                   class="css-1yerc6w-ChildrenWrapper e1g7b9o13"
++                                   class="css-10odzlz"
 +                                 >
 +                                   <div
 +                                     class="css-1sdoex4-FlexRow e1pdqxno4"
@@ -373,7 +258,7 @@ exports[`User edit view should allow user properties to be added 1`] = `
 +                               </div>
 +                             </div>
 +                             <div
-+                               class="css-1qpz4yt-IconButtonWrapper e1g7b9o14"
++                               class="css-17nfp2s"
 +                             >
                                 <button
                                   class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default"
@@ -413,7 +298,7 @@ exports[`User edit view should allow user properties to be added 1`] = `
                             >
                               <svg
                                 fill="currentColor"
-@@ -817,17 +988,38 @@
+@@ -817,18 +988,39 @@
                         <div
                           class="rs-form-control rs-form-control-wrapper"
                         >
@@ -423,6 +308,7 @@ exports[`User edit view should allow user properties to be added 1`] = `
 +                           aria-invalid="true"
                             aria-labelledby="password-control-label"
                             class="rs-input"
+                            disabled=""
                             id="password"
                             name="password"
                             type="password"
@@ -638,7 +524,7 @@ exports[`User edit view should render 1`] = `
     class="rs-form rs-form-vertical rs-form-fluid"
   >
     <div
-      class="css-11639om-FlexGrid e1j9na1z7 rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
+      class="css-b9g7s rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
     >
       <div
         class="rs-flex-box-grid-item rs-flex-box-grid-item-12"
@@ -647,19 +533,19 @@ exports[`User edit view should render 1`] = `
           class="rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
         >
           <div
-            class="css-1jfkkb5-FlexRow e1j9na1z2 rs-row"
+            class="css-1sg2lsz rs-row"
             role="row"
           >
             <div
-              class="css-1b4ksfg-PaddedCol e1j9na1z3 rs-col rs-col-xs-29"
+              class="css-b1st3c rs-col rs-col-xs-29"
               role="gridcell"
             >
               <a
-                class="css-7k4eh7-FlexLink e1j9na1z1"
+                class="css-ov1ktg"
                 href="/users"
               >
                 <svg
-                  class="css-1rhrlcg-ChevronLeft e1j9na1z8"
+                  class="css-11o64f7"
                   fill="currentColor"
                   height="1em"
                   stroke="currentColor"
@@ -678,7 +564,7 @@ exports[`User edit view should render 1`] = `
                 </svg>
               </a>
               <h1
-                class="css-1tkx6fb-Heading e1j9na1z0"
+                class="css-uzijeq"
               >
                 userCreateOrEditView.createNewUser
               </h1>
@@ -696,10 +582,10 @@ exports[`User edit view should render 1`] = `
             class="rs-flex-box-grid-item rs-flex-box-grid-item-0"
           />
           <div
-            class="css-89u6l2-FlexboxItem e1j9na1z6 rs-flex-box-grid-item rs-flex-box-grid-item-0"
+            class="css-yt3qgg rs-flex-box-grid-item rs-flex-box-grid-item-0"
           >
             <button
-              class="css-1gxmgc9-SaveButton e1j9na1z4 rs-btn rs-btn-ghost"
+              class="css-12frltk rs-btn rs-btn-ghost"
               data-testid="saveButton"
               type="submit"
             >
@@ -773,7 +659,7 @@ exports[`User edit view should render 1`] = `
                     role="gridcell"
                   >
                     <div
-                      class="css-obwoy8-Panel e1opz8xd0 rs-panel"
+                      class="css-chr1eq rs-panel"
                     >
                       <div
                         aria-expanded="false"
@@ -796,7 +682,7 @@ exports[`User edit view should render 1`] = `
                         role="region"
                       >
                         <div
-                          class="css-1posas4-PlaceholderInputWrapper e1tn6rau0"
+                          class="css-srfsgx"
                         >
                           <button
                             class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"
@@ -1456,6 +1342,7 @@ exports[`User edit view should render 1`] = `
                           aria-describedby="password-help-text"
                           aria-labelledby="password-control-label"
                           class="rs-input"
+                          disabled=""
                           id="password"
                           name="password"
                           type="password"
@@ -1481,7 +1368,7 @@ exports[`User edit view should render with ID 1`] = `
     class="rs-form rs-form-vertical rs-form-fluid"
   >
     <div
-      class="css-11639om-FlexGrid e1j9na1z7 rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
+      class="css-b9g7s rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
     >
       <div
         class="rs-flex-box-grid-item rs-flex-box-grid-item-12"
@@ -1490,19 +1377,19 @@ exports[`User edit view should render with ID 1`] = `
           class="rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
         >
           <div
-            class="css-1jfkkb5-FlexRow e1j9na1z2 rs-row"
+            class="css-1sg2lsz rs-row"
             role="row"
           >
             <div
-              class="css-1b4ksfg-PaddedCol e1j9na1z3 rs-col rs-col-xs-29"
+              class="css-b1st3c rs-col rs-col-xs-29"
               role="gridcell"
             >
               <a
-                class="css-7k4eh7-FlexLink e1j9na1z1"
+                class="css-ov1ktg"
                 href="/users"
               >
                 <svg
-                  class="css-1rhrlcg-ChevronLeft e1j9na1z8"
+                  class="css-11o64f7"
                   fill="currentColor"
                   height="1em"
                   stroke="currentColor"
@@ -1521,7 +1408,7 @@ exports[`User edit view should render with ID 1`] = `
                 </svg>
               </a>
               <h1
-                class="css-1tkx6fb-Heading e1j9na1z0"
+                class="css-uzijeq"
               >
                 userCreateOrEditView.createNewUser
               </h1>
@@ -1539,10 +1426,10 @@ exports[`User edit view should render with ID 1`] = `
             class="rs-flex-box-grid-item rs-flex-box-grid-item-0"
           />
           <div
-            class="css-89u6l2-FlexboxItem e1j9na1z6 rs-flex-box-grid-item rs-flex-box-grid-item-0"
+            class="css-yt3qgg rs-flex-box-grid-item rs-flex-box-grid-item-0"
           >
             <button
-              class="css-1gxmgc9-SaveButton e1j9na1z4 rs-btn rs-btn-ghost"
+              class="css-12frltk rs-btn rs-btn-ghost"
               data-testid="saveButton"
               type="submit"
             >
@@ -1616,7 +1503,7 @@ exports[`User edit view should render with ID 1`] = `
                     role="gridcell"
                   >
                     <div
-                      class="css-obwoy8-Panel e1opz8xd0 rs-panel"
+                      class="css-chr1eq rs-panel"
                     >
                       <div
                         aria-expanded="false"
@@ -1639,7 +1526,7 @@ exports[`User edit view should render with ID 1`] = `
                         role="region"
                       >
                         <div
-                          class="css-1posas4-PlaceholderInputWrapper e1tn6rau0"
+                          class="css-srfsgx"
                         >
                           <button
                             class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"
@@ -2299,6 +2186,7 @@ exports[`User edit view should render with ID 1`] = `
                           aria-describedby="password-help-text"
                           aria-labelledby="password-control-label"
                           class="rs-input"
+                          disabled=""
                           id="password"
                           name="password"
                           type="password"

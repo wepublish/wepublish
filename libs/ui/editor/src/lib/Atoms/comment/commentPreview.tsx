@@ -8,7 +8,6 @@ import {useTranslation} from 'react-i18next'
 import {MdAttachFile, MdEdit, MdExpandLess, MdExpandMore, MdTag} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Col, FlexboxGrid, Form, Grid, IconButton, Panel, Row} from 'rsuite'
-import FlexboxGridItem from 'rsuite/esm/FlexboxGrid/FlexboxGridItem'
 
 import {RichTextBlock} from '../../Blocks/richTextBlock/rich-text-block'
 import {RichTextBlockValue} from '../../Blocks/types'
@@ -145,11 +144,11 @@ export function CommentPreview({
       collapsible
       header={
         <FlexboxGrid justify="space-between">
-          <FlexboxGridItem>{getPanelHeader()}</FlexboxGridItem>
-          <FlexboxGridItem>
+          <FlexboxGrid.Item>{getPanelHeader()}</FlexboxGrid.Item>
+          <FlexboxGrid.Item>
             {panelExpanded && <MdExpandMore />}
             {!panelExpanded && <MdExpandLess />}
-          </FlexboxGridItem>
+          </FlexboxGrid.Item>
         </FlexboxGrid>
       }
       defaultExpanded={!!expanded}

@@ -2,7 +2,7 @@
 export * from './embeds'
 
 // rich text block
-export * from './richTextBlock/rich-text-block'
+export * from './richTextBlock'
 
 // others
 export * from './blockMap'

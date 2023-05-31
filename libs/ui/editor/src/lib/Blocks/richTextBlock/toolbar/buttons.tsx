@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import {useEffect, useRef} from 'react'
-import {OverlayTriggerInstance} from 'rsuite/esm/Picker'
+import {OverlayTriggerHandle} from 'rsuite/esm/Picker'
 import {useSlate} from 'slate-react'
 
 import {
@@ -67,7 +67,7 @@ export function EditorSubMenuButton({
   children,
   ...props
 }: EditorSubMenuButtonProps) {
-  const triggerRef = useRef<OverlayTriggerInstance>(null)
+  const triggerRef = useRef<OverlayTriggerHandle>(null)
 
   useEffect(() => {
     if (!editorHasFocus && triggerRef.current) triggerRef.current!.close()

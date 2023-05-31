@@ -10,7 +10,7 @@ import {
 } from 'react'
 import {MdClose} from 'react-icons/md'
 import {Divider, Popover, Whisper} from 'rsuite'
-import {OverlayTriggerInstance} from 'rsuite/esm/Picker'
+import {OverlayTriggerHandle} from 'rsuite/esm/Picker'
 import {useSlate} from 'slate-react'
 
 import {Format} from '../Blocks/richTextBlock/editor/formats'
@@ -158,11 +158,11 @@ export interface SubMenuButtonProps extends ToolbarIconButtonProps {
   readonly format?: Format
 }
 
-export const SubMenuButton = forwardRef<OverlayTriggerInstance, SubMenuButtonProps>(
+export const SubMenuButton = forwardRef<OverlayTriggerHandle, SubMenuButtonProps>(
   ({children, icon, format}, ref) => {
     // The Submenu buttons provides some local context to it's children.
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const localRef = useRef<OverlayTriggerInstance>(null)
+    const localRef = useRef<OverlayTriggerHandle>(null)
     // Optional forwarding ref from parent, else use local ref.
     const triggerRef = (ref || localRef) as typeof localRef
 
