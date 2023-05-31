@@ -324,7 +324,7 @@ export const publishArticle = async (
   }
 
   if (publishAt > new Date()) {
-    const deleOldRevisions = prisma.articleRevision.deleteMany({
+    const deletedOldRevisions = prisma.articleRevision.deleteMany({
       where: {
         id: {
           in: [article.pending?.id].filter((id): id is string => Boolean(id))
@@ -333,7 +333,7 @@ export const publishArticle = async (
     })
 
     const [, updatedArticle] = await prisma.$transaction([
-      deleOldRevisions,
+      deletedOldRevisions,
       prisma.article.update({
         where: {id},
         data: {
@@ -371,7 +371,7 @@ export const publishArticle = async (
     return updatedArticle
   }
 
-  const deleOldRevisions = prisma.articleRevision.deleteMany({
+  const deletedOldRevisions = prisma.articleRevision.deleteMany({
     where: {
       id: {
         in: [article.pending?.id, article.published?.id].filter((id): id is string => Boolean(id))
@@ -380,7 +380,7 @@ export const publishArticle = async (
   })
 
   const [, updatedArticle] = await prisma.$transaction([
-    deleOldRevisions,
+    deletedOldRevisions,
     prisma.article.update({
       where: {id},
       data: {
