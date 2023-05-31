@@ -198,6 +198,12 @@ export const unpublishArticle = async (
     ...revision
   } = (article.draft ?? article.pending ?? article.published)!
 
+  const duplicatedProperties = properties.map(property => ({
+    key: property.key,
+    value: property.value,
+    public: property.public
+  }))
+
   return articleClient.update({
     where: {id},
     data: {
@@ -210,7 +216,7 @@ export const unpublishArticle = async (
             updatedAt: null,
             properties: {
               createMany: {
-                data: properties
+                data: duplicatedProperties
               }
             },
             authors: {
@@ -234,7 +240,7 @@ export const unpublishArticle = async (
                 articleRevisionId: revisionId
               },
               createMany: {
-                data: properties
+                data: duplicatedProperties
               }
             },
             authors: {
@@ -289,6 +295,12 @@ export const publishArticle = async (
   if (!article.draft) return null
 
   const {id: revisionId, properties, authors, socialMediaAuthors, ...revision} = article.draft
+
+  const duplicatedProperties = properties.map(property => ({
+    key: property.key,
+    value: property.value,
+    public: property.public
+  }))
 
   const publishedArticle = await prisma.article.findFirst({
     where: {
@@ -345,7 +357,7 @@ export const publishArticle = async (
               updatedAt: updatedAt ?? publishAt,
               properties: {
                 createMany: {
-                  data: properties
+                  data: duplicatedProperties
                 }
               },
               authors: {
@@ -392,7 +404,7 @@ export const publishArticle = async (
             publishAt: null,
             properties: {
               createMany: {
-                data: properties
+                data: duplicatedProperties
               }
             },
             authors: {
