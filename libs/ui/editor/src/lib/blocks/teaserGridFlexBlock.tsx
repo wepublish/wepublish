@@ -7,7 +7,7 @@ import nanoid from 'nanoid'
 import {ComponentType, PropsWithChildren, useEffect, useState} from 'react'
 import GridLayoutWithoutChildren, {ReactGridLayoutProps} from 'react-grid-layout'
 import {useTranslation} from 'react-i18next'
-import {MdAddBox, MdDelete, MdEdit, MdLock, MdLockOpen} from 'react-icons/md'
+import {MdAddBox, MdArticle, MdDelete, MdEdit, MdLock, MdLockOpen} from 'react-icons/md'
 import {
   ButtonToolbar as RButtonToolbar,
   Drawer,
@@ -67,7 +67,7 @@ export function FlexTeaserBlock({
 
             <IconWrapper>
               <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.chooseTeaser')}>
-                <IconButton icon={<MdEdit />} onClick={onChoose} />
+                <IconButton icon={<MdArticle />} onClick={onChoose} />
               </IconButtonTooltip>
               <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.editTeaser')}>
                 <IconButton icon={<MdEdit />} onClick={onEdit} />
