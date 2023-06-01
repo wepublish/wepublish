@@ -351,6 +351,16 @@ export enum EventStatus {
   Scheduled = 'SCHEDULED'
 }
 
+export type EventTeaser = {
+  __typename?: 'EventTeaser'
+  event?: Maybe<Event>
+  image?: Maybe<Image>
+  lead?: Maybe<Scalars['String']>
+  preTitle?: Maybe<Scalars['String']>
+  style: TeaserStyle
+  title?: Maybe<Scalars['String']>
+}
+
 export type ExternalNavigationLink = BaseNavigationLink & {
   __typename?: 'ExternalNavigationLink'
   label: Scalars['String']
@@ -956,7 +966,7 @@ export type Query = {
   authors: AuthorConnection
   /** This query generates a challenge which can be used to access protected endpoints. */
   challenge: Challenge
-  /** This query will check the invoice status and update with information from the paymentProvider */
+  /** This mutation will check the invoice status and update with information from the paymentProvider */
   checkInvoiceStatus?: Maybe<Invoice>
   /** This query returns the comments of an item. */
   comments: Array<Comment>
@@ -964,7 +974,7 @@ export type Query = {
   event: Event
   /** This query returns a list of events */
   events?: Maybe<EventConnection>
-  /** This query returns the invoices of the authenticated user. */
+  /** This query returns the invoices  of the authenticated user. */
   invoices: Array<Invoice>
   /** This query returns the user. */
   me?: Maybe<User>
@@ -1238,7 +1248,7 @@ export enum TagType {
   Event = 'Event'
 }
 
-export type Teaser = ArticleTeaser | CustomTeaser | PageTeaser | PeerArticleTeaser
+export type Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser | PeerArticleTeaser
 
 export type TeaserGridBlock = {
   __typename?: 'TeaserGridBlock'
@@ -1299,6 +1309,7 @@ export type User = {
   oauth2Accounts: Array<OAuth2Account>
   paymentProviderCustomers: Array<PaymentProviderCustomer>
   preferredName?: Maybe<Scalars['String']>
+  properties: Array<PublicProperties>
 }
 
 export type UserAddress = {
@@ -1529,6 +1540,7 @@ export type FullArticleFragment = {
                 } | null
                 properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
               }
+            | {__typename?: 'EventTeaser'}
             | {
                 __typename?: 'PageTeaser'
                 style: TeaserStyle
@@ -1812,6 +1824,7 @@ export type ArticleQuery = {
                   } | null
                   properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                 }
+              | {__typename?: 'EventTeaser'}
               | {
                   __typename?: 'PageTeaser'
                   style: TeaserStyle
@@ -2232,6 +2245,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
           } | null
           properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
         }
+      | {__typename?: 'EventTeaser'}
       | {
           __typename?: 'PageTeaser'
           style: TeaserStyle
@@ -2919,6 +2933,7 @@ export type FullNavigationFragment = {
                           value: string
                         }>
                       }
+                    | {__typename?: 'EventTeaser'}
                     | {
                         __typename?: 'PageTeaser'
                         style: TeaserStyle
@@ -3217,6 +3232,7 @@ export type FullNavigationFragment = {
                           value: string
                         }>
                       }
+                    | {__typename?: 'EventTeaser'}
                     | {
                         __typename?: 'PageTeaser'
                         style: TeaserStyle
@@ -3527,6 +3543,7 @@ export type NavigationListQuery = {
                             value: string
                           }>
                         }
+                      | {__typename?: 'EventTeaser'}
                       | {
                           __typename?: 'PageTeaser'
                           style: TeaserStyle
@@ -3825,6 +3842,7 @@ export type NavigationListQuery = {
                             value: string
                           }>
                         }
+                      | {__typename?: 'EventTeaser'}
                       | {
                           __typename?: 'PageTeaser'
                           style: TeaserStyle
@@ -4138,6 +4156,7 @@ export type NavigationQuery = {
                             value: string
                           }>
                         }
+                      | {__typename?: 'EventTeaser'}
                       | {
                           __typename?: 'PageTeaser'
                           style: TeaserStyle
@@ -4436,6 +4455,7 @@ export type NavigationQuery = {
                             value: string
                           }>
                         }
+                      | {__typename?: 'EventTeaser'}
                       | {
                           __typename?: 'PageTeaser'
                           style: TeaserStyle
@@ -4720,6 +4740,7 @@ export type FullPageFragment = {
                 } | null
                 properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
               }
+            | {__typename?: 'EventTeaser'}
             | {
                 __typename?: 'PageTeaser'
                 style: TeaserStyle
@@ -5003,6 +5024,7 @@ export type PageQuery = {
                   } | null
                   properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                 }
+              | {__typename?: 'EventTeaser'}
               | {
                   __typename?: 'PageTeaser'
                   style: TeaserStyle

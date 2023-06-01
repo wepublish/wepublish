@@ -10,9 +10,11 @@ import {NotFound} from '../../error'
 import {validateCommentRatingValue} from '../comment-rating/comment-rating.public-mutation'
 import {authorise} from '../permissions'
 import {
+  CanCreateApprovedComment,
   CanDeleteComments,
   CanTakeActionOnComment,
-  CanUpdateComments
+  CanUpdateComments,
+  hasPermission
 } from '@wepublish/permissions/api'
 import {RichTextNode} from '../richText'
 
@@ -61,6 +63,8 @@ export const updateComment = async (
   const {roles} = authenticate()
   authorise(CanUpdateComments, roles)
 
+  const canSkipApproval = hasPermission(CanCreateApprovedComment, roles)
+
   if (ratingOverrides?.length) {
     const answerIds = ratingOverrides.map(override => override.answerId)
     const answers = await commentRatingAnswerClient.findMany({
@@ -87,6 +91,7 @@ export const updateComment = async (
     data: {
       userID,
       guestUsername,
+      state: canSkipApproval ? CommentState.approved : CommentState.pendingApproval,
       guestUserImageID,
       source,
       revisions: revision
@@ -156,9 +161,11 @@ export const createAdminComment = async (
   const {roles} = authenticate()
   authorise(CanUpdateComments, roles)
 
+  const canSkipApproval = hasPermission(CanCreateApprovedComment, roles)
+
   return commentClient.create({
     data: {
-      state: CommentState.pendingApproval,
+      state: canSkipApproval ? CommentState.approved : CommentState.pendingApproval,
       authorType: CommentAuthorType.team,
       itemID: itemId,
       itemType,
