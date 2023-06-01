@@ -36,12 +36,6 @@ query MemberPlanList($take: Int, $skip: Int) {
 }
 
 mutation Subscribe(
-  $name: String!
-  $firstName: String
-  $preferredName: String
-  $address: UserAddressInput
-  $email: String!
-  $password: String!
   $memberPlanID: ID
   $memberPlanSlug: Slug
   $autoRenew: Boolean!
@@ -52,15 +46,8 @@ mutation Subscribe(
   $subscriptionProperties: [PublicPropertiesInput!]
   $successURL: String
   $failureURL: String
-  $challengeAnswer: ChallengeInput!
 ) {
-  registerMemberAndReceivePayment(
-    name: $name
-    firstName: $firstName
-    preferredName: $preferredName
-    address: $address
-    email: $email
-    password: $password
+  createSubscription(
     memberPlanID: $memberPlanID
     memberPlanSlug: $memberPlanSlug
     autoRenew: $autoRenew
@@ -71,22 +58,9 @@ mutation Subscribe(
     subscriptionProperties: $subscriptionProperties
     successURL: $successURL
     failureURL: $failureURL
-    challengeAnswer: $challengeAnswer
   ) {
-    payment {
-      id
-      intentSecret
-    }
-
-    user {
-      id
-    }
-
-    session {
-      token
-      expiresAt
-      createdAt
-    }
+    id
+    intentSecret
   }
 }
 

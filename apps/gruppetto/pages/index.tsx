@@ -1,21 +1,35 @@
-import {Link, Typography} from '@mui/material'
-import {PageContainer} from '@wepublish/website'
+import {Typography, styled} from '@mui/material'
+import {
+  PageContainer,
+  PayInvoicesContainer,
+  SubscribeContainer,
+  WebsiteBuilderProvider
+} from '@wepublish/website'
 import Image from 'next/image'
 import Marlen from '../src/2212_Marlen Reusser030_396 1.png'
 import Marlen2 from '../src/2212_Marlen Reusser030_396 2.png'
 import {BreakImage} from '../src/components/break'
 import {BreakText} from '../src/components/break-text'
-import {Donate} from '../src/components/crowdfunding/donate'
 import {Intro} from '../src/components/intro'
+import {PayInvoices} from '../src/components/memberships/pay-invoices'
+import {Subscribe} from '../src/components/memberships/subscribe'
+
+const SubscriptionWrapper = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(5)};
+`
 
 export function Index() {
   return (
     <>
       <Intro />
 
-      <div id={'unterstuetze-uns'}>
-        <Donate />
-      </div>
+      <SubscriptionWrapper id={'unterstuetze-uns'}>
+        <WebsiteBuilderProvider Subscribe={Subscribe} PayInvoices={PayInvoices}>
+          <PayInvoicesContainer />
+          <SubscribeContainer />
+        </WebsiteBuilderProvider>
+      </SubscriptionWrapper>
 
       <BreakImage id={'ueber-uns'}>
         <div>

@@ -1,6 +1,6 @@
-import {SessionTokenContext, ApiV1} from '@wepublish/website'
+import {ApiV1, SessionTokenContext} from '@wepublish/website'
 import {deleteCookie, setCookie} from 'cookies-next'
-import {memo, PropsWithChildren, useEffect, useState} from 'react'
+import {PropsWithChildren, memo, useCallback, useEffect, useState} from 'react'
 
 export const AuthTokenStorageKey = 'auth.token'
 
@@ -15,20 +15,29 @@ export const SessionProvider = memo<PropsWithChildren<{sessionToken: ApiV1.UserS
       }
     })
 
+    const setCookieAndToken = useCallback(
+      (newToken: ApiV1.UserSession | null) => {
+        setToken(newToken)
+
+        if (newToken) {
+          setCookie(AuthTokenStorageKey, newToken, {
+            expires: new Date(newToken.expiresAt)
+          })
+          getMe()
+        } else {
+          setUser(null)
+          deleteCookie(AuthTokenStorageKey)
+        }
+      },
+      [getMe]
+    )
+
     useEffect(() => {
-      if (token) {
-        setCookie(AuthTokenStorageKey, token, {
-          expires: new Date(token.expiresAt)
-        })
-        getMe()
-      } else {
-        setUser(null)
-        deleteCookie(AuthTokenStorageKey)
-      }
-    }, [token, getMe])
+      setCookieAndToken(sessionToken)
+    }, [])
 
     return (
-      <SessionTokenContext.Provider value={[user, !!token, setToken]}>
+      <SessionTokenContext.Provider value={[user, !!token, setCookieAndToken]}>
         {children}
       </SessionTokenContext.Provider>
     )

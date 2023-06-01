@@ -3,33 +3,20 @@ import {
   ChallengeQuery,
   MemberPlanListQuery,
   SubscribeMutation,
-  SubscribeMutationVariables
+  SubscribeMutationVariables,
+  RegisterMutationVariables,
+  RegisterMutation
 } from '@wepublish/website/api'
 
 export type BuilderSubscribeProps = {
   challenge: Pick<QueryResult<ChallengeQuery>, 'data' | 'loading' | 'error'>
   memberPlans: Pick<QueryResult<MemberPlanListQuery>, 'data' | 'loading' | 'error'>
   subscribe: Pick<MutationResult<SubscribeMutation>, 'data' | 'loading' | 'error'>
-
-  onSubmit: (
-    data: Pick<
-      SubscribeMutationVariables,
-      | 'successURL'
-      | 'failureURL'
-      | 'name'
-      | 'firstName'
-      | 'preferredName'
-      | 'email'
-      | 'password'
-      | 'monthlyAmount'
-      | 'challengeAnswer'
-      | 'paymentPeriodicity'
-      | 'memberPlanID'
-      | 'paymentMethodID'
-      | 'address'
-      | 'autoRenew'
-    >
-  ) => void
-
+  register: Pick<MutationResult<RegisterMutation>, 'data' | 'loading' | 'error'>
   className?: string
+  onSubscribeWithRegister?: (data: {
+    subscribe: SubscribeMutationVariables
+    register: RegisterMutationVariables
+  }) => void
+  onSubscribe?: (data: SubscribeMutationVariables) => void
 }

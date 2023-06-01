@@ -4,16 +4,23 @@ import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {
   ChallengeQuery,
   MemberPlanListQuery,
+  RegisterMutation,
   SubscribeMutation,
+  SubscribeMutationVariables,
   useChallengeQuery,
   useMemberPlanListQuery,
+  useRegisterMutation,
   useSubscribeMutation
 } from '@wepublish/website/api'
-import {useEffect} from 'react'
+import {useEffect, useRef} from 'react'
 
 export type SubscribeContainerProps = {
   onSubscribeMutation?: (
     mutationResult: Pick<MutationResult<SubscribeMutation>, 'data' | 'loading' | 'error'>
+  ) => void
+
+  onRegisterMutation?: (
+    mutationResult: Pick<MutationResult<RegisterMutation>, 'data' | 'loading' | 'error'>
   ) => void
 
   onChallengeQuery?: (
@@ -28,10 +35,12 @@ export type SubscribeContainerProps = {
 export const SubscribeContainer = ({
   onChallengeQuery,
   onMemberPlansQuery,
-  onSubscribeMutation
+  onSubscribeMutation,
+  onRegisterMutation
 }: SubscribeContainerProps) => {
-  const {hasUser, setToken} = useUser()
+  const {setToken, hasUser} = useUser()
   const {Subscribe} = useWebsiteBuilder()
+  const memberToScribe = useRef<SubscribeMutationVariables>()
 
   const challenge = useChallengeQuery()
   const memberPlanList = useMemberPlanListQuery({
@@ -40,15 +49,19 @@ export const SubscribeContainer = ({
     }
   })
 
-  const [subscribe, result] = useSubscribeMutation({
+  const [subscribe, subscribeResult] = useSubscribeMutation({
+    onCompleted(data) {
+      if (data.createSubscription.intentSecret) {
+        window.location.href = data.createSubscription.intentSecret
+      }
+    }
+  })
+
+  const [register, registerResult] = useRegisterMutation({
     onError: () => challenge.refetch(),
     onCompleted(data) {
-      if (data.registerMemberAndReceivePayment.session) {
-        setToken(data.registerMemberAndReceivePayment.session)
-      }
-
-      if (data.registerMemberAndReceivePayment.payment.intentSecret) {
-        window.location.href = data.registerMemberAndReceivePayment.payment.intentSecret
+      if (data.registerMember.session) {
+        setToken(data.registerMember.session)
       }
     }
   })
@@ -62,25 +75,43 @@ export const SubscribeContainer = ({
   }, [memberPlanList, onMemberPlansQuery])
 
   useEffect(() => {
-    onSubscribeMutation?.(result)
-  }, [result, onSubscribeMutation])
+    onSubscribeMutation?.(subscribeResult)
+  }, [subscribeResult, onSubscribeMutation])
 
-  if (hasUser) {
-    return null
-  }
+  useEffect(() => {
+    onRegisterMutation?.(registerResult)
+  }, [registerResult, onRegisterMutation])
+
+  useEffect(() => {
+    if (hasUser && memberToScribe.current) {
+      subscribe({
+        variables: memberToScribe.current
+      })
+    }
+
+    memberToScribe.current = undefined
+  }, [hasUser, subscribe])
 
   return (
     <Subscribe
       challenge={challenge}
       memberPlans={memberPlanList}
-      subscribe={result}
-      onSubmit={formData =>
+      subscribe={subscribeResult}
+      onSubscribe={formData =>
         subscribe({
           variables: {
             ...formData
           }
         })
       }
+      register={registerResult}
+      onSubscribeWithRegister={async formData => {
+        memberToScribe.current = formData.subscribe
+
+        await register({
+          variables: formData.register
+        })
+      }}
     />
   )
 }

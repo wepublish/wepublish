@@ -1,10 +1,10 @@
-import {UserSession, User} from '@wepublish/website/api'
-import {createContext, Dispatch, SetStateAction, useContext} from 'react'
+import {User, UserSession} from '@wepublish/website/api'
+import {Dispatch, createContext, useContext} from 'react'
 
 export const AuthTokenStorageKey = 'auth.token'
 
 export const SessionTokenContext = createContext<
-  [User | null, boolean, Dispatch<SetStateAction<UserSession | null>>]
+  [User | null, boolean, Dispatch<UserSession | null>]
 >(null!)
 
 export const useUser = () => {

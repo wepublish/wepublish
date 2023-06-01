@@ -12,7 +12,7 @@ import {useEffect, useMemo, useState} from 'react'
 export type PayInvoicesContainerProps = {}
 
 export const PayInvoicesContainer = (props: PayInvoicesContainerProps) => {
-  const {user} = useUser()
+  const {hasUser} = useUser()
   const [checkedInvoices, setCheckedInvoices] =
     useState<CheckInvoiceStatusQuery['checkInvoiceStatus'][]>()
 
@@ -46,11 +46,11 @@ export const PayInvoicesContainer = (props: PayInvoicesContainerProps) => {
   const {PayInvoices} = useWebsiteBuilder()
 
   useEffect(() => {
-    if (user) {
+    if (hasUser) {
       getInvoices()
       getSubscriptions()
     }
-  }, [user, getInvoices, getSubscriptions])
+  }, [hasUser, getInvoices, getSubscriptions])
 
   const invoices = useMemo(() => {
     return checkedInvoices
@@ -69,7 +69,7 @@ export const PayInvoicesContainer = (props: PayInvoicesContainerProps) => {
       })
   }, [checkedInvoices, subscriptionList])
 
-  if (!user) {
+  if (!hasUser) {
     return null
   }
 
