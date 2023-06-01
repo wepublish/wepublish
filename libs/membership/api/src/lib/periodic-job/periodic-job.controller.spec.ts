@@ -33,7 +33,7 @@ describe('PeriodicJobController', () => {
     defaultData: {
       memberPlan: MemberPlanFactory,
       intervals: {connect: []}
-    }
+    } as any
   })
   const UserFactory = defineUserFactory()
   const InvoiceFactory = defineInvoiceFactory()
