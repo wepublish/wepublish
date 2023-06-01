@@ -9,11 +9,11 @@ import {
   ThemeProvider
 } from '@mui/material'
 import {theme} from '@wepublish/ui'
-import {FooterContainer, WebsiteBuilderProvider, WebsiteProvider, ApiV1} from '@wepublish/website'
+import {ApiV1, FooterContainer, WebsiteBuilderProvider, WebsiteProvider} from '@wepublish/website'
 import {deleteCookie, getCookie} from 'cookies-next'
 import {setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
-import App, {AppContext, AppProps} from 'next/app'
+import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import {PartialDeep} from 'type-fest'
@@ -87,11 +87,19 @@ const SocialLink = styled(Link)`
   justify-content: center;
 `
 
-type CustomAppProps = AppProps & {
-  sessionToken: ApiV1.UserSession | null
-}
+function CustomApp({Component, pageProps}: AppProps) {
+  const token = getCookie(AuthTokenStorageKey)
 
-function CustomApp({Component, pageProps, sessionToken}: CustomAppProps) {
+  let sessionToken = token ? (JSON.parse(token.toString()) as ApiV1.UserSession) : null
+
+  if (sessionToken) {
+    if (Date.now() > +new Date(sessionToken.expiresAt)) {
+      sessionToken = null
+
+      deleteCookie(AuthTokenStorageKey, {})
+    }
+  }
+
   return (
     <SessionProvider sessionToken={sessionToken}>
       <WebsiteProvider>
@@ -173,32 +181,5 @@ const {publicRuntimeConfig} = getConfig()
 const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
   CustomApp
 )
-
-;(ConnectedApp as any).getInitialProps = async (appContext: AppContext) => {
-  const appProps = await App.getInitialProps(appContext)
-
-  const token =
-    typeof window === 'undefined'
-      ? getCookie(AuthTokenStorageKey, {req: appContext.ctx.req})
-      : getCookie(AuthTokenStorageKey)
-
-  let sessionToken = token ? (JSON.parse(token.toString()) as ApiV1.UserSession) : null
-
-  if (sessionToken) {
-    if (Date.now() > +new Date(sessionToken.expiresAt)) {
-      sessionToken = null
-
-      deleteCookie(AuthTokenStorageKey, {
-        req: appContext?.ctx?.req,
-        res: appContext?.ctx?.res
-      })
-    }
-  }
-
-  return {
-    ...appProps,
-    sessionToken
-  }
-}
 
 export {ConnectedApp as default}
