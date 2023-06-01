@@ -13,6 +13,7 @@ import {
 } from '@wepublish/api'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {URL} from 'url'
+import {JobsModule} from '@wepublish/jobs'
 
 @Global()
 @Module({
@@ -34,6 +35,7 @@ import {URL} from 'url'
     PermissionModule,
     ConsentModule,
     SettingModule,
+    JobsModule.forRoot(),
     ConfigModule.forRoot()
   ],
   providers: [
