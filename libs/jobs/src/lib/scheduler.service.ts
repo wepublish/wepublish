@@ -8,9 +8,16 @@ export class Scheduler {
   constructor(private readonly boss: PgBoss) {}
 
   async scheduleJob(cron: string, jobName: string, handler: WorkHandler<any>) {
-    await this.boss.work(jobName, handler)
+    await this.boss.work(jobName, this.prepareWorkload(handler))
     await this.boss.schedule(jobName, cron)
     this.logger.log(`Scheduled job "${jobName}"`)
+  }
+
+  prepareWorkload(handler: WorkHandler<any>): WorkHandler<any> {
+    return async job => {
+      this.logger.log(`Processing job ${job.name} with id=${job.id}`)
+      await handler(job)
+    }
   }
 
   async unscheduleJob(jobName: string) {
