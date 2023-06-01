@@ -1,6 +1,6 @@
 import {ApiV1, SessionTokenContext} from '@wepublish/website'
 import {deleteCookie, setCookie} from 'cookies-next'
-import {PropsWithChildren, memo, useCallback, useState} from 'react'
+import {PropsWithChildren, memo, useCallback, useEffect, useState} from 'react'
 
 export const AuthTokenStorageKey = 'auth.token'
 
@@ -31,6 +31,10 @@ export const SessionProvider = memo<PropsWithChildren<{sessionToken: ApiV1.UserS
       },
       [getMe]
     )
+
+    useEffect(() => {
+      setCookieAndToken(sessionToken)
+    }, [])
 
     return (
       <SessionTokenContext.Provider value={[user, !!token, setCookieAndToken]}>

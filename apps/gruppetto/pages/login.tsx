@@ -11,7 +11,6 @@ import {GetServerSideProps} from 'next'
 import {useRouter} from 'next/router'
 import {useEffect} from 'react'
 import {Controller, useForm} from 'react-hook-form'
-import jwt from 'jsonwebtoken'
 import getConfig from 'next/config'
 
 const LoginWrapper = styled('div')`
