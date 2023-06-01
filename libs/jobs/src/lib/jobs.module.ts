@@ -1,5 +1,6 @@
 import {DynamicModule, Module} from '@nestjs/common'
-import {JobsService} from './jobs.service'
+import {Scheduler} from './scheduler.service'
+import {PgBossService} from './pg-boss.service'
 import PgBoss from 'pg-boss'
 
 type JobsModuleOptions = {
@@ -8,7 +9,13 @@ type JobsModuleOptions = {
 
 @Module({
   controllers: [],
-  providers: [JobsService],
+  providers: [
+    Scheduler,
+    {
+      provide: PgBoss,
+      useExisting: PgBossService
+    }
+  ],
   exports: []
 })
 export class JobsModule {
@@ -17,11 +24,11 @@ export class JobsModule {
       module: JobsModule,
       providers: [
         {
-          provide: JobsService.JOBS_SERVICE_PG_BOSS,
-          useValue: new PgBoss(options?.databaseUrl ?? process.env['DATABASE_URL']!)
+          provide: PgBossService,
+          useValue: new PgBossService(options?.databaseUrl ?? process.env['DATABASE_URL']!)
         }
       ],
-      exports: [JobsService]
+      exports: [Scheduler]
     }
   }
 }

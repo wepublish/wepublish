@@ -1,2 +1,2 @@
 export * from './lib/jobs.module'
-export * from './lib/jobs.service'
+export * from './lib/scheduler.service'
