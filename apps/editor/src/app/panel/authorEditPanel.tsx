@@ -23,6 +23,7 @@ import {
   RichTextBlock,
   RichTextBlockValue,
   slugify,
+  toggleRequiredLabel,
   useAuthorisation
 } from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
@@ -40,8 +41,6 @@ import {
   Schema,
   toaster
 } from 'rsuite'
-
-import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 const {ControlLabel, Group, Control} = RForm
 

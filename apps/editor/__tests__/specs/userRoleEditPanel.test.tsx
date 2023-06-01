@@ -5,10 +5,10 @@ import {
   PermissionListDocument,
   UserRoleDocument
 } from '@wepublish/editor/api'
+import {AuthContext} from '@wepublish/ui/editor'
 import React from 'react'
 import snapshotDiff from 'snapshot-diff'
 
-import {AuthContext} from '../../src/app/authContext'
 import {UserRoleEditPanel} from '../../src/app/panel/userRoleEditPanel'
 import {actWait, sessionWithPermissions} from '../utils'
 

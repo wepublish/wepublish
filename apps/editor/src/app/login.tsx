@@ -6,14 +6,18 @@ import {
   useCreateSessionWithOAuth2CodeMutation,
   useGetAuthProvidersQuery
 } from '@wepublish/editor/api'
-import {LocalStorageKey, LoginTemplate} from '@wepublish/ui/editor'
+import {
+  AuthDispatchActionType,
+  AuthDispatchContext,
+  LocalStorageKey,
+  LoginTemplate
+} from '@wepublish/ui/editor'
 import React, {FormEvent, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {IoIosRocket, IoLogoFacebook, IoLogoGoogle, IoLogoTwitter} from 'react-icons/io'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Divider, Form as RForm, IconButton as RIconButton, Message, toaster} from 'rsuite'
 
-import {AuthDispatchActionType, AuthDispatchContext} from './authContext'
 import {Background} from './ui/loginBackground'
 
 function useQuery() {

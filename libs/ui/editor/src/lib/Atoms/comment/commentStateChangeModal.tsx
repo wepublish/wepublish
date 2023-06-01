@@ -13,7 +13,7 @@ import {useTranslation} from 'react-i18next'
 import {MdReplay} from 'react-icons/md'
 import {Button, Dropdown, Message, Modal, Panel, Timeline, toaster} from 'rsuite'
 
-import {RichTextBlock} from '../../Blocks/richTextBlock/rich-text-block'
+import {RichTextBlock} from '../../blocks/richTextBlock/rich-text-block'
 import {DescriptionList, DescriptionListItem} from '../descriptionList'
 
 const ParentCommentPanel = styled(Panel)`

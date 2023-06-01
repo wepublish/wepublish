@@ -5,9 +5,47 @@ exports[`User edit view should allow a new user to be created 1`] = `
 - First value
 + Second value
 
-@@ -294,11 +294,11 @@
+@@ -210,18 +210,19 @@
+                          id="active-control-label"
+                        >
+                          userCreateOrEditView.active
+                        </label>
+                        <label
+-                         class="rs-toggle rs-toggle-checked"
++                         class="rs-toggle rs-toggle-checked rs-toggle-disabled"
+                        >
+                          <input
+                            aria-checked="true"
+-                           aria-disabled="false"
++                           aria-disabled="true"
+                            aria-label="Open"
+                            checked=""
+                            class="rs-toggle-input"
++                           disabled=""
+                            role="switch"
+                            type="checkbox"
+                          />
+                          <span
+                            class="rs-toggle-presentation"
+@@ -260,10 +261,11 @@
+                        >
+                          <input
+                            aria-describedby="firstName-help-text"
+                            aria-labelledby="firstName-control-label"
+                            class="rs-input"
++                           disabled=""
+                            id="firstName"
+                            name="firstName"
+                            type="text"
+                            value=""
+                          />
+@@ -291,14 +293,15 @@
+                        >
+                          <input
+                            aria-describedby="name-help-text"
                             aria-labelledby="name-control-label"
                             class="rs-input"
++                           disabled=""
                             id="name"
                             name="name"
                             type="text"
@@ -18,9 +56,25 @@ exports[`User edit view should allow a new user to be created 1`] = `
                       </div>
                     </div>
                     <div
-@@ -356,11 +356,11 @@
+@@ -322,10 +325,11 @@
+                        >
+                          <input
+                            aria-describedby="preferredName-help-text"
+                            aria-labelledby="preferredName-control-label"
+                            class="rs-input"
++                           disabled=""
+                            id="preferredName"
+                            name="preferredName"
+                            type="text"
+                            value=""
+                          />
+@@ -353,14 +357,15 @@
+                        >
+                          <input
+                            aria-describedby="email-help-text"
                             aria-labelledby="email-control-label"
                             class="rs-input"
++                           disabled=""
                             id="email"
                             name="email"
                             type="text"
@@ -31,46 +85,107 @@ exports[`User edit view should allow a new user to be created 1`] = `
                       </div>
                     </div>
                     <div
-@@ -817,18 +817,39 @@
-                        <div
-                          class="rs-form-control rs-form-control-wrapper"
+@@ -384,10 +389,11 @@
+                        >
+                          <input
+                            aria-describedby="flair-help-text"
+                            aria-labelledby="flair-control-label"
+                            class="rs-input"
++                           disabled=""
+                            id="flair"
+                            name="flair"
+                            type="text"
+                            value=""
+                          />
+@@ -415,10 +421,11 @@
+                        >
+                          <input
+                            aria-describedby="company-help-text"
+                            aria-labelledby="company-control-label"
+                            class="rs-input"
++                           disabled=""
+                            id="company"
+                            name="company"
+                            type="text"
+                            value=""
+                          />
+@@ -446,10 +453,11 @@
+                        >
+                          <input
+                            aria-describedby="streetAddress-help-text"
+                            aria-labelledby="streetAddress-control-label"
+                            class="rs-input"
++                           disabled=""
+                            id="streetAddress"
+                            name="streetAddress"
+                            type="text"
+                            value=""
+                          />
+@@ -477,10 +485,11 @@
+                        >
+                          <input
+                            aria-describedby="streetAddress2-help-text"
+                            aria-labelledby="streetAddress2-control-label"
+                            class="rs-input"
++                           disabled=""
+                            id="streetAddress2"
+                            name="streetAddress2"
+                            type="text"
+                            value=""
+                          />
+@@ -508,10 +517,11 @@
+                        >
+                          <input
+                            aria-describedby="zipCode-help-text"
+                            aria-labelledby="zipCode-control-label"
+                            class="rs-input"
++                           disabled=""
+                            id="zipCode"
+                            name="zipCode"
+                            type="text"
+                            value=""
+                          />
+@@ -539,10 +549,11 @@
+                        >
+                          <input
+                            aria-describedby="city-help-text"
+                            aria-labelledby="city-control-label"
+                            class="rs-input"
++                           disabled=""
+                            id="city"
+                            name="city"
+                            type="text"
+                            value=""
+                          />
+@@ -570,10 +581,11 @@
+                        >
+                          <input
+                            aria-describedby="country-help-text"
+                            aria-labelledby="country-control-label"
+                            class="rs-input"
++                           disabled=""
+                            id="country"
+                            name="country"
+                            type="text"
+                            value=""
+                          />
+@@ -819,14 +831,15 @@
                         >
                           <input
                             aria-describedby="password-help-text"
-+                           aria-errormessage="password-error-message"
-+                           aria-invalid="true"
                             aria-labelledby="password-control-label"
                             class="rs-input"
-                            disabled=""
++                           disabled=""
                             id="password"
                             name="password"
                             type="password"
-                            value=""
+-                           value=""
++                           value="superSecret"
                           />
-+                         <div
-+                           aria-relevant="all"
-+                           class="rs-form-control-message-wrapper rs-form-error-message-wrapper rs-form-error-message-placement-bottom-start"
-+                           id="password-error-message"
-+                           role="alert"
-+                         >
-+                           <span
-+                             class="rs-form-error-message rs-form-error-message-show"
-+                           >
-+                             <span
-+                               class="rs-form-error-message-arrow"
-+                             />
-+                             <span
-+                               class="rs-form-error-message-inner"
-+                             >
-+                               errorMessages.noPasswordErrorMessage
-+                             </span>
-+                           </span>
-+                         </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>"
+                  </div>"
 `;
 
 exports[`User edit view should allow user properties to be added 1`] = `
@@ -298,7 +413,7 @@ exports[`User edit view should allow user properties to be added 1`] = `
                             >
                               <svg
                                 fill="currentColor"
-@@ -817,18 +988,39 @@
+@@ -817,17 +988,38 @@
                         <div
                           class="rs-form-control rs-form-control-wrapper"
                         >
@@ -308,7 +423,6 @@ exports[`User edit view should allow user properties to be added 1`] = `
 +                           aria-invalid="true"
                             aria-labelledby="password-control-label"
                             class="rs-input"
-                            disabled=""
                             id="password"
                             name="password"
                             type="password"
@@ -1342,7 +1456,6 @@ exports[`User edit view should render 1`] = `
                           aria-describedby="password-help-text"
                           aria-labelledby="password-control-label"
                           class="rs-input"
-                          disabled=""
                           id="password"
                           name="password"
                           type="password"
@@ -2186,7 +2299,6 @@ exports[`User edit view should render with ID 1`] = `
                           aria-describedby="password-help-text"
                           aria-labelledby="password-control-label"
                           class="rs-input"
-                          disabled=""
                           id="password"
                           name="password"
                           type="password"

@@ -3,8 +3,8 @@ import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Input as RInput, Message} from 'rsuite'
 
-import {EmbedPreview} from '../Blocks/embedBlock'
-import {EmbedBlockValue, EmbedType} from '../Blocks/types'
+import {EmbedPreview} from '../blocks/embedBlock'
+import {EmbedBlockValue, EmbedType} from '../blocks/types'
 import {flattenDOMTokenList} from '../utility'
 
 const Metadata = styled.div`

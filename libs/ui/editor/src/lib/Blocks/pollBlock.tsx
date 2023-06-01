@@ -4,9 +4,9 @@ import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
 import {Drawer, IconButton, Panel as RPanel} from 'rsuite'
 
-import {BlockProps} from '../Atoms/blockList'
-import {PlaceholderInput} from '../Atoms/placeholderInput'
-import {SelectPollPanel} from '../Panel/selectPollPanel'
+import {BlockProps} from '../atoms/blockList'
+import {PlaceholderInput} from '../atoms/placeholderInput'
+import {SelectPollPanel} from '../panel/selectPollPanel'
 import {PollBlockValue} from './types'
 
 const IconWrapper = styled.div`

@@ -21,15 +21,15 @@ import {
   toaster
 } from 'rsuite'
 
-import {DescriptionList, DescriptionListItem} from '../Atoms/descriptionList'
-import {Point} from '../Atoms/draggable'
-import {FocalPointInput} from '../Atoms/focalPointInput'
-import {ImageMetaData} from '../Atoms/imageMetaData'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {Point} from '../atoms/draggable'
+import {FocalPointInput} from '../atoms/focalPointInput'
+import {ImageMetaData} from '../atoms/imageMetaData'
 import {
   createCheckedPermissionComponent,
   PermissionControl,
   useAuthorisation
-} from '../Atoms/permissionControl'
+} from '../atoms/permissionControl'
 import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
 
 const {ControlLabel, Control, Group} = RForm

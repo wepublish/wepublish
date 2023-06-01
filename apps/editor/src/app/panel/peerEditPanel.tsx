@@ -16,13 +16,12 @@ import {
   PermissionControl,
   RichTextBlock,
   slugify,
+  toggleRequiredLabel,
   useAuthorisation
 } from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form as RForm, Message, Panel, Schema, toaster} from 'rsuite'
-
-import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 export interface PeerEditPanelProps {
   id?: string

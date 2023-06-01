@@ -3,6 +3,7 @@ import {onError} from '@apollo/client/link/error'
 import {CssBaseline, ThemeProvider} from '@mui/material'
 import {theme} from '@wepublish/ui'
 import {
+  AuthProvider,
   FacebookProvider,
   getSettings,
   InstagramProvider,
@@ -14,7 +15,6 @@ import ReactDOM from 'react-dom'
 import {IconContext} from 'react-icons'
 
 import {App} from './app/app'
-import {AuthProvider} from './app/authContext'
 import {initI18N} from './app/i18n'
 import {ElementID} from './shared/elementID'
 

@@ -4,9 +4,9 @@ import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
 import {Drawer, IconButton, Panel as RPanel} from 'rsuite'
 
-import {BlockProps} from '../Atoms/blockList'
-import {PlaceholderInput} from '../Atoms/placeholderInput'
-import {SelectCommentPanel} from '../Panel/selectCommentsPanel'
+import {BlockProps} from '../atoms/blockList'
+import {PlaceholderInput} from '../atoms/placeholderInput'
+import {SelectCommentPanel} from '../panel/selectCommentsPanel'
 import {CommentBlockValue} from './types'
 
 const Panel = styled(RPanel)`

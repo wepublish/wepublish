@@ -18,9 +18,9 @@ import {
   Toggle
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
-import {IconButtonTooltip, PermissionControl, SelectTags} from '../Atoms'
-import {RichTextBlock} from '../Blocks'
-import {CommentBlockValue} from '../Blocks/types'
+import {IconButtonTooltip, PermissionControl, SelectTags} from '../atoms'
+import {RichTextBlock} from '../blocks'
+import {CommentBlockValue} from '../blocks/types'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
 
 const CheckboxWrapper = styled.div`

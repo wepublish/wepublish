@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Col, Drawer, Form, Row} from 'rsuite'
 
-import {ImageSelectPanel} from '../../Panel/imageSelectPanel'
+import {ImageSelectPanel} from '../../panel/imageSelectPanel'
 import {ChooseEditImage} from '../chooseEditImage'
 import {UserSearch} from '../searchAndFilter/userSearch'
 

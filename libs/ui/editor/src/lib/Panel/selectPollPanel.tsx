@@ -7,10 +7,9 @@ import {MdAddCircle} from 'react-icons/md'
 import {Button, Drawer, IconButton, Message, Pagination, Table, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {IconButtonTooltip} from '../Atoms/iconButtonTooltip'
-import {PollStateIndication} from '../Atoms/poll/pollStateIndication'
-import {PollBlockValue} from '../Blocks/types'
-// import {PollClosedAtView, PollOpensAtView} from '../routes/polls/pollList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {PollStateIndication} from '../atoms/poll/pollStateIndication'
+import {PollBlockValue} from '../blocks/types'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
 
 export function PollOpensAtView({poll}: {poll: Poll}) {

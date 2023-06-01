@@ -5,11 +5,11 @@ import {useTranslation} from 'react-i18next'
 import {MdBuild, MdEdit, MdPhoto} from 'react-icons/md'
 import {Drawer, Dropdown, IconButton, Panel as RPanel} from 'rsuite'
 
-import {BlockProps} from '../Atoms/blockList'
-import {PlaceholderInput} from '../Atoms/placeholderInput'
-import {TypographicTextArea} from '../Atoms/typographicTextArea'
-import {ImageEditPanel} from '../Panel/imageEditPanel'
-import {ImageSelectPanel} from '../Panel/imageSelectPanel'
+import {BlockProps} from '../atoms/blockList'
+import {PlaceholderInput} from '../atoms/placeholderInput'
+import {TypographicTextArea} from '../atoms/typographicTextArea'
+import {ImageEditPanel} from '../panel/imageEditPanel'
+import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImageBlockValue} from './types'
 
 export const Panel = styled(RPanel)`

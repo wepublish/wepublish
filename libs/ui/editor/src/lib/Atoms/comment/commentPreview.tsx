@@ -9,8 +9,8 @@ import {MdAttachFile, MdEdit, MdExpandLess, MdExpandMore, MdTag} from 'react-ico
 import {Link} from 'react-router-dom'
 import {Col, FlexboxGrid, Form, Grid, IconButton, Panel, Row} from 'rsuite'
 
-import {RichTextBlock} from '../../Blocks/richTextBlock/rich-text-block'
-import {RichTextBlockValue} from '../../Blocks/types'
+import {RichTextBlock} from '../../blocks/richTextBlock/rich-text-block'
+import {RichTextBlockValue} from '../../blocks/types'
 import {humanReadableCommentState} from './commentStateDropdown'
 import {CreateCommentBtn} from './createCommentBtn'
 

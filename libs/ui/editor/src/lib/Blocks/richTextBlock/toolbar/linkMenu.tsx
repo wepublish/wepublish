@@ -6,7 +6,7 @@ import {Button, ButtonToolbar, Col as RCol, Form, IconButton, InputGroup, Row} f
 import {Editor, Range, Transforms} from 'slate'
 import {useSlate} from 'slate-react'
 
-import {SubMenuContext} from '../../../Atoms/toolbar'
+import {SubMenuContext} from '../../../atoms/toolbar'
 import {InlineFormat} from '../editor/formats'
 import {WepublishEditor} from '../editor/wepublishEditor'
 

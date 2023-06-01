@@ -17,10 +17,10 @@ import {
   toaster
 } from 'rsuite'
 
-import {FileDropInput} from '../Atoms/fileDropInput'
-import {ImageMetaData, readImageMetaData} from '../Atoms/imageMetaData'
-import {createCheckedPermissionComponent} from '../Atoms/permissionControl'
-import {Typography} from '../Atoms/typography'
+import {FileDropInput} from '../atoms/fileDropInput'
+import {ImageMetaData, readImageMetaData} from '../atoms/imageMetaData'
+import {createCheckedPermissionComponent} from '../atoms/permissionControl'
+import {Typography} from '../atoms/typography'
 import {getImgMinSizeToCompress} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 

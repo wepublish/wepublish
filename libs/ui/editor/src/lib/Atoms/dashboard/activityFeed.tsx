@@ -17,7 +17,7 @@ import {Link} from 'react-router-dom'
 import {Avatar, Message, Timeline as RTimeline, toaster} from 'rsuite'
 
 import {AVAILABLE_LANG} from '../../utility'
-import {RichTextBlock} from '../../Blocks/richTextBlock/rich-text-block'
+import {RichTextBlock} from '../../blocks/richTextBlock/rich-text-block'
 
 const Timeline = styled(RTimeline)`
   margin-left: 10px;

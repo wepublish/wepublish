@@ -15,11 +15,11 @@ import {
   Panel as RPanel
 } from 'rsuite'
 
-import {BlockProps} from '../Atoms/blockList'
-import {IconButtonTooltip} from '../Atoms/iconButtonTooltip'
-import {PlaceholderInput} from '../Atoms/placeholderInput'
-import {TeaserEditPanel} from '../Panel/teaserEditPanel'
-import {TeaserSelectAndEditPanel} from '../Panel/teaserSelectAndEditPanel'
+import {BlockProps} from '../atoms/blockList'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {PlaceholderInput} from '../atoms/placeholderInput'
+import {TeaserEditPanel} from '../panel/teaserEditPanel'
+import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 import {ContentForTeaser, IconWrapper} from './teaserGridBlock'
 import {FlexAlignment, FlexTeaser, Teaser as TeaserType, TeaserGridFlexBlockValue} from './types'
 

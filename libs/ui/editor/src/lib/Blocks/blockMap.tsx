@@ -17,7 +17,7 @@ import {
   MdViewQuilt
 } from 'react-icons/md'
 
-import {BlockMapForValue} from '../Atoms/blockList'
+import {BlockMapForValue} from '../atoms/blockList'
 import {CommentBlock} from './commentBlock'
 import {EmbedBlock} from './embedBlock'
 import {EventBlock} from './eventBlock'

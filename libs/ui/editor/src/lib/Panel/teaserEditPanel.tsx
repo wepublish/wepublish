@@ -13,10 +13,10 @@ import {
   Toggle as RToggle
 } from 'rsuite'
 
-import {ChooseEditImage} from '../Atoms/chooseEditImage'
-import {DescriptionList, DescriptionListItem} from '../Atoms/descriptionList'
-import {ListInput, ListValue} from '../Atoms/listInput'
-import {Teaser, TeaserType} from '../Blocks/types'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {ListInput, ListValue} from '../atoms/listInput'
+import {Teaser, TeaserType} from '../blocks/types'
 import {generateID} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
@@ -261,6 +261,13 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
       imageURL = teaser.page.latest.image?.previewURL ?? undefined
       title = teaser.page.latest.title ?? undefined
       lead = teaser.page.latest.description ?? undefined
+      break
+
+    case TeaserType.Event:
+      type = 'Event'
+      imageURL = teaser.event.image?.previewURL ?? undefined
+      title = teaser.event.name ?? undefined
+      lead = teaser.event.location ?? undefined
       break
 
     case TeaserType.Custom:

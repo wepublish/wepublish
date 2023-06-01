@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 import {useEffect, useRef} from 'react'
 import {useTranslation} from 'react-i18next'
 
-import {BlockProps} from '../Atoms/blockList'
-import {TypographicTextArea} from '../Atoms/typographicTextArea'
+import {BlockProps} from '../atoms/blockList'
+import {TypographicTextArea} from '../atoms/typographicTextArea'
 import {QuoteBlockValue} from './types'
 
 const Dash = styled.div`

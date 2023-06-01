@@ -18,10 +18,10 @@ import {
 } from 'rsuite'
 
 import {RowDataType} from 'rsuite-table'
-import {IconButtonTooltip} from '../Atoms/iconButtonTooltip'
-import {PermissionControl} from '../Atoms/permissionControl'
-import {SelectTags} from '../Atoms/tag/selectTags'
-import {EventBlockValue} from '../Blocks/types'
+import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
+import {PermissionControl} from '../atoms/permissionControl'
+import {SelectTags} from '../atoms/tag/selectTags'
+import {EventBlockValue} from '../blocks/types'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
 
 const onErrorToast = (error: ApolloError) => {

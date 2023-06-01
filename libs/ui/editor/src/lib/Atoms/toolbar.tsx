@@ -13,8 +13,8 @@ import {Divider, Popover, Whisper} from 'rsuite'
 import {OverlayTriggerHandle} from 'rsuite/esm/Picker'
 import {useSlate} from 'slate-react'
 
-import {Format} from '../Blocks/richTextBlock/editor/formats'
-import {WepublishEditor} from '../Blocks/richTextBlock/editor/wepublishEditor'
+import {Format} from '../blocks/richTextBlock/editor/formats'
+import {WepublishEditor} from '../blocks/richTextBlock/editor/wepublishEditor'
 
 const ToolbarDividerElement = styled(Divider)`
   height: 1.5em;

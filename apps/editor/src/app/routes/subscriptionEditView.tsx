@@ -28,6 +28,7 @@ import {
   ListViewHeader,
   PermissionControl,
   TableWrapper,
+  toggleRequiredLabel,
   useAuthorisation,
   UserSearch
 } from '@wepublish/ui/editor'
@@ -55,7 +56,6 @@ import FormControlLabel from 'rsuite/FormControlLabel'
 
 import {InvoiceListPanel} from '../panel/invoiceListPanel'
 import {UserSubscriptionDeactivatePanel} from '../panel/userSubscriptionDeactivatePanel'
-import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 const {Group, ControlLabel, Control, HelpText} = RForm
 

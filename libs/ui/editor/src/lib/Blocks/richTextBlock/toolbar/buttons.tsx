@@ -10,7 +10,7 @@ import {
   ToolbarButtonProps,
   ToolbarIconButton,
   ToolbarIconButtonProps
-} from '../../../Atoms/toolbar'
+} from '../../../atoms/toolbar'
 import {Format} from '../editor/formats'
 import {WepublishEditor} from '../editor/wepublishEditor'
 

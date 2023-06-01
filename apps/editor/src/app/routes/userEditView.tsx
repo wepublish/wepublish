@@ -18,6 +18,7 @@ import {
   ListInput,
   ListValue,
   ModelTitle,
+  toggleRequiredLabel,
   useAuthorisation,
   UserSubscriptionsList
 } from '@wepublish/ui/editor'
@@ -38,8 +39,6 @@ import {
   toaster,
   Toggle as RToggle
 } from 'rsuite'
-
-import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 const Grid = styled(RGrid)`
   padding-right: 0px;

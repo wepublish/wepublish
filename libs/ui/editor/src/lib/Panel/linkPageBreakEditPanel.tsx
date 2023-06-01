@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, Radio, RadioGroup, SelectPicker, Toggle} from 'rsuite'
 
-import {LinkPageBreakBlockValue} from '../Blocks/types'
+import {LinkPageBreakBlockValue} from '../blocks/types'
 
 export interface LinkPageBreakEditPanelProps {
   readonly value: LinkPageBreakBlockValue

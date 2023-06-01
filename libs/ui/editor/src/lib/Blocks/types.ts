@@ -13,9 +13,9 @@ import {
 import nanoid from 'nanoid'
 import {Node} from 'slate'
 
-import {BlockListValue} from '../Atoms/blockList'
-import {ListValue} from '../Atoms/listInput'
-import {TeaserMetadataProperty} from '../Panel/teaserEditPanel'
+import {BlockListValue} from '../atoms/blockList'
+import {ListValue} from '../atoms/listInput'
+import {TeaserMetadataProperty} from '../panel/teaserEditPanel'
 
 export enum BlockType {
   RichText = 'richText',
@@ -204,7 +204,8 @@ export enum TeaserType {
   Article = 'article',
   PeerArticle = 'peerArticle',
   Page = 'page',
-  Custom = 'custom'
+  Custom = 'custom',
+  Event = 'event'
 }
 
 export enum MetaDataType {
@@ -231,6 +232,11 @@ export interface PageTeaserLink {
   page: PageRefFragment
 }
 
+export interface EventTeaserLink {
+  type: TeaserType.Event
+  event: EventRefFragment
+}
+
 export interface CustomTeaserLink extends BaseTeaser {
   type: TeaserType.Custom
   contentUrl?: string
@@ -242,6 +248,7 @@ export type TeaserLink =
   | PeerArticleTeaserLink
   | PageTeaserLink
   | CustomTeaserLink
+  | EventTeaserLink
 
 export interface BaseTeaser {
   style: TeaserStyle
@@ -255,8 +262,9 @@ export interface ArticleTeaser extends ArticleTeaserLink, BaseTeaser {}
 export interface PeerArticleTeaser extends PeerArticleTeaserLink, BaseTeaser {}
 export interface PageTeaser extends PageTeaserLink, BaseTeaser {}
 export interface CustomTeaser extends CustomTeaserLink, BaseTeaser {}
+export interface EventTeaser extends EventTeaserLink, BaseTeaser {}
 
-export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser
+export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser | EventTeaser
 
 export interface TeaserGridBlockValue {
   teasers: Array<[string, Teaser | null]>

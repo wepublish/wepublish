@@ -6,8 +6,8 @@ import {Button, Col as RCol, IconButton, InputGroup as RInputGroup, InputNumber,
 import {Transforms} from 'slate'
 import {useSlate} from 'slate-react'
 
-import {ColorPicker} from '../../../Atoms/colorPicker'
-import {ControlsContainer, SubMenuContext} from '../../../Atoms/toolbar'
+import {ColorPicker} from '../../../atoms/colorPicker'
+import {ControlsContainer, SubMenuContext} from '../../../atoms/toolbar'
 import {DEFAULT_BORDER_COLOR, emptyCellsTable} from '../editor/elements'
 import {BlockFormat} from '../editor/formats'
 import {WepublishEditor} from '../editor/wepublishEditor'

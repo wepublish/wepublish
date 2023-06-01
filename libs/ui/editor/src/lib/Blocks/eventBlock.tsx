@@ -4,9 +4,9 @@ import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
 import {Drawer, IconButton, Panel} from 'rsuite'
 
-import {BlockProps} from '../Atoms/blockList'
-import {PlaceholderInput} from '../Atoms/placeholderInput'
-import {SelectEventPanel} from '../Panel/selectEventsPanel'
+import {BlockProps} from '../atoms/blockList'
+import {PlaceholderInput} from '../atoms/placeholderInput'
+import {SelectEventPanel} from '../panel/selectEventsPanel'
 import {EventBlockValue} from './types'
 
 export function EventStartsAtView({startsAt}: {startsAt: string}) {

@@ -18,14 +18,13 @@ import {
   PermissionControl,
   RichTextBlock,
   RichTextBlockValue,
+  toggleRequiredLabel,
   useAuthorisation
 } from '@wepublish/ui/editor'
 import {useEffect, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form as RForm, Message as RMessage, Panel, Schema, toaster} from 'rsuite'
 import {FormInstance} from 'rsuite/esm/Form'
-
-import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 

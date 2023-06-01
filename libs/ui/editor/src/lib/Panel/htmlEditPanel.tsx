@@ -3,7 +3,7 @@ import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Input as RInput} from 'rsuite'
 
-import {HTMLBlockValue} from '../Blocks/types'
+import {HTMLBlockValue} from '../blocks/types'
 
 const Warning = styled.div`
   margin-top: 20px;
