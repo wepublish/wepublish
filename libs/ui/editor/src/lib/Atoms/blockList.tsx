@@ -91,7 +91,7 @@ export interface BlockListValue<T extends string = string, V = any> {
   value: V
 }
 
-export type BlockMap = Record<string, BlockCaseProps>
+type BlockMap = Record<string, BlockCaseProps>
 
 export type BlockMapForValue<R extends BlockListValue> = UnionToIntersection<
   R extends BlockListValue<infer T, infer V> ? {[K in T]: BlockCaseProps<V>} : never
