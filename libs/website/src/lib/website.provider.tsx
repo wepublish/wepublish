@@ -30,10 +30,6 @@ import {memo, PropsWithChildren} from 'react'
 import {IconContext} from 'react-icons'
 
 const globalStyles = css`
-  body {
-    word-break: break-word;
-  }
-
   img {
     max-width: 100%;
     height: auto;
