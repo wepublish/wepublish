@@ -129,10 +129,9 @@ const CustomSubscribe = ({
     mode: 'onSubmit'
   })
 
-  const activeMemberplans =
-    memberPlans.data?.memberPlans.nodes
-      .filter(memberPlan => !memberPlan.tags?.length)
-      .sort((a, b) => a.amountPerMonthMin - b.amountPerMonthMin) ?? []
+  const activeMemberplans = [...(memberPlans.data?.memberPlans.nodes ?? [])].sort(
+    (a, b) => a.amountPerMonthMin - b.amountPerMonthMin
+  )
 
   const [selectedMemberplan, setSelectedMemberplan] = useState<
     typeof activeMemberplans[0] | undefined
