@@ -412,10 +412,8 @@ const CustomSubscribe = ({
                 redaktion@gruppetto-magazin.ch
               </Link>{' '}
               informieren. Du möchtest mit der Kreditkarte bezahlen. Das kannst du unter folgendem{' '}
-              <Link href="https://checkout.stripe.com/c/pay/cs_live_a1xb9r1hgcEmqRJAOQ18XRTgyK8OMpR7Twco5FpWhXqzU4y3HYOXiM5Slf#fidkdWxOYHwnPyd1blppbHNgWjA0SHFEY2FNdUtiN0tPYmJoR1A2Z3Q2d19wMExuRGlNaE5WTWJKSERPSTxOQm11cjNdSU1oaTFzY2FEdkMyZjxyQm48TDNLdWZgdmNjNzExQ0ZLaGxBZ11dNTUyR0ROcmlpSycpJ3VpbGtuQH11anZgYUxhJz8nPERUPEFXYEZtPElBZ21oPERGJ3gl">
-                Link bei Stripe
-              </Link>
-              . Informiere uns per Mail, welchen Benefit du gerne möchtest.
+              <Link href="https://buy.stripe.com/bIY03h8dTe1T5X2eVa">Link bei Stripe</Link>.
+              Informiere uns per Mail, welchen Benefit du gerne möchtest.
             </strong>
           </Typography>
 
