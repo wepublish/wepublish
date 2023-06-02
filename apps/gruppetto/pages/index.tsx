@@ -14,6 +14,7 @@ import {Intro} from '../src/components/intro'
 import {PayInvoices} from '../src/components/memberships/pay-invoices'
 import {Subscribe} from '../src/components/memberships/subscribe'
 import {CrowdfundingChart} from '../src/components/crowdfunding/crowdfunding-chart'
+import {GetStaticProps} from 'next'
 
 const SubscriptionWrapper = styled('div')`
   display: grid;
@@ -139,3 +140,11 @@ export function Index() {
 }
 
 export default Index
+
+export const getStaticProps: GetStaticProps = async () => {
+  return {
+    props: {},
+    // - At most once every hour
+    revalidate: 60 * 60 // In seconds
+  }
+}
