@@ -52,6 +52,9 @@ exports[`DashboardSubscriptionService should get all active subscribers 2`] = `
     "OR": [
       {
         "deactivation": null,
+        "paidUntil": {
+          "gte": 2023-01-01T00:00:00.000Z,
+        },
       },
       {
         "deactivation": {
