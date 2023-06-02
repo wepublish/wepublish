@@ -259,7 +259,7 @@ const CustomSubscribe = ({
               <H5 component="h2">Deine Personalien</H5>
 
               <Paragraph>
-                (Falls du schon einen Account besiztz, <Link href="/login">klicke hier.</Link>)
+                (Falls du schon einen Account besizt, <Link href="/login">klicke hier.</Link>)
               </Paragraph>
 
               <InputForm>
@@ -406,7 +406,7 @@ const CustomSubscribe = ({
           <Typography variant="h6" component="p" marginBottom={3}>
             <strong>
               Bezahlen kannst du momentan nur mit Twint. Alternativ kannst du eine Zahlung an
-              Megaprint AG, Hohlstrasse 207, 8004, CH5404835055588231000 mit dem Zahlunszweck
+              Megaprint AG, Hohlstrasse 209, 8004, CH5404835055588231000 mit dem Zahlunszweck
               Bezeichnung des Benefits z.B. &quot;Besenwagen&quot; machen, und uns per Mail an{' '}
               <Link href="mailto:redaktion@gruppetto-magazin.ch">
                 redaktion@gruppetto-magazin.ch

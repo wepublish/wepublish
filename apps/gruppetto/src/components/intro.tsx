@@ -33,21 +33,11 @@ const Intro = () => {
 
   return (
     <IntroWrapper>
-      <H3 component="h1">Das neue Magazin für Radsport und Velokultur erscheint im Juni</H3>
+      <H3 component="h1">Abonniere das Magazin für Radsport und Velokultur</H3>
 
       <Paragraph>
         Das «Gruppetto»-Magazin erzählt packende Radsport-Geschichten, beleuchtet weniger bekannte
-        Hintergründe und widerspiegelt die Velobegeisterung der Leser:innen. Das Crowdfunding haben
-        wir erfolgreich abgeschlossen und die erste Ausgabe erscheint im Juni. Dies feiern wir mit
-        einem Launch-Event inkusive Social Ride am 2. Juni in der Zitrone Manegg, Allmendstrasse 91,
-        8041 Zürich. Wer sich unverbindlich anmelden möchte,{' '}
-        <Link
-          href={
-            'https://docs.google.com/forms/d/e/1FAIpQLSeydk0djDKZsAD--MdGiKCljaSc_lNi4s2kqg-3aNjTa9EtCw/viewform'
-          }
-          target="_blank">
-          kann das hier tun.
-        </Link>
+        Hintergründe und widerspiegelt die Velobegeisterung der Leser:innen.
       </Paragraph>
 
       <Paragraph>

@@ -40,7 +40,7 @@ export function Index() {
           <Typography variant="body1" marginBottom={2}>
             Wir sind vor zwei Jahren mit einer Idee losgerollt, die uns seither nicht mehr loslässt.
             Wir wollen ein hochwertiges Radsport-Magazin herausgeben, das man gerne in den Händen
-            hält und dabei ein Gefühl der Freiheit spürt. Die erste Nummer des «Gruppetto» ist um
+            hält und dabei ein Gefühl der Freiheit spürt. Die erste Nummer des «Gruppetto» ist im
             Juni erschienen. Nun entscheidet sich, ob es ab 2024 viermal im Jahr allen
             Abonnent:innen nachhause geliefert werden soll.
           </Typography>
