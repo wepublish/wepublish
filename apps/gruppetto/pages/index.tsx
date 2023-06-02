@@ -144,7 +144,7 @@ export default Index
 export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {},
-    // - At most once every hour
-    revalidate: 60 * 60 // In seconds
+    // - At most once every day
+    revalidate: 60 * 60 * 24 // In seconds
   }
 }

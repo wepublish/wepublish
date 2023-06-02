@@ -41,8 +41,8 @@ const Intro = () => {
       </Paragraph>
 
       <Paragraph>
-        Wer das «Gruppetto» abonnieren möchte, kann dies ab Juni hier auf der Website tun. Werden
-        mindestens 3000 Abos abgeschlossen, erscheint das «Gruppetto» ab 2024 viermal jährlich.
+        Wer das «Gruppetto» abonnieren möchte, kann dies hier auf der Website tun. Werden mindestens
+        3000 Abos abgeschlossen, erscheint das «Gruppetto» ab 2024 viermal jährlich.
       </Paragraph>
 
       <Paragraph>
@@ -59,7 +59,7 @@ const Intro = () => {
 
       <ActionWrapper>
         <UnstyledLink href="#unterstuetze-uns" scroll={false} shallow>
-          <Button>Unterstütze uns</Button>
+          <Button>Abo lösen</Button>
         </UnstyledLink>
 
         <UnstyledLink href="#ueber-uns" scroll={false} shallow>
