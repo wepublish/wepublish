@@ -1,6 +1,7 @@
 import {Meta} from '@storybook/react'
 import {ImageBlock} from './image-block'
 import {css} from '@emotion/react'
+import {Image} from '@wepublish/website/api'
 
 export default {
   component: ImageBlock,
@@ -22,7 +23,7 @@ const image = {
   title: 'An image title',
   filename: 'An image filename',
   url: 'https://unsplash.it/500/500'
-}
+} as Image
 
 export const Default = {
   args: {

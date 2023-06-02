@@ -16,6 +16,7 @@ import {
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
   BuilderTeaserGridFlexBlockProps,
+  BuilderTeaserProps,
   BuilderTitleBlockProps
 } from './blocks.interface'
 import {BuilderButtonProps} from './button.interface'
@@ -83,6 +84,7 @@ export type WebsiteBuilderComponents = {
     RichText: ComponentType<BuilderRichTextBlockProps>
     HTML: ComponentType<BuilderHTMLBlockProps>
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
+    Teaser: ComponentType<BuilderTeaserProps>
   }
 }
 
@@ -127,7 +129,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     Quote: NoComponent,
     RichText: NoComponent,
     HTML: NoComponent,
-    TeaserGridFlex: NoComponent
+    TeaserGridFlex: NoComponent,
+    Teaser: NoComponent
   }
 })
 

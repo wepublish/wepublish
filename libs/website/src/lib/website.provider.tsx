@@ -6,7 +6,8 @@ import {
   QuoteBlock,
   RichTextBlock,
   TeaserGridFlexBlock,
-  TitleBlock
+  TitleBlock,
+  Teaser
 } from '@wepublish/block-content/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
@@ -66,7 +67,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Quote: QuoteBlock,
           HTML: HtmlBlock,
           RichText: RichTextBlock,
-          TeaserGridFlex: TeaserGridFlexBlock
+          TeaserGridFlex: TeaserGridFlexBlock,
+          Teaser
         }}
         richtext={{RenderElement, RenderLeaf}}>
         {children}
