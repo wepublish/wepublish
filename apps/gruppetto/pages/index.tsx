@@ -13,6 +13,7 @@ import {BreakText} from '../src/components/break-text'
 import {Intro} from '../src/components/intro'
 import {PayInvoices} from '../src/components/memberships/pay-invoices'
 import {Subscribe} from '../src/components/memberships/subscribe'
+import {CrowdfundingChart} from '../src/components/crowdfunding/crowdfunding-chart'
 
 const SubscriptionWrapper = styled('div')`
   display: grid;
@@ -23,6 +24,8 @@ export function Index() {
   return (
     <>
       <Intro />
+
+      <CrowdfundingChart />
 
       <SubscriptionWrapper id={'unterstuetze-uns'}>
         <WebsiteBuilderProvider Subscribe={Subscribe} PayInvoices={PayInvoices}>

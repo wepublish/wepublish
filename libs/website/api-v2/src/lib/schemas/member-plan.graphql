@@ -5,3 +5,9 @@ query Revenue($start: DateTime!, $end: DateTime) {
     memberPlan
   }
 }
+
+query Subscriptions {
+  activeSubscribers {
+    monthlyAmount
+  }
+}
