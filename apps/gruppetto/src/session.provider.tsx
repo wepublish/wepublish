@@ -20,7 +20,7 @@ export const SessionProvider = memo<PropsWithChildren<{sessionToken: ApiV1.UserS
         setToken(newToken)
 
         if (newToken) {
-          setCookie(AuthTokenStorageKey, newToken, {
+          setCookie(AuthTokenStorageKey, JSON.stringify(newToken), {
             expires: new Date(newToken.expiresAt)
           })
           getMe()
