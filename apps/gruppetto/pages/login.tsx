@@ -118,7 +118,8 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
     setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
       req: ctx.req,
       res: ctx.res,
-      expires: new Date(data.data.createSessionWithJWT.expiresAt)
+      expires: new Date(data.data.createSessionWithJWT.expiresAt),
+      sameSite: 'strict'
     })
 
     return {
