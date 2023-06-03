@@ -6,7 +6,7 @@ export const AuthTokenStorageKey = 'auth.token'
 
 export const SessionProvider = memo<PropsWithChildren<{sessionToken: ApiV1.UserSession | null}>>(
   ({sessionToken, children}) => {
-    const [token, setToken] = useState<typeof sessionToken>(null)
+    const [token, setToken] = useState(sessionToken)
     const [user, setUser] = useState<ApiV1.User | null>(null)
 
     const [getMe] = ApiV1.useMeLazyQuery({
