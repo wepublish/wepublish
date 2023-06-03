@@ -258,7 +258,7 @@ const CustomSubscribe = ({
               <H5 component="h2">Deine Personalien</H5>
 
               <Paragraph>
-                (Falls du schon einen Account besizt, <Link href="/login">klicke hier.</Link>)
+                (Falls du schon einen Account besitzt, <Link href="/login">klicke hier.</Link>)
               </Paragraph>
 
               <InputForm>
