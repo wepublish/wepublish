@@ -99,7 +99,7 @@ const teaserImage = (teaser: TeaserType) => {
   }
 }
 
-const TeaserImage = styled('img')`
+const teaserImageStyles = css`
   object-fit: cover;
   height: 100%;
 `
@@ -114,21 +114,14 @@ export const Teaser = ({teaser, alignment, className, showLead}: BuilderTeaserPr
   const image = teaser && teaserImage(teaser)
 
   const {
-    elements: {H5, H6, Link}
+    elements: {H5, H6, Link, Image}
   } = useWebsiteBuilder()
 
   return (
     <TeaserWrapper {...alignment}>
       <Link color="inherit" underline="none" href={href}>
         <TeaserInnerWrapper className={className}>
-          {image?.url && (
-            <TeaserImage
-              src={image.url}
-              width={image.width}
-              height={image.height}
-              alt={image.description ?? ''}
-            />
-          )}
+          {image && <Image image={image} css={teaserImageStyles} />}
 
           <TeaserTitleWrapper>
             <H5 component="h1">

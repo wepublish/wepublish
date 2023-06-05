@@ -39,6 +39,7 @@ import {BuilderPayInvoicesProps} from './pay-invoices.interface'
 import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
 import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
+import {BuilderImageProps} from './image.interface'
 
 const NoComponent = () => null
 
@@ -70,6 +71,7 @@ export type WebsiteBuilderComponents = {
     OrderedList: ComponentType<BuilderOrderedListProps>
     UnorderedList: ComponentType<BuilderUnorderedListProps>
     ListItem: ComponentType<BuilderListItemProps>
+    Image: ComponentType<BuilderImageProps>
   }
 
   richtext: {
@@ -115,7 +117,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     Link: NoComponent,
     OrderedList: NoComponent,
     UnorderedList: NoComponent,
-    ListItem: NoComponent
+    ListItem: NoComponent,
+    Image: NoComponent
   },
 
   richtext: {
@@ -143,6 +146,8 @@ export const WebsiteBuilderProvider = memo<
 >(({children, ...components}) => {
   const parentComponents = useWebsiteBuilder()
   const newComponents = mergeDeepRight(parentComponents, components) as WebsiteBuilderComponents
+
+  console.log(newComponents)
 
   return (
     <WebsiteBuilderContext.Provider value={newComponents}>

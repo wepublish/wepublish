@@ -1,13 +1,13 @@
-import {Meta} from '@storybook/react'
 import {css} from '@emotion/react'
-import {TeaserGridFlexBlock} from './teaser-grid-flex-block'
+import {Meta} from '@storybook/react'
 import {
   ArticleTeaser,
   CustomTeaser,
-  Image,
+  FullImageFragment,
   PageTeaser,
   TeaserGridFlexBlock as TeaserGridFlexBlockType
 } from '@wepublish/website/api'
+import {TeaserGridFlexBlock} from './teaser-grid-flex-block'
 
 export default {
   component: TeaserGridFlexBlock,
@@ -28,8 +28,12 @@ const image = {
   description: 'An image description',
   title: 'An image title',
   filename: 'An image filename',
-  url: 'https://unsplash.it/500/500'
-} as Image
+  url: 'https://unsplash.it/500/500',
+  bigURL: 'https://unsplash.it/800/800',
+  largeURL: 'https://unsplash.it/500/500',
+  mediumURL: 'https://unsplash.it/300/300',
+  smallURL: 'https://unsplash.it/200/200'
+} as FullImageFragment
 
 const customTeaser = {
   style: 'DEFAULT',

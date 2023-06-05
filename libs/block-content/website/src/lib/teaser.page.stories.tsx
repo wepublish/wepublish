@@ -1,5 +1,5 @@
 import {Meta} from '@storybook/react'
-import {Image, PageTeaser} from '@wepublish/website/api'
+import {FullImageFragment, PageTeaser} from '@wepublish/website/api'
 import {Teaser} from './teaser'
 
 export default {
@@ -21,8 +21,12 @@ const image = {
   description: 'An image description',
   title: 'An image title',
   filename: 'An image filename',
-  url: 'https://unsplash.it/500/500'
-} as Image
+  url: 'https://unsplash.it/500/500',
+  bigURL: 'https://unsplash.it/800/800',
+  largeURL: 'https://unsplash.it/500/500',
+  mediumURL: 'https://unsplash.it/300/300',
+  smallURL: 'https://unsplash.it/200/200'
+} as FullImageFragment
 
 const pageTeaser = {
   __typename: 'PageTeaser',

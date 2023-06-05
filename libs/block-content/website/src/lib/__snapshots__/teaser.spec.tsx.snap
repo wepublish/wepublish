@@ -16,9 +16,13 @@ exports[`Teaser Article should render Default 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -52,9 +56,13 @@ exports[`Teaser Article should render WithShowLead 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -93,9 +101,13 @@ exports[`Teaser Article should render WithoutImage 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -158,9 +170,13 @@ exports[`Teaser Article should render WithoutLead 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -199,9 +215,13 @@ exports[`Teaser Article should render WithoutLeadWithoutBlock 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -240,9 +260,13 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -276,9 +300,13 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -312,9 +340,13 @@ exports[`Teaser Custom should render Default 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -348,9 +380,13 @@ exports[`Teaser Custom should render WithShowLead 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -418,9 +454,13 @@ exports[`Teaser Custom should render WithoutLead 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -457,9 +497,13 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -493,9 +537,13 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -529,9 +577,13 @@ exports[`Teaser Page should render Default 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -565,9 +617,13 @@ exports[`Teaser Page should render WithShowLead 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -606,9 +662,13 @@ exports[`Teaser Page should render WithoutImage 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -642,9 +702,13 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -678,9 +742,13 @@ exports[`Teaser Page should render WithoutLead 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -719,9 +787,13 @@ exports[`Teaser Page should render WithoutLeadWithoutBlock 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -760,9 +832,13 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -796,9 +872,13 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -832,9 +912,13 @@ exports[`Teaser should render WithClassName 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header
@@ -868,9 +952,13 @@ exports[`Teaser should render WithEmotion 1`] = `
       >
         <img
           alt="An image description"
-          class="css-sr2c7j"
+          class="css-1qnf57e"
           height="500"
-          src="https://unsplash.it/500/500"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
           width="500"
         />
         <header

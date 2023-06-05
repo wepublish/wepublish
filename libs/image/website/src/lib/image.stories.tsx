@@ -1,11 +1,10 @@
-import {css} from '@emotion/react'
 import {Meta} from '@storybook/react'
 import {FullImageFragment} from '@wepublish/website/api'
-import {ImageBlock} from './image-block'
+import {Image} from './image'
 
 export default {
-  component: ImageBlock,
-  title: 'Blocks/Image'
+  component: Image,
+  title: 'Components/Image'
 } as Meta
 
 const image = {
@@ -31,32 +30,20 @@ const image = {
 
 export const Default = {
   args: {
-    image,
+    image
+  }
+}
+
+export const WithoutDescription = {
+  args: {
+    image: {...image, description: undefined},
     caption: 'Image caption'
   }
 }
 
-export const WithClassName = {
+export const WithoutTitle = {
   args: {
-    image,
-    caption: 'Image caption',
-    className: 'extra-classname'
-  }
-}
-
-export const WithEmotion = {
-  args: {
-    image,
-    caption: 'Image caption',
-    css: css`
-      background-color: #eee;
-    `
-  }
-}
-
-export const WithoutCaption = {
-  args: {
-    image,
-    caption: ''
+    image: {...image, title: undefined},
+    caption: 'Image caption'
   }
 }

@@ -112,7 +112,6 @@ exports[`Richtext Block should render Default 1`] = `
           >
             <td
               data-slate-node="element"
-              style="border-color: #000000;"
             >
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -131,7 +130,6 @@ exports[`Richtext Block should render Default 1`] = `
             </td>
             <td
               data-slate-node="element"
-              style="border-color: #000000;"
             >
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -154,7 +152,6 @@ exports[`Richtext Block should render Default 1`] = `
           >
             <td
               data-slate-node="element"
-              style="border-color: #000000;"
             >
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -173,7 +170,6 @@ exports[`Richtext Block should render Default 1`] = `
             </td>
             <td
               data-slate-node="element"
-              style="border-color: #000000;"
             >
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -483,7 +479,6 @@ exports[`Richtext Block should render WithClassName 1`] = `
           >
             <td
               data-slate-node="element"
-              style="border-color: #000000;"
             >
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -502,7 +497,6 @@ exports[`Richtext Block should render WithClassName 1`] = `
             </td>
             <td
               data-slate-node="element"
-              style="border-color: #000000;"
             >
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -525,7 +519,6 @@ exports[`Richtext Block should render WithClassName 1`] = `
           >
             <td
               data-slate-node="element"
-              style="border-color: #000000;"
             >
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -544,7 +537,6 @@ exports[`Richtext Block should render WithClassName 1`] = `
             </td>
             <td
               data-slate-node="element"
-              style="border-color: #000000;"
             >
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -854,7 +846,6 @@ exports[`Richtext Block should render WithEmotion 1`] = `
           >
             <td
               data-slate-node="element"
-              style="border-color: #000000;"
             >
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -873,7 +864,6 @@ exports[`Richtext Block should render WithEmotion 1`] = `
             </td>
             <td
               data-slate-node="element"
-              style="border-color: #000000;"
             >
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -896,7 +886,6 @@ exports[`Richtext Block should render WithEmotion 1`] = `
           >
             <td
               data-slate-node="element"
-              style="border-color: #000000;"
             >
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -915,7 +904,6 @@ exports[`Richtext Block should render WithEmotion 1`] = `
             </td>
             <td
               data-slate-node="element"
-              style="border-color: #000000;"
             >
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"

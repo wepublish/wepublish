@@ -234,13 +234,10 @@ const blocks = [
       },
       title: null,
       url: 'https://unsplash.it/500/281',
-      largeURL: 'https://unsplash.it/500/281',
-      mediumURL: 'https://unsplash.it/500/281',
-      thumbURL: 'https://unsplash.it/500/281',
-      squareURL: 'https://unsplash.it/500/281',
-      previewURL: 'https://unsplash.it/500/281',
-      column1URL: 'https://unsplash.it/500/281',
-      column6URL: 'https://unsplash.it/500/281'
+      bigURL: 'https://unsplash.it/800/800',
+      largeURL: 'https://unsplash.it/500/500',
+      mediumURL: 'https://unsplash.it/300/300',
+      smallURL: 'https://unsplash.it/200/200'
     }
   },
   {
@@ -288,13 +285,10 @@ const blocks = [
             width: 4000,
             height: 6000,
             url: 'https://unsplash.it/500/281',
-            largeURL: 'https://unsplash.it/500/281',
-            mediumURL: 'https://unsplash.it/500/281',
-            thumbURL: 'https://unsplash.it/500/281',
-            squareURL: 'https://unsplash.it/500/281',
-            previewURL: 'https://unsplash.it/500/281',
-            column1URL: 'https://unsplash.it/500/281',
-            column6URL: 'https://unsplash.it/500/281'
+            bigURL: 'https://unsplash.it/800/800',
+            largeURL: 'https://unsplash.it/500/500',
+            mediumURL: 'https://unsplash.it/300/300',
+            smallURL: 'https://unsplash.it/200/200'
           },
           preTitle: 'Pre Title',
           title: 'Title',
@@ -335,13 +329,10 @@ const blocks = [
                   },
                   title: 'SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST',
                   url: 'https://unsplash.it/500/281',
-                  largeURL: 'https://unsplash.it/500/281',
-                  mediumURL: 'https://unsplash.it/500/281',
-                  thumbURL: 'https://unsplash.it/500/281',
-                  squareURL: 'https://unsplash.it/500/281',
-                  previewURL: 'https://unsplash.it/500/281',
-                  column1URL: 'https://unsplash.it/500/281',
-                  column6URL: 'https://unsplash.it/500/281'
+                  bigURL: 'https://unsplash.it/800/800',
+                  largeURL: 'https://unsplash.it/500/500',
+                  mediumURL: 'https://unsplash.it/300/300',
+                  smallURL: 'https://unsplash.it/200/200'
                 }
               },
               {
@@ -401,13 +392,10 @@ const blocks = [
                   },
                   title: 'SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST',
                   url: 'https://unsplash.it/500/281',
-                  largeURL: 'https://unsplash.it/500/281',
-                  mediumURL: 'https://unsplash.it/500/281',
-                  thumbURL: 'https://unsplash.it/500/281',
-                  squareURL: 'https://unsplash.it/500/281',
-                  previewURL: 'https://unsplash.it/500/281',
-                  column1URL: 'https://unsplash.it/500/281',
-                  column6URL: 'https://unsplash.it/500/281'
+                  bigURL: 'https://unsplash.it/800/800',
+                  largeURL: 'https://unsplash.it/500/500',
+                  mediumURL: 'https://unsplash.it/300/300',
+                  smallURL: 'https://unsplash.it/200/200'
                 }
               },
               {
@@ -436,13 +424,10 @@ const blocks = [
             width: 4000,
             height: 6000,
             url: 'https://unsplash.it/500/281',
-            largeURL: 'https://unsplash.it/500/281',
-            mediumURL: 'https://unsplash.it/500/281',
-            thumbURL: 'https://unsplash.it/500/281',
-            squareURL: 'https://unsplash.it/500/281',
-            previewURL: 'https://unsplash.it/500/281',
-            column1URL: 'https://unsplash.it/500/281',
-            column6URL: 'https://unsplash.it/500/281'
+            bigURL: 'https://unsplash.it/800/800',
+            largeURL: 'https://unsplash.it/500/500',
+            mediumURL: 'https://unsplash.it/300/300',
+            smallURL: 'https://unsplash.it/200/200'
           },
           preTitle: 'Pre Title',
           title: 'Title',
@@ -488,13 +473,10 @@ const blocks = [
                   },
                   title: null,
                   url: 'https://unsplash.it/500/281',
-                  largeURL: 'https://unsplash.it/500/281',
-                  mediumURL: 'https://unsplash.it/500/281',
-                  thumbURL: 'https://unsplash.it/500/281',
-                  squareURL: 'https://unsplash.it/500/281',
-                  previewURL: 'https://unsplash.it/500/281',
-                  column1URL: 'https://unsplash.it/500/281',
-                  column6URL: 'https://unsplash.it/500/281'
+                  bigURL: 'https://unsplash.it/800/800',
+                  largeURL: 'https://unsplash.it/500/500',
+                  mediumURL: 'https://unsplash.it/300/300',
+                  smallURL: 'https://unsplash.it/200/200'
                 }
               },
               {
@@ -529,13 +511,10 @@ const blocks = [
                   },
                   title: null,
                   url: 'https://unsplash.it/500/281',
-                  largeURL: 'https://unsplash.it/500/281',
-                  mediumURL: 'https://unsplash.it/500/281',
-                  thumbURL: 'https://unsplash.it/500/281',
-                  squareURL: 'https://unsplash.it/500/281',
-                  previewURL: 'https://unsplash.it/500/281',
-                  column1URL: 'https://unsplash.it/500/281',
-                  column6URL: 'https://unsplash.it/500/281'
+                  bigURL: 'https://unsplash.it/800/800',
+                  largeURL: 'https://unsplash.it/500/500',
+                  mediumURL: 'https://unsplash.it/300/300',
+                  smallURL: 'https://unsplash.it/200/200'
                 }
               },
               {
@@ -567,13 +546,10 @@ const blocks = [
                   },
                   title: null,
                   url: 'https://unsplash.it/500/281',
-                  largeURL: 'https://unsplash.it/500/281',
-                  mediumURL: 'https://unsplash.it/500/281',
-                  thumbURL: 'https://unsplash.it/500/281',
-                  squareURL: 'https://unsplash.it/500/281',
-                  previewURL: 'https://unsplash.it/500/281',
-                  column1URL: 'https://unsplash.it/500/281',
-                  column6URL: 'https://unsplash.it/500/281'
+                  bigURL: 'https://unsplash.it/800/800',
+                  largeURL: 'https://unsplash.it/500/500',
+                  mediumURL: 'https://unsplash.it/300/300',
+                  smallURL: 'https://unsplash.it/200/200'
                 }
               },
               {
@@ -603,13 +579,10 @@ const blocks = [
                   },
                   title: 'Limmathaus',
                   url: 'https://unsplash.it/500/281',
-                  largeURL: 'https://unsplash.it/500/281',
-                  mediumURL: 'https://unsplash.it/500/281',
-                  thumbURL: 'https://unsplash.it/500/281',
-                  squareURL: 'https://unsplash.it/500/281',
-                  previewURL: 'https://unsplash.it/500/281',
-                  column1URL: 'https://unsplash.it/500/281',
-                  column6URL: 'https://unsplash.it/500/281'
+                  bigURL: 'https://unsplash.it/800/800',
+                  largeURL: 'https://unsplash.it/500/500',
+                  mediumURL: 'https://unsplash.it/300/300',
+                  smallURL: 'https://unsplash.it/200/200'
                 }
               },
               {
@@ -647,13 +620,10 @@ const blocks = [
                   },
                   title: 'Limmathaus',
                   url: 'https://unsplash.it/500/281',
-                  largeURL: 'https://unsplash.it/500/281',
-                  mediumURL: 'https://unsplash.it/500/281',
-                  thumbURL: 'https://unsplash.it/500/281',
-                  squareURL: 'https://unsplash.it/500/281',
-                  previewURL: 'https://unsplash.it/500/281',
-                  column1URL: 'https://unsplash.it/500/281',
-                  column6URL: 'https://unsplash.it/500/281'
+                  bigURL: 'https://unsplash.it/800/800',
+                  largeURL: 'https://unsplash.it/500/500',
+                  mediumURL: 'https://unsplash.it/300/300',
+                  smallURL: 'https://unsplash.it/200/200'
                 }
               },
               {
@@ -721,13 +691,10 @@ const blocks = [
                   },
                   title: null,
                   url: 'https://unsplash.it/500/281',
-                  largeURL: 'https://unsplash.it/500/281',
-                  mediumURL: 'https://unsplash.it/500/281',
-                  thumbURL: 'https://unsplash.it/500/281',
-                  squareURL: 'https://unsplash.it/500/281',
-                  previewURL: 'https://unsplash.it/500/281',
-                  column1URL: 'https://unsplash.it/500/281',
-                  column6URL: 'https://unsplash.it/500/281'
+                  bigURL: 'https://unsplash.it/800/800',
+                  largeURL: 'https://unsplash.it/500/500',
+                  mediumURL: 'https://unsplash.it/300/300',
+                  smallURL: 'https://unsplash.it/200/200'
                 }
               },
               {
@@ -762,13 +729,10 @@ const blocks = [
                   },
                   title: null,
                   url: 'https://unsplash.it/500/281',
-                  largeURL: 'https://unsplash.it/500/281',
-                  mediumURL: 'https://unsplash.it/500/281',
-                  thumbURL: 'https://unsplash.it/500/281',
-                  squareURL: 'https://unsplash.it/500/281',
-                  previewURL: 'https://unsplash.it/500/281',
-                  column1URL: 'https://unsplash.it/500/281',
-                  column6URL: 'https://unsplash.it/500/281'
+                  bigURL: 'https://unsplash.it/800/800',
+                  largeURL: 'https://unsplash.it/500/500',
+                  mediumURL: 'https://unsplash.it/300/300',
+                  smallURL: 'https://unsplash.it/200/200'
                 }
               },
               {
@@ -800,13 +764,10 @@ const blocks = [
                   },
                   title: null,
                   url: 'https://unsplash.it/500/281',
-                  largeURL: 'https://unsplash.it/500/281',
-                  mediumURL: 'https://unsplash.it/500/281',
-                  thumbURL: 'https://unsplash.it/500/281',
-                  squareURL: 'https://unsplash.it/500/281',
-                  previewURL: 'https://unsplash.it/500/281',
-                  column1URL: 'https://unsplash.it/500/281',
-                  column6URL: 'https://unsplash.it/500/281'
+                  bigURL: 'https://unsplash.it/800/800',
+                  largeURL: 'https://unsplash.it/500/500',
+                  mediumURL: 'https://unsplash.it/300/300',
+                  smallURL: 'https://unsplash.it/200/200'
                 }
               },
               {
@@ -836,13 +797,10 @@ const blocks = [
                   },
                   title: 'Limmathaus',
                   url: 'https://unsplash.it/500/281',
-                  largeURL: 'https://unsplash.it/500/281',
-                  mediumURL: 'https://unsplash.it/500/281',
-                  thumbURL: 'https://unsplash.it/500/281',
-                  squareURL: 'https://unsplash.it/500/281',
-                  previewURL: 'https://unsplash.it/500/281',
-                  column1URL: 'https://unsplash.it/500/281',
-                  column6URL: 'https://unsplash.it/500/281'
+                  bigURL: 'https://unsplash.it/800/800',
+                  largeURL: 'https://unsplash.it/500/500',
+                  mediumURL: 'https://unsplash.it/300/300',
+                  smallURL: 'https://unsplash.it/200/200'
                 }
               },
               {
@@ -880,13 +838,10 @@ const blocks = [
                   },
                   title: 'Limmathaus',
                   url: 'https://unsplash.it/500/281',
-                  largeURL: 'https://unsplash.it/500/281',
-                  mediumURL: 'https://unsplash.it/500/281',
-                  thumbURL: 'https://unsplash.it/500/281',
-                  squareURL: 'https://unsplash.it/500/281',
-                  previewURL: 'https://unsplash.it/500/281',
-                  column1URL: 'https://unsplash.it/500/281',
-                  column6URL: 'https://unsplash.it/500/281'
+                  bigURL: 'https://unsplash.it/800/800',
+                  largeURL: 'https://unsplash.it/500/500',
+                  mediumURL: 'https://unsplash.it/300/300',
+                  smallURL: 'https://unsplash.it/200/200'
                 }
               },
               {
@@ -918,13 +873,10 @@ const blocks = [
             width: 4000,
             height: 6000,
             url: 'https://unsplash.it/500/281',
-            largeURL: 'https://unsplash.it/500/281',
-            mediumURL: 'https://unsplash.it/500/281',
-            thumbURL: 'https://unsplash.it/500/281',
-            squareURL: 'https://unsplash.it/500/281',
-            previewURL: 'https://unsplash.it/500/281',
-            column1URL: 'https://unsplash.it/500/281',
-            column6URL: 'https://unsplash.it/500/281'
+            bigURL: 'https://unsplash.it/800/800',
+            largeURL: 'https://unsplash.it/500/500',
+            mediumURL: 'https://unsplash.it/300/300',
+            smallURL: 'https://unsplash.it/200/200'
           },
           preTitle: 'Pre Title',
           title: 'Title',

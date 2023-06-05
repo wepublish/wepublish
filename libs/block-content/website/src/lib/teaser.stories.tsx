@@ -1,6 +1,6 @@
 import {css} from '@emotion/react'
 import {Meta} from '@storybook/react'
-import {CustomTeaser, Image} from '@wepublish/website/api'
+import {CustomTeaser, FullImageFragment} from '@wepublish/website/api'
 import {Teaser} from './teaser'
 
 export default {
@@ -22,8 +22,12 @@ const image = {
   description: 'An image description',
   title: 'An image title',
   filename: 'An image filename',
-  url: 'https://unsplash.it/500/500'
-} as Image
+  url: 'https://unsplash.it/500/500',
+  bigURL: 'https://unsplash.it/800/800',
+  largeURL: 'https://unsplash.it/500/500',
+  mediumURL: 'https://unsplash.it/300/300',
+  smallURL: 'https://unsplash.it/200/200'
+} as FullImageFragment
 
 const customTeaser = {
   style: 'DEFAULT',

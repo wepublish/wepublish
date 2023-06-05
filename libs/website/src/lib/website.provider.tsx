@@ -1,4 +1,3 @@
-import {css, Global} from '@emotion/react'
 import {ThemeProvider} from '@mui/material'
 import {
   HtmlBlock,
@@ -29,20 +28,12 @@ import {
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {memo, PropsWithChildren} from 'react'
 import {IconContext} from 'react-icons'
-
-const globalStyles = css`
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-`
+import {Image} from '@wepublish/image/website'
 
 export type WebsiteProps = PropsWithChildren
 
 export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
   <ThemeProvider theme={theme}>
-    <Global styles={globalStyles} />
-
     <IconContext.Provider value={{}}>
       <WebsiteBuilderProvider
         Navbar={Navbar}
@@ -59,7 +50,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Link,
           UnorderedList,
           OrderedList,
-          ListItem
+          ListItem,
+          Image
         }}
         blocks={{
           Title: TitleBlock,
