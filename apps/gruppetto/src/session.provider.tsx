@@ -33,7 +33,9 @@ export const SessionProvider = memo<PropsWithChildren<{sessionToken: ApiV1.UserS
     )
 
     useEffect(() => {
-      setCookieAndToken(sessionToken)
+      if (sessionToken) {
+        setCookieAndToken(sessionToken)
+      }
     }, [])
 
     return (

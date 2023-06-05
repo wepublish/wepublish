@@ -182,18 +182,7 @@ const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL
       ? getCookie(AuthTokenStorageKey, {req: appContext.ctx.req})
       : getCookie(AuthTokenStorageKey)
 
-  let sessionToken = token ? (JSON.parse(token.toString()) as ApiV1.UserSession) : null
-
-  if (sessionToken) {
-    if (Date.now() > +new Date(sessionToken.expiresAt)) {
-      sessionToken = null
-
-      deleteCookie(AuthTokenStorageKey, {
-        req: appContext?.ctx?.req,
-        res: appContext?.ctx?.res
-      })
-    }
-  }
+  const sessionToken = token ? (JSON.parse(token.toString()) as ApiV1.UserSession) : null
 
   return {
     ...appProps,
