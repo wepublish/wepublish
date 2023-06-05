@@ -1,5 +1,5 @@
 import {Alert, TextField, styled} from '@mui/material'
-import {AuthTokenStorageKey, useUser, useWebsiteBuilder} from '@wepublish/website'
+import {ApiV1, AuthTokenStorageKey, useUser, useWebsiteBuilder} from '@wepublish/website'
 import {
   LoginWithJwtDocument,
   UserSession,
@@ -26,8 +26,10 @@ const LoginForm = styled('form')`
   gap: ${({theme}) => theme.spacing(1)};
 `
 
-export default function Login() {
-  const {hasUser} = useUser()
+type LoginProps = {sessionToken?: ApiV1.UserSession}
+
+export default function Login({sessionToken}: LoginProps) {
+  const {hasUser, setToken} = useUser()
   const router = useRouter()
   const [login, {loading, data}] = useLoginMutation()
 
@@ -43,10 +45,14 @@ export default function Login() {
   })
 
   useEffect(() => {
+    if (sessionToken) {
+      setToken(sessionToken)
+    }
+
     if (hasUser) {
       router.push('/')
     }
-  }, [router, hasUser])
+  }, [router, hasUser, sessionToken, setToken])
 
   const onSubmit = handleSubmit(({email}) => {
     return login({
@@ -123,9 +129,8 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
     })
 
     return {
-      redirect: {
-        destination: '/',
-        permanent: false
+      props: {
+        sessionToken: data.data.createSessionWithJWT
       }
     }
   }
