@@ -1,9 +1,10 @@
 export * from './lib/utility'
-export * from './lib/ListView/list-view'
+export * from './lib/listView/list-view'
 
-export * from './lib/Atoms'
-export * from './lib/Blocks'
-export * from './lib/Panel'
+export * from './lib/atoms'
+export * from './lib/blocks'
+export * from './lib/panel'
 
 export * from './lib/testUtils'
 export * from './lib/authContext'
+export * from './lib/toggleRequiredLabel'

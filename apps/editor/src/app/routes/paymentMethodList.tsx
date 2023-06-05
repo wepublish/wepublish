@@ -4,11 +4,16 @@ import {
   usePaymentMethodListQuery
 } from '@wepublish/editor/api'
 import {
+  createCheckedPermissionComponent,
+  DescriptionList,
+  DescriptionListItem,
   IconButton,
+  IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
   PaddedCell,
+  PermissionControl,
   Table,
   TableWrapper
 } from '@wepublish/ui/editor'
@@ -19,9 +24,6 @@ import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, Modal, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {PaymentMethodEditPanel} from '../panel/paymentMethodEditPanel'
 
 const {Column, HeaderCell, Cell: RCell} = RTable

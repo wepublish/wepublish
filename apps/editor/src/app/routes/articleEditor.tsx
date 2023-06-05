@@ -8,6 +8,27 @@ import {
   usePublishArticleMutation,
   useUpdateArticleMutation
 } from '@wepublish/editor/api'
+import {
+  blockForQueryBlock,
+  BlockList,
+  BlockMap,
+  BlockType,
+  BlockValue,
+  createCheckedPermissionComponent,
+  EditorTemplate,
+  getSettings,
+  ListicleBlockListValue,
+  NavigationBar,
+  PermissionControl,
+  QuoteBlockListValue,
+  RichTextBlockListValue,
+  StateColor,
+  TitleBlockListValue,
+  TitleBlockValue,
+  unionMapForBlock,
+  useAuthorisation,
+  useBlockMap
+} from '@wepublish/ui/editor'
 import React, {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -30,30 +51,9 @@ import {
 } from 'rsuite'
 
 import {ClientSettings} from '../../shared/types'
-import {BlockList, useBlockMap} from '../atoms/blockList'
-import {EditorTemplate} from '../atoms/editorTemplate'
-import {NavigationBar} from '../atoms/navigationBar'
-import {
-  createCheckedPermissionComponent,
-  PermissionControl,
-  useAuthorisation
-} from '../atoms/permissionControl'
-import {BlockMap} from '../blocks/blockMap'
-import {
-  blockForQueryBlock,
-  BlockType,
-  BlockValue,
-  ListicleBlockListValue,
-  QuoteBlockListValue,
-  RichTextBlockListValue,
-  TitleBlockListValue,
-  TitleBlockValue,
-  unionMapForBlock
-} from '../blocks/types'
 import {ArticleMetadata, ArticleMetadataPanel, InfoData} from '../panel/articleMetadataPanel'
 import {PublishArticlePanel} from '../panel/publishArticlePanel'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
-import {getSettings, StateColor} from '../utility'
 
 const IconButtonMarginTop = styled(RIconButton)`
   margin-top: 4px;

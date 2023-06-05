@@ -1,9 +1,13 @@
 import {ApolloError} from '@apollo/client'
 import {Event, useEventListQuery} from '@wepublish/editor/api'
 import {
+  createCheckedPermissionComponent,
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
+  PermissionControl,
   Table,
   TableWrapper
 } from '@wepublish/ui/editor'
@@ -14,8 +18,6 @@ import {Link} from 'react-router-dom'
 import {IconButton, Message, Pagination, Table as RTable, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
-import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
 import {DeleteEventModal} from './deleteEventModal'
 
 const {Column, HeaderCell, Cell} = RTable

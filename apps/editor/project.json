@@ -9,12 +9,13 @@
       "options": {
         "commands": [
           {
-            "command": "npx nx browser editor"
+            "command": "npx nx server editor"
           },
           {
-            "command": "npx nx server editor"
+            "command": "npx nx browser editor"
           }
-        ]
+        ],
+        "parallel": false
       }
     },
     "serve-ssr": {
@@ -105,7 +106,7 @@
         "externalDependencies": "all",
         "generatePackageJson": true,
         "outputHashing": "none",
-        "webpackConfig": "apps/editor/webpack.config.js",
+        "webpackConfig": "apps/editor/webpack.config.server.js",
         "isolatedConfig": true
       },
       "configurations": {

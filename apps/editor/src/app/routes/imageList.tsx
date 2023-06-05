@@ -8,12 +8,19 @@ import {
   useImageListQuery
 } from '@wepublish/editor/api'
 import {
+  createCheckedPermissionComponent,
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
   IconButton,
+  IconButtonTooltip,
+  ImageEditPanel,
   ListViewActions,
   ListViewContainer,
   ListViewFilterArea,
   ListViewHeader,
+  LocalStorageKey,
   PaddedCell,
+  PermissionControl,
   Table,
   TableWrapper
 } from '@wepublish/ui/editor'
@@ -41,11 +48,7 @@ import {
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
-import {ImageEditPanel} from '../panel/imageEditPanel'
 import {ImageUploadAndEditPanel} from '../panel/imageUploadAndEditPanel'
-import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES, LocalStorageKey} from '../utility'
 
 export enum ImageListLayout {
   Grid = 'grid',

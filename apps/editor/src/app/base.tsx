@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {PermissionControl, Version} from '@wepublish/ui/editor'
 import {de, enUS, fr} from 'date-fns/locale'
 import {forwardRef, ReactNode, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -43,9 +44,6 @@ import {
   Sidebar as RSidebar,
   Sidenav as RSidenav
 } from 'rsuite'
-
-import {PermissionControl} from './atoms/permissionControl'
-import Version from './atoms/version'
 
 export interface BaseProps {
   children?: ReactNode
