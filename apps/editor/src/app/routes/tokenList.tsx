@@ -6,9 +6,13 @@ import {
   useTokenListQuery
 } from '@wepublish/editor/api'
 import {
+  createCheckedPermissionComponent,
+  getOperationNameFromDocument,
+  IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
+  PermissionControl,
   TableWrapper
 } from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
@@ -27,10 +31,7 @@ import {
   toaster
 } from 'rsuite'
 
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
-import {getOperationNameFromDocument} from '../utility'
 
 const List = styled(RList)`
   margin-top: 40px;

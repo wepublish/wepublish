@@ -9,6 +9,23 @@ import {
   useCreateAuthorMutation,
   useUpdateAuthorMutation
 } from '@wepublish/editor/api'
+import {
+  ChooseEditImage,
+  createCheckedPermissionComponent,
+  createDefaultValue,
+  generateID,
+  getOperationNameFromDocument,
+  ImageEditPanel,
+  ImageSelectPanel,
+  ListInput,
+  ListValue,
+  PermissionControl,
+  RichTextBlock,
+  RichTextBlockValue,
+  slugify,
+  toggleRequiredLabel,
+  useAuthorisation
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdLink} from 'react-icons/md'
@@ -24,20 +41,6 @@ import {
   Schema,
   toaster
 } from 'rsuite'
-
-import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {ListInput, ListValue} from '../atoms/listInput'
-import {
-  createCheckedPermissionComponent,
-  PermissionControl,
-  useAuthorisation
-} from '../atoms/permissionControl'
-import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../blocks/types'
-import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {generateID, getOperationNameFromDocument, slugify} from '../utility'
-import {ImageEditPanel} from './imageEditPanel'
-import {ImageSelectPanel} from './imageSelectPanel'
 
 const {ControlLabel, Group, Control} = RForm
 

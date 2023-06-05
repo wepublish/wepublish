@@ -5,6 +5,16 @@ import {
   useSettingListQuery,
   useUpdateSettingListMutation
 } from '@wepublish/editor/api'
+import {
+  createCheckedPermissionComponent,
+  DescriptionList,
+  DescriptionListItem,
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  PermissionControl,
+  useAuthorisation
+} from '@wepublish/ui/editor'
 import {useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdCancel, MdInfo, MdSave, MdWarning} from 'react-icons/md'
@@ -29,13 +39,6 @@ import {
 import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon'
 import FormControl from 'rsuite/FormControl'
 
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {
-  createCheckedPermissionComponent,
-  PermissionControl,
-  useAuthorisation
-} from '../atoms/permissionControl'
-import {ListViewActions, ListViewContainer, ListViewHeader} from '../ui/listView'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 
 const Panel = styled(RPanel)`
