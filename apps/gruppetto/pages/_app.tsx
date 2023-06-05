@@ -9,8 +9,8 @@ import {
   ThemeProvider
 } from '@mui/material'
 import {theme} from '@wepublish/ui'
-import {ApiV1, FooterContainer, WebsiteBuilderProvider, WebsiteProvider} from '@wepublish/website'
-import {getCookie} from 'cookies-next'
+import {FooterContainer, WebsiteBuilderProvider, WebsiteProvider, ApiV1} from '@wepublish/website'
+import {deleteCookie, getCookie} from 'cookies-next'
 import {setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import App, {AppContext, AppProps} from 'next/app'
@@ -182,7 +182,18 @@ const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL
       ? getCookie(AuthTokenStorageKey, {req: appContext.ctx.req})
       : getCookie(AuthTokenStorageKey)
 
-  const sessionToken = token ? (JSON.parse(token.toString()) as ApiV1.UserSession) : null
+  let sessionToken = token ? (JSON.parse(token.toString()) as ApiV1.UserSession) : null
+
+  if (sessionToken) {
+    if (Date.now() > +new Date(sessionToken.expiresAt)) {
+      sessionToken = null
+
+      deleteCookie(AuthTokenStorageKey, {
+        req: appContext?.ctx?.req,
+        res: appContext?.ctx?.res
+      })
+    }
+  }
 
   return {
     ...appProps,
