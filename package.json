@@ -251,7 +251,7 @@
     "next": "13.3.0",
     "node-cache": "^5.1.2",
     "node-fetch": "2.6.7",
-    "openid-client": "^3.14.0",
+    "openid-client": "^5.4.2",
     "passport-http-bearer": "^1.0.1",
     "pino": "^6.11.0",
     "pino-http": "^5.3.0",
