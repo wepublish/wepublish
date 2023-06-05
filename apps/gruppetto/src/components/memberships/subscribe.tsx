@@ -112,7 +112,7 @@ const CustomSubscribe = ({
     blocks: {RichText}
   } = useWebsiteBuilder()
 
-  const {hasUser} = useUser()
+  const {hasUser, user, logout} = useUser()
 
   const {handleSubmit, control, setValue, watch} = useForm({
     defaultValues: {
@@ -185,6 +185,15 @@ const CustomSubscribe = ({
   return (
     <SubscribeWrapper>
       <H4 component={'h3'}>Abonnement lösen</H4>
+
+      {hasUser && (
+        <div>
+          Eingeloggt als {user?.email}. Nicht du?{' '}
+          <Link onClick={logout} href="/login">
+            Log dich aus.
+          </Link>
+        </div>
+      )}
 
       {!!activeMemberplans.length && (
         <RadioGroup

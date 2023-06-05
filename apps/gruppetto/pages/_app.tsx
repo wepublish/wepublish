@@ -9,8 +9,8 @@ import {
   ThemeProvider
 } from '@mui/material'
 import {theme} from '@wepublish/ui'
-import {FooterContainer, WebsiteBuilderProvider, WebsiteProvider, ApiV1} from '@wepublish/website'
-import {deleteCookie, getCookie} from 'cookies-next'
+import {ApiV1, FooterContainer, WebsiteBuilderProvider, WebsiteProvider} from '@wepublish/website'
+import {getCookie} from 'cookies-next'
 import {setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import App, {AppContext, AppProps} from 'next/app'
