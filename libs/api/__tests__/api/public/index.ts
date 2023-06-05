@@ -276,6 +276,8 @@ export type Event = {
   __typename?: 'Event';
   description?: Maybe<Scalars['RichText']>;
   endsAt?: Maybe<Scalars['DateTime']>;
+  externalSourceId?: Maybe<Scalars['String']>;
+  externalSourceName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   image?: Maybe<Image>;
   location?: Maybe<Scalars['String']>;
@@ -951,7 +953,7 @@ export type Query = {
   authors: AuthorConnection;
   /** This query generates a challenge which can be used to access protected endpoints. */
   challenge: Challenge;
-  /** This mutation will check the invoice status and update with information from the paymentProvider */
+  /** This query will check the invoice status and update with information from the paymentProvider */
   checkInvoiceStatus?: Maybe<Invoice>;
   /** This query returns the comments of an item. */
   comments: Array<Comment>;
@@ -959,7 +961,9 @@ export type Query = {
   event: Event;
   /** This query returns a list of events */
   events?: Maybe<EventConnection>;
-  /** This query returns the invoices  of the authenticated user. */
+  /** This query returns a list of original ids of imported events */
+  importedEventsIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** This query returns the invoices of the authenticated user. */
   invoices: Array<Invoice>;
   /** This query returns the user. */
   me?: Maybe<User>;

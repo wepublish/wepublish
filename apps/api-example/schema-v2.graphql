@@ -23,6 +23,11 @@ input ConsentInput {
   slug: String!
 }
 
+input CreateEventArgs {
+  id: String!
+  source: Providers!
+}
+
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -46,6 +51,43 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Event {
+  createdAt: DateTime!
+  description: JSON!
+  endsAt: DateTime
+  externalSourceId: String!
+  externalSourceName: String!
+  id: String!
+  imageUrl: String
+  location: String!
+  modifiedAt: DateTime!
+  name: String!
+  startsAt: DateTime!
+  status: EventStatus!
+}
+
+enum EventStatus {
+  CANCELLED
+  POSTPONED
+  RESCHEDULED
+  SCHEDULED
+}
+
+input ImportedEventFilter {
+  name: String
+}
+
+type ImportedEventsDocument {
+  nodes: [Event!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
 type Mutation {
   """
   
@@ -53,6 +95,14 @@ type Mutation {
       
   """
   createConsent(consent: ConsentInput!): Consent!
+
+  """
+  
+        Creates and event based on data from importable events list and an id and provider.
+        Also, uploads an image to WePublish Image library.
+      
+  """
+  createEvent(filter: CreateEventArgs!): String!
 
   """
   
@@ -93,11 +143,22 @@ type Mutation {
   updateUserConsent(id: String!, userConsent: UpdateUserConsentInput!): UserConsent!
 }
 
+type PageInfo {
+  endCursor: String!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String!
+}
+
 enum PaymentPeriodicity {
   biannual
   monthly
   quarterly
   yearly
+}
+
+enum Providers {
+  AgendaBasel
 }
 
 type Query {
@@ -130,6 +191,20 @@ type Query {
       
   """
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+
+  """
+  
+        Returns a more detailed version of a single importable event, by id and source (e.g. AgendaBasel).
+      
+  """
+  importedEvent(filter: SingleEventFilter!): Event!
+
+  """
+  
+        Returns a list of imported events from external sources, transformed to match our model.
+      
+  """
+  importedEvents(filter: ImportedEventFilter, order: Int, skip: Int, sort: String, take: Int): ImportedEventsDocument!
 
   """
   
@@ -176,6 +251,11 @@ type Query {
   """
   userConsents(filter: UserConsentFilter): [UserConsent!]!
   versionInformation: VersionInformation!
+}
+
+input SingleEventFilter {
+  id: String!
+  source: Providers!
 }
 
 enum SubscriptionDeactivationReason {

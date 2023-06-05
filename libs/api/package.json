@@ -28,11 +28,5 @@
   },
   "publishConfig": {
     "directory": "../../dist/libs/api"
-  },
-  "devDependencies": {
-    "prisma": "^3.14.0"
-  },
-  "dependencies": {
-    "@prisma/client": "^3.14.0"
   }
 }

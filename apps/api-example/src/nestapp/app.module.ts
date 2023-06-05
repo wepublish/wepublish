@@ -1,6 +1,7 @@
 import {Module, Global} from '@nestjs/common'
 import {ApiModule} from '@wepublish/nest-modules'
 import {GraphQLModule} from '@nestjs/graphql'
+import GraphQLJSON from 'graphql-type-json'
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
 import {
   SettingModule,
@@ -8,6 +9,7 @@ import {
   AuthenticationModule,
   PermissionModule,
   ConsentModule,
+  EventsImportModule,
   MediaAdapterService,
   KarmaMediaAdapter
 } from '@wepublish/api'
@@ -19,6 +21,7 @@ import {URL} from 'url'
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
+      resolvers: {JSON: GraphQLJSON},
       autoSchemaFile: './apps/api-example/schema-v2.graphql',
       sortSchema: true,
       path: 'v2',
@@ -34,6 +37,7 @@ import {URL} from 'url'
     PermissionModule,
     ConsentModule,
     SettingModule,
+    EventsImportModule,
     ConfigModule.forRoot()
   ],
   providers: [

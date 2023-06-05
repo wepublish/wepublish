@@ -1187,6 +1187,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
         endsAt: {type: GraphQLDateTime},
         imageId: {type: GraphQLID},
+        externalSourceId: {type: GraphQLString},
+        externalSourceName: {type: GraphQLString},
         tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
       },
       resolve: (root, {tagIds, ...input}, {authenticate, prisma: {event}}) =>
@@ -1209,6 +1211,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         startsAt: {type: GraphQLDateTime},
         endsAt: {type: GraphQLDateTime},
         imageId: {type: GraphQLID},
+        externalSourceId: {type: GraphQLString},
+        externalSourceName: {type: GraphQLString},
         tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
       },
       resolve: (root, {id, tagIds, ...input}, {authenticate, prisma: {event}}) =>

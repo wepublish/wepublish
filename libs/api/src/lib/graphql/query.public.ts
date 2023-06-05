@@ -44,7 +44,7 @@ import {
   GraphQLEventFilter,
   GraphQLEventSort
 } from './event/event'
-import {EventSort, getEvent, getEvents} from './event/event.query'
+import {EventSort, getEvent, getEvents, getImportedEventsIds} from './event/event.query'
 import {GraphQLPublicInvoice} from './invoice'
 import {getPublicInvoices} from './invoice/invoice.public-queries'
 import {getActiveMemberPlans} from './member-plan/member-plan.public-queries'
@@ -278,7 +278,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLPublicPageConnection),
       args: {
         cursor: {type: GraphQLID},
-        take: {type: GraphQLInt},
+        take: {type: GraphQLInt, defaultValue: 10},
         skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLPublishedPageFilter},
         sort: {type: GraphQLPublishedPageSort, defaultValue: PageSort.PublishedAt},
@@ -564,6 +564,12 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {prisma: {event}}) => getEvent(id, event)
+    },
+
+    importedEventsIds: {
+      type: GraphQLList(GraphQLString),
+      description: 'This query returns a list of original ids of imported events',
+      resolve: (root, {prisma: {event}}) => getImportedEventsIds(event)
     },
 
     // Tag

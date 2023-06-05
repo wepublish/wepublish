@@ -103,6 +103,7 @@ const userListDocumentQuery = {
                 emailVerifiedAt: null,
                 properties: [],
                 lastLogin: null,
+                flair: 'foobar',
                 address: {
                   city: null,
                   company: null,
@@ -138,6 +139,7 @@ const userListDocumentQuery = {
                 emailVerifiedAt: null,
                 properties: [],
                 lastLogin: null,
+                flair: null,
                 address: {
                   city: null,
                   company: null,
@@ -199,6 +201,7 @@ const userListDocumentQuery = {
               emailVerifiedAt: null,
               properties: [],
               lastLogin: null,
+              flair: 'foobar',
               address: {
                 city: null,
                 company: null,
@@ -234,6 +237,7 @@ const userListDocumentQuery = {
               emailVerifiedAt: null,
               properties: [],
               lastLogin: null,
+              flair: null,
               address: {
                 city: null,
                 company: null,
@@ -277,6 +281,7 @@ const userListDocumentQuery = {
               emailVerifiedAt: null,
               properties: [],
               lastLogin: null,
+              flair: 'foobar',
               address: {
                 city: null,
                 company: null,
