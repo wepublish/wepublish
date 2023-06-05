@@ -10,11 +10,10 @@ import Marlen from '../src/2212_Marlen Reusser030_396 1.png'
 import Marlen2 from '../src/2212_Marlen Reusser030_396 2.png'
 import {BreakImage} from '../src/components/break'
 import {BreakText} from '../src/components/break-text'
+import {CrowdfundingChart} from '../src/components/crowdfunding/crowdfunding-chart'
 import {Intro} from '../src/components/intro'
 import {PayInvoices} from '../src/components/memberships/pay-invoices'
 import {Subscribe} from '../src/components/memberships/subscribe'
-import {CrowdfundingChart} from '../src/components/crowdfunding/crowdfunding-chart'
-import {GetStaticProps} from 'next'
 
 const SubscriptionWrapper = styled('div')`
   display: grid;
@@ -140,11 +139,3 @@ export function Index() {
 }
 
 export default Index
-
-export const getStaticProps: GetStaticProps = async () => {
-  return {
-    props: {},
-    // - At most once every day
-    revalidate: 60 * 60 * 24 // In seconds
-  }
-}
