@@ -14,14 +14,20 @@ const navigations = [
         __typename: 'PageNavigationLink',
         label: 'Home',
         page: {
-          url: '/'
+          id: '1234-1234',
+          slug: 'slug',
+          url: '/',
+          blocks: []
         }
       },
       {
         __typename: 'ArticleNavigationLink',
         label: 'Artikel',
         article: {
-          url: '/a/abcd'
+          id: '1234-1234',
+          slug: 'slug',
+          url: '/a/abcd',
+          blocks: []
         }
       },
       {

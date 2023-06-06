@@ -1,12 +1,7 @@
 import {Meta} from '@storybook/react'
-import {Button, ButtonProps} from './typography'
 
 export default {
-  component: Button,
-  title: 'Button'
-} as Meta<typeof Button>
+  title: 'Typography'
+} as Meta
 
-const Template = (args: ButtonProps) => <Button {...args}>Click me</Button>
-export const Default = {
-  render: Template
-}
+export const Default = {}
