@@ -1,7 +1,6 @@
 import {Theme, css, styled, useTheme} from '@mui/material'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {Event} from '@wepublish/website/api'
-import {format} from 'date-fns'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdDateRange} from 'react-icons/md'
 
 export const eventListItemStyles = (theme: Theme) => css`
@@ -38,6 +37,8 @@ const EventListItemDate = styled('div')`
   align-items: center;
 `
 
+const EventListItemImage = styled('div')``
+
 export const EventListItem = ({
   url,
   description,
@@ -50,24 +51,25 @@ export const EventListItem = ({
   const theme = useTheme()
 
   const {
-    elements: {H4, Link},
-    blocks: {RichText, Image}
+    elements: {H4, Link, Image},
+    blocks: {RichText},
+    date
   } = useWebsiteBuilder()
 
   return (
     <Link role={'article'} href={url} css={eventListItemStyles(theme)} className={className}>
-      <Image image={image} />
+      <EventListItemImage>{image && <Image image={image} />}</EventListItemImage>
 
       <EventListItemContent>
         <EventListItemMeta>
           <EventListItemDate>
             <MdDateRange />
-            <span>{format(new Date(startsAt), 'dd.MM.yyyy hh:mm')}</span>
+            <span>{date.format(new Date(startsAt))}</span>
           </EventListItemDate>
 
           {endsAt && (
             <>
-              &ndash; <span>{format(new Date(endsAt), 'dd.MM.yyyy hh:mm')}</span>
+              &ndash; <span>{date.format(new Date(endsAt))}</span>
             </>
           )}
         </EventListItemMeta>

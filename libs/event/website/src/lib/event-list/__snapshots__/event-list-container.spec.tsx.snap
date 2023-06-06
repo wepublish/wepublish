@@ -11,17 +11,21 @@ exports[`EventList Container should render Default 1`] = `
       href="https://example.com"
       role="article"
     >
-      <figure
-        class="css-umync8"
+      <div
+        class="css-0"
       >
         <img
           alt="DSC07717"
+          class="css-1qnf57e"
           height="6000"
-          src="https://unsplash.it/500/281"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
           title=""
           width="4000"
         />
-      </figure>
+      </div>
       <div
         class="css-1lnj73j"
       >
@@ -167,17 +171,21 @@ exports[`EventList Container should render Default 1`] = `
       href="https://example.com"
       role="article"
     >
-      <figure
-        class="css-umync8"
+      <div
+        class="css-0"
       >
         <img
           alt="DSC07717"
+          class="css-1qnf57e"
           height="6000"
-          src="https://unsplash.it/500/281"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
           title=""
           width="4000"
         />
-      </figure>
+      </div>
       <div
         class="css-1lnj73j"
       >
@@ -323,17 +331,21 @@ exports[`EventList Container should render Default 1`] = `
       href="https://example.com"
       role="article"
     >
-      <figure
-        class="css-umync8"
+      <div
+        class="css-0"
       >
         <img
           alt="DSC07717"
+          class="css-1qnf57e"
           height="6000"
-          src="https://unsplash.it/500/281"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
           title=""
           width="4000"
         />
-      </figure>
+      </div>
       <div
         class="css-1lnj73j"
       >
@@ -488,17 +500,21 @@ exports[`EventList Container should render WithClassName 1`] = `
       href="https://example.com"
       role="article"
     >
-      <figure
-        class="css-umync8"
+      <div
+        class="css-0"
       >
         <img
           alt="DSC07717"
+          class="css-1qnf57e"
           height="6000"
-          src="https://unsplash.it/500/281"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
           title=""
           width="4000"
         />
-      </figure>
+      </div>
       <div
         class="css-1lnj73j"
       >
@@ -644,17 +660,21 @@ exports[`EventList Container should render WithClassName 1`] = `
       href="https://example.com"
       role="article"
     >
-      <figure
-        class="css-umync8"
+      <div
+        class="css-0"
       >
         <img
           alt="DSC07717"
+          class="css-1qnf57e"
           height="6000"
-          src="https://unsplash.it/500/281"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
           title=""
           width="4000"
         />
-      </figure>
+      </div>
       <div
         class="css-1lnj73j"
       >
@@ -800,17 +820,21 @@ exports[`EventList Container should render WithClassName 1`] = `
       href="https://example.com"
       role="article"
     >
-      <figure
-        class="css-umync8"
+      <div
+        class="css-0"
       >
         <img
           alt="DSC07717"
+          class="css-1qnf57e"
           height="6000"
-          src="https://unsplash.it/500/281"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
           title=""
           width="4000"
         />
-      </figure>
+      </div>
       <div
         class="css-1lnj73j"
       >
@@ -965,17 +989,21 @@ exports[`EventList Container should render WithEmotion 1`] = `
       href="https://example.com"
       role="article"
     >
-      <figure
-        class="css-umync8"
+      <div
+        class="css-0"
       >
         <img
           alt="DSC07717"
+          class="css-1qnf57e"
           height="6000"
-          src="https://unsplash.it/500/281"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
           title=""
           width="4000"
         />
-      </figure>
+      </div>
       <div
         class="css-1lnj73j"
       >
@@ -1121,17 +1149,21 @@ exports[`EventList Container should render WithEmotion 1`] = `
       href="https://example.com"
       role="article"
     >
-      <figure
-        class="css-umync8"
+      <div
+        class="css-0"
       >
         <img
           alt="DSC07717"
+          class="css-1qnf57e"
           height="6000"
-          src="https://unsplash.it/500/281"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
           title=""
           width="4000"
         />
-      </figure>
+      </div>
       <div
         class="css-1lnj73j"
       >
@@ -1277,17 +1309,21 @@ exports[`EventList Container should render WithEmotion 1`] = `
       href="https://example.com"
       role="article"
     >
-      <figure
-        class="css-umync8"
+      <div
+        class="css-0"
       >
         <img
           alt="DSC07717"
+          class="css-1qnf57e"
           height="6000"
-          src="https://unsplash.it/500/281"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
           title=""
           width="4000"
         />
-      </figure>
+      </div>
       <div
         class="css-1lnj73j"
       >

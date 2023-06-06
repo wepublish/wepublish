@@ -1,12 +1,12 @@
 import {firstParagraphToPlaintext} from '@wepublish/richtext'
-import {Event} from '@wepublish/website/api'
+import {FullEventFragment} from '@wepublish/website/api'
 import {BuilderEventSEOProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {formatISO, formatISODuration, intervalToDuration} from 'date-fns'
 import {useMemo} from 'react'
 
-export const getEventSEO = (event: Event) => {
+export const getEventSEO = (event: FullEventFragment) => {
   const description = firstParagraphToPlaintext(event.description)
-  const image = event.image?.url
+  const image = event.image?.largeURL
   const startDate = formatISO(new Date(event.startsAt))
   const endDate = event.endsAt ? formatISO(new Date(event.endsAt)) : undefined
   const duration = event.endsAt

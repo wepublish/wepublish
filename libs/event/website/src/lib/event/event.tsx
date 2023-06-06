@@ -1,7 +1,6 @@
-import {styled, css, Theme, useTheme} from '@mui/material'
+import {Theme, css, styled, useTheme} from '@mui/material'
 import {BuilderEventProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdDateRange, MdLocationCity} from 'react-icons/md'
-import {format} from 'date-fns'
 import {EventSEO} from './event-seo'
 
 export const EventWrapper = styled('div')`
@@ -10,11 +9,8 @@ export const EventWrapper = styled('div')`
 `
 
 const eventImage = (theme: Theme) => css`
-  img {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-  }
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
 `
 
 export const EventMeta = styled('div')`
@@ -44,7 +40,9 @@ export const Event = ({data, loading, error, className}: BuilderEventProps) => {
   const theme = useTheme()
 
   const {
-    blocks: {Image, RichText, Title}
+    elements: {Image},
+    blocks: {RichText, Title},
+    date
   } = useWebsiteBuilder()
 
   return (
@@ -57,12 +55,12 @@ export const Event = ({data, loading, error, className}: BuilderEventProps) => {
           <MetaWrapper>
             <EventStart>
               <MdDateRange />
-              {format(new Date(data.event.startsAt), 'dd.MM.yyyy hh:mm')}
+              {date.format(new Date(data.event.startsAt))}
             </EventStart>
 
             {data.event.endsAt && (
               <>
-                <span>&ndash;</span> {format(new Date(data.event.endsAt), 'dd.MM.yyyy hh:mm')}
+                <span>&ndash;</span> {date.format(new Date(data.event.endsAt))}
               </>
             )}
           </MetaWrapper>

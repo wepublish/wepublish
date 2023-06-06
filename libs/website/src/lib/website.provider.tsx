@@ -30,8 +30,11 @@ import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {memo, PropsWithChildren} from 'react'
 import {IconContext} from 'react-icons'
 import {Image} from '@wepublish/image/website'
+import {format} from 'date-fns'
 
 export type WebsiteProps = PropsWithChildren
+
+const dateFormatter = (date: Date) => format(date, 'dd.MM.yyyy HH:mm')
 
 export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
   <ThemeProvider theme={theme}>
@@ -67,7 +70,10 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           TeaserGridFlex: TeaserGridFlexBlock,
           Teaser
         }}
-        richtext={{RenderElement, RenderLeaf}}>
+        richtext={{RenderElement, RenderLeaf}}
+        date={{
+          format: dateFormatter
+        }}>
         {children}
       </WebsiteBuilderProvider>
     </IconContext.Provider>
