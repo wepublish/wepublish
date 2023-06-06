@@ -16,6 +16,7 @@ import {
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
   BuilderTeaserGridFlexBlockProps,
+  BuilderTeaserProps,
   BuilderTitleBlockProps
 } from './blocks.interface'
 import {BuilderButtonProps} from './button.interface'
@@ -38,6 +39,7 @@ import {BuilderPayInvoicesProps} from './pay-invoices.interface'
 import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
 import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
+import {BuilderImageProps} from './image.interface'
 
 const NoComponent = () => null
 
@@ -69,6 +71,7 @@ export type WebsiteBuilderComponents = {
     OrderedList: ComponentType<BuilderOrderedListProps>
     UnorderedList: ComponentType<BuilderUnorderedListProps>
     ListItem: ComponentType<BuilderListItemProps>
+    Image: ComponentType<BuilderImageProps>
   }
 
   richtext: {
@@ -83,6 +86,7 @@ export type WebsiteBuilderComponents = {
     RichText: ComponentType<BuilderRichTextBlockProps>
     HTML: ComponentType<BuilderHTMLBlockProps>
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
+    Teaser: ComponentType<BuilderTeaserProps>
   }
 }
 
@@ -113,7 +117,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     Link: NoComponent,
     OrderedList: NoComponent,
     UnorderedList: NoComponent,
-    ListItem: NoComponent
+    ListItem: NoComponent,
+    Image: NoComponent
   },
 
   richtext: {
@@ -127,7 +132,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     Quote: NoComponent,
     RichText: NoComponent,
     HTML: NoComponent,
-    TeaserGridFlex: NoComponent
+    TeaserGridFlex: NoComponent,
+    Teaser: NoComponent
   }
 })
 
@@ -140,6 +146,8 @@ export const WebsiteBuilderProvider = memo<
 >(({children, ...components}) => {
   const parentComponents = useWebsiteBuilder()
   const newComponents = mergeDeepRight(parentComponents, components) as WebsiteBuilderComponents
+
+  console.log(newComponents)
 
   return (
     <WebsiteBuilderContext.Provider value={newComponents}>

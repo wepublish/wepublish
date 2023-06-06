@@ -1,6 +1,12 @@
 import {styled} from '@mui/material'
-import {BuilderImageBlockProps} from '@wepublish/website/builder'
+import {BuilderImageBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Block, ImageBlock as ImageBlockType} from '@wepublish/website/api'
+
+declare module 'react' {
+  interface HTMLAttributes<T> {
+    fetchPriority?: 'high' | 'low' | 'auto'
+  }
+}
 
 export const isImageBlock = (block: Block): block is ImageBlockType =>
   block.__typename === 'ImageBlock'
@@ -10,18 +16,16 @@ export const ImageBlockWrapper = styled('figure')`
   max-width: 100%;
 `
 
-export const ImageBlock = ({caption, image, className}: BuilderImageBlockProps) => (
-  <ImageBlockWrapper className={className}>
-    {image?.url && (
-      <img
-        alt={image.description ?? image.title ?? image.filename ?? ''}
-        title={image.title ?? ''}
-        width={image.width}
-        height={image.height}
-        src={image.url}
-      />
-    )}
+export const ImageBlock = ({caption, image, className}: BuilderImageBlockProps) => {
+  const {
+    elements: {Image}
+  } = useWebsiteBuilder()
 
-    {caption && <figcaption>{caption}</figcaption>}
-  </ImageBlockWrapper>
-)
+  return (
+    <ImageBlockWrapper className={className}>
+      {image && <Image image={image} fetchPriority="high" />}
+
+      {caption && <figcaption>{caption}</figcaption>}
+    </ImageBlockWrapper>
+  )
+}
