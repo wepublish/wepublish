@@ -1,4 +1,3 @@
-import {css, Global} from '@emotion/react'
 import {ThemeProvider} from '@mui/material'
 import {
   HtmlBlock,
@@ -6,7 +5,8 @@ import {
   QuoteBlock,
   RichTextBlock,
   TeaserGridFlexBlock,
-  TitleBlock
+  TitleBlock,
+  Teaser
 } from '@wepublish/block-content/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page} from '@wepublish/page/website'
@@ -29,24 +29,12 @@ import {
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {memo, PropsWithChildren} from 'react'
 import {IconContext} from 'react-icons'
-
-const globalStyles = css`
-  body {
-    word-break: break-word;
-  }
-
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-`
+import {Image} from '@wepublish/image/website'
 
 export type WebsiteProps = PropsWithChildren
 
 export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
   <ThemeProvider theme={theme}>
-    <Global styles={globalStyles} />
-
     <IconContext.Provider value={{}}>
       <WebsiteBuilderProvider
         Navbar={Navbar}
@@ -64,7 +52,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Link,
           UnorderedList,
           OrderedList,
-          ListItem
+          ListItem,
+          Image
         }}
         blocks={{
           Title: TitleBlock,
@@ -72,7 +61,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Quote: QuoteBlock,
           HTML: HtmlBlock,
           RichText: RichTextBlock,
-          TeaserGridFlex: TeaserGridFlexBlock
+          TeaserGridFlex: TeaserGridFlexBlock,
+          Teaser
         }}
         richtext={{RenderElement, RenderLeaf}}>
         {children}

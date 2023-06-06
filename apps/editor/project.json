@@ -105,7 +105,7 @@
         "externalDependencies": "all",
         "generatePackageJson": true,
         "outputHashing": "none",
-        "webpackConfig": "apps/editor/webpack.config.js",
+        "webpackConfig": "apps/editor/webpack.config.server.js",
         "isolatedConfig": true
       },
       "configurations": {

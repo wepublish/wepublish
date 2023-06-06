@@ -70,18 +70,7 @@ export function RenderElement({
       return <tr {...attributes}>{children}</tr>
 
     case BlockFormat.TableCell:
-      return (
-        <td
-          {...attributes}
-          style={{
-            borderColor:
-              element.borderColor === 'transparent'
-                ? `rgb(0, 0, 0, 0.1)`
-                : (element.borderColor as string)
-          }}>
-          {children}
-        </td>
-      )
+      return <td {...attributes}>{children}</td>
 
     case InlineFormat.Link:
       return (

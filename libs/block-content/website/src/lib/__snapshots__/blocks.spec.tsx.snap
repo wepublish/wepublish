@@ -126,7 +126,6 @@ exports[`Blocks should render Default 1`] = `
           >
             <td
               data-slate-node="element"
-              style="border-color: #000000;"
             >
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -145,7 +144,6 @@ exports[`Blocks should render Default 1`] = `
             </td>
             <td
               data-slate-node="element"
-              style="border-color: #000000;"
             >
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -168,7 +166,6 @@ exports[`Blocks should render Default 1`] = `
           >
             <td
               data-slate-node="element"
-              style="border-color: #000000;"
             >
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -187,7 +184,6 @@ exports[`Blocks should render Default 1`] = `
             </td>
             <td
               data-slate-node="element"
-              style="border-color: #000000;"
             >
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -387,8 +383,12 @@ exports[`Blocks should render Default 1`] = `
   >
     <img
       alt="DSC07717"
+      class="css-1qnf57e"
       height="6000"
-      src="https://unsplash.it/500/281"
+      srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
       title=""
       width="4000"
     />
@@ -426,10 +426,14 @@ exports[`Blocks should render Default 1`] = `
           class="css-rd719m"
         >
           <img
-            alt=""
-            class="css-sr2c7j"
+            alt="DSC07717"
+            class="css-1qnf57e"
             height="6000"
-            src="https://unsplash.it/500/281"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
             width="4000"
           />
           <header
@@ -458,9 +462,13 @@ exports[`Blocks should render Default 1`] = `
         >
           <img
             alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-            class="css-sr2c7j"
+            class="css-1qnf57e"
             height="2667"
-            src="https://unsplash.it/500/281"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             width="4000"
           />
           <header
@@ -488,10 +496,14 @@ exports[`Blocks should render Default 1`] = `
           class="css-rd719m"
         >
           <img
-            alt=""
-            class="css-sr2c7j"
+            alt="DSC07717"
+            class="css-1qnf57e"
             height="6000"
-            src="https://unsplash.it/500/281"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
             width="4000"
           />
           <header
@@ -519,10 +531,14 @@ exports[`Blocks should render Default 1`] = `
           class="css-rd719m"
         >
           <img
-            alt=""
-            class="css-sr2c7j"
+            alt="20220522_171501"
+            class="css-1qnf57e"
             height="2419"
-            src="https://unsplash.it/500/281"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
             width="1814"
           />
           <header
@@ -550,10 +566,14 @@ exports[`Blocks should render Default 1`] = `
           class="css-rd719m"
         >
           <img
-            alt=""
-            class="css-sr2c7j"
+            alt="DSC07717"
+            class="css-1qnf57e"
             height="6000"
-            src="https://unsplash.it/500/281"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
             width="4000"
           />
           <header
@@ -715,7 +735,6 @@ exports[`Blocks should render WithLayout 1`] = `
             >
               <td
                 data-slate-node="element"
-                style="border-color: #000000;"
               >
                 <p
                   class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -734,7 +753,6 @@ exports[`Blocks should render WithLayout 1`] = `
               </td>
               <td
                 data-slate-node="element"
-                style="border-color: #000000;"
               >
                 <p
                   class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -757,7 +775,6 @@ exports[`Blocks should render WithLayout 1`] = `
             >
               <td
                 data-slate-node="element"
-                style="border-color: #000000;"
               >
                 <p
                   class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -776,7 +793,6 @@ exports[`Blocks should render WithLayout 1`] = `
               </td>
               <td
                 data-slate-node="element"
-                style="border-color: #000000;"
               >
                 <p
                   class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -976,8 +992,12 @@ exports[`Blocks should render WithLayout 1`] = `
     >
       <img
         alt="DSC07717"
+        class="css-1qnf57e"
         height="6000"
-        src="https://unsplash.it/500/281"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
         title=""
         width="4000"
       />
@@ -1015,10 +1035,14 @@ exports[`Blocks should render WithLayout 1`] = `
             class="css-rd719m"
           >
             <img
-              alt=""
-              class="css-sr2c7j"
+              alt="DSC07717"
+              class="css-1qnf57e"
               height="6000"
-              src="https://unsplash.it/500/281"
+              srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+              title=""
               width="4000"
             />
             <header
@@ -1047,9 +1071,13 @@ exports[`Blocks should render WithLayout 1`] = `
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-sr2c7j"
+              class="css-1qnf57e"
               height="2667"
-              src="https://unsplash.it/500/281"
+              srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+              title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
               width="4000"
             />
             <header
@@ -1077,10 +1105,14 @@ exports[`Blocks should render WithLayout 1`] = `
             class="css-rd719m"
           >
             <img
-              alt=""
-              class="css-sr2c7j"
+              alt="DSC07717"
+              class="css-1qnf57e"
               height="6000"
-              src="https://unsplash.it/500/281"
+              srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+              title=""
               width="4000"
             />
             <header
@@ -1108,10 +1140,14 @@ exports[`Blocks should render WithLayout 1`] = `
             class="css-rd719m"
           >
             <img
-              alt=""
-              class="css-sr2c7j"
+              alt="20220522_171501"
+              class="css-1qnf57e"
               height="2419"
-              src="https://unsplash.it/500/281"
+              srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+              title=""
               width="1814"
             />
             <header
@@ -1139,10 +1175,14 @@ exports[`Blocks should render WithLayout 1`] = `
             class="css-rd719m"
           >
             <img
-              alt=""
-              class="css-sr2c7j"
+              alt="DSC07717"
+              class="css-1qnf57e"
               height="6000"
-              src="https://unsplash.it/500/281"
+              srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+              title=""
               width="4000"
             />
             <header
