@@ -617,7 +617,6 @@ export const CanDeleteUserConsent: Permission = {
 }
 
 export const AllPermissions: Permission[] = [
-  CanCreateApprovedComment,
   CanTakeActionOnComment,
   CanCreateNavigation,
   CanGetNavigation,
@@ -711,7 +710,8 @@ export const AllPermissions: Permission[] = [
   CanCreateEvent,
   CanCreateConsent,
   CanUpdateConsent,
-  CanDeleteConsent
+  CanDeleteConsent,
+  CanCreateApprovedComment
 ]
 
 export const EditorPermissions: Permission[] = [

@@ -1,12 +1,21 @@
-// import {CommentInput, AddComment} from '../api/public'
-// import {CommentAuthorType, CommentItemType} from '../../lib'
+import {CommentItemType, CreateComment} from '../api/private'
 
-// let testServerPrivate: ApolloServer
+import {createGraphQLTestClientWithPrisma} from '../utility'
+import {ApolloServer} from 'apollo-server-express'
+import {PrismaClient} from '@prisma/client'
+
+let testClientPrivate: ApolloServer
+let testClientPublic: ApolloServer
+let prisma: PrismaClient
+
+let testServerPrivate: ApolloServer
 
 beforeAll(async () => {
   try {
-    // const setupClient = await createGraphQLTestClientWithPrisma()
-    // testServerPrivate = setupClient.testServerPrivate
+    const setupClient = await createGraphQLTestClientWithPrisma()
+    testClientPrivate = setupClient.testServerPrivate
+    testClientPublic = setupClient.testServerPublic
+    prisma = setupClient.prisma
   } catch (error) {
     console.log('Error', error)
 
@@ -15,25 +24,30 @@ beforeAll(async () => {
 })
 
 describe('Comments', () => {
-  test('can be created', async () => {
-    // const {mutate} = testServerPublic
-    // const CommentInput: CommentInput = {
-    //   itemID: 'd',
-    //   itemType: CommentItemType.Article,
-    //   text: [
-    //     {
-    //       type: 'paragraph',
-    //       children: [{text: 'hello'}]
-    //     }
-    //   ]
-    // }
-    // const res = await mutate({
-    //   mutation: AddComment,
-    //   variables: {
-    //     input: CommentInput
-    //   }
-    // })
-    // expect(res).toMatchSnapshot()
-    // expect(res?.data?.AddComment?.authorType).toContain(CommentAuthorType.Author)
+  describe('create', () => {
+    test('can be created', async () => {
+      const res = await testClientPrivate.executeOperation({
+        query: CreateComment,
+        variables: {
+          itemID: 'd',
+          itemType: CommentItemType.Article,
+          text: [
+            {
+              type: 'paragraph',
+              children: [{text: 'hello'}]
+            }
+          ]
+        }
+      })
+      console.log(res)
+      expect(res).toMatchSnapshot({
+        data: {
+          createComment: {
+            id: expect.any(String)
+          }
+        }
+      })
+      // expect(res?.data?.AddComment?.authorType).toContain(CommentAuthorType.Author)
+    })
   })
 })

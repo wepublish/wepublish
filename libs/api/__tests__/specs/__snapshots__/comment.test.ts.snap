@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Comments create can be created 1`] = `
+{
+  "data": {
+    "createComment": {
+      "id": Any<String>,
+      "state": "Approved",
+      "user": null,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": {
+    "headers": Headers {
+      Symbol(map): {},
+    },
+  },
+}
+`;
