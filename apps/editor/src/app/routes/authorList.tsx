@@ -6,12 +6,20 @@ import {
   useDeleteAuthorMutation
 } from '@wepublish/editor/api'
 import {
+  createCheckedPermissionComponent,
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  DescriptionList,
+  DescriptionListItem,
   IconButton,
+  IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewFilterArea,
   ListViewHeader,
+  mapTableSortTypeToGraphQLSortOrder,
   PaddedCell,
+  PermissionControl,
   Table,
   TableWrapper
 } from '@wepublish/ui/editor'
@@ -32,15 +40,7 @@ import {
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {AuthorEditPanel} from '../panel/authorEditPanel'
-import {
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
-  mapTableSortTypeToGraphQLSortOrder
-} from '../utility'
 
 const {Column, HeaderCell, Cell} = RTable
 

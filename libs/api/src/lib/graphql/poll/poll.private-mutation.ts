@@ -55,7 +55,7 @@ export const createPoll = (
 
 type UpdatePollPollInput = Pick<
   Prisma.PollUncheckedCreateInput,
-  'question' | 'opensAt' | 'closedAt'
+  'question' | 'opensAt' | 'closedAt' | 'infoText'
 >
 
 type UpdatePollAnswer = {id: string; answer: string}
@@ -86,6 +86,7 @@ export const updatePoll = (
     where: {id: pollId},
     data: {
       ...pollInput,
+      infoText: pollInput.infoText || null,
       answers: {
         update: answers?.map(answer => ({
           where: {id: answer.id},

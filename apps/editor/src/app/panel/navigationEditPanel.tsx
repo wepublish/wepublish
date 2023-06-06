@@ -11,6 +11,15 @@ import {
   usePageListQuery,
   useUpdateNavigationMutation
 } from '@wepublish/editor/api'
+import {
+  createCheckedPermissionComponent,
+  generateID,
+  getOperationNameFromDocument,
+  ListInput,
+  ListValue,
+  PermissionControl,
+  useAuthorisation
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -23,14 +32,6 @@ import {
   SelectPicker as RSelectPicker,
   toaster
 } from 'rsuite'
-
-import {ListInput, ListValue} from '../atoms/listInput'
-import {
-  createCheckedPermissionComponent,
-  PermissionControl,
-  useAuthorisation
-} from '../atoms/permissionControl'
-import {generateID, getOperationNameFromDocument} from '../utility'
 
 const SelectPicker = styled(RSelectPicker)`
   margin-bottom: 4px;

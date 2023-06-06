@@ -88,6 +88,8 @@ export interface DataLoaderContext {
   readonly publicPagesByID: DataLoader<string, PublicPage | null>
   readonly publicPagesBySlug: DataLoader<string, PublicPage | null>
 
+  readonly events: DataLoader<string, Event | null>
+
   readonly userRolesByID: DataLoader<string, UserRole | null>
 
   readonly mailLogsByID: DataLoader<string, MailLog | null>
@@ -546,6 +548,20 @@ export async function contextFromRequest(
           })
         ).map(pageWithRevisionsToPublicPage),
         'slug'
+      )
+    ),
+
+    events: new DataLoader(async ids =>
+      createOptionalsArray(
+        ids as string[],
+        await prisma.event.findMany({
+          where: {
+            id: {
+              in: ids as string[]
+            }
+          }
+        }),
+        'id'
       )
     ),
 

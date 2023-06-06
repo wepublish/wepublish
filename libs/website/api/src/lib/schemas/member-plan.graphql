@@ -1,0 +1,141 @@
+query MemberPlanList($take: Int, $skip: Int) {
+  memberPlans(filter: {active: true}, take: $take, skip: $skip) {
+    nodes {
+      id
+      name
+      image {
+        url
+        largeURL: transformURL(input: {width: 500})
+      }
+      slug
+      tags
+      description
+      amountPerMonthMin
+      availablePaymentMethods {
+        paymentMethods {
+          id
+          paymentProviderID
+          name
+          slug
+          description
+        }
+        paymentPeriodicities
+        forceAutoRenewal
+      }
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+mutation Subscribe(
+  $name: String!
+  $firstName: String
+  $preferredName: String
+  $address: UserAddressInput
+  $email: String!
+  $password: String!
+  $memberPlanID: ID
+  $memberPlanSlug: Slug
+  $autoRenew: Boolean!
+  $paymentPeriodicity: PaymentPeriodicity!
+  $monthlyAmount: Int!
+  $paymentMethodID: ID
+  $paymentMethodSlug: Slug
+  $subscriptionProperties: [PublicPropertiesInput!]
+  $successURL: String
+  $failureURL: String
+  $challengeAnswer: ChallengeInput!
+) {
+  registerMemberAndReceivePayment(
+    name: $name
+    firstName: $firstName
+    preferredName: $preferredName
+    address: $address
+    email: $email
+    password: $password
+    memberPlanID: $memberPlanID
+    memberPlanSlug: $memberPlanSlug
+    autoRenew: $autoRenew
+    paymentPeriodicity: $paymentPeriodicity
+    monthlyAmount: $monthlyAmount
+    paymentMethodID: $paymentMethodID
+    paymentMethodSlug: $paymentMethodSlug
+    subscriptionProperties: $subscriptionProperties
+    successURL: $successURL
+    failureURL: $failureURL
+    challengeAnswer: $challengeAnswer
+  ) {
+    payment {
+      id
+      intentSecret
+    }
+
+    user {
+      id
+    }
+
+    session {
+      token
+      expiresAt
+      createdAt
+    }
+  }
+}
+
+mutation Pay(
+  $invoiceID: String!
+  $paymentMethodID: ID
+  $paymentMethodSlug: Slug
+  $successURL: String
+  $failureURL: String
+) {
+  createPaymentFromInvoice(
+    input: {
+      invoiceID: $invoiceID
+      paymentMethodID: $paymentMethodID
+      paymentMethodSlug: $paymentMethodSlug
+      successURL: $successURL
+      failureURL: $failureURL
+    }
+  ) {
+    id
+    intentSecret
+  }
+}
+
+query Invoices {
+  invoices {
+    id
+    canceledAt
+    paidAt
+    total
+    subscriptionID
+  }
+}
+
+query Subscriptions {
+  subscriptions {
+    id
+    paymentMethod {
+      id
+    }
+  }
+}
+
+query CheckInvoiceStatus($id: ID!) {
+  checkInvoiceStatus(id: $id) {
+    id
+    canceledAt
+    paidAt
+    total
+    subscriptionID
+  }
+}

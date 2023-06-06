@@ -9,9 +9,14 @@ import {
   useUpdateTagMutation
 } from '@wepublish/editor/api'
 import {
+  createCheckedPermissionComponent,
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
+  PermissionControl,
   TableWrapper
 } from '@wepublish/ui/editor'
 import {memo, useCallback, useEffect, useReducer, useState} from 'react'
@@ -28,10 +33,6 @@ import {
   Pagination,
   toaster
 } from 'rsuite'
-
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
-import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
 
 const FlexGridSmallerMargin = styled(FlexboxGrid)`
   margin-bottom: 12px;

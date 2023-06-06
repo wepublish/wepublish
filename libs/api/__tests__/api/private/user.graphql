@@ -3,6 +3,7 @@ fragment FullUser on User {
   name
   email
   emailVerifiedAt
+  flair
   roles {
     ...FullUserRole
   }
