@@ -10,6 +10,7 @@ import {
 } from '@wepublish/block-content/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
+import {Page} from '@wepublish/page/website'
 import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
 import {
   Button,
@@ -46,6 +47,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         EventSEO={EventSEO}
         EventList={EventList}
         EventListItem={EventListItem}
+        Page={Page}
         elements={{
           Button,
           H1,
