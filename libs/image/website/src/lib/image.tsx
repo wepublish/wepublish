@@ -8,20 +8,20 @@ declare module 'react' {
   }
 }
 
-type ImageItem = {size: number; url: string}
+type ImageItem = {size: number; url: string | null | undefined}
 
 const imageToImageItems = (image: FullImageFragment): ImageItem[] => [
-  {url: image.bigURL!, size: 800},
-  {url: image.largeURL!, size: 500},
-  {url: image.mediumURL!, size: 300},
-  {url: image.smallURL!, size: 200}
+  {url: image.bigURL, size: 800},
+  {url: image.largeURL, size: 500},
+  {url: image.mediumURL, size: 300},
+  {url: image.smallURL, size: 200}
 ]
 
 const imageToSquareImageItems = (image: FullImageFragment): ImageItem[] => [
-  {url: image.squareBigURL!, size: 800},
-  {url: image.squareLargeURL!, size: 500},
-  {url: image.squareMediumURL!, size: 300},
-  {url: image.squareSmallURL!, size: 200}
+  {url: image.squareBigURL, size: 800},
+  {url: image.squareLargeURL, size: 500},
+  {url: image.squareMediumURL, size: 300},
+  {url: image.squareSmallURL, size: 200}
 ]
 
 const ImageWrapper = styled('img')`
@@ -37,8 +37,10 @@ export function Image({
 }: BuilderImageProps) {
   const images = square ? imageToSquareImageItems(image) : imageToImageItems(image)
 
-  const imageArray = images.reduce((array, image) => {
-    array.push(`${image.url} ${image.size}w`)
+  const imageArray = images.reduce((array, img) => {
+    if (img.url) {
+      array.push(`${img.url} ${img.size}w`)
+    }
 
     return array
   }, [] as string[])

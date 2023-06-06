@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Article Container should render ById 1`] = `
+exports[`PeerArticle Container should render ById 1`] = `
 <DocumentFragment>
   <div
     class="css-1thzeso"
@@ -555,7 +555,7 @@ https://unsplash.it/200/100 200w"
 </DocumentFragment>
 `;
 
-exports[`Article Container should render BySlug 1`] = `
+exports[`PeerArticle Container should render BySlug 1`] = `
 <DocumentFragment>
   <div
     class="css-1thzeso"
@@ -1110,7 +1110,7 @@ https://unsplash.it/200/100 200w"
 </DocumentFragment>
 `;
 
-exports[`Article Container should render WithClassName 1`] = `
+exports[`PeerArticle Container should render WithClassName 1`] = `
 <DocumentFragment>
   <div
     class="extra-classname css-1thzeso"
@@ -1665,7 +1665,7 @@ https://unsplash.it/200/100 200w"
 </DocumentFragment>
 `;
 
-exports[`Article Container should render WithEmotion 1`] = `
+exports[`PeerArticle Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
     class="css-1thzeso"

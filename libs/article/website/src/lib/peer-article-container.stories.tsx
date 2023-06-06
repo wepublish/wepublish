@@ -1,8 +1,8 @@
 import {action} from '@storybook/addon-actions'
 import {Meta} from '@storybook/react'
-import {ArticleDocument, ArticleQuery} from '@wepublish/website/api'
-import {ArticleContainer} from './article-container'
+import {PeerArticleDocument, PeerArticleQuery} from '@wepublish/website/api'
 import {css} from '@emotion/react'
+import {PeerArticleContainer} from './peer-article-container'
 
 const article = {
   __typename: 'Article',
@@ -1043,17 +1043,18 @@ const article = {
       __typename: 'EventBlock'
     }
   ]
-} as Exclude<ArticleQuery['article'], undefined | null>
+} as Exclude<PeerArticleQuery['peerArticle'], undefined | null>
 
 export default {
-  component: ArticleContainer,
-  title: 'Container/Article'
+  component: PeerArticleContainer,
+  title: 'Container/PeerArticle'
 } as Meta
 
 export const ById = {
   args: {
     onQuery: action('onQuery'),
-    id: article.id
+    articleId: article.id,
+    peerId: '1234'
   },
 
   parameters: {
@@ -1061,14 +1062,15 @@ export const ById = {
       mocks: [
         {
           request: {
-            query: ArticleDocument,
+            query: PeerArticleDocument,
             variables: {
-              id: article.id
+              articleId: article.id,
+              peerId: '1234'
             }
           },
           result: {
             data: {
-              article
+              peerArticle: article
             }
           }
         }
@@ -1080,7 +1082,8 @@ export const ById = {
 export const BySlug = {
   args: {
     onQuery: action('onQuery'),
-    slug: article.slug
+    articleId: article.id,
+    peerSlug: 'foobar'
   },
 
   parameters: {
@@ -1088,14 +1091,15 @@ export const BySlug = {
       mocks: [
         {
           request: {
-            query: ArticleDocument,
+            query: PeerArticleDocument,
             variables: {
-              slug: article.slug
+              articleId: article.id,
+              peerSlug: 'foobar'
             }
           },
           result: {
             data: {
-              article
+              peerArticle: article
             }
           }
         }
@@ -1107,7 +1111,8 @@ export const BySlug = {
 export const WithClassName = {
   args: {
     onQuery: action('onQuery'),
-    id: article.id,
+    articleId: article.id,
+    peerId: '1234',
     className: 'extra-classname'
   },
 
@@ -1116,14 +1121,15 @@ export const WithClassName = {
       mocks: [
         {
           request: {
-            query: ArticleDocument,
+            query: PeerArticleDocument,
             variables: {
-              id: article.id
+              articleId: article.id,
+              peerId: '1234'
             }
           },
           result: {
             data: {
-              article
+              peerArticle: article
             }
           }
         }
@@ -1135,7 +1141,8 @@ export const WithClassName = {
 export const WithEmotion = {
   args: {
     onQuery: action('onQuery'),
-    id: article.id,
+    articleId: article.id,
+    peerId: '1234',
     css: css`
       background-color: #eee;
     `
@@ -1146,14 +1153,15 @@ export const WithEmotion = {
       mocks: [
         {
           request: {
-            query: ArticleDocument,
+            query: PeerArticleDocument,
             variables: {
-              id: article.id
+              articleId: article.id,
+              peerId: '1234'
             }
           },
           result: {
             data: {
-              article
+              peerArticle: article
             }
           }
         }

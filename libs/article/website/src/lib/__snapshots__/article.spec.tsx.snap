@@ -129,7 +129,6 @@ exports[`Article should render Default 1`] = `
             >
               <td
                 data-slate-node="element"
-                style="border-color: #000000;"
               >
                 <p
                   class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -148,7 +147,6 @@ exports[`Article should render Default 1`] = `
               </td>
               <td
                 data-slate-node="element"
-                style="border-color: #000000;"
               >
                 <p
                   class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -171,7 +169,6 @@ exports[`Article should render Default 1`] = `
             >
               <td
                 data-slate-node="element"
-                style="border-color: #000000;"
               >
                 <p
                   class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -190,7 +187,6 @@ exports[`Article should render Default 1`] = `
               </td>
               <td
                 data-slate-node="element"
-                style="border-color: #000000;"
               >
                 <p
                   class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
@@ -390,8 +386,12 @@ exports[`Article should render Default 1`] = `
     >
       <img
         alt="DSC07717"
+        class="css-1qnf57e"
         height="6000"
-        src="https://unsplash.it/500/281"
+        srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
         title=""
         width="4000"
       />
@@ -429,10 +429,14 @@ exports[`Article should render Default 1`] = `
             class="css-rd719m"
           >
             <img
-              alt=""
-              class="css-sr2c7j"
-              height="6000"
-              src="https://unsplash.it/500/281"
+              alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
+              class="css-1qnf57e"
+              height="2667"
+              srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+              title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
               width="4000"
             />
             <header
@@ -460,10 +464,14 @@ exports[`Article should render Default 1`] = `
             class="css-rd719m"
           >
             <img
-              alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-sr2c7j"
-              height="2667"
-              src="https://unsplash.it/500/281"
+              alt="DSC07717"
+              class="css-1qnf57e"
+              height="6000"
+              srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+              title=""
               width="4000"
             />
             <header
@@ -491,10 +499,14 @@ exports[`Article should render Default 1`] = `
             class="css-rd719m"
           >
             <img
-              alt=""
-              class="css-sr2c7j"
-              height="6000"
-              src="https://unsplash.it/500/281"
+              alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
+              class="css-1qnf57e"
+              height="2667"
+              srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+              title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
               width="4000"
             />
             <header
@@ -522,11 +534,15 @@ exports[`Article should render Default 1`] = `
             class="css-rd719m"
           >
             <img
-              alt=""
-              class="css-sr2c7j"
-              height="2419"
-              src="https://unsplash.it/500/281"
-              width="1814"
+              alt="DSC07717"
+              class="css-1qnf57e"
+              height="6000"
+              srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+              title=""
+              width="4000"
             />
             <header
               class="css-0"
@@ -553,10 +569,14 @@ exports[`Article should render Default 1`] = `
             class="css-rd719m"
           >
             <img
-              alt=""
-              class="css-sr2c7j"
-              height="6000"
-              src="https://unsplash.it/500/281"
+              alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
+              class="css-1qnf57e"
+              height="2667"
+              srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+              title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
               width="4000"
             />
             <header

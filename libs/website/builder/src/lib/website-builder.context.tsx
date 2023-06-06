@@ -147,8 +147,6 @@ export const WebsiteBuilderProvider = memo<
   const parentComponents = useWebsiteBuilder()
   const newComponents = mergeDeepRight(parentComponents, components) as WebsiteBuilderComponents
 
-  console.log(newComponents)
-
   return (
     <WebsiteBuilderContext.Provider value={newComponents}>
       {children}
