@@ -22,15 +22,27 @@ const image = {
   title: 'An image title',
   filename: 'An image filename',
   url: 'https://unsplash.it/500/500',
-  bigURL: 'https://unsplash.it/800/800',
-  largeURL: 'https://unsplash.it/500/500',
-  mediumURL: 'https://unsplash.it/300/300',
-  smallURL: 'https://unsplash.it/200/200'
+  bigURL: 'https://unsplash.it/800/400',
+  largeURL: 'https://unsplash.it/500/300',
+  mediumURL: 'https://unsplash.it/300/200',
+  smallURL: 'https://unsplash.it/200/100',
+
+  squareBigURL: 'https://unsplash.it/800/800',
+  squareLargeURL: 'https://unsplash.it/500/500',
+  squareMediumURL: 'https://unsplash.it/300/300',
+  squareSmallURL: 'https://unsplash.it/200/200'
 } as FullImageFragment
 
 export const Default = {
   args: {
     image
+  }
+}
+
+export const Square = {
+  args: {
+    image,
+    square: true
   }
 }
 
