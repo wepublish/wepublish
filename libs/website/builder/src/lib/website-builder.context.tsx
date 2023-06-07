@@ -88,6 +88,10 @@ export type WebsiteBuilderComponents = {
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
   }
+
+  date: {
+    format: (date: Date) => string
+  }
 }
 
 const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
@@ -134,6 +138,10 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     HTML: NoComponent,
     TeaserGridFlex: NoComponent,
     Teaser: NoComponent
+  },
+
+  date: {
+    format: date => date.toString()
   }
 })
 

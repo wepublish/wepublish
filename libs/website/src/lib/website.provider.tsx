@@ -8,6 +8,7 @@ import {
   TitleBlock,
   Teaser
 } from '@wepublish/block-content/website'
+import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page} from '@wepublish/page/website'
 import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
@@ -30,8 +31,11 @@ import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {memo, PropsWithChildren} from 'react'
 import {IconContext} from 'react-icons'
 import {Image} from '@wepublish/image/website'
+import {format} from 'date-fns'
 
 export type WebsiteProps = PropsWithChildren
+
+const dateFormatter = (date: Date) => format(date, 'dd.MM.yyyy HH:mm')
 
 export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
   <ThemeProvider theme={theme}>
@@ -39,6 +43,10 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
       <WebsiteBuilderProvider
         Navbar={Navbar}
         Footer={Footer}
+        Event={Event}
+        EventSEO={EventSEO}
+        EventList={EventList}
+        EventListItem={EventListItem}
         Page={Page}
         elements={{
           Button,
@@ -64,7 +72,10 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           TeaserGridFlex: TeaserGridFlexBlock,
           Teaser
         }}
-        richtext={{RenderElement, RenderLeaf}}>
+        richtext={{RenderElement, RenderLeaf}}
+        date={{
+          format: dateFormatter
+        }}>
         {children}
       </WebsiteBuilderProvider>
     </IconContext.Provider>
