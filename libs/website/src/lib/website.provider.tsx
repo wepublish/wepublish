@@ -1,4 +1,5 @@
 import {ThemeProvider} from '@mui/material'
+import {Article} from '@wepublish/article/website'
 import {
   HtmlBlock,
   ImageBlock,
@@ -41,6 +42,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
   <ThemeProvider theme={theme}>
     <IconContext.Provider value={{}}>
       <WebsiteBuilderProvider
+        Article={Article}
         Navbar={Navbar}
         Footer={Footer}
         Event={Event}
