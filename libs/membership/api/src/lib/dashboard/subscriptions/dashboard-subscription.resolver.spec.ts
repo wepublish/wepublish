@@ -251,7 +251,7 @@ describe('DashboardSubscriptionResolver', () => {
         monthlyAmount: 50,
         paymentPeriodicity: 'monthly',
         startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-02-01'),
+        paidUntil: new Date('2043-02-01'),
         paymentMethod: {
           create: paymentMethod
         },
@@ -283,10 +283,30 @@ describe('DashboardSubscriptionResolver', () => {
         }
       },
       {
+        autoRenew: true,
+        monthlyAmount: 50,
+        paymentPeriodicity: 'monthly',
+        startsAt: new Date('2023-01-01'),
+        paidUntil: new Date('2023-02-01'),
+        paymentMethod: {
+          create: paymentMethod
+        },
+        memberPlan: {
+          connect: {
+            slug: 'foo'
+          }
+        },
+        user: {
+          connect: {
+            email: 'foo@wepublish.ch'
+          }
+        }
+      },
+      {
         autoRenew: false,
         monthlyAmount: 50,
         paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-02-02'),
+        startsAt: new Date('2023-01-01'),
         paidUntil: new Date('2023-02-02'),
         deactivation: {
           create: {
@@ -329,6 +349,7 @@ describe('DashboardSubscriptionResolver', () => {
         monthlyAmount: 500,
         paymentPeriodicity: 'monthly',
         startsAt: new Date('2023-02-03'),
+        paidUntil: new Date('2043-02-01'),
         paymentMethod: {
           create: paymentMethod
         },
@@ -357,11 +378,7 @@ describe('DashboardSubscriptionResolver', () => {
     await request(app.getHttpServer())
       .post('')
       .send({
-        query: activeSubscribersQuery,
-        variables: {
-          start: new Date('2023-01-01').toISOString(),
-          end: new Date('2023-02-01').toISOString()
-        }
+        query: activeSubscribersQuery
       })
       .expect(200)
       .expect(res => {

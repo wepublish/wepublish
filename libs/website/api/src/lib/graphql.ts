@@ -353,6 +353,16 @@ export enum EventStatus {
   Scheduled = 'SCHEDULED'
 }
 
+export type EventTeaser = {
+  __typename?: 'EventTeaser'
+  event?: Maybe<Event>
+  image?: Maybe<Image>
+  lead?: Maybe<Scalars['String']>
+  preTitle?: Maybe<Scalars['String']>
+  style: TeaserStyle
+  title?: Maybe<Scalars['String']>
+}
+
 export type ExternalNavigationLink = BaseNavigationLink & {
   __typename?: 'ExternalNavigationLink'
   label: Scalars['String']
@@ -958,7 +968,7 @@ export type Query = {
   authors: AuthorConnection
   /** This query generates a challenge which can be used to access protected endpoints. */
   challenge: Challenge
-  /** This query will check the invoice status and update with information from the paymentProvider */
+  /** This mutation will check the invoice status and update with information from the paymentProvider */
   checkInvoiceStatus?: Maybe<Invoice>
   /** This query returns the comments of an item. */
   comments: Array<Comment>
@@ -1242,7 +1252,7 @@ export enum TagType {
   Event = 'Event'
 }
 
-export type Teaser = ArticleTeaser | CustomTeaser | PageTeaser | PeerArticleTeaser
+export type Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser | PeerArticleTeaser
 
 export type TeaserGridBlock = {
   __typename?: 'TeaserGridBlock'
@@ -1303,6 +1313,7 @@ export type User = {
   oauth2Accounts: Array<OAuth2Account>
   paymentProviderCustomers: Array<PaymentProviderCustomer>
   preferredName?: Maybe<Scalars['String']>
+  properties: Array<PublicProperties>
 }
 
 export type UserAddress = {
@@ -1391,13 +1402,14 @@ export type FullArticleFragment = {
           license?: string | null
           title?: string | null
           url?: string | null
+          bigURL?: string | null
           largeURL?: string | null
           mediumURL?: string | null
-          thumbURL?: string | null
-          squareURL?: string | null
-          previewURL?: string | null
-          column1URL?: string | null
-          column6URL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
         } | null
       }
@@ -1433,13 +1445,14 @@ export type FullArticleFragment = {
                   width: number
                   height: number
                   url?: string | null
+                  bigURL?: string | null
                   largeURL?: string | null
                   mediumURL?: string | null
-                  thumbURL?: string | null
-                  squareURL?: string | null
-                  previewURL?: string | null
-                  column1URL?: string | null
-                  column6URL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
                 } | null
                 article?: {
                   __typename?: 'Article'
@@ -1477,13 +1490,14 @@ export type FullArticleFragment = {
                           license?: string | null
                           title?: string | null
                           url?: string | null
+                          bigURL?: string | null
                           largeURL?: string | null
                           mediumURL?: string | null
-                          thumbURL?: string | null
-                          squareURL?: string | null
-                          previewURL?: string | null
-                          column1URL?: string | null
-                          column6URL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
@@ -1523,16 +1537,18 @@ export type FullArticleFragment = {
                   width: number
                   height: number
                   url?: string | null
+                  bigURL?: string | null
                   largeURL?: string | null
                   mediumURL?: string | null
-                  thumbURL?: string | null
-                  squareURL?: string | null
-                  previewURL?: string | null
-                  column1URL?: string | null
-                  column6URL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
                 } | null
                 properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
               }
+            | {__typename?: 'EventTeaser'}
             | {
                 __typename?: 'PageTeaser'
                 style: TeaserStyle
@@ -1549,13 +1565,14 @@ export type FullArticleFragment = {
                   width: number
                   height: number
                   url?: string | null
+                  bigURL?: string | null
                   largeURL?: string | null
                   mediumURL?: string | null
-                  thumbURL?: string | null
-                  squareURL?: string | null
-                  previewURL?: string | null
-                  column1URL?: string | null
-                  column6URL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
                 } | null
                 page?: {
                   __typename?: 'Page'
@@ -1592,13 +1609,14 @@ export type FullArticleFragment = {
                           license?: string | null
                           title?: string | null
                           url?: string | null
+                          bigURL?: string | null
                           largeURL?: string | null
                           mediumURL?: string | null
-                          thumbURL?: string | null
-                          squareURL?: string | null
-                          previewURL?: string | null
-                          column1URL?: string | null
-                          column6URL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
@@ -1674,13 +1692,14 @@ export type ArticleQuery = {
             license?: string | null
             title?: string | null
             url?: string | null
+            bigURL?: string | null
             largeURL?: string | null
             mediumURL?: string | null
-            thumbURL?: string | null
-            squareURL?: string | null
-            previewURL?: string | null
-            column1URL?: string | null
-            column6URL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
           } | null
         }
@@ -1716,13 +1735,14 @@ export type ArticleQuery = {
                     width: number
                     height: number
                     url?: string | null
+                    bigURL?: string | null
                     largeURL?: string | null
                     mediumURL?: string | null
-                    thumbURL?: string | null
-                    squareURL?: string | null
-                    previewURL?: string | null
-                    column1URL?: string | null
-                    column6URL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
                   } | null
                   article?: {
                     __typename?: 'Article'
@@ -1760,13 +1780,14 @@ export type ArticleQuery = {
                             license?: string | null
                             title?: string | null
                             url?: string | null
+                            bigURL?: string | null
                             largeURL?: string | null
                             mediumURL?: string | null
-                            thumbURL?: string | null
-                            squareURL?: string | null
-                            previewURL?: string | null
-                            column1URL?: string | null
-                            column6URL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
                             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                         }
@@ -1806,16 +1827,18 @@ export type ArticleQuery = {
                     width: number
                     height: number
                     url?: string | null
+                    bigURL?: string | null
                     largeURL?: string | null
                     mediumURL?: string | null
-                    thumbURL?: string | null
-                    squareURL?: string | null
-                    previewURL?: string | null
-                    column1URL?: string | null
-                    column6URL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
                   } | null
                   properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                 }
+              | {__typename?: 'EventTeaser'}
               | {
                   __typename?: 'PageTeaser'
                   style: TeaserStyle
@@ -1832,13 +1855,14 @@ export type ArticleQuery = {
                     width: number
                     height: number
                     url?: string | null
+                    bigURL?: string | null
                     largeURL?: string | null
                     mediumURL?: string | null
-                    thumbURL?: string | null
-                    squareURL?: string | null
-                    previewURL?: string | null
-                    column1URL?: string | null
-                    column6URL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
                   } | null
                   page?: {
                     __typename?: 'Page'
@@ -1875,13 +1899,306 @@ export type ArticleQuery = {
                             license?: string | null
                             title?: string | null
                             url?: string | null
+                            bigURL?: string | null
                             largeURL?: string | null
                             mediumURL?: string | null
-                            thumbURL?: string | null
-                            squareURL?: string | null
-                            previewURL?: string | null
-                            column1URL?: string | null
-                            column6URL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }
+                      | {__typename: 'ImageGalleryBlock'}
+                      | {__typename: 'InstagramPostBlock'}
+                      | {__typename: 'LinkPageBreakBlock'}
+                      | {__typename: 'ListicleBlock'}
+                      | {__typename: 'PolisConversationBlock'}
+                      | {__typename: 'PollBlock'}
+                      | {__typename: 'QuoteBlock'}
+                      | {__typename: 'RichTextBlock'}
+                      | {__typename: 'SoundCloudTrackBlock'}
+                      | {__typename: 'TeaserGridBlock'}
+                      | {__typename: 'TeaserGridFlexBlock'}
+                      | {__typename: 'TikTokVideoBlock'}
+                      | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+                      | {__typename: 'TwitterTweetBlock'}
+                      | {__typename: 'VimeoVideoBlock'}
+                      | {__typename: 'YouTubeVideoBlock'}
+                    >
+                  } | null
+                }
+              | {__typename?: 'PeerArticleTeaser'}
+              | null
+          }>
+        }
+      | {__typename: 'TikTokVideoBlock'}
+      | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+      | {__typename: 'TwitterTweetBlock'}
+      | {__typename: 'VimeoVideoBlock'}
+      | {__typename: 'YouTubeVideoBlock'}
+    >
+  } | null
+}
+
+export type PeerArticleQueryVariables = Exact<{
+  peerSlug?: InputMaybe<Scalars['Slug']>
+  peerId?: InputMaybe<Scalars['ID']>
+  articleId: Scalars['ID']
+}>
+
+export type PeerArticleQuery = {
+  __typename?: 'Query'
+  peerArticle?: {
+    __typename?: 'Article'
+    id: string
+    slug: string
+    url: string
+    blocks: Array<
+      | {__typename: 'BildwurfAdBlock'}
+      | {__typename: 'CommentBlock'}
+      | {__typename: 'EmbedBlock'}
+      | {__typename: 'EventBlock'}
+      | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'HTMLBlock'; html?: string | null}
+      | {
+          __typename: 'ImageBlock'
+          caption?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            title?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+        }
+      | {__typename: 'ImageGalleryBlock'}
+      | {__typename: 'InstagramPostBlock'}
+      | {__typename: 'LinkPageBreakBlock'}
+      | {__typename: 'ListicleBlock'}
+      | {__typename: 'PolisConversationBlock'}
+      | {__typename: 'PollBlock'}
+      | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+      | {__typename: 'RichTextBlock'; richText: Node[]}
+      | {__typename: 'SoundCloudTrackBlock'}
+      | {__typename: 'TeaserGridBlock'}
+      | {
+          __typename: 'TeaserGridFlexBlock'
+          flexTeasers: Array<{
+            __typename?: 'FlexTeaser'
+            alignment: {__typename?: 'FlexAlignment'; x: number; y: number; w: number; h: number}
+            teaser?:
+              | {
+                  __typename?: 'ArticleTeaser'
+                  style: TeaserStyle
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    filename?: string | null
+                    extension: string
+                    title?: string | null
+                    description?: string | null
+                    width: number
+                    height: number
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                  } | null
+                  article?: {
+                    __typename?: 'Article'
+                    id: string
+                    title: string
+                    preTitle?: string | null
+                    lead?: string | null
+                    url: string
+                    blocks: Array<
+                      | {__typename: 'BildwurfAdBlock'}
+                      | {__typename: 'CommentBlock'}
+                      | {__typename: 'EmbedBlock'}
+                      | {__typename: 'EventBlock'}
+                      | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'HTMLBlock'}
+                      | {
+                          __typename: 'ImageBlock'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            title?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }
+                      | {__typename: 'ImageGalleryBlock'}
+                      | {__typename: 'InstagramPostBlock'}
+                      | {__typename: 'LinkPageBreakBlock'}
+                      | {__typename: 'ListicleBlock'}
+                      | {__typename: 'PolisConversationBlock'}
+                      | {__typename: 'PollBlock'}
+                      | {__typename: 'QuoteBlock'}
+                      | {__typename: 'RichTextBlock'}
+                      | {__typename: 'SoundCloudTrackBlock'}
+                      | {__typename: 'TeaserGridBlock'}
+                      | {__typename: 'TeaserGridFlexBlock'}
+                      | {__typename: 'TikTokVideoBlock'}
+                      | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+                      | {__typename: 'TwitterTweetBlock'}
+                      | {__typename: 'VimeoVideoBlock'}
+                      | {__typename: 'YouTubeVideoBlock'}
+                    >
+                  } | null
+                }
+              | {
+                  __typename?: 'CustomTeaser'
+                  style: TeaserStyle
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  contentUrl?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    filename?: string | null
+                    extension: string
+                    title?: string | null
+                    description?: string | null
+                    width: number
+                    height: number
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                  } | null
+                  properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+                }
+              | {__typename?: 'EventTeaser'}
+              | {
+                  __typename?: 'PageTeaser'
+                  style: TeaserStyle
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    filename?: string | null
+                    extension: string
+                    title?: string | null
+                    description?: string | null
+                    width: number
+                    height: number
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                  } | null
+                  page?: {
+                    __typename?: 'Page'
+                    id: string
+                    title: string
+                    description?: string | null
+                    url: string
+                    blocks: Array<
+                      | {__typename: 'BildwurfAdBlock'}
+                      | {__typename: 'CommentBlock'}
+                      | {__typename: 'EmbedBlock'}
+                      | {__typename: 'EventBlock'}
+                      | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'HTMLBlock'}
+                      | {
+                          __typename: 'ImageBlock'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            title?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
                             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                         }
@@ -1969,13 +2286,14 @@ type BlockWithoutTeaser_ImageBlock_Fragment = {
     license?: string | null
     title?: string | null
     url?: string | null
+    bigURL?: string | null
     largeURL?: string | null
     mediumURL?: string | null
-    thumbURL?: string | null
-    squareURL?: string | null
-    previewURL?: string | null
-    column1URL?: string | null
-    column6URL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
   } | null
 }
@@ -2079,13 +2397,14 @@ type FullBlock_ImageBlock_Fragment = {
     license?: string | null
     title?: string | null
     url?: string | null
+    bigURL?: string | null
     largeURL?: string | null
     mediumURL?: string | null
-    thumbURL?: string | null
-    squareURL?: string | null
-    previewURL?: string | null
-    column1URL?: string | null
-    column6URL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
   } | null
 }
@@ -2136,13 +2455,14 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
             width: number
             height: number
             url?: string | null
+            bigURL?: string | null
             largeURL?: string | null
             mediumURL?: string | null
-            thumbURL?: string | null
-            squareURL?: string | null
-            previewURL?: string | null
-            column1URL?: string | null
-            column6URL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
           } | null
           article?: {
             __typename?: 'Article'
@@ -2180,13 +2500,14 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
                     license?: string | null
                     title?: string | null
                     url?: string | null
+                    bigURL?: string | null
                     largeURL?: string | null
                     mediumURL?: string | null
-                    thumbURL?: string | null
-                    squareURL?: string | null
-                    previewURL?: string | null
-                    column1URL?: string | null
-                    column6URL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
@@ -2226,16 +2547,18 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
             width: number
             height: number
             url?: string | null
+            bigURL?: string | null
             largeURL?: string | null
             mediumURL?: string | null
-            thumbURL?: string | null
-            squareURL?: string | null
-            previewURL?: string | null
-            column1URL?: string | null
-            column6URL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
           } | null
           properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
         }
+      | {__typename?: 'EventTeaser'}
       | {
           __typename?: 'PageTeaser'
           style: TeaserStyle
@@ -2252,13 +2575,14 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
             width: number
             height: number
             url?: string | null
+            bigURL?: string | null
             largeURL?: string | null
             mediumURL?: string | null
-            thumbURL?: string | null
-            squareURL?: string | null
-            previewURL?: string | null
-            column1URL?: string | null
-            column6URL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
           } | null
           page?: {
             __typename?: 'Page'
@@ -2295,13 +2619,14 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
                     license?: string | null
                     title?: string | null
                     url?: string | null
+                    bigURL?: string | null
                     largeURL?: string | null
                     mediumURL?: string | null
-                    thumbURL?: string | null
-                    squareURL?: string | null
-                    previewURL?: string | null
-                    column1URL?: string | null
-                    column6URL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
@@ -2409,13 +2734,14 @@ export type FullEventFragment = {
     license?: string | null
     title?: string | null
     url?: string | null
+    bigURL?: string | null
     largeURL?: string | null
     mediumURL?: string | null
-    thumbURL?: string | null
-    squareURL?: string | null
-    previewURL?: string | null
-    column1URL?: string | null
-    column6URL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
   } | null
   tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
@@ -2464,13 +2790,14 @@ export type EventListQuery = {
         license?: string | null
         title?: string | null
         url?: string | null
+        bigURL?: string | null
         largeURL?: string | null
         mediumURL?: string | null
-        thumbURL?: string | null
-        squareURL?: string | null
-        previewURL?: string | null
-        column1URL?: string | null
-        column6URL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
         focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
       } | null
       tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
@@ -2520,13 +2847,14 @@ export type EventQuery = {
       license?: string | null
       title?: string | null
       url?: string | null
+      bigURL?: string | null
       largeURL?: string | null
       mediumURL?: string | null
-      thumbURL?: string | null
-      squareURL?: string | null
-      previewURL?: string | null
-      column1URL?: string | null
-      column6URL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
       focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
     } | null
     tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
@@ -2536,13 +2864,14 @@ export type EventQuery = {
 export type ImageUrLsFragment = {
   __typename?: 'Image'
   url?: string | null
+  bigURL?: string | null
   largeURL?: string | null
   mediumURL?: string | null
-  thumbURL?: string | null
-  squareURL?: string | null
-  previewURL?: string | null
-  column1URL?: string | null
-  column6URL?: string | null
+  smallURL?: string | null
+  squareBigURL?: string | null
+  squareLargeURL?: string | null
+  squareMediumURL?: string | null
+  squareSmallURL?: string | null
 }
 
 export type ImageRefFragment = {
@@ -2555,13 +2884,14 @@ export type ImageRefFragment = {
   width: number
   height: number
   url?: string | null
+  bigURL?: string | null
   largeURL?: string | null
   mediumURL?: string | null
-  thumbURL?: string | null
-  squareURL?: string | null
-  previewURL?: string | null
-  column1URL?: string | null
-  column6URL?: string | null
+  smallURL?: string | null
+  squareBigURL?: string | null
+  squareLargeURL?: string | null
+  squareMediumURL?: string | null
+  squareSmallURL?: string | null
 }
 
 export type FullImageFragment = {
@@ -2583,13 +2913,14 @@ export type FullImageFragment = {
   license?: string | null
   title?: string | null
   url?: string | null
+  bigURL?: string | null
   largeURL?: string | null
   mediumURL?: string | null
-  thumbURL?: string | null
-  squareURL?: string | null
-  previewURL?: string | null
-  column1URL?: string | null
-  column6URL?: string | null
+  smallURL?: string | null
+  squareBigURL?: string | null
+  squareLargeURL?: string | null
+  squareMediumURL?: string | null
+  squareSmallURL?: string | null
   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
 }
 
@@ -2767,13 +3098,14 @@ export type FullNavigationFragment = {
                   license?: string | null
                   title?: string | null
                   url?: string | null
+                  bigURL?: string | null
                   largeURL?: string | null
                   mediumURL?: string | null
-                  thumbURL?: string | null
-                  squareURL?: string | null
-                  previewURL?: string | null
-                  column1URL?: string | null
-                  column6URL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                 } | null
               }
@@ -2815,13 +3147,14 @@ export type FullNavigationFragment = {
                           width: number
                           height: number
                           url?: string | null
+                          bigURL?: string | null
                           largeURL?: string | null
                           mediumURL?: string | null
-                          thumbURL?: string | null
-                          squareURL?: string | null
-                          previewURL?: string | null
-                          column1URL?: string | null
-                          column6URL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
                         } | null
                         article?: {
                           __typename?: 'Article'
@@ -2859,13 +3192,14 @@ export type FullNavigationFragment = {
                                   license?: string | null
                                   title?: string | null
                                   url?: string | null
+                                  bigURL?: string | null
                                   largeURL?: string | null
                                   mediumURL?: string | null
-                                  thumbURL?: string | null
-                                  squareURL?: string | null
-                                  previewURL?: string | null
-                                  column1URL?: string | null
-                                  column6URL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
@@ -2909,13 +3243,14 @@ export type FullNavigationFragment = {
                           width: number
                           height: number
                           url?: string | null
+                          bigURL?: string | null
                           largeURL?: string | null
                           mediumURL?: string | null
-                          thumbURL?: string | null
-                          squareURL?: string | null
-                          previewURL?: string | null
-                          column1URL?: string | null
-                          column6URL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
                         } | null
                         properties: Array<{
                           __typename?: 'PublicProperties'
@@ -2923,6 +3258,7 @@ export type FullNavigationFragment = {
                           value: string
                         }>
                       }
+                    | {__typename?: 'EventTeaser'}
                     | {
                         __typename?: 'PageTeaser'
                         style: TeaserStyle
@@ -2939,13 +3275,14 @@ export type FullNavigationFragment = {
                           width: number
                           height: number
                           url?: string | null
+                          bigURL?: string | null
                           largeURL?: string | null
                           mediumURL?: string | null
-                          thumbURL?: string | null
-                          squareURL?: string | null
-                          previewURL?: string | null
-                          column1URL?: string | null
-                          column6URL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
                         } | null
                         page?: {
                           __typename?: 'Page'
@@ -2982,13 +3319,14 @@ export type FullNavigationFragment = {
                                   license?: string | null
                                   title?: string | null
                                   url?: string | null
+                                  bigURL?: string | null
                                   largeURL?: string | null
                                   mediumURL?: string | null
-                                  thumbURL?: string | null
-                                  squareURL?: string | null
-                                  previewURL?: string | null
-                                  column1URL?: string | null
-                                  column6URL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
@@ -3065,13 +3403,14 @@ export type FullNavigationFragment = {
                   license?: string | null
                   title?: string | null
                   url?: string | null
+                  bigURL?: string | null
                   largeURL?: string | null
                   mediumURL?: string | null
-                  thumbURL?: string | null
-                  squareURL?: string | null
-                  previewURL?: string | null
-                  column1URL?: string | null
-                  column6URL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                 } | null
               }
@@ -3113,13 +3452,14 @@ export type FullNavigationFragment = {
                           width: number
                           height: number
                           url?: string | null
+                          bigURL?: string | null
                           largeURL?: string | null
                           mediumURL?: string | null
-                          thumbURL?: string | null
-                          squareURL?: string | null
-                          previewURL?: string | null
-                          column1URL?: string | null
-                          column6URL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
                         } | null
                         article?: {
                           __typename?: 'Article'
@@ -3157,13 +3497,14 @@ export type FullNavigationFragment = {
                                   license?: string | null
                                   title?: string | null
                                   url?: string | null
+                                  bigURL?: string | null
                                   largeURL?: string | null
                                   mediumURL?: string | null
-                                  thumbURL?: string | null
-                                  squareURL?: string | null
-                                  previewURL?: string | null
-                                  column1URL?: string | null
-                                  column6URL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
@@ -3207,13 +3548,14 @@ export type FullNavigationFragment = {
                           width: number
                           height: number
                           url?: string | null
+                          bigURL?: string | null
                           largeURL?: string | null
                           mediumURL?: string | null
-                          thumbURL?: string | null
-                          squareURL?: string | null
-                          previewURL?: string | null
-                          column1URL?: string | null
-                          column6URL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
                         } | null
                         properties: Array<{
                           __typename?: 'PublicProperties'
@@ -3221,6 +3563,7 @@ export type FullNavigationFragment = {
                           value: string
                         }>
                       }
+                    | {__typename?: 'EventTeaser'}
                     | {
                         __typename?: 'PageTeaser'
                         style: TeaserStyle
@@ -3237,13 +3580,14 @@ export type FullNavigationFragment = {
                           width: number
                           height: number
                           url?: string | null
+                          bigURL?: string | null
                           largeURL?: string | null
                           mediumURL?: string | null
-                          thumbURL?: string | null
-                          squareURL?: string | null
-                          previewURL?: string | null
-                          column1URL?: string | null
-                          column6URL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
                         } | null
                         page?: {
                           __typename?: 'Page'
@@ -3280,13 +3624,14 @@ export type FullNavigationFragment = {
                                   license?: string | null
                                   title?: string | null
                                   url?: string | null
+                                  bigURL?: string | null
                                   largeURL?: string | null
                                   mediumURL?: string | null
-                                  thumbURL?: string | null
-                                  squareURL?: string | null
-                                  previewURL?: string | null
-                                  column1URL?: string | null
-                                  column6URL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
@@ -3375,13 +3720,14 @@ export type NavigationListQuery = {
                     license?: string | null
                     title?: string | null
                     url?: string | null
+                    bigURL?: string | null
                     largeURL?: string | null
                     mediumURL?: string | null
-                    thumbURL?: string | null
-                    squareURL?: string | null
-                    previewURL?: string | null
-                    column1URL?: string | null
-                    column6URL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
@@ -3423,13 +3769,14 @@ export type NavigationListQuery = {
                             width: number
                             height: number
                             url?: string | null
+                            bigURL?: string | null
                             largeURL?: string | null
                             mediumURL?: string | null
-                            thumbURL?: string | null
-                            squareURL?: string | null
-                            previewURL?: string | null
-                            column1URL?: string | null
-                            column6URL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
                           } | null
                           article?: {
                             __typename?: 'Article'
@@ -3467,13 +3814,14 @@ export type NavigationListQuery = {
                                     license?: string | null
                                     title?: string | null
                                     url?: string | null
+                                    bigURL?: string | null
                                     largeURL?: string | null
                                     mediumURL?: string | null
-                                    thumbURL?: string | null
-                                    squareURL?: string | null
-                                    previewURL?: string | null
-                                    column1URL?: string | null
-                                    column6URL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
@@ -3517,13 +3865,14 @@ export type NavigationListQuery = {
                             width: number
                             height: number
                             url?: string | null
+                            bigURL?: string | null
                             largeURL?: string | null
                             mediumURL?: string | null
-                            thumbURL?: string | null
-                            squareURL?: string | null
-                            previewURL?: string | null
-                            column1URL?: string | null
-                            column6URL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
                           } | null
                           properties: Array<{
                             __typename?: 'PublicProperties'
@@ -3531,6 +3880,7 @@ export type NavigationListQuery = {
                             value: string
                           }>
                         }
+                      | {__typename?: 'EventTeaser'}
                       | {
                           __typename?: 'PageTeaser'
                           style: TeaserStyle
@@ -3547,13 +3897,14 @@ export type NavigationListQuery = {
                             width: number
                             height: number
                             url?: string | null
+                            bigURL?: string | null
                             largeURL?: string | null
                             mediumURL?: string | null
-                            thumbURL?: string | null
-                            squareURL?: string | null
-                            previewURL?: string | null
-                            column1URL?: string | null
-                            column6URL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
                           } | null
                           page?: {
                             __typename?: 'Page'
@@ -3590,13 +3941,14 @@ export type NavigationListQuery = {
                                     license?: string | null
                                     title?: string | null
                                     url?: string | null
+                                    bigURL?: string | null
                                     largeURL?: string | null
                                     mediumURL?: string | null
-                                    thumbURL?: string | null
-                                    squareURL?: string | null
-                                    previewURL?: string | null
-                                    column1URL?: string | null
-                                    column6URL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
@@ -3673,13 +4025,14 @@ export type NavigationListQuery = {
                     license?: string | null
                     title?: string | null
                     url?: string | null
+                    bigURL?: string | null
                     largeURL?: string | null
                     mediumURL?: string | null
-                    thumbURL?: string | null
-                    squareURL?: string | null
-                    previewURL?: string | null
-                    column1URL?: string | null
-                    column6URL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
@@ -3721,13 +4074,14 @@ export type NavigationListQuery = {
                             width: number
                             height: number
                             url?: string | null
+                            bigURL?: string | null
                             largeURL?: string | null
                             mediumURL?: string | null
-                            thumbURL?: string | null
-                            squareURL?: string | null
-                            previewURL?: string | null
-                            column1URL?: string | null
-                            column6URL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
                           } | null
                           article?: {
                             __typename?: 'Article'
@@ -3765,13 +4119,14 @@ export type NavigationListQuery = {
                                     license?: string | null
                                     title?: string | null
                                     url?: string | null
+                                    bigURL?: string | null
                                     largeURL?: string | null
                                     mediumURL?: string | null
-                                    thumbURL?: string | null
-                                    squareURL?: string | null
-                                    previewURL?: string | null
-                                    column1URL?: string | null
-                                    column6URL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
@@ -3815,13 +4170,14 @@ export type NavigationListQuery = {
                             width: number
                             height: number
                             url?: string | null
+                            bigURL?: string | null
                             largeURL?: string | null
                             mediumURL?: string | null
-                            thumbURL?: string | null
-                            squareURL?: string | null
-                            previewURL?: string | null
-                            column1URL?: string | null
-                            column6URL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
                           } | null
                           properties: Array<{
                             __typename?: 'PublicProperties'
@@ -3829,6 +4185,7 @@ export type NavigationListQuery = {
                             value: string
                           }>
                         }
+                      | {__typename?: 'EventTeaser'}
                       | {
                           __typename?: 'PageTeaser'
                           style: TeaserStyle
@@ -3845,13 +4202,14 @@ export type NavigationListQuery = {
                             width: number
                             height: number
                             url?: string | null
+                            bigURL?: string | null
                             largeURL?: string | null
                             mediumURL?: string | null
-                            thumbURL?: string | null
-                            squareURL?: string | null
-                            previewURL?: string | null
-                            column1URL?: string | null
-                            column6URL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
                           } | null
                           page?: {
                             __typename?: 'Page'
@@ -3888,13 +4246,14 @@ export type NavigationListQuery = {
                                     license?: string | null
                                     title?: string | null
                                     url?: string | null
+                                    bigURL?: string | null
                                     largeURL?: string | null
                                     mediumURL?: string | null
-                                    thumbURL?: string | null
-                                    squareURL?: string | null
-                                    previewURL?: string | null
-                                    column1URL?: string | null
-                                    column6URL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
@@ -3986,13 +4345,14 @@ export type NavigationQuery = {
                     license?: string | null
                     title?: string | null
                     url?: string | null
+                    bigURL?: string | null
                     largeURL?: string | null
                     mediumURL?: string | null
-                    thumbURL?: string | null
-                    squareURL?: string | null
-                    previewURL?: string | null
-                    column1URL?: string | null
-                    column6URL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
@@ -4034,13 +4394,14 @@ export type NavigationQuery = {
                             width: number
                             height: number
                             url?: string | null
+                            bigURL?: string | null
                             largeURL?: string | null
                             mediumURL?: string | null
-                            thumbURL?: string | null
-                            squareURL?: string | null
-                            previewURL?: string | null
-                            column1URL?: string | null
-                            column6URL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
                           } | null
                           article?: {
                             __typename?: 'Article'
@@ -4078,13 +4439,14 @@ export type NavigationQuery = {
                                     license?: string | null
                                     title?: string | null
                                     url?: string | null
+                                    bigURL?: string | null
                                     largeURL?: string | null
                                     mediumURL?: string | null
-                                    thumbURL?: string | null
-                                    squareURL?: string | null
-                                    previewURL?: string | null
-                                    column1URL?: string | null
-                                    column6URL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
@@ -4128,13 +4490,14 @@ export type NavigationQuery = {
                             width: number
                             height: number
                             url?: string | null
+                            bigURL?: string | null
                             largeURL?: string | null
                             mediumURL?: string | null
-                            thumbURL?: string | null
-                            squareURL?: string | null
-                            previewURL?: string | null
-                            column1URL?: string | null
-                            column6URL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
                           } | null
                           properties: Array<{
                             __typename?: 'PublicProperties'
@@ -4142,6 +4505,7 @@ export type NavigationQuery = {
                             value: string
                           }>
                         }
+                      | {__typename?: 'EventTeaser'}
                       | {
                           __typename?: 'PageTeaser'
                           style: TeaserStyle
@@ -4158,13 +4522,14 @@ export type NavigationQuery = {
                             width: number
                             height: number
                             url?: string | null
+                            bigURL?: string | null
                             largeURL?: string | null
                             mediumURL?: string | null
-                            thumbURL?: string | null
-                            squareURL?: string | null
-                            previewURL?: string | null
-                            column1URL?: string | null
-                            column6URL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
                           } | null
                           page?: {
                             __typename?: 'Page'
@@ -4201,13 +4566,14 @@ export type NavigationQuery = {
                                     license?: string | null
                                     title?: string | null
                                     url?: string | null
+                                    bigURL?: string | null
                                     largeURL?: string | null
                                     mediumURL?: string | null
-                                    thumbURL?: string | null
-                                    squareURL?: string | null
-                                    previewURL?: string | null
-                                    column1URL?: string | null
-                                    column6URL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
@@ -4284,13 +4650,14 @@ export type NavigationQuery = {
                     license?: string | null
                     title?: string | null
                     url?: string | null
+                    bigURL?: string | null
                     largeURL?: string | null
                     mediumURL?: string | null
-                    thumbURL?: string | null
-                    squareURL?: string | null
-                    previewURL?: string | null
-                    column1URL?: string | null
-                    column6URL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
@@ -4332,13 +4699,14 @@ export type NavigationQuery = {
                             width: number
                             height: number
                             url?: string | null
+                            bigURL?: string | null
                             largeURL?: string | null
                             mediumURL?: string | null
-                            thumbURL?: string | null
-                            squareURL?: string | null
-                            previewURL?: string | null
-                            column1URL?: string | null
-                            column6URL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
                           } | null
                           article?: {
                             __typename?: 'Article'
@@ -4376,13 +4744,14 @@ export type NavigationQuery = {
                                     license?: string | null
                                     title?: string | null
                                     url?: string | null
+                                    bigURL?: string | null
                                     largeURL?: string | null
                                     mediumURL?: string | null
-                                    thumbURL?: string | null
-                                    squareURL?: string | null
-                                    previewURL?: string | null
-                                    column1URL?: string | null
-                                    column6URL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
@@ -4426,13 +4795,14 @@ export type NavigationQuery = {
                             width: number
                             height: number
                             url?: string | null
+                            bigURL?: string | null
                             largeURL?: string | null
                             mediumURL?: string | null
-                            thumbURL?: string | null
-                            squareURL?: string | null
-                            previewURL?: string | null
-                            column1URL?: string | null
-                            column6URL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
                           } | null
                           properties: Array<{
                             __typename?: 'PublicProperties'
@@ -4440,6 +4810,7 @@ export type NavigationQuery = {
                             value: string
                           }>
                         }
+                      | {__typename?: 'EventTeaser'}
                       | {
                           __typename?: 'PageTeaser'
                           style: TeaserStyle
@@ -4456,13 +4827,14 @@ export type NavigationQuery = {
                             width: number
                             height: number
                             url?: string | null
+                            bigURL?: string | null
                             largeURL?: string | null
                             mediumURL?: string | null
-                            thumbURL?: string | null
-                            squareURL?: string | null
-                            previewURL?: string | null
-                            column1URL?: string | null
-                            column6URL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
                           } | null
                           page?: {
                             __typename?: 'Page'
@@ -4499,13 +4871,14 @@ export type NavigationQuery = {
                                     license?: string | null
                                     title?: string | null
                                     url?: string | null
+                                    bigURL?: string | null
                                     largeURL?: string | null
                                     mediumURL?: string | null
-                                    thumbURL?: string | null
-                                    squareURL?: string | null
-                                    previewURL?: string | null
-                                    column1URL?: string | null
-                                    column6URL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
@@ -4582,13 +4955,14 @@ export type FullPageFragment = {
           license?: string | null
           title?: string | null
           url?: string | null
+          bigURL?: string | null
           largeURL?: string | null
           mediumURL?: string | null
-          thumbURL?: string | null
-          squareURL?: string | null
-          previewURL?: string | null
-          column1URL?: string | null
-          column6URL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
         } | null
       }
@@ -4624,13 +4998,14 @@ export type FullPageFragment = {
                   width: number
                   height: number
                   url?: string | null
+                  bigURL?: string | null
                   largeURL?: string | null
                   mediumURL?: string | null
-                  thumbURL?: string | null
-                  squareURL?: string | null
-                  previewURL?: string | null
-                  column1URL?: string | null
-                  column6URL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
                 } | null
                 article?: {
                   __typename?: 'Article'
@@ -4668,13 +5043,14 @@ export type FullPageFragment = {
                           license?: string | null
                           title?: string | null
                           url?: string | null
+                          bigURL?: string | null
                           largeURL?: string | null
                           mediumURL?: string | null
-                          thumbURL?: string | null
-                          squareURL?: string | null
-                          previewURL?: string | null
-                          column1URL?: string | null
-                          column6URL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
@@ -4714,16 +5090,18 @@ export type FullPageFragment = {
                   width: number
                   height: number
                   url?: string | null
+                  bigURL?: string | null
                   largeURL?: string | null
                   mediumURL?: string | null
-                  thumbURL?: string | null
-                  squareURL?: string | null
-                  previewURL?: string | null
-                  column1URL?: string | null
-                  column6URL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
                 } | null
                 properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
               }
+            | {__typename?: 'EventTeaser'}
             | {
                 __typename?: 'PageTeaser'
                 style: TeaserStyle
@@ -4740,13 +5118,14 @@ export type FullPageFragment = {
                   width: number
                   height: number
                   url?: string | null
+                  bigURL?: string | null
                   largeURL?: string | null
                   mediumURL?: string | null
-                  thumbURL?: string | null
-                  squareURL?: string | null
-                  previewURL?: string | null
-                  column1URL?: string | null
-                  column6URL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
                 } | null
                 page?: {
                   __typename?: 'Page'
@@ -4783,13 +5162,14 @@ export type FullPageFragment = {
                           license?: string | null
                           title?: string | null
                           url?: string | null
+                          bigURL?: string | null
                           largeURL?: string | null
                           mediumURL?: string | null
-                          thumbURL?: string | null
-                          squareURL?: string | null
-                          previewURL?: string | null
-                          column1URL?: string | null
-                          column6URL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
@@ -4865,13 +5245,14 @@ export type PageQuery = {
             license?: string | null
             title?: string | null
             url?: string | null
+            bigURL?: string | null
             largeURL?: string | null
             mediumURL?: string | null
-            thumbURL?: string | null
-            squareURL?: string | null
-            previewURL?: string | null
-            column1URL?: string | null
-            column6URL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
           } | null
         }
@@ -4907,13 +5288,14 @@ export type PageQuery = {
                     width: number
                     height: number
                     url?: string | null
+                    bigURL?: string | null
                     largeURL?: string | null
                     mediumURL?: string | null
-                    thumbURL?: string | null
-                    squareURL?: string | null
-                    previewURL?: string | null
-                    column1URL?: string | null
-                    column6URL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
                   } | null
                   article?: {
                     __typename?: 'Article'
@@ -4951,13 +5333,14 @@ export type PageQuery = {
                             license?: string | null
                             title?: string | null
                             url?: string | null
+                            bigURL?: string | null
                             largeURL?: string | null
                             mediumURL?: string | null
-                            thumbURL?: string | null
-                            squareURL?: string | null
-                            previewURL?: string | null
-                            column1URL?: string | null
-                            column6URL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
                             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                         }
@@ -4997,16 +5380,18 @@ export type PageQuery = {
                     width: number
                     height: number
                     url?: string | null
+                    bigURL?: string | null
                     largeURL?: string | null
                     mediumURL?: string | null
-                    thumbURL?: string | null
-                    squareURL?: string | null
-                    previewURL?: string | null
-                    column1URL?: string | null
-                    column6URL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
                   } | null
                   properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                 }
+              | {__typename?: 'EventTeaser'}
               | {
                   __typename?: 'PageTeaser'
                   style: TeaserStyle
@@ -5023,13 +5408,14 @@ export type PageQuery = {
                     width: number
                     height: number
                     url?: string | null
+                    bigURL?: string | null
                     largeURL?: string | null
                     mediumURL?: string | null
-                    thumbURL?: string | null
-                    squareURL?: string | null
-                    previewURL?: string | null
-                    column1URL?: string | null
-                    column6URL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
                   } | null
                   page?: {
                     __typename?: 'Page'
@@ -5066,13 +5452,14 @@ export type PageQuery = {
                             license?: string | null
                             title?: string | null
                             url?: string | null
+                            bigURL?: string | null
                             largeURL?: string | null
                             mediumURL?: string | null
-                            thumbURL?: string | null
-                            squareURL?: string | null
-                            previewURL?: string | null
-                            column1URL?: string | null
-                            column6URL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
                             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                         }
@@ -5111,13 +5498,14 @@ export type PageQuery = {
 export const ImageUrLsFragmentDoc = gql`
   fragment ImageURLs on Image {
     url
-    largeURL: transformURL(input: {width: 500})
-    mediumURL: transformURL(input: {width: 300})
-    thumbURL: transformURL(input: {width: 280, height: 200})
-    squareURL: transformURL(input: {width: 100, height: 100})
-    previewURL: transformURL(input: {width: 400, height: 200})
-    column1URL: transformURL(input: {width: 800, height: 300})
-    column6URL: transformURL(input: {width: 260, height: 300})
+    bigURL: transformURL(input: {width: 800, output: WEBP, quality: 1})
+    largeURL: transformURL(input: {width: 500, output: WEBP, quality: 1})
+    mediumURL: transformURL(input: {width: 300, output: WEBP, quality: 1})
+    smallURL: transformURL(input: {width: 200, output: WEBP, quality: 1})
+    squareBigURL: transformURL(input: {width: 800, height: 800, output: WEBP, quality: 1})
+    squareLargeURL: transformURL(input: {width: 500, height: 500, output: WEBP, quality: 1})
+    squareMediumURL: transformURL(input: {width: 300, height: 300, output: WEBP, quality: 1})
+    squareSmallURL: transformURL(input: {width: 200, height: 200, output: WEBP, quality: 1})
   }
 `
 export const ImageRefFragmentDoc = gql`
@@ -5574,6 +5962,51 @@ export function useArticleLazyQuery(
 export type ArticleQueryHookResult = ReturnType<typeof useArticleQuery>
 export type ArticleLazyQueryHookResult = ReturnType<typeof useArticleLazyQuery>
 export type ArticleQueryResult = Apollo.QueryResult<ArticleQuery, ArticleQueryVariables>
+export const PeerArticleDocument = gql`
+  query PeerArticle($peerSlug: Slug, $peerId: ID, $articleId: ID!) {
+    peerArticle(peerSlug: $peerSlug, peerID: $peerId, id: $articleId) {
+      ...FullArticle
+    }
+  }
+  ${FullArticleFragmentDoc}
+`
+
+/**
+ * __usePeerArticleQuery__
+ *
+ * To run a query within a React component, call `usePeerArticleQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePeerArticleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePeerArticleQuery({
+ *   variables: {
+ *      peerSlug: // value for 'peerSlug'
+ *      peerId: // value for 'peerId'
+ *      articleId: // value for 'articleId'
+ *   },
+ * });
+ */
+export function usePeerArticleQuery(
+  baseOptions: Apollo.QueryHookOptions<PeerArticleQuery, PeerArticleQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<PeerArticleQuery, PeerArticleQueryVariables>(PeerArticleDocument, options)
+}
+export function usePeerArticleLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<PeerArticleQuery, PeerArticleQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<PeerArticleQuery, PeerArticleQueryVariables>(
+    PeerArticleDocument,
+    options
+  )
+}
+export type PeerArticleQueryHookResult = ReturnType<typeof usePeerArticleQuery>
+export type PeerArticleLazyQueryHookResult = ReturnType<typeof usePeerArticleLazyQuery>
+export type PeerArticleQueryResult = Apollo.QueryResult<PeerArticleQuery, PeerArticleQueryVariables>
 export const MeDocument = gql`
   query Me {
     me {
