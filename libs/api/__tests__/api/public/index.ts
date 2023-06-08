@@ -1488,14 +1488,14 @@ type FullBlock_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock', v
 
 export type FullBlockFragment = FullBlock_BildwurfAdBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_EventBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_RichTextBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment;
 
-export type MutationCommentFragment = { __typename?: 'Comment', itemID: string, itemType: CommentItemType, text?: Node[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null };
+export type MutationCommentFragment = { __typename?: 'Comment', itemID: string, itemType: CommentItemType, state: CommentState, text?: Node[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null };
 
 export type AddCommentMutationVariables = Exact<{
   input: CommentInput;
 }>;
 
 
-export type AddCommentMutation = { __typename?: 'Mutation', addComment: { __typename?: 'Comment', itemID: string, itemType: CommentItemType, text?: Node[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null } };
+export type AddCommentMutation = { __typename?: 'Mutation', addComment: { __typename?: 'Comment', itemID: string, itemType: CommentItemType, state: CommentState, text?: Node[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null } };
 
 export type EventRefFragment = { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null };
 
@@ -1812,6 +1812,7 @@ export const MutationComment = gql`
     fragment MutationComment on Comment {
   itemID
   itemType
+  state
   user {
     id
   }

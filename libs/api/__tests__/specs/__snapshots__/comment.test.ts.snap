@@ -6,7 +6,6 @@ exports[`Comments create can be created 1`] = `
     "createComment": {
       "id": Any<String>,
       "state": "Approved",
-      "user": null,
     },
   },
   "errors": undefined,

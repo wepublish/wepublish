@@ -2973,7 +2973,7 @@ export type CreateCommentMutationVariables = Exact<{
 }>;
 
 
-export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } };
+export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'Comment', id: string, state: CommentState } };
 
 export type DeleteCommentMutationVariables = Exact<{
   deleteCommentId: Scalars['ID'];
@@ -4144,10 +4144,11 @@ export const CreateComment = gql`
     text: $text
     tagIds: $tagIds
   ) {
-    ...FullComment
+    id
+    state
   }
 }
-    ${FullComment}`;
+    `;
 export const DeleteComment = gql`
     mutation DeleteComment($deleteCommentId: ID!) {
   deleteComment(id: $deleteCommentId) {

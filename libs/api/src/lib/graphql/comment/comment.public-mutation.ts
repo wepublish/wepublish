@@ -48,7 +48,7 @@ export const addPublicComment = async (
     throw new CommentLengthError(+maxCommentLength)
   }
 
-  let canSkipApproval = false
+  const canSkipApproval = hasPermission(CanCreateApprovedComment, user.roles)
 
   // Challenge
   if (!user) {
@@ -74,8 +74,6 @@ export const addPublicComment = async (
 
     if (!challengeValidationResult.valid)
       throw new CommentAuthenticationError(challengeValidationResult.message)
-  } else {
-    canSkipApproval = hasPermission(CanCreateApprovedComment, user.roles)
   }
 
   if (input.itemType === CommentItemType.peerArticle && !input.peerId) {
