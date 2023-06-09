@@ -5,11 +5,7 @@ import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Message, Pagination, Table as RTable, toaster, Button} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
-import {
-  useImportedEventListQuery,
-  useCreateEventMutation,
-  Providers
-} from '@wepublish/editor/api-v2'
+import {useImportedEventListQuery, useCreateEventMutation} from '@wepublish/editor/api-v2'
 import {getApiClientV2} from '../apiClientv2'
 
 import {
@@ -93,7 +89,7 @@ function ImportableEventListView() {
   })
   const alreadyImported = ids?.importedEventsIds
 
-  const importEvent = async (id: string, source: Providers) => {
+  const importEvent = async (id: string, source: string) => {
     createEvent({variables: {filter: {id, source}}})
   }
 

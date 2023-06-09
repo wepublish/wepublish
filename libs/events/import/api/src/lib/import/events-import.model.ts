@@ -1,11 +1,6 @@
 import {Field, ObjectType, InputType, registerEnumType, Int} from '@nestjs/graphql'
 import GraphQLJSON from 'graphql-type-json'
-
-export enum Providers {
-  AgendaBasel = 'AgendaBasel'
-  // add others in the future
-  // SomeOtherProvider = 'SomeOtherProvider'
-}
+import {Node} from 'slate'
 
 export enum ImportedEventSort {
   STARTS_AT = 'STARTS_AT',
@@ -20,10 +15,6 @@ export enum EventStatus {
   POSTPONED = 'POSTPONED',
   CANCELLED = 'CANCELLED'
 }
-
-registerEnumType(Providers, {
-  name: 'Providers'
-})
 
 registerEnumType(ImportedEventSort, {
   name: 'ImportedEventSort'
@@ -63,7 +54,7 @@ export class Event {
   name!: string
 
   @Field(type => GraphQLJSON)
-  description?: JSON
+  description?: Node
 
   @Field(type => EventStatus)
   status!: EventStatus
@@ -110,8 +101,8 @@ export class SingleEventFilter {
   @Field()
   id!: string
 
-  @Field(type => Providers)
-  source!: Providers
+  @Field()
+  source!: string
 }
 
 @InputType()
@@ -119,6 +110,6 @@ export class CreateEventArgs {
   @Field()
   id!: string
 
-  @Field(type => Providers)
-  source!: Providers
+  @Field()
+  source!: string
 }

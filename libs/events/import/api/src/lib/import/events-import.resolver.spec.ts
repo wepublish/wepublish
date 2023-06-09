@@ -3,10 +3,11 @@ import * as crypto from 'crypto'
 import {htmlToSlate} from 'slate-serializers'
 import {EventsImportResolver} from './events-import.resolver'
 import {EventsImportService} from './events-import.service'
-import {Event, ImportedEventsDocument, Providers, EventStatus} from './events-import.model'
+import {Event, ImportedEventsDocument, EventStatus} from './events-import.model'
 import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {PrismaClient} from '@prisma/client'
 import {MediaAdapterService} from '@wepublish/image/api'
+import {Node} from 'slate'
 
 export const generateRandomString = () => crypto.randomBytes(20).toString('hex')
 
@@ -16,7 +17,7 @@ export const mockImportableEvents: Event[] = [
     createdAt: new Date(),
     modifiedAt: new Date(),
     name: 'some name',
-    description: htmlToSlate('<p>some description</p>') as unknown as JSON,
+    description: htmlToSlate('<p>some description</p>') as unknown as Node,
     status: EventStatus.SCHEDULED,
     location: 'some location',
     imageUrl: 'some image url',
@@ -96,7 +97,7 @@ describe('EventsImportResolver', () => {
   })
 
   test('importedEvent query should call importedEvent method of EventsImportService with the provided filter', async () => {
-    const filter = {id: 'some-id', source: Providers.AgendaBasel}
+    const filter = {id: 'some-id', source: 'AgendaBasel'}
 
     jest
       .spyOn(service, 'importedEvent')
@@ -106,12 +107,23 @@ describe('EventsImportResolver', () => {
     expect(service.importedEvent).toHaveBeenCalledWith(filter)
   })
 
-  test('createEvent mutation should call createEvent method of EventsImportService with the provided filter', () => {
-    const filter = {id: 'some-id', source: Providers.AgendaBasel}
+  test('importedEventsIds query should call importedEvent method of EventsImportService', async () => {
+    jest
+      .spyOn(service, 'importedEventsIds')
+      .mockReturnValueOnce(Promise.resolve([mockImportableEvents[0].externalSourceId]))
 
-    jest.spyOn(service, 'createEvent').mockReturnValueOnce(Promise.resolve('some-id'))
+    expect(resolver.importedEventsIds()).resolves.toEqual([
+      mockImportableEvents[0].externalSourceId
+    ])
+    expect(service.importedEventsIds).toHaveBeenCalledWith()
+  })
 
-    expect(resolver.createEvent(filter)).resolves.toEqual('some-id')
-    expect(service.createEvent).toHaveBeenCalledWith(filter)
+  test('createEventFromSource mutation should call createEventFromSource method of EventsImportService with the provided filter', () => {
+    const filter = {id: 'some-id', source: 'AgendaBasel'}
+
+    jest.spyOn(service, 'createEventFromSource').mockReturnValueOnce(Promise.resolve('some-id'))
+
+    expect(resolver.createEventFromSource(filter)).resolves.toEqual('some-id')
+    expect(service.createEventFromSource).toHaveBeenCalledWith(filter)
   })
 })

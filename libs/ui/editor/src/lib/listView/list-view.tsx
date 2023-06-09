@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {IconButton as RIconButton, Table as RTable} from 'rsuite'
 
-import {ListViewFilters} from './list-view-filters'
+import {ListViewFilters} from '../atoms'
 import {StateColor} from '../utility'
 
 const {Cell} = RTable

@@ -973,7 +973,7 @@ export type Query = {
   events?: Maybe<EventConnection>;
   /** This query returns a list of original ids of imported events */
   importedEventsIds?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** This query returns the invoices of the authenticated user. */
+  /** This query returns the invoices  of the authenticated user. */
   invoices: Array<Invoice>;
   /** This query returns the user. */
   me?: Maybe<User>;

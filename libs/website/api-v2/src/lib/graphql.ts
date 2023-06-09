@@ -45,7 +45,7 @@ export type ConsentInput = {
 
 export type CreateEventArgs = {
   id: Scalars['String']
-  source: Providers
+  source: Scalars['String']
 }
 
 export type DashboardInvoice = {
@@ -177,10 +177,6 @@ export enum PaymentPeriodicity {
   Yearly = 'yearly'
 }
 
-export enum Providers {
-  AgendaBasel = 'AgendaBasel'
-}
-
 export type Query = {
   __typename?: 'Query'
   /**
@@ -280,7 +276,7 @@ export type QueryUserConsentsArgs = {
 
 export type SingleEventFilter = {
   id: Scalars['String']
-  source: Providers
+  source: Scalars['String']
 }
 
 export enum SubscriptionDeactivationReason {

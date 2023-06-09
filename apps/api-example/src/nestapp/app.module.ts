@@ -10,6 +10,7 @@ import {
   PermissionModule,
   ConsentModule,
   EventsImportModule,
+  AgendaBaselService,
   MediaAdapterService,
   KarmaMediaAdapter
 } from '@wepublish/api'
@@ -53,6 +54,13 @@ import {URL} from 'url'
         )
       },
       inject: [ConfigService]
+    },
+    {
+      provide: 'EVENT_PROVIDERS',
+      // useClass: AgendaBaselService
+      // useValue: AgendaBaselService
+      useFactory: agendaBasel => [agendaBasel],
+      inject: [AgendaBaselService]
     }
   ],
   exports: [MediaAdapterService]

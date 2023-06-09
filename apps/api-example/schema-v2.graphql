@@ -25,7 +25,7 @@ input ConsentInput {
 
 input CreateEventArgs {
   id: String!
-  source: Providers!
+  source: String!
 }
 
 type DashboardInvoice {
@@ -157,10 +157,6 @@ enum PaymentPeriodicity {
   yearly
 }
 
-enum Providers {
-  AgendaBasel
-}
-
 type Query {
   """
   
@@ -255,7 +251,7 @@ type Query {
 
 input SingleEventFilter {
   id: String!
-  source: Providers!
+  source: String!
 }
 
 enum SubscriptionDeactivationReason {

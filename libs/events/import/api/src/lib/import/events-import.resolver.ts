@@ -38,6 +38,16 @@ export class EventsImportResolver {
     return this.events.importedEvent(filter)
   }
 
+  @Query(returns => [Event], {
+    name: 'importedEventsIds',
+    description: `
+      Returns a list of external source ids of already imported events.
+    `
+  })
+  importedEventsIds() {
+    return this.events.importedEventsIds()
+  }
+
   /*
   Mutations
  */
@@ -48,7 +58,7 @@ export class EventsImportResolver {
       Also, uploads an image to WePublish Image library.
     `
   })
-  createEvent(@Args('filter') filter: CreateEventArgs) {
-    return this.events.createEvent(filter)
+  createEventFromSource(@Args('filter') filter: CreateEventArgs) {
+    return this.events.createEventFromSource(filter)
   }
 }

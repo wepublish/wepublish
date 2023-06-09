@@ -4,11 +4,7 @@ import '@testing-library/jest-dom'
 import {ImportableEventListView} from './importable-event-list'
 import {format} from 'date-fns'
 import {BrowserRouter} from 'react-router-dom'
-import {
-  Providers,
-  ImportedEventListDocument,
-  ImportedEventListQuery
-} from '@wepublish/editor/api-v2'
+import {ImportedEventListDocument, ImportedEventListQuery} from '@wepublish/editor/api-v2'
 import {actWait, sessionWithPermissions} from '@wepublish/ui/editor'
 import {AuthContext} from '@wepublish/ui/editor'
 import {CreateEventDocument, ImportedEventsIdsDocument} from '@wepublish/editor/api'
@@ -30,7 +26,7 @@ const eventsMockData = {
         name: 'Event 1',
         startsAt: '2023-05-01T09:00:00.000Z',
         endsAt: '2023-05-01T17:00:00.000Z',
-        externalSourceName: Providers.AgendaBasel
+        externalSourceName: 'AgendaBasel'
       },
       {
         __typename: 'Query',
@@ -38,7 +34,7 @@ const eventsMockData = {
         name: 'Event 2',
         startsAt: '2023-05-02T10:00:00.000Z',
         endsAt: '2023-05-02T18:00:00.000Z',
-        externalSourceName: Providers.AgendaBasel
+        externalSourceName: 'AgendaBasel'
       }
     ],
     pageInfo: {
@@ -76,7 +72,7 @@ const mocks = [
       query: CreateEventDocument,
       variables: {
         id: '1',
-        source: Providers.AgendaBasel
+        source: 'AgendaBasel'
       }
     },
     result: () => {
