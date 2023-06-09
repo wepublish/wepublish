@@ -11,13 +11,18 @@ import {
   UserConsentList
 } from '@wepublish/consent/editor'
 import {TagType} from '@wepublish/editor/api'
+import {
+  AuthContext,
+  AuthDispatchActionType,
+  AuthDispatchContext,
+  LocalStorageKey
+} from '@wepublish/ui/editor'
 import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
 import {CustomProvider} from 'rsuite'
 import enGB from 'rsuite/locales/en_GB'
 
-import {AuthContext, AuthDispatchActionType, AuthDispatchContext} from './authContext'
 import {Base} from './base'
 import de from './locales/rsuiteDe'
 import fr from './locales/rsuiteFr'
@@ -50,7 +55,6 @@ import {TokenList} from './routes/tokenList'
 import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
-import {LocalStorageKey} from './utility'
 
 const LogoutMutation = gql`
   mutation Logout {

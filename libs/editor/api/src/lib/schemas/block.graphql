@@ -52,6 +52,22 @@ fragment FullTeaser on Teaser {
     }
   }
 
+  ... on EventTeaser {
+    style
+
+    image {
+      ...ImageRef
+    }
+
+    preTitle
+    title
+    lead
+
+    event {
+      ...EventRef
+    }
+  }
+
   ... on CustomTeaser {
     style
 

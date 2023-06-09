@@ -2,17 +2,20 @@ import {ApolloClient, ApolloLink, ApolloProvider, InMemoryCache} from '@apollo/c
 import {onError} from '@apollo/client/link/error'
 import {CssBaseline, ThemeProvider} from '@mui/material'
 import {theme} from '@wepublish/ui'
+import {
+  AuthProvider,
+  FacebookProvider,
+  getSettings,
+  InstagramProvider,
+  LocalStorageKey,
+  TwitterProvider
+} from '@wepublish/ui/editor'
 import {createUploadLink} from 'apollo-upload-client'
 import ReactDOM from 'react-dom'
 import {IconContext} from 'react-icons'
 
 import {App} from './app/app'
-import {AuthProvider} from './app/authContext'
-import {FacebookProvider} from './app/blocks/embeds/facebook'
-import {InstagramProvider} from './app/blocks/embeds/instagram'
-import {TwitterProvider} from './app/blocks/embeds/twitter'
 import {initI18N} from './app/i18n'
-import {getSettings, LocalStorageKey} from './app/utility'
 import {ElementID} from './shared/elementID'
 
 // See: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces

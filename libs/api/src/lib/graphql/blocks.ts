@@ -36,6 +36,7 @@ import {
   ListicleBlock,
   ListicleItem,
   PageTeaser,
+  EventTeaser,
   PeerArticleTeaser,
   PolisConversationBlock,
   PollBlock,
@@ -177,6 +178,33 @@ export const GraphQLPageTeaser = new GraphQLObjectType<PageTeaser, Context>({
   isTypeOf: createProxyingIsTypeOf(value => value.type === TeaserType.Page)
 })
 
+export const GraphQLEventTeaser = new GraphQLObjectType<EventTeaser, Context>({
+  name: 'EventTeaser',
+  fields: () => ({
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, _, {loaders}) =>
+        imageID ? loaders.images.load(imageID) : null
+      )
+    },
+
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
+
+    event: {
+      type: GraphQLEvent,
+      resolve: createProxyingResolver(({eventID}, args, {loaders}) => {
+        return loaders.eventById.load(eventID)
+      })
+    }
+  }),
+
+  isTypeOf: createProxyingIsTypeOf(value => value.type === TeaserType.Event)
+})
+
 export const GraphQLCustomTeaser = new GraphQLObjectType<CustomTeaser, Context>({
   name: 'CustomTeaser',
   fields: () => ({
@@ -201,7 +229,13 @@ export const GraphQLCustomTeaser = new GraphQLObjectType<CustomTeaser, Context>(
 
 export const GraphQLTeaser = new GraphQLUnionType({
   name: 'Teaser',
-  types: [GraphQLArticleTeaser, GraphQLPeerArticleTeaser, GraphQLPageTeaser, GraphQLCustomTeaser]
+  types: [
+    GraphQLArticleTeaser,
+    GraphQLPeerArticleTeaser,
+    GraphQLPageTeaser,
+    GraphQLCustomTeaser,
+    GraphQLEventTeaser
+  ]
 })
 
 export const GraphQLTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Context>({
@@ -353,6 +387,34 @@ export const GraphQLPublicPageTeaser = new GraphQLObjectType<PageTeaser, Context
   })
 })
 
+export const GraphQLPublicEventTeaser = new GraphQLObjectType<EventTeaser, Context>({
+  name: 'EventTeaser',
+  fields: () => ({
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, _, {loaders}) =>
+        imageID ? loaders.images.load(imageID) : null
+      )
+    },
+
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
+
+    event: {
+      type: GraphQLEvent,
+      resolve: createProxyingResolver(({eventID}, args, {loaders}) => {
+        return loaders.eventById.load(eventID)
+      })
+    }
+  }),
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === TeaserType.Event
+  })
+})
+
 export const GraphQLPublicCustomTeaser = new GraphQLObjectType<CustomTeaser, Context>({
   name: 'CustomTeaser',
   fields: () => ({
@@ -383,6 +445,7 @@ export const GraphQLPublicTeaser = new GraphQLUnionType({
     GraphQLPublicArticleTeaser,
     GraphQLPublicPeerArticleTeaser,
     GraphQLPublicPageTeaser,
+    GraphQLPublicEventTeaser,
     GraphQLPublicCustomTeaser
   ]
 })
@@ -1067,6 +1130,18 @@ export const GraphQLPageTeaserInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLEventTeaserInput = new GraphQLInputObjectType({
+  name: 'EventTeaserInput',
+  fields: {
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+    imageID: {type: GraphQLID},
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
+    eventID: {type: GraphQLNonNull(GraphQLID)}
+  }
+})
+
 export const GraphQLCustomTeaserInput = new GraphQLInputObjectType({
   name: 'CustomTeaserInput',
   fields: {
@@ -1086,6 +1161,7 @@ export const GraphQLTeaserInput = new GraphQLInputObjectType({
     [TeaserType.Article]: {type: GraphQLArticleTeaserInput},
     [TeaserType.PeerArticle]: {type: GraphQLPeerArticleTeaserInput},
     [TeaserType.Page]: {type: GraphQLPageTeaserInput},
+    [TeaserType.Event]: {type: GraphQLEventTeaserInput},
     [TeaserType.Custom]: {type: GraphQLCustomTeaserInput}
   })
 })

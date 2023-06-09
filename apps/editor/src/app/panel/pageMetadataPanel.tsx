@@ -1,5 +1,18 @@
 import styled from '@emotion/styled'
 import {ImageRefFragment} from '@wepublish/editor/api'
+import {
+  ChooseEditImage,
+  createCheckedPermissionComponent,
+  generateID,
+  ImageEditPanel,
+  ImageSelectPanel,
+  ListInput,
+  ListValue,
+  MetaDataType,
+  PermissionControl,
+  Textarea,
+  useAuthorisation
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdListAlt, MdSettings, MdShare} from 'react-icons/md'
@@ -14,19 +27,6 @@ import {
   TagPicker as RTagPicker,
   Toggle as RToggle
 } from 'rsuite'
-
-import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {ListInput, ListValue} from '../atoms/listInput'
-import {
-  createCheckedPermissionComponent,
-  PermissionControl,
-  useAuthorisation
-} from '../atoms/permissionControl'
-import {Textarea} from '../atoms/textarea'
-import {MetaDataType} from '../blocks/types'
-import {generateID} from '../utility'
-import {ImageEditPanel} from './imageEditPanel'
-import {ImageSelectPanel} from './imageSelectPanel'
 
 const Nav = styled(RNav)`
   margin-bottom: 20px;

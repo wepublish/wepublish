@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
 import {SubscriptionDeactivationReason} from '@wepublish/editor/api'
+import {createCheckedPermissionComponent} from '@wepublish/ui/editor'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, DatePicker, Form as RForm, Message, Modal, SelectPicker} from 'rsuite'
-
-import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 const {Group, ControlLabel} = RForm
 

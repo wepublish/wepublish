@@ -1,0 +1,1468 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EventList Container should render Default 1`] = `
+<DocumentFragment>
+  <div
+    class="css-1ul8u7n"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      href="https://example.com"
+      role="article"
+    >
+      <div
+        class="css-0"
+      >
+        <img
+          alt="DSC07717"
+          class="css-1qnf57e"
+          height="6000"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
+          width="4000"
+        />
+      </div>
+      <div
+        class="css-1lnj73j"
+      >
+        <div
+          class="css-gp7vhb"
+        >
+          <div
+            class="css-1vfcp9h"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+              />
+            </svg>
+            <span>
+              24.02.2023 09:00
+            </span>
+          </div>
+          – 
+          <span>
+            25.02.2023 07:30
+          </span>
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+        >
+          Cool concert
+        </h1>
+        <div
+          class="css-0"
+        >
+          <div
+            data-gramm="false"
+            data-slate-editor="true"
+            data-slate-node="value"
+            style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+          >
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-string="true"
+                >
+                  Lorem ipsum dolor sit amet, 
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <strong
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    consectetur adipiscing elit, 
+                  </span>
+                </strong>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <em
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                  </span>
+                </em>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <u
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    Ut enim ad minim veniam, 
+                  </span>
+                </u>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <del
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
+                  </span>
+                </del>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      href="https://example.com"
+      role="article"
+    >
+      <div
+        class="css-0"
+      >
+        <img
+          alt="DSC07717"
+          class="css-1qnf57e"
+          height="6000"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
+          width="4000"
+        />
+      </div>
+      <div
+        class="css-1lnj73j"
+      >
+        <div
+          class="css-gp7vhb"
+        >
+          <div
+            class="css-1vfcp9h"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+              />
+            </svg>
+            <span>
+              24.02.2023 09:00
+            </span>
+          </div>
+          – 
+          <span>
+            25.02.2023 07:30
+          </span>
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+        >
+          Cool concert
+        </h1>
+        <div
+          class="css-0"
+        >
+          <div
+            data-gramm="false"
+            data-slate-editor="true"
+            data-slate-node="value"
+            style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+          >
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-string="true"
+                >
+                  Lorem ipsum dolor sit amet, 
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <strong
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    consectetur adipiscing elit, 
+                  </span>
+                </strong>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <em
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                  </span>
+                </em>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <u
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    Ut enim ad minim veniam, 
+                  </span>
+                </u>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <del
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
+                  </span>
+                </del>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      href="https://example.com"
+      role="article"
+    >
+      <div
+        class="css-0"
+      >
+        <img
+          alt="DSC07717"
+          class="css-1qnf57e"
+          height="6000"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
+          width="4000"
+        />
+      </div>
+      <div
+        class="css-1lnj73j"
+      >
+        <div
+          class="css-gp7vhb"
+        >
+          <div
+            class="css-1vfcp9h"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+              />
+            </svg>
+            <span>
+              24.02.2023 09:00
+            </span>
+          </div>
+          – 
+          <span>
+            25.02.2023 07:30
+          </span>
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+        >
+          Cool concert
+        </h1>
+        <div
+          class="css-0"
+        >
+          <div
+            data-gramm="false"
+            data-slate-editor="true"
+            data-slate-node="value"
+            style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+          >
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-string="true"
+                >
+                  Lorem ipsum dolor sit amet, 
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <strong
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    consectetur adipiscing elit, 
+                  </span>
+                </strong>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <em
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                  </span>
+                </em>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <u
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    Ut enim ad minim veniam, 
+                  </span>
+                </u>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <del
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
+                  </span>
+                </del>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`EventList Container should render WithClassName 1`] = `
+<DocumentFragment>
+  <div
+    class="extra-classname css-1ul8u7n"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      href="https://example.com"
+      role="article"
+    >
+      <div
+        class="css-0"
+      >
+        <img
+          alt="DSC07717"
+          class="css-1qnf57e"
+          height="6000"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
+          width="4000"
+        />
+      </div>
+      <div
+        class="css-1lnj73j"
+      >
+        <div
+          class="css-gp7vhb"
+        >
+          <div
+            class="css-1vfcp9h"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+              />
+            </svg>
+            <span>
+              24.02.2023 09:00
+            </span>
+          </div>
+          – 
+          <span>
+            25.02.2023 07:30
+          </span>
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+        >
+          Cool concert
+        </h1>
+        <div
+          class="css-0"
+        >
+          <div
+            data-gramm="false"
+            data-slate-editor="true"
+            data-slate-node="value"
+            style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+          >
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-string="true"
+                >
+                  Lorem ipsum dolor sit amet, 
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <strong
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    consectetur adipiscing elit, 
+                  </span>
+                </strong>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <em
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                  </span>
+                </em>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <u
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    Ut enim ad minim veniam, 
+                  </span>
+                </u>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <del
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
+                  </span>
+                </del>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      href="https://example.com"
+      role="article"
+    >
+      <div
+        class="css-0"
+      >
+        <img
+          alt="DSC07717"
+          class="css-1qnf57e"
+          height="6000"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
+          width="4000"
+        />
+      </div>
+      <div
+        class="css-1lnj73j"
+      >
+        <div
+          class="css-gp7vhb"
+        >
+          <div
+            class="css-1vfcp9h"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+              />
+            </svg>
+            <span>
+              24.02.2023 09:00
+            </span>
+          </div>
+          – 
+          <span>
+            25.02.2023 07:30
+          </span>
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+        >
+          Cool concert
+        </h1>
+        <div
+          class="css-0"
+        >
+          <div
+            data-gramm="false"
+            data-slate-editor="true"
+            data-slate-node="value"
+            style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+          >
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-string="true"
+                >
+                  Lorem ipsum dolor sit amet, 
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <strong
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    consectetur adipiscing elit, 
+                  </span>
+                </strong>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <em
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                  </span>
+                </em>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <u
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    Ut enim ad minim veniam, 
+                  </span>
+                </u>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <del
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
+                  </span>
+                </del>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      href="https://example.com"
+      role="article"
+    >
+      <div
+        class="css-0"
+      >
+        <img
+          alt="DSC07717"
+          class="css-1qnf57e"
+          height="6000"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
+          width="4000"
+        />
+      </div>
+      <div
+        class="css-1lnj73j"
+      >
+        <div
+          class="css-gp7vhb"
+        >
+          <div
+            class="css-1vfcp9h"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+              />
+            </svg>
+            <span>
+              24.02.2023 09:00
+            </span>
+          </div>
+          – 
+          <span>
+            25.02.2023 07:30
+          </span>
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+        >
+          Cool concert
+        </h1>
+        <div
+          class="css-0"
+        >
+          <div
+            data-gramm="false"
+            data-slate-editor="true"
+            data-slate-node="value"
+            style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+          >
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-string="true"
+                >
+                  Lorem ipsum dolor sit amet, 
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <strong
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    consectetur adipiscing elit, 
+                  </span>
+                </strong>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <em
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                  </span>
+                </em>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <u
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    Ut enim ad minim veniam, 
+                  </span>
+                </u>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <del
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
+                  </span>
+                </del>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`EventList Container should render WithEmotion 1`] = `
+<DocumentFragment>
+  <div
+    class="css-1ul8u7n"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      href="https://example.com"
+      role="article"
+    >
+      <div
+        class="css-0"
+      >
+        <img
+          alt="DSC07717"
+          class="css-1qnf57e"
+          height="6000"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
+          width="4000"
+        />
+      </div>
+      <div
+        class="css-1lnj73j"
+      >
+        <div
+          class="css-gp7vhb"
+        >
+          <div
+            class="css-1vfcp9h"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+              />
+            </svg>
+            <span>
+              24.02.2023 09:00
+            </span>
+          </div>
+          – 
+          <span>
+            25.02.2023 07:30
+          </span>
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+        >
+          Cool concert
+        </h1>
+        <div
+          class="css-0"
+        >
+          <div
+            data-gramm="false"
+            data-slate-editor="true"
+            data-slate-node="value"
+            style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+          >
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-string="true"
+                >
+                  Lorem ipsum dolor sit amet, 
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <strong
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    consectetur adipiscing elit, 
+                  </span>
+                </strong>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <em
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                  </span>
+                </em>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <u
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    Ut enim ad minim veniam, 
+                  </span>
+                </u>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <del
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
+                  </span>
+                </del>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      href="https://example.com"
+      role="article"
+    >
+      <div
+        class="css-0"
+      >
+        <img
+          alt="DSC07717"
+          class="css-1qnf57e"
+          height="6000"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
+          width="4000"
+        />
+      </div>
+      <div
+        class="css-1lnj73j"
+      >
+        <div
+          class="css-gp7vhb"
+        >
+          <div
+            class="css-1vfcp9h"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+              />
+            </svg>
+            <span>
+              24.02.2023 09:00
+            </span>
+          </div>
+          – 
+          <span>
+            25.02.2023 07:30
+          </span>
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+        >
+          Cool concert
+        </h1>
+        <div
+          class="css-0"
+        >
+          <div
+            data-gramm="false"
+            data-slate-editor="true"
+            data-slate-node="value"
+            style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+          >
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-string="true"
+                >
+                  Lorem ipsum dolor sit amet, 
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <strong
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    consectetur adipiscing elit, 
+                  </span>
+                </strong>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <em
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                  </span>
+                </em>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <u
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    Ut enim ad minim veniam, 
+                  </span>
+                </u>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <del
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
+                  </span>
+                </del>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      href="https://example.com"
+      role="article"
+    >
+      <div
+        class="css-0"
+      >
+        <img
+          alt="DSC07717"
+          class="css-1qnf57e"
+          height="6000"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
+          width="4000"
+        />
+      </div>
+      <div
+        class="css-1lnj73j"
+      >
+        <div
+          class="css-gp7vhb"
+        >
+          <div
+            class="css-1vfcp9h"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+              />
+            </svg>
+            <span>
+              24.02.2023 09:00
+            </span>
+          </div>
+          – 
+          <span>
+            25.02.2023 07:30
+          </span>
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+        >
+          Cool concert
+        </h1>
+        <div
+          class="css-0"
+        >
+          <div
+            data-gramm="false"
+            data-slate-editor="true"
+            data-slate-node="value"
+            style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+          >
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-string="true"
+                >
+                  Lorem ipsum dolor sit amet, 
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <strong
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    consectetur adipiscing elit, 
+                  </span>
+                </strong>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <em
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                  </span>
+                </em>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <u
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    Ut enim ad minim veniam, 
+                  </span>
+                </u>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <del
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
+                  </span>
+                </del>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="z"
+                >
+                  ﻿
+                </span>
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</DocumentFragment>
+`;
