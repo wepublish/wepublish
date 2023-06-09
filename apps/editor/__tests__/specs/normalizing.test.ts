@@ -1,13 +1,12 @@
-import {createEditor, Transforms} from 'slate'
-import {withReact} from 'slate-react'
-
 import {
+  BlockFormat,
   DEFAULT_BORDER_COLOR,
   emptyCellsTable,
-  emptyTextParagraph
-} from '../../src/app/blocks/richTextBlock/editor/elements'
-import {BlockFormat} from '../../src/app/blocks/richTextBlock/editor/formats'
-import {withNormalizeNode} from '../../src/app/blocks/richTextBlock/editor/normalizing'
+  emptyTextParagraph,
+  withNormalizeNode
+} from '@wepublish/ui/editor'
+import {createEditor, Transforms} from 'slate'
+import {withReact} from 'slate-react'
 
 describe('withNormalizeNode', () => {
   test.each([

@@ -9,6 +9,15 @@ import {
   useRatingSystemQuery,
   useUpdateCommentMutation
 } from '@wepublish/editor/api'
+import {
+  CommentDeleteBtn,
+  CommentHistory,
+  CommentStateDropdown,
+  CommentUser,
+  createCheckedPermissionComponent,
+  ModelTitle,
+  SelectTags
+} from '@wepublish/ui/editor'
 import {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdVisibility} from 'react-icons/md'
@@ -26,14 +35,6 @@ import {
   SelectPicker,
   toaster
 } from 'rsuite'
-
-import {CommentDeleteBtn} from '../../atoms/comment/commentDeleteBtn'
-import {CommentHistory} from '../../atoms/comment/commentHistory'
-import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
-import {CommentUser} from '../../atoms/comment/commentUser'
-import {ModelTitle} from '@wepublish/ui/editor'
-import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
-import {SelectTags} from '../../atoms/tag/selectTags'
 
 const ColNoMargin = styled(RCol)`
   margin-top: 0px;

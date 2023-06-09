@@ -278,10 +278,10 @@ exports[`User edit view should allow user properties to be added 1`] = `
                         <div>
                           <div>
 +                           <div
-+                             class="css-1wzl9qf-ListItemWrapper e1g7b9o10"
++                             class="css-1c4wd4"
 +                           >
 +                             <div
-+                               class="css-1ax8cc3-DragHandleWrapper e1g7b9o11"
++                               class="css-12frltk"
 +                             >
 +                               <button
 +                                 class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default"
@@ -314,14 +314,14 @@ exports[`User edit view should allow user properties to be added 1`] = `
 +                               </button>
 +                             </div>
 +                             <div
-+                               class="css-8n2042-Panel e1g7b9o12 rs-panel"
++                               class="css-1ago99h rs-panel"
 +                             >
 +                               <div
 +                                 class="rs-panel-body rs-panel-body-fill"
 +                                 role="region"
 +                               >
 +                                 <div
-+                                   class="css-1yerc6w-ChildrenWrapper e1g7b9o13"
++                                   class="css-10odzlz"
 +                                 >
 +                                   <div
 +                                     class="css-1sdoex4-FlexRow e1pdqxno4"
@@ -373,7 +373,7 @@ exports[`User edit view should allow user properties to be added 1`] = `
 +                               </div>
 +                             </div>
 +                             <div
-+                               class="css-1qpz4yt-IconButtonWrapper e1g7b9o14"
++                               class="css-17nfp2s"
 +                             >
                                 <button
                                   class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default"
@@ -773,7 +773,7 @@ exports[`User edit view should render 1`] = `
                     role="gridcell"
                   >
                     <div
-                      class="css-obwoy8-Panel e1opz8xd0 rs-panel"
+                      class="css-chr1eq rs-panel"
                     >
                       <div
                         aria-expanded="false"
@@ -796,7 +796,7 @@ exports[`User edit view should render 1`] = `
                         role="region"
                       >
                         <div
-                          class="css-1posas4-PlaceholderInputWrapper e1tn6rau0"
+                          class="css-srfsgx"
                         >
                           <button
                             class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"
@@ -1616,7 +1616,7 @@ exports[`User edit view should render with ID 1`] = `
                     role="gridcell"
                   >
                     <div
-                      class="css-obwoy8-Panel e1opz8xd0 rs-panel"
+                      class="css-chr1eq rs-panel"
                     >
                       <div
                         aria-expanded="false"
@@ -1639,7 +1639,7 @@ exports[`User edit view should render with ID 1`] = `
                         role="region"
                       >
                         <div
-                          class="css-1posas4-PlaceholderInputWrapper e1tn6rau0"
+                          class="css-srfsgx"
                         >
                           <button
                             class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"

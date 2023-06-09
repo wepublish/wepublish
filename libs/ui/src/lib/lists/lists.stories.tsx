@@ -1,12 +1,27 @@
 import {Meta} from '@storybook/react'
-import {Button, ButtonProps} from './typography'
+import {UnorderedList, OrderedList, ListItem} from './lists'
+import {ComponentProps} from 'react'
 
 export default {
-  component: Button,
-  title: 'Button'
-} as Meta<typeof Button>
+  title: 'Lists'
+} as Meta
 
-const Template = (args: ButtonProps) => <Button {...args}>Click me</Button>
-export const Default = {
-  render: Template
+export const Unordered = {
+  component: UnorderedList,
+  render: (args: ComponentProps<typeof UnorderedList>) => (
+    <UnorderedList {...args}>
+      <ListItem>One</ListItem>
+      <ListItem>Two</ListItem>
+    </UnorderedList>
+  )
+}
+
+export const Ordered = {
+  component: OrderedList,
+  render: (args: ComponentProps<typeof OrderedList>) => (
+    <OrderedList {...args}>
+      <ListItem>One</ListItem>
+      <ListItem>Two</ListItem>
+    </OrderedList>
+  )
 }

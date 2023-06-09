@@ -1,39 +1,40 @@
 import styled from '@emotion/styled'
 import {AuthorRefFragment, CommentItemType, ImageRefFragment} from '@wepublish/editor/api'
+import {
+  AuthorCheckPicker,
+  ChooseEditImage,
+  CommentHistory,
+  ImageEditPanel,
+  ImageSelectPanel,
+  ListInput,
+  ListValue,
+  MetaDataType,
+  PermissionControl,
+  Textarea,
+  createCheckedPermissionComponent,
+  generateID,
+  slugify,
+  useAuthorisation
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
 import {MdAutoFixHigh, MdComment, MdListAlt, MdSettings, MdShare} from 'react-icons/md'
 import {
   Button,
   Drawer,
-  Form as RForm,
   IconButton,
   Input,
-  InputGroup as RInputGroup,
   Message,
-  Nav as RNav,
   Panel,
+  Form as RForm,
+  InputGroup as RInputGroup,
+  Nav as RNav,
+  Toggle as RToggle,
   Schema,
   TagPicker,
-  Toggle as RToggle,
   Tooltip,
   Whisper
 } from 'rsuite'
-
-import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {CommentHistory} from '../atoms/comment/commentHistory'
-import {ListInput, ListValue} from '../atoms/listInput'
-import {
-  createCheckedPermissionComponent,
-  PermissionControl,
-  useAuthorisation
-} from '../atoms/permissionControl'
-import {Textarea} from '../atoms/textarea'
-import {MetaDataType} from '../blocks/types'
-import {generateID, slugify} from '../utility'
-import {AuthorCheckPicker} from '@wepublish/ui/editor'
-import {ImageEditPanel} from './imageEditPanel'
-import {ImageSelectPanel} from './imageSelectPanel'
 
 const {Item} = RNav
 

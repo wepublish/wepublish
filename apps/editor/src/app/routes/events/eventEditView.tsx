@@ -7,12 +7,12 @@ import {
   useEventQuery,
   useUpdateEventMutation
 } from '@wepublish/editor/api'
+import {ModelTitle} from '@wepublish/ui/editor'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Form, Message, Schema, toaster} from 'rsuite'
 
-import {ModelTitle} from '@wepublish/ui/editor'
 import {EventForm} from './eventForm'
 
 const onErrorToast = (error: ApolloError) => {
