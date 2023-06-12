@@ -5,6 +5,30 @@ import {DuplicateArticleSlugError, NotFound} from '../../error'
 import {authorise} from '../permissions'
 import {CanCreateArticle, CanDeleteArticle, CanPublishArticle} from '@wepublish/permissions/api'
 
+const fullArticleInclude = {
+  draft: {
+    include: {
+      properties: true,
+      authors: true,
+      socialMediaAuthors: true
+    }
+  },
+  pending: {
+    include: {
+      properties: true,
+      authors: true,
+      socialMediaAuthors: true
+    }
+  },
+  published: {
+    include: {
+      properties: true,
+      authors: true,
+      socialMediaAuthors: true
+    }
+  }
+}
+
 export const deleteArticleById = async (
   id: string,
   authenticate: Context['authenticate'],
@@ -17,29 +41,7 @@ export const deleteArticleById = async (
     where: {
       id
     },
-    include: {
-      draft: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      pending: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      published: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      }
-    }
+    include: fullArticleInclude
   })
 
   if (!article) {
@@ -105,29 +107,7 @@ export const createArticle = async (
         }
       }
     },
-    include: {
-      draft: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      pending: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      published: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      }
-    }
+    include: fullArticleInclude
   })
 }
 
@@ -189,29 +169,7 @@ export const duplicateArticle = async (
         create: input
       }
     },
-    include: {
-      draft: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      pending: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      published: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      }
-    }
+    include: fullArticleInclude
   })
 }
 
@@ -225,47 +183,7 @@ export const unpublishArticle = async (
 
   const article = await articleClient.findUnique({
     where: {id},
-    include: {
-      draft: {
-        include: {
-          properties: {
-            select: {
-              key: true,
-              value: true,
-              public: true
-            }
-          },
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      pending: {
-        include: {
-          properties: {
-            select: {
-              key: true,
-              value: true,
-              public: true
-            }
-          },
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      published: {
-        include: {
-          properties: {
-            select: {
-              key: true,
-              value: true,
-              public: true
-            }
-          },
-          authors: true,
-          socialMediaAuthors: true
-        }
-      }
-    }
+    include: fullArticleInclude
   })
 
   if (!article) {
@@ -280,6 +198,12 @@ export const unpublishArticle = async (
     ...revision
   } = (article.draft ?? article.pending ?? article.published)!
 
+  const duplicatedProperties = properties.map(property => ({
+    key: property.key,
+    value: property.value,
+    public: property.public
+  }))
+
   return articleClient.update({
     where: {id},
     data: {
@@ -292,7 +216,7 @@ export const unpublishArticle = async (
             updatedAt: null,
             properties: {
               createMany: {
-                data: properties
+                data: duplicatedProperties
               }
             },
             authors: {
@@ -316,7 +240,7 @@ export const unpublishArticle = async (
                 articleRevisionId: revisionId
               },
               createMany: {
-                data: properties
+                data: duplicatedProperties
               }
             },
             authors: {
@@ -345,29 +269,7 @@ export const unpublishArticle = async (
         delete: Boolean(article.publishedId)
       }
     },
-    include: {
-      draft: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      pending: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      published: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      }
-    }
+    include: fullArticleInclude
   })
 }
 
@@ -375,7 +277,7 @@ export const publishArticle = async (
   id: string,
   input: Pick<Prisma.ArticleRevisionCreateInput, 'publishAt' | 'publishedAt' | 'updatedAt'>,
   authenticate: Context['authenticate'],
-  articleClient: PrismaClient['article']
+  prisma: PrismaClient
 ): Promise<ArticleWithRevisions | null> => {
   const {roles} = authenticate()
   authorise(CanPublishArticle, roles)
@@ -384,49 +286,9 @@ export const publishArticle = async (
   const publishedAt = input.publishedAt
   const updatedAt = input.updatedAt
 
-  const article = await articleClient.findUnique({
+  const article = await prisma.article.findUnique({
     where: {id},
-    include: {
-      draft: {
-        include: {
-          properties: {
-            select: {
-              key: true,
-              value: true,
-              public: true
-            }
-          },
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      pending: {
-        include: {
-          properties: {
-            select: {
-              key: true,
-              value: true,
-              public: true
-            }
-          },
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      published: {
-        include: {
-          properties: {
-            select: {
-              key: true,
-              value: true,
-              public: true
-            }
-          },
-          authors: true,
-          socialMediaAuthors: true
-        }
-      }
-    }
+    include: fullArticleInclude
   })
 
   if (!article) throw new NotFound('article', id)
@@ -434,7 +296,13 @@ export const publishArticle = async (
 
   const {id: revisionId, properties, authors, socialMediaAuthors, ...revision} = article.draft
 
-  const publishedArticle = await articleClient.findFirst({
+  const duplicatedProperties = properties.map(property => ({
+    key: property.key,
+    value: property.value,
+    public: property.public
+  }))
+
+  const publishedArticle = await prisma.article.findFirst({
     where: {
       OR: [
         {
@@ -468,11 +336,20 @@ export const publishArticle = async (
   }
 
   if (publishAt > new Date()) {
-    return articleClient.update({
-      where: {id},
-      data: {
-        pending: {
-          upsert: {
+    const deletedOldRevisions = prisma.articleRevision.deleteMany({
+      where: {
+        id: {
+          in: [article.pending?.id].filter((id): id is string => Boolean(id))
+        }
+      }
+    })
+
+    const [, updatedArticle] = await prisma.$transaction([
+      deletedOldRevisions,
+      prisma.article.update({
+        where: {id},
+        data: {
+          pending: {
             create: {
               ...revision,
               publishAt,
@@ -480,7 +357,7 @@ export const publishArticle = async (
               updatedAt: updatedAt ?? publishAt,
               properties: {
                 createMany: {
-                  data: properties
+                  data: duplicatedProperties
                 }
               },
               authors: {
@@ -493,35 +370,51 @@ export const publishArticle = async (
                   data: socialMediaAuthors.map(({authorId}) => ({authorId}))
                 }
               }
+            }
+          },
+          draft: {
+            delete: true
+          }
+        },
+        include: fullArticleInclude
+      })
+    ])
+
+    return updatedArticle
+  }
+
+  const deletedOldRevisions = prisma.articleRevision.deleteMany({
+    where: {
+      id: {
+        in: [article.pending?.id, article.published?.id].filter((id): id is string => Boolean(id))
+      }
+    }
+  })
+
+  const [, updatedArticle] = await prisma.$transaction([
+    deletedOldRevisions,
+    prisma.article.update({
+      where: {id},
+      data: {
+        published: {
+          create: {
+            ...revision,
+            publishedAt: publishedAt ?? article.published?.publishAt ?? publishAt,
+            updatedAt: updatedAt ?? publishAt,
+            publishAt: null,
+            properties: {
+              createMany: {
+                data: duplicatedProperties
+              }
             },
-            update: {
-              ...revision,
-              publishAt,
-              publishedAt: publishedAt ?? article?.published?.publishedAt ?? publishAt,
-              updatedAt: updatedAt ?? publishAt,
-              properties: {
-                deleteMany: {
-                  articleRevisionId: revisionId
-                },
-                createMany: {
-                  data: properties
-                }
-              },
-              authors: {
-                deleteMany: {
-                  revisionId
-                },
-                createMany: {
-                  data: authors.map(({authorId}) => ({authorId}))
-                }
-              },
-              socialMediaAuthors: {
-                deleteMany: {
-                  revisionId
-                },
-                createMany: {
-                  data: socialMediaAuthors.map(({authorId}) => ({authorId}))
-                }
+            authors: {
+              createMany: {
+                data: authors.map(({authorId}) => ({authorId}))
+              }
+            },
+            socialMediaAuthors: {
+              createMany: {
+                data: socialMediaAuthors.map(({authorId}) => ({authorId}))
               }
             }
           }
@@ -530,121 +423,11 @@ export const publishArticle = async (
           delete: true
         }
       },
-      include: {
-        draft: {
-          include: {
-            properties: true,
-            authors: true,
-            socialMediaAuthors: true
-          }
-        },
-        pending: {
-          include: {
-            properties: true,
-            authors: true,
-            socialMediaAuthors: true
-          }
-        },
-        published: {
-          include: {
-            properties: true,
-            authors: true,
-            socialMediaAuthors: true
-          }
-        }
-      }
+      include: fullArticleInclude
     })
-  }
+  ])
 
-  return articleClient.update({
-    where: {id},
-    data: {
-      published: {
-        upsert: {
-          create: {
-            ...revision,
-            publishedAt: publishedAt ?? article.published?.publishAt ?? publishAt,
-            updatedAt: updatedAt ?? publishAt,
-            publishAt: null,
-            properties: {
-              createMany: {
-                data: properties
-              }
-            },
-            authors: {
-              createMany: {
-                data: authors.map(({authorId}) => ({authorId}))
-              }
-            },
-            socialMediaAuthors: {
-              createMany: {
-                data: socialMediaAuthors.map(({authorId}) => ({authorId}))
-              }
-            }
-          },
-          update: {
-            ...revision,
-            publishedAt: publishedAt ?? article.published?.publishAt ?? publishAt,
-            updatedAt: updatedAt ?? publishAt,
-            publishAt: null,
-            properties: {
-              deleteMany: {
-                articleRevisionId: revisionId
-              },
-              createMany: {
-                data: properties
-              }
-            },
-            authors: {
-              deleteMany: {
-                revisionId
-              },
-              createMany: {
-                data: authors.map(({authorId}) => ({authorId}))
-              }
-            },
-            socialMediaAuthors: {
-              deleteMany: {
-                revisionId
-              },
-              createMany: {
-                data: socialMediaAuthors.map(({authorId}) => ({authorId}))
-              }
-            }
-          }
-        }
-      },
-      pending: {
-        delete: Boolean(article.pendingId)
-      },
-      draft: {
-        delete: true
-      }
-    },
-    include: {
-      draft: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      pending: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      published: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      }
-    }
-  })
+  return updatedArticle
 }
 
 type UpdateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared'> &
@@ -665,29 +448,7 @@ export const updateArticle = async (
 
   const article = await articleClient.findUnique({
     where: {id},
-    include: {
-      draft: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      pending: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      published: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      }
-    }
+    include: fullArticleInclude
   })
 
   if (!article) {
@@ -770,28 +531,6 @@ export const updateArticle = async (
         }
       }
     },
-    include: {
-      draft: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      pending: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      },
-      published: {
-        include: {
-          properties: true,
-          authors: true,
-          socialMediaAuthors: true
-        }
-      }
-    }
+    include: fullArticleInclude
   })
 }
