@@ -3,7 +3,7 @@ import {Button, ButtonProps} from './button'
 
 export default {
   component: Button,
-  title: 'Button'
+  title: 'UI/Button'
 } as Meta<typeof Button>
 
 const Template = (args: ButtonProps) => <Button {...args}>Click me</Button>

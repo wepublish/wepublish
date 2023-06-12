@@ -1,5 +1,5 @@
 const fs = require('fs')
-const {spawn, exec} = require('child_process')
+const {exec} = require('child_process')
 const {slugify} = require('./utilities')
 
 try {

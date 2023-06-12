@@ -3,3 +3,25 @@ query Me {
     id
   }
 }
+
+fragment FullSessionWithToken on SessionWithToken {
+  token
+  expiresAt
+  createdAt
+}
+
+mutation LoginWithCredentials($email: String!, $password: String!) {
+  createSession(email: $email, password: $password) {
+    ...FullSessionWithToken
+  }
+}
+
+mutation LoginWithEmail($email: String!) {
+  sendWebsiteLogin(email: $email)
+}
+
+mutation LoginWithJWT($jwt: String!) {
+  createSessionWithJWT(jwt: $jwt) {
+    ...FullSessionWithToken
+  }
+}

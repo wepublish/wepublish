@@ -2,6 +2,7 @@ import {ApolloError} from '@apollo/client'
 import {Meta} from '@storybook/react'
 import {ArticleQuery} from '@wepublish/website/api'
 import {Article} from './article'
+import {css} from '@emotion/react'
 
 const article = {
   __typename: 'Article',
@@ -1051,8 +1052,7 @@ export default {
 
 export const Default = {
   args: {
-    data: {article},
-    loading: false
+    data: {article}
   }
 }
 
@@ -1074,5 +1074,21 @@ export const WithError = {
     error: new ApolloError({
       errorMessage: 'Foobar'
     })
+  }
+}
+
+export const WithClassName = {
+  args: {
+    data: {article},
+    className: 'extra-classname'
+  }
+}
+
+export const WithEmotion = {
+  args: {
+    data: {article},
+    css: css`
+      background-color: #eee;
+    `
   }
 }

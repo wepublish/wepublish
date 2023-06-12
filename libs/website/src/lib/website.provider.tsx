@@ -1,19 +1,22 @@
-import {ThemeProvider} from '@mui/material'
+import {ThemeProvider, TextField} from '@mui/material'
 import {Article} from '@wepublish/article/website'
+import {LoginForm} from '@wepublish/authentication/website'
 import {
   HtmlBlock,
   ImageBlock,
   QuoteBlock,
   RichTextBlock,
+  Teaser,
   TeaserGridFlexBlock,
-  TitleBlock,
-  Teaser
+  TitleBlock
 } from '@wepublish/block-content/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
+import {Image} from '@wepublish/image/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page} from '@wepublish/page/website'
 import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
 import {
+  Alert,
   Button,
   H1,
   H2,
@@ -25,14 +28,13 @@ import {
   ListItem,
   OrderedList,
   Paragraph,
-  theme,
-  UnorderedList
+  UnorderedList,
+  theme
 } from '@wepublish/ui'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
-import {memo, PropsWithChildren} from 'react'
-import {IconContext} from 'react-icons'
-import {Image} from '@wepublish/image/website'
 import {format} from 'date-fns'
+import {PropsWithChildren, memo} from 'react'
+import {IconContext} from 'react-icons'
 
 export type WebsiteProps = PropsWithChildren
 
@@ -50,7 +52,10 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         EventList={EventList}
         EventListItem={EventListItem}
         Page={Page}
+        LoginForm={LoginForm}
         elements={{
+          TextField,
+          Alert,
           Button,
           H1,
           H2,

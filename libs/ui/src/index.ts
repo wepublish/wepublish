@@ -1,5 +1,7 @@
 export * from './lib/button/button'
+export * from './lib/alert/alert'
 export * from './lib/typography/typography'
 export * from './lib/lists/lists'
 export * from './lib/radio-card/radio-card'
+export * from './lib/text-field/text-field'
 export * from './lib/theme'
