@@ -1,7 +1,8 @@
+import {zodResolver} from '@hookform/resolvers/zod'
 import {Checkbox, FormControlLabel, css, styled} from '@mui/material'
 import {BuilderLoginFormProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
+import {z} from 'zod'
 
 export const LoginFormWrapper = styled('div')`
   display: grid;
@@ -20,6 +21,20 @@ const buttonStyles = css`
   justify-self: flex-end;
 `
 
+const withEmailFormSchema = z.object({
+  email: z.string().email(),
+  requirePassword: z.literal(false),
+  password: z.string().optional()
+})
+
+const withCredentialsFormSchema = z.object({
+  email: z.string().email(),
+  requirePassword: z.literal(true),
+  password: z.string()
+})
+
+const loginFormSchema = z.union([withEmailFormSchema, withCredentialsFormSchema])
+
 export function LoginForm({
   subscriptionPath,
   loginWithCredentials,
@@ -32,29 +47,35 @@ export function LoginForm({
     elements: {Alert, Button, H3, Paragraph, Link, TextField}
   } = useWebsiteBuilder()
 
-  const [loginWithPassword, setLoginWithPassword] = useState(false)
-
-  const {handleSubmit, control, watch} = useForm({
+  type FormInput = z.infer<typeof loginFormSchema>
+  const {handleSubmit, control, watch, setValue} = useForm<FormInput>({
+    resolver: zodResolver(loginFormSchema),
     defaultValues: {
       email: '',
-      password: ''
+      password: '',
+      requirePassword: false
     },
     mode: 'onTouched',
     reValidateMode: 'onChange'
   })
 
-  const onSubmit = handleSubmit(({email, password}) => {
-    if (loginWithPassword) {
+  const onSubmit = handleSubmit(({email, requirePassword, password}) => {
+    if (requirePassword) {
       return onSubmitLoginWithCredentials(email, password)
     }
 
     return onSubmitLoginWithEmail(email)
   })
 
+  const loginWithPassword = watch('requirePassword')
   const loginLinkSent =
     !loginWithPassword && loginWithEmail.data?.sendWebsiteLogin === watch('email')
-  const error = loginWithEmail.error ?? loginWithCredentials.error
-  const loading = loginWithEmail.loading || loginWithCredentials.loading
+  const error =
+    (!loginWithPassword && loginWithEmail.error) ||
+    (loginWithPassword && loginWithCredentials.error)
+  const loading =
+    (!loginWithPassword && loginWithEmail.loading) ||
+    (loginWithPassword && loginWithCredentials.loading)
 
   return (
     <LoginFormWrapper className={className}>
@@ -68,7 +89,7 @@ export function LoginForm({
         control={
           <Checkbox
             checked={loginWithPassword}
-            onChange={event => setLoginWithPassword(event.target.checked)}
+            onChange={event => setValue('requirePassword', event.target.checked)}
           />
         }
         label="Login mit Passwort"
@@ -82,7 +103,6 @@ export function LoginForm({
         <Controller
           name={'email'}
           control={control}
-          rules={{required: true}}
           render={({field, fieldState: {error}}) => (
             <TextField
               {...field}
@@ -95,11 +115,10 @@ export function LoginForm({
           )}
         />
 
-        {loginWithPassword && (
+        {watch('requirePassword') && (
           <Controller
             name={'password'}
             control={control}
-            rules={{required: true, minLength: 3}}
             render={({field, fieldState: {error}}) => (
               <TextField
                 {...field}
