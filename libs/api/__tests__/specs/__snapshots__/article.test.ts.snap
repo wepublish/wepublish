@@ -84,6 +84,88 @@ exports[`Articles can be created/edited/deleted: can be published 1`] = `
 }
 `;
 
+exports[`Articles can be created/edited/deleted: can be published in the future 1`] = `
+{
+  "data": {
+    "publishArticle": {
+      "draft": null,
+      "id": Any<String>,
+      "latest": ObjectContaining {
+        "slug": Any<String>,
+      },
+      "pending": {
+        "publishAt": Any<Date>,
+        "revision": 0,
+      },
+      "published": null,
+      "shared": false,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": {
+    "headers": Headers {
+      Symbol(map): {},
+    },
+  },
+}
+`;
+
+exports[`Articles can be created/edited/deleted: can be published twice in the future with authorIds 1`] = `
+{
+  "data": {
+    "publishArticle": {
+      "draft": null,
+      "id": Any<String>,
+      "latest": ObjectContaining {
+        "slug": Any<String>,
+      },
+      "pending": {
+        "publishAt": Any<Date>,
+        "revision": 1,
+      },
+      "published": null,
+      "shared": false,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": {
+    "headers": Headers {
+      Symbol(map): {},
+    },
+  },
+}
+`;
+
+exports[`Articles can be created/edited/deleted: can be published twice with authorIds 1`] = `
+{
+  "data": {
+    "publishArticle": {
+      "draft": null,
+      "id": Any<String>,
+      "latest": ObjectContaining {
+        "slug": Any<String>,
+      },
+      "pending": null,
+      "published": {
+        "publishedAt": 2020-12-25T23:55:35.000Z,
+        "revision": 1,
+        "updatedAt": 2020-12-25T23:55:35.000Z,
+      },
+      "shared": false,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": {
+    "headers": Headers {
+      Symbol(map): {},
+    },
+  },
+}
+`;
+
 exports[`Articles can be created/edited/deleted: can be read by id 1`] = `
 {
   "data": {

@@ -1,12 +1,14 @@
 import styled from '@emotion/styled'
 import {useMeQuery} from '@wepublish/editor/api'
+import {
+  ActivityFeed,
+  ListViewContainer,
+  ListViewHeader,
+  PermissionControl,
+  SubscriberChart
+} from '@wepublish/ui/editor'
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Panel as RPanel} from 'rsuite'
-
-import {ActivityFeed} from '../atoms/dashboard/activityFeed'
-import {SubscriberChart} from '../atoms/dashboard/subscriberChart'
-import {PermissionControl} from '../atoms/permissionControl'
-import {ListViewContainer, ListViewHeader} from '../ui/listView'
 
 const Wrapper = styled(FlexboxGrid)`
   margin-top: 20px;

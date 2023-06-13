@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HTML Block should render Default 1`] = `
+<DocumentFragment>
+  <div
+    class="css-0"
+  >
+    <div>
+      <div
+        style="color: red;"
+      >
+        This is a html embed
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`HTML Block should render WithClassName 1`] = `
+<DocumentFragment>
+  <div
+    class="extra-classname css-0"
+  >
+    <div>
+      <div
+        style="color: red;"
+      >
+        This is a html embed
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`HTML Block should render WithEmotion 1`] = `
+<DocumentFragment>
+  <div
+    class="css-0"
+  >
+    <div>
+      <div
+        style="color: red;"
+      >
+        This is a html embed
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`HTML Block should render WithScript 1`] = `
+<DocumentFragment>
+  <div
+    class="css-0"
+  >
+    <div>
+      
+      
+      <div
+        style="color: red;"
+      >
+        Checkout your console.
+      </div>
+      
+      
+      <script>
+        console.log("This is a html embed")
+      </script>
+      
+    
+    </div>
+  </div>
+</DocumentFragment>
+`;

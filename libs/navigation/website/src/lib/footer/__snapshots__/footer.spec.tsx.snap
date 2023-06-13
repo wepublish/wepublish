@@ -24,7 +24,26 @@ exports[`Footer should render Default 1`] = `
       </svg>
       <nav
         class="css-1y3cie6"
-      />
+      >
+        <a
+          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          href="/"
+        >
+          Home
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          href="/a/impressum"
+        >
+          Impressum
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          href="https://google.com"
+        >
+          FAQ
+        </a>
+      </nav>
     </div>
   </footer>
 </DocumentFragment>

@@ -7,13 +7,23 @@ import {
   useSubscriptionListQuery
 } from '@wepublish/editor/api'
 import {
+  createCheckedPermissionComponent,
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  DescriptionList,
+  DescriptionListItem,
+  IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewFilterArea,
   ListViewHeader,
+  mapTableSortTypeToGraphQLSortOrder,
   PaddedCell,
+  PermissionControl,
+  SubscriptionListFilter,
   Table,
-  TableWrapper
+  TableWrapper,
+  useAuthorisation
 } from '@wepublish/ui/editor'
 import React, {useEffect, useState} from 'react'
 import {TFunction, useTranslation} from 'react-i18next'
@@ -30,20 +40,7 @@ import {
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {
-  createCheckedPermissionComponent,
-  PermissionControl,
-  useAuthorisation
-} from '../atoms/permissionControl'
-import {SubscriptionListFilter} from '../atoms/searchAndFilter/subscriptionListFilter'
 import {ExportSubscriptionsAsCsv} from '../panel/ExportSubscriptionsAsCsv'
-import {
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
-  mapTableSortTypeToGraphQLSortOrder
-} from '../utility'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 

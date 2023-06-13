@@ -7,6 +7,20 @@ import {
   usePublishPageMutation,
   useUpdatePageMutation
 } from '@wepublish/editor/api'
+import {
+  blockForQueryBlock,
+  BlockList,
+  BlockMap,
+  BlockValue,
+  createCheckedPermissionComponent,
+  EditorTemplate,
+  NavigationBar,
+  PermissionControl,
+  StateColor,
+  unionMapForBlock,
+  useAuthorisation,
+  useBlockMap
+} from '@wepublish/ui/editor'
 import React, {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -28,20 +42,9 @@ import {
   toaster
 } from 'rsuite'
 
-import {BlockList, useBlockMap} from '../atoms/blockList'
-import {EditorTemplate} from '../atoms/editorTemplate'
-import {NavigationBar} from '../atoms/navigationBar'
-import {
-  createCheckedPermissionComponent,
-  PermissionControl,
-  useAuthorisation
-} from '../atoms/permissionControl'
-import {BlockMap} from '../blocks/blockMap'
-import {blockForQueryBlock, BlockValue, unionMapForBlock} from '../blocks/types'
 import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
 import {PublishPagePanel} from '../panel/publishPagePanel'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
-import {StateColor} from '../utility'
 
 const IconButtonMargins = styled(RIconButton)`
   margin-top: 4px;

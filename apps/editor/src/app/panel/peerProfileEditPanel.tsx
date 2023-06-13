@@ -7,24 +7,24 @@ import {
   usePeerProfileQuery,
   useUpdatePeerProfileMutation
 } from '@wepublish/editor/api'
+import {
+  ChooseEditImage,
+  ColorPicker,
+  createCheckedPermissionComponent,
+  createDefaultValue,
+  getOperationNameFromDocument,
+  ImageEditPanel,
+  ImageSelectPanel,
+  PermissionControl,
+  RichTextBlock,
+  RichTextBlockValue,
+  toggleRequiredLabel,
+  useAuthorisation
+} from '@wepublish/ui/editor'
 import {useEffect, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form as RForm, Message as RMessage, Panel, Schema, toaster} from 'rsuite'
 import {FormInstance} from 'rsuite/esm/Form'
-
-import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {ColorPicker} from '../atoms/colorPicker'
-import {
-  createCheckedPermissionComponent,
-  PermissionControl,
-  useAuthorisation
-} from '../atoms/permissionControl'
-import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../blocks/types'
-import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {getOperationNameFromDocument} from '../utility'
-import {ImageEditPanel} from './imageEditPanel'
-import {ImageSelectPanel} from './imageSelectPanel'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 

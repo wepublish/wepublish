@@ -12,6 +12,25 @@ import {
   usePaymentMethodListQuery,
   useUpdateMemberPlanMutation
 } from '@wepublish/editor/api'
+import {
+  ALL_PAYMENT_PERIODICITIES,
+  ChooseEditImage,
+  createCheckedPermissionComponent,
+  createDefaultValue,
+  CurrencyInput,
+  generateID,
+  getOperationNameFromDocument,
+  ImageEditPanel,
+  ImageSelectPanel,
+  ListInput,
+  ListValue,
+  PermissionControl,
+  RichTextBlock,
+  RichTextBlockValue,
+  slugify,
+  toggleRequiredLabel,
+  useAuthorisation
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -26,26 +45,6 @@ import {
   toaster,
   Toggle
 } from 'rsuite'
-
-import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {CurrencyInput} from '../atoms/currencyInput'
-import {ListInput, ListValue} from '../atoms/listInput'
-import {
-  createCheckedPermissionComponent,
-  PermissionControl,
-  useAuthorisation
-} from '../atoms/permissionControl'
-import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../blocks/types'
-import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {
-  ALL_PAYMENT_PERIODICITIES,
-  generateID,
-  getOperationNameFromDocument,
-  slugify
-} from '../utility'
-import {ImageEditPanel} from './imageEditPanel'
-import {ImageSelectPanel} from './imageSelectPanel'
 
 const {ControlLabel, Group, Control, HelpText} = RForm
 

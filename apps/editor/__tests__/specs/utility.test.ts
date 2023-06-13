@@ -1,4 +1,4 @@
-import {slugify} from '../../src/app/utility'
+import {slugify} from '@wepublish/ui/editor'
 
 describe('slugify', () => {
   test.each([
