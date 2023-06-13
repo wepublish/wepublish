@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Users can be created/updated/edited/deleted: can be created 1`] = `
+exports[`Users can be created/updated/edited/deleted: private can be created 1`] = `
 {
   "data": {
     "createUser": {
@@ -22,7 +22,7 @@ exports[`Users can be created/updated/edited/deleted: can be created 1`] = `
 }
 `;
 
-exports[`Users can be created/updated/edited/deleted: can be deleted 1`] = `
+exports[`Users can be created/updated/edited/deleted: private can be deleted 1`] = `
 {
   "data": {
     "deleteUser": {
@@ -44,7 +44,7 @@ exports[`Users can be created/updated/edited/deleted: can be deleted 1`] = `
 }
 `;
 
-exports[`Users can be created/updated/edited/deleted: can be read by id 1`] = `
+exports[`Users can be created/updated/edited/deleted: private can be read by id 1`] = `
 {
   "data": {
     "user": {
@@ -66,7 +66,7 @@ exports[`Users can be created/updated/edited/deleted: can be read by id 1`] = `
 }
 `;
 
-exports[`Users can be created/updated/edited/deleted: can be updated 1`] = `
+exports[`Users can be created/updated/edited/deleted: private can be updated 1`] = `
 {
   "data": {
     "updateUser": {
@@ -88,7 +88,7 @@ exports[`Users can be created/updated/edited/deleted: can be updated 1`] = `
 }
 `;
 
-exports[`Users can be created/updated/edited/deleted: can reset user password 1`] = `
+exports[`Users can be created/updated/edited/deleted: private can reset user password 1`] = `
 {
   "data": {
     "createSession": {
@@ -108,7 +108,7 @@ exports[`Users can be created/updated/edited/deleted: can reset user password 1`
 }
 `;
 
-exports[`Users can be created/updated/edited/deleted: can reset user password 2`] = `
+exports[`Users can be created/updated/edited/deleted: private can reset user password 2`] = `
 {
   "data": {
     "resetUserPassword": {
@@ -130,7 +130,7 @@ exports[`Users can be created/updated/edited/deleted: can reset user password 2`
 }
 `;
 
-exports[`Users can be created/updated/edited/deleted: can reset user password 3`] = `
+exports[`Users can be created/updated/edited/deleted: private can reset user password 3`] = `
 {
   "data": {
     "createSession": {
@@ -148,4 +148,50 @@ exports[`Users can be created/updated/edited/deleted: can reset user password 3`
     },
   },
 }
+`;
+
+exports[`Users can be created/updated/edited/deleted: public updatePaymentProviderCustomers can add payment provider customers 1`] = `
+{
+  "data": {
+    "updatePaymentProviderCustomers": [
+      {
+        "customerID": "1234-1234",
+        "paymentProviderID": "123-123",
+      },
+      {
+        "customerID": "1233-1233",
+        "paymentProviderID": "122-122",
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": {
+    "headers": Headers {
+      Symbol(map): {},
+    },
+  },
+}
+`;
+
+exports[`Users can be created/updated/edited/deleted: public updatePaymentProviderCustomers can update payment provider customers 1`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -4,12 +4,12 @@
+        Object {
+          "customerID": "1234-1234",
+          "paymentProviderID": "123-123",
+        },
+        Object {
+-         "customerID": "1233-1233",
+-         "paymentProviderID": "122-122",
++         "customerID": "1222-1222",
++         "paymentProviderID": "121-121",
+        },
+      ],
+    },
+    "errors": undefined,
+    "extensions": undefined,"
 `;

@@ -2,7 +2,6 @@
   "compileOnSave": false,
   "compilerOptions": {
     "rootDir": ".",
-    "strict": true,
     "sourceMap": true,
     "declaration": false,
     "esModuleInterop": true,
@@ -25,26 +24,21 @@
       "@wepublish/authentication/api": ["libs/authentication/api/src/index.ts"],
       "@wepublish/authentication/website": ["libs/authentication/website/src/index.ts"],
       "@wepublish/block-content/website": ["libs/block-content/website/src/index.ts"],
+      "@wepublish/consent/api": ["libs/consent/api/src/index.ts"],
+      "@wepublish/consent/editor": ["libs/consent/editor/src/index.ts"],
       "@wepublish/editor/api": ["libs/editor/api/src/index.ts"],
       "@wepublish/editor/api-v2": ["libs/editor/api-v2/src/index.ts"],
       "@wepublish/event/website": ["libs/event/website/src/index.ts"],
-      "@wepublish/consent/api": ["libs/consent/api/src/index.ts"],
-      "@wepublish/consent/editor": ["libs/consent/editor/src/index.ts"],
       "@wepublish/image/api": ["libs/image/api/src/index.ts"],
-      "@wepublish/mails": ["libs/mails/src/index.ts"],
+      "@wepublish/image/website": ["libs/image/website/src/index.ts"],
+      "@wepublish/jobs": ["libs/jobs/src/index.ts"],
       "@wepublish/membership/api": ["libs/membership/api/src/index.ts"],
       "@wepublish/membership/editor": ["libs/membership/editor/src/index.ts"],
-      "@wepublish/membership/mail": ["libs/membership/api/src/lib/mail/index.ts"],
-      "@wepublish/membership/subscription-event-dictionary": [
-        "libs/membership/api/src/lib/subscription-event-dictionary/index.ts"
-      ],
       "@wepublish/navigation/website": ["libs/navigation/website/src/index.ts"],
       "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"],
-      "@wepublish/payments": ["libs/payments/src/index.ts"],
       "@wepublish/page/website": ["libs/page/website/src/index.ts"],
       "@wepublish/permissions/api": ["libs/permissions/api/src/index.ts"],
       "@wepublish/richtext": ["libs/richtext/src/index.ts"],
-      "@wepublish/richtext/server": ["libs/richtext/src/server.ts"],
       "@wepublish/richtext/website": ["libs/richtext/website/src/index.ts"],
       "@wepublish/settings/api": ["libs/settings/api/src/index.ts"],
       "@wepublish/storybook": ["tools/storybook/index.tsx"],
@@ -52,13 +46,10 @@
       "@wepublish/ui": ["libs/ui/src/index.ts"],
       "@wepublish/ui/editor": ["libs/ui/editor/src/index.ts"],
       "@wepublish/user/api": ["libs/user/api/src/index.ts"],
-      "@wepublish/utils": ["libs/utils/src/index.ts"],
-      "@wepublish/utils-api": ["libs/utils-api/src/index.ts"],
       "@wepublish/website": ["libs/website/src/index.ts"],
-      "@wepublish/website-builder": ["libs/website-builder/src/index.ts"],
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
       "@wepublish/website/api-v2": ["libs/website/api-v2/src/index.ts"],
-      "app/*": ["apps/editor/src/app/*"]
+      "@wepublish/website/builder": ["libs/website/builder/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

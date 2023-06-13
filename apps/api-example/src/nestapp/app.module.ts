@@ -27,6 +27,7 @@ import {
 } from '@wepublish/payments'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {URL} from 'url'
+import {JobsModule} from '@wepublish/jobs'
 
 @Global()
 @Module({
@@ -53,6 +54,13 @@ import {URL} from 'url'
     ConsentModule,
     SettingModule,
     ScheduleModule.forRoot(),
+    JobsModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => ({
+        databaseUrl: config.getOrThrow('DATABASE_URL')
+      }),
+      inject: [ConfigService]
+    }),
     ConfigModule.forRoot()
   ],
   exports: [BaseMailProvider, PaymentProviders, MediaAdapterService],
