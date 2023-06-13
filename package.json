@@ -253,6 +253,7 @@
     "node-fetch": "2.6.7",
     "openid-client": "^3.14.0",
     "passport-http-bearer": "^1.0.1",
+    "pg-boss": "^9.0.1",
     "pino": "^6.11.0",
     "pino-http": "^5.3.0",
     "pino-multi-stream": "^5.2.0",
