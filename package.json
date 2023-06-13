@@ -205,6 +205,7 @@
     "@nestjs/passport": "^9.0.1",
     "@nestjs/platform-express": "9.4.0",
     "@prisma/client": "^3.14.0",
+    "@seccom/bexio": "^3.1.1",
     "@types/js-cookie": "^3.0.2",
     "@wepublish/analytics": "1.0.0-alpha.3",
     "abort-controller": "^3.0.0",
