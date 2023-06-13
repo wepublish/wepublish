@@ -35,7 +35,13 @@ import {JobsModule} from '@wepublish/jobs'
     PermissionModule,
     ConsentModule,
     SettingModule,
-    JobsModule.forRoot(),
+    JobsModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => ({
+        databaseUrl: config.getOrThrow('DATABASE_URL')
+      }),
+      inject: [ConfigService]
+    }),
     ConfigModule.forRoot()
   ],
   providers: [

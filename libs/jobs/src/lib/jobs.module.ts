@@ -1,11 +1,13 @@
-import {DynamicModule, Module} from '@nestjs/common'
+import {DynamicModule, Module, Provider} from '@nestjs/common'
 import {Scheduler} from './scheduler.service'
 import {PgBossService} from './pg-boss.service'
 import PgBoss from 'pg-boss'
-
-type JobsModuleOptions = {
-  databaseUrl?: string
-}
+import {
+  JOBS_MODULE_OPTIONS,
+  JobsModuleAsyncOptions,
+  JobsModuleOptions
+} from './jobs-module-async-options'
+import {createAsyncOptionsProvider} from './module-options'
 
 @Module({
   controllers: [],
@@ -19,16 +21,23 @@ type JobsModuleOptions = {
   exports: []
 })
 export class JobsModule {
-  static forRoot(options?: JobsModuleOptions): DynamicModule {
+  static registerAsync(options: JobsModuleAsyncOptions): DynamicModule {
     return {
       module: JobsModule,
-      providers: [
-        {
-          provide: PgBossService,
-          useValue: new PgBossService(options?.databaseUrl ?? process.env['DATABASE_URL']!)
-        }
-      ],
-      exports: [Scheduler]
+      global: options.global,
+      imports: options.imports || [],
+      providers: this.createAsyncProviders(options)
     }
+  }
+
+  private static createAsyncProviders(options: JobsModuleAsyncOptions): Provider[] {
+    return [
+      createAsyncOptionsProvider<JobsModuleOptions>(JOBS_MODULE_OPTIONS, options),
+      {
+        provide: PgBossService,
+        useFactory: (options: JobsModuleOptions) => new PgBossService(options.databaseUrl),
+        inject: [JOBS_MODULE_OPTIONS]
+      }
+    ]
   }
 }
