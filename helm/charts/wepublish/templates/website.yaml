@@ -58,7 +58,11 @@ spec:
         - name: {{ include "helm.fullname" . }}
           image: {{ .Values.deployment.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
-          command: ['npx', 'next', 'start', 'dist/apps/website-example/', '-p', '8000']
+          command: [
+            'npx nx build website-example --prod',
+            '&&',
+            'npx next start dist/apps/website-example/ -p 8000'
+          ]
           ports:
             - name: http
               containerPort: 8000
