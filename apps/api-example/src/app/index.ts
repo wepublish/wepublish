@@ -11,7 +11,8 @@ import {
   SendMailType,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  WepublishServer
+  WepublishServer,
+  BexioPaymentProvider
 } from '@wepublish/api'
 import bodyParser from 'body-parser'
 import path from 'path'
@@ -163,6 +164,38 @@ export async function runServer(app: Application, mediaAdapter: MediaAdapter) {
         incomingRequestHandler: bodyParser.json(),
         webhookSecret: process.env.PAYREXX_WEBHOOK_SECRET,
         prisma
+      })
+    )
+  }
+  if (
+    process.env.BEXIO_API_KEY &&
+    process.env.BEXIO_USER_ID &&
+    process.env.BEXIO_COUNTRY_ID &&
+    process.env.BEXIO_INVOICE_TEMPLATE &&
+    process.env.BEXIO_UNIT_ID &&
+    process.env.BEXIO_TAX_ID &&
+    process.env.BEXIO_ACCOUNT_ID
+  ) {
+    paymentProviders.push(
+      new BexioPaymentProvider({
+        id: 'bexio',
+        name: 'Bexio',
+        offSessionPayments: true,
+        apiKey: process.env.BEXIO_API_KEY,
+        userId: parseInt(process.env.BEXIO_USER_ID),
+        countryId: parseInt(process.env.BEXIO_COUNTRY_ID),
+        invoiceTemplate: process.env.BEXIO_INVOICE_TEMPLATE,
+        unitId: parseInt(process.env.BEXIO_UNIT_ID),
+        taxId: parseInt(process.env.BEXIO_TAX_ID),
+        accountId: parseInt(process.env.BEXIO_ACCOUNT_ID),
+        invoiceMailSubject:
+          'Invoice for :memberPlan.name:' || process.env.BEXIO_INVOICE_MAIL_SUBJECT,
+        // [Network Link] is required by bexio => you can use replacer for user, subscription and memberPlan as you see in the example (any db fields are possible)
+        invoiceMailBody:
+          'Hello :user.firstName:\nThank you for your subscription :memberPlan.name:. You can see the invoice here:\n [Network Link]\n\n Kind regards from the Wepublish team' ||
+          process.env.BEXIO_INVOICE_MAIL_BODY,
+        markInvoiceAsOpen: false,
+        prisma: prisma
       })
     )
   }
