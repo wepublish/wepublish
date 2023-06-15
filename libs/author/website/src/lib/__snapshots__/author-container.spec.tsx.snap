@@ -1,24 +1,58 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PeerArticle Container should render ById 1`] = `
+exports[`Author Container should render ById 1`] = `
 <DocumentFragment>
   <article
     class="css-1thzeso"
   >
-    <div
-      class="css-1glohcq"
-    >
+    <header>
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
       >
-        Title
+        Foobar
       </h1>
-      <p
-        class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+      <aside
+        class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
       >
-        Lead
-      </p>
-    </div>
+        Editor
+      </aside>
+    </header>
+    <img
+      alt="DSC07717"
+      class="css-1qnf57e"
+      height="6000"
+      srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+      title=""
+      width="4000"
+    />
+    <aside
+      class="css-1cgxbfc"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+        href="https://twitter.com"
+        target="__blank"
+      >
+        Twitter
+      </a>
+      <a
+        class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+        href="https://facebook.com"
+        target="__blank"
+      >
+        Facebook
+      </a>
+      <a
+        class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+        href="https://instagram.com"
+        target="__blank"
+      >
+        Instagram
+      </a>
+    </aside>
     <div
       class="css-0"
     >
@@ -381,199 +415,63 @@ exports[`PeerArticle Container should render ById 1`] = `
         </p>
       </div>
     </div>
-    <figure
-      class="css-umync8"
-    >
-      <img
-        alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-        class="css-1qnf57e"
-        height="2667"
-        srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-        title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-        width="4000"
-      />
-      <figcaption>
-        Caption
-      </figcaption>
-    </figure>
-    <blockquote
-      class="css-1q48al4"
-    >
-      <p
-        class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
-      >
-        «Quote»
-      </p>
-      <cite
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-      >
-        By an Author
-      </cite>
-    </blockquote>
-    <div
-      class="css-dkdiq6"
-    >
-      <article
-        class="css-1inrwkk"
-        x="0"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-12fw5aw"
-        x="3"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-8dnxso"
-        x="3"
-        y="3"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-1xkgldp"
-        x="8"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-qd2ozm"
-        x="0"
-        y="6"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-    </div>
-    <div
-      class="css-0"
-    >
-      <div>
-        <div>
-          Some HTML embed
-        </div>
-        
-
-        <script>
-          console.log("Some HTML embed")
-        </script>
-      </div>
-    </div>
   </article>
 </DocumentFragment>
 `;
 
-exports[`PeerArticle Container should render BySlug 1`] = `
+exports[`Author Container should render BySlug 1`] = `
 <DocumentFragment>
   <article
     class="css-1thzeso"
   >
-    <div
-      class="css-1glohcq"
-    >
+    <header>
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
       >
-        Title
+        Foobar
       </h1>
-      <p
-        class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+      <aside
+        class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
       >
-        Lead
-      </p>
-    </div>
+        Editor
+      </aside>
+    </header>
+    <img
+      alt="DSC07717"
+      class="css-1qnf57e"
+      height="6000"
+      srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+      title=""
+      width="4000"
+    />
+    <aside
+      class="css-1cgxbfc"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+        href="https://twitter.com"
+        target="__blank"
+      >
+        Twitter
+      </a>
+      <a
+        class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+        href="https://facebook.com"
+        target="__blank"
+      >
+        Facebook
+      </a>
+      <a
+        class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+        href="https://instagram.com"
+        target="__blank"
+      >
+        Instagram
+      </a>
+    </aside>
     <div
       class="css-0"
     >
@@ -936,199 +834,63 @@ exports[`PeerArticle Container should render BySlug 1`] = `
         </p>
       </div>
     </div>
-    <figure
-      class="css-umync8"
-    >
-      <img
-        alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-        class="css-1qnf57e"
-        height="2667"
-        srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-        title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-        width="4000"
-      />
-      <figcaption>
-        Caption
-      </figcaption>
-    </figure>
-    <blockquote
-      class="css-1q48al4"
-    >
-      <p
-        class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
-      >
-        «Quote»
-      </p>
-      <cite
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-      >
-        By an Author
-      </cite>
-    </blockquote>
-    <div
-      class="css-dkdiq6"
-    >
-      <article
-        class="css-1inrwkk"
-        x="0"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-12fw5aw"
-        x="3"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-8dnxso"
-        x="3"
-        y="3"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-1xkgldp"
-        x="8"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-qd2ozm"
-        x="0"
-        y="6"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-    </div>
-    <div
-      class="css-0"
-    >
-      <div>
-        <div>
-          Some HTML embed
-        </div>
-        
-
-        <script>
-          console.log("Some HTML embed")
-        </script>
-      </div>
-    </div>
   </article>
 </DocumentFragment>
 `;
 
-exports[`PeerArticle Container should render WithClassName 1`] = `
+exports[`Author Container should render WithClassName 1`] = `
 <DocumentFragment>
   <article
     class="extra-classname css-1thzeso"
   >
-    <div
-      class="css-1glohcq"
-    >
+    <header>
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
       >
-        Title
+        Foobar
       </h1>
-      <p
-        class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+      <aside
+        class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
       >
-        Lead
-      </p>
-    </div>
+        Editor
+      </aside>
+    </header>
+    <img
+      alt="DSC07717"
+      class="css-1qnf57e"
+      height="6000"
+      srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+      title=""
+      width="4000"
+    />
+    <aside
+      class="css-1cgxbfc"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+        href="https://twitter.com"
+        target="__blank"
+      >
+        Twitter
+      </a>
+      <a
+        class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+        href="https://facebook.com"
+        target="__blank"
+      >
+        Facebook
+      </a>
+      <a
+        class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+        href="https://instagram.com"
+        target="__blank"
+      >
+        Instagram
+      </a>
+    </aside>
     <div
       class="css-0"
     >
@@ -1489,201 +1251,65 @@ exports[`PeerArticle Container should render WithClassName 1`] = `
             </span>
           </span>
         </p>
-      </div>
-    </div>
-    <figure
-      class="css-umync8"
-    >
-      <img
-        alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-        class="css-1qnf57e"
-        height="2667"
-        srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-        title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-        width="4000"
-      />
-      <figcaption>
-        Caption
-      </figcaption>
-    </figure>
-    <blockquote
-      class="css-1q48al4"
-    >
-      <p
-        class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
-      >
-        «Quote»
-      </p>
-      <cite
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-      >
-        By an Author
-      </cite>
-    </blockquote>
-    <div
-      class="css-dkdiq6"
-    >
-      <article
-        class="css-1inrwkk"
-        x="0"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-12fw5aw"
-        x="3"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-8dnxso"
-        x="3"
-        y="3"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-1xkgldp"
-        x="8"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-qd2ozm"
-        x="0"
-        y="6"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-    </div>
-    <div
-      class="css-0"
-    >
-      <div>
-        <div>
-          Some HTML embed
-        </div>
-        
-
-        <script>
-          console.log("Some HTML embed")
-        </script>
       </div>
     </div>
   </article>
 </DocumentFragment>
 `;
 
-exports[`PeerArticle Container should render WithEmotion 1`] = `
+exports[`Author Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
     class="css-1thzeso"
   >
-    <div
-      class="css-1glohcq"
-    >
+    <header>
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
       >
-        Title
+        Foobar
       </h1>
-      <p
-        class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+      <aside
+        class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
       >
-        Lead
-      </p>
-    </div>
+        Editor
+      </aside>
+    </header>
+    <img
+      alt="DSC07717"
+      class="css-1qnf57e"
+      height="6000"
+      srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+      title=""
+      width="4000"
+    />
+    <aside
+      class="css-1cgxbfc"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+        href="https://twitter.com"
+        target="__blank"
+      >
+        Twitter
+      </a>
+      <a
+        class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+        href="https://facebook.com"
+        target="__blank"
+      >
+        Facebook
+      </a>
+      <a
+        class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+        href="https://instagram.com"
+        target="__blank"
+      >
+        Instagram
+      </a>
+    </aside>
     <div
       class="css-0"
     >
@@ -2044,176 +1670,6 @@ exports[`PeerArticle Container should render WithEmotion 1`] = `
             </span>
           </span>
         </p>
-      </div>
-    </div>
-    <figure
-      class="css-umync8"
-    >
-      <img
-        alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-        class="css-1qnf57e"
-        height="2667"
-        srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-        title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-        width="4000"
-      />
-      <figcaption>
-        Caption
-      </figcaption>
-    </figure>
-    <blockquote
-      class="css-1q48al4"
-    >
-      <p
-        class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
-      >
-        «Quote»
-      </p>
-      <cite
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-      >
-        By an Author
-      </cite>
-    </blockquote>
-    <div
-      class="css-dkdiq6"
-    >
-      <article
-        class="css-1inrwkk"
-        x="0"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-12fw5aw"
-        x="3"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-8dnxso"
-        x="3"
-        y="3"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-1xkgldp"
-        x="8"
-        y="0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-qd2ozm"
-        x="0"
-        y="6"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
-          href=""
-        >
-          <div
-            class="css-rd719m"
-          >
-            <header
-              class="css-0"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                 
-              </h1>
-            </header>
-          </div>
-        </a>
-      </article>
-    </div>
-    <div
-      class="css-0"
-    >
-      <div>
-        <div>
-          Some HTML embed
-        </div>
-        
-
-        <script>
-          console.log("Some HTML embed")
-        </script>
       </div>
     </div>
   </article>

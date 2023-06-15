@@ -2,7 +2,7 @@
 
 exports[`Article Container should render ById 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   >
     <div
@@ -551,13 +551,13 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Article Container should render BySlug 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   >
     <div
@@ -1106,13 +1106,13 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Article Container should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="extra-classname css-1thzeso"
   >
     <div
@@ -1661,13 +1661,13 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Article Container should render WithEmotion 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   >
     <div
@@ -2216,6 +2216,6 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;

@@ -2,7 +2,7 @@
 
 exports[`Event should render Default 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-sxg9br"
   >
     <img
@@ -428,13 +428,13 @@ https://unsplash.it/200/100 200w"
         </p>
       </div>
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Event should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="extra-classname css-sxg9br"
   >
     <img
@@ -860,13 +860,13 @@ https://unsplash.it/200/100 200w"
         </p>
       </div>
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Event should render WithEmotion 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-sxg9br"
   >
     <img
@@ -1292,13 +1292,13 @@ https://unsplash.it/200/100 200w"
         </p>
       </div>
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Event should render WithError 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-sxg9br"
   >
     <div
@@ -1318,13 +1318,13 @@ exports[`Event should render WithError 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       />
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Event should render WithLoading 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-sxg9br"
   >
     <div
@@ -1344,13 +1344,13 @@ exports[`Event should render WithLoading 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       />
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Event should render WithoutImage 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-sxg9br"
   >
     <div
@@ -1765,6 +1765,6 @@ exports[`Event should render WithoutImage 1`] = `
         </p>
       </div>
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;

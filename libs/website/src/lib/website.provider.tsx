@@ -33,6 +33,7 @@ import {memo, PropsWithChildren} from 'react'
 import {IconContext} from 'react-icons'
 import {Image} from '@wepublish/image/website'
 import {format} from 'date-fns'
+import {Author} from '@wepublish/author/website'
 
 export type WebsiteProps = PropsWithChildren
 
@@ -42,6 +43,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
   <ThemeProvider theme={theme}>
     <IconContext.Provider value={{}}>
       <WebsiteBuilderProvider
+        Author={Author}
         Article={Article}
         Navbar={Navbar}
         Footer={Footer}

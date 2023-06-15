@@ -2,7 +2,7 @@
 
 exports[`Event Container should render Default 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-sxg9br"
   >
     <img
@@ -428,13 +428,13 @@ https://unsplash.it/200/100 200w"
         </p>
       </div>
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Event Container should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="extra-classname css-sxg9br"
   >
     <img
@@ -860,13 +860,13 @@ https://unsplash.it/200/100 200w"
         </p>
       </div>
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Event Container should render WithEmotion 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-sxg9br"
   >
     <img
@@ -1292,6 +1292,6 @@ https://unsplash.it/200/100 200w"
         </p>
       </div>
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;

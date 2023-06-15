@@ -2,7 +2,7 @@
 
 exports[`Article should render Default 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   >
     <div
@@ -606,13 +606,13 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Article should render WithError 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   />
 </DocumentFragment>
@@ -620,7 +620,7 @@ exports[`Article should render WithError 1`] = `
 
 exports[`Article should render WithLoading 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   />
 </DocumentFragment>

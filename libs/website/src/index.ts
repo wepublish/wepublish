@@ -8,6 +8,7 @@ export * from '@wepublish/event/website'
 export * from '@wepublish/page/website'
 export * from '@wepublish/image/website'
 export * from '@wepublish/authentication/website'
+export * from '@wepublish/author/website'
 
 export * from '@wepublish/website/builder'
 export * as ApiV1 from '@wepublish/website/api'

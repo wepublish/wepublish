@@ -2248,6 +2248,92 @@ export type CreateSessionMutation = {
   }
 }
 
+export type FullAuthorFragment = {
+  __typename?: 'Author'
+  id: string
+  name: string
+  jobTitle?: string | null
+  slug: string
+  bio?: Node[] | null
+  links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+  image?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    title?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
+}
+
+export type AuthorQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>
+  slug?: InputMaybe<Scalars['Slug']>
+}>
+
+export type AuthorQuery = {
+  __typename?: 'Query'
+  author?: {
+    __typename?: 'Author'
+    id: string
+    name: string
+    jobTitle?: string | null
+    slug: string
+    bio?: Node[] | null
+    links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      title?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+  } | null
+}
+
 type BlockWithoutTeaser_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'}
 
 type BlockWithoutTeaser_CommentBlock_Fragment = {__typename: 'CommentBlock'}
@@ -5542,6 +5628,23 @@ export const FullImageFragmentDoc = gql`
   }
   ${ImageRefFragmentDoc}
 `
+export const FullAuthorFragmentDoc = gql`
+  fragment FullAuthor on Author {
+    id
+    name
+    jobTitle
+    slug
+    bio
+    links {
+      title
+      url
+    }
+    image {
+      ...FullImage
+    }
+  }
+  ${FullImageFragmentDoc}
+`
 export const BlockWithoutTeaserFragmentDoc = gql`
   fragment BlockWithoutTeaser on Block {
     __typename
@@ -6087,6 +6190,47 @@ export type CreateSessionMutationOptions = Apollo.BaseMutationOptions<
   CreateSessionMutation,
   CreateSessionMutationVariables
 >
+export const AuthorDocument = gql`
+  query Author($id: ID, $slug: Slug) {
+    author(id: $id, slug: $slug) {
+      ...FullAuthor
+    }
+  }
+  ${FullAuthorFragmentDoc}
+`
+
+/**
+ * __useAuthorQuery__
+ *
+ * To run a query within a React component, call `useAuthorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAuthorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAuthorQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useAuthorQuery(
+  baseOptions?: Apollo.QueryHookOptions<AuthorQuery, AuthorQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<AuthorQuery, AuthorQueryVariables>(AuthorDocument, options)
+}
+export function useAuthorLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<AuthorQuery, AuthorQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<AuthorQuery, AuthorQueryVariables>(AuthorDocument, options)
+}
+export type AuthorQueryHookResult = ReturnType<typeof useAuthorQuery>
+export type AuthorLazyQueryHookResult = ReturnType<typeof useAuthorLazyQuery>
+export type AuthorQueryResult = Apollo.QueryResult<AuthorQuery, AuthorQueryVariables>
 export const ChallengeDocument = gql`
   query Challenge {
     challenge {
