@@ -17,6 +17,12 @@
       "options": {
         "jestConfig": "libs/membership/api/jest.config.ts",
         "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     }
   },
