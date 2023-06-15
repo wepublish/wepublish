@@ -40,7 +40,7 @@ import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.inte
 import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
 import {BuilderImageProps} from './image.interface'
-import {BuilderLoginFormProps} from './login.interface'
+import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
 
 const NoComponent = () => null
 
@@ -59,6 +59,7 @@ export type WebsiteBuilderComponents = {
   EventList: ComponentType<BuilderEventListProps>
   EventListItem: ComponentType<BuilderEventListItemProps>
   LoginForm: ComponentType<BuilderLoginFormProps>
+  RegistrationForm: ComponentType<BuilderRegistrationFormProps>
 
   elements: {
     Alert: ComponentType<BuilderAlertProps>
@@ -113,6 +114,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   EventList: NoComponent,
   EventListItem: NoComponent,
   LoginForm: NoComponent,
+  RegistrationForm: NoComponent,
 
   elements: {
     Alert: NoComponent,
