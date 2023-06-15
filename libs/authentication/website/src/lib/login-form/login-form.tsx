@@ -22,21 +22,20 @@ const buttonStyles = css`
 `
 
 const withEmailFormSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email().nonempty(),
   requirePassword: z.literal(false),
   password: z.string().optional()
 })
 
 const withCredentialsFormSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email().nonempty(),
   requirePassword: z.literal(true),
-  password: z.string()
+  password: z.string().nonempty()
 })
 
 const loginFormSchema = z.union([withEmailFormSchema, withCredentialsFormSchema])
 
 export function LoginForm({
-  subscriptionPath,
   loginWithCredentials,
   onSubmitLoginWithCredentials,
   loginWithEmail,
@@ -44,7 +43,7 @@ export function LoginForm({
   className
 }: BuilderLoginFormProps) {
   const {
-    elements: {Alert, Button, H3, Paragraph, Link, TextField}
+    elements: {Alert, Button, TextField}
   } = useWebsiteBuilder()
 
   type FormInput = z.infer<typeof loginFormSchema>
@@ -79,12 +78,6 @@ export function LoginForm({
 
   return (
     <LoginFormWrapper className={className}>
-      <H3 component="h1">Login für Abonnent*innen</H3>
-
-      <Paragraph>
-        (Falls du ein Abo lösen willst, <Link href={subscriptionPath}>klicke hier.</Link>)
-      </Paragraph>
-
       <FormControlLabel
         control={
           <Checkbox
@@ -95,11 +88,7 @@ export function LoginForm({
         label="Login mit Passwort"
       />
 
-      <LoginFormForm
-        onSubmit={e => {
-          e.preventDefault()
-          onSubmit()
-        }}>
+      <LoginFormForm onSubmit={onSubmit}>
         <Controller
           name={'email'}
           control={control}
@@ -144,7 +133,7 @@ export function LoginForm({
         <Button
           css={buttonStyles}
           disabled={loading || loginLinkSent}
-          type="button"
+          type="submit"
           onClick={onSubmit}>
           {!loginWithPassword && (
             <>{loginLinkSent ? 'Login-Link versendet' : 'Login-Link anfordern'}</>

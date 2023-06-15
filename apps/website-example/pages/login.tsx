@@ -1,14 +1,29 @@
-import {ApiV1, AuthTokenStorageKey, LoginFormContainer, useUser} from '@wepublish/website'
+import styled from '@emotion/styled'
+import {
+  ApiV1,
+  AuthTokenStorageKey,
+  LoginFormContainer,
+  useUser,
+  useWebsiteBuilder
+} from '@wepublish/website'
 import {setCookie} from 'cookies-next'
 import {GetServerSideProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useEffect} from 'react'
 
+const LoginWrapper = styled('div')`
+  display: grid;
+  justify-content: center;
+`
+
 type LoginProps = {sessionToken?: ApiV1.UserSession}
 
 export default function Login({sessionToken}: LoginProps) {
   const {hasUser, setToken} = useUser()
+  const {
+    elements: {H3, Link, Paragraph}
+  } = useWebsiteBuilder()
   const router = useRouter()
 
   useEffect(() => {
@@ -21,7 +36,17 @@ export default function Login({sessionToken}: LoginProps) {
     }
   }, [router, hasUser, sessionToken, setToken])
 
-  return <LoginFormContainer subscriptionPath="/" />
+  return (
+    <LoginWrapper>
+      <H3 component="h1">Login für Abonnent*innen</H3>
+
+      <Paragraph>
+        (Falls du ein Abo lösen willst, <Link href={'/'}>klicke hier.</Link>)
+      </Paragraph>
+
+      <LoginFormContainer />
+    </LoginWrapper>
+  )
 }
 
 export const getServerSideProps: GetServerSideProps = async ctx => {

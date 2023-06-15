@@ -44,6 +44,15 @@ const SessionProvider = memo<PropsWithChildren>(({children}) => {
     setToken(newToken)
 
     if (newToken) {
+      setUser({
+        id: '1234-1234',
+        firstName: 'Foo',
+        name: 'Bar',
+        email: 'foobar@example.com',
+        oauth2Accounts: [],
+        paymentProviderCustomers: [],
+        properties: []
+      })
     } else {
       setUser(null)
     }

@@ -5,15 +5,11 @@ import {
   useLoginWithCredentialsMutation,
   useLoginWithEmailMutation
 } from '@wepublish/website/api'
-import {
-  BuilderContainerProps,
-  BuilderLoginFormProps,
-  useWebsiteBuilder
-} from '@wepublish/website/builder'
+import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useEffect} from 'react'
 import {useUser} from '../session.context'
 
-export type LoginFormContainerProps = Pick<BuilderLoginFormProps, 'subscriptionPath'> & {
+export type LoginFormContainerProps = {
   onLoginWithEmail?: (
     mutationResult: Pick<MutationResult<LoginWithEmailMutation>, 'data' | 'loading' | 'error'>
   ) => void
@@ -26,7 +22,6 @@ export type LoginFormContainerProps = Pick<BuilderLoginFormProps, 'subscriptionP
 export function LoginFormContainer({
   onLoginWithEmail,
   onLoginWithCredentials,
-  subscriptionPath,
   className
 }: LoginFormContainerProps) {
   const {LoginForm} = useWebsiteBuilder()
@@ -52,7 +47,6 @@ export function LoginFormContainer({
 
   return (
     <LoginForm
-      subscriptionPath={subscriptionPath}
       className={className}
       onSubmitLoginWithCredentials={(email, password) => {
         loginWithCredentials({

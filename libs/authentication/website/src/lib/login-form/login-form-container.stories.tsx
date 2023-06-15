@@ -12,11 +12,10 @@ export default {
 
 export const WithEmail: StoryObj = {
   args: {
-    subscriptionPath: '/',
     onLoginWithEmail: action('onLoginWithEmail'),
     onLoginWithCredentials: action('onLoginWithCredentials')
   },
-  play: loginFormStories.WithEmailPlay.play,
+  play: loginFormStories.WithEmailFilled.play,
   parameters: {
     apolloClient: {
       mocks: [
@@ -38,11 +37,10 @@ export const WithEmail: StoryObj = {
 
 export const WithCredentials: StoryObj = {
   args: {
-    subscriptionPath: '/',
     onLoginWithEmail: action('onLoginWithEmail'),
     onLoginWithCredentials: action('onLoginWithCredentials')
   },
-  play: loginFormStories.WithCredentialsPlay.play,
+  play: loginFormStories.WithCredentialsFilled.play,
   parameters: {
     apolloClient: {
       mocks: [
@@ -71,7 +69,6 @@ export const WithCredentials: StoryObj = {
 
 export const WithClassName: StoryObj = {
   args: {
-    subscriptionPath: '/',
     onLoginWithEmail: action('onLoginWithEmail'),
     onLoginWithCredentials: action('onLoginWithCredentials'),
     className: 'extra-classname'
@@ -80,7 +77,6 @@ export const WithClassName: StoryObj = {
 
 export const WithEmotion: StoryObj = {
   args: {
-    subscriptionPath: '/',
     onLoginWithEmail: action('onLoginWithEmail'),
     onLoginWithCredentials: action('onLoginWithCredentials'),
     css: css`

@@ -5,23 +5,6 @@ exports[`Login Form Container should render WithClassName 1`] = `
   <div
     class="extra-classname css-37hfgs"
   >
-    <h1
-      class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-    >
-      Login für Abonnent*innen
-    </h1>
-    <p
-      class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-    >
-      (Falls du ein Abo lösen willst, 
-      <a
-        class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
-        href="/"
-      >
-        klicke hier.
-      </a>
-      )
-    </p>
     <label
       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
     >
@@ -97,7 +80,7 @@ exports[`Login Form Container should render WithClassName 1`] = `
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
         css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
         tabindex="0"
-        type="button"
+        type="submit"
       >
         Login-Link anfordern
         <span
@@ -114,8 +97,8 @@ exports[`Login Form Container should render WithCredentials 1`] = `
 - First value
 + Second value
 
-@@ -21,26 +21,26 @@
-      </p>
+@@ -4,26 +4,26 @@
+    >
       <label
         class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
       >
@@ -144,7 +127,7 @@ exports[`Login Form Container should render WithCredentials 1`] = `
           <span
             class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
           />
-@@ -56,12 +56,12 @@
+@@ -39,12 +39,12 @@
       >
         <div
           class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -159,7 +142,7 @@ exports[`Login Form Container should render WithCredentials 1`] = `
           >
             Email
           </label>
-@@ -72,21 +72,57 @@
+@@ -55,21 +55,57 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r1:"
@@ -219,11 +202,11 @@ exports[`Login Form Container should render WithCredentials 1`] = `
             </fieldset>
           </div>
         </div>
-@@ -94,11 +130,11 @@
+@@ -77,11 +113,11 @@
           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
           css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
           tabindex="0"
-          type="button"
+          type="submit"
         >
 -         Login-Link anfordern
 +         Login
@@ -239,7 +222,7 @@ exports[`Login Form Container should render WithEmail 1`] = `
 - First value
 + Second value
 
-@@ -56,12 +56,12 @@
+@@ -39,12 +39,12 @@
       >
         <div
           class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -254,7 +237,7 @@ exports[`Login Form Container should render WithEmail 1`] = `
           >
             Email
           </label>
-@@ -72,35 +72,58 @@
+@@ -55,35 +55,58 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r0:"
@@ -310,7 +293,7 @@ exports[`Login Form Container should render WithEmail 1`] = `
 -         tabindex="0"
 +         disabled=""
 +         tabindex="-1"
-          type="button"
+          type="submit"
         >
 -         Login-Link anfordern
 -         <span
@@ -328,23 +311,6 @@ exports[`Login Form Container should render WithEmotion 1`] = `
   <div
     class="css-37hfgs"
   >
-    <h1
-      class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-    >
-      Login für Abonnent*innen
-    </h1>
-    <p
-      class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-    >
-      (Falls du ein Abo lösen willst, 
-      <a
-        class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
-        href="/"
-      >
-        klicke hier.
-      </a>
-      )
-    </p>
     <label
       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
     >
@@ -420,7 +386,7 @@ exports[`Login Form Container should render WithEmotion 1`] = `
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
         css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
         tabindex="0"
-        type="button"
+        type="submit"
       >
         Login-Link anfordern
         <span

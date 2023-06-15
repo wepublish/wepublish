@@ -6,6 +6,52 @@ import {useArgs} from '@storybook/preview-api'
 import {ComponentProps} from 'react'
 import {ApolloError} from '@apollo/client'
 
+const fillEmail: StoryObj['play'] = async ({canvasElement, step}) => {
+  const canvas = within(canvasElement)
+
+  const input = canvas.getByLabelText('Email', {
+    selector: 'input'
+  })
+
+  await step('Enter email', async () => {
+    await userEvent.click(input)
+    await userEvent.type(input, 'foobar@email.com')
+  })
+}
+
+const fillPassword: StoryObj['play'] = async ({canvasElement, step}) => {
+  const canvas = within(canvasElement)
+
+  const input = canvas.getByLabelText('Passwort', {
+    selector: 'input'
+  })
+
+  await step('Enter password', async () => {
+    await userEvent.click(input)
+    await userEvent.type(input, '12345678')
+  })
+}
+
+const clickCheckbox: StoryObj['play'] = async ({canvasElement, step}) => {
+  const canvas = within(canvasElement)
+  const loginWithPasswordCheckbox = canvas.getByLabelText('Login mit Passwort', {
+    selector: 'input'
+  })
+
+  await step('Click login with password', async () => {
+    await userEvent.click(loginWithPasswordCheckbox)
+  })
+}
+
+const clickLogin: StoryObj['play'] = async ({canvasElement, step}) => {
+  const canvas = within(canvasElement)
+  const submitButton = canvas.getByRole('button')
+
+  await step('Submit form', async () => {
+    await userEvent.click(submitButton)
+  })
+}
+
 const Render = () => {
   const [args, updateArgs] = useArgs()
   const props = args as ComponentProps<typeof LoginForm>
@@ -41,7 +87,6 @@ export default {
 
 export const WithEmail: StoryObj = {
   args: {
-    subscriptionPath: '/',
     loginWithCredentials: {},
     onSubmitLoginWithCredentials: action('onSubmitLoginWithCredentials'),
     loginWithEmail: {},
@@ -49,82 +94,104 @@ export const WithEmail: StoryObj = {
   }
 }
 
-export const WithEmailPlay: StoryObj = {
+export const WithEmailFilled: StoryObj = {
   ...WithEmail,
-  play: async ({canvasElement}) => {
-    const canvas = within(canvasElement)
+  play: async ctx => {
+    await fillEmail(ctx)
+    await clickLogin(ctx)
+  }
+}
 
-    const emailInput = canvas.getByLabelText('Email', {
-      selector: 'input'
-    })
+export const WithEmailInvalid: StoryObj = {
+  ...WithEmail,
+  play: clickLogin
+}
 
-    await userEvent.click(emailInput)
-    await userEvent.type(emailInput, 'foobar@email.com', {
-      delay: 100
-    })
+export const WithEmailError: StoryObj = {
+  ...WithEmailFilled,
+  render: function Render() {
+    const [args, updateArgs] = useArgs()
+    const props = args as ComponentProps<typeof LoginForm>
 
-    const submitButton = canvas.getByRole('button')
-    await userEvent.click(submitButton)
+    return (
+      <LoginForm
+        {...props}
+        onSubmitLoginWithEmail={email => {
+          args.onSubmitLoginWithEmail()
+          updateArgs({
+            loginWithEmail: {
+              error: new ApolloError({errorMessage: 'Something went wrong.'})
+            }
+          })
+        }}
+        onSubmitLoginWithCredentials={() => {
+          args.onSubmitLoginWithCredentials()
+          updateArgs({
+            loginWithCredentials: {
+              loading: true
+            }
+          })
+        }}
+      />
+    )
   }
 }
 
 export const WithCredentials: StoryObj = {
   args: {
-    subscriptionPath: '/',
     loginWithCredentials: {},
     onSubmitLoginWithCredentials: action('onSubmitLoginWithCredentials'),
     loginWithEmail: {},
     onSubmitLoginWithEmail: action('onSubmitLoginWithEmail')
+  },
+  play: clickCheckbox
+}
+
+export const WithCredentialsFilled: StoryObj = {
+  ...WithCredentials,
+  play: async ctx => {
+    WithCredentials.play?.(ctx)
+    await fillEmail(ctx)
+    await fillPassword(ctx)
+    await clickLogin(ctx)
   }
 }
 
-export const WithCredentialsPlay: StoryObj = {
+export const WithCredentialsInvalid: StoryObj = {
   ...WithCredentials,
-  play: async ({canvasElement}) => {
-    const canvas = within(canvasElement)
+  play: async ctx => {
+    WithCredentials.play?.(ctx)
 
-    const loginWithPasswordCheckbox = canvas.getByLabelText('Login mit Passwort', {
-      selector: 'input'
-    })
-    await userEvent.click(loginWithPasswordCheckbox)
-
-    const emailInput = canvas.getByLabelText('Email', {
-      selector: 'input'
-    })
-    await userEvent.click(emailInput)
-    await userEvent.type(emailInput, 'foobar@email.com', {
-      delay: 100
-    })
-
-    const passwordInput = canvas.getByLabelText('Passwort', {
-      selector: 'input'
-    })
-    await userEvent.tab()
-    await userEvent.type(passwordInput, '12345678', {
-      delay: 100
-    })
-
-    const submitButton = canvas.getByRole('button')
-    await userEvent.click(submitButton)
+    await clickLogin(ctx)
   }
 }
 
 export const WithCredentialsError: StoryObj = {
-  args: {
-    subscriptionPath: '/',
-    loginWithCredentials: {
-      error: new ApolloError({errorMessage: 'Invalid Credentials'})
-    },
-    onSubmitLoginWithCredentials: action('onSubmitLoginWithCredentials'),
-    loginWithEmail: {},
-    onSubmitLoginWithEmail: action('onSubmitLoginWithEmail')
-  },
-  play: async ({canvasElement}) => {
-    const canvas = within(canvasElement)
+  ...WithCredentialsFilled,
+  render: function Render() {
+    const [args, updateArgs] = useArgs()
+    const props = args as ComponentProps<typeof LoginForm>
 
-    const loginWithPasswordCheckbox = canvas.getByLabelText('Login mit Passwort', {
-      selector: 'input'
-    })
-    await userEvent.click(loginWithPasswordCheckbox)
+    return (
+      <LoginForm
+        {...props}
+        onSubmitLoginWithEmail={email => {
+          args.onSubmitLoginWithEmail()
+          updateArgs({
+            loginWithEmail: {
+              data: {sendWebsiteLogin: email}
+            }
+          })
+        }}
+        onSubmitLoginWithCredentials={() => {
+          args.onSubmitLoginWithCredentials()
+          updateArgs({
+            loginWithCredentials: {
+              error: new ApolloError({errorMessage: 'Invalid Credentials'})
+            }
+          })
+        }}
+      />
+    )
   }
 }
