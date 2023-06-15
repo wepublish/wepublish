@@ -1,4 +1,4 @@
-import Bexio, {ContactsStatic, InvoicesStatic} from '@seccom/bexio'
+import Bexio, {ContactsStatic, InvoicesStatic} from 'bexio'
 import ContactSearchParameters = ContactsStatic.ContactSearchParameters
 import {
   BasePaymentProvider,
@@ -7,26 +7,9 @@ import {
   Intent,
   IntentState,
   PaymentProviderProps,
-  UpdatePaymentWithIntentStateProps,
   WebhookForPaymentIntentProps
 } from './paymentProvider'
-import {Payment, PrismaClient} from '@prisma/client'
-
-type Address = {
-  company?: string
-  streetAddress?: string
-  zipCode?: string
-  city?: string
-  country?: string
-}
-
-type User = {
-  id: string
-  email: string
-  name: string
-  firstName?: string
-  address?: Address
-}
+import {PaymentState, PrismaClient, User, UserAddress} from '@prisma/client'
 
 export interface BexioPaymentProviderProps extends PaymentProviderProps {
   apiKey: string
@@ -79,23 +62,29 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
     try {
-      const user: User = {
-        id: 'adasdads-asdasd-asdasd',
-        email: 'elias@seccom.ch',
-        name: 'API_TEST',
-        firstName: 'API_TEST',
-        address: {
-          company: 'API Test Firma',
-          streetAddress: 'Brunnmattstrasse 44',
-          zipCode: '3007',
-          city: 'Bern',
-          country: 'Switzerland'
+      const invoice = await this.prisma.invoice.findUnique({
+        where: {
+          id: props.invoice.id
+        },
+        include: {
+          user: {
+            include: {
+              address: true
+            }
+          }
         }
-      }
+      })
       const bexio = new Bexio(this.apiKey)
-      const contact = await this.searchForContact(bexio, user)
-      const updatedContact = await this.createOrUpdateContact(bexio, contact, user)
+      const contact = await this.searchForContact(bexio, invoice.user)
+      const updatedContact = await this.createOrUpdateContact(bexio, contact, invoice.user)
       await this.createInvoice(bexio, updatedContact)
+      return {
+        intentID: '',
+        intentSecret: '',
+        intentData: '',
+        paidAt: null,
+        state: PaymentState.created
+      }
     } catch (e) {
       console.error(e)
       throw e
@@ -103,21 +92,15 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   }
 
   async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
-    throw Error('Webhook not implemented!')
+    return {
+      state: PaymentState.requiresUserAction,
+      paidAt: null,
+      paymentID: 'None',
+      paymentData: ''
+    }
   }
 
-  async updatePaymentWithIntentState({
-    intentState,
-    paymentClient,
-    paymentsByID,
-    invoicesByID,
-    subscriptionClient,
-    userClient
-  }: UpdatePaymentWithIntentStateProps): Promise<Payment> {
-    throw Error('Update payment with intent state not implemented')
-  }
-
-  async searchForContact(bexio: Bexio, user: User) {
+  async searchForContact(bexio: Bexio, user: User & {address: UserAddress}) {
     const contacts = await bexio.contacts.search([
       {
         field: ContactSearchParameters.mail,
@@ -128,7 +111,11 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     return contacts[0]
   }
 
-  async createOrUpdateContact(bexio: Bexio, contact: ContactsStatic.ContactSmall, user: User) {
+  async createOrUpdateContact(
+    bexio: Bexio,
+    contact: ContactsStatic.ContactSmall,
+    user: User & {address: UserAddress}
+  ) {
     const uppserContact: ContactsStatic.ContactOverwrite = {
       nr: '',
       name_1: user?.address?.company ? user?.address.company : user.name, // lastname or company name
