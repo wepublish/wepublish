@@ -1,20 +1,20 @@
-import {Module, Global} from '@nestjs/common'
-import {ApiModule} from '@wepublish/nest-modules'
-import {GraphQLModule} from '@nestjs/graphql'
-import GraphQLJSON from 'graphql-type-json'
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
-import {
-  SettingModule,
-  DashboardModule,
-  AuthenticationModule,
-  PermissionModule,
-  ConsentModule,
-  EventsImportModule,
-  AgendaBaselService,
-  MediaAdapterService,
-  KarmaMediaAdapter
-} from '@wepublish/api'
+import {Global, Module} from '@nestjs/common'
 import {ConfigModule, ConfigService} from '@nestjs/config'
+import {GraphQLModule} from '@nestjs/graphql'
+import {
+  AgendaBaselService,
+  AuthenticationModule,
+  ConsentModule,
+  DashboardModule,
+  EventsImportModule,
+  KarmaMediaAdapter,
+  MediaAdapterService,
+  PermissionModule,
+  SettingModule
+} from '@wepublish/api'
+import {ApiModule} from '@wepublish/nest-modules'
+import GraphQLJSON from 'graphql-type-json'
 import {URL} from 'url'
 
 @Global()
@@ -38,7 +38,10 @@ import {URL} from 'url'
     PermissionModule,
     ConsentModule,
     SettingModule,
-    EventsImportModule,
+    EventsImportModule.registerAsync({
+      useFactory: (agendaBasel: AgendaBaselService) => [agendaBasel],
+      inject: [AgendaBaselService]
+    }),
     ConfigModule.forRoot()
   ],
   providers: [
@@ -54,13 +57,6 @@ import {URL} from 'url'
         )
       },
       inject: [ConfigService]
-    },
-    {
-      provide: 'EVENT_PROVIDERS',
-      // useClass: AgendaBaselService
-      // useValue: AgendaBaselService
-      useFactory: agendaBasel => [agendaBasel],
-      inject: [AgendaBaselService]
     }
   ],
   exports: [MediaAdapterService]
