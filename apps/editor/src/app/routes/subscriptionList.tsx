@@ -20,13 +20,15 @@ import {
   mapTableSortTypeToGraphQLSortOrder,
   PaddedCell,
   PermissionControl,
+  SortType,
   SubscriptionListFilter,
   Table,
   TableWrapper,
   useAuthorisation
 } from '@wepublish/ui/editor'
-import React, {useEffect, useState} from 'react'
-import {TFunction, useTranslation} from 'react-i18next'
+import {TFunction} from 'i18next'
+import {ReactNode, useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdInfo} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {
@@ -157,7 +159,7 @@ function SubscriptionList() {
   /**
    * UI helper
    */
-  function userNameView(fullUser: FullSubscriptionFragment): React.ReactElement {
+  function userNameView(fullUser: FullSubscriptionFragment): ReactNode {
     const user = fullUser.user
     // user deleted
     if (!user) {
@@ -200,7 +202,7 @@ function SubscriptionList() {
           data={subscriptions}
           sortColumn={sortField}
           sortType={sortOrder}
-          onSortColumn={(sortColumn, sortType) => {
+          onSortColumn={(sortColumn: string, sortType?: SortType) => {
             setSortOrder(sortType ?? 'asc')
             setSortField(sortColumn)
           }}>
