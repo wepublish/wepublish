@@ -28,6 +28,12 @@
       "options": {
         "jestConfig": "libs/nest-modules/jest.config.ts",
         "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     }
   },
