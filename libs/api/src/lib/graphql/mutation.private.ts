@@ -352,7 +352,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authorise(CanSendJWTLogin, roles)
 
         email = email.toLowerCase()
-        await Validator.login().validateAsync({email})
+        await Validator.login().parse({email})
 
         const user = await prisma.user.findUnique({
           where: {email},
@@ -400,7 +400,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         {authenticate, prisma, generateJWT, mailContext, urlAdapter}
       ) {
         email = email.toLowerCase()
-        await Validator.login().validateAsync({email})
+        await Validator.login().parse({email})
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
 
