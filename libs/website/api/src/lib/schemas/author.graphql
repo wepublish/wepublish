@@ -4,6 +4,7 @@ fragment FullAuthor on Author {
   jobTitle
   slug
   bio
+  url
 
   links {
     title

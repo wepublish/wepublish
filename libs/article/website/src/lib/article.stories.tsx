@@ -1,7 +1,75 @@
 import {ApolloError} from '@apollo/client'
 import {Meta} from '@storybook/react'
-import {ArticleQuery} from '@wepublish/website/api'
+import {ArticleQuery, AuthorQuery} from '@wepublish/website/api'
 import {Article} from './article'
+
+const author = {
+  __typename: 'Author',
+  id: 'clgp1hfio50331801rejmrk6sj3',
+  slug: 'slug',
+  name: 'Foobar',
+  jobTitle: 'Editor',
+  url: 'https://example.com',
+  bio: [
+    {
+      type: 'paragraph',
+      children: [
+        {
+          text: 'Normal text,'
+        }
+      ]
+    }
+  ],
+  links: [
+    {
+      title: 'Twitter',
+      url: 'https://twitter.com',
+      __typename: 'AuthorLink'
+    },
+    {
+      title: 'Facebook',
+      url: 'https://facebook.com',
+      __typename: 'AuthorLink'
+    },
+    {
+      title: 'Instagram',
+      url: 'https://instagram.com',
+      __typename: 'AuthorLink'
+    }
+  ],
+  image: {
+    __typename: 'Image',
+    id: 'ljh9FHAvHAs0AxC',
+    mimeType: 'image/jpg',
+    format: 'jpg',
+    createdAt: '2023-04-18T12:38:56.369Z',
+    modifiedAt: '2023-04-18T12:38:56.371Z',
+    filename: 'DSC07717',
+    extension: '.JPG',
+    width: 4000,
+    height: 6000,
+    fileSize: 8667448,
+    description: null,
+    tags: [],
+    source: null,
+    link: null,
+    license: null,
+    focalPoint: {
+      x: 0.5,
+      y: 0.5
+    },
+    title: null,
+    url: 'https://unsplash.it/500/281',
+    bigURL: 'https://unsplash.it/800/400',
+    largeURL: 'https://unsplash.it/500/300',
+    mediumURL: 'https://unsplash.it/300/200',
+    smallURL: 'https://unsplash.it/200/100',
+    squareBigURL: 'https://unsplash.it/800/800',
+    squareLargeURL: 'https://unsplash.it/500/500',
+    squareMediumURL: 'https://unsplash.it/300/300',
+    squareSmallURL: 'https://unsplash.it/200/200'
+  }
+} as Exclude<AuthorQuery['author'], undefined | null>
 
 const article = {
   __typename: 'Article',
@@ -1041,7 +1109,8 @@ const article = {
     {
       __typename: 'EventBlock'
     }
-  ]
+  ],
+  authors: [author, {...author, id: '1234'}]
 } as Exclude<ArticleQuery['article'], undefined | null>
 
 export default {
@@ -1069,6 +1138,21 @@ export const WithError = {
   args: {
     data: {
       article: null
+    },
+    loading: false,
+    error: new ApolloError({
+      errorMessage: 'Foobar'
+    })
+  }
+}
+
+export const WithoutAuthors = {
+  args: {
+    data: {
+      article: {
+        ...article,
+        authors: []
+      }
     },
     loading: false,
     error: new ApolloError({
