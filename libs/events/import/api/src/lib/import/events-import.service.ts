@@ -59,10 +59,12 @@ export enum EventStatus {
   Scheduled = 'SCHEDULED'
 }
 
+export const EVENT_IMPORT_PROVIDER = Symbol('Event Import Provider')
+
 @Injectable()
 export class EventsImportService {
   constructor(
-    @Inject('EVENT_PROVIDERS') private providers: EventsProvider[],
+    @Inject(EVENT_IMPORT_PROVIDER) private providers: EventsProvider[],
     private prisma: PrismaClient
   ) {}
 
@@ -94,8 +96,7 @@ export class EventsImportService {
     this.providers.find(p => p.name === source)?.importedEvent({id})
   }
 
-  async createEventFromSource(filter: CreateEventArgs) {
-    const {id, source} = filter
+  async createEventFromSource({id, source}: CreateEventArgs) {
     this.providers.find(p => p.name === source)?.createEvent({id})
   }
 
