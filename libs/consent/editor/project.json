@@ -17,6 +17,12 @@
       "options": {
         "jestConfig": "libs/consent/editor/jest.config.ts",
         "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     }
   }

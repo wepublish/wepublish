@@ -35,7 +35,7 @@ export const createAdminUser = async (
   authorise(CanCreateUser, roles)
 
   input.email = input.email ? (input.email as string).toLowerCase() : input.email
-  await Validator.createUser().validateAsync(input, {allowUnknown: true})
+  await Validator.createUser().parse(input)
 
   const userExists = await user.findUnique({
     where: {email: input.email}
@@ -61,7 +61,7 @@ export const updateAdminUser = async (
   authorise(CanCreateUser, roles)
 
   input.email = input.email ? (input.email as string).toLowerCase() : input.email
-  await Validator.createUser().validateAsync(input, {allowUnknown: true})
+  await Validator.createUser().parse(input)
 
   return user.update({
     where: {id},
