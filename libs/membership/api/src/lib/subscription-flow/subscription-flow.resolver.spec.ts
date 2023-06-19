@@ -355,7 +355,7 @@ describe('Subscription Flow Resolver', () => {
     const SubscriptionFlowFactory = defineSubscriptionFlowFactory({
       defaultData: {
         memberPlan: MemberPlanFactory
-      }
+      } as any
     })
 
     beforeEach(async () => {

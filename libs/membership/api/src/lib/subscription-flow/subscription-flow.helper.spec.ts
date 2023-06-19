@@ -29,7 +29,7 @@ describe('SubscriptionFlowHelper', () => {
   const SubscriptionFlowFactory = defineSubscriptionFlowFactory({
     defaultData: {
       memberPlan: MemberPlanFactory
-    }
+    } as any
   })
   const SubscriptionFactory = defineSubscriptionFactory({
     defaultData: {

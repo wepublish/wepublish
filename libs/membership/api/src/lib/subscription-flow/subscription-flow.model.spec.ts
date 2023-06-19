@@ -25,7 +25,7 @@ describe('SubscriptionFlowController', () => {
     defaultData: {
       memberPlan: MemberPlanFactory,
       intervals: {connect: []}
-    }
+    } as any
   })
   const SubscriptionIntervalFactory = defineSubscriptionIntervalFactory({
     defaultData: {

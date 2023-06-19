@@ -26,7 +26,7 @@ describe('SubscriptionFlowController', () => {
     defaultData: {
       memberPlan: MemberPlanFactory,
       intervals: {connect: []}
-    }
+    } as any
   })
 
   beforeEach(async () => {

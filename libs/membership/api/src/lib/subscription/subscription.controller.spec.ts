@@ -40,7 +40,7 @@ describe('SubscriptionController', () => {
     defaultData: {
       memberPlan: MemberPlanFactory,
       intervals: {connect: []}
-    }
+    } as any
   })
   const SubscriptionFactory = defineSubscriptionFactory({
     defaultData: {
