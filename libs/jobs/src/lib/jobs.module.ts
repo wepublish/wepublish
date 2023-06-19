@@ -7,7 +7,7 @@ import {
   JobsModuleAsyncOptions,
   JobsModuleOptions
 } from './jobs-module-async-options'
-import {createAsyncOptionsProvider} from './module-options'
+import {createAsyncOptionsProvider} from '@wepublish/utils'
 
 @Module({
   controllers: [],

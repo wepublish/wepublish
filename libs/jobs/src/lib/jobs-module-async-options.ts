@@ -1,4 +1,4 @@
-import {ModuleAsyncOptions} from './module-options'
+import {ModuleAsyncOptions} from '@wepublish/utils'
 
 export const JOBS_MODULE_OPTIONS = 'JOBS_MODULE_OPTIONS'
 
