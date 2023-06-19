@@ -41,6 +41,10 @@ query ImportedEvent($filter: SingleEventFilter!) {
   }
 }
 
+query ImportedEventsIds {
+  importedEventsIds
+}
+
 # mutations
 mutation createEvent($filter: CreateEventArgs!) {
   createEvent(filter: $filter)

@@ -10,10 +10,10 @@ export enum ImportedEventSort {
 }
 
 export enum EventStatus {
-  SCHEDULED = 'SCHEDULED',
-  RESCHEDULED = 'RESCHEDULED',
-  POSTPONED = 'POSTPONED',
-  CANCELLED = 'CANCELLED'
+  Scheduled = 'Scheduled',
+  Rescheduled = 'Rescheduled',
+  Postponed = 'Postponed',
+  Cancelled = 'Cancelled'
 }
 
 registerEnumType(ImportedEventSort, {

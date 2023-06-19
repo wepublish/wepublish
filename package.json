@@ -177,11 +177,11 @@
     "url": "^0.11.0",
     "url-loader": "^4.1.1",
     "util": "^0.12.5",
-    "xml-fetch": "^1.1.91",
-    "xml2js": "^0.4.23",
     "vite-plugin-dts": "1.7.3",
     "vite-plugin-eslint": "1.8.1",
-    "vite-tsconfig-paths": "4.2.0"
+    "vite-tsconfig-paths": "4.2.0",
+    "xml-fetch": "^1.1.91",
+    "xml2js": "^0.4.23"
   },
   "prisma": {
     "schema": "libs/api/prisma/schema.prisma",
@@ -200,6 +200,7 @@
     "@karma.run/react": "^0.1.2",
     "@mui/material": "^5.11.4",
     "@nestjs/apollo": "^10.1.7",
+    "@nestjs/axios": "^3.0.0",
     "@nestjs/cache-manager": "^1.0.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",

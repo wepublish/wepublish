@@ -4,7 +4,8 @@ import {
   ImportedEventsDocument,
   Event,
   SingleEventFilter,
-  CreateEventArgs
+  CreateEventArgs,
+  ImportedEventSort
 } from './events-import.model'
 import {EventsImportService} from './events-import.service'
 
@@ -23,7 +24,7 @@ export class EventsImportResolver {
     @Args('order', {nullable: true, type: () => Int}) order: 1 | -1,
     @Args('skip', {nullable: true, type: () => Int}) skip: number,
     @Args('take', {nullable: true, type: () => Int}) take: number,
-    @Args('sort', {nullable: true}) sort: string
+    @Args('sort', {nullable: true}) sort: ImportedEventSort
   ) {
     return this.events.importedEvents({filter, order, skip, take, sort})
   }
@@ -38,7 +39,7 @@ export class EventsImportResolver {
     return this.events.importedEvent(filter)
   }
 
-  @Query(returns => [Event], {
+  @Query(returns => [String], {
     name: 'importedEventsIds',
     description: `
       Returns a list of external source ids of already imported events.

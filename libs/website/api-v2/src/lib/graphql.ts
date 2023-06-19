@@ -85,10 +85,10 @@ export type Event = {
 }
 
 export enum EventStatus {
-  Cancelled = 'CANCELLED',
-  Postponed = 'POSTPONED',
-  Rescheduled = 'RESCHEDULED',
-  Scheduled = 'SCHEDULED'
+  Cancelled = 'Cancelled',
+  Postponed = 'Postponed',
+  Rescheduled = 'Rescheduled',
+  Scheduled = 'Scheduled'
 }
 
 export type ImportedEventFilter = {
@@ -197,6 +197,8 @@ export type Query = {
   importedEvent: Event
   /** Returns a list of imported events from external sources, transformed to match our model. */
   importedEvents: ImportedEventsDocument
+  /** Returns a list of external source ids of already imported events. */
+  importedEventsIds: Array<Scalars['String']>
   /**
    * Returns all new deactivations in a given timeframe.
    * This considers the time the deactivation was made, not when the subscription runs out.

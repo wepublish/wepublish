@@ -85,10 +85,10 @@ export type Event = {
 };
 
 export enum EventStatus {
-  Cancelled = 'CANCELLED',
-  Postponed = 'POSTPONED',
-  Rescheduled = 'RESCHEDULED',
-  Scheduled = 'SCHEDULED'
+  Cancelled = 'Cancelled',
+  Postponed = 'Postponed',
+  Rescheduled = 'Rescheduled',
+  Scheduled = 'Scheduled'
 }
 
 export type ImportedEventFilter = {
@@ -204,6 +204,8 @@ export type Query = {
   importedEvent: Event;
   /** Returns a list of imported events from external sources, transformed to match our model. */
   importedEvents: ImportedEventsDocument;
+  /** Returns a list of external source ids of already imported events. */
+  importedEventsIds: Array<Scalars['String']>;
   /**
    * Returns all new deactivations in a given timeframe.
    * This considers the time the deactivation was made, not when the subscription runs out.
@@ -438,6 +440,11 @@ export type ImportedEventQueryVariables = Exact<{
 
 
 export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: any, status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl?: string | null, startsAt: string, endsAt?: string | null } };
+
+export type ImportedEventsIdsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ImportedEventsIdsQuery = { __typename?: 'Query', importedEventsIds: Array<string> };
 
 export type CreateEventMutationVariables = Exact<{
   filter: CreateEventArgs;
@@ -955,6 +962,38 @@ export function useImportedEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type ImportedEventQueryHookResult = ReturnType<typeof useImportedEventQuery>;
 export type ImportedEventLazyQueryHookResult = ReturnType<typeof useImportedEventLazyQuery>;
 export type ImportedEventQueryResult = Apollo.QueryResult<ImportedEventQuery, ImportedEventQueryVariables>;
+export const ImportedEventsIdsDocument = gql`
+    query ImportedEventsIds {
+  importedEventsIds
+}
+    `;
+
+/**
+ * __useImportedEventsIdsQuery__
+ *
+ * To run a query within a React component, call `useImportedEventsIdsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useImportedEventsIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useImportedEventsIdsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useImportedEventsIdsQuery(baseOptions?: Apollo.QueryHookOptions<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>(ImportedEventsIdsDocument, options);
+      }
+export function useImportedEventsIdsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>(ImportedEventsIdsDocument, options);
+        }
+export type ImportedEventsIdsQueryHookResult = ReturnType<typeof useImportedEventsIdsQuery>;
+export type ImportedEventsIdsLazyQueryHookResult = ReturnType<typeof useImportedEventsIdsLazyQuery>;
+export type ImportedEventsIdsQueryResult = Apollo.QueryResult<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>;
 export const CreateEventDocument = gql`
     mutation createEvent($filter: CreateEventArgs!) {
   createEvent(filter: $filter)

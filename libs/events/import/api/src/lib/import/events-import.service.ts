@@ -4,6 +4,7 @@ import {
   CreateEventArgs,
   Event,
   ImportedEventFilter,
+  ImportedEventSort,
   ImportedEventsDocument,
   SingleEventFilter
 } from './events-import.model'
@@ -14,7 +15,7 @@ export interface ImportedEventsResolverParams {
   order: 1 | -1
   skip: number
   take: number
-  sort: string
+  sort: ImportedEventSort
 }
 
 export interface ImportedEventResolverParams {
@@ -52,13 +53,6 @@ export interface EventsProvider {
   createEvent({id}: CreateEventParams): Promise<string>
 }
 
-export enum EventStatus {
-  Cancelled = 'CANCELLED',
-  Postponed = 'POSTPONED',
-  Rescheduled = 'RESCHEDULED',
-  Scheduled = 'SCHEDULED'
-}
-
 export const EVENT_IMPORT_PROVIDER = Symbol('Event Import Provider')
 
 @Injectable()
@@ -69,7 +63,6 @@ export class EventsImportService {
   ) {}
 
   async importedEvents({filter, order, skip, take, sort}: ImportedEventsResolverParams) {
-    console.log('providers', this.providers)
     const importableEvents = Promise.all(
       this.providers.map(provider =>
         provider.importedEvents({
@@ -93,11 +86,11 @@ export class EventsImportService {
 
   async importedEvent(filter: SingleEventFilter) {
     const {id, source} = filter
-    this.providers.find(p => p.name === source)?.importedEvent({id})
+    return this.providers.find(p => p.name === source)?.importedEvent({id})
   }
 
   async createEventFromSource({id, source}: CreateEventArgs) {
-    this.providers.find(p => p.name === source)?.createEvent({id})
+    return this.providers.find(p => p.name === source)?.createEvent({id})
   }
 
   async importedEventsIds() {

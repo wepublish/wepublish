@@ -2,8 +2,8 @@ import {Test, TestingModule} from '@nestjs/testing'
 import * as crypto from 'crypto'
 import {htmlToSlate} from 'slate-serializers'
 import {EventsImportResolver} from './events-import.resolver'
-import {EventsImportService} from './events-import.service'
-import {Event, ImportedEventsDocument, EventStatus} from './events-import.model'
+import {EVENT_IMPORT_PROVIDER, EventsImportService} from './events-import.service'
+import {Event, ImportedEventsDocument, EventStatus, ImportedEventSort} from './events-import.model'
 import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {PrismaClient} from '@prisma/client'
 import {MediaAdapterService} from '@wepublish/image/api'
@@ -18,7 +18,7 @@ export const mockImportableEvents: Event[] = [
     modifiedAt: new Date(),
     name: 'some name',
     description: htmlToSlate('<p>some description</p>') as unknown as Node,
-    status: EventStatus.SCHEDULED,
+    status: EventStatus.Scheduled,
     location: 'some location',
     imageUrl: 'some image url',
     externalSourceId: '123456',
@@ -48,6 +48,10 @@ describe('EventsImportResolver', () => {
       providers: [
         EventsImportService,
         EventsImportResolver,
+        {
+          provide: EVENT_IMPORT_PROVIDER,
+          useValue: jest.fn()
+        },
         {
           provide: CACHE_MANAGER,
           useValue: {
@@ -84,7 +88,7 @@ describe('EventsImportResolver', () => {
     const order = 1
     const skip = 0
     const take = 10
-    const sort = ''
+    const sort = ImportedEventSort.CREATED_AT
 
     jest
       .spyOn(service, 'importedEvents')

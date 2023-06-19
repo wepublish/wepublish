@@ -1,21 +1,24 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {PrismaClient} from '@prisma/client'
-import {MediaAdapterService} from '@wepublish/image/api'
-import {EventsImportService} from './events-import.service'
-import {Event, EventStatus} from './events-import.model'
+import {EVENT_IMPORT_PROVIDER, EventsImportService} from './events-import.service'
+import {AgendaBaselService} from './agenda-basel.service'
+import {Event, EventStatus, ImportedEventSort} from './events-import.model'
 import {Cache} from 'cache-manager'
+import {Node} from 'slate'
 
 describe('EventsImportService', () => {
   let service: EventsImportService
   let cacheManager: Cache
-  let prismaClient: PrismaClient
-  let mediaAdapter: MediaAdapterService
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         EventsImportService,
+        {
+          provide: EVENT_IMPORT_PROVIDER,
+          useValue: [AgendaBaselService]
+        },
         {
           provide: CACHE_MANAGER,
           useValue: {
@@ -33,20 +36,12 @@ describe('EventsImportService', () => {
               create: jest.fn()
             }
           }
-        },
-        {
-          provide: MediaAdapterService,
-          useValue: {
-            uploadImageFromArrayBuffer: jest.fn()
-          }
         }
       ]
     }).compile()
 
     service = module.get<EventsImportService>(EventsImportService)
     cacheManager = module.get<Cache>(CACHE_MANAGER)
-    prismaClient = module.get<PrismaClient>(PrismaClient)
-    mediaAdapter = module.get<MediaAdapterService>(MediaAdapterService)
   })
 
   const mockEvent: Event = {
@@ -54,8 +49,8 @@ describe('EventsImportService', () => {
     createdAt: new Date(),
     modifiedAt: new Date(),
     name: 'Event 1',
-    description: {} as JSON,
-    status: EventStatus.SCHEDULED,
+    description: {} as Node,
+    status: EventStatus.Scheduled,
     location: '',
     externalSourceId: '',
     externalSourceName: '',
@@ -82,7 +77,7 @@ describe('EventsImportService', () => {
         order: 1,
         skip: 0,
         take: 10,
-        sort: ''
+        sort: ImportedEventSort.CREATED_AT
       })
       expect(result).toEqual(mockEventsDocument)
     })
@@ -102,7 +97,7 @@ describe('EventsImportService', () => {
       expect(result).toEqual(mockEvent)
     })
 
-    test('createEvent method should create an event in the db', async () => {
+    test('createEventFromSource method should create an event in the db', async () => {
       const event = {...mockEvent, imageId: '123'} as any
       jest.spyOn(cacheManager, 'get').mockResolvedValueOnce([event])
       const createEvent = {
@@ -110,23 +105,16 @@ describe('EventsImportService', () => {
         source: 'AgendaBasel'
       }
 
-      const createdEvent = {
-        name: event.name,
-        description: event.description as unknown as any,
-        location: event.location,
-        startsAt: event.startsAt,
-        imageId: '',
-        endsAt: event.endsAt,
-        externalSourceName: event.externalSourceName,
-        externalSourceId: event.externalSourceId
-      }
+      jest.spyOn(service, 'createEventFromSource').mockResolvedValueOnce(event)
 
-      jest.spyOn(prismaClient.event, 'create').mockResolvedValueOnce(event)
+      const result = await service.createEventFromSource(createEvent)
 
-      const result = await service.createEvent(createEvent)
+      expect(service.createEventFromSource).toBeCalledWith({
+        id: '1',
+        source: 'AgendaBasel'
+      })
 
-      expect(prismaClient.event.create).toBeCalledWith({data: createdEvent})
-      expect(result).toEqual('1')
+      expect(result).toEqual(event)
     })
   })
 })

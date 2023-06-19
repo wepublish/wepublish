@@ -7,15 +7,16 @@ import {
 } from './events-import.service'
 import {ImportedEventsDocument, Event} from './events-import.model'
 import {Cache} from 'cache-manager'
-import moment from 'moment'
 import fetch from 'node-fetch'
 import {htmlToSlate} from 'slate-serializers'
 import xml2js from 'xml2js'
-import axios from 'axios'
+import {isBefore, startOfDay} from 'date-fns'
+import {HttpService} from '@nestjs/axios'
 import {ArrayBufferUpload, MediaAdapterService} from '@wepublish/image/api'
 import {XMLEventType} from './xmlTypes'
 import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {EventStatus, PrismaClient} from '@prisma/client'
+import {firstValueFrom} from 'rxjs'
 
 const AGENDA_BASEL_URL = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
 
@@ -54,7 +55,7 @@ const parseAndCacheData = async (cacheManager: Cache, source: string): Promise<E
   return importedEvents
 }
 
-const today = moment().startOf('day')
+const today = startOfDay(new Date())
 const upcomingOnly = (XMLEvent: XMLEventType) => {
   const startDate =
     XMLEvent &&
@@ -67,7 +68,7 @@ const upcomingOnly = (XMLEvent: XMLEventType) => {
   if (!startDate) {
     return
   }
-  if (moment(startDate).isBefore(today)) return
+  if (isBefore(new Date(startDate), today)) return
   return XMLEvent
 }
 
@@ -77,7 +78,7 @@ const getImageUrl = (event: XMLEventType) => {
       event?.ActivityMultimedia[0]?.Images.length &&
       event?.ActivityMultimedia[0]?.Images[0]?.Image?.length &&
       event?.ActivityMultimedia[0]?.Images[0]?.Image[0].$?.url) ||
-    ''
+    null
   )
 }
 
@@ -127,10 +128,14 @@ const parseXMLEventToWpEvent = (XMLEvent: XMLEventType, source: string) => {
   return parsedEvent
 }
 
-const fetchAndTransformImage = async (url: string): Promise<ArrayBufferUpload> => {
+const fetchAndTransformImage = async (
+  url: string,
+  httpService: HttpService
+): Promise<ArrayBufferUpload> => {
   try {
-    const response = await axios.get(url, {responseType: 'arraybuffer'})
-    const {data, headers} = response
+    const {data, headers} = await firstValueFrom(
+      httpService.get(url, {responseType: 'arraybuffer'})
+    )
 
     const filename = 'transformed-image.jpg'
     const mimetype = headers['content-type']
@@ -152,6 +157,7 @@ const fetchAndTransformImage = async (url: string): Promise<ArrayBufferUpload> =
 export class AgendaBaselService implements EventsProvider {
   constructor(
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly httpService: HttpService,
     private prisma: PrismaClient,
     private mediaAdapter: MediaAdapterService
   ) {}
@@ -219,7 +225,8 @@ export class AgendaBaselService implements EventsProvider {
     }
 
     if (event.imageUrl) {
-      const file = fetchAndTransformImage(event.imageUrl)
+      console.log('this.httpService', this.httpService)
+      const file = fetchAndTransformImage(event.imageUrl, this.httpService)
 
       const {id, ...image} = await this.mediaAdapter.uploadImageFromArrayBuffer(file)
 
@@ -242,14 +249,13 @@ export class AgendaBaselService implements EventsProvider {
       description: event.description as unknown as any, // ehh
       location: event.location,
       startsAt: event.startsAt,
-      imageId: createdImageId || '',
+      imageId: createdImageId || null,
       endsAt: event.endsAt,
       externalSourceName: event.externalSourceName,
       externalSourceId: event.externalSourceId
     }
 
     const createdEvent = await this.prisma.event.create({data: eventInput})
-
     return createdEvent.id
   }
 }

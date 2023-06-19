@@ -67,10 +67,10 @@ type Event {
 }
 
 enum EventStatus {
-  CANCELLED
-  POSTPONED
-  RESCHEDULED
-  SCHEDULED
+  Cancelled
+  Postponed
+  Rescheduled
+  Scheduled
 }
 
 input ImportedEventFilter {
@@ -201,6 +201,13 @@ type Query {
       
   """
   importedEvents(filter: ImportedEventFilter, order: Int, skip: Int, sort: String, take: Int): ImportedEventsDocument!
+
+  """
+  
+        Returns a list of external source ids of already imported events.
+      
+  """
+  importedEventsIds: [String!]!
 
   """
   
