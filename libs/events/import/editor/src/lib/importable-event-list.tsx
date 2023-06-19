@@ -92,7 +92,6 @@ function ImportableEventListView() {
     fetchPolicy: 'no-cache'
   })
   const alreadyImported = ids?.importedEventsIds
-  console.log('alreadyImported', alreadyImported)
 
   const importEvent = async (id: string, source: string) => {
     createEvent({variables: {filter: {id, source}}})

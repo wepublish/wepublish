@@ -95,6 +95,13 @@ export type ImportedEventFilter = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+export enum ImportedEventSort {
+  CreatedAt = 'CREATED_AT',
+  EndsAt = 'ENDS_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  StartsAt = 'STARTS_AT'
+}
+
 export type ImportedEventsDocument = {
   __typename?: 'ImportedEventsDocument';
   nodes: Array<Event>;
@@ -256,7 +263,7 @@ export type QueryImportedEventsArgs = {
   filter?: InputMaybe<ImportedEventFilter>;
   order?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<Scalars['String']>;
+  sort?: InputMaybe<ImportedEventSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
 
@@ -428,7 +435,7 @@ export type ImportedEventListQueryVariables = Exact<{
   order?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<Scalars['String']>;
+  sort?: InputMaybe<ImportedEventSort>;
 }>;
 
 
@@ -874,7 +881,7 @@ export type DeleteUserConsentMutationHookResult = ReturnType<typeof useDeleteUse
 export type DeleteUserConsentMutationResult = Apollo.MutationResult<DeleteUserConsentMutation>;
 export type DeleteUserConsentMutationOptions = Apollo.BaseMutationOptions<DeleteUserConsentMutation, DeleteUserConsentMutationVariables>;
 export const ImportedEventListDocument = gql`
-    query ImportedEventList($filter: ImportedEventFilter, $order: Int, $skip: Int, $take: Int, $sort: String) {
+    query ImportedEventList($filter: ImportedEventFilter, $order: Int, $skip: Int, $take: Int, $sort: ImportedEventSort) {
   importedEvents(
     filter: $filter
     order: $order

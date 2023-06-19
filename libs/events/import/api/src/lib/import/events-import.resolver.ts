@@ -24,7 +24,7 @@ export class EventsImportResolver {
     @Args('order', {nullable: true, type: () => Int}) order: 1 | -1,
     @Args('skip', {nullable: true, type: () => Int}) skip: number,
     @Args('take', {nullable: true, type: () => Int}) take: number,
-    @Args('sort', {nullable: true}) sort: ImportedEventSort
+    @Args('sort', {nullable: true, type: () => ImportedEventSort}) sort: ImportedEventSort
   ) {
     return this.events.importedEvents({filter, order, skip, take, sort})
   }

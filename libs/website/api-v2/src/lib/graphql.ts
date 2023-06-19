@@ -95,6 +95,13 @@ export type ImportedEventFilter = {
   name?: InputMaybe<Scalars['String']>
 }
 
+export enum ImportedEventSort {
+  CreatedAt = 'CREATED_AT',
+  EndsAt = 'ENDS_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  StartsAt = 'STARTS_AT'
+}
+
 export type ImportedEventsDocument = {
   __typename?: 'ImportedEventsDocument'
   nodes: Array<Event>
@@ -244,7 +251,7 @@ export type QueryImportedEventsArgs = {
   filter?: InputMaybe<ImportedEventFilter>
   order?: InputMaybe<Scalars['Int']>
   skip?: InputMaybe<Scalars['Int']>
-  sort?: InputMaybe<Scalars['String']>
+  sort?: InputMaybe<ImportedEventSort>
   take?: InputMaybe<Scalars['Int']>
 }
 

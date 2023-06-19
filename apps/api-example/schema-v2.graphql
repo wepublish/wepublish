@@ -77,6 +77,13 @@ input ImportedEventFilter {
   name: String
 }
 
+enum ImportedEventSort {
+  CREATED_AT
+  ENDS_AT
+  MODIFIED_AT
+  STARTS_AT
+}
+
 type ImportedEventsDocument {
   nodes: [Event!]!
   pageInfo: PageInfo!
@@ -200,7 +207,7 @@ type Query {
         Returns a list of imported events from external sources, transformed to match our model.
       
   """
-  importedEvents(filter: ImportedEventFilter, order: Int, skip: Int, sort: String, take: Int): ImportedEventsDocument!
+  importedEvents(filter: ImportedEventFilter, order: Int, skip: Int, sort: ImportedEventSort, take: Int): ImportedEventsDocument!
 
   """
   

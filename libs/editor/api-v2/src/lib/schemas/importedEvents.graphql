@@ -17,7 +17,7 @@ query ImportedEventList(
   $order: Int
   $skip: Int
   $take: Int
-  $sort: String
+  $sort: ImportedEventSort
 ) {
   importedEvents(filter: $filter, order: $order, skip: $skip, take: $take, sort: $sort) {
     nodes {
