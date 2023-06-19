@@ -1584,6 +1584,13 @@ export type CreateSessionWithJwtMutationVariables = Exact<{
 
 export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'User', email: string } } };
 
+export type UpdatePaymentProviderCustomersMutationVariables = Exact<{
+  customers: Array<PaymentProviderCustomerInput> | PaymentProviderCustomerInput;
+}>;
+
+
+export type UpdatePaymentProviderCustomersMutation = { __typename?: 'Mutation', updatePaymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', customerID: string, paymentProviderID: string }> };
+
 export const ImageUrLs = gql`
     fragment ImageURLs on Image {
   url
@@ -2100,6 +2107,14 @@ export const CreateSessionWithJwt = gql`
       email
     }
     token
+  }
+}
+    `;
+export const UpdatePaymentProviderCustomers = gql`
+    mutation UpdatePaymentProviderCustomers($customers: [PaymentProviderCustomerInput!]!) {
+  updatePaymentProviderCustomers(input: $customers) {
+    customerID
+    paymentProviderID
   }
 }
     `;

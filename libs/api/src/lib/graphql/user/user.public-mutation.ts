@@ -6,8 +6,13 @@ import {EmailAlreadyInUseError, NotAuthenticatedError, NotFound, UserInputError}
 import {Validator} from '../../validator'
 import {CreateImageInput} from '../image/image.private-mutation'
 
+type UpdatePaymentProviderCustomers = {
+  paymentProviderID: string
+  customerID: string
+}[]
+
 export const updatePaymentProviderCustomers = async (
-  paymentProviderCustomers: Prisma.UserUncheckedUpdateInput['paymentProviderCustomers'],
+  paymentProviderCustomers: UpdatePaymentProviderCustomers,
   authenticateUser: Context['authenticateUser'],
   userClient: PrismaClient['user']
 ) => {
@@ -16,7 +21,14 @@ export const updatePaymentProviderCustomers = async (
   const updateUser = await userClient.update({
     where: {id: user.id},
     data: {
-      paymentProviderCustomers
+      paymentProviderCustomers: {
+        deleteMany: {
+          userId: user.id
+        },
+        createMany: {
+          data: paymentProviderCustomers
+        }
+      }
     },
     select: unselectPassword
   })
@@ -120,10 +132,7 @@ export const updatePublicUser = async (
 
   email = email ? (email as string).toLowerCase() : email
 
-  await Validator.createUser().validateAsync(
-    {address, name, email, firstName, preferredName},
-    {allowUnknown: true}
-  )
+  await Validator.createUser().parse({address, name, email, firstName, preferredName})
 
   if (email && user.email !== email) {
     const userExists = await userClient.findUnique({
