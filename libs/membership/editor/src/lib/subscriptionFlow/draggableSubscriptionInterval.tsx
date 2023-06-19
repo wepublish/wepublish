@@ -6,10 +6,11 @@ import {
   SubscriptionFlowFragment
 } from '@wepublish/editor/api-v2'
 import MailTemplateSelect from './mailTemplateSelect'
-import {MdDragIndicator} from 'react-icons/all'
+import {MdDragIndicator} from 'react-icons/md'
 import {useDraggable} from '@dnd-kit/core'
 import styled from '@emotion/styled'
-import {useAuthorisation} from 'app/atoms/permissionControl'
+
+import {useAuthorisation} from '@wepublish/ui/editor'
 
 const DraggableContainer = styled.div`
   margin: 3px;

@@ -8,14 +8,18 @@ import {
   Typography
 } from '@mui/material'
 import {useMailTemplateQuery, useSynchronizeMailTemplatesMutation} from '@wepublish/editor/api-v2'
-import {ListViewContainer, ListViewHeader} from 'app/ui/listView'
-import {getApiClientV2} from 'app/utility'
+import {
+  createCheckedPermissionComponent,
+  getApiClientV2,
+  ListViewContainer,
+  ListViewHeader,
+  PermissionControl
+} from '@wepublish/ui/editor'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdCheck, MdSync, MdWarning} from 'react-icons/all'
+import {MdCheck, MdSync, MdWarning} from 'react-icons/md'
 import {Button, Stack} from 'rsuite'
 import styles from './mailTemplate.module.css'
-import {createCheckedPermissionComponent, PermissionControl} from 'app/atoms/permissionControl'
 import {DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS} from '../common'
 
 function MailTemplateList() {

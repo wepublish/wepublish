@@ -12,11 +12,12 @@ import {
 } from '@wepublish/consent/editor'
 import {TagType} from '@wepublish/editor/api'
 import {
-  AuthContext,
-  AuthDispatchActionType,
-  AuthDispatchContext,
-  LocalStorageKey
-} from '@wepublish/ui/editor'
+  MailTemplateList,
+  MemberPlanEdit,
+  SubscriptionFlowList,
+  SystemMailList
+} from '@wepublish/membership/editor'
+import {AuthContext, AuthDispatchActionType, AuthDispatchContext} from '@wepublish/ui/editor'
 import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
@@ -56,12 +57,6 @@ import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
 import {LocalStorageKey} from './utility'
-import {
-  MailTemplateList,
-  MemberPlanEdit,
-  SubscriptionFlowList,
-  SystemMailList
-} from '@wepublish/membership/editor'
 
 const LogoutMutation = gql`
   mutation Logout {

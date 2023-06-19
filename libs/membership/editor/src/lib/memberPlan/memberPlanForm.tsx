@@ -6,18 +6,21 @@ import {
   ImageRefFragment,
   PaymentMethod
 } from '@wepublish/editor/api'
-import {ListInput, ListValue} from 'app/atoms/listInput'
 import {CheckPicker, Col, Divider, Drawer, Form, Panel, Row, TagPicker, Toggle} from 'rsuite'
-import {ChooseEditImage} from 'app/atoms/chooseEditImage'
-import {RichTextBlock} from 'app/blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from 'app/blocks/types'
-import {CurrencyInput} from 'app/atoms/currencyInput'
-import {ALL_PAYMENT_PERIODICITIES} from 'app/utility'
 import {useTranslation} from 'react-i18next'
-import {ImageSelectPanel} from 'app/panel/imageSelectPanel'
-import {ImageEditPanel} from 'app/panel/imageEditPanel'
-import {slugify} from '@wepublish/utils'
 import styled from '@emotion/styled'
+import {
+  ALL_PAYMENT_PERIODICITIES,
+  ChooseEditImage,
+  CurrencyInput,
+  ImageEditPanel,
+  ImageSelectPanel,
+  ListInput,
+  ListValue,
+  RichTextBlock,
+  RichTextBlockValue,
+  slugify
+} from '@wepublish/ui/editor'
 
 const ColTextAlignEnd = styled(Col)`
   text-align: end;

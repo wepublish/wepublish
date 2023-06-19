@@ -1,5 +1,4 @@
 import React, {createContext, useMemo, useState} from 'react'
-import {ListViewContainer, ListViewHeader} from 'app/ui/listView'
 import {
   styled,
   Table,
@@ -11,13 +10,11 @@ import {
   TableRow,
   Typography
 } from '@mui/material'
-import {MdOutlineClose, MdOutlineNoteAdd, MdTune} from 'react-icons/all'
 import {useTranslation} from 'react-i18next'
 import {useParams} from 'react-router-dom'
 import {Loader} from 'rsuite'
 import {useMemberPlanListQuery} from '@wepublish/editor/api'
 import {ApolloClient, NormalizedCacheObject} from '@apollo/client'
-import {getApiClientV2} from 'app/utility'
 import {
   FullMailTemplateFragment,
   SubscriptionEvent,
@@ -44,8 +41,15 @@ import ActionsBody from './events/eventsBody'
 import TimelineBody from './timeline/timelineBody'
 import DeleteSubscriptionFlow from './deleteSubscriptionFlow'
 import SubscriptionFlowHeadline from './subscriptionFlowHeadline'
-import {createCheckedPermissionComponent, PermissionControl} from 'app/atoms/permissionControl'
 import {DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS} from '../common'
+import {
+  createCheckedPermissionComponent,
+  getApiClientV2,
+  ListViewContainer,
+  ListViewHeader,
+  PermissionControl
+} from '@wepublish/ui/editor'
+import {MdOutlineClose, MdOutlineNoteAdd, MdTune} from 'react-icons/md'
 
 /**
  * CONTEXT
@@ -63,14 +67,14 @@ const USER_ACTION_EVENTS = [
   SubscriptionEvent.DeactivationByUser,
   SubscriptionEvent.Reactivation
 ] as const
-type UserActionEvents = typeof USER_ACTION_EVENTS[number]
+type UserActionEvents = (typeof USER_ACTION_EVENTS)[number]
 
 const NON_USER_ACTION_EVENTS = [
   SubscriptionEvent.InvoiceCreation,
   SubscriptionEvent.DeactivationUnpaid,
   SubscriptionEvent.Custom
 ] as const
-type NonUserActionEvents = typeof NON_USER_ACTION_EVENTS[number]
+type NonUserActionEvents = (typeof NON_USER_ACTION_EVENTS)[number]
 
 export interface UserActionEvent {
   title: string

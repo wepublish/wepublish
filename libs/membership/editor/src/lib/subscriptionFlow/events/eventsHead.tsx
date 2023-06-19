@@ -1,9 +1,9 @@
 import React, {useRef} from 'react'
 import {Button, IconButton, InputNumber, Popover, Whisper} from 'rsuite'
-import {MdAdd} from 'react-icons/all'
+import {MdAdd} from 'react-icons/md'
 import {styled, TableCell} from '@mui/material'
 import {useTranslation} from 'react-i18next'
-import {PermissionControl} from 'app/atoms/permissionControl'
+import {PermissionControl} from '@wepublish/ui/editor'
 
 interface CreateDayFormType {
   open: boolean

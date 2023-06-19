@@ -14,18 +14,21 @@ import {
   useTestSystemMailMutation,
   useUpdateSystemMailMutation
 } from '@wepublish/editor/api-v2'
-import {ListViewContainer, ListViewHeader} from 'app/ui/listView'
-import {getApiClientV2} from 'app/utility'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, SelectPicker, Stack, Tag} from 'rsuite'
-import {createCheckedPermissionComponent} from 'app/atoms/permissionControl'
 import {TypeAttributes} from 'rsuite/esm/@types/common'
 import {MdLink, MdLogin, MdPassword} from 'react-icons/md'
 import {RiTestTubeLine} from 'react-icons/ri'
 import {DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS} from '../common'
+import {
+  createCheckedPermissionComponent,
+  getApiClientV2,
+  ListViewContainer,
+  ListViewHeader
+} from '@wepublish/ui/editor'
 
-type UserEventColorMap = Record<typeof UserEvent[keyof typeof UserEvent], TypeAttributes.Color>
+type UserEventColorMap = Record<(typeof UserEvent)[keyof typeof UserEvent], TypeAttributes.Color>
 const userEventColors: UserEventColorMap = {
   [UserEvent.AccountCreation]: 'green',
   [UserEvent.PasswordReset]: 'blue',
@@ -33,7 +36,7 @@ const userEventColors: UserEventColorMap = {
   [UserEvent.TestMail]: 'violet'
 }
 
-type UserEventIconMap = Record<typeof UserEvent[keyof typeof UserEvent], JSX.Element>
+type UserEventIconMap = Record<(typeof UserEvent)[keyof typeof UserEvent], JSX.Element>
 const userEventIcons: UserEventIconMap = {
   [UserEvent.AccountCreation]: <MdLogin size={16} />,
   [UserEvent.PasswordReset]: <MdPassword size={16} />,
