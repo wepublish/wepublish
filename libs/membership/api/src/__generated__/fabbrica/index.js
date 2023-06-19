@@ -1547,13 +1547,6 @@ function autoGenerateAuthorScalarsOrEnums({seq}) {
       isId: false,
       isUnique: true,
       seq
-    }),
-    bio: getScalarFieldValueGenerator().Json({
-      modelName: 'Author',
-      fieldName: 'bio',
-      isId: false,
-      isUnique: false,
-      seq
     })
   }
 }

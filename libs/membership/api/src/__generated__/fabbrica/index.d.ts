@@ -437,7 +437,7 @@ declare type AuthorFactoryDefineInput = {
   slug?: string
   jobTitle?: string | null
   links?: Prisma.AuthorsLinksCreateNestedManyWithoutAuthorInput
-  bio?: Prisma.JsonNullValueInput | Prisma.InputJsonValue
+  bio?: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue
   image?: AuthorimageFactory | Prisma.ImageCreateNestedOneWithoutAuthorInput
   articlesAsAuthor?: Prisma.ArticleRevisionAuthorCreateNestedManyWithoutAuthorInput
   articlesAsSocialMediaAuthor?: Prisma.ArticleRevisionSocialMediaAuthorCreateNestedManyWithoutAuthorInput
