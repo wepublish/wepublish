@@ -1,11 +1,11 @@
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import {fireEvent, render, screen} from '@testing-library/react'
 import {CreateUserDocument, UserDocument, UserRoleListDocument} from '@wepublish/editor/api'
+import {AuthContext} from '@wepublish/ui/editor'
 import React from 'react'
 import {BrowserRouter} from 'react-router-dom'
 import snapshotDiff from 'snapshot-diff'
 
-import {AuthContext} from '../../src/app/authContext'
 import {UserEditView} from '../../src/app/routes/userEditView'
 import {actWait, sessionWithPermissions} from '../utils'
 
@@ -69,6 +69,7 @@ const userDocumentQuery = {
         name: 'Parker',
         preferredName: 'Peter Parker',
         email: 'peter@parker.com',
+        flair: 'foobar',
         address: null,
         active: false,
         roles: [

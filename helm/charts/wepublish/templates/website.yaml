@@ -96,10 +96,7 @@ metadata:
     {{- end }}
 type: Opaque
 data:
-  {{- range $name, $value := .Values.deployment.env }}
-    {{ $name }}: "{{ $value | b64enc }}"
-    {{- end }}
-    {{- range $name, $value := .Values.website.env }}
+    {{- range $name, $value := merge .Values.website.env .Values.deployment.env }}
     {{ $name }}: "{{ $value | b64enc }}"
     {{- end }}
 

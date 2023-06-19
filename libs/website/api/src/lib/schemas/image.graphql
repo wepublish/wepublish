@@ -1,0 +1,43 @@
+fragment ImageURLs on Image {
+  url
+
+  bigURL: transformURL(input: {width: 800, output: WEBP, quality: 1})
+  largeURL: transformURL(input: {width: 500, output: WEBP, quality: 1})
+  mediumURL: transformURL(input: {width: 300, output: WEBP, quality: 1})
+  smallURL: transformURL(input: {width: 200, output: WEBP, quality: 1})
+
+  squareBigURL: transformURL(input: {width: 800, height: 800, output: WEBP, quality: 1})
+  squareLargeURL: transformURL(input: {width: 500, height: 500, output: WEBP, quality: 1})
+  squareMediumURL: transformURL(input: {width: 300, height: 300, output: WEBP, quality: 1})
+  squareSmallURL: transformURL(input: {width: 200, height: 200, output: WEBP, quality: 1})
+}
+
+fragment FullImage on Image {
+  id
+
+  createdAt
+  modifiedAt
+
+  filename
+  format
+  mimeType
+  extension
+  width
+  height
+  fileSize
+
+  title
+  description
+  tags
+
+  source
+  link
+  license
+
+  focalPoint {
+    x
+    y
+  }
+
+  ...ImageURLs
+}

@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Quote Block should render Default 1`] = `
+<DocumentFragment>
+  <blockquote
+    class="css-1q48al4"
+  >
+    <p
+      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+    >
+      «This is a quote»
+    </p>
+    <cite
+      class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+    >
+      John Doe
+    </cite>
+  </blockquote>
+</DocumentFragment>
+`;
+
+exports[`Quote Block should render WithClassName 1`] = `
+<DocumentFragment>
+  <blockquote
+    class="extra-classname css-1q48al4"
+  >
+    <p
+      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+    >
+      «This is a quote»
+    </p>
+    <cite
+      class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+    >
+      John Doe
+    </cite>
+  </blockquote>
+</DocumentFragment>
+`;
+
+exports[`Quote Block should render WithEmotion 1`] = `
+<DocumentFragment>
+  <blockquote
+    class="css-1q48al4"
+  >
+    <p
+      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+    >
+      «This is a quote»
+    </p>
+    <cite
+      class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+    >
+      John Doe
+    </cite>
+  </blockquote>
+</DocumentFragment>
+`;

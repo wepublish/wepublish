@@ -1,9 +1,9 @@
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import {fireEvent, render, screen, waitFor} from '@testing-library/react'
 import {UserListDocument, UserRoleListDocument} from '@wepublish/editor/api'
+import {AuthContext} from '@wepublish/ui/editor'
 import {BrowserRouter} from 'react-router-dom'
 
-import {AuthContext} from '../../src/app/authContext'
 import {UserList} from '../../src/app/routes/userList'
 import {actWait, sessionWithPermissions} from '../utils'
 
@@ -103,6 +103,7 @@ const userListDocumentQuery = {
                 emailVerifiedAt: null,
                 properties: [],
                 lastLogin: null,
+                flair: 'foobar',
                 address: {
                   city: null,
                   company: null,
@@ -138,6 +139,7 @@ const userListDocumentQuery = {
                 emailVerifiedAt: null,
                 properties: [],
                 lastLogin: null,
+                flair: null,
                 address: {
                   city: null,
                   company: null,
@@ -199,6 +201,7 @@ const userListDocumentQuery = {
               emailVerifiedAt: null,
               properties: [],
               lastLogin: null,
+              flair: 'foobar',
               address: {
                 city: null,
                 company: null,
@@ -234,6 +237,7 @@ const userListDocumentQuery = {
               emailVerifiedAt: null,
               properties: [],
               lastLogin: null,
+              flair: null,
               address: {
                 city: null,
                 company: null,
@@ -277,6 +281,7 @@ const userListDocumentQuery = {
               emailVerifiedAt: null,
               properties: [],
               lastLogin: null,
+              flair: 'foobar',
               address: {
                 city: null,
                 company: null,

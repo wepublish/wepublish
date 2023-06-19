@@ -55,7 +55,10 @@ export class DashboardSubscriptionService {
       where: {
         OR: [
           {
-            deactivation: null
+            deactivation: null,
+            paidUntil: {
+              gte: new Date()
+            }
           },
           {
             deactivation: {

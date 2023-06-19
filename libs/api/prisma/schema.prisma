@@ -143,7 +143,7 @@ model Author {
   slug       String         @unique
   jobTitle   String?
   links      AuthorsLinks[]
-  bio        Json
+  bio        Json?
 
   imageID                     String?
   image                       Image?                             @relation(fields: [imageID], references: [id])
@@ -791,6 +791,7 @@ model User {
   name            String
   firstName       String?
   preferredName   String?
+  flair           String?
   password        String
   active          Boolean
   lastLogin       DateTime?

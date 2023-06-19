@@ -1,0 +1,109 @@
+fragment BlockWithoutTeaser on Block {
+  __typename
+
+  ... on TitleBlock {
+    title
+    lead
+  }
+
+  ... on ImageBlock {
+    caption
+    image {
+      ...FullImage
+    }
+  }
+
+  ... on QuoteBlock {
+    quote
+    author
+  }
+
+  ... on RichTextBlock {
+    richText
+  }
+
+  ... on HTMLBlock {
+    html
+  }
+}
+
+fragment FullBlock on Block {
+  __typename
+  ...BlockWithoutTeaser
+
+  ... on TeaserGridFlexBlock {
+    flexTeasers {
+      alignment {
+        x
+        y
+        w
+        h
+      }
+
+      teaser {
+        ... on ArticleTeaser {
+          style
+
+          image {
+            ...FullImage
+          }
+
+          preTitle
+          title
+          lead
+
+          article {
+            id
+            title
+            preTitle
+            lead
+            url
+            blocks {
+              ...BlockWithoutTeaser
+            }
+          }
+        }
+
+        ... on PageTeaser {
+          style
+
+          image {
+            ...FullImage
+          }
+
+          preTitle
+          title
+          lead
+
+          page {
+            id
+            title
+            description
+            url
+            blocks {
+              __typename
+              ...BlockWithoutTeaser
+            }
+          }
+        }
+
+        ... on CustomTeaser {
+          style
+
+          image {
+            ...FullImage
+          }
+
+          preTitle
+          title
+          lead
+          contentUrl
+          properties {
+            key
+            value
+          }
+        }
+      }
+    }
+  }
+}

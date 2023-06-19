@@ -891,7 +891,8 @@
       "zipCode": "Code Postal",
       "city": "Ville",
       "country": "Pays",
-      "selectUserImage": "Choisir une photo de profil"
+      "selectUserImage": "Choisir une photo de profil",
+      "flair": "Flair"
     },
     "userSubscriptionList": {
       "deactivationReason": {

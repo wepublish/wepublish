@@ -13,7 +13,8 @@ import {DashboardInvoiceService} from './dashboard-invoice.service'
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      path: '/'
+      path: '/',
+      cache: 'bounded'
     }),
     PrismaModule
   ],

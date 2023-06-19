@@ -90,6 +90,7 @@
         "outlined": "Outlined",
         "page": "Page",
         "custom": "Custom",
+        "event": "Event",
         "contentUrl": "Content URL",
         "pagePreviewLink": "Page Preview Link",
         "peerArticle": "Peer Article",
@@ -1123,7 +1124,8 @@
       "zipCode": "ZIP",
       "city": "City",
       "country": "Country",
-      "selectUserImage": "Choose profile picture"
+      "selectUserImage": "Choose profile picture",
+      "flair": "Flair"
     },
     "userSubscriptionList": {
       "deactivationReason": {
@@ -1348,7 +1350,8 @@
         "create": "Create new event",
         "startsAt": "Starts at {{startsAt, ccc PP p}}",
         "endsAt": "Ends at {{endsAt, ccc PP p}}",
-        "endsAtNone": "Open ended"
+        "endsAtNone": "Open ended",
+        "upcomingOnly": "Upcoming only"
       },
       "create": {
         "title": "Create Event"

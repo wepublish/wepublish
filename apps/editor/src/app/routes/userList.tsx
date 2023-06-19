@@ -7,12 +7,21 @@ import {
   useUserListQuery
 } from '@wepublish/editor/api'
 import {
+  createCheckedPermissionComponent,
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  DescriptionList,
+  DescriptionListItem,
   IconButton,
+  IconButtonTooltip,
   ListFilters,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
+  mapTableSortTypeToGraphQLSortOrder,
   PaddedCell,
+  PermissionControl,
+  ResetUserPasswordForm,
   Table,
   TableWrapper
 } from '@wepublish/ui/editor'
@@ -30,16 +39,6 @@ import {
   toaster
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
-
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
-import {ResetUserPasswordForm} from '../atoms/user/resetUserPasswordForm'
-import {
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
-  mapTableSortTypeToGraphQLSortOrder
-} from '../utility'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 
