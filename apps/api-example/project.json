@@ -53,6 +53,12 @@
       "options": {
         "jestConfig": "apps/api-example/jest.config.ts",
         "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     },
     "seed": {

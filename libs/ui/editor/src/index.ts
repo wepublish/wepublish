@@ -1,5 +1,6 @@
 export * from './lib/utility'
 export * from './lib/listView/list-view'
+export * from './lib/authorCheckPicker/author-check-picker'
 
 export * from './lib/atoms'
 export * from './lib/blocks'

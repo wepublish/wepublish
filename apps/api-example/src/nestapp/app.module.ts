@@ -16,6 +16,7 @@ import {
 import {ApiModule} from '@wepublish/nest-modules'
 import GraphQLJSON from 'graphql-type-json'
 import {URL} from 'url'
+import {JobsModule} from '@wepublish/jobs'
 
 @Global()
 @Module({
@@ -41,6 +42,13 @@ import {URL} from 'url'
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService) => [agendaBasel],
       inject: [AgendaBaselService]
+    }),
+    JobsModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => ({
+        databaseUrl: config.getOrThrow('DATABASE_URL')
+      }),
+      inject: [ConfigService]
     }),
     ConfigModule.forRoot()
   ],

@@ -1,5 +1,6 @@
 {
   "name": "consent-editor",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/consent/editor/src",
   "projectType": "library",
   "tags": [],
@@ -17,6 +18,12 @@
       "options": {
         "jestConfig": "libs/consent/editor/jest.config.ts",
         "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     }
   }

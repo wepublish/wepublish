@@ -30,14 +30,14 @@ import {
   Col,
   Drawer,
   Form,
-  Grid as RGrid,
   Input,
   Message,
-  Panel as RPanel,
+  Grid as RGrid,
   Row,
+  Panel as RPanel,
+  Toggle as RToggle,
   Schema,
-  toaster,
-  Toggle as RToggle
+  toaster
 } from 'rsuite'
 
 const Grid = styled(RGrid)`

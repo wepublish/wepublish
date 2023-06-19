@@ -352,7 +352,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authorise(CanSendJWTLogin, roles)
 
         email = email.toLowerCase()
-        await Validator.login().validateAsync({email})
+        await Validator.login().parse({email})
 
         const user = await prisma.user.findUnique({
           where: {email},
@@ -400,7 +400,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         {authenticate, prisma, generateJWT, mailContext, urlAdapter}
       ) {
         email = email.toLowerCase()
-        await Validator.login().validateAsync({email})
+        await Validator.login().parse({email})
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
 
@@ -705,8 +705,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         updatedAt: {type: GraphQLDateTime},
         publishedAt: {type: GraphQLDateTime}
       },
-      resolve: (root, {id, publishAt, updatedAt, publishedAt}, {authenticate, prisma: {article}}) =>
-        publishArticle(id, {publishAt, updatedAt, publishedAt}, authenticate, article)
+      resolve: (root, {id, publishAt, updatedAt, publishedAt}, {authenticate, prisma}) =>
+        publishArticle(id, {publishAt, updatedAt, publishedAt}, authenticate, prisma)
     },
 
     unpublishArticle: {
