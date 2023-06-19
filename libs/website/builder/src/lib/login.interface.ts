@@ -3,7 +3,6 @@ import {LoginWithCredentialsMutation, LoginWithEmailMutation} from '@wepublish/w
 
 export type BuilderLoginFormProps = {
   className?: string
-  subscriptionPath: string
 
   loginWithEmail: Pick<MutationResult<LoginWithEmailMutation>, 'data' | 'loading' | 'error'>
   onSubmitLoginWithEmail: (email: string) => void
