@@ -449,7 +449,11 @@ async function applyStorybook() {
             {
               name: appName,
               image,
-              command: ['sh', '-c', 'npx -y http-server dist/storybook/website -p 8000'],
+              command: [
+                'sh',
+                '-c',
+                'npx -y http-server ./dist/storybook/website -d false -p 8000 -g -b --proxy http://localhost:8000/'
+              ],
               env: [],
               ports: [
                 {
