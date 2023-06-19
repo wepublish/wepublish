@@ -467,40 +467,40 @@ async function applyStorybook() {
                   cpu: '0m',
                   memory: envSwitch(ENVIRONMENT_NAME, '128Mi', '128Mi')
                 }
-              },
-              readinessProbe: {
-                httpGet: {
-                  httpHeaders: [
-                    {
-                      name: 'Host',
-                      value: domainCn
-                    }
-                  ],
-                  path: '/',
-                  port: servicePort,
-                  scheme: 'HTTP'
-                },
-                initialDelaySeconds: 5,
-                successThreshold: 1,
-                timeoutSeconds: 60
-              },
-              livenessProbe: {
-                httpGet: {
-                  httpHeaders: [
-                    {
-                      name: 'Host',
-                      value: domainCn
-                    }
-                  ],
-                  path: '/',
-                  port: servicePort,
-                  scheme: 'HTTP'
-                },
-                initialDelaySeconds: 60,
-                periodSeconds: 60,
-                successThreshold: 1,
-                timeoutSeconds: 60
               }
+              // readinessProbe: {
+              //   httpGet: {
+              //     httpHeaders: [
+              //       {
+              //         name: 'Host',
+              //         value: domainCn
+              //       }
+              //     ],
+              //     path: '/',
+              //     port: servicePort,
+              //     scheme: 'HTTP'
+              //   },
+              //   initialDelaySeconds: 5,
+              //   successThreshold: 1,
+              //   timeoutSeconds: 60
+              // },
+              // livenessProbe: {
+              //   httpGet: {
+              //     httpHeaders: [
+              //       {
+              //         name: 'Host',
+              //         value: domainCn
+              //       }
+              //     ],
+              //     path: '/',
+              //     port: servicePort,
+              //     scheme: 'HTTP'
+              //   },
+              //   initialDelaySeconds: 60,
+              //   periodSeconds: 60,
+              //   successThreshold: 1,
+              //   timeoutSeconds: 60
+              // }
             }
           ]
         }
