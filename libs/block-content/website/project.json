@@ -18,6 +18,12 @@
       "options": {
         "jestConfig": "libs/block-content/website/jest.config.ts",
         "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     }
   }

@@ -234,7 +234,11 @@ async function applyWebsite() {
             {
               name: appName,
               image,
-              command: ['npx', 'next', 'start', 'dist/apps/website-example/', '-p', '8000'],
+              command: [
+                'sh',
+                '-c',
+                'npx nx build website-example --prod && npx next start dist/apps/website-example/ -p 8000'
+              ],
               env: [
                 {
                   name: 'NODE_ENV',
