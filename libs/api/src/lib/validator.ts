@@ -1,18 +1,18 @@
-import Joi = require('joi')
+import z from 'zod'
 
 export class Validator {
   static createUser() {
-    return Joi.object({
-      email: Joi.string().email().required(),
-      name: Joi.string().max(50).required(),
-      firstName: Joi.string().max(50),
-      preferredName: Joi.string().max(50).allow('')
+    return z.object({
+      email: z.string().email(),
+      name: z.string().max(50),
+      firstName: z.string().max(50).optional(),
+      preferredName: z.string().max(50).optional()
     })
   }
 
   static login() {
-    return Joi.object({
-      email: Joi.string().email().required()
+    return z.object({
+      email: z.string().email()
     })
   }
 }

@@ -233,7 +233,6 @@
     "i18next": "^19.7.0",
     "i18next-browser-languagedetector": "^6.0.1",
     "isbot": "^3.6.5",
-    "joi": "^17.6.0",
     "js-cookie": "^3.0.1",
     "jsonwebtoken": "^9.0.0",
     "mandrill-api": "^1.0.45",
@@ -244,6 +243,7 @@
     "node-fetch": "2.6.7",
     "openid-client": "^3.14.0",
     "passport-http-bearer": "^1.0.1",
+    "pg-boss": "^9.0.1",
     "pino": "^6.11.0",
     "pino-http": "^5.3.0",
     "pino-multi-stream": "^5.2.0",
@@ -274,6 +274,7 @@
     "slate-hyperscript": "^0.58.1",
     "slate-react": "^0.58.1",
     "stripe": "^8.126.0",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "zod": "^3.21.4"
   }
 }
