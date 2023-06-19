@@ -26,15 +26,19 @@ function getJiraCommentBody() {
     },
     {
       name: 'Public API',
-      url: `https://api.${GITHUB_REF_SHORT}.wepublish.dev`
+      url: `https://api.${GITHUB_REF_SHORT}.wepublish.dev/v1`
     },
     {
       name: 'Private API',
-      url: `https://api.${GITHUB_REF_SHORT}.wepublish.dev/admin`
+      url: `https://api.${GITHUB_REF_SHORT}.wepublish.dev/v1/admin`
     },
     {
       name: 'Media',
       url: `https://media.${GITHUB_REF_SHORT}.wepublish.dev`
+    },
+    {
+      name: 'Storybook',
+      url: `https://storybook.${GITHUB_REF_SHORT}.wepublish.dev`
     }
   ]
 

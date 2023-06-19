@@ -49,6 +49,7 @@ async function main() {
     await applyCertificate()
   }
   await applyWebsite()
+  await applyStorybook()
   await applyMediaServer()
   await applyApiServer()
   await applyEditor()
@@ -249,6 +250,207 @@ async function applyWebsite() {
                   value: `https://${domainAPI}`
                 }
               ],
+              ports: [
+                {
+                  containerPort: servicePort,
+                  protocol: 'TCP'
+                }
+              ],
+              imagePullPolicy: 'IfNotPresent',
+              resources: {
+                requests: {
+                  cpu: '0m',
+                  memory: envSwitch(ENVIRONMENT_NAME, '128Mi', '128Mi')
+                }
+              },
+              readinessProbe: {
+                httpGet: {
+                  httpHeaders: [
+                    {
+                      name: 'Host',
+                      value: domainCn
+                    }
+                  ],
+                  path: '/',
+                  port: servicePort,
+                  scheme: 'HTTP'
+                },
+                initialDelaySeconds: 5,
+                successThreshold: 1,
+                timeoutSeconds: 60
+              },
+              livenessProbe: {
+                httpGet: {
+                  httpHeaders: [
+                    {
+                      name: 'Host',
+                      value: domainCn
+                    }
+                  ],
+                  path: '/',
+                  port: servicePort,
+                  scheme: 'HTTP'
+                },
+                initialDelaySeconds: 60,
+                periodSeconds: 60,
+                successThreshold: 1,
+                timeoutSeconds: 60
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+  await applyConfig(`deployment-${app}`, deployment)
+}
+
+async function applyStorybook() {
+  const servicePort = 8000
+  const app = 'storybook'
+  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
+
+  const service = {
+    apiVersion: 'v1',
+    kind: 'Service',
+    metadata: {
+      name: appName,
+      namespace: NAMESPACE
+    },
+    spec: {
+      ports: [
+        {
+          name: 'http',
+          port: servicePort,
+          protocol: 'TCP',
+          targetPort: servicePort
+        }
+      ],
+      selector: {
+        app,
+        slug: GITHUB_REF_SHORT,
+        release: ENVIRONMENT_NAME
+      },
+      sessionAffinity: 'None',
+      type: 'ClusterIP'
+    }
+  }
+  await applyConfig(`service-${app}`, service)
+
+  function getRule(host) {
+    return {
+      host,
+      http: {
+        paths: [
+          {
+            backend: {
+              service: {
+                name: appName,
+                port: {
+                  number: servicePort
+                }
+              }
+            },
+            pathType: 'Prefix',
+            path: '/'
+          }
+        ]
+      }
+    }
+  }
+
+  let rules = [getRule(domainCn)]
+  let hosts = [domainCn]
+  if (domainSan) {
+    const domains = domainSan.split(',')
+    rules = rules.concat(domains.map(domain => getRule(domain)))
+    hosts = hosts.concat(domains)
+  }
+
+  const ingress = {
+    apiVersion: 'networking.k8s.io/v1',
+    kind: 'Ingress',
+    metadata: {
+      name: appName,
+      namespace: NAMESPACE,
+      labels: {
+        app,
+        release: ENVIRONMENT_NAME
+      },
+      annotations: {
+        'kubernetes.io/ingress.class': 'nginx',
+        'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
+        'nginx.ingress.kubernetes.io/proxy-body-size': '1m',
+        'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
+        ...envSwitch(
+          ENVIRONMENT_NAME,
+          {
+            'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+          },
+          {
+            'cert-manager.io/acme-challenge-type': 'dns01',
+            'cert-manager.io/acme-dns01-provider': 'cloudDNS'
+          }
+        )
+      }
+    },
+    spec: {
+      rules,
+      tls: [
+        {
+          hosts,
+          secretName: envSwitch(ENVIRONMENT_NAME, `${appName}-tls`, certificateSecretName)
+        }
+      ]
+    }
+  }
+  await applyConfig(`ingress-${app}`, ingress)
+
+  // Info Resources: https://github.com/kubernetes/community/blob/master/contributors/design-proposals/node/resource-qos.md
+  const deployment = {
+    apiVersion: 'apps/v1',
+    kind: 'Deployment',
+    metadata: {
+      name: appName,
+      namespace: NAMESPACE,
+      labels: {
+        app,
+        slug: GITHUB_REF_SHORT,
+        release: ENVIRONMENT_NAME
+      }
+    },
+    spec: {
+      replicas: 1,
+      selector: {
+        matchLabels: {
+          app,
+          slug: GITHUB_REF_SHORT,
+          release: ENVIRONMENT_NAME
+        }
+      },
+      strategy: {
+        rollingUpdate: {
+          maxSurge: 1,
+          maxUnavailable: 0
+        },
+        type: 'RollingUpdate'
+      },
+      template: {
+        metadata: {
+          name: appName,
+          labels: {
+            app,
+            slug: GITHUB_REF_SHORT,
+            release: ENVIRONMENT_NAME
+          }
+        },
+        spec: {
+          containers: [
+            {
+              name: appName,
+              image,
+              command: ['sh', '-c', 'npx -y http-server dist/storybook/website -p 8000'],
+              env: [],
               ports: [
                 {
                   containerPort: servicePort,
