@@ -44,7 +44,14 @@ import {JobsModule} from '@wepublish/jobs'
       cache: 'bounded'
     }),
     PrismaModule,
-    MailsModule,
+    MailsModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => ({
+        defaultFromAddress: config.getOrThrow('DEFAULT_FROM_ADDRESS'),
+        defaultReplyToAddress: config.getOrThrow('DEFAULT_REPLY_TO_ADDRESS')
+      }),
+      inject: [ConfigService]
+    }),
     PaymentsModule,
     ApiModule,
     MembershipModule,
