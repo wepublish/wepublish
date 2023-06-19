@@ -1,18 +1,19 @@
 import styled from '@emotion/styled'
 import {AuthorRefFragment, CommentItemType, ImageRefFragment} from '@wepublish/editor/api'
 import {
+  AuthorCheckPicker,
   ChooseEditImage,
   CommentHistory,
-  createCheckedPermissionComponent,
-  generateID,
   ImageEditPanel,
   ImageSelectPanel,
   ListInput,
   ListValue,
   MetaDataType,
   PermissionControl,
-  slugify,
   Textarea,
+  createCheckedPermissionComponent,
+  generateID,
+  slugify,
   useAuthorisation
 } from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
@@ -21,21 +22,19 @@ import {MdAutoFixHigh, MdComment, MdListAlt, MdSettings, MdShare} from 'react-ic
 import {
   Button,
   Drawer,
-  Form as RForm,
   IconButton,
   Input,
-  InputGroup as RInputGroup,
   Message,
-  Nav as RNav,
   Panel,
+  Form as RForm,
+  InputGroup as RInputGroup,
+  Nav as RNav,
+  Toggle as RToggle,
   Schema,
   TagPicker,
-  Toggle as RToggle,
   Tooltip,
   Whisper
 } from 'rsuite'
-
-import {AuthorCheckPicker} from './authorCheckPicker'
 
 const {Item} = RNav
 

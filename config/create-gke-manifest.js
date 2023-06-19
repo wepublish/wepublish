@@ -235,9 +235,9 @@ async function applyWebsite() {
               name: appName,
               image,
               command: [
-                'npx nx build website-example --prod',
-                '&&',
-                'npx next start dist/apps/website-example/ -p 8000'
+                'sh',
+                '-c',
+                'npx nx build website-example --prod && npx next start dist/apps/website-example/ -p 8000'
               ],
               env: [
                 {
