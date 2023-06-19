@@ -32,6 +32,27 @@ export default {
   babel: (config, options) => {
     config.overrides?.push({
       presets: [['@babel/preset-react', {runtime: 'automatic', importSource: '@emotion/react'}]],
+      plugins: [
+        [
+          '@emotion',
+          {
+            importMap: {
+              '@mui/material': {
+                styled: {
+                  canonicalImport: ['@emotion/styled', 'default'],
+                  styledBaseImport: ['@mui/material', 'styled']
+                }
+              },
+              '@mui/material/styles': {
+                styled: {
+                  canonicalImport: ['@emotion/styled', 'default'],
+                  styledBaseImport: ['@mui/material/styles', 'styled']
+                }
+              }
+            }
+          }
+        ]
+      ],
       test: '*'
     })
 

@@ -3,10 +3,12 @@ import {
   createTheme,
   css,
   CssBaseline,
+  GlobalStyles,
   styled,
   Theme,
   ThemeOptions,
-  ThemeProvider
+  ThemeProvider,
+  useTheme
 } from '@mui/material'
 import {theme} from '@wepublish/ui'
 import {ApiV1, FooterContainer, WebsiteBuilderProvider, WebsiteProvider} from '@wepublish/website'
@@ -27,6 +29,8 @@ import i18next from 'i18next'
 import {z} from 'zod'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import {initReactI18next} from 'react-i18next'
+import {useMemo} from 'react'
+import {tsriArticleStyles} from '../src/styles/tsri-article.styles'
 
 setDefaultOptions({
   locale: de
@@ -76,11 +80,15 @@ const LogoWrapper = styled(Logo)`
 `
 
 function CustomApp({Component, pageProps}: AppProps) {
+  const theme = useTheme()
+  const globalStyles = useMemo(() => tsriArticleStyles(theme), [theme])
+
   return (
     <SessionProvider sessionToken={null}>
       <WebsiteProvider>
         <WebsiteBuilderProvider Head={Head} Script={Script} elements={{Link: NextWepublishLink}}>
           <ThemeProvider theme={websiteExampleTheme}>
+            <GlobalStyles styles={globalStyles} />
             <CssBaseline />
 
             <Head>

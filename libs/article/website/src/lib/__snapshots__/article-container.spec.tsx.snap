@@ -2,11 +2,11 @@
 
 exports[`Article Container should render ById 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   >
     <div
-      class="css-1glohcq"
+      class="css-1gn0lpx"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -385,14 +385,14 @@ exports[`Article Container should render ById 1`] = `
       class="css-umync8"
     >
       <img
-        alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
+        alt="DSC07717"
         class="css-1qnf57e"
-        height="2667"
+        height="6000"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-        title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+        title=""
         width="4000"
       />
       <figcaption>
@@ -422,7 +422,7 @@ https://unsplash.it/200/100 200w"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -446,7 +446,7 @@ https://unsplash.it/200/100 200w"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -470,7 +470,7 @@ https://unsplash.it/200/100 200w"
         y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -494,7 +494,7 @@ https://unsplash.it/200/100 200w"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -518,7 +518,7 @@ https://unsplash.it/200/100 200w"
         y="6"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -551,17 +551,103 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+    <section
+      class="css-1kbbmi6"
+    >
+      <aside
+        class="css-a451hm"
+      >
+        <div
+          class="css-chr1eq"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+        </div>
+        <div
+          class="css-chr1eq"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              Von 
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+                href="https://example.com"
+              >
+                Foobar
+              </a>
+            </strong>
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            Editor
+          </p>
+        </div>
+      </aside>
+      <aside
+        class="css-a451hm"
+      >
+        <div
+          class="css-chr1eq"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+        </div>
+        <div
+          class="css-chr1eq"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              Von 
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+                href="https://example.com"
+              >
+                Foobar
+              </a>
+            </strong>
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            Editor
+          </p>
+        </div>
+      </aside>
+    </section>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Article Container should render BySlug 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   >
     <div
-      class="css-1glohcq"
+      class="css-1gn0lpx"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -940,14 +1026,14 @@ exports[`Article Container should render BySlug 1`] = `
       class="css-umync8"
     >
       <img
-        alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
+        alt="DSC07717"
         class="css-1qnf57e"
-        height="2667"
+        height="6000"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-        title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+        title=""
         width="4000"
       />
       <figcaption>
@@ -977,7 +1063,7 @@ https://unsplash.it/200/100 200w"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -1001,7 +1087,7 @@ https://unsplash.it/200/100 200w"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -1025,7 +1111,7 @@ https://unsplash.it/200/100 200w"
         y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -1049,7 +1135,7 @@ https://unsplash.it/200/100 200w"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -1073,7 +1159,7 @@ https://unsplash.it/200/100 200w"
         y="6"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -1106,17 +1192,103 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+    <section
+      class="css-1kbbmi6"
+    >
+      <aside
+        class="css-a451hm"
+      >
+        <div
+          class="css-chr1eq"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+        </div>
+        <div
+          class="css-chr1eq"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              Von 
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+                href="https://example.com"
+              >
+                Foobar
+              </a>
+            </strong>
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            Editor
+          </p>
+        </div>
+      </aside>
+      <aside
+        class="css-a451hm"
+      >
+        <div
+          class="css-chr1eq"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+        </div>
+        <div
+          class="css-chr1eq"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              Von 
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+                href="https://example.com"
+              >
+                Foobar
+              </a>
+            </strong>
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            Editor
+          </p>
+        </div>
+      </aside>
+    </section>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Article Container should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="extra-classname css-1thzeso"
   >
     <div
-      class="css-1glohcq"
+      class="css-1gn0lpx"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -1495,14 +1667,14 @@ exports[`Article Container should render WithClassName 1`] = `
       class="css-umync8"
     >
       <img
-        alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
+        alt="DSC07717"
         class="css-1qnf57e"
-        height="2667"
+        height="6000"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-        title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+        title=""
         width="4000"
       />
       <figcaption>
@@ -1532,7 +1704,7 @@ https://unsplash.it/200/100 200w"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -1556,7 +1728,7 @@ https://unsplash.it/200/100 200w"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -1580,7 +1752,7 @@ https://unsplash.it/200/100 200w"
         y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -1604,7 +1776,7 @@ https://unsplash.it/200/100 200w"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -1628,7 +1800,7 @@ https://unsplash.it/200/100 200w"
         y="6"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -1661,17 +1833,103 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+    <section
+      class="css-1kbbmi6"
+    >
+      <aside
+        class="css-a451hm"
+      >
+        <div
+          class="css-chr1eq"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+        </div>
+        <div
+          class="css-chr1eq"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              Von 
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+                href="https://example.com"
+              >
+                Foobar
+              </a>
+            </strong>
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            Editor
+          </p>
+        </div>
+      </aside>
+      <aside
+        class="css-a451hm"
+      >
+        <div
+          class="css-chr1eq"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+        </div>
+        <div
+          class="css-chr1eq"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              Von 
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+                href="https://example.com"
+              >
+                Foobar
+              </a>
+            </strong>
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            Editor
+          </p>
+        </div>
+      </aside>
+    </section>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Article Container should render WithEmotion 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   >
     <div
-      class="css-1glohcq"
+      class="css-1gn0lpx"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -2050,14 +2308,14 @@ exports[`Article Container should render WithEmotion 1`] = `
       class="css-umync8"
     >
       <img
-        alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
+        alt="DSC07717"
         class="css-1qnf57e"
-        height="2667"
+        height="6000"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-        title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
+        title=""
         width="4000"
       />
       <figcaption>
@@ -2087,7 +2345,7 @@ https://unsplash.it/200/100 200w"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -2111,7 +2369,7 @@ https://unsplash.it/200/100 200w"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -2135,7 +2393,7 @@ https://unsplash.it/200/100 200w"
         y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -2159,7 +2417,7 @@ https://unsplash.it/200/100 200w"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -2183,7 +2441,7 @@ https://unsplash.it/200/100 200w"
         y="6"
       >
         <a
-          class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
           href=""
         >
           <div
@@ -2216,6 +2474,92 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+    <section
+      class="css-1kbbmi6"
+    >
+      <aside
+        class="css-a451hm"
+      >
+        <div
+          class="css-chr1eq"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+        </div>
+        <div
+          class="css-chr1eq"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              Von 
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+                href="https://example.com"
+              >
+                Foobar
+              </a>
+            </strong>
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            Editor
+          </p>
+        </div>
+      </aside>
+      <aside
+        class="css-a451hm"
+      >
+        <div
+          class="css-chr1eq"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+        </div>
+        <div
+          class="css-chr1eq"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              Von 
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+                href="https://example.com"
+              >
+                Foobar
+              </a>
+            </strong>
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            Editor
+          </p>
+        </div>
+      </aside>
+    </section>
+  </article>
 </DocumentFragment>
 `;
