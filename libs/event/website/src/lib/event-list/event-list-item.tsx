@@ -4,6 +4,7 @@ import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdDateRange} from 'react-icons/md'
 
 export const eventListItemStyles = (theme: Theme) => css`
+  width: 100%;
   display: grid;
   gap: ${theme.spacing(2)};
   grid-template-columns: 1fr;
