@@ -385,6 +385,7 @@ exports[`Blocks should render Default 1`] = `
       alt="DSC07717"
       class="css-1qnf57e"
       height="6000"
+      loading="lazy"
       srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -429,6 +430,7 @@ https://unsplash.it/200/200 200w"
             alt="DSC07717"
             class="css-1qnf57e"
             height="6000"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -464,6 +466,7 @@ https://unsplash.it/200/200 200w"
             alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
             class="css-1qnf57e"
             height="2667"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -499,6 +502,7 @@ https://unsplash.it/200/200 200w"
             alt="DSC07717"
             class="css-1qnf57e"
             height="6000"
+            loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -534,6 +538,7 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-1qnf57e"
             height="6000"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -569,6 +574,7 @@ https://unsplash.it/200/200 200w"
             alt="DSC07717"
             class="css-1qnf57e"
             height="6000"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -994,6 +1000,7 @@ exports[`Blocks should render WithLayout 1`] = `
         alt="DSC07717"
         class="css-1qnf57e"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1038,6 +1045,7 @@ https://unsplash.it/200/200 200w"
               alt="DSC07717"
               class="css-1qnf57e"
               height="6000"
+              loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1073,6 +1081,7 @@ https://unsplash.it/200/200 200w"
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
               class="css-1qnf57e"
               height="2667"
+              loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1108,6 +1117,7 @@ https://unsplash.it/200/200 200w"
               alt="DSC07717"
               class="css-1qnf57e"
               height="6000"
+              loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -1143,6 +1153,7 @@ https://unsplash.it/200/100 200w"
               alt="DSC07717"
               class="css-1qnf57e"
               height="6000"
+              loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1178,6 +1189,7 @@ https://unsplash.it/200/200 200w"
               alt="DSC07717"
               class="css-1qnf57e"
               height="6000"
+              loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,

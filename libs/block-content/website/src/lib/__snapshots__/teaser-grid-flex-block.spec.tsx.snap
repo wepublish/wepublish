@@ -21,6 +21,7 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -56,6 +57,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -91,6 +93,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -126,6 +129,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -161,6 +165,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -196,6 +201,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -240,6 +246,7 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -275,6 +282,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -310,6 +318,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -345,6 +354,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -380,6 +390,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -415,6 +426,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -459,6 +471,7 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -494,6 +507,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -529,6 +543,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -564,6 +579,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -599,6 +615,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -634,6 +651,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -678,6 +696,7 @@ exports[`Teaser Grid Flex Block should render WithShowLoad 1`] = `
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -718,6 +737,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -758,6 +778,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -798,6 +819,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -838,6 +860,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -878,6 +901,7 @@ https://unsplash.it/200/200 200w"
             alt="An image description"
             class="css-1qnf57e"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,

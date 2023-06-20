@@ -28,6 +28,7 @@ const ImageWrapper = styled('img')`
   max-width: 100%;
   height: auto;
 `
+
 export function Image({
   image,
   square,
@@ -52,6 +53,8 @@ export function Image({
       title={image.title ?? ''}
       width={image.width}
       height={image.height}
+      loading={loading}
+      fetchPriority={fetchPriority}
       srcSet={imageArray.join(',\n')}
     />
   )

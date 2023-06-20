@@ -6,6 +6,7 @@ exports[`Image should render Default 1`] = `
     alt="An image description"
     class="css-1qnf57e"
     height="500"
+    loading="lazy"
     srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -22,6 +23,7 @@ exports[`Image should render Square 1`] = `
     alt="An image description"
     class="css-1qnf57e"
     height="500"
+    loading="lazy"
     srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -38,6 +40,7 @@ exports[`Image should render WithoutDescription 1`] = `
     alt="An image title"
     class="css-1qnf57e"
     height="500"
+    loading="lazy"
     srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -54,6 +57,7 @@ exports[`Image should render WithoutTitle 1`] = `
     alt="An image description"
     class="css-1qnf57e"
     height="500"
+    loading="lazy"
     srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
