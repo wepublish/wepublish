@@ -815,18 +815,6 @@ async function applyApiServer() {
                   name: 'MEDIA_PORT',
                   value: '443'
                 },
-                // {
-                //   name: 'HOST_ENV',
-                //   value: envSwitch(ENVIRONMENT_NAME, 'production', 'staging')
-                // },
-                // {
-                //   name: 'CANONICAL_HOST',
-                //   value: envSwitch(
-                //     ENVIRONMENT_NAME,
-                //     'https://demo.wepublish.media',
-                //     'https://staging.demo.wepublish.media'
-                //   )
-                // },
                 {
                   name: 'DATABASE_URL',
                   value: databaseURL
