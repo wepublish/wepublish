@@ -32,7 +32,7 @@ export default function Login({sessionToken}: LoginProps) {
     }
 
     if (hasUser) {
-      router.push('/')
+      router.replace('/')
     }
   }, [router, hasUser, sessionToken, setToken])
 

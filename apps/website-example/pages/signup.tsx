@@ -18,7 +18,7 @@ export default function SignUp() {
 
   useEffect(() => {
     if (hasUser) {
-      router.push('/')
+      router.replace('/')
     }
   }, [router, hasUser])
 
