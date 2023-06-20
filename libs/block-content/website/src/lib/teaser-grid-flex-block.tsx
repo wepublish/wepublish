@@ -1,6 +1,12 @@
 import {css, styled} from '@mui/material'
-import {Block, TeaserGridFlexBlock as TeaserGridFlexBlockType} from '@wepublish/website/api'
+import {
+  Block,
+  FlexTeaser,
+  TeaserGridFlexBlock as TeaserGridFlexBlockType
+} from '@wepublish/website/api'
 import {BuilderTeaserGridFlexBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {ascend, sortWith} from 'ramda'
+import {useMemo} from 'react'
 
 export const isTeaserGridFlexBlock = (block: Block): block is TeaserGridFlexBlockType =>
   block.__typename === 'TeaserGridFlexBlock'
@@ -22,6 +28,11 @@ export const TeaserGridFlexBlockWrapper = styled('div')`
   `}
 `
 
+const sortTeasersByYAndX = sortWith<FlexTeaser>([
+  ascend(teaser => teaser.alignment.y),
+  ascend(teaser => teaser.alignment.x)
+])
+
 export const TeaserGridFlexBlock = ({
   flexTeasers,
   showLead,
@@ -31,9 +42,14 @@ export const TeaserGridFlexBlock = ({
     blocks: {Teaser}
   } = useWebsiteBuilder()
 
+  const sortedTeasers = useMemo(
+    () => (flexTeasers ? sortTeasersByYAndX(flexTeasers) : []),
+    [flexTeasers]
+  )
+
   return (
     <TeaserGridFlexBlockWrapper className={className}>
-      {flexTeasers?.map((teaser, index) => (
+      {sortedTeasers.map((teaser, index) => (
         <Teaser key={index} showLead={showLead} {...teaser} />
       ))}
     </TeaserGridFlexBlockWrapper>
