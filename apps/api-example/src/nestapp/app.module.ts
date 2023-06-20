@@ -48,7 +48,21 @@ import {JobsModule} from '@wepublish/jobs'
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({
         defaultFromAddress: config.getOrThrow('DEFAULT_FROM_ADDRESS'),
-        defaultReplyToAddress: config.getOrThrow('DEFAULT_REPLY_TO_ADDRESS')
+        defaultReplyToAddress: config.getOrThrow('DEFAULT_REPLY_TO_ADDRESS'),
+        mailProvider: new MailgunMailProvider({
+          id: 'mailgun',
+          name: 'Mailgun',
+          fromAddress: config.getOrThrow('DEFAULT_FROM_ADDRESS'),
+          webhookEndpointSecret: config.getOrThrow('MAILGUN_WEBHOOK_SECRET'),
+          baseDomain: config.getOrThrow('MAILGUN_BASE_DOMAIN'),
+          mailDomain: config.getOrThrow('MAILGUN_MAIL_DOMAIN'),
+          apiKey: config.getOrThrow('MAILGUN_API_KEY'),
+          incomingRequestHandler: bodyParser.json(),
+          mailgunClient: new Mailgun(FormData).client({
+            username: 'api',
+            key: config.get('MAILGUN_API_KEY', 'dev-api-key')
+          })
+        })
       }),
       inject: [ConfigService]
     }),
@@ -72,24 +86,6 @@ import {JobsModule} from '@wepublish/jobs'
   ],
   exports: [BaseMailProvider, PaymentProviders, MediaAdapterService],
   providers: [
-    {
-      provide: BaseMailProvider,
-      useFactory: () =>
-        new MailgunMailProvider({
-          id: 'mailgun',
-          name: 'Mailgun',
-          fromAddress: 'dev@wepublish.ch',
-          webhookEndpointSecret: process.env.MAILGUN_WEBHOOK_SECRET!,
-          baseDomain: process.env.MAILGUN_BASE_DOMAIN!,
-          mailDomain: process.env.MAILGUN_MAIL_DOMAIN!,
-          apiKey: process.env.MAILGUN_API_KEY!,
-          incomingRequestHandler: bodyParser.json(),
-          mailgunClient: new Mailgun(FormData).client({
-            username: 'api',
-            key: process.env.MAILGUN_API_KEY || 'dev-api-key'
-          })
-        })
-    },
     {
       provide: PaymentProviders,
       useFactory: (prisma: PrismaService) => {

@@ -1,7 +1,6 @@
 import {DynamicModule, Module, Provider} from '@nestjs/common'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {MailContext} from './mail-context'
-import {BaseMailProvider} from './mail-provider/base-mail-provider'
 import {
   MAILS_MODULE_OPTIONS,
   MailsModuleAsyncOptions,
@@ -31,9 +30,8 @@ export class MailsModule {
       {
         provide: MailContext,
         useFactory: (
-          {defaultFromAddress, defaultReplyToAddress}: MailsModuleOptions,
-          prisma: PrismaClient,
-          mailProvider: BaseMailProvider
+          {defaultFromAddress, defaultReplyToAddress, mailProvider}: MailsModuleOptions,
+          prisma: PrismaClient
         ) =>
           new MailContext({
             prisma,
@@ -41,7 +39,7 @@ export class MailsModule {
             defaultFromAddress,
             defaultReplyToAddress
           }),
-        inject: [MAILS_MODULE_OPTIONS, PrismaClient, BaseMailProvider]
+        inject: [MAILS_MODULE_OPTIONS, PrismaClient]
       }
     ]
   }
