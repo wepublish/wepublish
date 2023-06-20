@@ -6,10 +6,16 @@ import {Reducer, useReducer} from 'react'
 
 const Filter = styled('div')`
   display: grid;
-  grid-template-columns: 250px 250px;
+  grid-template-columns: minmax(150px, 250px);
   align-items: center;
   gap: ${({theme}) => theme.spacing(2)};
   margin-bottom: ${({theme}) => theme.spacing(3)};
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('sm')} {
+      grid-template-columns: 1fr 1fr;
+    }
+  `}
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
