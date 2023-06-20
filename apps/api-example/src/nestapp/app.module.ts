@@ -12,13 +12,12 @@ import {
   KarmaMediaAdapter
 } from '@wepublish/api'
 import {ScheduleModule} from '@nestjs/schedule'
-import {MailsModule, BaseMailProvider, MailgunMailProvider} from '@wepublish/mails'
-import process from 'process'
+import {MailsModule, MailgunMailProvider} from '@wepublish/mails'
 import bodyParser from 'body-parser'
 import Mailgun from 'mailgun.js'
 import FormData from 'form-data'
 import {
-  PaymentProviders,
+  PaymentProvider,
   PaymentsModule,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
@@ -66,68 +65,48 @@ import {JobsModule} from '@wepublish/jobs'
       }),
       inject: [ConfigService]
     }),
-    PaymentsModule,
-    ApiModule,
-    MembershipModule,
-    DashboardModule,
-    AuthenticationModule,
-    PermissionModule,
-    ConsentModule,
-    SettingModule,
-    ScheduleModule.forRoot(),
-    JobsModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: (config: ConfigService) => ({
-        databaseUrl: config.getOrThrow('DATABASE_URL')
-      }),
-      inject: [ConfigService]
-    }),
-    ConfigModule.forRoot()
-  ],
-  exports: [BaseMailProvider, PaymentProviders, MediaAdapterService],
-  providers: [
-    {
-      provide: PaymentProviders,
-      useFactory: (prisma: PrismaService) => {
-        const paymentProviders = []
+    PaymentsModule.registerAsync({
+      imports: [ConfigModule, PrismaModule],
+      useFactory: (config: ConfigService, prisma: PrismaService) => {
+        const paymentProviders: PaymentProvider[] = []
 
         if (
-          process.env.STRIPE_SECRET_KEY &&
-          process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET &&
-          process.env.STRIPE_WEBHOOK_SECRET
+          config.get('STRIPE_SECRET_KEY') &&
+          config.get('STRIPE_CHECKOUT_WEBHOOK_SECRET') &&
+          config.get('STRIPE_WEBHOOK_SECRET')
         ) {
           paymentProviders.push(
             new StripeCheckoutPaymentProvider({
               id: 'stripe_checkout',
               name: 'Stripe Checkout',
               offSessionPayments: false,
-              secretKey: process.env.STRIPE_SECRET_KEY,
-              webhookEndpointSecret: process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET,
+              secretKey: config.get('STRIPE_SECRET_KEY'),
+              webhookEndpointSecret: config.get('STRIPE_CHECKOUT_WEBHOOK_SECRET'),
               incomingRequestHandler: bodyParser.raw({type: 'application/json'})
             }),
             new StripePaymentProvider({
               id: 'stripe',
               name: 'Stripe',
               offSessionPayments: true,
-              secretKey: process.env.STRIPE_SECRET_KEY,
-              webhookEndpointSecret: process.env.STRIPE_WEBHOOK_SECRET,
+              secretKey: config.get('STRIPE_SECRET_KEY'),
+              webhookEndpointSecret: config.get('STRIPE_WEBHOOK_SECRET'),
               incomingRequestHandler: bodyParser.raw({type: 'application/json'})
             })
           )
         }
 
         if (
-          process.env.PAYREXX_INSTANCE_NAME &&
-          process.env.PAYREXX_API_SECRET &&
-          process.env.PAYREXX_WEBHOOK_SECRET
+          config.get('PAYREXX_INSTANCE_NAME') &&
+          config.get('PAYREXX_API_SECRET') &&
+          config.get('PAYREXX_WEBHOOK_SECRET')
         ) {
           paymentProviders.push(
             new PayrexxPaymentProvider({
               id: 'payrexx',
               name: 'Payrexx',
               offSessionPayments: false,
-              instanceName: process.env.PAYREXX_INSTANCE_NAME,
-              instanceAPISecret: process.env.PAYREXX_API_SECRET,
+              instanceName: config.get('PAYREXX_INSTANCE_NAME'),
+              instanceAPISecret: config.get('PAYREXX_API_SECRET'),
               psp: [0, 15, 17, 2, 3, 36],
               pm: [
                 'postfinance_card',
@@ -147,18 +126,37 @@ import {JobsModule} from '@wepublish/jobs'
               id: 'payrexx-subscription',
               name: 'Payrexx Subscription',
               offSessionPayments: false,
-              instanceName: process.env.PAYREXX_INSTANCE_NAME,
-              instanceAPISecret: process.env.PAYREXX_API_SECRET,
+              instanceName: config.get('PAYREXX_INSTANCE_NAME'),
+              instanceAPISecret: config.get('PAYREXX_API_SECRET'),
               incomingRequestHandler: bodyParser.json(),
-              webhookSecret: process.env.PAYREXX_WEBHOOK_SECRET,
+              webhookSecret: config.get('PAYREXX_WEBHOOK_SECRET'),
               prisma
             })
           )
         }
-        return paymentProviders
+        return {paymentProviders}
       },
-      inject: [PrismaService]
-    },
+      inject: [ConfigService, PrismaService]
+    }),
+    ApiModule,
+    MembershipModule,
+    DashboardModule,
+    AuthenticationModule,
+    PermissionModule,
+    ConsentModule,
+    SettingModule,
+    ScheduleModule.forRoot(),
+    JobsModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => ({
+        databaseUrl: config.getOrThrow('DATABASE_URL')
+      }),
+      inject: [ConfigService]
+    }),
+    ConfigModule.forRoot()
+  ],
+  exports: [MediaAdapterService],
+  providers: [
     {
       provide: MediaAdapterService,
       useFactory: (config: ConfigService) => {
