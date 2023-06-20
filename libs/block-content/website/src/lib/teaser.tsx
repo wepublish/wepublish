@@ -101,7 +101,8 @@ const teaserImage = (teaser: TeaserType) => {
 
 const teaserImageStyles = css`
   object-fit: cover;
-  height: 100%;
+  width: 100%;
+  height: 300px;
 `
 
 const TeaserTitleWrapper = styled('header')``
