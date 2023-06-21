@@ -8,7 +8,7 @@ import {
   EventsProvider
 } from './import/events-import.service'
 import {AgendaBaselService} from './import/agenda-basel.service'
-import {HttpModule} from '@nestjs/axios'
+import {ImageFetcherModule} from '@wepublish/image/api'
 
 export type EventsImportOptionsFactory = {
   createEventProviders(): Promise<EventsProvider[]> | EventsProvider[]
@@ -22,14 +22,7 @@ export interface EventsImportAsyncOptions extends Pick<ModuleMetadata, 'imports'
 }
 
 @Module({
-  imports: [
-    PrismaModule,
-    CacheModule.register(),
-    HttpModule.register({
-      timeout: 5000,
-      maxRedirects: 5
-    })
-  ],
+  imports: [PrismaModule, CacheModule.register(), ImageFetcherModule],
   providers: [EventsImportResolver, EventsImportService, AgendaBaselService],
   exports: [AgendaBaselService]
 })

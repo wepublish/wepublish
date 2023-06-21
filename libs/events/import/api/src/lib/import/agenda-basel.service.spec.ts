@@ -68,7 +68,7 @@ describe('AgendaBaselService', () => {
     createdAt: new Date(),
     modifiedAt: new Date(),
     name: 'Event 1',
-    description: {} as Node,
+    description: [],
     status: EventStatus.Scheduled,
     location: '',
     externalSourceId: '',
@@ -124,7 +124,7 @@ describe('AgendaBaselService', () => {
 
       const createdEvent = {
         name: event.name,
-        description: event.description as unknown as any,
+        description: event.description,
         location: event.location,
         startsAt: event.startsAt,
         imageId: null,
