@@ -12,6 +12,5 @@ export default {
     '^.+\\.[tj]s$': 'ts-jest'
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../../coverage/libs/events/import',
-  globalSetup: '<rootDir>/setup-database.js'
+  coverageDirectory: '../../../../coverage/libs/events/import'
 }
