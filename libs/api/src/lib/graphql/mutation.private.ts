@@ -118,7 +118,7 @@ import {
   deletePollExternalVoteSource,
   updatePoll
 } from './poll/poll.private-mutation'
-import {GraphQLRichText} from './richText'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {
   createJWTSession,

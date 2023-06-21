@@ -1,6 +1,6 @@
 import {MemberPlan, MemberPlanSort} from '../db/memberPlan'
 
-import {GraphQLRichText} from './richText'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 import {GraphQLImage} from './image'
 import {Context} from '../context'
 import {createProxyingResolver} from '../utility'

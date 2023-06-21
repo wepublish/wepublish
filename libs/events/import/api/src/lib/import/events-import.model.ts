@@ -1,5 +1,5 @@
 import {Field, ObjectType, InputType, registerEnumType, Int} from '@nestjs/graphql'
-import GraphQLJSON from 'graphql-type-json'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 import {Node} from 'slate'
 
 export enum ImportedEventSort {
@@ -53,8 +53,8 @@ export class Event {
   @Field()
   name!: string
 
-  @Field(type => GraphQLJSON)
-  description?: Node
+  @Field(type => GraphQLRichText)
+  description?: Node[]
 
   @Field(type => EventStatus)
   status!: EventStatus

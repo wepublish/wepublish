@@ -3,7 +3,7 @@ import {
   PaymentPeriodicity,
   AvailablePaymentMethod
 } from '@prisma/client'
-import {RichTextNode} from '../graphql/richText'
+import {RichTextNode} from '@wepublish/richtext/api'
 
 export const AllPaymentPeriodicity: PaymentPeriodicity[] = [
   PaymentPeriodicity.monthly,

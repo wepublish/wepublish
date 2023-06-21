@@ -17,8 +17,7 @@ export type Scalars = {
   Float: number
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: string
-  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-  JSON: any
+  RichText: Node[]
 }
 
 export type Consent = {
@@ -71,7 +70,7 @@ export type DashboardSubscription = {
 export type Event = {
   __typename?: 'Event'
   createdAt: Scalars['DateTime']
-  description: Scalars['JSON']
+  description: Scalars['RichText']
   endsAt?: Maybe<Scalars['DateTime']>
   externalSourceId: Scalars['String']
   externalSourceName: Scalars['String']

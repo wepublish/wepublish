@@ -14,7 +14,7 @@ import {
   SettingModule
 } from '@wepublish/api'
 import {ApiModule} from '@wepublish/nest-modules'
-import GraphQLJSON from 'graphql-type-json'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 import {URL} from 'url'
 import {JobsModule} from '@wepublish/jobs'
 
@@ -23,7 +23,7 @@ import {JobsModule} from '@wepublish/jobs'
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      resolvers: {JSON: GraphQLJSON},
+      resolvers: {RichText: GraphQLRichText},
       autoSchemaFile: './apps/api-example/schema-v2.graphql',
       sortSchema: true,
       path: 'v2',
