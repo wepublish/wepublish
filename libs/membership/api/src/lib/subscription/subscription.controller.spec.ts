@@ -29,6 +29,7 @@ import {clearDatabase, clearFullDatabase} from '../../prisma-utils'
 import {add, sub} from 'date-fns'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {PaymentsService} from '@wepublish/payments'
+import {registerMailsModule, registerPaymentsModule} from '../testing/module-registrars'
 
 describe('SubscriptionController', () => {
   const prismaClient = new PrismaClient()
@@ -319,13 +320,13 @@ describe('SubscriptionController', () => {
   beforeEach(async () => {
     await nock.disableNetConnect()
     const module: TestingModule = await Test.createTestingModule({
-      imports: [forwardRef(() => PrismaModule.forTest(prismaClient))],
-      providers: [
-        PrismaService,
-        SubscriptionFlowController,
-        PeriodicJobController,
-        SubscriptionController
-      ]
+      imports: [
+        forwardRef(() => PrismaModule.forTest(prismaClient)),
+        registerMailsModule(),
+        registerPaymentsModule()
+      ],
+
+      providers: [SubscriptionFlowController, PeriodicJobController, SubscriptionController]
     }).compile()
     const paymentsService = module.get<PaymentsService>(PaymentsService)
 

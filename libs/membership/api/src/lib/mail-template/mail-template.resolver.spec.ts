@@ -11,6 +11,7 @@ import {PrismaModule} from '@wepublish/nest-modules'
 import {APP_GUARD} from '@nestjs/core'
 import {PermissionsGuard} from '@wepublish/permissions/api'
 import request from 'supertest'
+import {registerMailsModule, registerPaymentsModule} from '../testing/module-registrars'
 
 const mailTemplatesQuery = `
   query MailTemplates {
@@ -79,11 +80,12 @@ const syncServiceMock = {
       autoSchemaFile: true,
       path: '/'
     }),
-    PrismaModule
+    PrismaModule,
+    registerMailsModule(),
+    registerPaymentsModule()
   ],
   providers: [
     PrismaService,
-    MailContext,
     MailTemplatesResolver,
     MailTemplateSyncService,
     {

@@ -20,6 +20,7 @@ import {
 } from '../../__generated__/fabbrica'
 import {PermissionsGuard} from '@wepublish/permissions/api'
 import {clearDatabase} from '../../prisma-utils'
+import {registerMailsModule, registerPaymentsModule} from '../testing/module-registrars'
 
 @Injectable()
 export class TestPermissionsGuard implements CanActivate {
@@ -100,7 +101,9 @@ const paymentMethodsQuery = `
       autoSchemaFile: true,
       path: '/'
     }),
-    PrismaModule
+    PrismaModule,
+    registerMailsModule(),
+    registerPaymentsModule()
   ],
   providers: [
     SubscriptionFlowResolver,
@@ -124,7 +127,9 @@ export class AppUnauthenticatedModule {}
       autoSchemaFile: true,
       path: '/'
     }),
-    PrismaModule
+    PrismaModule,
+    registerMailsModule(),
+    registerPaymentsModule()
   ],
   providers: [
     SubscriptionFlowResolver,
@@ -360,10 +365,13 @@ describe('Subscription Flow Resolver', () => {
 
     beforeEach(async () => {
       const module: TestingModule = await Test.createTestingModule({
-        imports: [PrismaModule.forTest(prismaClient)],
+        imports: [
+          PrismaModule.forTest(prismaClient),
+          registerMailsModule(),
+          registerPaymentsModule()
+        ],
         providers: [
           PeriodicJobController,
-          PrismaService,
           SubscriptionController,
           SubscriptionFlowController,
           SubscriptionFlowHelper,

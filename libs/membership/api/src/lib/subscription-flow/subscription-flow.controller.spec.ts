@@ -13,6 +13,7 @@ import {
   defineSubscriptionFlowFactory,
   definePaymentMethodFactory
 } from '../../__generated__/fabbrica'
+import {registerMailsModule, registerPaymentsModule} from '../testing/module-registrars'
 
 describe('SubscriptionFlowController', () => {
   let controller: SubscriptionFlowController
@@ -31,7 +32,11 @@ describe('SubscriptionFlowController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PrismaModule.forTest(prismaClient)],
+      imports: [
+        PrismaModule.forTest(prismaClient),
+        registerMailsModule(),
+        registerPaymentsModule()
+      ],
       providers: [
         PrismaService,
         SubscriptionFlowController,

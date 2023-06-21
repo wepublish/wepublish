@@ -12,6 +12,7 @@ import {
   defineUserFactory,
   definePaymentMethodFactory
 } from '../../__generated__/fabbrica'
+import {registerPaymentsModule} from '../testing/module-registrars'
 
 describe('SubscriptionFlowHelper', () => {
   let helper: SubscriptionFlowHelper
@@ -41,7 +42,7 @@ describe('SubscriptionFlowHelper', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PrismaModule.forTest(prismaClient)],
+      imports: [PrismaModule.forTest(prismaClient), registerPaymentsModule()],
       providers: [PrismaService, SubscriptionFlowHelper]
     }).compile()
 
