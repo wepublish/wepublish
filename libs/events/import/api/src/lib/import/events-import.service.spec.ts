@@ -49,7 +49,7 @@ describe('EventsImportService', () => {
     createdAt: new Date(),
     modifiedAt: new Date(),
     name: 'Event 1',
-    description: {} as Node,
+    description: {} as Node[],
     status: EventStatus.Scheduled,
     location: '',
     externalSourceId: '',

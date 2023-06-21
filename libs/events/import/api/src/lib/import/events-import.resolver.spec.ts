@@ -17,7 +17,7 @@ export const mockImportableEvents: Event[] = [
     createdAt: new Date(),
     modifiedAt: new Date(),
     name: 'some name',
-    description: htmlToSlate('<p>some description</p>') as unknown as Node,
+    description: htmlToSlate('<p>some description</p>') as unknown as Node[],
     status: EventStatus.Scheduled,
     location: 'some location',
     imageUrl: 'some image url',

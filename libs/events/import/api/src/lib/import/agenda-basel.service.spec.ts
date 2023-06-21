@@ -6,7 +6,7 @@ import {AgendaBaselService} from './agenda-basel.service'
 import {Event, EventStatus, ImportedEventSort} from './events-import.model'
 import {Cache} from 'cache-manager'
 import {HttpService} from '@nestjs/axios'
-import {MediaAdapterService} from '@wepublish/image/api'
+import {ImageFetcherService, MediaAdapterService} from '@wepublish/image/api'
 
 describe('AgendaBaselService', () => {
   let service: AgendaBaselService
@@ -44,6 +44,12 @@ describe('AgendaBaselService', () => {
             image: {
               create: jest.fn()
             }
+          }
+        },
+        {
+          provide: ImageFetcherService,
+          useValue: {
+            fetch: jest.fn()
           }
         },
         {
