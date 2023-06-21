@@ -898,7 +898,6 @@ describe('SubscriptionController', () => {
         state: 'submitted',
         intentID: 'unknown_error',
         intentSecret: '',
-        intentData: '{"id":"unknown_error","error":{},"state":"requiresUserAction"}',
         paymentData: null
       }
     })
