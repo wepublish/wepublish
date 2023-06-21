@@ -5,7 +5,6 @@ import {EVENT_IMPORT_PROVIDER} from './events-import.service'
 import {AgendaBaselService} from './agenda-basel.service'
 import {Event, EventStatus, ImportedEventSort} from './events-import.model'
 import {Cache} from 'cache-manager'
-import {Node} from 'slate'
 import {HttpService} from '@nestjs/axios'
 import {MediaAdapterService} from '@wepublish/image/api'
 
@@ -18,7 +17,6 @@ describe('AgendaBaselService', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        // EventsImportService,
         AgendaBaselService,
         {
           provide: EVENT_IMPORT_PROVIDER,
