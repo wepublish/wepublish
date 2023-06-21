@@ -1,0 +1,33 @@
+import {Meta, Story, Canvas, CodeOrSourceMdx} from '@storybook/blocks'
+import * as stories from './event-container.stories'
+import LinkTo from '@storybook/addon-links/react'
+
+<Meta of={stories} />
+
+# Event Container
+
+> The Event Container gets an event by id and renders it as an <LinkTo kind="Components/Event" story="Default">Event component</LinkTo>.
+
+## Override `Event`
+
+To replace the `Event` component that is being rendered by a custom component, one can override it like this:
+
+<CodeOrSourceMdx>
+```typescript
+import {WebsiteBuilderProvider, BuilderEventProps} from '@wepublish/website'
+
+const MyEvent = (props: BuilderEventProps) => <div>My Event</div>
+
+export default function () {
+  return (
+    <WebsiteBuilderProvider Event={MyEvent}>
+      <EventContainer id="123-123-123" />
+    </WebsiteBuilderProvider>
+  )
+}
+```
+</CodeOrSourceMdx>
+
+<Canvas>
+  <Story of={stories.Default} />
+</Canvas>

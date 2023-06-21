@@ -18,10 +18,19 @@ import {
   useUserQuery
 } from '@wepublish/editor/api'
 import {
+  ALL_PAYMENT_PERIODICITIES,
+  createCheckedPermissionComponent,
+  CurrencyInput,
+  DescriptionList,
+  DescriptionListItem,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  TableWrapper
+  PermissionControl,
+  TableWrapper,
+  toggleRequiredLabel,
+  useAuthorisation,
+  UserSearch
 } from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -45,18 +54,8 @@ import {
 } from 'rsuite'
 import FormControlLabel from 'rsuite/FormControlLabel'
 
-import {CurrencyInput} from '../atoms/currencyInput'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {
-  createCheckedPermissionComponent,
-  PermissionControl,
-  useAuthorisation
-} from '../atoms/permissionControl'
-import {UserSearch} from '../atoms/searchAndFilter/userSearch'
 import {InvoiceListPanel} from '../panel/invoiceListPanel'
 import {UserSubscriptionDeactivatePanel} from '../panel/userSubscriptionDeactivatePanel'
-import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {ALL_PAYMENT_PERIODICITIES} from '../utility'
 
 const {Group, ControlLabel, Control, HelpText} = RForm
 

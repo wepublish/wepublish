@@ -9,12 +9,13 @@
       "options": {
         "commands": [
           {
-            "command": "npx nx browser editor"
+            "command": "npx nx server editor"
           },
           {
-            "command": "npx nx server editor"
+            "command": "npx nx browser editor"
           }
-        ]
+        ],
+        "parallel": false
       }
     },
     "serve-ssr": {
@@ -49,6 +50,12 @@
       "options": {
         "jestConfig": "apps/editor/jest.config.ts",
         "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     },
     "browser": {

@@ -9,6 +9,19 @@ import {
   useUserQuery,
   useUserRoleListQuery
 } from '@wepublish/editor/api'
+import {
+  ChooseEditImage,
+  createCheckedPermissionComponent,
+  EditUserPassword,
+  generateID,
+  ImageSelectPanel,
+  ListInput,
+  ListValue,
+  ModelTitle,
+  toggleRequiredLabel,
+  useAuthorisation,
+  UserSubscriptionsList
+} from '@wepublish/ui/editor'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useLocation, useNavigate, useParams} from 'react-router-dom'
@@ -17,25 +30,15 @@ import {
   Col,
   Drawer,
   Form,
-  Grid as RGrid,
   Input,
   Message,
-  Panel as RPanel,
+  Grid as RGrid,
   Row,
+  Panel as RPanel,
+  Toggle as RToggle,
   Schema,
-  toaster,
-  Toggle as RToggle
+  toaster
 } from 'rsuite'
-
-import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {ListInput, ListValue} from '../atoms/listInput'
-import {ModelTitle} from '../atoms/modelTitle'
-import {createCheckedPermissionComponent, useAuthorisation} from '../atoms/permissionControl'
-import {EditUserPassword} from '../atoms/user/editUserPassword'
-import {UserSubscriptionsList} from '../atoms/user/userSubscriptionsList'
-import {ImageSelectPanel} from '../panel/imageSelectPanel'
-import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {generateID} from '../utility'
 
 const Grid = styled(RGrid)`
   padding-right: 0px;

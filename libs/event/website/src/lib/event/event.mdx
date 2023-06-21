@@ -1,0 +1,28 @@
+import {Meta, Story, Canvas, CodeOrSourceMdx} from '@storybook/blocks'
+import * as stories from './event.stories'
+
+<Meta of={stories} />
+
+# Event
+
+To replace the `Event` component with a custom component, one can override it like this:
+
+<CodeOrSourceMdx>
+```typescript
+import {WebsiteBuilderProvider, BuilderEventProps} from '@wepublish/website'
+
+const MyEvent = (props: BuilderEventProps) => <div>My Event</div>
+
+export default function () {
+  return (
+    <WebsiteBuilderProvider Event={MyEvent}>
+      <EventContainer id="123-123-123" />
+    </WebsiteBuilderProvider>
+  )
+}
+```
+</CodeOrSourceMdx>
+
+<Canvas>
+  <Story of={stories.Default} />
+</Canvas>

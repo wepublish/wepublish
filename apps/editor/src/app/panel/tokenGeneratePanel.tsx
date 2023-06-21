@@ -1,11 +1,9 @@
 import styled from '@emotion/styled'
 import {TokenListDocument, useCreateTokenMutation} from '@wepublish/editor/api'
+import {createCheckedPermissionComponent, getOperationNameFromDocument} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Input, Message as RMessage, Panel, toaster} from 'rsuite'
-
-import {createCheckedPermissionComponent} from '../atoms/permissionControl'
-import {getOperationNameFromDocument} from '../utility'
 
 const Message = styled(RMessage)`
   margin-top: 5px;

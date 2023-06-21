@@ -1,10 +1,8 @@
 import styled from '@emotion/styled'
 import {InvoiceFragment, useMeQuery} from '@wepublish/editor/api'
+import {createCheckedPermissionComponent, Invoice} from '@wepublish/ui/editor'
 import {useTranslation} from 'react-i18next'
 import {Drawer, Message} from 'rsuite'
-
-import {Invoice} from '../atoms/invoice'
-import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 const InvoiceWrapper = styled.div`
   margin-bottom: 10px;

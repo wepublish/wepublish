@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
 import {useArticlePreviewLinkQuery} from '@wepublish/editor/api'
+import {createCheckedPermissionComponent} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Form, Message as RMessage, Modal, Slider, toaster} from 'rsuite'
-
-import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 
 const Message = styled(RMessage)`
   margin-bottom: 20px;
