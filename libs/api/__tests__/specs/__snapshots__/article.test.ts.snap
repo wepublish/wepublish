@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Articles can be created/edited/deleted: can be created 1`] = `
-Object {
-  "data": Object {
-    "createArticle": Object {
-      "draft": Object {
+{
+  "data": {
+    "createArticle": {
+      "draft": {
         "publishedAt": null,
         "revision": 0,
         "updatedAt": null,
@@ -20,19 +20,19 @@ Object {
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
 exports[`Articles can be created/edited/deleted: can be deleted 1`] = `
-Object {
-  "data": Object {
-    "deleteArticle": Object {
-      "draft": Object {
+{
+  "data": {
+    "deleteArticle": {
+      "draft": {
         "publishedAt": null,
         "revision": 0,
         "updatedAt": null,
@@ -48,25 +48,25 @@ Object {
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
 exports[`Articles can be created/edited/deleted: can be published 1`] = `
-Object {
-  "data": Object {
-    "publishArticle": Object {
+{
+  "data": {
+    "publishArticle": {
       "draft": null,
       "id": Any<String>,
       "latest": ObjectContaining {
         "slug": Any<String>,
       },
       "pending": null,
-      "published": Object {
+      "published": {
         "publishedAt": 2020-11-25T23:55:35.000Z,
         "revision": 0,
         "updatedAt": 2020-11-25T23:55:35.000Z,
@@ -76,18 +76,100 @@ Object {
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
+    },
+  },
+}
+`;
+
+exports[`Articles can be created/edited/deleted: can be published in the future 1`] = `
+{
+  "data": {
+    "publishArticle": {
+      "draft": null,
+      "id": Any<String>,
+      "latest": ObjectContaining {
+        "slug": Any<String>,
+      },
+      "pending": {
+        "publishAt": Any<Date>,
+        "revision": 0,
+      },
+      "published": null,
+      "shared": false,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": {
+    "headers": Headers {
+      Symbol(map): {},
+    },
+  },
+}
+`;
+
+exports[`Articles can be created/edited/deleted: can be published twice in the future with authorIds 1`] = `
+{
+  "data": {
+    "publishArticle": {
+      "draft": null,
+      "id": Any<String>,
+      "latest": ObjectContaining {
+        "slug": Any<String>,
+      },
+      "pending": {
+        "publishAt": Any<Date>,
+        "revision": 1,
+      },
+      "published": null,
+      "shared": false,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": {
+    "headers": Headers {
+      Symbol(map): {},
+    },
+  },
+}
+`;
+
+exports[`Articles can be created/edited/deleted: can be published twice with authorIds 1`] = `
+{
+  "data": {
+    "publishArticle": {
+      "draft": null,
+      "id": Any<String>,
+      "latest": ObjectContaining {
+        "slug": Any<String>,
+      },
+      "pending": null,
+      "published": {
+        "publishedAt": 2020-12-25T23:55:35.000Z,
+        "revision": 1,
+        "updatedAt": 2020-12-25T23:55:35.000Z,
+      },
+      "shared": false,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": {
+    "headers": Headers {
+      Symbol(map): {},
     },
   },
 }
 `;
 
 exports[`Articles can be created/edited/deleted: can be read by id 1`] = `
-Object {
-  "data": Object {
-    "article": Object {
+{
+  "data": {
+    "article": {
       "id": Any<String>,
       "latest": ObjectContaining {
         "slug": Any<String>,
@@ -99,19 +181,19 @@ Object {
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
 exports[`Articles can be created/edited/deleted: can be unpublished 1`] = `
-Object {
-  "data": Object {
-    "unpublishArticle": Object {
-      "draft": Object {
+{
+  "data": {
+    "unpublishArticle": {
+      "draft": {
         "publishedAt": null,
         "revision": 0,
         "updatedAt": null,
@@ -127,19 +209,19 @@ Object {
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
 exports[`Articles can be created/edited/deleted: can be updated 1`] = `
-Object {
-  "data": Object {
-    "updateArticle": Object {
-      "draft": Object {
+{
+  "data": {
+    "updateArticle": {
+      "draft": {
         "publishedAt": null,
         "revision": 0,
         "updatedAt": null,
@@ -155,9 +237,9 @@ Object {
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }

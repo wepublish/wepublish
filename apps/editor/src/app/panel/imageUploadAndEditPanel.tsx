@@ -1,7 +1,6 @@
+import {ImageEditPanel, ImageMetaData, readImageMetaData} from '@wepublish/ui/editor'
 import {useState} from 'react'
 
-import {ImageMetaData, readImageMetaData} from '../atoms/imageMetaData'
-import {ImageEditPanel} from './imageEditPanel'
 import {ImageUploadPanel} from './imageUploadPanel'
 
 export interface ImageUploadAndEditPanelProps {

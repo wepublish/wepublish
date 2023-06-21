@@ -278,7 +278,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLPublicPageConnection),
       args: {
         cursor: {type: GraphQLID},
-        take: {type: GraphQLInt},
+        take: {type: GraphQLInt, defaultValue: 10},
         skip: {type: GraphQLInt, defaultValue: 0},
         filter: {type: GraphQLPublishedPageFilter},
         sort: {type: GraphQLPublishedPageSort, defaultValue: PageSort.PublishedAt},

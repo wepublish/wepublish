@@ -1,12 +1,15 @@
+import {
+  createCheckedPermissionComponent,
+  DateTimePicker,
+  DescriptionList,
+  DescriptionListItem,
+  DescriptionListItemWithMessage,
+  InfoColor
+} from '@wepublish/ui/editor'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Checkbox, Message, Modal} from 'rsuite'
 
-import {DateTimePicker} from '../atoms/dateTimePicker'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {DescriptionListItemWithMessage} from '../atoms/descriptionListwithMessage'
-import {InfoColor} from '../atoms/infoMessage'
-import {createCheckedPermissionComponent} from '../atoms/permissionControl'
 import {PageMetadata} from './pageMetadataPanel'
 
 export interface PublishPagePanelProps {

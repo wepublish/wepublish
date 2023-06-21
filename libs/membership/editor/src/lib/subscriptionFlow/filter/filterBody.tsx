@@ -8,10 +8,10 @@ import {
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput
 } from '@wepublish/editor/api-v2'
-import {MdAdd} from 'react-icons/all'
+import {MdAdd} from 'react-icons/md'
 import {FullMemberPlanFragment} from '@wepublish/editor/api'
 import {useTranslation} from 'react-i18next'
-import {useAuthorisation} from 'app/atoms/permissionControl'
+import {useAuthorisation} from '@wepublish/ui/editor'
 import {GraphqlClientContext} from '../graphqlClientContext'
 
 interface FilterBodyProps {

@@ -7,9 +7,18 @@ import {
   useCommentListQuery
 } from '@wepublish/editor/api'
 import {
+  CommentStateDropdown,
+  createCheckedPermissionComponent,
+  CreateCommentBtn,
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  IconButtonTooltip,
   ListViewContainer,
   ListViewFilterArea,
   ListViewHeader,
+  mapTableSortTypeToGraphQLSortOrder,
+  PermissionControl,
+  RichTextBlock,
   Table,
   TableWrapper
 } from '@wepublish/ui/editor'
@@ -19,17 +28,6 @@ import {MdEdit} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {IconButton, Pagination, Table as RTable, Toggle} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
-
-import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
-import {CreateCommentBtn} from '../../atoms/comment/createCommentBtn'
-import {IconButtonTooltip} from '../../atoms/iconButtonTooltip'
-import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
-import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
-import {
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
-  mapTableSortTypeToGraphQLSortOrder
-} from '../../utility'
 
 const {Column, HeaderCell, Cell} = RTable
 

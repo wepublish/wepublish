@@ -8,6 +8,7 @@ import {INestApplication} from '@nestjs/common'
 import {APP_GUARD} from '@nestjs/core'
 import {PermissionsGuard} from '@wepublish/permissions/api'
 import request from 'supertest'
+import {registerMailsModule, registerPaymentsModule} from '../testing/module-registrars'
 
 const mailTemplatesQuery = `
   query MailTemplates {
@@ -75,6 +76,7 @@ describe('MailTemplatesResolver', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [registerMailsModule(), registerPaymentsModule()],
       providers: [
         MailTemplatesResolver,
         {provide: PrismaService, useValue: prismaServiceMock},

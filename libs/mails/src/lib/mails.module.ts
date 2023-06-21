@@ -1,50 +1,46 @@
-import {DynamicModule, Module} from '@nestjs/common'
-import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
+import {DynamicModule, Module, Provider} from '@nestjs/common'
+import {PrismaModule} from '@wepublish/nest-modules'
 import {MailContext} from './mail-context'
-import {BaseMailProvider} from './mail-provider/base-mail-provider'
-
-type MailsModuleProps = {
-  defaultFromAddress: string
-  defaultReplyToAddress: string
-}
+import {
+  MAILS_MODULE_OPTIONS,
+  MailsModuleAsyncOptions,
+  MailsModuleOptions
+} from './mails-module-options'
+import {PrismaClient} from '@prisma/client'
+import {createAsyncOptionsProvider} from '@wepublish/utils'
 
 @Module({
   imports: [PrismaModule],
-  providers: [
-    {
-      provide: MailContext,
-      useFactory: (prisma: PrismaService, mailProvider: BaseMailProvider) => {
-        return new MailContext({
-          prisma,
-          mailProvider,
-          defaultFromAddress: 'ff',
-          defaultReplyToAddress: 'ff'
-        })
-      },
-      inject: [PrismaService, BaseMailProvider]
-    }
-  ],
+  providers: [],
   exports: [MailContext]
 })
 export class MailsModule {
-  static forRoot({defaultFromAddress, defaultReplyToAddress}: MailsModuleProps): DynamicModule {
+  static registerAsync(options: MailsModuleAsyncOptions): DynamicModule {
     return {
       module: MailsModule,
-      providers: [
-        {
-          provide: MailContext,
-          useFactory: (prisma: PrismaService, mailProvider: BaseMailProvider) => {
-            return new MailContext({
-              prisma,
-              mailProvider,
-              defaultFromAddress,
-              defaultReplyToAddress
-            })
-          },
-          inject: [PrismaService, BaseMailProvider]
-        }
-      ],
-      exports: [MailContext]
+      global: options.global,
+      imports: options.imports || [],
+      providers: this.createAsyncProviders(options)
     }
+  }
+
+  private static createAsyncProviders(options: MailsModuleAsyncOptions): Provider[] {
+    return [
+      createAsyncOptionsProvider<MailsModuleOptions>(MAILS_MODULE_OPTIONS, options),
+      {
+        provide: MailContext,
+        useFactory: (
+          {defaultFromAddress, defaultReplyToAddress, mailProvider}: MailsModuleOptions,
+          prisma: PrismaClient
+        ) =>
+          new MailContext({
+            prisma,
+            mailProvider,
+            defaultFromAddress,
+            defaultReplyToAddress
+          }),
+        inject: [MAILS_MODULE_OPTIONS, PrismaClient]
+      }
+    ]
   }
 }

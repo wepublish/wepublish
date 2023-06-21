@@ -1,11 +1,11 @@
 import React, {useContext, useRef} from 'react'
 import {styled, TableCell} from '@mui/material'
 import {IconButton, InputNumber, Popover, Tag, Whisper} from 'rsuite'
-import {MdCheck, MdEdit, MdRefresh} from 'react-icons/all'
 import {useTranslation} from 'react-i18next'
 import {SubscriptionInterval} from '@wepublish/editor/api-v2'
 import {GraphqlClientContext} from '../graphqlClientContext'
-import {useAuthorisation} from 'app/atoms/permissionControl'
+import {useAuthorisation} from '@wepublish/ui/editor'
+import {MdCheck, MdEdit, MdRefresh} from 'react-icons/md'
 
 interface FlowHeadProps {
   days: (number | null | undefined)[]

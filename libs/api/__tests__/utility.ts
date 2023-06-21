@@ -14,10 +14,10 @@ import {
   PublicComment,
   PublicPage,
   URLAdapter,
-  DefaultSessionTTL,
-  FakeMailProvider
+  DefaultSessionTTL
 } from '../src'
 import {createUserSession} from '../src/lib/graphql/session/session.mutation'
+import {FakeMailProvider} from '@wepublish/membership/api'
 
 export interface TestClient {
   testServerPublic: ApolloServer

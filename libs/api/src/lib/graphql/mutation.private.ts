@@ -692,8 +692,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         updatedAt: {type: GraphQLDateTime},
         publishedAt: {type: GraphQLDateTime}
       },
-      resolve: (root, {id, publishAt, updatedAt, publishedAt}, {authenticate, prisma: {article}}) =>
-        publishArticle(id, {publishAt, updatedAt, publishedAt}, authenticate, article)
+      resolve: (root, {id, publishAt, updatedAt, publishedAt}, {authenticate, prisma}) =>
+        publishArticle(id, {publishAt, updatedAt, publishedAt}, authenticate, prisma)
     },
 
     unpublishArticle: {

@@ -7,6 +7,12 @@ import {
   usePollQuery,
   useUpdatePollMutation
 } from '@wepublish/editor/api'
+import {
+  createCheckedPermissionComponent,
+  PollAnswers,
+  PollExternalVotes,
+  RichTextBlock
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
@@ -14,10 +20,6 @@ import {Col, DatePicker, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster
 import {Node} from 'slate'
 
 import {SingleViewTitle} from '@wepublish/ui'
-import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
-import {PollAnswers} from '../../atoms/poll/pollAnswers'
-import {PollExternalVotes} from '../../atoms/poll/pollExternalVotes'
-import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
 
 const OpensAtLabel = styled(Form.ControlLabel)`
   margin-right: 5px;

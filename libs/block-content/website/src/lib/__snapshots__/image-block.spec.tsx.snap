@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Image Block should render Default 1`] = `
+<DocumentFragment>
+  <figure
+    class="css-umync8"
+  >
+    <img
+      alt="An image description"
+      class="css-1qnf57e"
+      height="500"
+      srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+      title="An image title"
+      width="500"
+    />
+    <figcaption>
+      Image caption
+    </figcaption>
+  </figure>
+</DocumentFragment>
+`;
+
+exports[`Image Block should render WithClassName 1`] = `
+<DocumentFragment>
+  <figure
+    class="extra-classname css-umync8"
+  >
+    <img
+      alt="An image description"
+      class="css-1qnf57e"
+      height="500"
+      srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+      title="An image title"
+      width="500"
+    />
+    <figcaption>
+      Image caption
+    </figcaption>
+  </figure>
+</DocumentFragment>
+`;
+
+exports[`Image Block should render WithEmotion 1`] = `
+<DocumentFragment>
+  <figure
+    class="css-umync8"
+  >
+    <img
+      alt="An image description"
+      class="css-1qnf57e"
+      height="500"
+      srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+      title="An image title"
+      width="500"
+    />
+    <figcaption>
+      Image caption
+    </figcaption>
+  </figure>
+</DocumentFragment>
+`;
+
+exports[`Image Block should render WithoutCaption 1`] = `
+<DocumentFragment>
+  <figure
+    class="css-umync8"
+  >
+    <img
+      alt="An image description"
+      class="css-1qnf57e"
+      height="500"
+      srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+      title="An image title"
+      width="500"
+    />
+  </figure>
+</DocumentFragment>
+`;

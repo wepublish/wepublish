@@ -1,10 +1,8 @@
 import styled from '@emotion/styled'
+import {FileDropInput, getImgMinSizeToCompress} from '@wepublish/ui/editor'
 import {useTranslation} from 'react-i18next'
 import {MdUploadFile} from 'react-icons/md'
 import {Button, Drawer, Form, Notification, toaster} from 'rsuite'
-
-import {FileDropInput} from '../atoms/fileDropInput'
-import {getImgMinSizeToCompress} from '../utility'
 
 const InputWrapper = styled.div`
   height: 100px;

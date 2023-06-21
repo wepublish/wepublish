@@ -1,17 +1,15 @@
 import React, {useContext} from 'react'
 import {IconButton, Popover, Whisper} from 'rsuite'
-import {MdDelete} from 'react-icons/all'
+import {MdDelete} from 'react-icons/md'
 import {SubscriptionFlowFragment} from '@wepublish/editor/api-v2'
 import {GraphqlClientContext} from './graphqlClientContext'
 import {useTranslation} from 'react-i18next'
-import {PermissionControl} from 'app/atoms/permissionControl'
+import {PermissionControl} from '@wepublish/ui/editor'
 
 interface DeleteSubscriptionFlowProps {
   subscriptionFlow: SubscriptionFlowFragment
 }
-export default function ({
-  subscriptionFlow
-}: DeleteSubscriptionFlowProps) {
+export default function ({subscriptionFlow}: DeleteSubscriptionFlowProps) {
   const {t} = useTranslation()
   const client = useContext(GraphqlClientContext)
 

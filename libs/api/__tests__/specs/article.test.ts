@@ -3,7 +3,9 @@ import {
   Article,
   ArticleInput,
   ArticleList,
+  AuthorInput,
   CreateArticle,
+  CreateAuthor,
   DeleteArticle,
   PublishArticle,
   UnpublishArticle,
@@ -191,6 +193,228 @@ describe('Articles', () => {
             latest: expect.objectContaining({
               slug: expect.any(String)
             })
+          }
+        }
+      })
+    })
+
+    test('can be published twice with authorIds', async () => {
+      const authorRes = await testServerPrivate.executeOperation({
+        query: CreateAuthor,
+        variables: {
+          input: {
+            name: 'Foobar',
+            slug: generateRandomString(),
+            links: [],
+            bio: []
+          } as AuthorInput
+        }
+      })
+
+      const articleInput = {
+        title: '',
+        slug: generateRandomString(),
+        shared: false,
+        tags: [],
+        breaking: true,
+        lead: '',
+        preTitle: '',
+        hideAuthor: false,
+        properties: [],
+        authorIDs: [authorRes.data.createAuthor.id],
+        socialMediaTitle: 'A social media title',
+        socialMediaDescription: 'A social media description',
+        socialMediaImageID: null,
+        blocks: [],
+        socialMediaAuthorIDs: [authorRes.data.createAuthor.id]
+      } as ArticleInput
+
+      const createdArticle = await testServerPrivate.executeOperation({
+        query: CreateArticle,
+        variables: {
+          input: articleInput
+        }
+      })
+
+      const firstPublish = await testServerPrivate.executeOperation({
+        query: PublishArticle,
+        variables: {
+          id: createdArticle.data.createArticle.id,
+          publishAt: '2020-11-25T23:55:35.000Z',
+          publishedAt: '2020-11-25T23:55:35.000Z',
+          updatedAt: '2020-11-25T23:55:35.000Z'
+        }
+      })
+
+      const update = await testServerPrivate.executeOperation({
+        query: UpdateArticle,
+        variables: {
+          input: {
+            ...articleInput,
+            title: 'Second Update'
+          } as ArticleInput,
+          id: createdArticle.data.createArticle.id
+        }
+      })
+
+      const secondPublish = await testServerPrivate.executeOperation({
+        query: PublishArticle,
+        variables: {
+          id: createdArticle.data.createArticle.id,
+          publishAt: '2020-12-25T23:55:35.000Z',
+          publishedAt: '2020-12-25T23:55:35.000Z',
+          updatedAt: '2020-12-25T23:55:35.000Z'
+        }
+      })
+
+      expect(secondPublish).toMatchSnapshot({
+        data: {
+          publishArticle: {
+            id: expect.any(String),
+            latest: expect.objectContaining({
+              slug: expect.any(String)
+            })
+          }
+        }
+      })
+    })
+
+    test('can be published in the future', async () => {
+      const articleInput = {
+        title: '',
+        slug: generateRandomString(),
+        shared: false,
+        tags: [],
+        breaking: true,
+        lead: '',
+        preTitle: '',
+        hideAuthor: false,
+        properties: [],
+        authorIDs: [],
+        socialMediaTitle: 'A social media title',
+        socialMediaDescription: 'A social media description',
+        socialMediaImageID: null,
+        blocks: [],
+        socialMediaAuthorIDs: []
+      } as ArticleInput
+
+      const createdArticle = await testServerPrivate.executeOperation({
+        query: CreateArticle,
+        variables: {
+          input: articleInput
+        }
+      })
+
+      const tomorrow = new Date()
+      tomorrow.setDate(tomorrow.getDate() + 1)
+
+      const res = await testServerPrivate.executeOperation({
+        query: PublishArticle,
+        variables: {
+          id: createdArticle.data.createArticle.id,
+          publishAt: tomorrow.toISOString(),
+          publishedAt: tomorrow.toISOString(),
+          updatedAt: '2020-11-25T23:55:35.000Z'
+        }
+      })
+
+      expect(res).toMatchSnapshot({
+        data: {
+          publishArticle: {
+            id: expect.any(String),
+            latest: expect.objectContaining({
+              slug: expect.any(String)
+            }),
+            pending: {
+              publishAt: expect.any(Date)
+            }
+          }
+        }
+      })
+    })
+
+    test('can be published twice in the future with authorIds', async () => {
+      const authorRes = await testServerPrivate.executeOperation({
+        query: CreateAuthor,
+        variables: {
+          input: {
+            name: 'Foobar',
+            slug: generateRandomString(),
+            links: [],
+            bio: []
+          } as AuthorInput
+        }
+      })
+
+      const articleInput = {
+        title: '',
+        slug: generateRandomString(),
+        shared: false,
+        tags: [],
+        breaking: true,
+        lead: '',
+        preTitle: '',
+        hideAuthor: false,
+        properties: [],
+        authorIDs: [authorRes.data.createAuthor.id],
+        socialMediaTitle: 'A social media title',
+        socialMediaDescription: 'A social media description',
+        socialMediaImageID: null,
+        blocks: [],
+        socialMediaAuthorIDs: [authorRes.data.createAuthor.id]
+      } as ArticleInput
+
+      const createdArticle = await testServerPrivate.executeOperation({
+        query: CreateArticle,
+        variables: {
+          input: articleInput
+        }
+      })
+
+      const tomorrow = new Date()
+      tomorrow.setDate(tomorrow.getDate() + 1)
+
+      const firstPublish = await testServerPrivate.executeOperation({
+        query: PublishArticle,
+        variables: {
+          id: createdArticle.data.createArticle.id,
+          publishAt: tomorrow.toISOString(),
+          publishedAt: tomorrow.toISOString(),
+          updatedAt: '2020-11-25T23:55:35.000Z'
+        }
+      })
+
+      const update = await testServerPrivate.executeOperation({
+        query: UpdateArticle,
+        variables: {
+          input: {
+            ...articleInput,
+            title: 'Second Update'
+          } as ArticleInput,
+          id: createdArticle.data.createArticle.id
+        }
+      })
+
+      const secondPublish = await testServerPrivate.executeOperation({
+        query: PublishArticle,
+        variables: {
+          id: createdArticle.data.createArticle.id,
+          publishAt: tomorrow.toISOString(),
+          publishedAt: tomorrow.toISOString(),
+          updatedAt: '2020-12-25T23:55:35.000Z'
+        }
+      })
+
+      expect(secondPublish).toMatchSnapshot({
+        data: {
+          publishArticle: {
+            id: expect.any(String),
+            latest: expect.objectContaining({
+              slug: expect.any(String)
+            }),
+            pending: {
+              publishAt: expect.any(Date)
+            }
           }
         }
       })

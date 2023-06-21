@@ -4,6 +4,7 @@ import {clearDatabase} from '../../prisma-utils'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {PrismaService} from '@wepublish/nest-modules'
 import {MailTemplate, PrismaClient} from '@prisma/client'
+import {PrismaClient} from '@prisma/client'
 import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
 import {SubscriptionController} from '../subscription/subscription.controller'
 import {
@@ -69,6 +70,7 @@ const mailContextMock = {
   mailProvider: mailProviderServiceMock as unknown as MailProvider,
   getUsedTemplateIdentifiers: jest.fn((): string[] => [])
 }
+import {registerMailsModule, registerPaymentsModule} from '../testing/module-registrars'
 
 describe('SubscriptionFlowController', () => {
   let controller: SubscriptionFlowController
@@ -81,7 +83,7 @@ describe('SubscriptionFlowController', () => {
     defaultData: {
       memberPlan: MemberPlanFactory,
       intervals: {connect: []}
-    }
+    } as any
   })
   const SubscriptionIntervalFactory = defineSubscriptionIntervalFactory({
     defaultData: {
@@ -91,15 +93,12 @@ describe('SubscriptionFlowController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PrismaModule.forTest(prismaClient)],
-      providers: [
-        SubscriptionFlowController,
-        PeriodicJobController,
-        SubscriptionController,
-        {provide: PaymentsService, useValue: {}},
-        {provide: PrismaService, useValue: prismaServiceMock},
-        {provide: MailContext, useValue: mailContextMock}
-      ]
+      imports: [
+        PrismaModule.forTest(prismaClient),
+        registerMailsModule(),
+        registerPaymentsModule()
+      ],
+      providers: [SubscriptionFlowController, PeriodicJobController, SubscriptionController]
     }).compile()
 
     controller = module.get<SubscriptionFlowController>(SubscriptionFlowController)

@@ -1,10 +1,18 @@
 import {ApolloError} from '@apollo/client'
 import {Poll, usePollsQuery} from '@wepublish/editor/api'
 import {
+  createCheckedPermissionComponent,
+  CreatePollBtn,
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  DeletePollModal,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
   PaddedCell,
+  PollClosedAtView,
+  PollOpensAtView,
+  PollStateIndication,
   Table,
   TableWrapper
 } from '@wepublish/ui/editor'
@@ -15,40 +23,7 @@ import {Link} from 'react-router-dom'
 import {IconButton, Message, Pagination, Table as RTable, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
-import {CreatePollBtn} from '../../atoms/poll/createPollBtn'
-import {DeletePollModal} from '../../atoms/poll/deletePollModal'
-import {PollStateIndication} from '../../atoms/poll/pollStateIndication'
-import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
-
 const {Column, HeaderCell, Cell: RCell} = RTable
-
-export function PollOpensAtView({poll}: {poll: Poll}) {
-  const now = new Date()
-  const opensAt = new Date(poll.opensAt)
-  const {t} = useTranslation()
-
-  // poll is open
-  if (now.getTime() > opensAt.getTime()) {
-    return <>{t('pollList.openedAt', {openedAt: opensAt})}</>
-  }
-
-  // poll is waiting to open
-  return <>{t('pollList.pollWillOpenAt', {opensAt})}</>
-}
-
-export function PollClosedAtView({poll}: {poll: Poll}) {
-  const now = new Date()
-  const closedAt = poll.closedAt ? new Date(poll.closedAt) : undefined
-  const {t} = useTranslation()
-
-  // poll has been closed
-  if (closedAt && now.getTime() >= closedAt.getTime()) {
-    return <>{t('pollList.hasBeenClosedAt', {closedAt})}</>
-  }
-
-  return <>{t('pollList.closedAtNone')}</>
-}
 
 const onErrorToast = (error: ApolloError) => {
   if (error?.message) {

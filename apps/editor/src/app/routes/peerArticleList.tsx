@@ -6,9 +6,13 @@ import {
   usePeerArticleListQuery
 } from '@wepublish/editor/api'
 import {
+  createCheckedPermissionComponent,
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
   ListFilters,
   ListViewContainer,
   ListViewHeader,
+  mapTableSortTypeToGraphQLSortOrder,
   Table,
   TableWrapper
 } from '@wepublish/ui/editor'
@@ -24,13 +28,6 @@ import {
   Whisper
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
-
-import {createCheckedPermissionComponent} from '../atoms/permissionControl'
-import {
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
-  mapTableSortTypeToGraphQLSortOrder
-} from '../utility'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 

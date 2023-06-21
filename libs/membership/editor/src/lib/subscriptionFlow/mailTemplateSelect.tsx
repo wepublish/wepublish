@@ -13,8 +13,8 @@ import {
   UserActionInterval
 } from './subscriptionFlowList'
 import {useTranslation} from 'react-i18next'
-import {MdUnsubscribe} from 'react-icons/all'
-import {useAuthorisation} from 'app/atoms/permissionControl'
+import {MdUnsubscribe} from 'react-icons/md'
+import {useAuthorisation} from '@wepublish/ui/editor'
 
 interface MailTemplateSelectProps {
   mailTemplates: FullMailTemplateFragment[]
