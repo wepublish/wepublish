@@ -1,4 +1,4 @@
-import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderBlockRendererProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Block as BlockType} from '@wepublish/website/api'
 import {isHtmlBlock} from './html-block'
 import {isImageBlock} from './image-block'
@@ -8,11 +8,7 @@ import {isTeaserGridFlexBlock} from './teaser-grid-flex-block'
 import {isTitleBlock} from './title-block'
 import {cond} from 'ramda'
 
-export type BlockProp = {
-  block: BlockType
-}
-
-export const Block = ({block}: BlockProp) => {
+export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
   const {blocks} = useWebsiteBuilder()
 
   return cond([
@@ -29,10 +25,16 @@ export type BlocksProp = {
   blocks: BlockType[]
 }
 
-export const Blocks = ({blocks}: BlocksProp) => (
-  <>
-    {blocks.map((block, index) => (
-      <Block key={index} block={block} />
-    ))}
-  </>
-)
+export const Blocks = ({blocks}: BlocksProp) => {
+  const {
+    blocks: {Renderer}
+  } = useWebsiteBuilder()
+
+  return (
+    <>
+      {blocks.map((block, index) => (
+        <Renderer key={index} block={block} />
+      ))}
+    </>
+  )
+}

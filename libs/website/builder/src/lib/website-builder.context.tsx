@@ -11,6 +11,7 @@ import {
 import {PartialDeep} from 'type-fest'
 import {BuilderArticleProps} from './article.interface'
 import {
+  BuilderBlockRendererProps,
   BuilderHTMLBlockProps,
   BuilderImageBlockProps,
   BuilderQuoteBlockProps,
@@ -80,6 +81,7 @@ export type WebsiteBuilderComponents = {
   }
 
   blocks: {
+    Renderer: ComponentType<BuilderBlockRendererProps>
     Title: ComponentType<BuilderTitleBlockProps>
     Image: ComponentType<BuilderImageBlockProps>
     Quote: ComponentType<BuilderQuoteBlockProps>
@@ -131,6 +133,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   },
 
   blocks: {
+    Renderer: NoComponent,
     Title: NoComponent,
     Image: NoComponent,
     Quote: NoComponent,
