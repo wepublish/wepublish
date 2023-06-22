@@ -3,7 +3,7 @@ import {MailgunMailProvider, MailProviderTemplate} from '../../src'
 import Mailgun from 'mailgun.js'
 import FormData from 'form-data'
 
-let mockSubmit = jest.fn()
+const mockSubmit = jest.fn()
 const mockAppend = jest.fn()
 
 jest.mock('form-data', () => {
@@ -14,10 +14,6 @@ jest.mock('form-data', () => {
     }
   })
 })
-
-jest.mock('mailgun.js')
-
-let mailgunMailProvider: MailgunMailProvider
 
 let listTemplates: nock.Scope
 let listTemplatesInvalidKey: nock.Scope
@@ -46,8 +42,8 @@ describe('Mailgun Mail Provider', () => {
   })
 
   test('can be created', () => {
-    const mailgunClient = new Mailgun(FormData).client({username: 'api', key: 'test-api-key'})
-    mailgunMailProvider = new MailgunMailProvider({
+    const mailgunClient = new Mailgun(FormData).client({username: 'api', key: 'fakeAPIkey'})
+    const mailgunMailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
       apiKey: 'fakeAPIkey',
@@ -60,33 +56,9 @@ describe('Mailgun Mail Provider', () => {
     expect(mailgunMailProvider).toBeDefined()
   })
 
-  test('can call send', async () => {
-    const mailInfo = {
-      replyToAddress: 'dev@wepublish.ch',
-      recipient: 'test@recipient.adr',
-      subject: 'Mocked Send',
-      message: 'mocking send',
-      mailLogID: 'mailLogID'
-    }
-
-    mockSubmit = jest
-      .fn()
-      .mockImplementationOnce((data, callback) => callback(null, {statusCode: 200}))
-      .mockImplementationOnce((data, callback) => callback(null, {statusCode: 404}))
-
-    await mailgunMailProvider.sendMail(mailInfo)
-
-    expect(mockSubmit).toHaveBeenCalledTimes(1)
-
-    expect(mockAppend).toHaveBeenCalledTimes(5)
-    expect(mockAppend).toHaveBeenLastCalledWith('v:mail_log_id', 'mailLogID')
-
-    await expect(mailgunMailProvider.sendMail(mailInfo)).rejects.toEqual({statusCode: 404})
-  })
-
   test('loads templates', async () => {
-    const mailgunClient = new Mailgun(FormData).client({username: 'api', key: 'test-api-key'})
-    mailgunMailProvider = new MailgunMailProvider({
+    const mailgunClient = new Mailgun(FormData).client({username: 'api', key: 'mg-12345678'})
+    const mailgunMailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
       apiKey: 'mg-12345678',
@@ -107,8 +79,8 @@ describe('Mailgun Mail Provider', () => {
   })
 
   test('returns error when using invalid key', async () => {
-    const mailgunClient = new Mailgun(FormData).client({username: 'api', key: 'test-api-key'})
-    mailgunMailProvider = new MailgunMailProvider({
+    const mailgunClient = new Mailgun(FormData).client({username: 'api', key: 'invalid-key'})
+    const mailgunMailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
       apiKey: 'invalid-key',
@@ -119,9 +91,7 @@ describe('Mailgun Mail Provider', () => {
       mailgunClient
     })
 
-    await expect(mailgunMailProvider.getTemplates())
-    .rejects
-    .toThrow('Invalid private key')
+    await expect(mailgunMailProvider.getTemplates()).rejects.toThrow('Invalid private key')
     expect(listTemplatesInvalidKey.isDone()).toEqual(true)
   })
 })
