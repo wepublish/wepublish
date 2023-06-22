@@ -1,12 +1,11 @@
 import {MailTemplate} from '@prisma/client'
+import {BaseMailProvider, MailProviderProps} from './base-mail-provider'
 import {
-  BaseMailProvider,
   MailLogStatus,
-  MailProviderProps,
   MailProviderTemplate,
   SendMailProps,
   WebhookForSendMailProps
-} from '@wepublish/mails'
+} from './mail-provider.interface'
 
 export class FakeMailProvider extends BaseMailProvider {
   constructor(props: MailProviderProps) {

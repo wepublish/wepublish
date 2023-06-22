@@ -1,8 +1,7 @@
 import {PrismaClient} from '@prisma/client'
 import {DynamicModule} from '@nestjs/common'
 import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
-import {MailsModule} from '@wepublish/mails'
-import {FakeMailProvider} from './FakeMailProvider'
+import {FakeMailProvider, MailsModule} from '@wepublish/mails'
 import {
   PaymentProvider,
   PaymentsModule,
