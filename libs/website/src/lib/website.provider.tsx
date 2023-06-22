@@ -1,6 +1,6 @@
 import {ThemeProvider, TextField} from '@mui/material'
 import {Article} from '@wepublish/article/website'
-import {LoginForm} from '@wepublish/authentication/website'
+import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {
   HtmlBlock,
   ImageBlock,
@@ -53,6 +53,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         EventListItem={EventListItem}
         Page={Page}
         LoginForm={LoginForm}
+        RegistrationForm={RegistrationForm}
         elements={{
           TextField,
           Alert,
