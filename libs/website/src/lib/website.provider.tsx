@@ -7,7 +7,8 @@ import {
   RichTextBlock,
   TeaserGridFlexBlock,
   TitleBlock,
-  Teaser
+  Teaser,
+  BlockRenderer
 } from '@wepublish/block-content/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
@@ -66,6 +67,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Image
         }}
         blocks={{
+          Renderer: BlockRenderer,
           Title: TitleBlock,
           Image: ImageBlock,
           Quote: QuoteBlock,

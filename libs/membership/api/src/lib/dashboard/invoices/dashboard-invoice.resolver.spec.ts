@@ -3,7 +3,7 @@ import {INestApplication, Module} from '@nestjs/common'
 import request from 'supertest'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
-import {PrismaClient} from '@prisma/client'
+import {Invoice, PrismaClient} from '@prisma/client'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {DashboardInvoiceResolver} from './dashboard-invoice.resolver'
 import {DashboardInvoiceService} from './dashboard-invoice.service'
@@ -45,6 +45,7 @@ const expectedRevenueQuery = `
 `
 
 describe('DashboardInvoiceResolver', () => {
+  let invoicesToDelete: Invoice[] = []
   let app: INestApplication
   let prisma: PrismaClient
 
@@ -59,7 +60,19 @@ describe('DashboardInvoiceResolver', () => {
   })
 
   beforeEach(async () => {
-    await prisma.invoice.deleteMany({})
+    invoicesToDelete = []
+  })
+
+  afterEach(async () => {
+    const ids = invoicesToDelete.map(invoice => invoice.id)
+
+    await prisma.invoice.deleteMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    })
   })
 
   afterAll(async () => {
@@ -155,7 +168,7 @@ describe('DashboardInvoiceResolver', () => {
       }
     ]
 
-    await Promise.all(mockData.map(data => prisma.invoice.create({data})))
+    invoicesToDelete = await Promise.all(mockData.map(data => prisma.invoice.create({data})))
 
     await request(app.getHttpServer())
       .post('')
@@ -259,7 +272,7 @@ describe('DashboardInvoiceResolver', () => {
       }
     ]
 
-    await Promise.all(mockData.map(data => prisma.invoice.create({data})))
+    invoicesToDelete = await Promise.all(mockData.map(data => prisma.invoice.create({data})))
 
     await request(app.getHttpServer())
       .post('')
