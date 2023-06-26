@@ -6,9 +6,11 @@ import {
   RichTextBlock,
   TeaserGridFlexBlock,
   TitleBlock,
-  Teaser
+  Teaser,
+  Block
 } from '@wepublish/website/api'
 
+export type BuilderBlockRendererProps = {block: Block}
 export type BuilderTitleBlockProps = TitleBlock & {className?: string}
 export type BuilderImageBlockProps = ImageBlock & {className?: string}
 export type BuilderQuoteBlockProps = QuoteBlock & {className?: string}
