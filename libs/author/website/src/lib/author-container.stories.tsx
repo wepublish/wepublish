@@ -10,6 +10,7 @@ const author = {
   slug: 'slug',
   name: 'Foobar',
   jobTitle: 'Editor',
+  url: 'https://example.com',
   bio: [
     {
       type: 'heading-one',

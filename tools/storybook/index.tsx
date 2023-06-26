@@ -1,7 +1,7 @@
 import {MockedProvider} from '@apollo/client/testing'
 import {ComponentType} from 'react'
 import {WebsiteBuilderProvider, WebsiteProvider} from '@wepublish/website'
-import {css} from '@mui/material'
+import {CssBaseline, css} from '@mui/material'
 import {Global} from '@emotion/react'
 import Head from 'next/head'
 import Script from 'next/script'
@@ -34,6 +34,7 @@ export const parameters = {
 const withWebsiteProvider = (Story: ComponentType) => (
   <WebsiteProvider>
     <WebsiteBuilderProvider Head={Head} Script={Script}>
+      <CssBaseline />
       <Story />
     </WebsiteBuilderProvider>
   </WebsiteProvider>

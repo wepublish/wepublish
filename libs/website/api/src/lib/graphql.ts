@@ -26,7 +26,7 @@ export type Scalars = {
 
 export type Article = {
   __typename?: 'Article'
-  authors: Array<Maybe<Author>>
+  authors: Array<Author>
   blocks: Array<Block>
   breaking: Scalars['Boolean']
   canonicalUrl?: Maybe<Scalars['String']>
@@ -1645,6 +1645,45 @@ export type FullArticleFragment = {
     | {__typename: 'VimeoVideoBlock'}
     | {__typename: 'YouTubeVideoBlock'}
   >
+  authors: Array<{
+    __typename?: 'Author'
+    id: string
+    name: string
+    jobTitle?: string | null
+    slug: string
+    bio?: Node[] | null
+    url: string
+    links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      title?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+  }>
 }
 
 export type ArticleQueryVariables = Exact<{
@@ -1935,6 +1974,45 @@ export type ArticleQuery = {
       | {__typename: 'VimeoVideoBlock'}
       | {__typename: 'YouTubeVideoBlock'}
     >
+    authors: Array<{
+      __typename?: 'Author'
+      id: string
+      name: string
+      jobTitle?: string | null
+      slug: string
+      bio?: Node[] | null
+      url: string
+      links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+      image?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        title?: string | null
+        url?: string | null
+        bigURL?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+    }>
   } | null
 }
 
@@ -2227,6 +2305,45 @@ export type PeerArticleQuery = {
       | {__typename: 'VimeoVideoBlock'}
       | {__typename: 'YouTubeVideoBlock'}
     >
+    authors: Array<{
+      __typename?: 'Author'
+      id: string
+      name: string
+      jobTitle?: string | null
+      slug: string
+      bio?: Node[] | null
+      url: string
+      links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+      image?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        title?: string | null
+        url?: string | null
+        bigURL?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+    }>
   } | null
 }
 
@@ -2255,6 +2372,7 @@ export type FullAuthorFragment = {
   jobTitle?: string | null
   slug: string
   bio?: Node[] | null
+  url: string
   links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
   image?: {
     __typename?: 'Image'
@@ -2301,6 +2419,7 @@ export type AuthorQuery = {
     jobTitle?: string | null
     slug: string
     bio?: Node[] | null
+    url: string
     links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
     image?: {
       __typename?: 'Image'
@@ -3445,6 +3564,45 @@ export type FullNavigationFragment = {
             | {__typename: 'VimeoVideoBlock'}
             | {__typename: 'YouTubeVideoBlock'}
           >
+          authors: Array<{
+            __typename?: 'Author'
+            id: string
+            name: string
+            jobTitle?: string | null
+            slug: string
+            bio?: Node[] | null
+            url: string
+            links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              title?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+          }>
         } | null
       }
     | {__typename?: 'ExternalNavigationLink'; label: string; url: string}
@@ -4067,6 +4225,45 @@ export type NavigationListQuery = {
               | {__typename: 'VimeoVideoBlock'}
               | {__typename: 'YouTubeVideoBlock'}
             >
+            authors: Array<{
+              __typename?: 'Author'
+              id: string
+              name: string
+              jobTitle?: string | null
+              slug: string
+              bio?: Node[] | null
+              url: string
+              links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+              image?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                title?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+            }>
           } | null
         }
       | {__typename?: 'ExternalNavigationLink'; label: string; url: string}
@@ -4692,6 +4889,45 @@ export type NavigationQuery = {
               | {__typename: 'VimeoVideoBlock'}
               | {__typename: 'YouTubeVideoBlock'}
             >
+            authors: Array<{
+              __typename?: 'Author'
+              id: string
+              name: string
+              jobTitle?: string | null
+              slug: string
+              bio?: Node[] | null
+              url: string
+              links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+              image?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                title?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+            }>
           } | null
         }
       | {__typename?: 'ExternalNavigationLink'; label: string; url: string}
@@ -5628,23 +5864,6 @@ export const FullImageFragmentDoc = gql`
   }
   ${ImageRefFragmentDoc}
 `
-export const FullAuthorFragmentDoc = gql`
-  fragment FullAuthor on Author {
-    id
-    name
-    jobTitle
-    slug
-    bio
-    links {
-      title
-      url
-    }
-    image {
-      ...FullImage
-    }
-  }
-  ${FullImageFragmentDoc}
-`
 export const BlockWithoutTeaserFragmentDoc = gql`
   fragment BlockWithoutTeaser on Block {
     __typename
@@ -5878,6 +6097,24 @@ export const FullPageFragmentDoc = gql`
   ${FullImageFragmentDoc}
   ${ImageRefFragmentDoc}
 `
+export const FullAuthorFragmentDoc = gql`
+  fragment FullAuthor on Author {
+    id
+    name
+    jobTitle
+    slug
+    bio
+    url
+    links {
+      title
+      url
+    }
+    image {
+      ...FullImage
+    }
+  }
+  ${FullImageFragmentDoc}
+`
 export const FullArticleFragmentDoc = gql`
   fragment FullArticle on Article {
     id
@@ -5989,9 +6226,13 @@ export const FullArticleFragmentDoc = gql`
         }
       }
     }
+    authors {
+      ...FullAuthor
+    }
   }
   ${FullImageFragmentDoc}
   ${ImageRefFragmentDoc}
+  ${FullAuthorFragmentDoc}
 `
 export const FullNavigationFragmentDoc = gql`
   fragment FullNavigation on Navigation {

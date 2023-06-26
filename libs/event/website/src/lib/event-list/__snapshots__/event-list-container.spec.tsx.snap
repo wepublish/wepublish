@@ -6,7 +6,7 @@ exports[`EventList Container should render Default 1`] = `
     class="css-1ul8u7n"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
       href="https://example.com"
       role="article"
@@ -166,7 +166,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
       href="https://example.com"
       role="article"
@@ -326,7 +326,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
       href="https://example.com"
       role="article"
@@ -495,7 +495,7 @@ exports[`EventList Container should render WithClassName 1`] = `
     class="extra-classname css-1ul8u7n"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
       href="https://example.com"
       role="article"
@@ -655,7 +655,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
       href="https://example.com"
       role="article"
@@ -815,7 +815,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
       href="https://example.com"
       role="article"
@@ -984,7 +984,7 @@ exports[`EventList Container should render WithEmotion 1`] = `
     class="css-1ul8u7n"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
       href="https://example.com"
       role="article"
@@ -1144,7 +1144,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
       href="https://example.com"
       role="article"
@@ -1304,7 +1304,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineAlways css-jj9aj1-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
       href="https://example.com"
       role="article"

@@ -3,10 +3,12 @@ import {
   createTheme,
   css,
   CssBaseline,
+  GlobalStyles,
   styled,
   Theme,
   ThemeOptions,
-  ThemeProvider
+  ThemeProvider,
+  useTheme
 } from '@mui/material'
 import {theme} from '@wepublish/ui'
 import {ApiV1, FooterContainer, WebsiteBuilderProvider, WebsiteProvider} from '@wepublish/website'
@@ -21,6 +23,8 @@ import {authLink} from '../src/auth-link'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {NextWepublishLink} from '../src/next-wepublish-link'
 import {SessionProvider} from '../src/session.provider'
+import {useMemo} from 'react'
+import {tsriArticleStyles} from '../src/styles/tsri-article.styles'
 
 setDefaultOptions({
   locale: de
@@ -57,11 +61,15 @@ const LogoWrapper = styled(Logo)`
 `
 
 function CustomApp({Component, pageProps}: AppProps) {
+  const theme = useTheme()
+  const globalStyles = useMemo(() => tsriArticleStyles(theme), [theme])
+
   return (
     <SessionProvider sessionToken={null}>
       <WebsiteProvider>
         <WebsiteBuilderProvider Head={Head} Script={Script} elements={{Link: NextWepublishLink}}>
           <ThemeProvider theme={websiteExampleTheme}>
+            <GlobalStyles styles={globalStyles} />
             <CssBaseline />
 
             <Head>

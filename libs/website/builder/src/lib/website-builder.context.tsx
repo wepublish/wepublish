@@ -40,7 +40,7 @@ import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.inte
 import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
 import {BuilderImageProps} from './image.interface'
-import {BuilderAuthorProps} from './author.interface'
+import {BuilderAuthorChipProps, BuilderAuthorProps} from './author.interface'
 
 const NoComponent = () => null
 
@@ -55,6 +55,7 @@ export type WebsiteBuilderComponents = {
   Page: ComponentType<BuilderPageProps>
   Article: ComponentType<BuilderArticleProps>
   Author: ComponentType<BuilderAuthorProps>
+  AuthorChip: ComponentType<BuilderAuthorChipProps>
   Event: ComponentType<BuilderEventProps>
   EventSEO: ComponentType<BuilderEventSEOProps>
   EventList: ComponentType<BuilderEventListProps>
@@ -107,6 +108,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   Page: NoComponent,
   Article: NoComponent,
   Author: NoComponent,
+  AuthorChip: NoComponent,
   Event: NoComponent,
   EventSEO: NoComponent,
   EventList: NoComponent,
