@@ -6,9 +6,9 @@ import xml2js from 'xml2js'
 import {Event} from './events-import.model'
 import {XMLEventType} from './xmlTypes'
 
-const getFallbackDesc = (source: string) => `<p>Event imported from ${source}</p>`
+export const getFallbackDesc = (source: string) => `<p>Event imported from ${source}</p>`
 
-async function getXMLfromURL(url: string) {
+export async function getXMLfromURL(url: string) {
   const parser = new xml2js.Parser()
 
   try {
@@ -26,6 +26,8 @@ export const fetchAndParseKulturagenda = async (
   urlToQuery: string,
   source: string
 ): Promise<Event[]> => {
+  console.log('urlToQuery', urlToQuery)
+  console.log('source', source)
   const eventsParsedXML = await getXMLfromURL(urlToQuery)
   const events = eventsParsedXML['kdz:exportActivities']?.Activities[0]?.Activity
 
@@ -40,7 +42,7 @@ export const fetchAndParseKulturagenda = async (
   return importedEvents
 }
 
-const upcomingOnly = (XMLEvent: XMLEventType) => {
+export const upcomingOnly = (XMLEvent: XMLEventType) => {
   const today = startOfDay(new Date())
 
   const startDate =
@@ -60,7 +62,7 @@ const upcomingOnly = (XMLEvent: XMLEventType) => {
 
 export const getImageUrl = (event: XMLEventType) => {
   return (
-    (event?.ActivityMultimedia.length &&
+    (event?.ActivityMultimedia?.length &&
       event?.ActivityMultimedia[0]?.Images.length &&
       event?.ActivityMultimedia[0]?.Images[0]?.Image?.length &&
       event?.ActivityMultimedia[0]?.Images[0]?.Image[0].$?.url) ||

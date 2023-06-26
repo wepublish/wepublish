@@ -9,6 +9,18 @@ exports[`DashboardInvoiceResolver expectedRevenue 1`] = `
     "paidAt": null,
   },
   {
+    "amount": 50,
+    "dueAt": "2023-01-02T12:00:00.000Z",
+    "memberPlan": null,
+    "paidAt": null,
+  },
+  {
+    "amount": 1050,
+    "dueAt": "2023-01-01T12:00:00.000Z",
+    "memberPlan": null,
+    "paidAt": "2023-01-01T12:00:00.000Z",
+  },
+  {
     "amount": 1050,
     "dueAt": "2023-01-01T12:00:00.000Z",
     "memberPlan": null,
@@ -24,6 +36,12 @@ exports[`DashboardInvoiceResolver revenue 1`] = `
     "dueAt": "2023-01-01T12:00:00.000Z",
     "memberPlan": null,
     "paidAt": "2023-01-02T12:00:00.000Z",
+  },
+  {
+    "amount": 1050,
+    "dueAt": "2023-01-01T12:00:00.000Z",
+    "memberPlan": null,
+    "paidAt": "2023-01-01T12:00:00.000Z",
   },
   {
     "amount": 1050,

@@ -36,10 +36,10 @@ type XMLEventSettings = {
 }
 
 type XMLEventType = {
-  Title: string
-  Subtitle: string
-  ShortDescription: string
-  LongDescription: string
+  Title: string[]
+  Subtitle: string[]
+  ShortDescription: string[]
+  LongDescription: string[]
   $: XMLEventOrigin
   CastInformation: string[]
   PriceInformation: string[]

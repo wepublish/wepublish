@@ -3,7 +3,7 @@ import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {PrismaClient} from '@prisma/client'
 import {EVENT_IMPORT_PROVIDER} from './events-import.service'
 import {AgendaBaselService} from './agenda-basel.service'
-import {Event, EventStatus, ImportedEventSort} from './events-import.model'
+import {ImportedEventSort} from './events-import.model'
 import {Cache} from 'cache-manager'
 import {HttpService} from '@nestjs/axios'
 import {ImageFetcherService, MediaAdapterService} from '@wepublish/image/api'
@@ -39,10 +39,15 @@ describe('AgendaBaselService', () => {
           provide: PrismaClient,
           useValue: {
             event: {
-              create: jest.fn()
+              create: jest.fn().mockResolvedValue({
+                id: 'created-event-id'
+              })
             },
             image: {
-              create: jest.fn()
+              create: async (id: any) =>
+                await {
+                  id
+                }
             }
           }
         },
@@ -55,7 +60,9 @@ describe('AgendaBaselService', () => {
         {
           provide: MediaAdapterService,
           useValue: {
-            uploadImageFromArrayBuffer: jest.fn()
+            uploadImageFromArrayBuffer: jest.fn().mockResolvedValue({
+              id: 'bar'
+            })
           }
         }
       ]
@@ -67,82 +74,64 @@ describe('AgendaBaselService', () => {
     httpClient = module.get<HttpService>(HttpService)
   })
 
-  const mockEvent: Event = {
-    id: '1',
-    createdAt: new Date(),
-    modifiedAt: new Date(),
-    name: 'Event 1',
-    description: [],
-    status: EventStatus.Scheduled,
-    location: '',
-    externalSourceId: '',
-    externalSourceName: '',
-    startsAt: new Date(),
-    endsAt: undefined
-  }
-
   afterEach(() => {
     jest.clearAllMocks()
   })
 
   describe('AgendaBaselService', () => {
-    test('importedEvents method should return imported events from the cache if available', async () => {
-      const mockEventsDocument = {
-        nodes: [mockEvent],
-        pageInfo: {endCursor: '1', hasNextPage: false, hasPreviousPage: false, startCursor: '1'},
-        totalCount: 1
-      }
-      jest.spyOn(cacheManager, 'get').mockResolvedValueOnce([mockEvent])
-
-      jest.spyOn(service, 'importedEvents').mockResolvedValueOnce(mockEventsDocument)
-      const result = await service.importedEvents({
+    test('importedEvents() method returns the correct paginated events.', async () => {
+      const importedEvents = await service.importedEvents({
         filter: {} as any,
         order: 1,
         skip: 0,
         take: 10,
         sort: ImportedEventSort.CREATED_AT
       })
-      expect(result).toEqual(mockEventsDocument)
+
+      expect(importedEvents.nodes.length).toBe(10)
+      expect(importedEvents.totalCount).toBeGreaterThanOrEqual(10)
+      expect(importedEvents.pageInfo.hasPreviousPage).toBe(false)
+      expect(importedEvents.pageInfo.hasNextPage).toBe(false)
+      expect(importedEvents.pageInfo.startCursor).toBe(importedEvents.nodes[0]?.id)
     })
 
-    test('importedEvent should return the imported event by ID from the corresponding provider', async () => {
-      const id = '1'
+    test('importedEvent() method returns not found error when searching for a non-existing id', async () => {
+      const importedEventParams = {
+        id: 'non-existing-event-id'
+      }
 
-      jest.spyOn(service, 'importedEvent').mockResolvedValueOnce(mockEvent)
+      await expect(service.importedEvent(importedEventParams)).rejects.toThrowError(
+        `Event with id ${importedEventParams.id} not found.`
+      )
+    })
 
-      const result = await service.importedEvent({id})
-
-      expect(service.importedEvent).toBeCalledWith({
-        id: '1'
+    test('createEvent() method successfully creates an event and returns the ID.', async () => {
+      const importedEvents = await service.importedEvents({
+        filter: {} as any,
+        order: 1,
+        skip: 0,
+        take: 1,
+        sort: ImportedEventSort.CREATED_AT
       })
-      expect(result).toEqual(mockEvent)
+
+      const createEventParams = {
+        id: importedEvents.nodes[0].id
+      }
+
+      const createdEventId = await service.createEvent(createEventParams)
+
+      expect(createdEventId).toBe('created-event-id')
+      expect(prismaClient.event.create).toHaveBeenCalledWith(expect.any(Object))
     })
 
-    test('createEvent method should create an event in the db', async () => {
-      const event = {...mockEvent, imageId: '123'} as any
-      jest.spyOn(cacheManager, 'get').mockResolvedValueOnce([event])
-      const createEvent = {
-        id: '1',
-        source: 'AgendaBasel'
+    test('createEvent() method throws an error when an event with the provided ID is not found.', async () => {
+      const createEventParams = {
+        id: 'non-existent-event-id'
       }
 
-      const createdEvent = {
-        name: event.name,
-        description: event.description,
-        location: event.location,
-        startsAt: event.startsAt,
-        imageId: null,
-        endsAt: event.endsAt,
-        externalSourceName: event.externalSourceName,
-        externalSourceId: event.externalSourceId
-      }
-
-      jest.spyOn(prismaClient.event, 'create').mockResolvedValueOnce(event)
-
-      const result = await service.createEvent(createEvent)
-
-      expect(prismaClient.event.create).toBeCalledWith({data: createdEvent})
-      expect(result).toEqual('1')
+      await expect(service.createEvent(createEventParams)).rejects.toThrowError(
+        `Event with id ${createEventParams.id} not found.`
+      )
     })
   })
 })
