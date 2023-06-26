@@ -2,7 +2,7 @@ import {Meta} from '@storybook/react'
 import {ListItem, OrderedList, UnorderedList} from './lists'
 
 export default {
-  title: 'Lists'
+  title: 'UI/Lists'
 } as Meta
 
 export const Unordered = {

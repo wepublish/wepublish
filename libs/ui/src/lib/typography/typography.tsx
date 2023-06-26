@@ -52,15 +52,20 @@ export const H6 = forwardRef(({children, ...props}: HeadingProps, ref) => {
   )
 })
 
-export type ParagraphProps = HTMLAttributes<HTMLParagraphElement> & {component?: React.ElementType}
+export type ParagraphProps = HTMLAttributes<HTMLParagraphElement> & {
+  component?: React.ElementType
+  gutterBottom?: boolean
+}
 
-export const Paragraph = forwardRef(({children, ...props}: ParagraphProps, ref) => {
-  return (
-    <Typography {...props} ref={ref as any} variant="body1" gutterBottom>
-      {children}
-    </Typography>
-  )
-})
+export const Paragraph = forwardRef(
+  ({children, gutterBottom = true, ...props}: ParagraphProps, ref) => {
+    return (
+      <Typography {...props} ref={ref as any} variant="body1" gutterBottom={gutterBottom}>
+        {children}
+      </Typography>
+    )
+  }
+)
 
 export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
   component?: React.ElementType

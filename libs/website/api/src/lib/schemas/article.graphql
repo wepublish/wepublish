@@ -125,6 +125,9 @@ fragment FullArticle on Article {
       }
     }
   }
+  authors {
+    ...FullAuthor
+  }
 }
 
 query Article($slug: Slug, $id: ID) {

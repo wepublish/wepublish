@@ -2,7 +2,7 @@
 
 exports[`EventList should render Default 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1ul8u7n"
   >
     <a
@@ -805,13 +805,13 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
     </a>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`EventList should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="extra-classname css-1ul8u7n"
   >
     <a
@@ -1614,13 +1614,13 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
     </a>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`EventList should render WithEmotion 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1ul8u7n"
   >
     <a
@@ -2423,13 +2423,13 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
     </a>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`EventList should render WithError 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1ul8u7n"
   />
 </DocumentFragment>
@@ -2437,7 +2437,7 @@ exports[`EventList should render WithError 1`] = `
 
 exports[`EventList should render WithLoading 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1ul8u7n"
   />
 </DocumentFragment>
@@ -2445,7 +2445,7 @@ exports[`EventList should render WithLoading 1`] = `
 
 exports[`EventList should render WithoutImage 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1ul8u7n"
   >
     <a
@@ -3212,6 +3212,6 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
     </a>
-  </div>
+  </article>
 </DocumentFragment>
 `;

@@ -3,7 +3,7 @@ import {Button} from './button'
 
 export default {
   component: Button,
-  title: 'Button'
+  title: 'UI/Button'
 } as Meta<typeof Button>
 
 export const Default = {

@@ -2,11 +2,11 @@
 
 exports[`Page should render Default 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   >
     <div
-      class="css-1glohcq"
+      class="css-1gn0lpx"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -606,13 +606,13 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Page should render WithError 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   />
 </DocumentFragment>
@@ -620,7 +620,7 @@ exports[`Page should render WithError 1`] = `
 
 exports[`Page should render WithLoading 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   />
 </DocumentFragment>

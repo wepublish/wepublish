@@ -2,11 +2,11 @@
 
 exports[`Article Container should render ById 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   >
     <div
-      class="css-1glohcq"
+      class="css-1gn0lpx"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -606,17 +606,103 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+    <section
+      class="css-1kbbmi6"
+    >
+      <aside
+        class="css-a451hm"
+      >
+        <div
+          class="css-chr1eq"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+        </div>
+        <div
+          class="css-chr1eq"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              Von 
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+                href="https://example.com"
+              >
+                Foobar
+              </a>
+            </strong>
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            Editor
+          </p>
+        </div>
+      </aside>
+      <aside
+        class="css-a451hm"
+      >
+        <div
+          class="css-chr1eq"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+        </div>
+        <div
+          class="css-chr1eq"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              Von 
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+                href="https://example.com"
+              >
+                Foobar
+              </a>
+            </strong>
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            Editor
+          </p>
+        </div>
+      </aside>
+    </section>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Article Container should render BySlug 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   >
     <div
-      class="css-1glohcq"
+      class="css-1gn0lpx"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -1216,17 +1302,103 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+    <section
+      class="css-1kbbmi6"
+    >
+      <aside
+        class="css-a451hm"
+      >
+        <div
+          class="css-chr1eq"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+        </div>
+        <div
+          class="css-chr1eq"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              Von 
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+                href="https://example.com"
+              >
+                Foobar
+              </a>
+            </strong>
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            Editor
+          </p>
+        </div>
+      </aside>
+      <aside
+        class="css-a451hm"
+      >
+        <div
+          class="css-chr1eq"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+        </div>
+        <div
+          class="css-chr1eq"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              Von 
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+                href="https://example.com"
+              >
+                Foobar
+              </a>
+            </strong>
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            Editor
+          </p>
+        </div>
+      </aside>
+    </section>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Article Container should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="extra-classname css-1thzeso"
   >
     <div
-      class="css-1glohcq"
+      class="css-1gn0lpx"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -1826,17 +1998,103 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+    <section
+      class="css-1kbbmi6"
+    >
+      <aside
+        class="css-a451hm"
+      >
+        <div
+          class="css-chr1eq"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+        </div>
+        <div
+          class="css-chr1eq"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              Von 
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+                href="https://example.com"
+              >
+                Foobar
+              </a>
+            </strong>
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            Editor
+          </p>
+        </div>
+      </aside>
+      <aside
+        class="css-a451hm"
+      >
+        <div
+          class="css-chr1eq"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+        </div>
+        <div
+          class="css-chr1eq"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              Von 
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+                href="https://example.com"
+              >
+                Foobar
+              </a>
+            </strong>
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            Editor
+          </p>
+        </div>
+      </aside>
+    </section>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Article Container should render WithEmotion 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   >
     <div
-      class="css-1glohcq"
+      class="css-1gn0lpx"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -2436,6 +2694,92 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+    <section
+      class="css-1kbbmi6"
+    >
+      <aside
+        class="css-a451hm"
+      >
+        <div
+          class="css-chr1eq"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+        </div>
+        <div
+          class="css-chr1eq"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              Von 
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+                href="https://example.com"
+              >
+                Foobar
+              </a>
+            </strong>
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            Editor
+          </p>
+        </div>
+      </aside>
+      <aside
+        class="css-a451hm"
+      >
+        <div
+          class="css-chr1eq"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+        </div>
+        <div
+          class="css-chr1eq"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              Von 
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+                href="https://example.com"
+              >
+                Foobar
+              </a>
+            </strong>
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            Editor
+          </p>
+        </div>
+      </aside>
+    </section>
+  </article>
 </DocumentFragment>
 `;

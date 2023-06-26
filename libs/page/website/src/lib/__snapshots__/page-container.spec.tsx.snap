@@ -2,11 +2,11 @@
 
 exports[`Page Container should render ById 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   >
     <div
-      class="css-1glohcq"
+      class="css-1gn0lpx"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -606,17 +606,17 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Page Container should render BySlug 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   >
     <div
-      class="css-1glohcq"
+      class="css-1gn0lpx"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -1216,17 +1216,17 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Page Container should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="extra-classname css-1thzeso"
   >
     <div
-      class="css-1glohcq"
+      class="css-1gn0lpx"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -1826,17 +1826,17 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;
 
 exports[`Page Container should render WithEmotion 1`] = `
 <DocumentFragment>
-  <div
+  <article
     class="css-1thzeso"
   >
     <div
-      class="css-1glohcq"
+      class="css-1gn0lpx"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -2436,6 +2436,6 @@ https://unsplash.it/200/100 200w"
         </script>
       </div>
     </div>
-  </div>
+  </article>
 </DocumentFragment>
 `;

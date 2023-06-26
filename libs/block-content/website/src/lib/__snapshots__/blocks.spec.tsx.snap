@@ -3,7 +3,7 @@
 exports[`Blocks should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-1glohcq"
+    class="css-1gn0lpx"
   >
     <h1
       class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -612,7 +612,7 @@ exports[`Blocks should render WithLayout 1`] = `
     class="css-1thzeso"
   >
     <div
-      class="css-1glohcq"
+      class="css-1gn0lpx"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
