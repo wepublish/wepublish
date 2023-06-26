@@ -5,7 +5,7 @@ import {Blocks} from '@wepublish/block-content/website'
 
 export type PageProps = BuilderPageProps
 
-const PageWrapper = styled('div')`
+export const PageWrapper = styled('article')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
 `

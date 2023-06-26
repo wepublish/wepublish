@@ -58,17 +58,11 @@ spec:
         - name: {{ include "helm.fullname" . }}
           image: {{ .Values.deployment.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
-          command: ['node', 'dist/apps/website-example/main.js']
+          command: ["sh", "-c", "npx nx build website-example --prod && npx next start dist/apps/website-example/ -p 8000"]
           ports:
             - name: http
               containerPort: 8000
               protocol: TCP
-          env:
-            - name: CANONICAL_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "helm.fullname" . }}-website-environment-{{ .Release.Revision }}
-                  key: WEBSITE_URL
           envFrom:
             - secretRef:
                 name: {{ include "helm.fullname" . }}-website-environment-{{ .Release.Revision }}
