@@ -1,136 +1,33 @@
-fragment FullArticle on Article {
+fragment ArticleWithoutBlocks on Article {
   id
   slug
+  breaking
+  lead
+  publishedAt
+  tags
+  title
   url
-  blocks {
-    __typename
 
-    ... on TitleBlock {
-      title
-      lead
-    }
-
-    ... on ImageBlock {
-      caption
-      image {
-        ...FullImage
-      }
-    }
-
-    ... on QuoteBlock {
-      quote
-      author
-    }
-
-    ... on RichTextBlock {
-      richText
-    }
-
-    ... on HTMLBlock {
-      html
-    }
-
-    ... on TeaserGridFlexBlock {
-      flexTeasers {
-        alignment {
-          x
-          y
-          w
-          h
-        }
-
-        teaser {
-          ... on ArticleTeaser {
-            style
-
-            image {
-              ...FullImage
-            }
-
-            preTitle
-            title
-            lead
-
-            article {
-              id
-              title
-              preTitle
-              lead
-              url
-              blocks {
-                __typename
-
-                ... on TitleBlock {
-                  title
-                  lead
-                }
-
-                ... on ImageBlock {
-                  caption
-                  image {
-                    ...FullImage
-                  }
-                }
-              }
-            }
-          }
-
-          ... on PageTeaser {
-            style
-
-            image {
-              ...FullImage
-            }
-
-            preTitle
-            title
-            lead
-
-            page {
-              id
-              title
-              description
-              url
-              blocks {
-                __typename
-
-                ... on TitleBlock {
-                  title
-                  lead
-                }
-
-                ... on ImageBlock {
-                  caption
-                  image {
-                    ...FullImage
-                  }
-                }
-              }
-            }
-          }
-
-          ... on CustomTeaser {
-            style
-
-            image {
-              ...FullImage
-            }
-
-            preTitle
-            title
-            lead
-            contentUrl
-            properties {
-              key
-              value
-            }
-          }
-        }
-      }
-    }
-  }
   authors {
     ...FullAuthor
+  }
+
+  image {
+    ...FullImage
+  }
+
+  socialMediaDescription
+  socialMediaTitle
+  socialMediaImage {
+    ...FullImage
+  }
+}
+
+fragment FullArticle on Article {
+  ...ArticleWithoutBlocks
+
+  blocks {
+    ...FullBlock
   }
 }
 

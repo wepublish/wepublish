@@ -1,0 +1,586 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Teaser Grid Block should render OneColumn 1`] = `
+<DocumentFragment>
+  <div
+    class="css-y7q5pk"
+  >
+    <article
+      class="css-hvib8e"
+      x="0"
+      y="0"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        href="https://example.com"
+      >
+        <div
+          class="css-rd719m"
+        >
+          <img
+            alt="An image description"
+            class="css-1qnf57e"
+            height="500"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+            width="500"
+          />
+          <header
+            class="css-0"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+            >
+              Pre Title:  Title
+            </h1>
+          </header>
+        </div>
+      </a>
+    </article>
+    <article
+      class="css-iyhzuj"
+      x="0"
+      y="1"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        href="https://example.com"
+      >
+        <div
+          class="css-rd719m"
+        >
+          <img
+            alt="An image description"
+            class="css-1qnf57e"
+            height="500"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+            width="500"
+          />
+          <header
+            class="css-0"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+            >
+              Pre Title:  Title
+            </h1>
+          </header>
+        </div>
+      </a>
+    </article>
+    <article
+      class="css-1uwl6n8"
+      x="0"
+      y="2"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        href="https://example.com"
+      >
+        <div
+          class="css-rd719m"
+        >
+          <img
+            alt="An image description"
+            class="css-1qnf57e"
+            height="500"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+            width="500"
+          />
+          <header
+            class="css-0"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+            >
+               Teambesprechung vom 23.05.
+            </h1>
+          </header>
+        </div>
+      </a>
+    </article>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Teaser Grid Block should render ThreeColumns 1`] = `
+<DocumentFragment>
+  <div
+    class="css-g9gdip"
+  >
+    <article
+      class="css-1wew3fr"
+      x="0"
+      y="0"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        href="https://example.com"
+      >
+        <div
+          class="css-rd719m"
+        >
+          <img
+            alt="An image description"
+            class="css-1qnf57e"
+            height="500"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+            width="500"
+          />
+          <header
+            class="css-0"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+            >
+              Pre Title:  Title
+            </h1>
+          </header>
+        </div>
+      </a>
+    </article>
+    <article
+      class="css-1n3ni4"
+      x="4"
+      y="0"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        href="https://example.com"
+      >
+        <div
+          class="css-rd719m"
+        >
+          <img
+            alt="An image description"
+            class="css-1qnf57e"
+            height="500"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+            width="500"
+          />
+          <header
+            class="css-0"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+            >
+              Pre Title:  Title
+            </h1>
+          </header>
+        </div>
+      </a>
+    </article>
+    <article
+      class="css-1rq2gvl"
+      x="8"
+      y="0"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        href="https://example.com"
+      >
+        <div
+          class="css-rd719m"
+        >
+          <img
+            alt="An image description"
+            class="css-1qnf57e"
+            height="500"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+            width="500"
+          />
+          <header
+            class="css-0"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+            >
+               Teambesprechung vom 23.05.
+            </h1>
+          </header>
+        </div>
+      </a>
+    </article>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Teaser Grid Block should render WithClassName 1`] = `
+<DocumentFragment>
+  <div
+    class="extra-classname css-g9gdip"
+  >
+    <article
+      class="css-1wew3fr"
+      x="0"
+      y="0"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        href="https://example.com"
+      >
+        <div
+          class="css-rd719m"
+        >
+          <img
+            alt="An image description"
+            class="css-1qnf57e"
+            height="500"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+            width="500"
+          />
+          <header
+            class="css-0"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+            >
+              Pre Title:  Title
+            </h1>
+          </header>
+        </div>
+      </a>
+    </article>
+    <article
+      class="css-1n3ni4"
+      x="4"
+      y="0"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        href="https://example.com"
+      >
+        <div
+          class="css-rd719m"
+        >
+          <img
+            alt="An image description"
+            class="css-1qnf57e"
+            height="500"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+            width="500"
+          />
+          <header
+            class="css-0"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+            >
+              Pre Title:  Title
+            </h1>
+          </header>
+        </div>
+      </a>
+    </article>
+    <article
+      class="css-1rq2gvl"
+      x="8"
+      y="0"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        href="https://example.com"
+      >
+        <div
+          class="css-rd719m"
+        >
+          <img
+            alt="An image description"
+            class="css-1qnf57e"
+            height="500"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+            width="500"
+          />
+          <header
+            class="css-0"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+            >
+               Teambesprechung vom 23.05.
+            </h1>
+          </header>
+        </div>
+      </a>
+    </article>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Teaser Grid Block should render WithEmotion 1`] = `
+<DocumentFragment>
+  <div
+    class="css-g9gdip"
+  >
+    <article
+      class="css-1wew3fr"
+      x="0"
+      y="0"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        href="https://example.com"
+      >
+        <div
+          class="css-rd719m"
+        >
+          <img
+            alt="An image description"
+            class="css-1qnf57e"
+            height="500"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+            width="500"
+          />
+          <header
+            class="css-0"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+            >
+              Pre Title:  Title
+            </h1>
+          </header>
+        </div>
+      </a>
+    </article>
+    <article
+      class="css-1n3ni4"
+      x="4"
+      y="0"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        href="https://example.com"
+      >
+        <div
+          class="css-rd719m"
+        >
+          <img
+            alt="An image description"
+            class="css-1qnf57e"
+            height="500"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+            width="500"
+          />
+          <header
+            class="css-0"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+            >
+              Pre Title:  Title
+            </h1>
+          </header>
+        </div>
+      </a>
+    </article>
+    <article
+      class="css-1rq2gvl"
+      x="8"
+      y="0"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        href="https://example.com"
+      >
+        <div
+          class="css-rd719m"
+        >
+          <img
+            alt="An image description"
+            class="css-1qnf57e"
+            height="500"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+            width="500"
+          />
+          <header
+            class="css-0"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+            >
+               Teambesprechung vom 23.05.
+            </h1>
+          </header>
+        </div>
+      </a>
+    </article>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Teaser Grid Block should render WithShowLoad 1`] = `
+<DocumentFragment>
+  <div
+    class="css-g9gdip"
+  >
+    <article
+      class="css-1wew3fr"
+      x="0"
+      y="0"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        href="https://example.com"
+      >
+        <div
+          class="css-rd719m"
+        >
+          <img
+            alt="An image description"
+            class="css-1qnf57e"
+            height="500"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+            width="500"
+          />
+          <header
+            class="css-0"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+            >
+              Pre Title:  Title
+            </h1>
+          </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          >
+            Lead
+          </p>
+        </div>
+      </a>
+    </article>
+    <article
+      class="css-1n3ni4"
+      x="4"
+      y="0"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        href="https://example.com"
+      >
+        <div
+          class="css-rd719m"
+        >
+          <img
+            alt="An image description"
+            class="css-1qnf57e"
+            height="500"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+            width="500"
+          />
+          <header
+            class="css-0"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+            >
+              Pre Title:  Title
+            </h1>
+          </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          >
+            Lead
+          </p>
+        </div>
+      </a>
+    </article>
+    <article
+      class="css-1rq2gvl"
+      x="8"
+      y="0"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        href="https://example.com"
+      >
+        <div
+          class="css-rd719m"
+        >
+          <img
+            alt="An image description"
+            class="css-1qnf57e"
+            height="500"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+            width="500"
+          />
+          <header
+            class="css-0"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+            >
+               Teambesprechung vom 23.05.
+            </h1>
+          </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          >
+            Lead
+          </p>
+        </div>
+      </a>
+    </article>
+  </div>
+</DocumentFragment>
+`;

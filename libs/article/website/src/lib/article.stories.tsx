@@ -1,8 +1,41 @@
 import {ApolloError} from '@apollo/client'
-import {Meta} from '@storybook/react'
-import {ArticleQuery, AuthorQuery} from '@wepublish/website/api'
-import {Article} from './article'
 import {css} from '@emotion/react'
+import {Meta} from '@storybook/react'
+import {ArticleQuery, FullAuthorFragment, FullImageFragment} from '@wepublish/website/api'
+import {Article} from './article'
+
+const image = {
+  __typename: 'Image',
+  id: 'ljh9FHAvHAs0AxC',
+  mimeType: 'image/jpg',
+  format: 'jpg',
+  createdAt: '2023-04-18T12:38:56.369Z',
+  modifiedAt: '2023-04-18T12:38:56.371Z',
+  filename: 'DSC07717',
+  extension: '.JPG',
+  width: 4000,
+  height: 6000,
+  fileSize: 8667448,
+  description: null,
+  tags: [],
+  source: null,
+  link: null,
+  license: null,
+  focalPoint: {
+    x: 0.5,
+    y: 0.5
+  },
+  title: null,
+  url: 'https://unsplash.it/500/281',
+  bigURL: 'https://unsplash.it/800/400',
+  largeURL: 'https://unsplash.it/500/300',
+  mediumURL: 'https://unsplash.it/300/200',
+  smallURL: 'https://unsplash.it/200/100',
+  squareBigURL: 'https://unsplash.it/800/800',
+  squareLargeURL: 'https://unsplash.it/500/500',
+  squareMediumURL: 'https://unsplash.it/300/300',
+  squareSmallURL: 'https://unsplash.it/200/200'
+} as FullImageFragment
 
 const author = {
   __typename: 'Author',
@@ -38,45 +71,24 @@ const author = {
       __typename: 'AuthorLink'
     }
   ],
-  image: {
-    __typename: 'Image',
-    id: 'ljh9FHAvHAs0AxC',
-    mimeType: 'image/jpg',
-    format: 'jpg',
-    createdAt: '2023-04-18T12:38:56.369Z',
-    modifiedAt: '2023-04-18T12:38:56.371Z',
-    filename: 'DSC07717',
-    extension: '.JPG',
-    width: 4000,
-    height: 6000,
-    fileSize: 8667448,
-    description: null,
-    tags: [],
-    source: null,
-    link: null,
-    license: null,
-    focalPoint: {
-      x: 0.5,
-      y: 0.5
-    },
-    title: null,
-    url: 'https://unsplash.it/500/281',
-    bigURL: 'https://unsplash.it/800/400',
-    largeURL: 'https://unsplash.it/500/300',
-    mediumURL: 'https://unsplash.it/300/200',
-    smallURL: 'https://unsplash.it/200/100',
-    squareBigURL: 'https://unsplash.it/800/800',
-    squareLargeURL: 'https://unsplash.it/500/500',
-    squareMediumURL: 'https://unsplash.it/300/300',
-    squareSmallURL: 'https://unsplash.it/200/200'
-  }
-} as Exclude<AuthorQuery['author'], undefined | null>
+  image
+} as FullAuthorFragment
 
 const article = {
   __typename: 'Article',
   id: 'clgp1hfio50331801rejmrk6sj3',
+  title: 'title',
   slug: 'slug',
   url: 'https://example.com',
+  authors: [author, {...author, id: '1234'}],
+  tags: ['foo', 'bar'],
+  breaking: false,
+  publishedAt: new Date('2023-01-01').toISOString(),
+  image,
+  socialMediaImage: image,
+  socialMediaTitle: 'socialMediaTitle',
+  socialMediaDescription: 'socialMediaDescription',
+  lead: 'lead',
   blocks: [
     {
       __typename: 'TitleBlock',
@@ -394,7 +406,16 @@ const article = {
               title: 'Chur solidarisiert sich mit der Ukraine',
               preTitle: null,
               lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
-              url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+              url: 'https://example.com',
+              slug: 'slug',
+              authors: [author, {...author, id: '1234'}],
+              tags: ['foo', 'bar'],
+              breaking: false,
+              publishedAt: new Date('2023-01-01').toISOString(),
+              image,
+              socialMediaImage: image,
+              socialMediaTitle: 'socialMediaTitle',
+              socialMediaDescription: 'socialMediaDescription',
               blocks: [
                 {
                   __typename: 'TitleBlock',
@@ -463,9 +484,17 @@ const article = {
               __typename: 'Article',
               id: 'clg2cxnig57497901rej8i9ubj1',
               title: 'Chur solidarisiert sich mit der Ukraine',
-              preTitle: null,
+              slug: 'slug',
+              authors: [author, {...author, id: '1234'}],
+              tags: ['foo', 'bar'],
+              breaking: false,
+              publishedAt: new Date('2023-01-01').toISOString(),
+              image,
+              socialMediaImage: image,
+              socialMediaTitle: 'socialMediaTitle',
+              socialMediaDescription: 'socialMediaDescription',
               lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
-              url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+              url: 'https://example.com',
               blocks: [
                 {
                   __typename: 'TitleBlock',
@@ -564,9 +593,15 @@ const article = {
             page: {
               __typename: 'Page',
               id: 'cl95fumlq261901phgrctx4mz',
-              title: 'Home',
+              slug: 'slug',
+              url: 'https://example.com',
+              title: 'title',
               description: '',
-              url: 'https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/',
+              image,
+              tags: ['foo', 'bar'],
+              socialMediaImage: image,
+              socialMediaDescription: 'socialMediaDescription',
+              socialMediaTitle: 'socialMediaTitle',
               blocks: [
                 {
                   __typename: 'TeaserGridBlock'
@@ -814,9 +849,15 @@ const article = {
             page: {
               __typename: 'Page',
               id: 'cl95fumlq261901phgrctx4mz',
-              title: 'Home',
+              slug: 'slug',
+              url: 'https://example.com',
+              title: 'title',
               description: '',
-              url: 'https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/',
+              image,
+              tags: ['foo', 'bar'],
+              socialMediaImage: image,
+              socialMediaDescription: 'socialMediaDescription',
+              socialMediaTitle: 'socialMediaTitle',
               blocks: [
                 {
                   __typename: 'TeaserGridBlock'
@@ -1110,8 +1151,7 @@ const article = {
     {
       __typename: 'EventBlock'
     }
-  ],
-  authors: [author, {...author, id: '1234'}]
+  ]
 } as Exclude<ArticleQuery['article'], undefined | null>
 
 export default {
@@ -1139,7 +1179,6 @@ export const WithError = {
     data: {
       article: null
     },
-    loading: false,
     error: new ApolloError({
       errorMessage: 'Foobar'
     })
@@ -1169,10 +1208,42 @@ export const WithoutAuthors = {
         ...article,
         authors: []
       }
-    },
-    loading: false,
-    error: new ApolloError({
-      errorMessage: 'Foobar'
-    })
+    }
+  }
+}
+
+export const WithoutSocialMedia = {
+  args: {
+    data: {
+      article: {
+        ...article,
+        socialMediaImage: null,
+        socialMediaDescription: null,
+        socialMediaTitle: null
+      }
+    }
+  }
+}
+
+export const WithoutLead = {
+  args: {
+    data: {
+      article: {
+        ...article,
+        lead: null
+      }
+    }
+  }
+}
+
+export const WithoutImageMetadata = {
+  args: {
+    data: {
+      article: {
+        ...article,
+        socialMediaImage: null,
+        image: null
+      }
+    }
   }
 }

@@ -34,6 +34,7 @@
     "@emotion/babel-plugin": "11.10.6",
     "@graphql-codegen/add": "^2.0.1",
     "@graphql-codegen/cli": "^2.15.0",
+    "@graphql-codegen/fragment-matcher": "^5.0.0",
     "@graphql-codegen/introspection": "^2.2.1",
     "@graphql-codegen/typescript": "^2.8.3",
     "@graphql-codegen/typescript-document-nodes": "^2.3.8",

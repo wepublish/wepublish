@@ -370,3 +370,13 @@ export type VersionInformationQueryResult = Apollo.QueryResult<
   VersionInformationQuery,
   VersionInformationQueryVariables
 >
+
+export interface PossibleTypesResultData {
+  possibleTypes: {
+    [key: string]: string[]
+  }
+}
+const result: PossibleTypesResultData = {
+  possibleTypes: {}
+}
+export default result
