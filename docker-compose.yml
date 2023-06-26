@@ -13,10 +13,7 @@ services:
     command: ['npx', '@wepublish/website-example']
     environment:
       NODE_ENV: production
-      CANONICAL_HOST: http://localhost:4200
       API_URL: http://api:8000
-      ALLOWED_HOSTS: localhost
-      NUM_WORKERS: 1
     depends_on:
       - api
     networks:

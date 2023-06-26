@@ -230,9 +230,9 @@ describe('DashboardSubscriptionResolver', () => {
       }
     ]
 
-    subscriptionsToDelete = await Promise.all(
-      mockData.map(data => prisma.subscription.create({data}))
-    )
+    for (const data of mockData) {
+      subscriptionsToDelete.push(await prisma.subscription.create({data}))
+    }
 
     await request(app.getHttpServer())
       .post('')
@@ -386,9 +386,9 @@ describe('DashboardSubscriptionResolver', () => {
       }
     ]
 
-    subscriptionsToDelete = await Promise.all(
-      mockData.map(data => prisma.subscription.create({data}))
-    )
+    for (const data of mockData) {
+      subscriptionsToDelete.push(await prisma.subscription.create({data}))
+    }
 
     await request(app.getHttpServer())
       .post('')
@@ -545,9 +545,9 @@ describe('DashboardSubscriptionResolver', () => {
       }
     ]
 
-    subscriptionsToDelete = await Promise.all(
-      mockData.map(data => prisma.subscription.create({data}))
-    )
+    for (const data of mockData) {
+      subscriptionsToDelete.push(await prisma.subscription.create({data}))
+    }
 
     await request(app.getHttpServer())
       .post('')
@@ -653,9 +653,9 @@ describe('DashboardSubscriptionResolver', () => {
       }
     ]
 
-    subscriptionsToDelete = await Promise.all(
-      mockData.map(data => prisma.subscription.create({data}))
-    )
+    for (const data of mockData) {
+      subscriptionsToDelete.push(await prisma.subscription.create({data}))
+    }
 
     await request(app.getHttpServer())
       .post('')
