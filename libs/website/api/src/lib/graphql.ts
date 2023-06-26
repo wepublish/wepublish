@@ -1364,11 +1364,17 @@ export type OverriddenRating = {
   value?: Maybe<Scalars['Int']>
 }
 
-export type FullArticleFragment = {
+export type ArticleWithoutTeasersFragment = {
   __typename?: 'Article'
   id: string
+  publishedAt: string
+  updatedAt: string
+  preTitle?: string | null
+  title: string
+  lead?: string | null
   slug: string
   url: string
+  tags: Array<string>
   blocks: Array<
     | {__typename: 'BildwurfAdBlock'}
     | {__typename: 'CommentBlock'}
@@ -1391,12 +1397,111 @@ export type FullArticleFragment = {
           width: number
           height: number
           fileSize: number
+          title?: string | null
           description?: string | null
           tags: Array<string>
           source?: string | null
           link?: string | null
           license?: string | null
+          url?: string | null
+          bigURL?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+      }
+    | {__typename: 'ImageGalleryBlock'}
+    | {__typename: 'InstagramPostBlock'}
+    | {__typename: 'LinkPageBreakBlock'}
+    | {__typename: 'ListicleBlock'}
+    | {__typename: 'PolisConversationBlock'}
+    | {__typename: 'PollBlock'}
+    | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+    | {__typename: 'RichTextBlock'; richText: Node[]}
+    | {__typename: 'SoundCloudTrackBlock'}
+    | {__typename: 'TeaserGridBlock'}
+    | {__typename: 'TeaserGridFlexBlock'}
+    | {__typename: 'TikTokVideoBlock'}
+    | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+    | {__typename: 'TwitterTweetBlock'}
+    | {__typename: 'VimeoVideoBlock'}
+    | {__typename: 'YouTubeVideoBlock'}
+  >
+  image?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    title?: string | null
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
+}
+
+export type FullArticleFragment = {
+  __typename?: 'Article'
+  id: string
+  publishedAt: string
+  updatedAt: string
+  preTitle?: string | null
+  title: string
+  lead?: string | null
+  slug: string
+  url: string
+  tags: Array<string>
+  blocks: Array<
+    | {__typename: 'BildwurfAdBlock'}
+    | {__typename: 'CommentBlock'}
+    | {__typename: 'EmbedBlock'}
+    | {__typename: 'EventBlock'}
+    | {__typename: 'FacebookPostBlock'}
+    | {__typename: 'HTMLBlock'; html?: string | null}
+    | {
+        __typename: 'ImageBlock'
+        caption?: string | null
+        image?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          format: string
+          mimeType: string
+          extension: string
+          width: number
+          height: number
+          fileSize: number
           title?: string | null
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
           url?: string | null
           bigURL?: string | null
           largeURL?: string | null
@@ -1434,12 +1539,21 @@ export type FullArticleFragment = {
                 image?: {
                   __typename?: 'Image'
                   id: string
+                  createdAt: string
+                  modifiedAt: string
                   filename?: string | null
+                  format: string
+                  mimeType: string
                   extension: string
-                  title?: string | null
-                  description?: string | null
                   width: number
                   height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
                   url?: string | null
                   bigURL?: string | null
                   largeURL?: string | null
@@ -1449,21 +1563,26 @@ export type FullArticleFragment = {
                   squareLargeURL?: string | null
                   squareMediumURL?: string | null
                   squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                 } | null
                 article?: {
                   __typename?: 'Article'
                   id: string
-                  title: string
+                  publishedAt: string
+                  updatedAt: string
                   preTitle?: string | null
+                  title: string
                   lead?: string | null
+                  slug: string
                   url: string
+                  tags: Array<string>
                   blocks: Array<
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
-                    | {__typename: 'HTMLBlock'}
+                    | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
                         caption?: string | null
@@ -1479,12 +1598,12 @@ export type FullArticleFragment = {
                           width: number
                           height: number
                           fileSize: number
+                          title?: string | null
                           description?: string | null
                           tags: Array<string>
                           source?: string | null
                           link?: string | null
                           license?: string | null
-                          title?: string | null
                           url?: string | null
                           bigURL?: string | null
                           largeURL?: string | null
@@ -1503,8 +1622,8 @@ export type FullArticleFragment = {
                     | {__typename: 'ListicleBlock'}
                     | {__typename: 'PolisConversationBlock'}
                     | {__typename: 'PollBlock'}
-                    | {__typename: 'QuoteBlock'}
-                    | {__typename: 'RichTextBlock'}
+                    | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                    | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
                     | {__typename: 'TeaserGridBlock'}
                     | {__typename: 'TeaserGridFlexBlock'}
@@ -1514,6 +1633,35 @@ export type FullArticleFragment = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
                 } | null
               }
             | {
@@ -1526,12 +1674,21 @@ export type FullArticleFragment = {
                 image?: {
                   __typename?: 'Image'
                   id: string
+                  createdAt: string
+                  modifiedAt: string
                   filename?: string | null
+                  format: string
+                  mimeType: string
                   extension: string
-                  title?: string | null
-                  description?: string | null
                   width: number
                   height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
                   url?: string | null
                   bigURL?: string | null
                   largeURL?: string | null
@@ -1541,6 +1698,7 @@ export type FullArticleFragment = {
                   squareLargeURL?: string | null
                   squareMediumURL?: string | null
                   squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                 } | null
                 properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
               }
@@ -1554,12 +1712,21 @@ export type FullArticleFragment = {
                 image?: {
                   __typename?: 'Image'
                   id: string
+                  createdAt: string
+                  modifiedAt: string
                   filename?: string | null
+                  format: string
+                  mimeType: string
                   extension: string
-                  title?: string | null
-                  description?: string | null
                   width: number
                   height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
                   url?: string | null
                   bigURL?: string | null
                   largeURL?: string | null
@@ -1569,6 +1736,7 @@ export type FullArticleFragment = {
                   squareLargeURL?: string | null
                   squareMediumURL?: string | null
                   squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                 } | null
                 page?: {
                   __typename?: 'Page'
@@ -1598,12 +1766,12 @@ export type FullArticleFragment = {
                           width: number
                           height: number
                           fileSize: number
+                          title?: string | null
                           description?: string | null
                           tags: Array<string>
                           source?: string | null
                           link?: string | null
                           license?: string | null
-                          title?: string | null
                           url?: string | null
                           bigURL?: string | null
                           largeURL?: string | null
@@ -1645,6 +1813,35 @@ export type FullArticleFragment = {
     | {__typename: 'VimeoVideoBlock'}
     | {__typename: 'YouTubeVideoBlock'}
   >
+  image?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    title?: string | null
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
 }
 
 export type ArticleQueryVariables = Exact<{
@@ -1657,8 +1854,14 @@ export type ArticleQuery = {
   article?: {
     __typename?: 'Article'
     id: string
+    publishedAt: string
+    updatedAt: string
+    preTitle?: string | null
+    title: string
+    lead?: string | null
     slug: string
     url: string
+    tags: Array<string>
     blocks: Array<
       | {__typename: 'BildwurfAdBlock'}
       | {__typename: 'CommentBlock'}
@@ -1681,12 +1884,12 @@ export type ArticleQuery = {
             width: number
             height: number
             fileSize: number
+            title?: string | null
             description?: string | null
             tags: Array<string>
             source?: string | null
             link?: string | null
             license?: string | null
-            title?: string | null
             url?: string | null
             bigURL?: string | null
             largeURL?: string | null
@@ -1724,12 +1927,21 @@ export type ArticleQuery = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    createdAt: string
+                    modifiedAt: string
                     filename?: string | null
+                    format: string
+                    mimeType: string
                     extension: string
-                    title?: string | null
-                    description?: string | null
                     width: number
                     height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
                     url?: string | null
                     bigURL?: string | null
                     largeURL?: string | null
@@ -1739,21 +1951,26 @@ export type ArticleQuery = {
                     squareLargeURL?: string | null
                     squareMediumURL?: string | null
                     squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                   article?: {
                     __typename?: 'Article'
                     id: string
-                    title: string
+                    publishedAt: string
+                    updatedAt: string
                     preTitle?: string | null
+                    title: string
                     lead?: string | null
+                    slug: string
                     url: string
+                    tags: Array<string>
                     blocks: Array<
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
-                      | {__typename: 'HTMLBlock'}
+                      | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
                           caption?: string | null
@@ -1769,12 +1986,12 @@ export type ArticleQuery = {
                             width: number
                             height: number
                             fileSize: number
+                            title?: string | null
                             description?: string | null
                             tags: Array<string>
                             source?: string | null
                             link?: string | null
                             license?: string | null
-                            title?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -1793,8 +2010,8 @@ export type ArticleQuery = {
                       | {__typename: 'ListicleBlock'}
                       | {__typename: 'PolisConversationBlock'}
                       | {__typename: 'PollBlock'}
-                      | {__typename: 'QuoteBlock'}
-                      | {__typename: 'RichTextBlock'}
+                      | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                      | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
                       | {__typename: 'TeaserGridBlock'}
                       | {__typename: 'TeaserGridFlexBlock'}
@@ -1804,6 +2021,35 @@ export type ArticleQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
                   } | null
                 }
               | {
@@ -1816,12 +2062,21 @@ export type ArticleQuery = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    createdAt: string
+                    modifiedAt: string
                     filename?: string | null
+                    format: string
+                    mimeType: string
                     extension: string
-                    title?: string | null
-                    description?: string | null
                     width: number
                     height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
                     url?: string | null
                     bigURL?: string | null
                     largeURL?: string | null
@@ -1831,6 +2086,7 @@ export type ArticleQuery = {
                     squareLargeURL?: string | null
                     squareMediumURL?: string | null
                     squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                   properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                 }
@@ -1844,12 +2100,21 @@ export type ArticleQuery = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    createdAt: string
+                    modifiedAt: string
                     filename?: string | null
+                    format: string
+                    mimeType: string
                     extension: string
-                    title?: string | null
-                    description?: string | null
                     width: number
                     height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
                     url?: string | null
                     bigURL?: string | null
                     largeURL?: string | null
@@ -1859,6 +2124,7 @@ export type ArticleQuery = {
                     squareLargeURL?: string | null
                     squareMediumURL?: string | null
                     squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                   page?: {
                     __typename?: 'Page'
@@ -1888,12 +2154,12 @@ export type ArticleQuery = {
                             width: number
                             height: number
                             fileSize: number
+                            title?: string | null
                             description?: string | null
                             tags: Array<string>
                             source?: string | null
                             link?: string | null
                             license?: string | null
-                            title?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -1935,6 +2201,35 @@ export type ArticleQuery = {
       | {__typename: 'VimeoVideoBlock'}
       | {__typename: 'YouTubeVideoBlock'}
     >
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
   } | null
 }
 
@@ -1949,8 +2244,14 @@ export type PeerArticleQuery = {
   peerArticle?: {
     __typename?: 'Article'
     id: string
+    publishedAt: string
+    updatedAt: string
+    preTitle?: string | null
+    title: string
+    lead?: string | null
     slug: string
     url: string
+    tags: Array<string>
     blocks: Array<
       | {__typename: 'BildwurfAdBlock'}
       | {__typename: 'CommentBlock'}
@@ -1973,12 +2274,12 @@ export type PeerArticleQuery = {
             width: number
             height: number
             fileSize: number
+            title?: string | null
             description?: string | null
             tags: Array<string>
             source?: string | null
             link?: string | null
             license?: string | null
-            title?: string | null
             url?: string | null
             bigURL?: string | null
             largeURL?: string | null
@@ -2016,12 +2317,21 @@ export type PeerArticleQuery = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    createdAt: string
+                    modifiedAt: string
                     filename?: string | null
+                    format: string
+                    mimeType: string
                     extension: string
-                    title?: string | null
-                    description?: string | null
                     width: number
                     height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
                     url?: string | null
                     bigURL?: string | null
                     largeURL?: string | null
@@ -2031,21 +2341,26 @@ export type PeerArticleQuery = {
                     squareLargeURL?: string | null
                     squareMediumURL?: string | null
                     squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                   article?: {
                     __typename?: 'Article'
                     id: string
-                    title: string
+                    publishedAt: string
+                    updatedAt: string
                     preTitle?: string | null
+                    title: string
                     lead?: string | null
+                    slug: string
                     url: string
+                    tags: Array<string>
                     blocks: Array<
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
-                      | {__typename: 'HTMLBlock'}
+                      | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
                           caption?: string | null
@@ -2061,12 +2376,12 @@ export type PeerArticleQuery = {
                             width: number
                             height: number
                             fileSize: number
+                            title?: string | null
                             description?: string | null
                             tags: Array<string>
                             source?: string | null
                             link?: string | null
                             license?: string | null
-                            title?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -2085,8 +2400,8 @@ export type PeerArticleQuery = {
                       | {__typename: 'ListicleBlock'}
                       | {__typename: 'PolisConversationBlock'}
                       | {__typename: 'PollBlock'}
-                      | {__typename: 'QuoteBlock'}
-                      | {__typename: 'RichTextBlock'}
+                      | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                      | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
                       | {__typename: 'TeaserGridBlock'}
                       | {__typename: 'TeaserGridFlexBlock'}
@@ -2096,6 +2411,35 @@ export type PeerArticleQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
                   } | null
                 }
               | {
@@ -2108,12 +2452,21 @@ export type PeerArticleQuery = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    createdAt: string
+                    modifiedAt: string
                     filename?: string | null
+                    format: string
+                    mimeType: string
                     extension: string
-                    title?: string | null
-                    description?: string | null
                     width: number
                     height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
                     url?: string | null
                     bigURL?: string | null
                     largeURL?: string | null
@@ -2123,6 +2476,7 @@ export type PeerArticleQuery = {
                     squareLargeURL?: string | null
                     squareMediumURL?: string | null
                     squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                   properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                 }
@@ -2136,12 +2490,21 @@ export type PeerArticleQuery = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    createdAt: string
+                    modifiedAt: string
                     filename?: string | null
+                    format: string
+                    mimeType: string
                     extension: string
-                    title?: string | null
-                    description?: string | null
                     width: number
                     height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
                     url?: string | null
                     bigURL?: string | null
                     largeURL?: string | null
@@ -2151,6 +2514,7 @@ export type PeerArticleQuery = {
                     squareLargeURL?: string | null
                     squareMediumURL?: string | null
                     squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                   page?: {
                     __typename?: 'Page'
@@ -2180,12 +2544,12 @@ export type PeerArticleQuery = {
                             width: number
                             height: number
                             fileSize: number
+                            title?: string | null
                             description?: string | null
                             tags: Array<string>
                             source?: string | null
                             link?: string | null
                             license?: string | null
-                            title?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -2227,6 +2591,35 @@ export type PeerArticleQuery = {
       | {__typename: 'VimeoVideoBlock'}
       | {__typename: 'YouTubeVideoBlock'}
     >
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
   } | null
 }
 
@@ -2275,12 +2668,12 @@ type BlockWithoutTeaser_ImageBlock_Fragment = {
     width: number
     height: number
     fileSize: number
+    title?: string | null
     description?: string | null
     tags: Array<string>
     source?: string | null
     link?: string | null
     license?: string | null
-    title?: string | null
     url?: string | null
     bigURL?: string | null
     largeURL?: string | null
@@ -2386,12 +2779,12 @@ type FullBlock_ImageBlock_Fragment = {
     width: number
     height: number
     fileSize: number
+    title?: string | null
     description?: string | null
     tags: Array<string>
     source?: string | null
     link?: string | null
     license?: string | null
-    title?: string | null
     url?: string | null
     bigURL?: string | null
     largeURL?: string | null
@@ -2444,12 +2837,21 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
           image?: {
             __typename?: 'Image'
             id: string
+            createdAt: string
+            modifiedAt: string
             filename?: string | null
+            format: string
+            mimeType: string
             extension: string
-            title?: string | null
-            description?: string | null
             width: number
             height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
             url?: string | null
             bigURL?: string | null
             largeURL?: string | null
@@ -2459,6 +2861,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
             squareLargeURL?: string | null
             squareMediumURL?: string | null
             squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
           } | null
           article?: {
             __typename?: 'Article'
@@ -2489,12 +2892,12 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
                     width: number
                     height: number
                     fileSize: number
+                    title?: string | null
                     description?: string | null
                     tags: Array<string>
                     source?: string | null
                     link?: string | null
                     license?: string | null
-                    title?: string | null
                     url?: string | null
                     bigURL?: string | null
                     largeURL?: string | null
@@ -2536,12 +2939,21 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
           image?: {
             __typename?: 'Image'
             id: string
+            createdAt: string
+            modifiedAt: string
             filename?: string | null
+            format: string
+            mimeType: string
             extension: string
-            title?: string | null
-            description?: string | null
             width: number
             height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
             url?: string | null
             bigURL?: string | null
             largeURL?: string | null
@@ -2551,6 +2963,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
             squareLargeURL?: string | null
             squareMediumURL?: string | null
             squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
           } | null
           properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
         }
@@ -2564,12 +2977,21 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
           image?: {
             __typename?: 'Image'
             id: string
+            createdAt: string
+            modifiedAt: string
             filename?: string | null
+            format: string
+            mimeType: string
             extension: string
-            title?: string | null
-            description?: string | null
             width: number
             height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
             url?: string | null
             bigURL?: string | null
             largeURL?: string | null
@@ -2579,6 +3001,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
             squareLargeURL?: string | null
             squareMediumURL?: string | null
             squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
           } | null
           page?: {
             __typename?: 'Page'
@@ -2608,12 +3031,12 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
                     width: number
                     height: number
                     fileSize: number
+                    title?: string | null
                     description?: string | null
                     tags: Array<string>
                     source?: string | null
                     link?: string | null
                     license?: string | null
-                    title?: string | null
                     url?: string | null
                     bigURL?: string | null
                     largeURL?: string | null
@@ -2723,12 +3146,12 @@ export type FullEventFragment = {
     width: number
     height: number
     fileSize: number
+    title?: string | null
     description?: string | null
     tags: Array<string>
     source?: string | null
     link?: string | null
     license?: string | null
-    title?: string | null
     url?: string | null
     bigURL?: string | null
     largeURL?: string | null
@@ -2779,12 +3202,12 @@ export type EventListQuery = {
         width: number
         height: number
         fileSize: number
+        title?: string | null
         description?: string | null
         tags: Array<string>
         source?: string | null
         link?: string | null
         license?: string | null
-        title?: string | null
         url?: string | null
         bigURL?: string | null
         largeURL?: string | null
@@ -2836,12 +3259,12 @@ export type EventQuery = {
       width: number
       height: number
       fileSize: number
+      title?: string | null
       description?: string | null
       tags: Array<string>
       source?: string | null
       link?: string | null
       license?: string | null
-      title?: string | null
       url?: string | null
       bigURL?: string | null
       largeURL?: string | null
@@ -2870,26 +3293,6 @@ export type ImageUrLsFragment = {
   squareSmallURL?: string | null
 }
 
-export type ImageRefFragment = {
-  __typename?: 'Image'
-  id: string
-  filename?: string | null
-  extension: string
-  title?: string | null
-  description?: string | null
-  width: number
-  height: number
-  url?: string | null
-  bigURL?: string | null
-  largeURL?: string | null
-  mediumURL?: string | null
-  smallURL?: string | null
-  squareBigURL?: string | null
-  squareLargeURL?: string | null
-  squareMediumURL?: string | null
-  squareSmallURL?: string | null
-}
-
 export type FullImageFragment = {
   __typename?: 'Image'
   id: string
@@ -2902,12 +3305,12 @@ export type FullImageFragment = {
   width: number
   height: number
   fileSize: number
+  title?: string | null
   description?: string | null
   tags: Array<string>
   source?: string | null
   link?: string | null
   license?: string | null
-  title?: string | null
   url?: string | null
   bigURL?: string | null
   largeURL?: string | null
@@ -3063,8 +3466,14 @@ export type FullNavigationFragment = {
         article?: {
           __typename?: 'Article'
           id: string
+          publishedAt: string
+          updatedAt: string
+          preTitle?: string | null
+          title: string
+          lead?: string | null
           slug: string
           url: string
+          tags: Array<string>
           blocks: Array<
             | {__typename: 'BildwurfAdBlock'}
             | {__typename: 'CommentBlock'}
@@ -3087,12 +3496,12 @@ export type FullNavigationFragment = {
                   width: number
                   height: number
                   fileSize: number
+                  title?: string | null
                   description?: string | null
                   tags: Array<string>
                   source?: string | null
                   link?: string | null
                   license?: string | null
-                  title?: string | null
                   url?: string | null
                   bigURL?: string | null
                   largeURL?: string | null
@@ -3136,12 +3545,21 @@ export type FullNavigationFragment = {
                         image?: {
                           __typename?: 'Image'
                           id: string
+                          createdAt: string
+                          modifiedAt: string
                           filename?: string | null
+                          format: string
+                          mimeType: string
                           extension: string
-                          title?: string | null
-                          description?: string | null
                           width: number
                           height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
                           url?: string | null
                           bigURL?: string | null
                           largeURL?: string | null
@@ -3151,21 +3569,26 @@ export type FullNavigationFragment = {
                           squareLargeURL?: string | null
                           squareMediumURL?: string | null
                           squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                         article?: {
                           __typename?: 'Article'
                           id: string
-                          title: string
+                          publishedAt: string
+                          updatedAt: string
                           preTitle?: string | null
+                          title: string
                           lead?: string | null
+                          slug: string
                           url: string
+                          tags: Array<string>
                           blocks: Array<
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
-                            | {__typename: 'HTMLBlock'}
+                            | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
                                 caption?: string | null
@@ -3181,12 +3604,12 @@ export type FullNavigationFragment = {
                                   width: number
                                   height: number
                                   fileSize: number
+                                  title?: string | null
                                   description?: string | null
                                   tags: Array<string>
                                   source?: string | null
                                   link?: string | null
                                   license?: string | null
-                                  title?: string | null
                                   url?: string | null
                                   bigURL?: string | null
                                   largeURL?: string | null
@@ -3205,8 +3628,12 @@ export type FullNavigationFragment = {
                             | {__typename: 'ListicleBlock'}
                             | {__typename: 'PolisConversationBlock'}
                             | {__typename: 'PollBlock'}
-                            | {__typename: 'QuoteBlock'}
-                            | {__typename: 'RichTextBlock'}
+                            | {
+                                __typename: 'QuoteBlock'
+                                quote?: string | null
+                                author?: string | null
+                              }
+                            | {__typename: 'RichTextBlock'; richText: Node[]}
                             | {__typename: 'SoundCloudTrackBlock'}
                             | {__typename: 'TeaserGridBlock'}
                             | {__typename: 'TeaserGridFlexBlock'}
@@ -3220,6 +3647,35 @@ export type FullNavigationFragment = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
                         } | null
                       }
                     | {
@@ -3232,12 +3688,21 @@ export type FullNavigationFragment = {
                         image?: {
                           __typename?: 'Image'
                           id: string
+                          createdAt: string
+                          modifiedAt: string
                           filename?: string | null
+                          format: string
+                          mimeType: string
                           extension: string
-                          title?: string | null
-                          description?: string | null
                           width: number
                           height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
                           url?: string | null
                           bigURL?: string | null
                           largeURL?: string | null
@@ -3247,6 +3712,7 @@ export type FullNavigationFragment = {
                           squareLargeURL?: string | null
                           squareMediumURL?: string | null
                           squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                         properties: Array<{
                           __typename?: 'PublicProperties'
@@ -3264,12 +3730,21 @@ export type FullNavigationFragment = {
                         image?: {
                           __typename?: 'Image'
                           id: string
+                          createdAt: string
+                          modifiedAt: string
                           filename?: string | null
+                          format: string
+                          mimeType: string
                           extension: string
-                          title?: string | null
-                          description?: string | null
                           width: number
                           height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
                           url?: string | null
                           bigURL?: string | null
                           largeURL?: string | null
@@ -3279,6 +3754,7 @@ export type FullNavigationFragment = {
                           squareLargeURL?: string | null
                           squareMediumURL?: string | null
                           squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                         page?: {
                           __typename?: 'Page'
@@ -3308,12 +3784,12 @@ export type FullNavigationFragment = {
                                   width: number
                                   height: number
                                   fileSize: number
+                                  title?: string | null
                                   description?: string | null
                                   tags: Array<string>
                                   source?: string | null
                                   link?: string | null
                                   license?: string | null
-                                  title?: string | null
                                   url?: string | null
                                   bigURL?: string | null
                                   largeURL?: string | null
@@ -3359,6 +3835,35 @@ export type FullNavigationFragment = {
             | {__typename: 'VimeoVideoBlock'}
             | {__typename: 'YouTubeVideoBlock'}
           >
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
         } | null
       }
     | {__typename?: 'ExternalNavigationLink'; label: string; url: string}
@@ -3392,12 +3897,12 @@ export type FullNavigationFragment = {
                   width: number
                   height: number
                   fileSize: number
+                  title?: string | null
                   description?: string | null
                   tags: Array<string>
                   source?: string | null
                   link?: string | null
                   license?: string | null
-                  title?: string | null
                   url?: string | null
                   bigURL?: string | null
                   largeURL?: string | null
@@ -3441,12 +3946,21 @@ export type FullNavigationFragment = {
                         image?: {
                           __typename?: 'Image'
                           id: string
+                          createdAt: string
+                          modifiedAt: string
                           filename?: string | null
+                          format: string
+                          mimeType: string
                           extension: string
-                          title?: string | null
-                          description?: string | null
                           width: number
                           height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
                           url?: string | null
                           bigURL?: string | null
                           largeURL?: string | null
@@ -3456,21 +3970,26 @@ export type FullNavigationFragment = {
                           squareLargeURL?: string | null
                           squareMediumURL?: string | null
                           squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                         article?: {
                           __typename?: 'Article'
                           id: string
-                          title: string
+                          publishedAt: string
+                          updatedAt: string
                           preTitle?: string | null
+                          title: string
                           lead?: string | null
+                          slug: string
                           url: string
+                          tags: Array<string>
                           blocks: Array<
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
-                            | {__typename: 'HTMLBlock'}
+                            | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
                                 caption?: string | null
@@ -3486,12 +4005,12 @@ export type FullNavigationFragment = {
                                   width: number
                                   height: number
                                   fileSize: number
+                                  title?: string | null
                                   description?: string | null
                                   tags: Array<string>
                                   source?: string | null
                                   link?: string | null
                                   license?: string | null
-                                  title?: string | null
                                   url?: string | null
                                   bigURL?: string | null
                                   largeURL?: string | null
@@ -3510,8 +4029,12 @@ export type FullNavigationFragment = {
                             | {__typename: 'ListicleBlock'}
                             | {__typename: 'PolisConversationBlock'}
                             | {__typename: 'PollBlock'}
-                            | {__typename: 'QuoteBlock'}
-                            | {__typename: 'RichTextBlock'}
+                            | {
+                                __typename: 'QuoteBlock'
+                                quote?: string | null
+                                author?: string | null
+                              }
+                            | {__typename: 'RichTextBlock'; richText: Node[]}
                             | {__typename: 'SoundCloudTrackBlock'}
                             | {__typename: 'TeaserGridBlock'}
                             | {__typename: 'TeaserGridFlexBlock'}
@@ -3525,6 +4048,35 @@ export type FullNavigationFragment = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
                         } | null
                       }
                     | {
@@ -3537,12 +4089,21 @@ export type FullNavigationFragment = {
                         image?: {
                           __typename?: 'Image'
                           id: string
+                          createdAt: string
+                          modifiedAt: string
                           filename?: string | null
+                          format: string
+                          mimeType: string
                           extension: string
-                          title?: string | null
-                          description?: string | null
                           width: number
                           height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
                           url?: string | null
                           bigURL?: string | null
                           largeURL?: string | null
@@ -3552,6 +4113,7 @@ export type FullNavigationFragment = {
                           squareLargeURL?: string | null
                           squareMediumURL?: string | null
                           squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                         properties: Array<{
                           __typename?: 'PublicProperties'
@@ -3569,12 +4131,21 @@ export type FullNavigationFragment = {
                         image?: {
                           __typename?: 'Image'
                           id: string
+                          createdAt: string
+                          modifiedAt: string
                           filename?: string | null
+                          format: string
+                          mimeType: string
                           extension: string
-                          title?: string | null
-                          description?: string | null
                           width: number
                           height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
                           url?: string | null
                           bigURL?: string | null
                           largeURL?: string | null
@@ -3584,6 +4155,7 @@ export type FullNavigationFragment = {
                           squareLargeURL?: string | null
                           squareMediumURL?: string | null
                           squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                         page?: {
                           __typename?: 'Page'
@@ -3613,12 +4185,12 @@ export type FullNavigationFragment = {
                                   width: number
                                   height: number
                                   fileSize: number
+                                  title?: string | null
                                   description?: string | null
                                   tags: Array<string>
                                   source?: string | null
                                   link?: string | null
                                   license?: string | null
-                                  title?: string | null
                                   url?: string | null
                                   bigURL?: string | null
                                   largeURL?: string | null
@@ -3685,8 +4257,14 @@ export type NavigationListQuery = {
           article?: {
             __typename?: 'Article'
             id: string
+            publishedAt: string
+            updatedAt: string
+            preTitle?: string | null
+            title: string
+            lead?: string | null
             slug: string
             url: string
+            tags: Array<string>
             blocks: Array<
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'CommentBlock'}
@@ -3709,12 +4287,12 @@ export type NavigationListQuery = {
                     width: number
                     height: number
                     fileSize: number
+                    title?: string | null
                     description?: string | null
                     tags: Array<string>
                     source?: string | null
                     link?: string | null
                     license?: string | null
-                    title?: string | null
                     url?: string | null
                     bigURL?: string | null
                     largeURL?: string | null
@@ -3758,12 +4336,21 @@ export type NavigationListQuery = {
                           image?: {
                             __typename?: 'Image'
                             id: string
+                            createdAt: string
+                            modifiedAt: string
                             filename?: string | null
+                            format: string
+                            mimeType: string
                             extension: string
-                            title?: string | null
-                            description?: string | null
                             width: number
                             height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -3773,21 +4360,26 @@ export type NavigationListQuery = {
                             squareLargeURL?: string | null
                             squareMediumURL?: string | null
                             squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                           article?: {
                             __typename?: 'Article'
                             id: string
-                            title: string
+                            publishedAt: string
+                            updatedAt: string
                             preTitle?: string | null
+                            title: string
                             lead?: string | null
+                            slug: string
                             url: string
+                            tags: Array<string>
                             blocks: Array<
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
-                              | {__typename: 'HTMLBlock'}
+                              | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
                                   caption?: string | null
@@ -3803,12 +4395,12 @@ export type NavigationListQuery = {
                                     width: number
                                     height: number
                                     fileSize: number
+                                    title?: string | null
                                     description?: string | null
                                     tags: Array<string>
                                     source?: string | null
                                     link?: string | null
                                     license?: string | null
-                                    title?: string | null
                                     url?: string | null
                                     bigURL?: string | null
                                     largeURL?: string | null
@@ -3827,8 +4419,12 @@ export type NavigationListQuery = {
                               | {__typename: 'ListicleBlock'}
                               | {__typename: 'PolisConversationBlock'}
                               | {__typename: 'PollBlock'}
-                              | {__typename: 'QuoteBlock'}
-                              | {__typename: 'RichTextBlock'}
+                              | {
+                                  __typename: 'QuoteBlock'
+                                  quote?: string | null
+                                  author?: string | null
+                                }
+                              | {__typename: 'RichTextBlock'; richText: Node[]}
                               | {__typename: 'SoundCloudTrackBlock'}
                               | {__typename: 'TeaserGridBlock'}
                               | {__typename: 'TeaserGridFlexBlock'}
@@ -3842,6 +4438,35 @@ export type NavigationListQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
                           } | null
                         }
                       | {
@@ -3854,12 +4479,21 @@ export type NavigationListQuery = {
                           image?: {
                             __typename?: 'Image'
                             id: string
+                            createdAt: string
+                            modifiedAt: string
                             filename?: string | null
+                            format: string
+                            mimeType: string
                             extension: string
-                            title?: string | null
-                            description?: string | null
                             width: number
                             height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -3869,6 +4503,7 @@ export type NavigationListQuery = {
                             squareLargeURL?: string | null
                             squareMediumURL?: string | null
                             squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                           properties: Array<{
                             __typename?: 'PublicProperties'
@@ -3886,12 +4521,21 @@ export type NavigationListQuery = {
                           image?: {
                             __typename?: 'Image'
                             id: string
+                            createdAt: string
+                            modifiedAt: string
                             filename?: string | null
+                            format: string
+                            mimeType: string
                             extension: string
-                            title?: string | null
-                            description?: string | null
                             width: number
                             height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -3901,6 +4545,7 @@ export type NavigationListQuery = {
                             squareLargeURL?: string | null
                             squareMediumURL?: string | null
                             squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                           page?: {
                             __typename?: 'Page'
@@ -3930,12 +4575,12 @@ export type NavigationListQuery = {
                                     width: number
                                     height: number
                                     fileSize: number
+                                    title?: string | null
                                     description?: string | null
                                     tags: Array<string>
                                     source?: string | null
                                     link?: string | null
                                     license?: string | null
-                                    title?: string | null
                                     url?: string | null
                                     bigURL?: string | null
                                     largeURL?: string | null
@@ -3981,6 +4626,35 @@ export type NavigationListQuery = {
               | {__typename: 'VimeoVideoBlock'}
               | {__typename: 'YouTubeVideoBlock'}
             >
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
           } | null
         }
       | {__typename?: 'ExternalNavigationLink'; label: string; url: string}
@@ -4014,12 +4688,12 @@ export type NavigationListQuery = {
                     width: number
                     height: number
                     fileSize: number
+                    title?: string | null
                     description?: string | null
                     tags: Array<string>
                     source?: string | null
                     link?: string | null
                     license?: string | null
-                    title?: string | null
                     url?: string | null
                     bigURL?: string | null
                     largeURL?: string | null
@@ -4063,12 +4737,21 @@ export type NavigationListQuery = {
                           image?: {
                             __typename?: 'Image'
                             id: string
+                            createdAt: string
+                            modifiedAt: string
                             filename?: string | null
+                            format: string
+                            mimeType: string
                             extension: string
-                            title?: string | null
-                            description?: string | null
                             width: number
                             height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -4078,21 +4761,26 @@ export type NavigationListQuery = {
                             squareLargeURL?: string | null
                             squareMediumURL?: string | null
                             squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                           article?: {
                             __typename?: 'Article'
                             id: string
-                            title: string
+                            publishedAt: string
+                            updatedAt: string
                             preTitle?: string | null
+                            title: string
                             lead?: string | null
+                            slug: string
                             url: string
+                            tags: Array<string>
                             blocks: Array<
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
-                              | {__typename: 'HTMLBlock'}
+                              | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
                                   caption?: string | null
@@ -4108,12 +4796,12 @@ export type NavigationListQuery = {
                                     width: number
                                     height: number
                                     fileSize: number
+                                    title?: string | null
                                     description?: string | null
                                     tags: Array<string>
                                     source?: string | null
                                     link?: string | null
                                     license?: string | null
-                                    title?: string | null
                                     url?: string | null
                                     bigURL?: string | null
                                     largeURL?: string | null
@@ -4132,8 +4820,12 @@ export type NavigationListQuery = {
                               | {__typename: 'ListicleBlock'}
                               | {__typename: 'PolisConversationBlock'}
                               | {__typename: 'PollBlock'}
-                              | {__typename: 'QuoteBlock'}
-                              | {__typename: 'RichTextBlock'}
+                              | {
+                                  __typename: 'QuoteBlock'
+                                  quote?: string | null
+                                  author?: string | null
+                                }
+                              | {__typename: 'RichTextBlock'; richText: Node[]}
                               | {__typename: 'SoundCloudTrackBlock'}
                               | {__typename: 'TeaserGridBlock'}
                               | {__typename: 'TeaserGridFlexBlock'}
@@ -4147,6 +4839,35 @@ export type NavigationListQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
                           } | null
                         }
                       | {
@@ -4159,12 +4880,21 @@ export type NavigationListQuery = {
                           image?: {
                             __typename?: 'Image'
                             id: string
+                            createdAt: string
+                            modifiedAt: string
                             filename?: string | null
+                            format: string
+                            mimeType: string
                             extension: string
-                            title?: string | null
-                            description?: string | null
                             width: number
                             height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -4174,6 +4904,7 @@ export type NavigationListQuery = {
                             squareLargeURL?: string | null
                             squareMediumURL?: string | null
                             squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                           properties: Array<{
                             __typename?: 'PublicProperties'
@@ -4191,12 +4922,21 @@ export type NavigationListQuery = {
                           image?: {
                             __typename?: 'Image'
                             id: string
+                            createdAt: string
+                            modifiedAt: string
                             filename?: string | null
+                            format: string
+                            mimeType: string
                             extension: string
-                            title?: string | null
-                            description?: string | null
                             width: number
                             height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -4206,6 +4946,7 @@ export type NavigationListQuery = {
                             squareLargeURL?: string | null
                             squareMediumURL?: string | null
                             squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                           page?: {
                             __typename?: 'Page'
@@ -4235,12 +4976,12 @@ export type NavigationListQuery = {
                                     width: number
                                     height: number
                                     fileSize: number
+                                    title?: string | null
                                     description?: string | null
                                     tags: Array<string>
                                     source?: string | null
                                     link?: string | null
                                     license?: string | null
-                                    title?: string | null
                                     url?: string | null
                                     bigURL?: string | null
                                     largeURL?: string | null
@@ -4310,8 +5051,14 @@ export type NavigationQuery = {
           article?: {
             __typename?: 'Article'
             id: string
+            publishedAt: string
+            updatedAt: string
+            preTitle?: string | null
+            title: string
+            lead?: string | null
             slug: string
             url: string
+            tags: Array<string>
             blocks: Array<
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'CommentBlock'}
@@ -4334,12 +5081,12 @@ export type NavigationQuery = {
                     width: number
                     height: number
                     fileSize: number
+                    title?: string | null
                     description?: string | null
                     tags: Array<string>
                     source?: string | null
                     link?: string | null
                     license?: string | null
-                    title?: string | null
                     url?: string | null
                     bigURL?: string | null
                     largeURL?: string | null
@@ -4383,12 +5130,21 @@ export type NavigationQuery = {
                           image?: {
                             __typename?: 'Image'
                             id: string
+                            createdAt: string
+                            modifiedAt: string
                             filename?: string | null
+                            format: string
+                            mimeType: string
                             extension: string
-                            title?: string | null
-                            description?: string | null
                             width: number
                             height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -4398,21 +5154,26 @@ export type NavigationQuery = {
                             squareLargeURL?: string | null
                             squareMediumURL?: string | null
                             squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                           article?: {
                             __typename?: 'Article'
                             id: string
-                            title: string
+                            publishedAt: string
+                            updatedAt: string
                             preTitle?: string | null
+                            title: string
                             lead?: string | null
+                            slug: string
                             url: string
+                            tags: Array<string>
                             blocks: Array<
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
-                              | {__typename: 'HTMLBlock'}
+                              | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
                                   caption?: string | null
@@ -4428,12 +5189,12 @@ export type NavigationQuery = {
                                     width: number
                                     height: number
                                     fileSize: number
+                                    title?: string | null
                                     description?: string | null
                                     tags: Array<string>
                                     source?: string | null
                                     link?: string | null
                                     license?: string | null
-                                    title?: string | null
                                     url?: string | null
                                     bigURL?: string | null
                                     largeURL?: string | null
@@ -4452,8 +5213,12 @@ export type NavigationQuery = {
                               | {__typename: 'ListicleBlock'}
                               | {__typename: 'PolisConversationBlock'}
                               | {__typename: 'PollBlock'}
-                              | {__typename: 'QuoteBlock'}
-                              | {__typename: 'RichTextBlock'}
+                              | {
+                                  __typename: 'QuoteBlock'
+                                  quote?: string | null
+                                  author?: string | null
+                                }
+                              | {__typename: 'RichTextBlock'; richText: Node[]}
                               | {__typename: 'SoundCloudTrackBlock'}
                               | {__typename: 'TeaserGridBlock'}
                               | {__typename: 'TeaserGridFlexBlock'}
@@ -4467,6 +5232,35 @@ export type NavigationQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
                           } | null
                         }
                       | {
@@ -4479,12 +5273,21 @@ export type NavigationQuery = {
                           image?: {
                             __typename?: 'Image'
                             id: string
+                            createdAt: string
+                            modifiedAt: string
                             filename?: string | null
+                            format: string
+                            mimeType: string
                             extension: string
-                            title?: string | null
-                            description?: string | null
                             width: number
                             height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -4494,6 +5297,7 @@ export type NavigationQuery = {
                             squareLargeURL?: string | null
                             squareMediumURL?: string | null
                             squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                           properties: Array<{
                             __typename?: 'PublicProperties'
@@ -4511,12 +5315,21 @@ export type NavigationQuery = {
                           image?: {
                             __typename?: 'Image'
                             id: string
+                            createdAt: string
+                            modifiedAt: string
                             filename?: string | null
+                            format: string
+                            mimeType: string
                             extension: string
-                            title?: string | null
-                            description?: string | null
                             width: number
                             height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -4526,6 +5339,7 @@ export type NavigationQuery = {
                             squareLargeURL?: string | null
                             squareMediumURL?: string | null
                             squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                           page?: {
                             __typename?: 'Page'
@@ -4555,12 +5369,12 @@ export type NavigationQuery = {
                                     width: number
                                     height: number
                                     fileSize: number
+                                    title?: string | null
                                     description?: string | null
                                     tags: Array<string>
                                     source?: string | null
                                     link?: string | null
                                     license?: string | null
-                                    title?: string | null
                                     url?: string | null
                                     bigURL?: string | null
                                     largeURL?: string | null
@@ -4606,6 +5420,35 @@ export type NavigationQuery = {
               | {__typename: 'VimeoVideoBlock'}
               | {__typename: 'YouTubeVideoBlock'}
             >
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
           } | null
         }
       | {__typename?: 'ExternalNavigationLink'; label: string; url: string}
@@ -4639,12 +5482,12 @@ export type NavigationQuery = {
                     width: number
                     height: number
                     fileSize: number
+                    title?: string | null
                     description?: string | null
                     tags: Array<string>
                     source?: string | null
                     link?: string | null
                     license?: string | null
-                    title?: string | null
                     url?: string | null
                     bigURL?: string | null
                     largeURL?: string | null
@@ -4688,12 +5531,21 @@ export type NavigationQuery = {
                           image?: {
                             __typename?: 'Image'
                             id: string
+                            createdAt: string
+                            modifiedAt: string
                             filename?: string | null
+                            format: string
+                            mimeType: string
                             extension: string
-                            title?: string | null
-                            description?: string | null
                             width: number
                             height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -4703,21 +5555,26 @@ export type NavigationQuery = {
                             squareLargeURL?: string | null
                             squareMediumURL?: string | null
                             squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                           article?: {
                             __typename?: 'Article'
                             id: string
-                            title: string
+                            publishedAt: string
+                            updatedAt: string
                             preTitle?: string | null
+                            title: string
                             lead?: string | null
+                            slug: string
                             url: string
+                            tags: Array<string>
                             blocks: Array<
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
-                              | {__typename: 'HTMLBlock'}
+                              | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
                                   caption?: string | null
@@ -4733,12 +5590,12 @@ export type NavigationQuery = {
                                     width: number
                                     height: number
                                     fileSize: number
+                                    title?: string | null
                                     description?: string | null
                                     tags: Array<string>
                                     source?: string | null
                                     link?: string | null
                                     license?: string | null
-                                    title?: string | null
                                     url?: string | null
                                     bigURL?: string | null
                                     largeURL?: string | null
@@ -4757,8 +5614,12 @@ export type NavigationQuery = {
                               | {__typename: 'ListicleBlock'}
                               | {__typename: 'PolisConversationBlock'}
                               | {__typename: 'PollBlock'}
-                              | {__typename: 'QuoteBlock'}
-                              | {__typename: 'RichTextBlock'}
+                              | {
+                                  __typename: 'QuoteBlock'
+                                  quote?: string | null
+                                  author?: string | null
+                                }
+                              | {__typename: 'RichTextBlock'; richText: Node[]}
                               | {__typename: 'SoundCloudTrackBlock'}
                               | {__typename: 'TeaserGridBlock'}
                               | {__typename: 'TeaserGridFlexBlock'}
@@ -4772,6 +5633,35 @@ export type NavigationQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
                           } | null
                         }
                       | {
@@ -4784,12 +5674,21 @@ export type NavigationQuery = {
                           image?: {
                             __typename?: 'Image'
                             id: string
+                            createdAt: string
+                            modifiedAt: string
                             filename?: string | null
+                            format: string
+                            mimeType: string
                             extension: string
-                            title?: string | null
-                            description?: string | null
                             width: number
                             height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -4799,6 +5698,7 @@ export type NavigationQuery = {
                             squareLargeURL?: string | null
                             squareMediumURL?: string | null
                             squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                           properties: Array<{
                             __typename?: 'PublicProperties'
@@ -4816,12 +5716,21 @@ export type NavigationQuery = {
                           image?: {
                             __typename?: 'Image'
                             id: string
+                            createdAt: string
+                            modifiedAt: string
                             filename?: string | null
+                            format: string
+                            mimeType: string
                             extension: string
-                            title?: string | null
-                            description?: string | null
                             width: number
                             height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -4831,6 +5740,7 @@ export type NavigationQuery = {
                             squareLargeURL?: string | null
                             squareMediumURL?: string | null
                             squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                           page?: {
                             __typename?: 'Page'
@@ -4860,12 +5770,12 @@ export type NavigationQuery = {
                                     width: number
                                     height: number
                                     fileSize: number
+                                    title?: string | null
                                     description?: string | null
                                     tags: Array<string>
                                     source?: string | null
                                     link?: string | null
                                     license?: string | null
-                                    title?: string | null
                                     url?: string | null
                                     bigURL?: string | null
                                     largeURL?: string | null
@@ -4944,12 +5854,12 @@ export type FullPageFragment = {
           width: number
           height: number
           fileSize: number
+          title?: string | null
           description?: string | null
           tags: Array<string>
           source?: string | null
           link?: string | null
           license?: string | null
-          title?: string | null
           url?: string | null
           bigURL?: string | null
           largeURL?: string | null
@@ -4987,12 +5897,21 @@ export type FullPageFragment = {
                 image?: {
                   __typename?: 'Image'
                   id: string
+                  createdAt: string
+                  modifiedAt: string
                   filename?: string | null
+                  format: string
+                  mimeType: string
                   extension: string
-                  title?: string | null
-                  description?: string | null
                   width: number
                   height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
                   url?: string | null
                   bigURL?: string | null
                   largeURL?: string | null
@@ -5002,21 +5921,26 @@ export type FullPageFragment = {
                   squareLargeURL?: string | null
                   squareMediumURL?: string | null
                   squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                 } | null
                 article?: {
                   __typename?: 'Article'
                   id: string
-                  title: string
+                  publishedAt: string
+                  updatedAt: string
                   preTitle?: string | null
+                  title: string
                   lead?: string | null
+                  slug: string
                   url: string
+                  tags: Array<string>
                   blocks: Array<
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
-                    | {__typename: 'HTMLBlock'}
+                    | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
                         caption?: string | null
@@ -5032,12 +5956,12 @@ export type FullPageFragment = {
                           width: number
                           height: number
                           fileSize: number
+                          title?: string | null
                           description?: string | null
                           tags: Array<string>
                           source?: string | null
                           link?: string | null
                           license?: string | null
-                          title?: string | null
                           url?: string | null
                           bigURL?: string | null
                           largeURL?: string | null
@@ -5056,8 +5980,8 @@ export type FullPageFragment = {
                     | {__typename: 'ListicleBlock'}
                     | {__typename: 'PolisConversationBlock'}
                     | {__typename: 'PollBlock'}
-                    | {__typename: 'QuoteBlock'}
-                    | {__typename: 'RichTextBlock'}
+                    | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                    | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
                     | {__typename: 'TeaserGridBlock'}
                     | {__typename: 'TeaserGridFlexBlock'}
@@ -5067,6 +5991,35 @@ export type FullPageFragment = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
                 } | null
               }
             | {
@@ -5079,12 +6032,21 @@ export type FullPageFragment = {
                 image?: {
                   __typename?: 'Image'
                   id: string
+                  createdAt: string
+                  modifiedAt: string
                   filename?: string | null
+                  format: string
+                  mimeType: string
                   extension: string
-                  title?: string | null
-                  description?: string | null
                   width: number
                   height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
                   url?: string | null
                   bigURL?: string | null
                   largeURL?: string | null
@@ -5094,6 +6056,7 @@ export type FullPageFragment = {
                   squareLargeURL?: string | null
                   squareMediumURL?: string | null
                   squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                 } | null
                 properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
               }
@@ -5107,12 +6070,21 @@ export type FullPageFragment = {
                 image?: {
                   __typename?: 'Image'
                   id: string
+                  createdAt: string
+                  modifiedAt: string
                   filename?: string | null
+                  format: string
+                  mimeType: string
                   extension: string
-                  title?: string | null
-                  description?: string | null
                   width: number
                   height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
                   url?: string | null
                   bigURL?: string | null
                   largeURL?: string | null
@@ -5122,6 +6094,7 @@ export type FullPageFragment = {
                   squareLargeURL?: string | null
                   squareMediumURL?: string | null
                   squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                 } | null
                 page?: {
                   __typename?: 'Page'
@@ -5151,12 +6124,12 @@ export type FullPageFragment = {
                           width: number
                           height: number
                           fileSize: number
+                          title?: string | null
                           description?: string | null
                           tags: Array<string>
                           source?: string | null
                           link?: string | null
                           license?: string | null
-                          title?: string | null
                           url?: string | null
                           bigURL?: string | null
                           largeURL?: string | null
@@ -5234,12 +6207,12 @@ export type PageQuery = {
             width: number
             height: number
             fileSize: number
+            title?: string | null
             description?: string | null
             tags: Array<string>
             source?: string | null
             link?: string | null
             license?: string | null
-            title?: string | null
             url?: string | null
             bigURL?: string | null
             largeURL?: string | null
@@ -5277,12 +6250,21 @@ export type PageQuery = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    createdAt: string
+                    modifiedAt: string
                     filename?: string | null
+                    format: string
+                    mimeType: string
                     extension: string
-                    title?: string | null
-                    description?: string | null
                     width: number
                     height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
                     url?: string | null
                     bigURL?: string | null
                     largeURL?: string | null
@@ -5292,21 +6274,26 @@ export type PageQuery = {
                     squareLargeURL?: string | null
                     squareMediumURL?: string | null
                     squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                   article?: {
                     __typename?: 'Article'
                     id: string
-                    title: string
+                    publishedAt: string
+                    updatedAt: string
                     preTitle?: string | null
+                    title: string
                     lead?: string | null
+                    slug: string
                     url: string
+                    tags: Array<string>
                     blocks: Array<
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
-                      | {__typename: 'HTMLBlock'}
+                      | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
                           caption?: string | null
@@ -5322,12 +6309,12 @@ export type PageQuery = {
                             width: number
                             height: number
                             fileSize: number
+                            title?: string | null
                             description?: string | null
                             tags: Array<string>
                             source?: string | null
                             link?: string | null
                             license?: string | null
-                            title?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -5346,8 +6333,8 @@ export type PageQuery = {
                       | {__typename: 'ListicleBlock'}
                       | {__typename: 'PolisConversationBlock'}
                       | {__typename: 'PollBlock'}
-                      | {__typename: 'QuoteBlock'}
-                      | {__typename: 'RichTextBlock'}
+                      | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                      | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
                       | {__typename: 'TeaserGridBlock'}
                       | {__typename: 'TeaserGridFlexBlock'}
@@ -5357,6 +6344,35 @@ export type PageQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
                   } | null
                 }
               | {
@@ -5369,12 +6385,21 @@ export type PageQuery = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    createdAt: string
+                    modifiedAt: string
                     filename?: string | null
+                    format: string
+                    mimeType: string
                     extension: string
-                    title?: string | null
-                    description?: string | null
                     width: number
                     height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
                     url?: string | null
                     bigURL?: string | null
                     largeURL?: string | null
@@ -5384,6 +6409,7 @@ export type PageQuery = {
                     squareLargeURL?: string | null
                     squareMediumURL?: string | null
                     squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                   properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                 }
@@ -5397,12 +6423,21 @@ export type PageQuery = {
                   image?: {
                     __typename?: 'Image'
                     id: string
+                    createdAt: string
+                    modifiedAt: string
                     filename?: string | null
+                    format: string
+                    mimeType: string
                     extension: string
-                    title?: string | null
-                    description?: string | null
                     width: number
                     height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
                     url?: string | null
                     bigURL?: string | null
                     largeURL?: string | null
@@ -5412,6 +6447,7 @@ export type PageQuery = {
                     squareLargeURL?: string | null
                     squareMediumURL?: string | null
                     squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                   page?: {
                     __typename?: 'Page'
@@ -5441,12 +6477,12 @@ export type PageQuery = {
                             width: number
                             height: number
                             fileSize: number
+                            title?: string | null
                             description?: string | null
                             tags: Array<string>
                             source?: string | null
                             link?: string | null
                             license?: string | null
-                            title?: string | null
                             url?: string | null
                             bigURL?: string | null
                             largeURL?: string | null
@@ -5504,19 +6540,6 @@ export const ImageUrLsFragmentDoc = gql`
     squareSmallURL: transformURL(input: {width: 200, height: 200, output: WEBP, quality: 1})
   }
 `
-export const ImageRefFragmentDoc = gql`
-  fragment ImageRef on Image {
-    id
-    filename
-    extension
-    title
-    description
-    width
-    height
-    ...ImageURLs
-  }
-  ${ImageUrLsFragmentDoc}
-`
 export const FullImageFragmentDoc = gql`
   fragment FullImage on Image {
     id
@@ -5529,6 +6552,7 @@ export const FullImageFragmentDoc = gql`
     width
     height
     fileSize
+    title
     description
     tags
     source
@@ -5538,9 +6562,9 @@ export const FullImageFragmentDoc = gql`
       x
       y
     }
-    ...ImageRef
+    ...ImageURLs
   }
-  ${ImageRefFragmentDoc}
+  ${ImageUrLsFragmentDoc}
 `
 export const BlockWithoutTeaserFragmentDoc = gql`
   fragment BlockWithoutTeaser on Block {
@@ -5584,7 +6608,7 @@ export const FullBlockFragmentDoc = gql`
           ... on ArticleTeaser {
             style
             image {
-              ...ImageRef
+              ...FullImage
             }
             preTitle
             title
@@ -5603,7 +6627,7 @@ export const FullBlockFragmentDoc = gql`
           ... on PageTeaser {
             style
             image {
-              ...ImageRef
+              ...FullImage
             }
             preTitle
             title
@@ -5622,7 +6646,7 @@ export const FullBlockFragmentDoc = gql`
           ... on CustomTeaser {
             style
             image {
-              ...ImageRef
+              ...FullImage
             }
             preTitle
             title
@@ -5638,7 +6662,7 @@ export const FullBlockFragmentDoc = gql`
     }
   }
   ${BlockWithoutTeaserFragmentDoc}
-  ${ImageRefFragmentDoc}
+  ${FullImageFragmentDoc}
 `
 export const FullEventFragmentDoc = gql`
   fragment FullEvent on Event {
@@ -5657,6 +6681,46 @@ export const FullEventFragmentDoc = gql`
     startsAt
     endsAt
     url
+  }
+  ${FullImageFragmentDoc}
+`
+export const ArticleWithoutTeasersFragmentDoc = gql`
+  fragment ArticleWithoutTeasers on Article {
+    id
+    publishedAt
+    updatedAt
+    preTitle
+    title
+    lead
+    slug
+    url
+    tags
+    blocks {
+      __typename
+      ... on TitleBlock {
+        title
+        lead
+      }
+      ... on ImageBlock {
+        caption
+        image {
+          ...FullImage
+        }
+      }
+      ... on QuoteBlock {
+        quote
+        author
+      }
+      ... on RichTextBlock {
+        richText
+      }
+      ... on HTMLBlock {
+        html
+      }
+    }
+    image {
+      ...FullImage
+    }
   }
   ${FullImageFragmentDoc}
 `
@@ -5699,36 +6763,19 @@ export const FullPageFragmentDoc = gql`
             ... on ArticleTeaser {
               style
               image {
-                ...ImageRef
+                ...FullImage
               }
               preTitle
               title
               lead
               article {
-                id
-                title
-                preTitle
-                lead
-                url
-                blocks {
-                  __typename
-                  ... on TitleBlock {
-                    title
-                    lead
-                  }
-                  ... on ImageBlock {
-                    caption
-                    image {
-                      ...FullImage
-                    }
-                  }
-                }
+                ...ArticleWithoutTeasers
               }
             }
             ... on PageTeaser {
               style
               image {
-                ...ImageRef
+                ...FullImage
               }
               preTitle
               title
@@ -5756,7 +6803,7 @@ export const FullPageFragmentDoc = gql`
             ... on CustomTeaser {
               style
               image {
-                ...ImageRef
+                ...FullImage
               }
               preTitle
               title
@@ -5773,35 +6820,12 @@ export const FullPageFragmentDoc = gql`
     }
   }
   ${FullImageFragmentDoc}
-  ${ImageRefFragmentDoc}
+  ${ArticleWithoutTeasersFragmentDoc}
 `
 export const FullArticleFragmentDoc = gql`
   fragment FullArticle on Article {
-    id
-    slug
-    url
+    ...ArticleWithoutTeasers
     blocks {
-      __typename
-      ... on TitleBlock {
-        title
-        lead
-      }
-      ... on ImageBlock {
-        caption
-        image {
-          ...FullImage
-        }
-      }
-      ... on QuoteBlock {
-        quote
-        author
-      }
-      ... on RichTextBlock {
-        richText
-      }
-      ... on HTMLBlock {
-        html
-      }
       ... on TeaserGridFlexBlock {
         flexTeasers {
           alignment {
@@ -5814,36 +6838,19 @@ export const FullArticleFragmentDoc = gql`
             ... on ArticleTeaser {
               style
               image {
-                ...ImageRef
+                ...FullImage
               }
               preTitle
               title
               lead
               article {
-                id
-                title
-                preTitle
-                lead
-                url
-                blocks {
-                  __typename
-                  ... on TitleBlock {
-                    title
-                    lead
-                  }
-                  ... on ImageBlock {
-                    caption
-                    image {
-                      ...FullImage
-                    }
-                  }
-                }
+                ...ArticleWithoutTeasers
               }
             }
             ... on PageTeaser {
               style
               image {
-                ...ImageRef
+                ...FullImage
               }
               preTitle
               title
@@ -5871,7 +6878,7 @@ export const FullArticleFragmentDoc = gql`
             ... on CustomTeaser {
               style
               image {
-                ...ImageRef
+                ...FullImage
               }
               preTitle
               title
@@ -5887,8 +6894,8 @@ export const FullArticleFragmentDoc = gql`
       }
     }
   }
+  ${ArticleWithoutTeasersFragmentDoc}
   ${FullImageFragmentDoc}
-  ${ImageRefFragmentDoc}
 `
 export const FullNavigationFragmentDoc = gql`
   fragment FullNavigation on Navigation {

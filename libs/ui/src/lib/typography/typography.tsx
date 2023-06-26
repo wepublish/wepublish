@@ -70,7 +70,7 @@ export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
 
 export const Link = forwardRef(({children, underline, color, ...props}: LinkProps, ref) => {
   return (
-    <MuiLink {...props} ref={ref as any} variant="body1" color={color} underline={underline}>
+    <MuiLink {...props} ref={ref as any} color={color} underline={underline}>
       {children}
     </MuiLink>
   )

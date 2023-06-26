@@ -1,4 +1,5 @@
 export * from './lib/button/button'
+export * from './lib/icon-button/icon-button'
 export * from './lib/typography/typography'
 export * from './lib/lists/lists'
 export * from './lib/radio-card/radio-card'

@@ -9,7 +9,13 @@ import {
   ThemeProvider
 } from '@mui/material'
 import {theme} from '@wepublish/ui'
-import {ApiV1, FooterContainer, WebsiteBuilderProvider, WebsiteProvider} from '@wepublish/website'
+import {
+  ApiV1,
+  FooterContainer,
+  NavbarContainer,
+  WebsiteBuilderProvider,
+  WebsiteProvider
+} from '@wepublish/website'
 import {setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import {AppProps} from 'next/app'
@@ -78,7 +84,7 @@ function CustomApp({Component, pageProps}: AppProps) {
             </Head>
 
             <Spacer>
-              <div></div>
+              <NavbarContainer categorySlugs={['categories']} slug="main" />
 
               <main>
                 <MainSpacer>

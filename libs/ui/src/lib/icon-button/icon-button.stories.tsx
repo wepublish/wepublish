@@ -1,10 +1,10 @@
 import {Meta} from '@storybook/react'
-import {Button} from './button'
+import {IconButton} from './icon-button'
 
 export default {
-  component: Button,
-  title: 'Button'
-} as Meta<typeof Button>
+  component: IconButton,
+  title: 'Icon Button'
+} as Meta
 
 export const Default = {
   args: {

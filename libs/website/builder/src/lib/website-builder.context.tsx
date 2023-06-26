@@ -19,7 +19,7 @@ import {
   BuilderTeaserProps,
   BuilderTitleBlockProps
 } from './blocks.interface'
-import {BuilderButtonProps} from './button.interface'
+import {BuilderButtonProps, BuilderIconButtonProps} from './button.interface'
 import {
   BuilderEventListItemProps,
   BuilderEventListProps,
@@ -60,6 +60,7 @@ export type WebsiteBuilderComponents = {
 
   elements: {
     Button: ComponentType<BuilderButtonProps>
+    IconButton: ComponentType<BuilderIconButtonProps>
     H1: ComponentType<BuilderHeadingProps>
     H2: ComponentType<BuilderHeadingProps>
     H3: ComponentType<BuilderHeadingProps>
@@ -111,6 +112,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
 
   elements: {
     Button: NoComponent,
+    IconButton: NoComponent,
     H1: NoComponent,
     H2: NoComponent,
     H3: NoComponent,

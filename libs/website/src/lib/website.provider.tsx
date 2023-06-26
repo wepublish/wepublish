@@ -1,4 +1,4 @@
-import {ThemeProvider} from '@mui/material'
+import {GlobalStyles, Theme, ThemeProvider, css} from '@mui/material'
 import {Article} from '@wepublish/article/website'
 import {
   HtmlBlock,
@@ -26,7 +26,8 @@ import {
   OrderedList,
   Paragraph,
   theme,
-  UnorderedList
+  UnorderedList,
+  IconButton
 } from '@wepublish/ui'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {memo, PropsWithChildren} from 'react'
@@ -37,6 +38,25 @@ import {format} from 'date-fns'
 export type WebsiteProps = PropsWithChildren
 
 const dateFormatter = (date: Date) => format(date, 'dd.MM.yyyy HH:mm')
+
+const styles = (theme: Theme) => css`
+  html {
+    font-family: ${theme.typography.fontFamily};
+  }
+
+  * {
+    text-wrap: pretty;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
+`
 
 export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
   <ThemeProvider theme={theme}>
@@ -52,6 +72,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         Page={Page}
         elements={{
           Button,
+          IconButton,
           H1,
           H2,
           H3,
@@ -78,6 +99,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         date={{
           format: dateFormatter
         }}>
+        <GlobalStyles styles={styles} />
         {children}
       </WebsiteBuilderProvider>
     </IconContext.Provider>

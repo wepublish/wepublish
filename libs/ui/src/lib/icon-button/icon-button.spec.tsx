@@ -1,10 +1,10 @@
 import {render} from '@testing-library/react'
-import * as stories from './button.stories'
+import * as stories from './icon-button.stories'
 import {composeStories} from '@storybook/react'
 
 const storiesCmp = composeStories(stories)
 
-describe('Button', () => {
+describe('IconButton', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, () => {
       const {asFragment} = render(<Component />)
