@@ -8,6 +8,7 @@ WORKDIR /home/node/wepublish
 
 COPY --chown=node:node . .
 
+RUN rm -rf .env
 RUN npm ci
 RUN npm run build
 

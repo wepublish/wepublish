@@ -1,0 +1,23 @@
+fragment FullAuthor on Author {
+  id
+  name
+  jobTitle
+  slug
+  bio
+  url
+
+  links {
+    title
+    url
+  }
+
+  image {
+    ...FullImage
+  }
+}
+
+query Author($id: ID, $slug: Slug) {
+  author(id: $id, slug: $slug) {
+    ...FullAuthor
+  }
+}

@@ -17,7 +17,7 @@ export const createUser = async (
 ) => {
   const hashedPassword = await hashPassword(password, hashCostFactor)
   input.email = input.email.toLowerCase()
-  await Validator.createUser().validateAsync(input, {allowUnknown: true})
+  await Validator.createUser().parse(input)
 
   return user.create({
     data: {

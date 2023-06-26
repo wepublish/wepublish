@@ -26,8 +26,7 @@ export const EventCreateView = () => {
 
   const closePath = '/events'
   const [event, setEvent] = useState({
-    name: '',
-    startsAt: new Date().toISOString()
+    name: ''
   } as MutationCreateEventArgs & {image?: ImageRefFragment | null})
 
   const [shouldClose, setShouldClose] = useState(false)

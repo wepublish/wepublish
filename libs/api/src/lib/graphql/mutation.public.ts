@@ -192,10 +192,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         {sessionTTL, hashCostFactor, prisma, challenge}
       ) {
         email = email.toLowerCase()
-        await Validator.createUser().validateAsync(
-          {name, email, firstName, preferredName},
-          {allowUnknown: true}
-        )
+        await Validator.createUser().parse({name, email, firstName, preferredName})
 
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
@@ -310,10 +307,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         }
       ) {
         email = email.toLowerCase()
-        await Validator.createUser().validateAsync(
-          {name, email, firstName, preferredName},
-          {allowUnknown: true}
-        )
+        await Validator.createUser().parse({name, email, firstName, preferredName})
         const challengeValidationResult = await challenge.validateChallenge({
           challengeID: challengeAnswer.challengeID,
           solution: challengeAnswer.challengeSolution
@@ -670,7 +664,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         'This mutation sends a login link to the email if the user exists. Method will always return email address',
       async resolve(root, {email}, {prisma, generateJWT, mailContext, urlAdapter}) {
         email = email.toLowerCase()
-        await Validator.login().validateAsync({email}, {allowUnknown: true})
+        await Validator.login().parse({email})
 
         const user = await prisma.user.findUnique({
           where: {email},

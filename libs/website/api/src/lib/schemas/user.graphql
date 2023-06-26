@@ -1,5 +1,119 @@
+fragment FullProperty on PublicProperties {
+  key
+  value
+}
+
+fragment FullOAuth2Account on OAuth2Account {
+  type
+  provider
+  scope
+}
+
+fragment FullPaymentProviderCustomer on PaymentProviderCustomer {
+  paymentProviderID
+  customerID
+}
+
+fragment FullUser on User {
+  id
+  name
+  firstName
+  preferredName
+  flair
+  email
+
+  address {
+    ...FullAddress
+  }
+
+  paymentProviderCustomers {
+    ...FullPaymentProviderCustomer
+  }
+
+  oauth2Accounts {
+    ...FullOAuth2Account
+  }
+
+  image {
+    ...FullImage
+  }
+
+  properties {
+    ...FullProperty
+  }
+}
+
+fragment FullAddress on UserAddress {
+  company
+  streetAddress
+  streetAddress2
+  zipCode
+  city
+  country
+}
+
+fragment FullUserSession on UserSession {
+  token
+  expiresAt
+  createdAt
+}
+
+fragment FullSessionWithToken on SessionWithToken {
+  token
+  expiresAt
+  createdAt
+
+  user {
+    ...FullUser
+  }
+}
+
 query Me {
   me {
-    id
+    ...FullUser
+  }
+}
+
+mutation LoginWithCredentials($email: String!, $password: String!) {
+  createSession(email: $email, password: $password) {
+    ...FullSessionWithToken
+  }
+}
+
+mutation LoginWithEmail($email: String!) {
+  sendWebsiteLogin(email: $email)
+}
+
+mutation LoginWithJWT($jwt: String!) {
+  createSessionWithJWT(jwt: $jwt) {
+    ...FullSessionWithToken
+  }
+}
+
+mutation Register(
+  $name: String!
+  $firstName: String
+  $preferredName: String
+  $address: UserAddressInput
+  $email: String!
+  $password: String
+  $challengeAnswer: ChallengeInput!
+) {
+  registerMember(
+    name: $name
+    firstName: $firstName
+    preferredName: $preferredName
+    address: $address
+    email: $email
+    password: $password
+    challengeAnswer: $challengeAnswer
+  ) {
+    user {
+      ...FullUser
+    }
+
+    session {
+      ...FullUserSession
+    }
   }
 }

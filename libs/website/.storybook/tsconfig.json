@@ -11,11 +11,11 @@
   ],
   "exclude": ["../**/*.spec.ts", "../**/*.spec.js", "../**/*.spec.tsx", "../**/*.spec.jsx"],
   "include": [
-    "../../**/website/src/**/*.stories.ts",
-    "../../**/website/src/**/*.stories.js",
-    "../../**/website/src/**/*.stories.jsx",
-    "../../**/website/src/**/*.stories.tsx",
-    "../../**/website/src/**/*.stories.mdx",
+    "../../**/src/**/*.stories.ts",
+    "../../**/src/**/*.stories.js",
+    "../../**/src/**/*.stories.jsx",
+    "../../**/src/**/*.stories.tsx",
+    "../../**/src/**/*.stories.mdx",
     "*.js",
     "preview.tsx",
     "main.ts"

@@ -113,8 +113,15 @@ declare type MetadataPropertyFactoryDefineInput = {
 }
 declare type MetadataPropertyFactoryDefineOptions = {
   defaultData?: Resolver<MetadataPropertyFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<MetadataPropertyFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface MetadataPropertyFactoryInterface {
+declare type MetadataPropertyTraitKeys<TOptions extends MetadataPropertyFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface MetadataPropertyFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'MetadataProperty'
   build(
     inputData?: Partial<Prisma.MetadataPropertyCreateInput>
@@ -134,15 +141,23 @@ export interface MetadataPropertyFactoryInterface {
     inputData?: Partial<Prisma.MetadataPropertyCreateInput>
   ): PromiseLike<Pick<MetadataProperty, 'id'>>
 }
+export interface MetadataPropertyFactoryInterface<
+  TOptions extends MetadataPropertyFactoryDefineOptions = MetadataPropertyFactoryDefineOptions
+> extends MetadataPropertyFactoryInterfaceWithoutTraits {
+  use(
+    name: MetadataPropertyTraitKeys<TOptions>,
+    ...names: readonly MetadataPropertyTraitKeys<TOptions>[]
+  ): MetadataPropertyFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link MetadataProperty} model.
  *
  * @param options
  * @returns factory {@link MetadataPropertyFactoryInterface}
  */
-export declare function defineMetadataPropertyFactory(
-  options?: MetadataPropertyFactoryDefineOptions
-): MetadataPropertyFactoryInterface
+export declare function defineMetadataPropertyFactory<
+  TOptions extends MetadataPropertyFactoryDefineOptions
+>(options?: TOptions): MetadataPropertyFactoryInterface<TOptions>
 declare type ArticleRevisionimageFactory = {
   _factoryFor: 'Image'
   build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutArticleRevisionImagesInput['create']>
@@ -187,8 +202,15 @@ declare type ArticleRevisionFactoryDefineInput = {
 }
 declare type ArticleRevisionFactoryDefineOptions = {
   defaultData?: Resolver<ArticleRevisionFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<ArticleRevisionFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface ArticleRevisionFactoryInterface {
+declare type ArticleRevisionTraitKeys<TOptions extends ArticleRevisionFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface ArticleRevisionFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'ArticleRevision'
   build(
     inputData?: Partial<Prisma.ArticleRevisionCreateInput>
@@ -208,15 +230,23 @@ export interface ArticleRevisionFactoryInterface {
     inputData?: Partial<Prisma.ArticleRevisionCreateInput>
   ): PromiseLike<Pick<ArticleRevision, 'id'>>
 }
+export interface ArticleRevisionFactoryInterface<
+  TOptions extends ArticleRevisionFactoryDefineOptions = ArticleRevisionFactoryDefineOptions
+> extends ArticleRevisionFactoryInterfaceWithoutTraits {
+  use(
+    name: ArticleRevisionTraitKeys<TOptions>,
+    ...names: readonly ArticleRevisionTraitKeys<TOptions>[]
+  ): ArticleRevisionFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link ArticleRevision} model.
  *
  * @param options
  * @returns factory {@link ArticleRevisionFactoryInterface}
  */
-export declare function defineArticleRevisionFactory(
-  options?: ArticleRevisionFactoryDefineOptions
-): ArticleRevisionFactoryInterface
+export declare function defineArticleRevisionFactory<
+  TOptions extends ArticleRevisionFactoryDefineOptions
+>(options?: TOptions): ArticleRevisionFactoryInterface<TOptions>
 declare type ArticleRevisionAuthorrevisionFactory = {
   _factoryFor: 'ArticleRevision'
   build: () => PromiseLike<Prisma.ArticleRevisionCreateNestedOneWithoutAuthorsInput['create']>
@@ -235,8 +265,16 @@ declare type ArticleRevisionAuthorFactoryDefineInput = {
 }
 declare type ArticleRevisionAuthorFactoryDefineOptions = {
   defaultData: Resolver<ArticleRevisionAuthorFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<ArticleRevisionAuthorFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface ArticleRevisionAuthorFactoryInterface {
+declare type ArticleRevisionAuthorTraitKeys<
+  TOptions extends ArticleRevisionAuthorFactoryDefineOptions
+> = keyof TOptions['traits']
+export interface ArticleRevisionAuthorFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'ArticleRevisionAuthor'
   build(
     inputData?: Partial<Prisma.ArticleRevisionAuthorCreateInput>
@@ -260,15 +298,23 @@ export interface ArticleRevisionAuthorFactoryInterface {
     inputData?: Partial<Prisma.ArticleRevisionAuthorCreateInput>
   ): PromiseLike<Pick<ArticleRevisionAuthor, 'revisionId' | 'authorId'>>
 }
+export interface ArticleRevisionAuthorFactoryInterface<
+  TOptions extends ArticleRevisionAuthorFactoryDefineOptions = ArticleRevisionAuthorFactoryDefineOptions
+> extends ArticleRevisionAuthorFactoryInterfaceWithoutTraits {
+  use(
+    name: ArticleRevisionAuthorTraitKeys<TOptions>,
+    ...names: readonly ArticleRevisionAuthorTraitKeys<TOptions>[]
+  ): ArticleRevisionAuthorFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link ArticleRevisionAuthor} model.
  *
  * @param options
  * @returns factory {@link ArticleRevisionAuthorFactoryInterface}
  */
-export declare function defineArticleRevisionAuthorFactory(
-  options: ArticleRevisionAuthorFactoryDefineOptions
-): ArticleRevisionAuthorFactoryInterface
+export declare function defineArticleRevisionAuthorFactory<
+  TOptions extends ArticleRevisionAuthorFactoryDefineOptions
+>(options: TOptions): ArticleRevisionAuthorFactoryInterface<TOptions>
 declare type ArticleRevisionSocialMediaAuthorrevisionFactory = {
   _factoryFor: 'ArticleRevision'
   build: () => PromiseLike<
@@ -291,8 +337,16 @@ declare type ArticleRevisionSocialMediaAuthorFactoryDefineInput = {
 }
 declare type ArticleRevisionSocialMediaAuthorFactoryDefineOptions = {
   defaultData: Resolver<ArticleRevisionSocialMediaAuthorFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<ArticleRevisionSocialMediaAuthorFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface ArticleRevisionSocialMediaAuthorFactoryInterface {
+declare type ArticleRevisionSocialMediaAuthorTraitKeys<
+  TOptions extends ArticleRevisionSocialMediaAuthorFactoryDefineOptions
+> = keyof TOptions['traits']
+export interface ArticleRevisionSocialMediaAuthorFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'ArticleRevisionSocialMediaAuthor'
   build(
     inputData?: Partial<Prisma.ArticleRevisionSocialMediaAuthorCreateInput>
@@ -316,15 +370,23 @@ export interface ArticleRevisionSocialMediaAuthorFactoryInterface {
     inputData?: Partial<Prisma.ArticleRevisionSocialMediaAuthorCreateInput>
   ): PromiseLike<Pick<ArticleRevisionSocialMediaAuthor, 'revisionId' | 'authorId'>>
 }
+export interface ArticleRevisionSocialMediaAuthorFactoryInterface<
+  TOptions extends ArticleRevisionSocialMediaAuthorFactoryDefineOptions = ArticleRevisionSocialMediaAuthorFactoryDefineOptions
+> extends ArticleRevisionSocialMediaAuthorFactoryInterfaceWithoutTraits {
+  use(
+    name: ArticleRevisionSocialMediaAuthorTraitKeys<TOptions>,
+    ...names: readonly ArticleRevisionSocialMediaAuthorTraitKeys<TOptions>[]
+  ): ArticleRevisionSocialMediaAuthorFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link ArticleRevisionSocialMediaAuthor} model.
  *
  * @param options
  * @returns factory {@link ArticleRevisionSocialMediaAuthorFactoryInterface}
  */
-export declare function defineArticleRevisionSocialMediaAuthorFactory(
-  options: ArticleRevisionSocialMediaAuthorFactoryDefineOptions
-): ArticleRevisionSocialMediaAuthorFactoryInterface
+export declare function defineArticleRevisionSocialMediaAuthorFactory<
+  TOptions extends ArticleRevisionSocialMediaAuthorFactoryDefineOptions
+>(options: TOptions): ArticleRevisionSocialMediaAuthorFactoryInterface<TOptions>
 declare type ArticlepublishedFactory = {
   _factoryFor: 'ArticleRevision'
   build: () => PromiseLike<
@@ -355,8 +417,15 @@ declare type ArticleFactoryDefineInput = {
 }
 declare type ArticleFactoryDefineOptions = {
   defaultData?: Resolver<ArticleFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<ArticleFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface ArticleFactoryInterface {
+declare type ArticleTraitKeys<TOptions extends ArticleFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface ArticleFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'Article'
   build(inputData?: Partial<Prisma.ArticleCreateInput>): PromiseLike<Prisma.ArticleCreateInput>
   buildCreateInput(
@@ -372,15 +441,23 @@ export interface ArticleFactoryInterface {
   ): PromiseLike<Article[]>
   createForConnect(inputData?: Partial<Prisma.ArticleCreateInput>): PromiseLike<Pick<Article, 'id'>>
 }
+export interface ArticleFactoryInterface<
+  TOptions extends ArticleFactoryDefineOptions = ArticleFactoryDefineOptions
+> extends ArticleFactoryInterfaceWithoutTraits {
+  use(
+    name: ArticleTraitKeys<TOptions>,
+    ...names: readonly ArticleTraitKeys<TOptions>[]
+  ): ArticleFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link Article} model.
  *
  * @param options
  * @returns factory {@link ArticleFactoryInterface}
  */
-export declare function defineArticleFactory(
-  options?: ArticleFactoryDefineOptions
-): ArticleFactoryInterface
+export declare function defineArticleFactory<TOptions extends ArticleFactoryDefineOptions>(
+  options?: TOptions
+): ArticleFactoryInterface<TOptions>
 declare type AuthorsLinksAuthorFactory = {
   _factoryFor: 'Author'
   build: () => PromiseLike<Prisma.AuthorCreateNestedOneWithoutLinksInput['create']>
@@ -395,8 +472,15 @@ declare type AuthorsLinksFactoryDefineInput = {
 }
 declare type AuthorsLinksFactoryDefineOptions = {
   defaultData?: Resolver<AuthorsLinksFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<AuthorsLinksFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface AuthorsLinksFactoryInterface {
+declare type AuthorsLinksTraitKeys<TOptions extends AuthorsLinksFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface AuthorsLinksFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'AuthorsLinks'
   build(
     inputData?: Partial<Prisma.AuthorsLinksCreateInput>
@@ -416,15 +500,23 @@ export interface AuthorsLinksFactoryInterface {
     inputData?: Partial<Prisma.AuthorsLinksCreateInput>
   ): PromiseLike<Pick<AuthorsLinks, 'id'>>
 }
+export interface AuthorsLinksFactoryInterface<
+  TOptions extends AuthorsLinksFactoryDefineOptions = AuthorsLinksFactoryDefineOptions
+> extends AuthorsLinksFactoryInterfaceWithoutTraits {
+  use(
+    name: AuthorsLinksTraitKeys<TOptions>,
+    ...names: readonly AuthorsLinksTraitKeys<TOptions>[]
+  ): AuthorsLinksFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link AuthorsLinks} model.
  *
  * @param options
  * @returns factory {@link AuthorsLinksFactoryInterface}
  */
-export declare function defineAuthorsLinksFactory(
-  options?: AuthorsLinksFactoryDefineOptions
-): AuthorsLinksFactoryInterface
+export declare function defineAuthorsLinksFactory<
+  TOptions extends AuthorsLinksFactoryDefineOptions
+>(options?: TOptions): AuthorsLinksFactoryInterface<TOptions>
 declare type AuthorimageFactory = {
   _factoryFor: 'Image'
   build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutAuthorInput['create']>
@@ -444,8 +536,14 @@ declare type AuthorFactoryDefineInput = {
 }
 declare type AuthorFactoryDefineOptions = {
   defaultData?: Resolver<AuthorFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<AuthorFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface AuthorFactoryInterface {
+declare type AuthorTraitKeys<TOptions extends AuthorFactoryDefineOptions> = keyof TOptions['traits']
+export interface AuthorFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'Author'
   build(inputData?: Partial<Prisma.AuthorCreateInput>): PromiseLike<Prisma.AuthorCreateInput>
   buildCreateInput(
@@ -461,15 +559,23 @@ export interface AuthorFactoryInterface {
   ): PromiseLike<Author[]>
   createForConnect(inputData?: Partial<Prisma.AuthorCreateInput>): PromiseLike<Pick<Author, 'id'>>
 }
+export interface AuthorFactoryInterface<
+  TOptions extends AuthorFactoryDefineOptions = AuthorFactoryDefineOptions
+> extends AuthorFactoryInterfaceWithoutTraits {
+  use(
+    name: AuthorTraitKeys<TOptions>,
+    ...names: readonly AuthorTraitKeys<TOptions>[]
+  ): AuthorFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link Author} model.
  *
  * @param options
  * @returns factory {@link AuthorFactoryInterface}
  */
-export declare function defineAuthorFactory(
-  options?: AuthorFactoryDefineOptions
-): AuthorFactoryInterface
+export declare function defineAuthorFactory<TOptions extends AuthorFactoryDefineOptions>(
+  options?: TOptions
+): AuthorFactoryInterface<TOptions>
 declare type FocalPointimageFactory = {
   _factoryFor: 'Image'
   build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutFocalPointInput['create']>
@@ -481,8 +587,15 @@ declare type FocalPointFactoryDefineInput = {
 }
 declare type FocalPointFactoryDefineOptions = {
   defaultData?: Resolver<FocalPointFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<FocalPointFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface FocalPointFactoryInterface {
+declare type FocalPointTraitKeys<TOptions extends FocalPointFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface FocalPointFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'FocalPoint'
   build(
     inputData?: Partial<Prisma.FocalPointCreateInput>
@@ -502,15 +615,23 @@ export interface FocalPointFactoryInterface {
     inputData?: Partial<Prisma.FocalPointCreateInput>
   ): PromiseLike<Pick<FocalPoint, 'imageId'>>
 }
+export interface FocalPointFactoryInterface<
+  TOptions extends FocalPointFactoryDefineOptions = FocalPointFactoryDefineOptions
+> extends FocalPointFactoryInterfaceWithoutTraits {
+  use(
+    name: FocalPointTraitKeys<TOptions>,
+    ...names: readonly FocalPointTraitKeys<TOptions>[]
+  ): FocalPointFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link FocalPoint} model.
  *
  * @param options
  * @returns factory {@link FocalPointFactoryInterface}
  */
-export declare function defineFocalPointFactory(
-  options?: FocalPointFactoryDefineOptions
-): FocalPointFactoryInterface
+export declare function defineFocalPointFactory<TOptions extends FocalPointFactoryDefineOptions>(
+  options?: TOptions
+): FocalPointFactoryInterface<TOptions>
 declare type ImagefocalPointFactory = {
   _factoryFor: 'FocalPoint'
   build: () => PromiseLike<Prisma.FocalPointCreateNestedOneWithoutImageInput['create']>
@@ -547,8 +668,14 @@ declare type ImageFactoryDefineInput = {
 }
 declare type ImageFactoryDefineOptions = {
   defaultData?: Resolver<ImageFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<ImageFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface ImageFactoryInterface {
+declare type ImageTraitKeys<TOptions extends ImageFactoryDefineOptions> = keyof TOptions['traits']
+export interface ImageFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'Image'
   build(inputData?: Partial<Prisma.ImageCreateInput>): PromiseLike<Prisma.ImageCreateInput>
   buildCreateInput(
@@ -562,15 +689,23 @@ export interface ImageFactoryInterface {
   createList(inputData: number | readonly Partial<Prisma.ImageCreateInput>[]): PromiseLike<Image[]>
   createForConnect(inputData?: Partial<Prisma.ImageCreateInput>): PromiseLike<Pick<Image, 'id'>>
 }
+export interface ImageFactoryInterface<
+  TOptions extends ImageFactoryDefineOptions = ImageFactoryDefineOptions
+> extends ImageFactoryInterfaceWithoutTraits {
+  use(
+    name: ImageTraitKeys<TOptions>,
+    ...names: readonly ImageTraitKeys<TOptions>[]
+  ): ImageFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link Image} model.
  *
  * @param options
  * @returns factory {@link ImageFactoryInterface}
  */
-export declare function defineImageFactory(
-  options?: ImageFactoryDefineOptions
-): ImageFactoryInterface
+export declare function defineImageFactory<TOptions extends ImageFactoryDefineOptions>(
+  options?: TOptions
+): ImageFactoryInterface<TOptions>
 declare type CommentsRevisionsCommentFactory = {
   _factoryFor: 'Comment'
   build: () => PromiseLike<Prisma.CommentCreateNestedOneWithoutRevisionsInput['create']>
@@ -585,8 +720,15 @@ declare type CommentsRevisionsFactoryDefineInput = {
 }
 declare type CommentsRevisionsFactoryDefineOptions = {
   defaultData?: Resolver<CommentsRevisionsFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<CommentsRevisionsFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface CommentsRevisionsFactoryInterface {
+declare type CommentsRevisionsTraitKeys<TOptions extends CommentsRevisionsFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface CommentsRevisionsFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'CommentsRevisions'
   build(
     inputData?: Partial<Prisma.CommentsRevisionsCreateInput>
@@ -606,15 +748,23 @@ export interface CommentsRevisionsFactoryInterface {
     inputData?: Partial<Prisma.CommentsRevisionsCreateInput>
   ): PromiseLike<Pick<CommentsRevisions, 'id'>>
 }
+export interface CommentsRevisionsFactoryInterface<
+  TOptions extends CommentsRevisionsFactoryDefineOptions = CommentsRevisionsFactoryDefineOptions
+> extends CommentsRevisionsFactoryInterfaceWithoutTraits {
+  use(
+    name: CommentsRevisionsTraitKeys<TOptions>,
+    ...names: readonly CommentsRevisionsTraitKeys<TOptions>[]
+  ): CommentsRevisionsFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link CommentsRevisions} model.
  *
  * @param options
  * @returns factory {@link CommentsRevisionsFactoryInterface}
  */
-export declare function defineCommentsRevisionsFactory(
-  options?: CommentsRevisionsFactoryDefineOptions
-): CommentsRevisionsFactoryInterface
+export declare function defineCommentsRevisionsFactory<
+  TOptions extends CommentsRevisionsFactoryDefineOptions
+>(options?: TOptions): CommentsRevisionsFactoryInterface<TOptions>
 declare type CommentpeerFactory = {
   _factoryFor: 'Peer'
   build: () => PromiseLike<Prisma.PeerCreateNestedOneWithoutCommentsInput['create']>
@@ -649,8 +799,15 @@ declare type CommentFactoryDefineInput = {
 }
 declare type CommentFactoryDefineOptions = {
   defaultData?: Resolver<CommentFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<CommentFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface CommentFactoryInterface {
+declare type CommentTraitKeys<TOptions extends CommentFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface CommentFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'Comment'
   build(inputData?: Partial<Prisma.CommentCreateInput>): PromiseLike<Prisma.CommentCreateInput>
   buildCreateInput(
@@ -666,15 +823,23 @@ export interface CommentFactoryInterface {
   ): PromiseLike<Comment[]>
   createForConnect(inputData?: Partial<Prisma.CommentCreateInput>): PromiseLike<Pick<Comment, 'id'>>
 }
+export interface CommentFactoryInterface<
+  TOptions extends CommentFactoryDefineOptions = CommentFactoryDefineOptions
+> extends CommentFactoryInterfaceWithoutTraits {
+  use(
+    name: CommentTraitKeys<TOptions>,
+    ...names: readonly CommentTraitKeys<TOptions>[]
+  ): CommentFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link Comment} model.
  *
  * @param options
  * @returns factory {@link CommentFactoryInterface}
  */
-export declare function defineCommentFactory(
-  options?: CommentFactoryDefineOptions
-): CommentFactoryInterface
+export declare function defineCommentFactory<TOptions extends CommentFactoryDefineOptions>(
+  options?: TOptions
+): CommentFactoryInterface<TOptions>
 declare type TaggedCommentscommentFactory = {
   _factoryFor: 'Comment'
   build: () => PromiseLike<Prisma.CommentCreateNestedOneWithoutTagsInput['create']>
@@ -691,8 +856,15 @@ declare type TaggedCommentsFactoryDefineInput = {
 }
 declare type TaggedCommentsFactoryDefineOptions = {
   defaultData: Resolver<TaggedCommentsFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<TaggedCommentsFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface TaggedCommentsFactoryInterface {
+declare type TaggedCommentsTraitKeys<TOptions extends TaggedCommentsFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface TaggedCommentsFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'TaggedComments'
   build(
     inputData?: Partial<Prisma.TaggedCommentsCreateInput>
@@ -712,15 +884,23 @@ export interface TaggedCommentsFactoryInterface {
     inputData?: Partial<Prisma.TaggedCommentsCreateInput>
   ): PromiseLike<Pick<TaggedComments, 'commentId' | 'tagId'>>
 }
+export interface TaggedCommentsFactoryInterface<
+  TOptions extends TaggedCommentsFactoryDefineOptions = TaggedCommentsFactoryDefineOptions
+> extends TaggedCommentsFactoryInterfaceWithoutTraits {
+  use(
+    name: TaggedCommentsTraitKeys<TOptions>,
+    ...names: readonly TaggedCommentsTraitKeys<TOptions>[]
+  ): TaggedCommentsFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link TaggedComments} model.
  *
  * @param options
  * @returns factory {@link TaggedCommentsFactoryInterface}
  */
-export declare function defineTaggedCommentsFactory(
-  options: TaggedCommentsFactoryDefineOptions
-): TaggedCommentsFactoryInterface
+export declare function defineTaggedCommentsFactory<
+  TOptions extends TaggedCommentsFactoryDefineOptions
+>(options: TOptions): TaggedCommentsFactoryInterface<TOptions>
 declare type CommentRatingSystemFactoryDefineInput = {
   id?: string
   createdAt?: Date
@@ -730,8 +910,16 @@ declare type CommentRatingSystemFactoryDefineInput = {
 }
 declare type CommentRatingSystemFactoryDefineOptions = {
   defaultData?: Resolver<CommentRatingSystemFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<CommentRatingSystemFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface CommentRatingSystemFactoryInterface {
+declare type CommentRatingSystemTraitKeys<
+  TOptions extends CommentRatingSystemFactoryDefineOptions
+> = keyof TOptions['traits']
+export interface CommentRatingSystemFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'CommentRatingSystem'
   build(
     inputData?: Partial<Prisma.CommentRatingSystemCreateInput>
@@ -753,15 +941,23 @@ export interface CommentRatingSystemFactoryInterface {
     inputData?: Partial<Prisma.CommentRatingSystemCreateInput>
   ): PromiseLike<Pick<CommentRatingSystem, 'id'>>
 }
+export interface CommentRatingSystemFactoryInterface<
+  TOptions extends CommentRatingSystemFactoryDefineOptions = CommentRatingSystemFactoryDefineOptions
+> extends CommentRatingSystemFactoryInterfaceWithoutTraits {
+  use(
+    name: CommentRatingSystemTraitKeys<TOptions>,
+    ...names: readonly CommentRatingSystemTraitKeys<TOptions>[]
+  ): CommentRatingSystemFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link CommentRatingSystem} model.
  *
  * @param options
  * @returns factory {@link CommentRatingSystemFactoryInterface}
  */
-export declare function defineCommentRatingSystemFactory(
-  options?: CommentRatingSystemFactoryDefineOptions
-): CommentRatingSystemFactoryInterface
+export declare function defineCommentRatingSystemFactory<
+  TOptions extends CommentRatingSystemFactoryDefineOptions
+>(options?: TOptions): CommentRatingSystemFactoryInterface<TOptions>
 declare type CommentRatingSystemAnswerratingSystemFactory = {
   _factoryFor: 'CommentRatingSystem'
   build: () => PromiseLike<Prisma.CommentRatingSystemCreateNestedOneWithoutAnswersInput['create']>
@@ -780,8 +976,16 @@ declare type CommentRatingSystemAnswerFactoryDefineInput = {
 }
 declare type CommentRatingSystemAnswerFactoryDefineOptions = {
   defaultData: Resolver<CommentRatingSystemAnswerFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<CommentRatingSystemAnswerFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface CommentRatingSystemAnswerFactoryInterface {
+declare type CommentRatingSystemAnswerTraitKeys<
+  TOptions extends CommentRatingSystemAnswerFactoryDefineOptions
+> = keyof TOptions['traits']
+export interface CommentRatingSystemAnswerFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'CommentRatingSystemAnswer'
   build(
     inputData?: Partial<Prisma.CommentRatingSystemAnswerCreateInput>
@@ -803,15 +1007,23 @@ export interface CommentRatingSystemAnswerFactoryInterface {
     inputData?: Partial<Prisma.CommentRatingSystemAnswerCreateInput>
   ): PromiseLike<Pick<CommentRatingSystemAnswer, 'id'>>
 }
+export interface CommentRatingSystemAnswerFactoryInterface<
+  TOptions extends CommentRatingSystemAnswerFactoryDefineOptions = CommentRatingSystemAnswerFactoryDefineOptions
+> extends CommentRatingSystemAnswerFactoryInterfaceWithoutTraits {
+  use(
+    name: CommentRatingSystemAnswerTraitKeys<TOptions>,
+    ...names: readonly CommentRatingSystemAnswerTraitKeys<TOptions>[]
+  ): CommentRatingSystemAnswerFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link CommentRatingSystemAnswer} model.
  *
  * @param options
  * @returns factory {@link CommentRatingSystemAnswerFactoryInterface}
  */
-export declare function defineCommentRatingSystemAnswerFactory(
-  options: CommentRatingSystemAnswerFactoryDefineOptions
-): CommentRatingSystemAnswerFactoryInterface
+export declare function defineCommentRatingSystemAnswerFactory<
+  TOptions extends CommentRatingSystemAnswerFactoryDefineOptions
+>(options: TOptions): CommentRatingSystemAnswerFactoryInterface<TOptions>
 declare type CommentRatinguserFactory = {
   _factoryFor: 'User'
   build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutCommentRatingInput['create']>
@@ -841,8 +1053,15 @@ declare type CommentRatingFactoryDefineInput = {
 }
 declare type CommentRatingFactoryDefineOptions = {
   defaultData: Resolver<CommentRatingFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<CommentRatingFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface CommentRatingFactoryInterface {
+declare type CommentRatingTraitKeys<TOptions extends CommentRatingFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface CommentRatingFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'CommentRating'
   build(
     inputData?: Partial<Prisma.CommentRatingCreateInput>
@@ -862,15 +1081,23 @@ export interface CommentRatingFactoryInterface {
     inputData?: Partial<Prisma.CommentRatingCreateInput>
   ): PromiseLike<Pick<CommentRating, 'id'>>
 }
+export interface CommentRatingFactoryInterface<
+  TOptions extends CommentRatingFactoryDefineOptions = CommentRatingFactoryDefineOptions
+> extends CommentRatingFactoryInterfaceWithoutTraits {
+  use(
+    name: CommentRatingTraitKeys<TOptions>,
+    ...names: readonly CommentRatingTraitKeys<TOptions>[]
+  ): CommentRatingFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link CommentRating} model.
  *
  * @param options
  * @returns factory {@link CommentRatingFactoryInterface}
  */
-export declare function defineCommentRatingFactory(
-  options: CommentRatingFactoryDefineOptions
-): CommentRatingFactoryInterface
+export declare function defineCommentRatingFactory<
+  TOptions extends CommentRatingFactoryDefineOptions
+>(options: TOptions): CommentRatingFactoryInterface<TOptions>
 declare type CommentRatingOverrideanswerFactory = {
   _factoryFor: 'CommentRatingSystemAnswer'
   build: () => PromiseLike<
@@ -894,8 +1121,16 @@ declare type CommentRatingOverrideFactoryDefineInput = {
 }
 declare type CommentRatingOverrideFactoryDefineOptions = {
   defaultData: Resolver<CommentRatingOverrideFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<CommentRatingOverrideFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface CommentRatingOverrideFactoryInterface {
+declare type CommentRatingOverrideTraitKeys<
+  TOptions extends CommentRatingOverrideFactoryDefineOptions
+> = keyof TOptions['traits']
+export interface CommentRatingOverrideFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'CommentRatingOverride'
   build(
     inputData?: Partial<Prisma.CommentRatingOverrideCreateInput>
@@ -919,15 +1154,23 @@ export interface CommentRatingOverrideFactoryInterface {
     inputData?: Partial<Prisma.CommentRatingOverrideCreateInput>
   ): PromiseLike<Pick<CommentRatingOverride, 'answerId' | 'commentId'>>
 }
+export interface CommentRatingOverrideFactoryInterface<
+  TOptions extends CommentRatingOverrideFactoryDefineOptions = CommentRatingOverrideFactoryDefineOptions
+> extends CommentRatingOverrideFactoryInterfaceWithoutTraits {
+  use(
+    name: CommentRatingOverrideTraitKeys<TOptions>,
+    ...names: readonly CommentRatingOverrideTraitKeys<TOptions>[]
+  ): CommentRatingOverrideFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link CommentRatingOverride} model.
  *
  * @param options
  * @returns factory {@link CommentRatingOverrideFactoryInterface}
  */
-export declare function defineCommentRatingOverrideFactory(
-  options: CommentRatingOverrideFactoryDefineOptions
-): CommentRatingOverrideFactoryInterface
+export declare function defineCommentRatingOverrideFactory<
+  TOptions extends CommentRatingOverrideFactoryDefineOptions
+>(options: TOptions): CommentRatingOverrideFactoryInterface<TOptions>
 declare type InvoiceIteminvoicesFactory = {
   _factoryFor: 'Invoice'
   build: () => PromiseLike<Prisma.InvoiceCreateNestedOneWithoutItemsInput['create']>
@@ -944,8 +1187,15 @@ declare type InvoiceItemFactoryDefineInput = {
 }
 declare type InvoiceItemFactoryDefineOptions = {
   defaultData?: Resolver<InvoiceItemFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<InvoiceItemFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface InvoiceItemFactoryInterface {
+declare type InvoiceItemTraitKeys<TOptions extends InvoiceItemFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface InvoiceItemFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'InvoiceItem'
   build(
     inputData?: Partial<Prisma.InvoiceItemCreateInput>
@@ -965,15 +1215,23 @@ export interface InvoiceItemFactoryInterface {
     inputData?: Partial<Prisma.InvoiceItemCreateInput>
   ): PromiseLike<Pick<InvoiceItem, 'id'>>
 }
+export interface InvoiceItemFactoryInterface<
+  TOptions extends InvoiceItemFactoryDefineOptions = InvoiceItemFactoryDefineOptions
+> extends InvoiceItemFactoryInterfaceWithoutTraits {
+  use(
+    name: InvoiceItemTraitKeys<TOptions>,
+    ...names: readonly InvoiceItemTraitKeys<TOptions>[]
+  ): InvoiceItemFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link InvoiceItem} model.
  *
  * @param options
  * @returns factory {@link InvoiceItemFactoryInterface}
  */
-export declare function defineInvoiceItemFactory(
-  options?: InvoiceItemFactoryDefineOptions
-): InvoiceItemFactoryInterface
+export declare function defineInvoiceItemFactory<TOptions extends InvoiceItemFactoryDefineOptions>(
+  options?: TOptions
+): InvoiceItemFactoryInterface<TOptions>
 declare type InvoicesubscriptionFactory = {
   _factoryFor: 'Subscription'
   build: () => PromiseLike<Prisma.SubscriptionCreateNestedOneWithoutInvoicesInput['create']>
@@ -995,8 +1253,15 @@ declare type InvoiceFactoryDefineInput = {
 }
 declare type InvoiceFactoryDefineOptions = {
   defaultData?: Resolver<InvoiceFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<InvoiceFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface InvoiceFactoryInterface {
+declare type InvoiceTraitKeys<TOptions extends InvoiceFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface InvoiceFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'Invoice'
   build(inputData?: Partial<Prisma.InvoiceCreateInput>): PromiseLike<Prisma.InvoiceCreateInput>
   buildCreateInput(
@@ -1012,15 +1277,23 @@ export interface InvoiceFactoryInterface {
   ): PromiseLike<Invoice[]>
   createForConnect(inputData?: Partial<Prisma.InvoiceCreateInput>): PromiseLike<Pick<Invoice, 'id'>>
 }
+export interface InvoiceFactoryInterface<
+  TOptions extends InvoiceFactoryDefineOptions = InvoiceFactoryDefineOptions
+> extends InvoiceFactoryInterfaceWithoutTraits {
+  use(
+    name: InvoiceTraitKeys<TOptions>,
+    ...names: readonly InvoiceTraitKeys<TOptions>[]
+  ): InvoiceFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link Invoice} model.
  *
  * @param options
  * @returns factory {@link InvoiceFactoryInterface}
  */
-export declare function defineInvoiceFactory(
-  options?: InvoiceFactoryDefineOptions
-): InvoiceFactoryInterface
+export declare function defineInvoiceFactory<TOptions extends InvoiceFactoryDefineOptions>(
+  options?: TOptions
+): InvoiceFactoryInterface<TOptions>
 declare type MailLogrecipientFactory = {
   _factoryFor: 'User'
   build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutMailSentInput['create']>
@@ -1044,8 +1317,15 @@ declare type MailLogFactoryDefineInput = {
 }
 declare type MailLogFactoryDefineOptions = {
   defaultData: Resolver<MailLogFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<MailLogFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface MailLogFactoryInterface {
+declare type MailLogTraitKeys<TOptions extends MailLogFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface MailLogFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'MailLog'
   build(inputData?: Partial<Prisma.MailLogCreateInput>): PromiseLike<Prisma.MailLogCreateInput>
   buildCreateInput(
@@ -1061,15 +1341,23 @@ export interface MailLogFactoryInterface {
   ): PromiseLike<MailLog[]>
   createForConnect(inputData?: Partial<Prisma.MailLogCreateInput>): PromiseLike<Pick<MailLog, 'id'>>
 }
+export interface MailLogFactoryInterface<
+  TOptions extends MailLogFactoryDefineOptions = MailLogFactoryDefineOptions
+> extends MailLogFactoryInterfaceWithoutTraits {
+  use(
+    name: MailLogTraitKeys<TOptions>,
+    ...names: readonly MailLogTraitKeys<TOptions>[]
+  ): MailLogFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link MailLog} model.
  *
  * @param options
  * @returns factory {@link MailLogFactoryInterface}
  */
-export declare function defineMailLogFactory(
-  options: MailLogFactoryDefineOptions
-): MailLogFactoryInterface
+export declare function defineMailLogFactory<TOptions extends MailLogFactoryDefineOptions>(
+  options: TOptions
+): MailLogFactoryInterface<TOptions>
 declare type AvailablePaymentMethodMemberPlanFactory = {
   _factoryFor: 'MemberPlan'
   build: () => PromiseLike<
@@ -1095,8 +1383,16 @@ declare type AvailablePaymentMethodFactoryDefineInput = {
 }
 declare type AvailablePaymentMethodFactoryDefineOptions = {
   defaultData?: Resolver<AvailablePaymentMethodFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<AvailablePaymentMethodFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface AvailablePaymentMethodFactoryInterface {
+declare type AvailablePaymentMethodTraitKeys<
+  TOptions extends AvailablePaymentMethodFactoryDefineOptions
+> = keyof TOptions['traits']
+export interface AvailablePaymentMethodFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'AvailablePaymentMethod'
   build(
     inputData?: Partial<Prisma.AvailablePaymentMethodCreateInput>
@@ -1118,15 +1414,23 @@ export interface AvailablePaymentMethodFactoryInterface {
     inputData?: Partial<Prisma.AvailablePaymentMethodCreateInput>
   ): PromiseLike<Pick<AvailablePaymentMethod, 'id'>>
 }
+export interface AvailablePaymentMethodFactoryInterface<
+  TOptions extends AvailablePaymentMethodFactoryDefineOptions = AvailablePaymentMethodFactoryDefineOptions
+> extends AvailablePaymentMethodFactoryInterfaceWithoutTraits {
+  use(
+    name: AvailablePaymentMethodTraitKeys<TOptions>,
+    ...names: readonly AvailablePaymentMethodTraitKeys<TOptions>[]
+  ): AvailablePaymentMethodFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link AvailablePaymentMethod} model.
  *
  * @param options
  * @returns factory {@link AvailablePaymentMethodFactoryInterface}
  */
-export declare function defineAvailablePaymentMethodFactory(
-  options?: AvailablePaymentMethodFactoryDefineOptions
-): AvailablePaymentMethodFactoryInterface
+export declare function defineAvailablePaymentMethodFactory<
+  TOptions extends AvailablePaymentMethodFactoryDefineOptions
+>(options?: TOptions): AvailablePaymentMethodFactoryInterface<TOptions>
 declare type MemberPlanimageFactory = {
   _factoryFor: 'Image'
   build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutMemberPlanInput['create']>
@@ -1149,8 +1453,15 @@ declare type MemberPlanFactoryDefineInput = {
 }
 declare type MemberPlanFactoryDefineOptions = {
   defaultData?: Resolver<MemberPlanFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<MemberPlanFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface MemberPlanFactoryInterface {
+declare type MemberPlanTraitKeys<TOptions extends MemberPlanFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface MemberPlanFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'MemberPlan'
   build(
     inputData?: Partial<Prisma.MemberPlanCreateInput>
@@ -1170,15 +1481,23 @@ export interface MemberPlanFactoryInterface {
     inputData?: Partial<Prisma.MemberPlanCreateInput>
   ): PromiseLike<Pick<MemberPlan, 'id'>>
 }
+export interface MemberPlanFactoryInterface<
+  TOptions extends MemberPlanFactoryDefineOptions = MemberPlanFactoryDefineOptions
+> extends MemberPlanFactoryInterfaceWithoutTraits {
+  use(
+    name: MemberPlanTraitKeys<TOptions>,
+    ...names: readonly MemberPlanTraitKeys<TOptions>[]
+  ): MemberPlanFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link MemberPlan} model.
  *
  * @param options
  * @returns factory {@link MemberPlanFactoryInterface}
  */
-export declare function defineMemberPlanFactory(
-  options?: MemberPlanFactoryDefineOptions
-): MemberPlanFactoryInterface
+export declare function defineMemberPlanFactory<TOptions extends MemberPlanFactoryDefineOptions>(
+  options?: TOptions
+): MemberPlanFactoryInterface<TOptions>
 declare type NavigationLinkpageFactory = {
   _factoryFor: 'Page'
   build: () => PromiseLike<Prisma.PageCreateNestedOneWithoutNavigationsInput['create']>
@@ -1204,8 +1523,15 @@ declare type NavigationLinkFactoryDefineInput = {
 }
 declare type NavigationLinkFactoryDefineOptions = {
   defaultData?: Resolver<NavigationLinkFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<NavigationLinkFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface NavigationLinkFactoryInterface {
+declare type NavigationLinkTraitKeys<TOptions extends NavigationLinkFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface NavigationLinkFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'NavigationLink'
   build(
     inputData?: Partial<Prisma.NavigationLinkCreateInput>
@@ -1225,15 +1551,23 @@ export interface NavigationLinkFactoryInterface {
     inputData?: Partial<Prisma.NavigationLinkCreateInput>
   ): PromiseLike<Pick<NavigationLink, 'id'>>
 }
+export interface NavigationLinkFactoryInterface<
+  TOptions extends NavigationLinkFactoryDefineOptions = NavigationLinkFactoryDefineOptions
+> extends NavigationLinkFactoryInterfaceWithoutTraits {
+  use(
+    name: NavigationLinkTraitKeys<TOptions>,
+    ...names: readonly NavigationLinkTraitKeys<TOptions>[]
+  ): NavigationLinkFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link NavigationLink} model.
  *
  * @param options
  * @returns factory {@link NavigationLinkFactoryInterface}
  */
-export declare function defineNavigationLinkFactory(
-  options?: NavigationLinkFactoryDefineOptions
-): NavigationLinkFactoryInterface
+export declare function defineNavigationLinkFactory<
+  TOptions extends NavigationLinkFactoryDefineOptions
+>(options?: TOptions): NavigationLinkFactoryInterface<TOptions>
 declare type NavigationFactoryDefineInput = {
   id?: string
   createdAt?: Date
@@ -1244,8 +1578,15 @@ declare type NavigationFactoryDefineInput = {
 }
 declare type NavigationFactoryDefineOptions = {
   defaultData?: Resolver<NavigationFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<NavigationFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface NavigationFactoryInterface {
+declare type NavigationTraitKeys<TOptions extends NavigationFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface NavigationFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'Navigation'
   build(
     inputData?: Partial<Prisma.NavigationCreateInput>
@@ -1265,15 +1606,23 @@ export interface NavigationFactoryInterface {
     inputData?: Partial<Prisma.NavigationCreateInput>
   ): PromiseLike<Pick<Navigation, 'id'>>
 }
+export interface NavigationFactoryInterface<
+  TOptions extends NavigationFactoryDefineOptions = NavigationFactoryDefineOptions
+> extends NavigationFactoryInterfaceWithoutTraits {
+  use(
+    name: NavigationTraitKeys<TOptions>,
+    ...names: readonly NavigationTraitKeys<TOptions>[]
+  ): NavigationFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link Navigation} model.
  *
  * @param options
  * @returns factory {@link NavigationFactoryInterface}
  */
-export declare function defineNavigationFactory(
-  options?: NavigationFactoryDefineOptions
-): NavigationFactoryInterface
+export declare function defineNavigationFactory<TOptions extends NavigationFactoryDefineOptions>(
+  options?: TOptions
+): NavigationFactoryInterface<TOptions>
 declare type PageRevisionimageFactory = {
   _factoryFor: 'Image'
   build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutPageRevisionImagesInput['create']>
@@ -1311,8 +1660,15 @@ declare type PageRevisionFactoryDefineInput = {
 }
 declare type PageRevisionFactoryDefineOptions = {
   defaultData?: Resolver<PageRevisionFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<PageRevisionFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface PageRevisionFactoryInterface {
+declare type PageRevisionTraitKeys<TOptions extends PageRevisionFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface PageRevisionFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'PageRevision'
   build(
     inputData?: Partial<Prisma.PageRevisionCreateInput>
@@ -1332,15 +1688,23 @@ export interface PageRevisionFactoryInterface {
     inputData?: Partial<Prisma.PageRevisionCreateInput>
   ): PromiseLike<Pick<PageRevision, 'id'>>
 }
+export interface PageRevisionFactoryInterface<
+  TOptions extends PageRevisionFactoryDefineOptions = PageRevisionFactoryDefineOptions
+> extends PageRevisionFactoryInterfaceWithoutTraits {
+  use(
+    name: PageRevisionTraitKeys<TOptions>,
+    ...names: readonly PageRevisionTraitKeys<TOptions>[]
+  ): PageRevisionFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link PageRevision} model.
  *
  * @param options
  * @returns factory {@link PageRevisionFactoryInterface}
  */
-export declare function definePageRevisionFactory(
-  options?: PageRevisionFactoryDefineOptions
-): PageRevisionFactoryInterface
+export declare function definePageRevisionFactory<
+  TOptions extends PageRevisionFactoryDefineOptions
+>(options?: TOptions): PageRevisionFactoryInterface<TOptions>
 declare type PagepublishedFactory = {
   _factoryFor: 'PageRevision'
   build: () => PromiseLike<Prisma.PageRevisionCreateNestedOneWithoutPublishedPageInput['create']>
@@ -1364,8 +1728,14 @@ declare type PageFactoryDefineInput = {
 }
 declare type PageFactoryDefineOptions = {
   defaultData?: Resolver<PageFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<PageFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface PageFactoryInterface {
+declare type PageTraitKeys<TOptions extends PageFactoryDefineOptions> = keyof TOptions['traits']
+export interface PageFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'Page'
   build(inputData?: Partial<Prisma.PageCreateInput>): PromiseLike<Prisma.PageCreateInput>
   buildCreateInput(inputData?: Partial<Prisma.PageCreateInput>): PromiseLike<Prisma.PageCreateInput>
@@ -1377,13 +1747,23 @@ export interface PageFactoryInterface {
   createList(inputData: number | readonly Partial<Prisma.PageCreateInput>[]): PromiseLike<Page[]>
   createForConnect(inputData?: Partial<Prisma.PageCreateInput>): PromiseLike<Pick<Page, 'id'>>
 }
+export interface PageFactoryInterface<
+  TOptions extends PageFactoryDefineOptions = PageFactoryDefineOptions
+> extends PageFactoryInterfaceWithoutTraits {
+  use(
+    name: PageTraitKeys<TOptions>,
+    ...names: readonly PageTraitKeys<TOptions>[]
+  ): PageFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link Page} model.
  *
  * @param options
  * @returns factory {@link PageFactoryInterface}
  */
-export declare function definePageFactory(options?: PageFactoryDefineOptions): PageFactoryInterface
+export declare function definePageFactory<TOptions extends PageFactoryDefineOptions>(
+  options?: TOptions
+): PageFactoryInterface<TOptions>
 declare type PaymentMethodFactoryDefineInput = {
   id?: string
   createdAt?: Date
@@ -1399,8 +1779,15 @@ declare type PaymentMethodFactoryDefineInput = {
 }
 declare type PaymentMethodFactoryDefineOptions = {
   defaultData?: Resolver<PaymentMethodFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<PaymentMethodFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface PaymentMethodFactoryInterface {
+declare type PaymentMethodTraitKeys<TOptions extends PaymentMethodFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface PaymentMethodFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'PaymentMethod'
   build(
     inputData?: Partial<Prisma.PaymentMethodCreateInput>
@@ -1420,15 +1807,23 @@ export interface PaymentMethodFactoryInterface {
     inputData?: Partial<Prisma.PaymentMethodCreateInput>
   ): PromiseLike<Pick<PaymentMethod, 'id'>>
 }
+export interface PaymentMethodFactoryInterface<
+  TOptions extends PaymentMethodFactoryDefineOptions = PaymentMethodFactoryDefineOptions
+> extends PaymentMethodFactoryInterfaceWithoutTraits {
+  use(
+    name: PaymentMethodTraitKeys<TOptions>,
+    ...names: readonly PaymentMethodTraitKeys<TOptions>[]
+  ): PaymentMethodFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link PaymentMethod} model.
  *
  * @param options
  * @returns factory {@link PaymentMethodFactoryInterface}
  */
-export declare function definePaymentMethodFactory(
-  options?: PaymentMethodFactoryDefineOptions
-): PaymentMethodFactoryInterface
+export declare function definePaymentMethodFactory<
+  TOptions extends PaymentMethodFactoryDefineOptions
+>(options?: TOptions): PaymentMethodFactoryInterface<TOptions>
 declare type PaymentpaymentMethodFactory = {
   _factoryFor: 'PaymentMethod'
   build: () => PromiseLike<Prisma.PaymentMethodCreateNestedOneWithoutPaymentInput['create']>
@@ -1449,8 +1844,15 @@ declare type PaymentFactoryDefineInput = {
 }
 declare type PaymentFactoryDefineOptions = {
   defaultData: Resolver<PaymentFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<PaymentFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface PaymentFactoryInterface {
+declare type PaymentTraitKeys<TOptions extends PaymentFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface PaymentFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'Payment'
   build(inputData?: Partial<Prisma.PaymentCreateInput>): PromiseLike<Prisma.PaymentCreateInput>
   buildCreateInput(
@@ -1466,15 +1868,23 @@ export interface PaymentFactoryInterface {
   ): PromiseLike<Payment[]>
   createForConnect(inputData?: Partial<Prisma.PaymentCreateInput>): PromiseLike<Pick<Payment, 'id'>>
 }
+export interface PaymentFactoryInterface<
+  TOptions extends PaymentFactoryDefineOptions = PaymentFactoryDefineOptions
+> extends PaymentFactoryInterfaceWithoutTraits {
+  use(
+    name: PaymentTraitKeys<TOptions>,
+    ...names: readonly PaymentTraitKeys<TOptions>[]
+  ): PaymentFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link Payment} model.
  *
  * @param options
  * @returns factory {@link PaymentFactoryInterface}
  */
-export declare function definePaymentFactory(
-  options: PaymentFactoryDefineOptions
-): PaymentFactoryInterface
+export declare function definePaymentFactory<TOptions extends PaymentFactoryDefineOptions>(
+  options: TOptions
+): PaymentFactoryInterface<TOptions>
 declare type PeerProfilelogoFactory = {
   _factoryFor: 'Image'
   build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutPeerProfileInput['create']>
@@ -1492,8 +1902,15 @@ declare type PeerProfileFactoryDefineInput = {
 }
 declare type PeerProfileFactoryDefineOptions = {
   defaultData?: Resolver<PeerProfileFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<PeerProfileFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface PeerProfileFactoryInterface {
+declare type PeerProfileTraitKeys<TOptions extends PeerProfileFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface PeerProfileFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'PeerProfile'
   build(
     inputData?: Partial<Prisma.PeerProfileCreateInput>
@@ -1513,15 +1930,23 @@ export interface PeerProfileFactoryInterface {
     inputData?: Partial<Prisma.PeerProfileCreateInput>
   ): PromiseLike<Pick<PeerProfile, 'id'>>
 }
+export interface PeerProfileFactoryInterface<
+  TOptions extends PeerProfileFactoryDefineOptions = PeerProfileFactoryDefineOptions
+> extends PeerProfileFactoryInterfaceWithoutTraits {
+  use(
+    name: PeerProfileTraitKeys<TOptions>,
+    ...names: readonly PeerProfileTraitKeys<TOptions>[]
+  ): PeerProfileFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link PeerProfile} model.
  *
  * @param options
  * @returns factory {@link PeerProfileFactoryInterface}
  */
-export declare function definePeerProfileFactory(
-  options?: PeerProfileFactoryDefineOptions
-): PeerProfileFactoryInterface
+export declare function definePeerProfileFactory<TOptions extends PeerProfileFactoryDefineOptions>(
+  options?: TOptions
+): PeerProfileFactoryInterface<TOptions>
 declare type PeerFactoryDefineInput = {
   id?: string
   createdAt?: Date
@@ -1535,8 +1960,14 @@ declare type PeerFactoryDefineInput = {
 }
 declare type PeerFactoryDefineOptions = {
   defaultData?: Resolver<PeerFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<PeerFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface PeerFactoryInterface {
+declare type PeerTraitKeys<TOptions extends PeerFactoryDefineOptions> = keyof TOptions['traits']
+export interface PeerFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'Peer'
   build(inputData?: Partial<Prisma.PeerCreateInput>): PromiseLike<Prisma.PeerCreateInput>
   buildCreateInput(inputData?: Partial<Prisma.PeerCreateInput>): PromiseLike<Prisma.PeerCreateInput>
@@ -1548,13 +1979,23 @@ export interface PeerFactoryInterface {
   createList(inputData: number | readonly Partial<Prisma.PeerCreateInput>[]): PromiseLike<Peer[]>
   createForConnect(inputData?: Partial<Prisma.PeerCreateInput>): PromiseLike<Pick<Peer, 'id'>>
 }
+export interface PeerFactoryInterface<
+  TOptions extends PeerFactoryDefineOptions = PeerFactoryDefineOptions
+> extends PeerFactoryInterfaceWithoutTraits {
+  use(
+    name: PeerTraitKeys<TOptions>,
+    ...names: readonly PeerTraitKeys<TOptions>[]
+  ): PeerFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link Peer} model.
  *
  * @param options
  * @returns factory {@link PeerFactoryInterface}
  */
-export declare function definePeerFactory(options?: PeerFactoryDefineOptions): PeerFactoryInterface
+export declare function definePeerFactory<TOptions extends PeerFactoryDefineOptions>(
+  options?: TOptions
+): PeerFactoryInterface<TOptions>
 declare type TokenFactoryDefineInput = {
   id?: string
   createdAt?: Date
@@ -1566,8 +2007,14 @@ declare type TokenFactoryDefineInput = {
 }
 declare type TokenFactoryDefineOptions = {
   defaultData?: Resolver<TokenFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<TokenFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface TokenFactoryInterface {
+declare type TokenTraitKeys<TOptions extends TokenFactoryDefineOptions> = keyof TOptions['traits']
+export interface TokenFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'Token'
   build(inputData?: Partial<Prisma.TokenCreateInput>): PromiseLike<Prisma.TokenCreateInput>
   buildCreateInput(
@@ -1581,15 +2028,23 @@ export interface TokenFactoryInterface {
   createList(inputData: number | readonly Partial<Prisma.TokenCreateInput>[]): PromiseLike<Token[]>
   createForConnect(inputData?: Partial<Prisma.TokenCreateInput>): PromiseLike<Pick<Token, 'id'>>
 }
+export interface TokenFactoryInterface<
+  TOptions extends TokenFactoryDefineOptions = TokenFactoryDefineOptions
+> extends TokenFactoryInterfaceWithoutTraits {
+  use(
+    name: TokenTraitKeys<TOptions>,
+    ...names: readonly TokenTraitKeys<TOptions>[]
+  ): TokenFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link Token} model.
  *
  * @param options
  * @returns factory {@link TokenFactoryInterface}
  */
-export declare function defineTokenFactory(
-  options?: TokenFactoryDefineOptions
-): TokenFactoryInterface
+export declare function defineTokenFactory<TOptions extends TokenFactoryDefineOptions>(
+  options?: TOptions
+): TokenFactoryInterface<TOptions>
 declare type SessionuserFactory = {
   _factoryFor: 'User'
   build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutSessionInput['create']>
@@ -1603,8 +2058,15 @@ declare type SessionFactoryDefineInput = {
 }
 declare type SessionFactoryDefineOptions = {
   defaultData: Resolver<SessionFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<SessionFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface SessionFactoryInterface {
+declare type SessionTraitKeys<TOptions extends SessionFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface SessionFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'Session'
   build(inputData?: Partial<Prisma.SessionCreateInput>): PromiseLike<Prisma.SessionCreateInput>
   buildCreateInput(
@@ -1620,15 +2082,23 @@ export interface SessionFactoryInterface {
   ): PromiseLike<Session[]>
   createForConnect(inputData?: Partial<Prisma.SessionCreateInput>): PromiseLike<Pick<Session, 'id'>>
 }
+export interface SessionFactoryInterface<
+  TOptions extends SessionFactoryDefineOptions = SessionFactoryDefineOptions
+> extends SessionFactoryInterfaceWithoutTraits {
+  use(
+    name: SessionTraitKeys<TOptions>,
+    ...names: readonly SessionTraitKeys<TOptions>[]
+  ): SessionFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link Session} model.
  *
  * @param options
  * @returns factory {@link SessionFactoryInterface}
  */
-export declare function defineSessionFactory(
-  options: SessionFactoryDefineOptions
-): SessionFactoryInterface
+export declare function defineSessionFactory<TOptions extends SessionFactoryDefineOptions>(
+  options: TOptions
+): SessionFactoryInterface<TOptions>
 declare type SubscriptionPeriodinvoiceFactory = {
   _factoryFor: 'Invoice'
   build: () => PromiseLike<Prisma.InvoiceCreateNestedOneWithoutSubscriptionPeriodsInput['create']>
@@ -1654,8 +2124,15 @@ declare type SubscriptionPeriodFactoryDefineInput = {
 }
 declare type SubscriptionPeriodFactoryDefineOptions = {
   defaultData: Resolver<SubscriptionPeriodFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<SubscriptionPeriodFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface SubscriptionPeriodFactoryInterface {
+declare type SubscriptionPeriodTraitKeys<TOptions extends SubscriptionPeriodFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface SubscriptionPeriodFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'SubscriptionPeriod'
   build(
     inputData?: Partial<Prisma.SubscriptionPeriodCreateInput>
@@ -1675,15 +2152,23 @@ export interface SubscriptionPeriodFactoryInterface {
     inputData?: Partial<Prisma.SubscriptionPeriodCreateInput>
   ): PromiseLike<Pick<SubscriptionPeriod, 'id'>>
 }
+export interface SubscriptionPeriodFactoryInterface<
+  TOptions extends SubscriptionPeriodFactoryDefineOptions = SubscriptionPeriodFactoryDefineOptions
+> extends SubscriptionPeriodFactoryInterfaceWithoutTraits {
+  use(
+    name: SubscriptionPeriodTraitKeys<TOptions>,
+    ...names: readonly SubscriptionPeriodTraitKeys<TOptions>[]
+  ): SubscriptionPeriodFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link SubscriptionPeriod} model.
  *
  * @param options
  * @returns factory {@link SubscriptionPeriodFactoryInterface}
  */
-export declare function defineSubscriptionPeriodFactory(
-  options: SubscriptionPeriodFactoryDefineOptions
-): SubscriptionPeriodFactoryInterface
+export declare function defineSubscriptionPeriodFactory<
+  TOptions extends SubscriptionPeriodFactoryDefineOptions
+>(options: TOptions): SubscriptionPeriodFactoryInterface<TOptions>
 declare type SubscriptionDeactivationsubscriptionFactory = {
   _factoryFor: 'Subscription'
   build: () => PromiseLike<Prisma.SubscriptionCreateNestedOneWithoutDeactivationInput['create']>
@@ -1700,8 +2185,16 @@ declare type SubscriptionDeactivationFactoryDefineInput = {
 }
 declare type SubscriptionDeactivationFactoryDefineOptions = {
   defaultData: Resolver<SubscriptionDeactivationFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<SubscriptionDeactivationFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface SubscriptionDeactivationFactoryInterface {
+declare type SubscriptionDeactivationTraitKeys<
+  TOptions extends SubscriptionDeactivationFactoryDefineOptions
+> = keyof TOptions['traits']
+export interface SubscriptionDeactivationFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'SubscriptionDeactivation'
   build(
     inputData?: Partial<Prisma.SubscriptionDeactivationCreateInput>
@@ -1723,15 +2216,23 @@ export interface SubscriptionDeactivationFactoryInterface {
     inputData?: Partial<Prisma.SubscriptionDeactivationCreateInput>
   ): PromiseLike<Pick<SubscriptionDeactivation, 'id'>>
 }
+export interface SubscriptionDeactivationFactoryInterface<
+  TOptions extends SubscriptionDeactivationFactoryDefineOptions = SubscriptionDeactivationFactoryDefineOptions
+> extends SubscriptionDeactivationFactoryInterfaceWithoutTraits {
+  use(
+    name: SubscriptionDeactivationTraitKeys<TOptions>,
+    ...names: readonly SubscriptionDeactivationTraitKeys<TOptions>[]
+  ): SubscriptionDeactivationFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link SubscriptionDeactivation} model.
  *
  * @param options
  * @returns factory {@link SubscriptionDeactivationFactoryInterface}
  */
-export declare function defineSubscriptionDeactivationFactory(
-  options: SubscriptionDeactivationFactoryDefineOptions
-): SubscriptionDeactivationFactoryInterface
+export declare function defineSubscriptionDeactivationFactory<
+  TOptions extends SubscriptionDeactivationFactoryDefineOptions
+>(options: TOptions): SubscriptionDeactivationFactoryInterface<TOptions>
 declare type SubscriptiondeactivationFactory = {
   _factoryFor: 'SubscriptionDeactivation'
   build: () => PromiseLike<
@@ -1775,8 +2276,15 @@ declare type SubscriptionFactoryDefineInput = {
 }
 declare type SubscriptionFactoryDefineOptions = {
   defaultData: Resolver<SubscriptionFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<SubscriptionFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface SubscriptionFactoryInterface {
+declare type SubscriptionTraitKeys<TOptions extends SubscriptionFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface SubscriptionFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'Subscription'
   build(
     inputData?: Partial<Prisma.SubscriptionCreateInput>
@@ -1796,15 +2304,23 @@ export interface SubscriptionFactoryInterface {
     inputData?: Partial<Prisma.SubscriptionCreateInput>
   ): PromiseLike<Pick<Subscription, 'id'>>
 }
+export interface SubscriptionFactoryInterface<
+  TOptions extends SubscriptionFactoryDefineOptions = SubscriptionFactoryDefineOptions
+> extends SubscriptionFactoryInterfaceWithoutTraits {
+  use(
+    name: SubscriptionTraitKeys<TOptions>,
+    ...names: readonly SubscriptionTraitKeys<TOptions>[]
+  ): SubscriptionFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link Subscription} model.
  *
  * @param options
  * @returns factory {@link SubscriptionFactoryInterface}
  */
-export declare function defineSubscriptionFactory(
-  options: SubscriptionFactoryDefineOptions
-): SubscriptionFactoryInterface
+export declare function defineSubscriptionFactory<
+  TOptions extends SubscriptionFactoryDefineOptions
+>(options: TOptions): SubscriptionFactoryInterface<TOptions>
 declare type UserAddressUserFactory = {
   _factoryFor: 'User'
   build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutAddressInput['create']>
@@ -1822,8 +2338,15 @@ declare type UserAddressFactoryDefineInput = {
 }
 declare type UserAddressFactoryDefineOptions = {
   defaultData: Resolver<UserAddressFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<UserAddressFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface UserAddressFactoryInterface {
+declare type UserAddressTraitKeys<TOptions extends UserAddressFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface UserAddressFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'UserAddress'
   build(
     inputData?: Partial<Prisma.UserAddressCreateInput>
@@ -1843,15 +2366,23 @@ export interface UserAddressFactoryInterface {
     inputData?: Partial<Prisma.UserAddressCreateInput>
   ): PromiseLike<Pick<UserAddress, 'userId'>>
 }
+export interface UserAddressFactoryInterface<
+  TOptions extends UserAddressFactoryDefineOptions = UserAddressFactoryDefineOptions
+> extends UserAddressFactoryInterfaceWithoutTraits {
+  use(
+    name: UserAddressTraitKeys<TOptions>,
+    ...names: readonly UserAddressTraitKeys<TOptions>[]
+  ): UserAddressFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link UserAddress} model.
  *
  * @param options
  * @returns factory {@link UserAddressFactoryInterface}
  */
-export declare function defineUserAddressFactory(
-  options: UserAddressFactoryDefineOptions
-): UserAddressFactoryInterface
+export declare function defineUserAddressFactory<TOptions extends UserAddressFactoryDefineOptions>(
+  options: TOptions
+): UserAddressFactoryInterface<TOptions>
 declare type UserOAuth2AccountUserFactory = {
   _factoryFor: 'User'
   build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutOauth2AccountsInput['create']>
@@ -1876,8 +2407,15 @@ declare type UserOAuth2AccountFactoryDefineInput = {
 }
 declare type UserOAuth2AccountFactoryDefineOptions = {
   defaultData?: Resolver<UserOAuth2AccountFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<UserOAuth2AccountFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface UserOAuth2AccountFactoryInterface {
+declare type UserOAuth2AccountTraitKeys<TOptions extends UserOAuth2AccountFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface UserOAuth2AccountFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'UserOAuth2Account'
   build(
     inputData?: Partial<Prisma.UserOAuth2AccountCreateInput>
@@ -1897,15 +2435,23 @@ export interface UserOAuth2AccountFactoryInterface {
     inputData?: Partial<Prisma.UserOAuth2AccountCreateInput>
   ): PromiseLike<Pick<UserOAuth2Account, 'id'>>
 }
+export interface UserOAuth2AccountFactoryInterface<
+  TOptions extends UserOAuth2AccountFactoryDefineOptions = UserOAuth2AccountFactoryDefineOptions
+> extends UserOAuth2AccountFactoryInterfaceWithoutTraits {
+  use(
+    name: UserOAuth2AccountTraitKeys<TOptions>,
+    ...names: readonly UserOAuth2AccountTraitKeys<TOptions>[]
+  ): UserOAuth2AccountFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link UserOAuth2Account} model.
  *
  * @param options
  * @returns factory {@link UserOAuth2AccountFactoryInterface}
  */
-export declare function defineUserOAuth2AccountFactory(
-  options?: UserOAuth2AccountFactoryDefineOptions
-): UserOAuth2AccountFactoryInterface
+export declare function defineUserOAuth2AccountFactory<
+  TOptions extends UserOAuth2AccountFactoryDefineOptions
+>(options?: TOptions): UserOAuth2AccountFactoryInterface<TOptions>
 declare type PaymentProviderCustomerUserFactory = {
   _factoryFor: 'User'
   build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutPaymentProviderCustomersInput['create']>
@@ -1922,8 +2468,16 @@ declare type PaymentProviderCustomerFactoryDefineInput = {
 }
 declare type PaymentProviderCustomerFactoryDefineOptions = {
   defaultData?: Resolver<PaymentProviderCustomerFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<PaymentProviderCustomerFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface PaymentProviderCustomerFactoryInterface {
+declare type PaymentProviderCustomerTraitKeys<
+  TOptions extends PaymentProviderCustomerFactoryDefineOptions
+> = keyof TOptions['traits']
+export interface PaymentProviderCustomerFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'PaymentProviderCustomer'
   build(
     inputData?: Partial<Prisma.PaymentProviderCustomerCreateInput>
@@ -1945,15 +2499,23 @@ export interface PaymentProviderCustomerFactoryInterface {
     inputData?: Partial<Prisma.PaymentProviderCustomerCreateInput>
   ): PromiseLike<Pick<PaymentProviderCustomer, 'id'>>
 }
+export interface PaymentProviderCustomerFactoryInterface<
+  TOptions extends PaymentProviderCustomerFactoryDefineOptions = PaymentProviderCustomerFactoryDefineOptions
+> extends PaymentProviderCustomerFactoryInterfaceWithoutTraits {
+  use(
+    name: PaymentProviderCustomerTraitKeys<TOptions>,
+    ...names: readonly PaymentProviderCustomerTraitKeys<TOptions>[]
+  ): PaymentProviderCustomerFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link PaymentProviderCustomer} model.
  *
  * @param options
  * @returns factory {@link PaymentProviderCustomerFactoryInterface}
  */
-export declare function definePaymentProviderCustomerFactory(
-  options?: PaymentProviderCustomerFactoryDefineOptions
-): PaymentProviderCustomerFactoryInterface
+export declare function definePaymentProviderCustomerFactory<
+  TOptions extends PaymentProviderCustomerFactoryDefineOptions
+>(options?: TOptions): PaymentProviderCustomerFactoryInterface<TOptions>
 declare type UseruserImageFactory = {
   _factoryFor: 'Image'
   build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutUsersInput['create']>
@@ -1992,8 +2554,14 @@ declare type UserFactoryDefineInput = {
 }
 declare type UserFactoryDefineOptions = {
   defaultData?: Resolver<UserFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<UserFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface UserFactoryInterface {
+declare type UserTraitKeys<TOptions extends UserFactoryDefineOptions> = keyof TOptions['traits']
+export interface UserFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'User'
   build(inputData?: Partial<Prisma.UserCreateInput>): PromiseLike<Prisma.UserCreateInput>
   buildCreateInput(inputData?: Partial<Prisma.UserCreateInput>): PromiseLike<Prisma.UserCreateInput>
@@ -2005,13 +2573,23 @@ export interface UserFactoryInterface {
   createList(inputData: number | readonly Partial<Prisma.UserCreateInput>[]): PromiseLike<User[]>
   createForConnect(inputData?: Partial<Prisma.UserCreateInput>): PromiseLike<Pick<User, 'id'>>
 }
+export interface UserFactoryInterface<
+  TOptions extends UserFactoryDefineOptions = UserFactoryDefineOptions
+> extends UserFactoryInterfaceWithoutTraits {
+  use(
+    name: UserTraitKeys<TOptions>,
+    ...names: readonly UserTraitKeys<TOptions>[]
+  ): UserFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link User} model.
  *
  * @param options
  * @returns factory {@link UserFactoryInterface}
  */
-export declare function defineUserFactory(options?: UserFactoryDefineOptions): UserFactoryInterface
+export declare function defineUserFactory<TOptions extends UserFactoryDefineOptions>(
+  options?: TOptions
+): UserFactoryInterface<TOptions>
 declare type UserRoleFactoryDefineInput = {
   id?: string
   createdAt?: Date
@@ -2024,8 +2602,15 @@ declare type UserRoleFactoryDefineInput = {
 }
 declare type UserRoleFactoryDefineOptions = {
   defaultData?: Resolver<UserRoleFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<UserRoleFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface UserRoleFactoryInterface {
+declare type UserRoleTraitKeys<TOptions extends UserRoleFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface UserRoleFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'UserRole'
   build(inputData?: Partial<Prisma.UserRoleCreateInput>): PromiseLike<Prisma.UserRoleCreateInput>
   buildCreateInput(
@@ -2043,15 +2628,23 @@ export interface UserRoleFactoryInterface {
     inputData?: Partial<Prisma.UserRoleCreateInput>
   ): PromiseLike<Pick<UserRole, 'id'>>
 }
+export interface UserRoleFactoryInterface<
+  TOptions extends UserRoleFactoryDefineOptions = UserRoleFactoryDefineOptions
+> extends UserRoleFactoryInterfaceWithoutTraits {
+  use(
+    name: UserRoleTraitKeys<TOptions>,
+    ...names: readonly UserRoleTraitKeys<TOptions>[]
+  ): UserRoleFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link UserRole} model.
  *
  * @param options
  * @returns factory {@link UserRoleFactoryInterface}
  */
-export declare function defineUserRoleFactory(
-  options?: UserRoleFactoryDefineOptions
-): UserRoleFactoryInterface
+export declare function defineUserRoleFactory<TOptions extends UserRoleFactoryDefineOptions>(
+  options?: TOptions
+): UserRoleFactoryInterface<TOptions>
 declare type SettingFactoryDefineInput = {
   id?: string
   createdAt?: Date
@@ -2062,8 +2655,15 @@ declare type SettingFactoryDefineInput = {
 }
 declare type SettingFactoryDefineOptions = {
   defaultData?: Resolver<SettingFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<SettingFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface SettingFactoryInterface {
+declare type SettingTraitKeys<TOptions extends SettingFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface SettingFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'Setting'
   build(inputData?: Partial<Prisma.SettingCreateInput>): PromiseLike<Prisma.SettingCreateInput>
   buildCreateInput(
@@ -2079,15 +2679,23 @@ export interface SettingFactoryInterface {
   ): PromiseLike<Setting[]>
   createForConnect(inputData?: Partial<Prisma.SettingCreateInput>): PromiseLike<Pick<Setting, 'id'>>
 }
+export interface SettingFactoryInterface<
+  TOptions extends SettingFactoryDefineOptions = SettingFactoryDefineOptions
+> extends SettingFactoryInterfaceWithoutTraits {
+  use(
+    name: SettingTraitKeys<TOptions>,
+    ...names: readonly SettingTraitKeys<TOptions>[]
+  ): SettingFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link Setting} model.
  *
  * @param options
  * @returns factory {@link SettingFactoryInterface}
  */
-export declare function defineSettingFactory(
-  options?: SettingFactoryDefineOptions
-): SettingFactoryInterface
+export declare function defineSettingFactory<TOptions extends SettingFactoryDefineOptions>(
+  options?: TOptions
+): SettingFactoryInterface<TOptions>
 declare type TagFactoryDefineInput = {
   id?: string
   createdAt?: Date
@@ -2099,8 +2707,14 @@ declare type TagFactoryDefineInput = {
 }
 declare type TagFactoryDefineOptions = {
   defaultData?: Resolver<TagFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<TagFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface TagFactoryInterface {
+declare type TagTraitKeys<TOptions extends TagFactoryDefineOptions> = keyof TOptions['traits']
+export interface TagFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'Tag'
   build(inputData?: Partial<Prisma.TagCreateInput>): PromiseLike<Prisma.TagCreateInput>
   buildCreateInput(inputData?: Partial<Prisma.TagCreateInput>): PromiseLike<Prisma.TagCreateInput>
@@ -2112,13 +2726,23 @@ export interface TagFactoryInterface {
   createList(inputData: number | readonly Partial<Prisma.TagCreateInput>[]): PromiseLike<Tag[]>
   createForConnect(inputData?: Partial<Prisma.TagCreateInput>): PromiseLike<Pick<Tag, 'id'>>
 }
+export interface TagFactoryInterface<
+  TOptions extends TagFactoryDefineOptions = TagFactoryDefineOptions
+> extends TagFactoryInterfaceWithoutTraits {
+  use(
+    name: TagTraitKeys<TOptions>,
+    ...names: readonly TagTraitKeys<TOptions>[]
+  ): TagFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link Tag} model.
  *
  * @param options
  * @returns factory {@link TagFactoryInterface}
  */
-export declare function defineTagFactory(options?: TagFactoryDefineOptions): TagFactoryInterface
+export declare function defineTagFactory<TOptions extends TagFactoryDefineOptions>(
+  options?: TOptions
+): TagFactoryInterface<TOptions>
 declare type PollFactoryDefineInput = {
   id?: string
   createdAt?: Date
@@ -2133,8 +2757,14 @@ declare type PollFactoryDefineInput = {
 }
 declare type PollFactoryDefineOptions = {
   defaultData?: Resolver<PollFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<PollFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface PollFactoryInterface {
+declare type PollTraitKeys<TOptions extends PollFactoryDefineOptions> = keyof TOptions['traits']
+export interface PollFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'Poll'
   build(inputData?: Partial<Prisma.PollCreateInput>): PromiseLike<Prisma.PollCreateInput>
   buildCreateInput(inputData?: Partial<Prisma.PollCreateInput>): PromiseLike<Prisma.PollCreateInput>
@@ -2146,13 +2776,23 @@ export interface PollFactoryInterface {
   createList(inputData: number | readonly Partial<Prisma.PollCreateInput>[]): PromiseLike<Poll[]>
   createForConnect(inputData?: Partial<Prisma.PollCreateInput>): PromiseLike<Pick<Poll, 'id'>>
 }
+export interface PollFactoryInterface<
+  TOptions extends PollFactoryDefineOptions = PollFactoryDefineOptions
+> extends PollFactoryInterfaceWithoutTraits {
+  use(
+    name: PollTraitKeys<TOptions>,
+    ...names: readonly PollTraitKeys<TOptions>[]
+  ): PollFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link Poll} model.
  *
  * @param options
  * @returns factory {@link PollFactoryInterface}
  */
-export declare function definePollFactory(options?: PollFactoryDefineOptions): PollFactoryInterface
+export declare function definePollFactory<TOptions extends PollFactoryDefineOptions>(
+  options?: TOptions
+): PollFactoryInterface<TOptions>
 declare type PollAnswerpollFactory = {
   _factoryFor: 'Poll'
   build: () => PromiseLike<Prisma.PollCreateNestedOneWithoutAnswersInput['create']>
@@ -2168,8 +2808,15 @@ declare type PollAnswerFactoryDefineInput = {
 }
 declare type PollAnswerFactoryDefineOptions = {
   defaultData: Resolver<PollAnswerFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<PollAnswerFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface PollAnswerFactoryInterface {
+declare type PollAnswerTraitKeys<TOptions extends PollAnswerFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface PollAnswerFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'PollAnswer'
   build(
     inputData?: Partial<Prisma.PollAnswerCreateInput>
@@ -2189,15 +2836,23 @@ export interface PollAnswerFactoryInterface {
     inputData?: Partial<Prisma.PollAnswerCreateInput>
   ): PromiseLike<Pick<PollAnswer, 'id'>>
 }
+export interface PollAnswerFactoryInterface<
+  TOptions extends PollAnswerFactoryDefineOptions = PollAnswerFactoryDefineOptions
+> extends PollAnswerFactoryInterfaceWithoutTraits {
+  use(
+    name: PollAnswerTraitKeys<TOptions>,
+    ...names: readonly PollAnswerTraitKeys<TOptions>[]
+  ): PollAnswerFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link PollAnswer} model.
  *
  * @param options
  * @returns factory {@link PollAnswerFactoryInterface}
  */
-export declare function definePollAnswerFactory(
-  options: PollAnswerFactoryDefineOptions
-): PollAnswerFactoryInterface
+export declare function definePollAnswerFactory<TOptions extends PollAnswerFactoryDefineOptions>(
+  options: TOptions
+): PollAnswerFactoryInterface<TOptions>
 declare type PollVoteuserFactory = {
   _factoryFor: 'User'
   build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutPollVoteInput['create']>
@@ -2222,8 +2877,15 @@ declare type PollVoteFactoryDefineInput = {
 }
 declare type PollVoteFactoryDefineOptions = {
   defaultData: Resolver<PollVoteFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<PollVoteFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface PollVoteFactoryInterface {
+declare type PollVoteTraitKeys<TOptions extends PollVoteFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface PollVoteFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'PollVote'
   build(inputData?: Partial<Prisma.PollVoteCreateInput>): PromiseLike<Prisma.PollVoteCreateInput>
   buildCreateInput(
@@ -2241,15 +2903,23 @@ export interface PollVoteFactoryInterface {
     inputData?: Partial<Prisma.PollVoteCreateInput>
   ): PromiseLike<Pick<PollVote, 'id'>>
 }
+export interface PollVoteFactoryInterface<
+  TOptions extends PollVoteFactoryDefineOptions = PollVoteFactoryDefineOptions
+> extends PollVoteFactoryInterfaceWithoutTraits {
+  use(
+    name: PollVoteTraitKeys<TOptions>,
+    ...names: readonly PollVoteTraitKeys<TOptions>[]
+  ): PollVoteFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link PollVote} model.
  *
  * @param options
  * @returns factory {@link PollVoteFactoryInterface}
  */
-export declare function definePollVoteFactory(
-  options: PollVoteFactoryDefineOptions
-): PollVoteFactoryInterface
+export declare function definePollVoteFactory<TOptions extends PollVoteFactoryDefineOptions>(
+  options: TOptions
+): PollVoteFactoryInterface<TOptions>
 declare type PollExternalVoteSourcepollFactory = {
   _factoryFor: 'Poll'
   build: () => PromiseLike<Prisma.PollCreateNestedOneWithoutExternalVoteSourcesInput['create']>
@@ -2266,8 +2936,16 @@ declare type PollExternalVoteSourceFactoryDefineInput = {
 }
 declare type PollExternalVoteSourceFactoryDefineOptions = {
   defaultData: Resolver<PollExternalVoteSourceFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<PollExternalVoteSourceFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface PollExternalVoteSourceFactoryInterface {
+declare type PollExternalVoteSourceTraitKeys<
+  TOptions extends PollExternalVoteSourceFactoryDefineOptions
+> = keyof TOptions['traits']
+export interface PollExternalVoteSourceFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'PollExternalVoteSource'
   build(
     inputData?: Partial<Prisma.PollExternalVoteSourceCreateInput>
@@ -2289,15 +2967,23 @@ export interface PollExternalVoteSourceFactoryInterface {
     inputData?: Partial<Prisma.PollExternalVoteSourceCreateInput>
   ): PromiseLike<Pick<PollExternalVoteSource, 'id'>>
 }
+export interface PollExternalVoteSourceFactoryInterface<
+  TOptions extends PollExternalVoteSourceFactoryDefineOptions = PollExternalVoteSourceFactoryDefineOptions
+> extends PollExternalVoteSourceFactoryInterfaceWithoutTraits {
+  use(
+    name: PollExternalVoteSourceTraitKeys<TOptions>,
+    ...names: readonly PollExternalVoteSourceTraitKeys<TOptions>[]
+  ): PollExternalVoteSourceFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link PollExternalVoteSource} model.
  *
  * @param options
  * @returns factory {@link PollExternalVoteSourceFactoryInterface}
  */
-export declare function definePollExternalVoteSourceFactory(
-  options: PollExternalVoteSourceFactoryDefineOptions
-): PollExternalVoteSourceFactoryInterface
+export declare function definePollExternalVoteSourceFactory<
+  TOptions extends PollExternalVoteSourceFactoryDefineOptions
+>(options: TOptions): PollExternalVoteSourceFactoryInterface<TOptions>
 declare type PollExternalVoteanswerFactory = {
   _factoryFor: 'PollAnswer'
   build: () => PromiseLike<Prisma.PollAnswerCreateNestedOneWithoutExternalVotesInput['create']>
@@ -2320,8 +3006,15 @@ declare type PollExternalVoteFactoryDefineInput = {
 }
 declare type PollExternalVoteFactoryDefineOptions = {
   defaultData: Resolver<PollExternalVoteFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<PollExternalVoteFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface PollExternalVoteFactoryInterface {
+declare type PollExternalVoteTraitKeys<TOptions extends PollExternalVoteFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface PollExternalVoteFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'PollExternalVote'
   build(
     inputData?: Partial<Prisma.PollExternalVoteCreateInput>
@@ -2341,15 +3034,23 @@ export interface PollExternalVoteFactoryInterface {
     inputData?: Partial<Prisma.PollExternalVoteCreateInput>
   ): PromiseLike<Pick<PollExternalVote, 'id'>>
 }
+export interface PollExternalVoteFactoryInterface<
+  TOptions extends PollExternalVoteFactoryDefineOptions = PollExternalVoteFactoryDefineOptions
+> extends PollExternalVoteFactoryInterfaceWithoutTraits {
+  use(
+    name: PollExternalVoteTraitKeys<TOptions>,
+    ...names: readonly PollExternalVoteTraitKeys<TOptions>[]
+  ): PollExternalVoteFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link PollExternalVote} model.
  *
  * @param options
  * @returns factory {@link PollExternalVoteFactoryInterface}
  */
-export declare function definePollExternalVoteFactory(
-  options: PollExternalVoteFactoryDefineOptions
-): PollExternalVoteFactoryInterface
+export declare function definePollExternalVoteFactory<
+  TOptions extends PollExternalVoteFactoryDefineOptions
+>(options: TOptions): PollExternalVoteFactoryInterface<TOptions>
 declare type EventimageFactory = {
   _factoryFor: 'Image'
   build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutEventsInput['create']>
@@ -2370,8 +3071,14 @@ declare type EventFactoryDefineInput = {
 }
 declare type EventFactoryDefineOptions = {
   defaultData?: Resolver<EventFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<EventFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface EventFactoryInterface {
+declare type EventTraitKeys<TOptions extends EventFactoryDefineOptions> = keyof TOptions['traits']
+export interface EventFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'Event'
   build(inputData?: Partial<Prisma.EventCreateInput>): PromiseLike<Prisma.EventCreateInput>
   buildCreateInput(
@@ -2385,15 +3092,23 @@ export interface EventFactoryInterface {
   createList(inputData: number | readonly Partial<Prisma.EventCreateInput>[]): PromiseLike<Event[]>
   createForConnect(inputData?: Partial<Prisma.EventCreateInput>): PromiseLike<Pick<Event, 'id'>>
 }
+export interface EventFactoryInterface<
+  TOptions extends EventFactoryDefineOptions = EventFactoryDefineOptions
+> extends EventFactoryInterfaceWithoutTraits {
+  use(
+    name: EventTraitKeys<TOptions>,
+    ...names: readonly EventTraitKeys<TOptions>[]
+  ): EventFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link Event} model.
  *
  * @param options
  * @returns factory {@link EventFactoryInterface}
  */
-export declare function defineEventFactory(
-  options?: EventFactoryDefineOptions
-): EventFactoryInterface
+export declare function defineEventFactory<TOptions extends EventFactoryDefineOptions>(
+  options?: TOptions
+): EventFactoryInterface<TOptions>
 declare type TaggedEventseventFactory = {
   _factoryFor: 'Event'
   build: () => PromiseLike<Prisma.EventCreateNestedOneWithoutTagsInput['create']>
@@ -2410,8 +3125,15 @@ declare type TaggedEventsFactoryDefineInput = {
 }
 declare type TaggedEventsFactoryDefineOptions = {
   defaultData: Resolver<TaggedEventsFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<TaggedEventsFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface TaggedEventsFactoryInterface {
+declare type TaggedEventsTraitKeys<TOptions extends TaggedEventsFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface TaggedEventsFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'TaggedEvents'
   build(
     inputData?: Partial<Prisma.TaggedEventsCreateInput>
@@ -2431,15 +3153,23 @@ export interface TaggedEventsFactoryInterface {
     inputData?: Partial<Prisma.TaggedEventsCreateInput>
   ): PromiseLike<Pick<TaggedEvents, 'eventId' | 'tagId'>>
 }
+export interface TaggedEventsFactoryInterface<
+  TOptions extends TaggedEventsFactoryDefineOptions = TaggedEventsFactoryDefineOptions
+> extends TaggedEventsFactoryInterfaceWithoutTraits {
+  use(
+    name: TaggedEventsTraitKeys<TOptions>,
+    ...names: readonly TaggedEventsTraitKeys<TOptions>[]
+  ): TaggedEventsFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link TaggedEvents} model.
  *
  * @param options
  * @returns factory {@link TaggedEventsFactoryInterface}
  */
-export declare function defineTaggedEventsFactory(
-  options: TaggedEventsFactoryDefineOptions
-): TaggedEventsFactoryInterface
+export declare function defineTaggedEventsFactory<
+  TOptions extends TaggedEventsFactoryDefineOptions
+>(options: TOptions): TaggedEventsFactoryInterface<TOptions>
 declare type ConsentFactoryDefineInput = {
   id?: string
   createdAt?: Date
@@ -2451,8 +3181,15 @@ declare type ConsentFactoryDefineInput = {
 }
 declare type ConsentFactoryDefineOptions = {
   defaultData?: Resolver<ConsentFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<ConsentFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface ConsentFactoryInterface {
+declare type ConsentTraitKeys<TOptions extends ConsentFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface ConsentFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'Consent'
   build(inputData?: Partial<Prisma.ConsentCreateInput>): PromiseLike<Prisma.ConsentCreateInput>
   buildCreateInput(
@@ -2468,15 +3205,23 @@ export interface ConsentFactoryInterface {
   ): PromiseLike<Consent[]>
   createForConnect(inputData?: Partial<Prisma.ConsentCreateInput>): PromiseLike<Pick<Consent, 'id'>>
 }
+export interface ConsentFactoryInterface<
+  TOptions extends ConsentFactoryDefineOptions = ConsentFactoryDefineOptions
+> extends ConsentFactoryInterfaceWithoutTraits {
+  use(
+    name: ConsentTraitKeys<TOptions>,
+    ...names: readonly ConsentTraitKeys<TOptions>[]
+  ): ConsentFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link Consent} model.
  *
  * @param options
  * @returns factory {@link ConsentFactoryInterface}
  */
-export declare function defineConsentFactory(
-  options?: ConsentFactoryDefineOptions
-): ConsentFactoryInterface
+export declare function defineConsentFactory<TOptions extends ConsentFactoryDefineOptions>(
+  options?: TOptions
+): ConsentFactoryInterface<TOptions>
 declare type UserConsentconsentFactory = {
   _factoryFor: 'Consent'
   build: () => PromiseLike<Prisma.ConsentCreateNestedOneWithoutUserConsentsInput['create']>
@@ -2495,8 +3240,15 @@ declare type UserConsentFactoryDefineInput = {
 }
 declare type UserConsentFactoryDefineOptions = {
   defaultData: Resolver<UserConsentFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<UserConsentFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface UserConsentFactoryInterface {
+declare type UserConsentTraitKeys<TOptions extends UserConsentFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface UserConsentFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'UserConsent'
   build(
     inputData?: Partial<Prisma.UserConsentCreateInput>
@@ -2516,15 +3268,23 @@ export interface UserConsentFactoryInterface {
     inputData?: Partial<Prisma.UserConsentCreateInput>
   ): PromiseLike<Pick<UserConsent, 'id'>>
 }
+export interface UserConsentFactoryInterface<
+  TOptions extends UserConsentFactoryDefineOptions = UserConsentFactoryDefineOptions
+> extends UserConsentFactoryInterfaceWithoutTraits {
+  use(
+    name: UserConsentTraitKeys<TOptions>,
+    ...names: readonly UserConsentTraitKeys<TOptions>[]
+  ): UserConsentFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link UserConsent} model.
  *
  * @param options
  * @returns factory {@link UserConsentFactoryInterface}
  */
-export declare function defineUserConsentFactory(
-  options: UserConsentFactoryDefineOptions
-): UserConsentFactoryInterface
+export declare function defineUserConsentFactory<TOptions extends UserConsentFactoryDefineOptions>(
+  options: TOptions
+): UserConsentFactoryInterface<TOptions>
 declare type UserFlowMailmailTemplateFactory = {
   _factoryFor: 'MailTemplate'
   build: () => PromiseLike<Prisma.MailTemplateCreateNestedOneWithoutUserFlowMailsInput['create']>
@@ -2540,8 +3300,15 @@ declare type UserFlowMailFactoryDefineInput = {
 }
 declare type UserFlowMailFactoryDefineOptions = {
   defaultData?: Resolver<UserFlowMailFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<UserFlowMailFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface UserFlowMailFactoryInterface {
+declare type UserFlowMailTraitKeys<TOptions extends UserFlowMailFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface UserFlowMailFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'UserFlowMail'
   build(
     inputData?: Partial<Prisma.UserFlowMailCreateInput>
@@ -2561,15 +3328,23 @@ export interface UserFlowMailFactoryInterface {
     inputData?: Partial<Prisma.UserFlowMailCreateInput>
   ): PromiseLike<Pick<UserFlowMail, 'id'>>
 }
+export interface UserFlowMailFactoryInterface<
+  TOptions extends UserFlowMailFactoryDefineOptions = UserFlowMailFactoryDefineOptions
+> extends UserFlowMailFactoryInterfaceWithoutTraits {
+  use(
+    name: UserFlowMailTraitKeys<TOptions>,
+    ...names: readonly UserFlowMailTraitKeys<TOptions>[]
+  ): UserFlowMailFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link UserFlowMail} model.
  *
  * @param options
  * @returns factory {@link UserFlowMailFactoryInterface}
  */
-export declare function defineUserFlowMailFactory(
-  options?: UserFlowMailFactoryDefineOptions
-): UserFlowMailFactoryInterface
+export declare function defineUserFlowMailFactory<
+  TOptions extends UserFlowMailFactoryDefineOptions
+>(options?: TOptions): UserFlowMailFactoryInterface<TOptions>
 declare type SubscriptionFlowmemberPlanFactory = {
   _factoryFor: 'MemberPlan'
   build: () => PromiseLike<Prisma.MemberPlanCreateNestedOneWithoutSubscriptionFlowsInput['create']>
@@ -2593,8 +3368,15 @@ declare type SubscriptionFlowFactoryDefineInput = {
 }
 declare type SubscriptionFlowFactoryDefineOptions = {
   defaultData?: Resolver<SubscriptionFlowFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<SubscriptionFlowFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface SubscriptionFlowFactoryInterface {
+declare type SubscriptionFlowTraitKeys<TOptions extends SubscriptionFlowFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface SubscriptionFlowFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'SubscriptionFlow'
   build(
     inputData?: Partial<Prisma.SubscriptionFlowCreateInput>
@@ -2614,15 +3396,23 @@ export interface SubscriptionFlowFactoryInterface {
     inputData?: Partial<Prisma.SubscriptionFlowCreateInput>
   ): PromiseLike<Pick<SubscriptionFlow, 'id'>>
 }
+export interface SubscriptionFlowFactoryInterface<
+  TOptions extends SubscriptionFlowFactoryDefineOptions = SubscriptionFlowFactoryDefineOptions
+> extends SubscriptionFlowFactoryInterfaceWithoutTraits {
+  use(
+    name: SubscriptionFlowTraitKeys<TOptions>,
+    ...names: readonly SubscriptionFlowTraitKeys<TOptions>[]
+  ): SubscriptionFlowFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link SubscriptionFlow} model.
  *
  * @param options
  * @returns factory {@link SubscriptionFlowFactoryInterface}
  */
-export declare function defineSubscriptionFlowFactory(
-  options?: SubscriptionFlowFactoryDefineOptions
-): SubscriptionFlowFactoryInterface
+export declare function defineSubscriptionFlowFactory<
+  TOptions extends SubscriptionFlowFactoryDefineOptions
+>(options?: TOptions): SubscriptionFlowFactoryInterface<TOptions>
 declare type SubscriptionIntervalmailTemplateFactory = {
   _factoryFor: 'MailTemplate'
   build: () => PromiseLike<
@@ -2648,8 +3438,16 @@ declare type SubscriptionIntervalFactoryDefineInput = {
 }
 declare type SubscriptionIntervalFactoryDefineOptions = {
   defaultData: Resolver<SubscriptionIntervalFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<SubscriptionIntervalFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface SubscriptionIntervalFactoryInterface {
+declare type SubscriptionIntervalTraitKeys<
+  TOptions extends SubscriptionIntervalFactoryDefineOptions
+> = keyof TOptions['traits']
+export interface SubscriptionIntervalFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'SubscriptionInterval'
   build(
     inputData?: Partial<Prisma.SubscriptionIntervalCreateInput>
@@ -2671,15 +3469,23 @@ export interface SubscriptionIntervalFactoryInterface {
     inputData?: Partial<Prisma.SubscriptionIntervalCreateInput>
   ): PromiseLike<Pick<SubscriptionInterval, 'id'>>
 }
+export interface SubscriptionIntervalFactoryInterface<
+  TOptions extends SubscriptionIntervalFactoryDefineOptions = SubscriptionIntervalFactoryDefineOptions
+> extends SubscriptionIntervalFactoryInterfaceWithoutTraits {
+  use(
+    name: SubscriptionIntervalTraitKeys<TOptions>,
+    ...names: readonly SubscriptionIntervalTraitKeys<TOptions>[]
+  ): SubscriptionIntervalFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link SubscriptionInterval} model.
  *
  * @param options
  * @returns factory {@link SubscriptionIntervalFactoryInterface}
  */
-export declare function defineSubscriptionIntervalFactory(
-  options: SubscriptionIntervalFactoryDefineOptions
-): SubscriptionIntervalFactoryInterface
+export declare function defineSubscriptionIntervalFactory<
+  TOptions extends SubscriptionIntervalFactoryDefineOptions
+>(options: TOptions): SubscriptionIntervalFactoryInterface<TOptions>
 declare type MailTemplateFactoryDefineInput = {
   id?: string
   createdAt?: Date
@@ -2694,8 +3500,15 @@ declare type MailTemplateFactoryDefineInput = {
 }
 declare type MailTemplateFactoryDefineOptions = {
   defaultData?: Resolver<MailTemplateFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<MailTemplateFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface MailTemplateFactoryInterface {
+declare type MailTemplateTraitKeys<TOptions extends MailTemplateFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface MailTemplateFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'MailTemplate'
   build(
     inputData?: Partial<Prisma.MailTemplateCreateInput>
@@ -2715,15 +3528,23 @@ export interface MailTemplateFactoryInterface {
     inputData?: Partial<Prisma.MailTemplateCreateInput>
   ): PromiseLike<Pick<MailTemplate, 'id'>>
 }
+export interface MailTemplateFactoryInterface<
+  TOptions extends MailTemplateFactoryDefineOptions = MailTemplateFactoryDefineOptions
+> extends MailTemplateFactoryInterfaceWithoutTraits {
+  use(
+    name: MailTemplateTraitKeys<TOptions>,
+    ...names: readonly MailTemplateTraitKeys<TOptions>[]
+  ): MailTemplateFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link MailTemplate} model.
  *
  * @param options
  * @returns factory {@link MailTemplateFactoryInterface}
  */
-export declare function defineMailTemplateFactory(
-  options?: MailTemplateFactoryDefineOptions
-): MailTemplateFactoryInterface
+export declare function defineMailTemplateFactory<
+  TOptions extends MailTemplateFactoryDefineOptions
+>(options?: TOptions): MailTemplateFactoryInterface<TOptions>
 declare type PeriodicJobFactoryDefineInput = {
   id?: string
   createdAt?: Date
@@ -2737,8 +3558,15 @@ declare type PeriodicJobFactoryDefineInput = {
 }
 declare type PeriodicJobFactoryDefineOptions = {
   defaultData?: Resolver<PeriodicJobFactoryDefineInput, BuildDataOptions>
+  traits?: {
+    [traitName: string | symbol]: {
+      data: Resolver<Partial<PeriodicJobFactoryDefineInput>, BuildDataOptions>
+    }
+  }
 }
-export interface PeriodicJobFactoryInterface {
+declare type PeriodicJobTraitKeys<TOptions extends PeriodicJobFactoryDefineOptions> =
+  keyof TOptions['traits']
+export interface PeriodicJobFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'PeriodicJob'
   build(
     inputData?: Partial<Prisma.PeriodicJobCreateInput>
@@ -2758,12 +3586,20 @@ export interface PeriodicJobFactoryInterface {
     inputData?: Partial<Prisma.PeriodicJobCreateInput>
   ): PromiseLike<Pick<PeriodicJob, 'id'>>
 }
+export interface PeriodicJobFactoryInterface<
+  TOptions extends PeriodicJobFactoryDefineOptions = PeriodicJobFactoryDefineOptions
+> extends PeriodicJobFactoryInterfaceWithoutTraits {
+  use(
+    name: PeriodicJobTraitKeys<TOptions>,
+    ...names: readonly PeriodicJobTraitKeys<TOptions>[]
+  ): PeriodicJobFactoryInterfaceWithoutTraits
+}
 /**
  * Define factory for {@link PeriodicJob} model.
  *
  * @param options
  * @returns factory {@link PeriodicJobFactoryInterface}
  */
-export declare function definePeriodicJobFactory(
-  options?: PeriodicJobFactoryDefineOptions
-): PeriodicJobFactoryInterface
+export declare function definePeriodicJobFactory<TOptions extends PeriodicJobFactoryDefineOptions>(
+  options?: TOptions
+): PeriodicJobFactoryInterface<TOptions>

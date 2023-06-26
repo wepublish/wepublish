@@ -1,19 +1,24 @@
-import {ThemeProvider} from '@mui/material'
+import {TextField, ThemeProvider} from '@mui/material'
 import {Article} from '@wepublish/article/website'
+import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
+import {Author, AuthorChip} from '@wepublish/author/website'
 import {
+  BlockRenderer,
   HtmlBlock,
   ImageBlock,
   QuoteBlock,
   RichTextBlock,
+  Teaser,
   TeaserGridFlexBlock,
-  TitleBlock,
-  Teaser
+  TitleBlock
 } from '@wepublish/block-content/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
+import {Image} from '@wepublish/image/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page} from '@wepublish/page/website'
 import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
 import {
+  Alert,
   Button,
   H1,
   H2,
@@ -25,14 +30,13 @@ import {
   ListItem,
   OrderedList,
   Paragraph,
-  theme,
-  UnorderedList
+  UnorderedList,
+  theme
 } from '@wepublish/ui'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
-import {memo, PropsWithChildren} from 'react'
-import {IconContext} from 'react-icons'
-import {Image} from '@wepublish/image/website'
 import {format} from 'date-fns'
+import {PropsWithChildren, memo} from 'react'
+import {IconContext} from 'react-icons'
 
 export type WebsiteProps = PropsWithChildren
 
@@ -42,6 +46,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
   <ThemeProvider theme={theme}>
     <IconContext.Provider value={{}}>
       <WebsiteBuilderProvider
+        Author={Author}
+        AuthorChip={AuthorChip}
         Article={Article}
         Navbar={Navbar}
         Footer={Footer}
@@ -50,7 +56,11 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         EventList={EventList}
         EventListItem={EventListItem}
         Page={Page}
+        LoginForm={LoginForm}
+        RegistrationForm={RegistrationForm}
         elements={{
+          TextField,
+          Alert,
           Button,
           H1,
           H2,
@@ -66,6 +76,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Image
         }}
         blocks={{
+          Renderer: BlockRenderer,
           Title: TitleBlock,
           Image: ImageBlock,
           Quote: QuoteBlock,

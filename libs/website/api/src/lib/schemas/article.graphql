@@ -44,7 +44,7 @@ fragment FullArticle on Article {
             style
 
             image {
-              ...ImageRef
+              ...FullImage
             }
 
             preTitle
@@ -79,7 +79,7 @@ fragment FullArticle on Article {
             style
 
             image {
-              ...ImageRef
+              ...FullImage
             }
 
             preTitle
@@ -113,7 +113,7 @@ fragment FullArticle on Article {
             style
 
             image {
-              ...ImageRef
+              ...FullImage
             }
 
             preTitle
@@ -128,6 +128,9 @@ fragment FullArticle on Article {
         }
       }
     }
+  }
+  authors {
+    ...FullAuthor
   }
 }
 
