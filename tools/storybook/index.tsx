@@ -1,16 +1,16 @@
 import {MockedProvider} from '@apollo/client/testing'
-import {ComponentType, PropsWithChildren, memo, useCallback, useState} from 'react'
+import {Global} from '@emotion/react'
+import {CssBaseline, css} from '@mui/material'
+import {Preview} from '@storybook/react'
 import {
   ApiV1,
   SessionTokenContext,
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
-import {css} from '@mui/material'
-import {Global} from '@emotion/react'
 import Head from 'next/head'
 import Script from 'next/script'
-import {Preview} from '@storybook/react'
+import {ComponentType, PropsWithChildren, memo, useCallback, useState} from 'react'
 
 export const parameters = {
   apolloClient: {
@@ -69,6 +69,7 @@ const withWebsiteProvider = (Story: ComponentType) => (
   <WebsiteProvider>
     <WebsiteBuilderProvider Head={Head} Script={Script}>
       <SessionProvider>
+        <CssBaseline />
         <Story />
       </SessionProvider>
     </WebsiteBuilderProvider>

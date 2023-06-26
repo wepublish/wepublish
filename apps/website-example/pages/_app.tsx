@@ -3,30 +3,34 @@ import {
   createTheme,
   css,
   CssBaseline,
+  GlobalStyles,
   styled,
   Theme,
   ThemeOptions,
-  ThemeProvider
+  ThemeProvider,
+  useTheme
 } from '@mui/material'
 import {theme} from '@wepublish/ui'
 import {ApiV1, FooterContainer, WebsiteBuilderProvider, WebsiteProvider} from '@wepublish/website'
 import {setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
+import i18next from 'i18next'
+import LanguageDetector from 'i18next-browser-languagedetector'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
+import {useMemo} from 'react'
+import {initReactI18next} from 'react-i18next'
 import {PartialDeep} from 'type-fest'
+import {z} from 'zod'
+import {zodI18nMap} from 'zod-i18n-map'
+import translation from 'zod-i18n-map/locales/de/zod.json'
 import {authLink} from '../src/auth-link'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {NextWepublishLink} from '../src/next-wepublish-link'
 import {SessionProvider} from '../src/session.provider'
-import {zodI18nMap} from 'zod-i18n-map'
-import translation from 'zod-i18n-map/locales/de/zod.json'
-import i18next from 'i18next'
-import {z} from 'zod'
-import LanguageDetector from 'i18next-browser-languagedetector'
-import {initReactI18next} from 'react-i18next'
+import {tsriArticleStyles} from '../src/styles/tsri-article.styles'
 
 setDefaultOptions({
   locale: de
@@ -76,11 +80,15 @@ const LogoWrapper = styled(Logo)`
 `
 
 function CustomApp({Component, pageProps}: AppProps) {
+  const theme = useTheme()
+  const globalStyles = useMemo(() => tsriArticleStyles(theme), [theme])
+
   return (
     <SessionProvider sessionToken={null}>
       <WebsiteProvider>
         <WebsiteBuilderProvider Head={Head} Script={Script} elements={{Link: NextWepublishLink}}>
           <ThemeProvider theme={websiteExampleTheme}>
+            <GlobalStyles styles={globalStyles} />
             <CssBaseline />
 
             <Head>

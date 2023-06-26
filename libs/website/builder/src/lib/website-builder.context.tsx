@@ -10,6 +10,8 @@ import {
 } from 'react'
 import {PartialDeep} from 'type-fest'
 import {BuilderArticleProps} from './article.interface'
+import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
+import {BuilderAuthorChipProps, BuilderAuthorProps} from './author.interface'
 import {
   BuilderHTMLBlockProps,
   BuilderImageBlockProps,
@@ -19,7 +21,6 @@ import {
   BuilderTeaserProps,
   BuilderTitleBlockProps
 } from './blocks.interface'
-import {BuilderButtonProps, BuilderAlertProps, BuilderTextFieldProps} from './ui.interface'
 import {
   BuilderEventListItemProps,
   BuilderEventListProps,
@@ -27,6 +28,7 @@ import {
   BuilderEventSEOProps
 } from './event.interface'
 import {BuilderFooterProps} from './footer.interface'
+import {BuilderImageProps} from './image.interface'
 import {
   BuilderListItemProps,
   BuilderOrderedListProps,
@@ -39,8 +41,7 @@ import {BuilderPayInvoicesProps} from './pay-invoices.interface'
 import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
 import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
-import {BuilderImageProps} from './image.interface'
-import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
+import {BuilderAlertProps, BuilderButtonProps, BuilderTextFieldProps} from './ui.interface'
 
 const NoComponent = () => null
 
@@ -54,6 +55,8 @@ export type WebsiteBuilderComponents = {
   PayInvoices: ComponentType<BuilderPayInvoicesProps>
   Page: ComponentType<BuilderPageProps>
   Article: ComponentType<BuilderArticleProps>
+  Author: ComponentType<BuilderAuthorProps>
+  AuthorChip: ComponentType<BuilderAuthorChipProps>
   Event: ComponentType<BuilderEventProps>
   EventSEO: ComponentType<BuilderEventSEOProps>
   EventList: ComponentType<BuilderEventListProps>
@@ -109,6 +112,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   PayInvoices: NoComponent,
   Page: NoComponent,
   Article: NoComponent,
+  Author: NoComponent,
+  AuthorChip: NoComponent,
   Event: NoComponent,
   EventSEO: NoComponent,
   EventList: NoComponent,

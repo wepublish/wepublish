@@ -1,6 +1,7 @@
-import {ThemeProvider, TextField} from '@mui/material'
+import {TextField, ThemeProvider} from '@mui/material'
 import {Article} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
+import {Author, AuthorChip} from '@wepublish/author/website'
 import {
   HtmlBlock,
   ImageBlock,
@@ -44,6 +45,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
   <ThemeProvider theme={theme}>
     <IconContext.Provider value={{}}>
       <WebsiteBuilderProvider
+        Author={Author}
+        AuthorChip={AuthorChip}
         Article={Article}
         Navbar={Navbar}
         Footer={Footer}
