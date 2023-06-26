@@ -45,6 +45,7 @@ export const SessionProvider = memo<PropsWithChildren<{sessionToken: ApiV1.UserS
       if (sToken) {
         setCookieAndToken(sToken)
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (

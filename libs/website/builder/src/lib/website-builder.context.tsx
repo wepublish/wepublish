@@ -19,7 +19,7 @@ import {
   BuilderTeaserProps,
   BuilderTitleBlockProps
 } from './blocks.interface'
-import {BuilderButtonProps} from './button.interface'
+import {BuilderButtonProps, BuilderAlertProps, BuilderTextFieldProps} from './ui.interface'
 import {
   BuilderEventListItemProps,
   BuilderEventListProps,
@@ -40,6 +40,7 @@ import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.inte
 import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
 import {BuilderImageProps} from './image.interface'
+import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
 
 const NoComponent = () => null
 
@@ -57,8 +58,12 @@ export type WebsiteBuilderComponents = {
   EventSEO: ComponentType<BuilderEventSEOProps>
   EventList: ComponentType<BuilderEventListProps>
   EventListItem: ComponentType<BuilderEventListItemProps>
+  LoginForm: ComponentType<BuilderLoginFormProps>
+  RegistrationForm: ComponentType<BuilderRegistrationFormProps>
 
   elements: {
+    Alert: ComponentType<BuilderAlertProps>
+    TextField: ComponentType<BuilderTextFieldProps>
     Button: ComponentType<BuilderButtonProps>
     H1: ComponentType<BuilderHeadingProps>
     H2: ComponentType<BuilderHeadingProps>
@@ -108,8 +113,12 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   EventSEO: NoComponent,
   EventList: NoComponent,
   EventListItem: NoComponent,
+  LoginForm: NoComponent,
+  RegistrationForm: NoComponent,
 
   elements: {
+    Alert: NoComponent,
+    TextField: NoComponent,
     Button: NoComponent,
     H1: NoComponent,
     H2: NoComponent,

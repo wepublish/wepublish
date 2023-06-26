@@ -21,10 +21,29 @@ import {authLink} from '../src/auth-link'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {NextWepublishLink} from '../src/next-wepublish-link'
 import {SessionProvider} from '../src/session.provider'
+import {zodI18nMap} from 'zod-i18n-map'
+import translation from 'zod-i18n-map/locales/de/zod.json'
+import i18next from 'i18next'
+import {z} from 'zod'
+import LanguageDetector from 'i18next-browser-languagedetector'
+import {initReactI18next} from 'react-i18next'
 
 setDefaultOptions({
   locale: de
 })
+
+i18next
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    lng: 'de',
+    fallbackLng: 'de',
+    supportedLngs: ['de'],
+    resources: {
+      de: {zod: translation}
+    }
+  })
+z.setErrorMap(zodI18nMap)
 
 const websiteExampleTheme = createTheme(theme, {} as PartialDeep<Theme> | ThemeOptions)
 
