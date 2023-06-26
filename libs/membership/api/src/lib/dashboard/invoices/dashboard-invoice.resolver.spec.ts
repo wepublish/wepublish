@@ -168,7 +168,9 @@ describe('DashboardInvoiceResolver', () => {
       }
     ]
 
-    invoicesToDelete = await Promise.all(mockData.map(data => prisma.invoice.create({data})))
+    for (const data of mockData) {
+      invoicesToDelete.push(await prisma.invoice.create({data}))
+    }
 
     await request(app.getHttpServer())
       .post('')
@@ -272,7 +274,9 @@ describe('DashboardInvoiceResolver', () => {
       }
     ]
 
-    invoicesToDelete = await Promise.all(mockData.map(data => prisma.invoice.create({data})))
+    for (const data of mockData) {
+      invoicesToDelete.push(await prisma.invoice.create({data}))
+    }
 
     await request(app.getHttpServer())
       .post('')
