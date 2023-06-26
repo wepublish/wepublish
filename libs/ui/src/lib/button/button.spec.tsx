@@ -1,10 +1,14 @@
 import {render} from '@testing-library/react'
+import * as stories from './button.stories'
+import {composeStories} from '@storybook/react'
 
-import {Button} from './button'
+const storiesCmp = composeStories(stories)
 
 describe('Button', () => {
-  it('should render successfully', () => {
-    const {baseElement} = render(<Button />)
-    expect(baseElement).toMatchSnapshot()
+  Object.entries(storiesCmp).forEach(([story, Component]) => {
+    it(`should render ${story}`, () => {
+      const {asFragment} = render(<Component />)
+      expect(asFragment()).toMatchSnapshot()
+    })
   })
 })

@@ -1,25 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`OrderedList should render successfully 1`] = `
-<body>
-  <div>
-    <ol>
-      <li>
-        Foobar
-      </li>
-    </ol>
-  </div>
-</body>
+exports[`Lists should render Ordered 1`] = `
+<DocumentFragment>
+  <ol>
+    <li>
+      One
+    </li>
+    <li>
+      Two
+    </li>
+  </ol>
+</DocumentFragment>
 `;
 
-exports[`UnorderedList should render successfully 1`] = `
-<body>
-  <div>
-    <ul>
-      <li>
-        Foobar
-      </li>
-    </ul>
-  </div>
-</body>
+exports[`Lists should render Unordered 1`] = `
+<DocumentFragment>
+  <ul>
+    <li>
+      One
+    </li>
+    <li>
+      Two
+    </li>
+  </ul>
+</DocumentFragment>
 `;

@@ -10,6 +10,8 @@ import {
 } from 'react'
 import {PartialDeep} from 'type-fest'
 import {BuilderArticleProps} from './article.interface'
+import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
+import {BuilderAuthorChipProps, BuilderAuthorProps} from './author.interface'
 import {
   BuilderHTMLBlockProps,
   BuilderImageBlockProps,
@@ -19,7 +21,6 @@ import {
   BuilderTeaserProps,
   BuilderTitleBlockProps
 } from './blocks.interface'
-import {BuilderButtonProps} from './button.interface'
 import {
   BuilderEventListItemProps,
   BuilderEventListProps,
@@ -27,6 +28,7 @@ import {
   BuilderEventSEOProps
 } from './event.interface'
 import {BuilderFooterProps} from './footer.interface'
+import {BuilderImageProps} from './image.interface'
 import {
   BuilderListItemProps,
   BuilderOrderedListProps,
@@ -39,8 +41,7 @@ import {BuilderPayInvoicesProps} from './pay-invoices.interface'
 import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
 import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
-import {BuilderImageProps} from './image.interface'
-import {BuilderAuthorChipProps, BuilderAuthorProps} from './author.interface'
+import {BuilderAlertProps, BuilderButtonProps, BuilderTextFieldProps} from './ui.interface'
 
 const NoComponent = () => null
 
@@ -60,8 +61,12 @@ export type WebsiteBuilderComponents = {
   EventSEO: ComponentType<BuilderEventSEOProps>
   EventList: ComponentType<BuilderEventListProps>
   EventListItem: ComponentType<BuilderEventListItemProps>
+  LoginForm: ComponentType<BuilderLoginFormProps>
+  RegistrationForm: ComponentType<BuilderRegistrationFormProps>
 
   elements: {
+    Alert: ComponentType<BuilderAlertProps>
+    TextField: ComponentType<BuilderTextFieldProps>
     Button: ComponentType<BuilderButtonProps>
     H1: ComponentType<BuilderHeadingProps>
     H2: ComponentType<BuilderHeadingProps>
@@ -113,8 +118,12 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   EventSEO: NoComponent,
   EventList: NoComponent,
   EventListItem: NoComponent,
+  LoginForm: NoComponent,
+  RegistrationForm: NoComponent,
 
   elements: {
+    Alert: NoComponent,
+    TextField: NoComponent,
     Button: NoComponent,
     H1: NoComponent,
     H2: NoComponent,
