@@ -240,7 +240,7 @@
     "graphql-tag": "^2.11.0",
     "graphql-tools": "^5.0.0",
     "graphql-upload": "^13.0.0",
-    "i18next": "^23.0.2",
+    "i18next": "23.0.2",
     "i18next-browser-languagedetector": "^7.0.2",
     "isbot": "^3.6.5",
     "js-cookie": "^3.0.1",
