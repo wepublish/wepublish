@@ -1,7 +1,9 @@
 import {HttpService} from '@nestjs/axios'
 import {firstValueFrom} from 'rxjs'
 import {ArrayBufferUpload} from '../media-adapter'
+import {Injectable} from '@nestjs/common'
 
+@Injectable()
 export class ImageFetcherService {
   constructor(private httpService: HttpService) {}
 
