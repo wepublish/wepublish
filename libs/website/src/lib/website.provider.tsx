@@ -3,6 +3,7 @@ import {Article} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {Author, AuthorChip} from '@wepublish/author/website'
 import {
+  BlockRenderer,
   HtmlBlock,
   ImageBlock,
   QuoteBlock,
@@ -75,6 +76,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Image
         }}
         blocks={{
+          Renderer: BlockRenderer,
           Title: TitleBlock,
           Image: ImageBlock,
           Quote: QuoteBlock,
