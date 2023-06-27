@@ -26,8 +26,6 @@ export const fetchAndParseKulturagenda = async (
   urlToQuery: string,
   source: string
 ): Promise<Event[]> => {
-  console.log('urlToQuery', urlToQuery)
-  console.log('source', source)
   const eventsParsedXML = await getXMLfromURL(urlToQuery)
   const events = eventsParsedXML['kdz:exportActivities']?.Activities[0]?.Activity
 
