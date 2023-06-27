@@ -23,7 +23,7 @@ export default function EventById({event}: EventByIdProps) {
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],
-    fallback: 'blocking'
+    fallback: true
   }
 }
 

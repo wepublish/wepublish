@@ -1,6 +1,10 @@
 import {QueryResult} from '@apollo/client'
-import {ArticleQuery} from '@wepublish/website/api'
+import {Article, ArticleQuery} from '@wepublish/website/api'
 
 export type BuilderArticleProps = Pick<QueryResult<ArticleQuery>, 'data' | 'loading' | 'error'> & {
   className?: string
+}
+
+export type BuilderArticleSEOProps = {
+  article: Article
 }

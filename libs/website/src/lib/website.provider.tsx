@@ -1,5 +1,5 @@
 import {TextField, ThemeProvider} from '@mui/material'
-import {Article} from '@wepublish/article/website'
+import {Article, ArticleSEO} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {Author, AuthorChip} from '@wepublish/author/website'
 import {
@@ -16,7 +16,7 @@ import {
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
 import {Image} from '@wepublish/image/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
-import {Page} from '@wepublish/page/website'
+import {Page, PageSEO} from '@wepublish/page/website'
 import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
 import {
   Alert,
@@ -50,6 +50,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         Author={Author}
         AuthorChip={AuthorChip}
         Article={Article}
+        ArticleSEO={ArticleSEO}
         Navbar={Navbar}
         Footer={Footer}
         Event={Event}
@@ -57,6 +58,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         EventList={EventList}
         EventListItem={EventListItem}
         Page={Page}
+        PageSEO={PageSEO}
         LoginForm={LoginForm}
         RegistrationForm={RegistrationForm}
         elements={{
