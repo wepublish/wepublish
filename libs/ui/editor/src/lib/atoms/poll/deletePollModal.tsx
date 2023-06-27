@@ -1,7 +1,6 @@
 import {ApolloError, ApolloQueryResult} from '@apollo/client'
 import {Poll, PollsQuery, useDeletePollMutation} from '@wepublish/editor/api'
-import {useTranslation} from 'react-i18next'
-import {TFunction} from 'i18next'
+import {TFunction, useTranslation} from 'react-i18next'
 import {Button, Message, Modal, toaster} from 'rsuite'
 
 interface DeletePollProps {
