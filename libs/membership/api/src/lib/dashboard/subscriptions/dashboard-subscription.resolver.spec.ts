@@ -7,9 +7,6 @@ import {PrismaClient, Prisma, Subscription} from '@prisma/client'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {DashboardSubscriptionResolver} from './dashboard-subscription.resolver'
 import {DashboardSubscriptionService} from './dashboard-subscription.service'
-import * as crypto from 'crypto'
-
-export const generateRandomString = () => crypto.randomBytes(20).toString('hex')
 
 @Module({
   imports: [
@@ -152,8 +149,7 @@ describe('DashboardSubscriptionResolver', () => {
             where: {email: 'foo@wepublish.ch'},
             create: {
               active: true,
-              email: `${generateRandomString()}@wepublish.ch`,
-              flair: '',
+              email: 'foo@wepublish.ch',
               name: 'Foo',
               password: ''
             }
@@ -190,15 +186,8 @@ describe('DashboardSubscriptionResolver', () => {
           }
         },
         user: {
-          connectOrCreate: {
-            where: {email: 'foo@wepublish.ch'},
-            create: {
-              active: true,
-              email: `${generateRandomString()}@wepublish.ch`,
-              flair: '',
-              name: 'Foo',
-              password: ''
-            }
+          connect: {
+            email: 'foo@wepublish.ch'
           }
         }
       },
@@ -216,15 +205,8 @@ describe('DashboardSubscriptionResolver', () => {
           }
         },
         user: {
-          connectOrCreate: {
-            where: {email: 'foo@wepublish.ch'},
-            create: {
-              active: true,
-              email: `${generateRandomString()}@wepublish.ch`,
-              flair: '',
-              name: 'Foo',
-              password: ''
-            }
+          connect: {
+            email: 'foo@wepublish.ch'
           }
         }
       }
@@ -287,8 +269,7 @@ describe('DashboardSubscriptionResolver', () => {
             where: {email: 'foo@wepublish.ch'},
             create: {
               active: true,
-              email: `${generateRandomString()}@wepublish.ch`,
-              flair: '',
+              email: 'foo@wepublish.ch',
               name: 'Foo',
               password: ''
             }
@@ -345,15 +326,8 @@ describe('DashboardSubscriptionResolver', () => {
           }
         },
         user: {
-          connectOrCreate: {
-            where: {email: 'foo@wepublish.ch'},
-            create: {
-              active: true,
-              email: `${generateRandomString()}@wepublish.ch`,
-              flair: '',
-              name: 'Foo',
-              password: ''
-            }
+          connect: {
+            email: 'foo@wepublish.ch'
           }
         }
       },
@@ -372,15 +346,8 @@ describe('DashboardSubscriptionResolver', () => {
           }
         },
         user: {
-          connectOrCreate: {
-            where: {email: 'foo@wepublish.ch'},
-            create: {
-              active: true,
-              email: `${generateRandomString()}@wepublish.ch`,
-              flair: '',
-              name: 'Foo',
-              password: ''
-            }
+          connect: {
+            email: 'foo@wepublish.ch'
           }
         }
       }
@@ -439,8 +406,7 @@ describe('DashboardSubscriptionResolver', () => {
             where: {email: 'foo@wepublish.ch'},
             create: {
               active: true,
-              email: `${generateRandomString()}@wepublish.ch`,
-              flair: '',
+              email: 'foo@wepublish.ch',
               name: 'Foo',
               password: ''
             }
@@ -462,15 +428,8 @@ describe('DashboardSubscriptionResolver', () => {
           }
         },
         user: {
-          connectOrCreate: {
-            where: {email: 'foo@wepublish.ch'},
-            create: {
-              active: true,
-              email: `${generateRandomString()}@wepublish.ch`,
-              flair: '',
-              name: 'Foo',
-              password: ''
-            }
+          connect: {
+            email: 'foo@wepublish.ch'
           }
         }
       },
@@ -504,15 +463,8 @@ describe('DashboardSubscriptionResolver', () => {
           }
         },
         user: {
-          connectOrCreate: {
-            where: {email: 'foo@wepublish.ch'},
-            create: {
-              active: true,
-              email: `${generateRandomString()}@wepublish.ch`,
-              flair: '',
-              name: 'Foo',
-              password: ''
-            }
+          connect: {
+            email: 'foo@wepublish.ch'
           }
         }
       },
@@ -531,15 +483,8 @@ describe('DashboardSubscriptionResolver', () => {
           }
         },
         user: {
-          connectOrCreate: {
-            where: {email: 'foo@wepublish.ch'},
-            create: {
-              active: true,
-              email: `${generateRandomString()}@wepublish.ch`,
-              flair: '',
-              name: 'Foo',
-              password: ''
-            }
+          connect: {
+            email: 'foo@wepublish.ch'
           }
         }
       }
@@ -609,8 +554,7 @@ describe('DashboardSubscriptionResolver', () => {
             where: {email: 'foo@wepublish.ch'},
             create: {
               active: true,
-              email: `${generateRandomString()}@wepublish.ch`,
-              flair: '',
+              email: 'foo@wepublish.ch',
               name: 'Foo',
               password: ''
             }
@@ -639,15 +583,8 @@ describe('DashboardSubscriptionResolver', () => {
           }
         },
         user: {
-          connectOrCreate: {
-            where: {email: 'foo@wepublish.ch'},
-            create: {
-              active: true,
-              email: `${generateRandomString()}@wepublish.ch`,
-              flair: '',
-              name: 'Foo',
-              password: ''
-            }
+          connect: {
+            email: 'foo@wepublish.ch'
           }
         }
       }
