@@ -59,11 +59,12 @@ import {JobsModule} from '@wepublish/jobs'
           incomingRequestHandler: bodyParser.json(),
           mailgunClient: new Mailgun(FormData).client({
             username: 'api',
-            key: config.get('MAILGUN_API_KEY', 'dev-api-key')
+            key: config.get('MAILGUN_API_KEY') || 'dev-api-key'
           })
         })
       }),
-      inject: [ConfigService]
+      inject: [ConfigService],
+      global: true
     }),
     PaymentsModule.registerAsync({
       imports: [ConfigModule, PrismaModule],
@@ -136,7 +137,8 @@ import {JobsModule} from '@wepublish/jobs'
         }
         return {paymentProviders}
       },
-      inject: [ConfigService, PrismaService]
+      inject: [ConfigService, PrismaService],
+      global: true
     }),
     ApiModule,
     MembershipModule,

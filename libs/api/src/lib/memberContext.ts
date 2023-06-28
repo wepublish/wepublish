@@ -16,7 +16,7 @@ import {
 import {mailLogType} from '@wepublish/mails'
 import {unselectPassword} from '@wepublish/user/api'
 import {DataLoaderContext} from './context'
-import {InvoiceWithItems} from './db/invoice'
+import {InvoiceWithItems} from '@wepublish/payments'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {SubscriptionWithRelations} from './db/subscription'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'

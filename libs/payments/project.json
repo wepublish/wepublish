@@ -4,17 +4,6 @@
   "sourceRoot": "libs/payments/src",
   "projectType": "library",
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/libs/payments",
-        "tsConfig": "libs/payments/tsconfig.lib.json",
-        "packageJson": "libs/payments/package.json",
-        "main": "libs/payments/src/index.ts",
-        "assets": ["libs/payments/*.md"]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

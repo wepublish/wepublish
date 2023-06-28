@@ -2,7 +2,7 @@ import {Context} from '../../context'
 import {authorise} from '../permissions'
 import {CanCreateInvoice, CanDeleteInvoice} from '@wepublish/permissions/api'
 import {PrismaClient, Prisma, Invoice} from '@prisma/client'
-import {InvoiceWithItems} from '../../db/invoice'
+import {InvoiceWithItems} from '@wepublish/payments'
 
 export const deleteInvoiceById = async (
   id: string,
