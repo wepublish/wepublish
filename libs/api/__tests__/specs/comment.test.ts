@@ -1,10 +1,8 @@
-import {CommentItemType, CreateComment, CreateSession, Me} from '../api/private'
-
+import {CommentItemType, CreateComment} from '../api/private'
 import {createGraphQLTestClient, createGraphQLTestClientWithPrisma} from '../utility'
 import {ApolloServer} from 'apollo-server-express'
 import {PrismaClient} from '@prisma/client'
-import {AddComment, CommentItemType as PublicCommentItemType} from '../api/public'
-import {IncomingMessage} from 'http'
+import {AddComment} from '../api/public'
 
 let clientPrivateAsAdmin: ApolloServer
 let clientPublicAsAdmin: ApolloServer

@@ -17,7 +17,6 @@ import {
   DefaultSessionTTL
 } from '../src'
 import {createUserSession} from '../src/lib/graphql/session/session.mutation'
-import {IncomingMessage} from 'http'
 
 export interface TestClient {
   testServerPublic: ApolloServer
