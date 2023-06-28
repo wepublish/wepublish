@@ -6859,6 +6859,24 @@ export const FullPageFragmentDoc = gql`
   }
   ${FullImageFragmentDoc}
 `
+export const FullAuthorFragmentDoc = gql`
+  fragment FullAuthor on Author {
+    id
+    name
+    jobTitle
+    slug
+    bio
+    url
+    links {
+      title
+      url
+    }
+    image {
+      ...FullImage
+    }
+  }
+  ${FullImageFragmentDoc}
+`
 export const FullArticleFragmentDoc = gql`
   fragment FullArticle on Article {
     id
@@ -6975,6 +6993,7 @@ export const FullArticleFragmentDoc = gql`
     }
   }
   ${FullImageFragmentDoc}
+  ${FullAuthorFragmentDoc}
 `
 export const FullNavigationFragmentDoc = gql`
   fragment FullNavigation on Navigation {
