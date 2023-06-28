@@ -5,7 +5,7 @@ import {useMemo} from 'react'
 
 const MAX_LENGTH = 225
 
-export const EventListWrapper = styled('div')`
+export const EventListWrapper = styled('article')`
   display: grid;
   gap: ${({theme}) => theme.spacing(4)};
   justify-items: center;
