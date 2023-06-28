@@ -21,3 +21,20 @@ query Author($id: ID, $slug: Slug) {
     ...FullAuthor
   }
 }
+
+query AuthorList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+  authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+    nodes {
+      ...FullAuthor
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}

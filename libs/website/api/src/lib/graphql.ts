@@ -2525,6 +2525,67 @@ export type AuthorQuery = {
   } | null
 }
 
+export type AuthorListQueryVariables = Exact<{
+  filter?: InputMaybe<Scalars['String']>
+  cursor?: InputMaybe<Scalars['ID']>
+  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']>
+}>
+
+export type AuthorListQuery = {
+  __typename?: 'Query'
+  authors: {
+    __typename?: 'AuthorConnection'
+    totalCount: number
+    nodes: Array<{
+      __typename?: 'Author'
+      id: string
+      name: string
+      jobTitle?: string | null
+      slug: string
+      bio?: Node[] | null
+      url: string
+      links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+      image?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        title?: string | null
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        url?: string | null
+        bigURL?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+    }>
+    pageInfo: {
+      __typename?: 'PageInfo'
+      startCursor?: string | null
+      endCursor?: string | null
+      hasNextPage: boolean
+      hasPreviousPage: boolean
+    }
+  }
+}
+
 type BlockWithoutTeaser_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'}
 
 type BlockWithoutTeaser_CommentBlock_Fragment = {__typename: 'CommentBlock'}
@@ -7226,6 +7287,58 @@ export function useAuthorLazyQuery(
 export type AuthorQueryHookResult = ReturnType<typeof useAuthorQuery>
 export type AuthorLazyQueryHookResult = ReturnType<typeof useAuthorLazyQuery>
 export type AuthorQueryResult = Apollo.QueryResult<AuthorQuery, AuthorQueryVariables>
+export const AuthorListDocument = gql`
+  query AuthorList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+      nodes {
+        ...FullAuthor
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+  }
+  ${FullAuthorFragmentDoc}
+`
+
+/**
+ * __useAuthorListQuery__
+ *
+ * To run a query within a React component, call `useAuthorListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAuthorListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAuthorListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useAuthorListQuery(
+  baseOptions?: Apollo.QueryHookOptions<AuthorListQuery, AuthorListQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<AuthorListQuery, AuthorListQueryVariables>(AuthorListDocument, options)
+}
+export function useAuthorListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<AuthorListQuery, AuthorListQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<AuthorListQuery, AuthorListQueryVariables>(AuthorListDocument, options)
+}
+export type AuthorListQueryHookResult = ReturnType<typeof useAuthorListQuery>
+export type AuthorListLazyQueryHookResult = ReturnType<typeof useAuthorListLazyQuery>
+export type AuthorListQueryResult = Apollo.QueryResult<AuthorListQuery, AuthorListQueryVariables>
 export const ChallengeDocument = gql`
   query Challenge {
     challenge {
