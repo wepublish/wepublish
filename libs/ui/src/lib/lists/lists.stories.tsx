@@ -3,7 +3,7 @@ import {UnorderedList, OrderedList, ListItem} from './lists'
 import {ComponentProps} from 'react'
 
 export default {
-  title: 'Lists'
+  title: 'UI/Lists'
 } as Meta
 
 export const Unordered = {
