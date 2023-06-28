@@ -142,8 +142,7 @@ mutation createComment(
     text: $text
     tagIds: $tagIds
   ) {
-    id
-    state
+    ...FullComment
   }
 }
 

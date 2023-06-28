@@ -1,39 +1,105 @@
-import {CommentItemType, CreateComment} from '../api/private'
+import {CommentItemType, CreateComment, CreateSession, Me} from '../api/private'
 
-import {createGraphQLTestClientWithPrisma} from '../utility'
+import {createGraphQLTestClient, createGraphQLTestClientWithPrisma} from '../utility'
 import {ApolloServer} from 'apollo-server-express'
 import {PrismaClient} from '@prisma/client'
 import {AddComment, CommentItemType as PublicCommentItemType} from '../api/public'
-// import  * as hasPermissionModule from '@wepublish/permissions/api'
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import * as hasPermissionModule from '../.../../../../../libs/permissions/api/src/lib/has-permission'
-// '@wepublish/permissions/api'
+import {IncomingMessage} from 'http'
 
-let testClientPrivate: ApolloServer
-let testClientPublic: ApolloServer
+let clientPrivateAsAdmin: ApolloServer
+let clientPublicAsAdmin: ApolloServer
+let clientPublicAsUser: ApolloServer
+let clientPublicAsModerator: ApolloServer
+let clientPrivateAsUser: ApolloServer
+let clientPrivateAsModerator: ApolloServer
 let prisma: PrismaClient
 
 beforeAll(async () => {
   try {
-    const setupClient = await createGraphQLTestClientWithPrisma()
-    testClientPrivate = setupClient.testServerPrivate
-    testClientPublic = setupClient.testServerPublic
-    prisma = setupClient.prisma
+    const clientAsAdmin = await createGraphQLTestClientWithPrisma()
+    clientPrivateAsAdmin = clientAsAdmin.testServerPrivate
+    clientPublicAsAdmin = clientAsAdmin.testServerPublic
+
+    prisma = clientAsAdmin.prisma
+
+    const needApprovalRole = await prisma.userRole.create({
+      data: {
+        name: 'needApprovalRole',
+        systemRole: false,
+        permissionIDs: ['CAN_GET_COMMENTS', 'CAN_UPDATE_COMMENTS']
+      }
+    })
+
+    const authorizeCommentsRole = await prisma.userRole.create({
+      data: {
+        name: 'authorizeCommentsRole',
+        systemRole: false,
+        permissionIDs: ['CAN_CREATE_APPROVED_COMMENT']
+      }
+    })
+
+    const user = await prisma.user.create({
+      data: {
+        id: 'unauthorizedUser',
+        email: 'unauthorized@wepublish.ch',
+        active: true,
+        name: 'test-user',
+        password: '123',
+        roleIDs: [needApprovalRole.id]
+      }
+    })
+
+    const date = new Date()
+    date.setHours(date.getHours() + 1)
+
+    const userSession = await prisma.session.create({
+      data: {
+        expiresAt: date,
+        token: 'unauth123',
+        userID: user.id
+      }
+    })
+
+    const moderator = await prisma.user.create({
+      data: {
+        id: 'authorizedUser',
+        email: 'authorized@wepublish.ch',
+        active: true,
+        name: 'test-user',
+        password: '123',
+        roleIDs: [needApprovalRole.id, authorizeCommentsRole.id]
+      }
+    })
+
+    const moderatorSession = await prisma.session.create({
+      data: {
+        expiresAt: date,
+        token: 'auth123',
+        userID: moderator.id
+      }
+    })
+
+    const clientAsUser = await createGraphQLTestClient({
+      headers: {authorization: `Bearer ${userSession.token}`}
+    } as any)
+    clientPrivateAsUser = clientAsUser.testServerPrivate
+    clientPublicAsUser = clientAsUser.testServerPublic
+
+    const clientAsModerator = await createGraphQLTestClient({
+      headers: {authorization: `Bearer ${moderatorSession.token}`}
+    } as any)
+    clientPrivateAsModerator = clientAsModerator.testServerPrivate
+    clientPublicAsModerator = clientAsModerator.testServerPublic
   } catch (error) {
     console.log('Error', error)
-
     throw new Error('Error during test setup')
   }
-})
-
-afterEach(async () => {
-  jest.clearAllMocks()
 })
 
 describe('Comments', () => {
   describe('create', () => {
     test('can be created', async () => {
-      const res = await testClientPrivate.executeOperation({
+      const res = await clientPrivateAsAdmin.executeOperation({
         query: CreateComment,
         variables: {
           itemID: 'd',
@@ -49,81 +115,28 @@ describe('Comments', () => {
       expect(res).toMatchSnapshot({
         data: {
           createComment: {
-            id: expect.any(String)
+            id: expect.any(String),
+            createdAt: expect.any(Date),
+            modifiedAt: expect.any(Date),
+            revisions: expect.arrayContaining([
+              expect.objectContaining({
+                createdAt: expect.any(Date)
+              })
+            ])
           }
         }
       })
+      expect(res.data.createComment.state).toBe('Approved')
       // expect(res?.data?.AddComment?.authorType).toContain(CommentAuthorType.Author)
     })
 
-    test('comment from a user with approval permission is approved', async () => {
-      const spy = jest
-        .spyOn(hasPermissionModule, 'hasPermission')
-        // authorise()
-        .mockImplementationOnce(() => {
-          const originalResult = jest.requireActual('@wepublish/api').hasPermission
-          return originalResult
-        })
-        // canSkipApproval
-        .mockImplementationOnce(() => true)
-
-      const res = await testClientPrivate.executeOperation({
-        query: CreateComment,
-        variables: {
-          itemID: 'd',
-          itemType: CommentItemType.Article,
-          text: [
-            {
-              type: 'paragraph',
-              children: [{text: 'hello'}]
-            }
-          ]
-        }
-      })
-      expect(spy).toHaveBeenCalled()
-      expect(res.data.createComment.state).toBe('Approved')
-    })
-
-    test('comment from a user without approval permission is pending approval', async () => {
-      const spy = jest
-        .spyOn(hasPermissionModule, 'hasPermission')
-        // authorise()
-        .mockImplementationOnce(() => {
-          const originalResult = jest.requireActual('@wepublish/api').hasPermission
-          return originalResult
-        })
-        // canSkipApproval
-        .mockImplementationOnce(() => false)
-
-      const res = await testClientPrivate.executeOperation({
-        query: CreateComment,
-        variables: {
-          itemID: 'd',
-          itemType: CommentItemType.Article,
-          text: [
-            {
-              type: 'paragraph',
-              children: [{text: 'hello'}]
-            }
-          ]
-        }
-      })
-      expect(spy).toHaveBeenCalled()
-      expect(res.data.createComment.state).toBe('PendingApproval')
-    })
-
-    test('Public: comment from a user with approval permission is approved', async () => {
-      const spy = jest
-        .spyOn(hasPermissionModule, 'hasPermission')
-        // canSkipApproval
-        .mockImplementationOnce(() => true)
-
-      const res = await testClientPublic.executeOperation({
-        query: AddComment,
-        variables: {
-          input: {
+    describe('authorize permissions', () => {
+      test('comment from a user with approval permission is approved', async () => {
+        const res = await clientPrivateAsModerator.executeOperation({
+          query: CreateComment,
+          variables: {
             itemID: 'd',
-            itemType: PublicCommentItemType.Article,
+            itemType: CommentItemType.Article,
             text: [
               {
                 type: 'paragraph',
@@ -131,24 +144,31 @@ describe('Comments', () => {
               }
             ]
           }
-        }
+        })
+
+        expect(res).toMatchSnapshot({
+          data: {
+            createComment: {
+              id: expect.any(String),
+              createdAt: expect.any(Date),
+              modifiedAt: expect.any(Date),
+              revisions: expect.arrayContaining([
+                expect.objectContaining({
+                  createdAt: expect.any(Date)
+                })
+              ])
+            }
+          }
+        })
+        expect(res.data.createComment.state).toBe('Approved')
       })
 
-      expect(spy).toHaveBeenCalled()
-      expect(res.data.addComment.state).toBe('Approved')
-    })
-    test('Public: comment from a user without approval permission is pending approval', async () => {
-      const spy = jest
-        .spyOn(hasPermissionModule, 'hasPermission')
-        // canSkipApproval
-        .mockImplementationOnce(() => false)
-
-      const res = await testClientPublic.executeOperation({
-        query: AddComment,
-        variables: {
-          input: {
+      test('comment from a user without approval permission is pending approval', async () => {
+        const res = await clientPrivateAsUser.executeOperation({
+          query: CreateComment,
+          variables: {
             itemID: 'd',
-            itemType: PublicCommentItemType.Article,
+            itemType: CommentItemType.Article,
             text: [
               {
                 type: 'paragraph',
@@ -156,11 +176,65 @@ describe('Comments', () => {
               }
             ]
           }
-        }
+        })
+
+        expect(res).toMatchSnapshot({
+          data: {
+            createComment: {
+              id: expect.any(String),
+              createdAt: expect.any(Date),
+              modifiedAt: expect.any(Date),
+              revisions: expect.arrayContaining([
+                expect.objectContaining({
+                  createdAt: expect.any(Date)
+                })
+              ])
+            }
+          }
+        })
+        expect(res.data.createComment.state).toBe('PendingApproval')
       })
 
-      expect(spy).toHaveBeenCalled()
-      expect(res.data.addComment.state).toBe('PendingApproval')
+      test('Public: comment from a user with approval permission is approved', async () => {
+        const res = await clientPublicAsModerator.executeOperation({
+          query: AddComment,
+          variables: {
+            input: {
+              itemID: 'd',
+              itemType: CommentItemType.Article,
+              text: [
+                {
+                  type: 'paragraph',
+                  children: [{text: 'hello'}]
+                }
+              ]
+            }
+          }
+        })
+
+        expect(res).toMatchSnapshot()
+        expect(res.data.addComment.state).toBe('Approved')
+      })
+      test('Public: comment from a user without approval permission is pending approval', async () => {
+        const res = await clientPublicAsUser.executeOperation({
+          query: AddComment,
+          variables: {
+            input: {
+              itemID: 'd',
+              itemType: CommentItemType.Article,
+              text: [
+                {
+                  type: 'paragraph',
+                  children: [{text: 'hello'}]
+                }
+              ]
+            }
+          }
+        })
+
+        expect(res).toMatchSnapshot()
+        expect(res.data.addComment.state).toBe('PendingApproval')
+      })
     })
   })
 })

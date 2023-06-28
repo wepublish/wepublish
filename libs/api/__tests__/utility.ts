@@ -17,6 +17,7 @@ import {
   DefaultSessionTTL
 } from '../src'
 import {createUserSession} from '../src/lib/graphql/session/session.mutation'
+import {IncomingMessage} from 'http'
 
 export interface TestClient {
   testServerPublic: ApolloServer
@@ -71,6 +72,31 @@ class ExampleURLAdapter implements URLAdapter {
 }
 
 export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
+  const prisma = new PrismaClient()
+  await prisma.$connect()
+
+  const adminUser = await prisma.user.findUnique({
+    where: {
+      email: 'dev@wepublish.ch'
+    }
+  })
+
+  const userSession = await createUserSession(
+    adminUser!,
+    DefaultSessionTTL,
+    prisma.session,
+    prisma.userRole
+  )
+
+  const request: any = {
+    headers: {
+      authorization: `Bearer ${userSession?.token}`
+    }
+  }
+  return await createGraphQLTestClient(request)
+}
+
+export async function createGraphQLTestClient(overwriteRequest?: any): Promise<TestClient> {
   if (!process.env.DATABASE_URL) {
     throw new Error('DATABASE_URL not defined')
   }
@@ -96,26 +122,13 @@ export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
     _uploadImage: jest.fn()
   }
 
-  const userSession = await createUserSession(
-    adminUser!,
-    DefaultSessionTTL,
-    prisma.session,
-    prisma.userRole
-  )
-
-  const request: any = {
-    headers: {
-      authorization: `Bearer ${userSession?.token}`
-    }
-  }
-
   const challenge = new AlgebraicCaptchaChallenge('secret', 600, {})
 
   const testServerPublic = new ApolloServer({
     schema: GraphQLWepublishPublicSchema,
     introspection: false,
-    context: async () =>
-      await contextFromRequest(request, {
+    context: async ({req}) =>
+      await contextFromRequest(overwriteRequest ? overwriteRequest : req, {
         hostURL: 'https://fakeURL',
         websiteURL: 'https://fakeurl',
         prisma,
@@ -135,8 +148,8 @@ export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
   const testServerPrivate = new ApolloServer({
     schema: GraphQLWepublishSchema,
     introspection: false,
-    context: async () =>
-      await contextFromRequest(request, {
+    context: async ({req}) =>
+      await contextFromRequest(overwriteRequest ? overwriteRequest : req, {
         hostURL: 'https://fakeURL',
         websiteURL: 'https://fakeurl',
         prisma,
