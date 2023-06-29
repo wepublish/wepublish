@@ -9,7 +9,8 @@ import {
   PermissionModule,
   ConsentModule,
   MediaAdapterService,
-  KarmaMediaAdapter
+  KarmaMediaAdapter,
+  MailchimpMailProvider
 } from '@wepublish/api'
 import {ScheduleModule} from '@nestjs/schedule'
 import {MailsModule, MailgunMailProvider} from '@wepublish/mails'
@@ -27,6 +28,7 @@ import {
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {URL} from 'url'
 import {JobsModule} from '@wepublish/jobs'
+import {SlackMailProvider} from '../app/slack-mail-provider'
 
 @Global()
 @Module({
@@ -45,24 +47,67 @@ import {JobsModule} from '@wepublish/jobs'
     PrismaModule,
     MailsModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: (config: ConfigService) => ({
-        defaultFromAddress: config.getOrThrow('DEFAULT_FROM_ADDRESS'),
-        defaultReplyToAddress: config.getOrThrow('DEFAULT_REPLY_TO_ADDRESS'),
-        mailProvider: new MailgunMailProvider({
-          id: 'mailgun',
-          name: 'Mailgun',
-          fromAddress: config.getOrThrow('DEFAULT_FROM_ADDRESS'),
-          webhookEndpointSecret: config.getOrThrow('MAILGUN_WEBHOOK_SECRET'),
-          baseDomain: config.getOrThrow('MAILGUN_BASE_DOMAIN'),
-          mailDomain: config.getOrThrow('MAILGUN_MAIL_DOMAIN'),
-          apiKey: config.getOrThrow('MAILGUN_API_KEY'),
-          incomingRequestHandler: bodyParser.json(),
-          mailgunClient: new Mailgun(FormData).client({
+      useFactory: (config: ConfigService) => {
+        let mailProvider
+        if (
+          config.get('MAILGUN_API_KEY') &&
+          config.get('MAILGUN_BASE_DOMAIN') &&
+          config.get('MAILGUN_MAIL_DOMAIN')
+        ) {
+          const mailgunClient = new Mailgun(FormData).client({
             username: 'api',
-            key: config.get('MAILGUN_API_KEY') || 'dev-api-key'
+            key: config.get('MAILGUN_API_KEY')
           })
-        })
-      }),
+          mailProvider = new MailgunMailProvider({
+            id: 'mailgun',
+            name: 'Mailgun',
+            fromAddress:
+              config.get('MAILGUN_FROM_ADDRESS') ||
+              config.get('DEFAULT_FROM_ADDRESS') ||
+              'dev@wepublish.ch',
+            webhookEndpointSecret: config.get('MAILGUN_WEBHOOK_SECRET') || '',
+            baseDomain: config.get('MAILGUN_BASE_DOMAIN'),
+            mailDomain: config.get('MAILGUN_MAIL_DOMAIN'),
+            apiKey: config.get('MAILGUN_API_KEY'),
+            incomingRequestHandler: bodyParser.json(),
+            mailgunClient
+          })
+        }
+
+        if (config.get('MAILCHIMP_API_KEY')) {
+          mailProvider = new MailchimpMailProvider({
+            id: 'mailchimp',
+            name: 'Mailchimp',
+            fromAddress:
+              config.get('MAILCHIMP_FROM_ADDRESS') ||
+              config.get('DEFAULT_FROM_ADDRESS') ||
+              'dev@wepublish.ch',
+            webhookEndpointSecret: config.get('MAILCHIMP_WEBHOOK_SECRET') || '',
+            apiKey: config.get('MAILCHIMP_API_KEY'),
+            baseURL: '',
+            incomingRequestHandler: bodyParser.urlencoded({extended: true})
+          })
+        }
+
+        if (config.get('SLACK_DEV_MAIL_WEBHOOK_URL')) {
+          mailProvider = new SlackMailProvider({
+            id: 'slackMail',
+            name: 'Slack Mail',
+            fromAddress: 'fakeMail@wepublish.media',
+            webhookURL: config.get('SLACK_DEV_MAIL_WEBHOOK_URL')
+          })
+        }
+
+        if (!mailProvider) {
+          throw new Error('A MailProvider must be configured.')
+        }
+
+        return {
+          defaultFromAddress: config.getOrThrow('DEFAULT_FROM_ADDRESS'),
+          defaultReplyToAddress: config.getOrThrow('DEFAULT_REPLY_TO_ADDRESS'),
+          mailProvider
+        }
+      },
       inject: [ConfigService],
       global: true
     }),
