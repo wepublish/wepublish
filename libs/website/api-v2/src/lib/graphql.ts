@@ -17,6 +17,7 @@ export type Scalars = {
   Float: number
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: string
+  RichText: Node[]
 }
 
 export type Consent = {
@@ -41,6 +42,11 @@ export type ConsentInput = {
   slug: Scalars['String']
 }
 
+export type CreateEventArgs = {
+  id: Scalars['String']
+  source: Scalars['String']
+}
+
 export type DashboardInvoice = {
   __typename?: 'DashboardInvoice'
   amount: Scalars['Int']
@@ -61,10 +67,56 @@ export type DashboardSubscription = {
   startsAt: Scalars['DateTime']
 }
 
+export type Event = {
+  __typename?: 'Event'
+  createdAt: Scalars['DateTime']
+  description: Scalars['RichText']
+  endsAt?: Maybe<Scalars['DateTime']>
+  externalSourceId: Scalars['String']
+  externalSourceName: Scalars['String']
+  id: Scalars['String']
+  imageUrl?: Maybe<Scalars['String']>
+  location: Scalars['String']
+  modifiedAt: Scalars['DateTime']
+  name: Scalars['String']
+  startsAt: Scalars['DateTime']
+  status: EventStatus
+}
+
+export enum EventStatus {
+  Cancelled = 'Cancelled',
+  Postponed = 'Postponed',
+  Rescheduled = 'Rescheduled',
+  Scheduled = 'Scheduled'
+}
+
+export type ImportedEventFilter = {
+  name?: InputMaybe<Scalars['String']>
+}
+
+export enum ImportedEventSort {
+  CreatedAt = 'CREATED_AT',
+  EndsAt = 'ENDS_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  StartsAt = 'STARTS_AT'
+}
+
+export type ImportedEventsDocument = {
+  __typename?: 'ImportedEventsDocument'
+  nodes: Array<Event>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
 export type Mutation = {
   __typename?: 'Mutation'
   /** Create a new consent. */
   createConsent: Consent
+  /**
+   * Creates and event based on data from importable events list and an id and provider.
+   * Also, uploads an image to WePublish Image library.
+   */
+  createEvent: Scalars['String']
   /**
    * Creates a new userConsent based on input.
    * Returns created userConsent.
@@ -90,6 +142,10 @@ export type MutationCreateConsentArgs = {
   consent: ConsentInput
 }
 
+export type MutationCreateEventArgs = {
+  filter: CreateEventArgs
+}
+
 export type MutationCreateUserConsentArgs = {
   userConsent: UserConsentInput
 }
@@ -110,6 +166,14 @@ export type MutationUpdateConsentArgs = {
 export type MutationUpdateUserConsentArgs = {
   id: Scalars['String']
   userConsent: UpdateUserConsentInput
+}
+
+export type PageInfo = {
+  __typename?: 'PageInfo'
+  endCursor: Scalars['String']
+  hasNextPage: Scalars['Boolean']
+  hasPreviousPage: Scalars['Boolean']
+  startCursor: Scalars['String']
 }
 
 export enum PaymentPeriodicity {
@@ -135,6 +199,12 @@ export type Query = {
    * Excludes cancelled or manually set as paid invoices.
    */
   expectedRevenue: Array<DashboardInvoice>
+  /** Returns a more detailed version of a single importable event, by id and source (e.g. AgendaBasel). */
+  importedEvent: Event
+  /** Returns a list of imported events from external sources, transformed to match our model. */
+  importedEvents: ImportedEventsDocument
+  /** Returns a list of external source ids of already imported events. */
+  importedEventsIds: Array<Scalars['String']>
   /**
    * Returns all new deactivations in a given timeframe.
    * This considers the time the deactivation was made, not when the subscription runs out.
@@ -172,6 +242,18 @@ export type QueryExpectedRevenueArgs = {
   start: Scalars['DateTime']
 }
 
+export type QueryImportedEventArgs = {
+  filter: SingleEventFilter
+}
+
+export type QueryImportedEventsArgs = {
+  filter?: InputMaybe<ImportedEventFilter>
+  order?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']>
+  sort?: InputMaybe<ImportedEventSort>
+  take?: InputMaybe<Scalars['Int']>
+}
+
 export type QueryNewDeactivationsArgs = {
   end?: InputMaybe<Scalars['DateTime']>
   start: Scalars['DateTime']
@@ -198,6 +280,11 @@ export type QueryUserConsentArgs = {
 
 export type QueryUserConsentsArgs = {
   filter?: InputMaybe<UserConsentFilter>
+}
+
+export type SingleEventFilter = {
+  id: Scalars['String']
+  source: Scalars['String']
 }
 
 export enum SubscriptionDeactivationReason {

@@ -182,3 +182,17 @@ export const getEvents = async (
     }
   }
 }
+
+export const getImportedEventsIds = async (event: PrismaClient['event']) => {
+  const externalEventsIds = event
+    .findMany({
+      where: {
+        externalSourceId: {
+          not: null
+        }
+      }
+    })
+    .then(res => res.map(single => single.externalSourceId))
+
+  return externalEventsIds
+}

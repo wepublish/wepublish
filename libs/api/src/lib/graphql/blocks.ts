@@ -12,7 +12,7 @@ import {
 } from 'graphql'
 
 import {GraphQLImage} from './image'
-import {GraphQLRichText} from './richText'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 
 import {Context} from '../context'
 

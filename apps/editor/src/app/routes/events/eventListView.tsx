@@ -114,6 +114,11 @@ function EventListView() {
             </Cell>
           </Column>
 
+          <Column width={150} resizable>
+            <HeaderCell>{t('event.list.source')}</HeaderCell>
+            <Cell>{(rowData: RowDataType<Event>) => rowData.externalSourceName}</Cell>
+          </Column>
+
           <Column resizable>
             <HeaderCell align={'center'}>{t('event.list.delete')}</HeaderCell>
             <Cell align={'center'} style={{padding: '5px 0'}}>

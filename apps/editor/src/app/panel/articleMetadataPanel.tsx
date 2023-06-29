@@ -4,16 +4,16 @@ import {
   AuthorCheckPicker,
   ChooseEditImage,
   CommentHistory,
+  createCheckedPermissionComponent,
+  generateID,
   ImageEditPanel,
   ImageSelectPanel,
   ListInput,
   ListValue,
   MetaDataType,
   PermissionControl,
-  Textarea,
-  createCheckedPermissionComponent,
-  generateID,
   slugify,
+  Textarea,
   useAuthorisation
 } from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
@@ -22,16 +22,16 @@ import {MdAutoFixHigh, MdComment, MdListAlt, MdSettings, MdShare} from 'react-ic
 import {
   Button,
   Drawer,
+  Form as RForm,
   IconButton,
   Input,
-  Message,
-  Panel,
-  Form as RForm,
   InputGroup as RInputGroup,
+  Message,
   Nav as RNav,
-  Toggle as RToggle,
+  Panel,
   Schema,
   TagPicker,
+  Toggle as RToggle,
   Tooltip,
   Whisper
 } from 'rsuite'
