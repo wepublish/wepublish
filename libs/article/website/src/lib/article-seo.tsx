@@ -5,7 +5,6 @@ import {BuilderArticleSEOProps, useWebsiteBuilder} from '@wepublish/website/buil
 import {Fragment, useMemo} from 'react'
 
 export const getArticleSEO = (article: Article) => {
-  console.log(article)
   const firstTitle = article.blocks.find(isTitleBlock)
   const firstRichText = article.blocks.find(isRichTextBlock)
   const firstImageBlock = article.blocks.find(isImageBlock)
@@ -114,6 +113,12 @@ export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
         <meta
           key={`og:article:published_time`}
           property="og:article:published_time"
+          content={seo.publishedAt}
+        />
+
+        <meta
+          key={`og:article:modified_time`}
+          property="og:article:modified_time"
           content={seo.publishedAt}
         />
 
