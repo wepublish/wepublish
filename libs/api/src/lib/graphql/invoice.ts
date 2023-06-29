@@ -11,7 +11,8 @@ import {
 } from 'graphql'
 import {GraphQLDate, GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../context'
-import {InvoiceSort, InvoiceWithItems} from '../db/invoice'
+import {InvoiceSort} from '../db/invoice'
+import {InvoiceWithItems} from '@wepublish/payments'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
 

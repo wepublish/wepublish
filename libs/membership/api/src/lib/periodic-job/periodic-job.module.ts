@@ -3,10 +3,9 @@ import {PeriodicJobExecutor} from './periodic-job.executor'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {PeriodicJobController} from './periodic-job.controller'
 import {SubscriptionFlowModule} from '../subscription-flow/subscription-flow.module'
-import {MailsModule} from '@wepublish/mails'
 
 @Module({
   providers: [PeriodicJobExecutor, PeriodicJobController],
-  imports: [PrismaModule, SubscriptionFlowModule, MailsModule]
+  imports: [PrismaModule, SubscriptionFlowModule]
 })
 export class PeriodicJobModule {}

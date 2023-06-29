@@ -44,7 +44,7 @@ import {
   PublicArticle
 } from './db/article'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
-import {InvoiceWithItems} from './db/invoice'
+import {InvoiceWithItems} from '@wepublish/payments'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {NavigationWithLinks} from './db/navigation'
 import {PageWithRevisions, pageWithRevisionsToPublicPage, PublicPage} from './db/page'

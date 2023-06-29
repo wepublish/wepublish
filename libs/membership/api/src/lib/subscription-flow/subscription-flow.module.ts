@@ -4,7 +4,6 @@ import {SubscriptionFlowHelper} from './subscription-flow.helper'
 import {SubscriptionFlowResolver} from './subscription-flow.resolver'
 import {SubscriptionController} from '../subscription/subscription.controller'
 import {PrismaModule} from '@wepublish/nest-modules'
-import {PaymentsModule} from '@wepublish/payments'
 
 @Module({
   controllers: [],
@@ -15,6 +14,6 @@ import {PaymentsModule} from '@wepublish/payments'
     SubscriptionFlowHelper
   ],
   exports: [SubscriptionController],
-  imports: [PrismaModule, PaymentsModule]
+  imports: [PrismaModule]
 })
 export class SubscriptionFlowModule {}
