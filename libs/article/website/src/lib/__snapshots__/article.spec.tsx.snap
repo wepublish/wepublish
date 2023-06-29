@@ -6,6 +6,80 @@ exports[`Article should render Default 1`] = `
     class="css-1thzeso"
   >
     <div
+      data-testid="fake-head"
+    >
+      <meta
+        content="article"
+        property="og:type"
+      />
+      <meta
+        content="socialMediaTitle"
+        property="og:title"
+      />
+      <meta
+        content="socialMediaDescription"
+        property="og:description"
+      />
+      <meta
+        content="lead"
+        name="description"
+      />
+      <meta
+        content="https://example.com"
+        property="og:url"
+      />
+      <link
+        href="https://example.com"
+        rel="canonical"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="summary_large_image"
+        name="twitter:card"
+      />
+      <meta
+        content="2023-01-01T00:00:00.000Z"
+        property="og:article:published_time"
+      />
+      <meta
+        content="2023-01-01T00:00:00.000Z"
+        property="og:article:modified_time"
+      />
+      <meta
+        content="Foobar"
+        name="author"
+      />
+      <meta
+        content="Foobar"
+        property="og:article:author:username"
+      />
+      <meta
+        content="Foobar"
+        name="author"
+      />
+      <meta
+        content="Foobar"
+        property="og:article:author:username"
+      />
+      <meta
+        content="foo"
+        property="og:article:tag"
+      />
+      <meta
+        content="bar"
+        property="og:article:tag"
+      />
+    </div>
+    <script
+      data-testid="fake-script"
+      type="application/ld+json"
+    >
+      {"@context":"http://schema.org","@type":"NewsArticle","articleBody":"TitleTitle 2Title 3Unordered ListOrdered ListTable Cell 1Table Cell 2Table Cell 3Table Cell 4Normal text, Bold, Italic, Underline, Strikethrough, Sup, Sub, Link, 😀","keywords":"foo,bar","image":"https://unsplash.it/500/300","description":"lead","author":{"@context":"https://schema.org","@type":"Person","image":"https://unsplash.it/500/300","jobTitle":"Editor","name":"Foobar","url":"https://example.com"},"datePublished":"2023-01-01T00:00:00.000Z","name":"title","headline":"Title","identifier":"clgp1hfio50331801rejmrk6sj3","url":"https://example.com"}
+    </script>
+    <div
       class="css-1gn0lpx"
     >
       <h1
@@ -708,6 +782,80 @@ exports[`Article should render WithClassName 1`] = `
     class="extra-classname css-1thzeso"
   >
     <div
+      data-testid="fake-head"
+    >
+      <meta
+        content="article"
+        property="og:type"
+      />
+      <meta
+        content="socialMediaTitle"
+        property="og:title"
+      />
+      <meta
+        content="socialMediaDescription"
+        property="og:description"
+      />
+      <meta
+        content="lead"
+        name="description"
+      />
+      <meta
+        content="https://example.com"
+        property="og:url"
+      />
+      <link
+        href="https://example.com"
+        rel="canonical"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="summary_large_image"
+        name="twitter:card"
+      />
+      <meta
+        content="2023-01-01T00:00:00.000Z"
+        property="og:article:published_time"
+      />
+      <meta
+        content="2023-01-01T00:00:00.000Z"
+        property="og:article:modified_time"
+      />
+      <meta
+        content="Foobar"
+        name="author"
+      />
+      <meta
+        content="Foobar"
+        property="og:article:author:username"
+      />
+      <meta
+        content="Foobar"
+        name="author"
+      />
+      <meta
+        content="Foobar"
+        property="og:article:author:username"
+      />
+      <meta
+        content="foo"
+        property="og:article:tag"
+      />
+      <meta
+        content="bar"
+        property="og:article:tag"
+      />
+    </div>
+    <script
+      data-testid="fake-script"
+      type="application/ld+json"
+    >
+      {"@context":"http://schema.org","@type":"NewsArticle","articleBody":"TitleTitle 2Title 3Unordered ListOrdered ListTable Cell 1Table Cell 2Table Cell 3Table Cell 4Normal text, Bold, Italic, Underline, Strikethrough, Sup, Sub, Link, 😀","keywords":"foo,bar","image":"https://unsplash.it/500/300","description":"lead","author":{"@context":"https://schema.org","@type":"Person","image":"https://unsplash.it/500/300","jobTitle":"Editor","name":"Foobar","url":"https://example.com"},"datePublished":"2023-01-01T00:00:00.000Z","name":"title","headline":"Title","identifier":"clgp1hfio50331801rejmrk6sj3","url":"https://example.com"}
+    </script>
+    <div
       class="css-1gn0lpx"
     >
       <h1
@@ -1409,6 +1557,80 @@ exports[`Article should render WithEmotion 1`] = `
   <article
     class="css-1thzeso"
   >
+    <div
+      data-testid="fake-head"
+    >
+      <meta
+        content="article"
+        property="og:type"
+      />
+      <meta
+        content="socialMediaTitle"
+        property="og:title"
+      />
+      <meta
+        content="socialMediaDescription"
+        property="og:description"
+      />
+      <meta
+        content="lead"
+        name="description"
+      />
+      <meta
+        content="https://example.com"
+        property="og:url"
+      />
+      <link
+        href="https://example.com"
+        rel="canonical"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="summary_large_image"
+        name="twitter:card"
+      />
+      <meta
+        content="2023-01-01T00:00:00.000Z"
+        property="og:article:published_time"
+      />
+      <meta
+        content="2023-01-01T00:00:00.000Z"
+        property="og:article:modified_time"
+      />
+      <meta
+        content="Foobar"
+        name="author"
+      />
+      <meta
+        content="Foobar"
+        property="og:article:author:username"
+      />
+      <meta
+        content="Foobar"
+        name="author"
+      />
+      <meta
+        content="Foobar"
+        property="og:article:author:username"
+      />
+      <meta
+        content="foo"
+        property="og:article:tag"
+      />
+      <meta
+        content="bar"
+        property="og:article:tag"
+      />
+    </div>
+    <script
+      data-testid="fake-script"
+      type="application/ld+json"
+    >
+      {"@context":"http://schema.org","@type":"NewsArticle","articleBody":"TitleTitle 2Title 3Unordered ListOrdered ListTable Cell 1Table Cell 2Table Cell 3Table Cell 4Normal text, Bold, Italic, Underline, Strikethrough, Sup, Sub, Link, 😀","keywords":"foo,bar","image":"https://unsplash.it/500/300","description":"lead","author":{"@context":"https://schema.org","@type":"Person","image":"https://unsplash.it/500/300","jobTitle":"Editor","name":"Foobar","url":"https://example.com"},"datePublished":"2023-01-01T00:00:00.000Z","name":"title","headline":"Title","identifier":"clgp1hfio50331801rejmrk6sj3","url":"https://example.com"}
+    </script>
     <div
       class="css-1gn0lpx"
     >
@@ -2136,6 +2358,64 @@ exports[`Article should render WithoutAuthors 1`] = `
     class="css-1thzeso"
   >
     <div
+      data-testid="fake-head"
+    >
+      <meta
+        content="article"
+        property="og:type"
+      />
+      <meta
+        content="socialMediaTitle"
+        property="og:title"
+      />
+      <meta
+        content="socialMediaDescription"
+        property="og:description"
+      />
+      <meta
+        content="lead"
+        name="description"
+      />
+      <meta
+        content="https://example.com"
+        property="og:url"
+      />
+      <link
+        href="https://example.com"
+        rel="canonical"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="summary_large_image"
+        name="twitter:card"
+      />
+      <meta
+        content="2023-01-01T00:00:00.000Z"
+        property="og:article:published_time"
+      />
+      <meta
+        content="2023-01-01T00:00:00.000Z"
+        property="og:article:modified_time"
+      />
+      <meta
+        content="foo"
+        property="og:article:tag"
+      />
+      <meta
+        content="bar"
+        property="og:article:tag"
+      />
+    </div>
+    <script
+      data-testid="fake-script"
+      type="application/ld+json"
+    >
+      {"@context":"http://schema.org","@type":"NewsArticle","articleBody":"TitleTitle 2Title 3Unordered ListOrdered ListTable Cell 1Table Cell 2Table Cell 3Table Cell 4Normal text, Bold, Italic, Underline, Strikethrough, Sup, Sub, Link, 😀","keywords":"foo,bar","image":"https://unsplash.it/500/300","description":"lead","author":{"@context":"https://schema.org","@type":"Person"},"datePublished":"2023-01-01T00:00:00.000Z","name":"title","headline":"Title","identifier":"clgp1hfio50331801rejmrk6sj3","url":"https://example.com"}
+    </script>
+    <div
       class="css-1gn0lpx"
     >
       <h1
@@ -2754,6 +3034,80 @@ exports[`Article should render WithoutImageMetadata 1`] = `
   <article
     class="css-1thzeso"
   >
+    <div
+      data-testid="fake-head"
+    >
+      <meta
+        content="article"
+        property="og:type"
+      />
+      <meta
+        content="socialMediaTitle"
+        property="og:title"
+      />
+      <meta
+        content="socialMediaDescription"
+        property="og:description"
+      />
+      <meta
+        content="lead"
+        name="description"
+      />
+      <meta
+        content="https://example.com"
+        property="og:url"
+      />
+      <link
+        href="https://example.com"
+        rel="canonical"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="summary_large_image"
+        name="twitter:card"
+      />
+      <meta
+        content="2023-01-01T00:00:00.000Z"
+        property="og:article:published_time"
+      />
+      <meta
+        content="2023-01-01T00:00:00.000Z"
+        property="og:article:modified_time"
+      />
+      <meta
+        content="Foobar"
+        name="author"
+      />
+      <meta
+        content="Foobar"
+        property="og:article:author:username"
+      />
+      <meta
+        content="Foobar"
+        name="author"
+      />
+      <meta
+        content="Foobar"
+        property="og:article:author:username"
+      />
+      <meta
+        content="foo"
+        property="og:article:tag"
+      />
+      <meta
+        content="bar"
+        property="og:article:tag"
+      />
+    </div>
+    <script
+      data-testid="fake-script"
+      type="application/ld+json"
+    >
+      {"@context":"http://schema.org","@type":"NewsArticle","articleBody":"TitleTitle 2Title 3Unordered ListOrdered ListTable Cell 1Table Cell 2Table Cell 3Table Cell 4Normal text, Bold, Italic, Underline, Strikethrough, Sup, Sub, Link, 😀","keywords":"foo,bar","image":"https://unsplash.it/500/300","description":"lead","author":{"@context":"https://schema.org","@type":"Person","image":"https://unsplash.it/500/300","jobTitle":"Editor","name":"Foobar","url":"https://example.com"},"datePublished":"2023-01-01T00:00:00.000Z","name":"title","headline":"Title","identifier":"clgp1hfio50331801rejmrk6sj3","url":"https://example.com"}
+    </script>
     <div
       class="css-1gn0lpx"
     >
@@ -3457,6 +3811,76 @@ exports[`Article should render WithoutLead 1`] = `
     class="css-1thzeso"
   >
     <div
+      data-testid="fake-head"
+    >
+      <meta
+        content="article"
+        property="og:type"
+      />
+      <meta
+        content="socialMediaTitle"
+        property="og:title"
+      />
+      <meta
+        content="socialMediaDescription"
+        property="og:description"
+      />
+      <meta
+        content="https://example.com"
+        property="og:url"
+      />
+      <link
+        href="https://example.com"
+        rel="canonical"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="summary_large_image"
+        name="twitter:card"
+      />
+      <meta
+        content="2023-01-01T00:00:00.000Z"
+        property="og:article:published_time"
+      />
+      <meta
+        content="2023-01-01T00:00:00.000Z"
+        property="og:article:modified_time"
+      />
+      <meta
+        content="Foobar"
+        name="author"
+      />
+      <meta
+        content="Foobar"
+        property="og:article:author:username"
+      />
+      <meta
+        content="Foobar"
+        name="author"
+      />
+      <meta
+        content="Foobar"
+        property="og:article:author:username"
+      />
+      <meta
+        content="foo"
+        property="og:article:tag"
+      />
+      <meta
+        content="bar"
+        property="og:article:tag"
+      />
+    </div>
+    <script
+      data-testid="fake-script"
+      type="application/ld+json"
+    >
+      {"@context":"http://schema.org","@type":"NewsArticle","articleBody":"TitleTitle 2Title 3Unordered ListOrdered ListTable Cell 1Table Cell 2Table Cell 3Table Cell 4Normal text, Bold, Italic, Underline, Strikethrough, Sup, Sub, Link, 😀","keywords":"foo,bar","image":"https://unsplash.it/500/300","description":"","author":{"@context":"https://schema.org","@type":"Person","image":"https://unsplash.it/500/300","jobTitle":"Editor","name":"Foobar","url":"https://example.com"},"datePublished":"2023-01-01T00:00:00.000Z","name":"title","headline":"Title","identifier":"clgp1hfio50331801rejmrk6sj3","url":"https://example.com"}
+    </script>
+    <div
       class="css-1gn0lpx"
     >
       <h1
@@ -4158,6 +4582,80 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   <article
     class="css-1thzeso"
   >
+    <div
+      data-testid="fake-head"
+    >
+      <meta
+        content="article"
+        property="og:type"
+      />
+      <meta
+        content="title"
+        property="og:title"
+      />
+      <meta
+        content="lead"
+        property="og:description"
+      />
+      <meta
+        content="lead"
+        name="description"
+      />
+      <meta
+        content="https://example.com"
+        property="og:url"
+      />
+      <link
+        href="https://example.com"
+        rel="canonical"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="summary_large_image"
+        name="twitter:card"
+      />
+      <meta
+        content="2023-01-01T00:00:00.000Z"
+        property="og:article:published_time"
+      />
+      <meta
+        content="2023-01-01T00:00:00.000Z"
+        property="og:article:modified_time"
+      />
+      <meta
+        content="Foobar"
+        name="author"
+      />
+      <meta
+        content="Foobar"
+        property="og:article:author:username"
+      />
+      <meta
+        content="Foobar"
+        name="author"
+      />
+      <meta
+        content="Foobar"
+        property="og:article:author:username"
+      />
+      <meta
+        content="foo"
+        property="og:article:tag"
+      />
+      <meta
+        content="bar"
+        property="og:article:tag"
+      />
+    </div>
+    <script
+      data-testid="fake-script"
+      type="application/ld+json"
+    >
+      {"@context":"http://schema.org","@type":"NewsArticle","articleBody":"TitleTitle 2Title 3Unordered ListOrdered ListTable Cell 1Table Cell 2Table Cell 3Table Cell 4Normal text, Bold, Italic, Underline, Strikethrough, Sup, Sub, Link, 😀","keywords":"foo,bar","image":"https://unsplash.it/500/300","description":"lead","author":{"@context":"https://schema.org","@type":"Person","image":"https://unsplash.it/500/300","jobTitle":"Editor","name":"Foobar","url":"https://example.com"},"datePublished":"2023-01-01T00:00:00.000Z","name":"title","headline":"Title","identifier":"clgp1hfio50331801rejmrk6sj3","url":"https://example.com"}
+    </script>
     <div
       class="css-1gn0lpx"
     >

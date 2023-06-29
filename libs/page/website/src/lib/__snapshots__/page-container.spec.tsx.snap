@@ -6,6 +6,48 @@ exports[`Page Container should render ById 1`] = `
     class="css-1thzeso"
   >
     <div
+      data-testid="fake-head"
+    >
+      <meta
+        content="website"
+        property="og:type"
+      />
+      <meta
+        content="socialMediaTitle"
+        property="og:title"
+      />
+      <meta
+        content="socialMediaDescription"
+        property="og:description"
+      />
+      <meta
+        content="socialMediaDescription"
+        name="description"
+      />
+      <meta
+        content="https://example.com"
+        property="og:url"
+      />
+      <link
+        href="https://example.com"
+        rel="canonical"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="summary_large_image"
+        name="twitter:card"
+      />
+    </div>
+    <script
+      data-testid="fake-script"
+      type="application/ld+json"
+    >
+      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":"https://unsplash.it/500/300","description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
+    </script>
+    <div
       class="css-1gn0lpx"
     >
       <h1
@@ -621,6 +663,48 @@ exports[`Page Container should render BySlug 1`] = `
   <article
     class="css-1thzeso"
   >
+    <div
+      data-testid="fake-head"
+    >
+      <meta
+        content="website"
+        property="og:type"
+      />
+      <meta
+        content="socialMediaTitle"
+        property="og:title"
+      />
+      <meta
+        content="socialMediaDescription"
+        property="og:description"
+      />
+      <meta
+        content="socialMediaDescription"
+        name="description"
+      />
+      <meta
+        content="https://example.com"
+        property="og:url"
+      />
+      <link
+        href="https://example.com"
+        rel="canonical"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="summary_large_image"
+        name="twitter:card"
+      />
+    </div>
+    <script
+      data-testid="fake-script"
+      type="application/ld+json"
+    >
+      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":"https://unsplash.it/500/300","description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
+    </script>
     <div
       class="css-1gn0lpx"
     >
@@ -1238,6 +1322,48 @@ exports[`Page Container should render WithClassName 1`] = `
     class="extra-classname css-1thzeso"
   >
     <div
+      data-testid="fake-head"
+    >
+      <meta
+        content="website"
+        property="og:type"
+      />
+      <meta
+        content="socialMediaTitle"
+        property="og:title"
+      />
+      <meta
+        content="socialMediaDescription"
+        property="og:description"
+      />
+      <meta
+        content="socialMediaDescription"
+        name="description"
+      />
+      <meta
+        content="https://example.com"
+        property="og:url"
+      />
+      <link
+        href="https://example.com"
+        rel="canonical"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="summary_large_image"
+        name="twitter:card"
+      />
+    </div>
+    <script
+      data-testid="fake-script"
+      type="application/ld+json"
+    >
+      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":"https://unsplash.it/500/300","description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
+    </script>
+    <div
       class="css-1gn0lpx"
     >
       <h1
@@ -1853,6 +1979,48 @@ exports[`Page Container should render WithEmotion 1`] = `
   <article
     class="css-1thzeso"
   >
+    <div
+      data-testid="fake-head"
+    >
+      <meta
+        content="website"
+        property="og:type"
+      />
+      <meta
+        content="socialMediaTitle"
+        property="og:title"
+      />
+      <meta
+        content="socialMediaDescription"
+        property="og:description"
+      />
+      <meta
+        content="socialMediaDescription"
+        name="description"
+      />
+      <meta
+        content="https://example.com"
+        property="og:url"
+      />
+      <link
+        href="https://example.com"
+        rel="canonical"
+      />
+      <meta
+        content="https://unsplash.it/500/300"
+        property="og:image"
+      />
+      <meta
+        content="summary_large_image"
+        name="twitter:card"
+      />
+    </div>
+    <script
+      data-testid="fake-script"
+      type="application/ld+json"
+    >
+      {"@context":"http://schema.org","@type":"WebPage","keywords":"foo,bar","image":"https://unsplash.it/500/300","description":"socialMediaDescription","name":"title","headline":"Title","identifier":"clgoyl8n042780301remhfw9cqj","url":"https://example.com"}
+    </script>
     <div
       class="css-1gn0lpx"
     >
