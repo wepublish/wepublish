@@ -1,30 +1,73 @@
-import {useAuthorListQuery, AuthorListQuery, AuthorSort, SortOrder} from '@wepublish/website/api'
-import {styled} from '@mui/material'
+import {useAuthorListQuery, AuthorListQuery, FullAuthorFragment} from '@wepublish/website/api'
+import {styled, css} from '@mui/material'
 import {QueryResult} from '@apollo/client'
 import {useEffect} from 'react'
 import {BuilderAuthorListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
-type IdOrSlug = {id: string; slug?: never} | {id?: never; slug: string}
+export const AuthorTileWrapper = styled('a')`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+`
+
+export const AuthorTileImageWrapper = styled('div')`
+  width: 240px;
+  height: 240px;
+`
+
+export const AuthorTileContentWrapper = styled('div')`
+  margin-top: 20px;
+`
 
 export const AuthorListWrapper = styled('article')`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  grid-template-columns: repeat(4, minmax(230px, 1fr));
   gap: ${({theme}) => theme.spacing(4)};
   justify-items: center;
 `
 
-export type AuthorListProps = IdOrSlug &
-  Pick<BuilderAuthorListProps, 'authors'> & {
-    onQuery?: (
-      queryResult: Pick<QueryResult<AuthorListQuery>, 'data' | 'loading' | 'error' | 'refetch'>
-    ) => void
-  } & BuilderAuthorListProps
+const imageStyles = css`
+  border-radius: 50%;
+`
 
-export function AuthorList({onQuery, className}: AuthorListProps) {
-  const {AuthorChip} = useWebsiteBuilder()
+export type AuthorListProps = Pick<BuilderAuthorListProps, 'authors'> & {
+  onQuery?: (
+    queryResult: Pick<QueryResult<AuthorListQuery>, 'data' | 'loading' | 'error' | 'refetch'>
+  ) => void
+  skip?: number
+  take?: number
+} & BuilderAuthorListProps
+
+type AuthorTileProps = {
+  className?: string
+  author: FullAuthorFragment
+}
+
+export function AuthorList({onQuery, className, skip, take}: AuthorListProps) {
+  const {
+    elements: {Image, Paragraph, H6}
+  } = useWebsiteBuilder()
+
+  const AuthorTile = ({className, author}: AuthorTileProps) => (
+    <AuthorTileWrapper className={className} href={author.slug}>
+      <AuthorTileImageWrapper>
+        {author.image && <Image image={author.image} square css={imageStyles} />}
+      </AuthorTileImageWrapper>
+
+      <AuthorTileContentWrapper>
+        <H6>{author.name}</H6>
+
+        {author.jobTitle && <Paragraph gutterBottom={false}>{author.jobTitle}</Paragraph>}
+      </AuthorTileContentWrapper>
+    </AuthorTileWrapper>
+  )
 
   const authorListQueryVariables = {
-    // should the AuthorList accept variables?
+    take: take || undefined,
+    skip: skip || undefined
   }
 
   const {data, loading, error, refetch} = useAuthorListQuery({
@@ -35,13 +78,10 @@ export function AuthorList({onQuery, className}: AuthorListProps) {
     onQuery?.({data, loading, error, refetch})
   }, [data, loading, error, refetch, onQuery])
 
-  console.log('data', data)
-  console.log('data?.authors', data?.authors)
-
   return (
     <AuthorListWrapper className={className}>
       {data?.authors?.nodes.map(author => (
-        <AuthorChip key={author.id} author={author} />
+        <AuthorTile key={author.id} author={author} />
       ))}
     </AuthorListWrapper>
   )

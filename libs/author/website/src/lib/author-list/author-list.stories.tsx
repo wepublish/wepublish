@@ -1,15 +1,15 @@
 import {css} from '@emotion/react'
 import {Meta} from '@storybook/react'
 import {action} from '@storybook/addon-actions'
-import {AuthorListDocument, AuthorListQuery, AuthorQuery} from '@wepublish/website/api'
+import {AuthorListDocument, AuthorQuery} from '@wepublish/website/api'
 import {AuthorList} from './author-list'
 
 const author = {
   __typename: 'Author',
   id: 'clgp1hfio50331801rejmrk6sj3',
-  slug: 'slug',
-  name: 'Foobar',
-  jobTitle: 'Editor',
+  slug: 'example-slug',
+  name: 'Example Name',
+  jobTitle: 'Co-Geschäftsleitung & Chefredaktor',
   url: 'https://example.com',
   bio: [
     {
@@ -256,23 +256,6 @@ const author = {
   }
 } as AuthorQuery['author']
 
-const data = {
-  authors: {
-    nodes: [
-      {author, id: '1'},
-      {author, id: '2'},
-      {author, id: '3'}
-    ],
-    pageInfo: {
-      hasNextPage: false,
-      hasPreviousPage: false,
-      endCursor: null,
-      startCursor: null
-    },
-    totalCount: 3
-  }
-}
-
 export default {
   component: AuthorList,
   title: 'Components/AuthorList'
@@ -308,6 +291,47 @@ export const Default = {
                   {...author, id: '11'}
                 ],
                 totalCount: 11,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  endCursor: null,
+                  startCursor: null
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+export const WithFilters = {
+  args: {
+    onQuery: action('onQuery'),
+    skip: 5,
+    take: 5
+  },
+
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: AuthorListDocument,
+            variables: {skip: 5, take: 5}
+          },
+          result: {
+            data: {
+              authors: {
+                nodes: [
+                  {...author, id: '6'},
+                  {...author, id: '7'},
+                  {...author, id: '8'},
+                  {...author, id: '9'},
+                  {...author, id: '10'}
+                ],
+                totalCount: 5,
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,
