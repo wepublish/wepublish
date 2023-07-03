@@ -52,26 +52,7 @@ fragment FullPage on Page {
             lead
 
             article {
-              id
-              title
-              preTitle
-              lead
-              url
-              blocks {
-                __typename
-
-                ... on TitleBlock {
-                  title
-                  lead
-                }
-
-                ... on ImageBlock {
-                  caption
-                  image {
-                    ...FullImage
-                  }
-                }
-              }
+              ...ArticleWithoutTeasers
             }
           }
 

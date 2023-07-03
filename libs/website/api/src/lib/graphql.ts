@@ -1368,11 +1368,116 @@ export type OverriddenRating = {
   value?: Maybe<Scalars['Int']>
 }
 
+export type ArticleWithoutTeasersFragment = {
+  __typename?: 'Article'
+  id: string
+  publishedAt: string
+  updatedAt: string
+  preTitle?: string | null
+  title: string
+  lead?: string | null
+  slug: string
+  url: string
+  tags: Array<string>
+  blocks: Array<
+    | {__typename: 'BildwurfAdBlock'}
+    | {__typename: 'CommentBlock'}
+    | {__typename: 'EmbedBlock'}
+    | {__typename: 'EventBlock'}
+    | {__typename: 'FacebookPostBlock'}
+    | {__typename: 'HTMLBlock'; html?: string | null}
+    | {
+        __typename: 'ImageBlock'
+        caption?: string | null
+        image?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          format: string
+          mimeType: string
+          extension: string
+          width: number
+          height: number
+          fileSize: number
+          title?: string | null
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
+          url?: string | null
+          bigURL?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+      }
+    | {__typename: 'ImageGalleryBlock'}
+    | {__typename: 'InstagramPostBlock'}
+    | {__typename: 'LinkPageBreakBlock'}
+    | {__typename: 'ListicleBlock'}
+    | {__typename: 'PolisConversationBlock'}
+    | {__typename: 'PollBlock'}
+    | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+    | {__typename: 'RichTextBlock'; richText: Node[]}
+    | {__typename: 'SoundCloudTrackBlock'}
+    | {__typename: 'TeaserGridBlock'}
+    | {__typename: 'TeaserGridFlexBlock'}
+    | {__typename: 'TikTokVideoBlock'}
+    | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+    | {__typename: 'TwitterTweetBlock'}
+    | {__typename: 'VimeoVideoBlock'}
+    | {__typename: 'YouTubeVideoBlock'}
+  >
+  image?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    title?: string | null
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
+}
+
 export type FullArticleFragment = {
   __typename?: 'Article'
   id: string
+  publishedAt: string
+  updatedAt: string
+  preTitle?: string | null
+  title: string
+  lead?: string | null
   slug: string
   url: string
+  tags: Array<string>
   blocks: Array<
     | {__typename: 'BildwurfAdBlock'}
     | {__typename: 'CommentBlock'}
@@ -1467,17 +1572,21 @@ export type FullArticleFragment = {
                 article?: {
                   __typename?: 'Article'
                   id: string
-                  title: string
+                  publishedAt: string
+                  updatedAt: string
                   preTitle?: string | null
+                  title: string
                   lead?: string | null
+                  slug: string
                   url: string
+                  tags: Array<string>
                   blocks: Array<
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
-                    | {__typename: 'HTMLBlock'}
+                    | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
                         caption?: string | null
@@ -1517,8 +1626,8 @@ export type FullArticleFragment = {
                     | {__typename: 'ListicleBlock'}
                     | {__typename: 'PolisConversationBlock'}
                     | {__typename: 'PollBlock'}
-                    | {__typename: 'QuoteBlock'}
-                    | {__typename: 'RichTextBlock'}
+                    | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                    | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
                     | {__typename: 'TeaserGridBlock'}
                     | {__typename: 'TeaserGridFlexBlock'}
@@ -1528,6 +1637,35 @@ export type FullArticleFragment = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
                 } | null
               }
             | {
@@ -1718,6 +1856,35 @@ export type FullArticleFragment = {
       focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
     } | null
   }>
+  image?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    title?: string | null
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
 }
 
 export type ArticleQueryVariables = Exact<{
@@ -1730,8 +1897,14 @@ export type ArticleQuery = {
   article?: {
     __typename?: 'Article'
     id: string
+    publishedAt: string
+    updatedAt: string
+    preTitle?: string | null
+    title: string
+    lead?: string | null
     slug: string
     url: string
+    tags: Array<string>
     blocks: Array<
       | {__typename: 'BildwurfAdBlock'}
       | {__typename: 'CommentBlock'}
@@ -1826,17 +1999,21 @@ export type ArticleQuery = {
                   article?: {
                     __typename?: 'Article'
                     id: string
-                    title: string
+                    publishedAt: string
+                    updatedAt: string
                     preTitle?: string | null
+                    title: string
                     lead?: string | null
+                    slug: string
                     url: string
+                    tags: Array<string>
                     blocks: Array<
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
-                      | {__typename: 'HTMLBlock'}
+                      | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
                           caption?: string | null
@@ -1876,8 +2053,8 @@ export type ArticleQuery = {
                       | {__typename: 'ListicleBlock'}
                       | {__typename: 'PolisConversationBlock'}
                       | {__typename: 'PollBlock'}
-                      | {__typename: 'QuoteBlock'}
-                      | {__typename: 'RichTextBlock'}
+                      | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                      | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
                       | {__typename: 'TeaserGridBlock'}
                       | {__typename: 'TeaserGridFlexBlock'}
@@ -1887,6 +2064,35 @@ export type ArticleQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
                   } | null
                 }
               | {
@@ -2077,6 +2283,35 @@ export type ArticleQuery = {
         focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
       } | null
     }>
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
   } | null
 }
 
@@ -2091,8 +2326,14 @@ export type PeerArticleQuery = {
   peerArticle?: {
     __typename?: 'Article'
     id: string
+    publishedAt: string
+    updatedAt: string
+    preTitle?: string | null
+    title: string
+    lead?: string | null
     slug: string
     url: string
+    tags: Array<string>
     blocks: Array<
       | {__typename: 'BildwurfAdBlock'}
       | {__typename: 'CommentBlock'}
@@ -2187,17 +2428,21 @@ export type PeerArticleQuery = {
                   article?: {
                     __typename?: 'Article'
                     id: string
-                    title: string
+                    publishedAt: string
+                    updatedAt: string
                     preTitle?: string | null
+                    title: string
                     lead?: string | null
+                    slug: string
                     url: string
+                    tags: Array<string>
                     blocks: Array<
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
-                      | {__typename: 'HTMLBlock'}
+                      | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
                           caption?: string | null
@@ -2237,8 +2482,8 @@ export type PeerArticleQuery = {
                       | {__typename: 'ListicleBlock'}
                       | {__typename: 'PolisConversationBlock'}
                       | {__typename: 'PollBlock'}
-                      | {__typename: 'QuoteBlock'}
-                      | {__typename: 'RichTextBlock'}
+                      | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                      | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
                       | {__typename: 'TeaserGridBlock'}
                       | {__typename: 'TeaserGridFlexBlock'}
@@ -2248,6 +2493,35 @@ export type PeerArticleQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
                   } | null
                 }
               | {
@@ -2438,6 +2712,35 @@ export type PeerArticleQuery = {
         focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
       } | null
     }>
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
   } | null
 }
 
@@ -3354,8 +3657,14 @@ export type FullNavigationFragment = {
         article?: {
           __typename?: 'Article'
           id: string
+          publishedAt: string
+          updatedAt: string
+          preTitle?: string | null
+          title: string
+          lead?: string | null
           slug: string
           url: string
+          tags: Array<string>
           blocks: Array<
             | {__typename: 'BildwurfAdBlock'}
             | {__typename: 'CommentBlock'}
@@ -3456,17 +3765,21 @@ export type FullNavigationFragment = {
                         article?: {
                           __typename?: 'Article'
                           id: string
-                          title: string
+                          publishedAt: string
+                          updatedAt: string
                           preTitle?: string | null
+                          title: string
                           lead?: string | null
+                          slug: string
                           url: string
+                          tags: Array<string>
                           blocks: Array<
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
-                            | {__typename: 'HTMLBlock'}
+                            | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
                                 caption?: string | null
@@ -3506,8 +3819,12 @@ export type FullNavigationFragment = {
                             | {__typename: 'ListicleBlock'}
                             | {__typename: 'PolisConversationBlock'}
                             | {__typename: 'PollBlock'}
-                            | {__typename: 'QuoteBlock'}
-                            | {__typename: 'RichTextBlock'}
+                            | {
+                                __typename: 'QuoteBlock'
+                                quote?: string | null
+                                author?: string | null
+                              }
+                            | {__typename: 'RichTextBlock'; richText: Node[]}
                             | {__typename: 'SoundCloudTrackBlock'}
                             | {__typename: 'TeaserGridBlock'}
                             | {__typename: 'TeaserGridFlexBlock'}
@@ -3521,6 +3838,35 @@ export type FullNavigationFragment = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
                         } | null
                       }
                     | {
@@ -3719,6 +4065,35 @@ export type FullNavigationFragment = {
               focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
             } | null
           }>
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
         } | null
       }
     | {__typename?: 'ExternalNavigationLink'; label: string; url: string}
@@ -3830,17 +4205,21 @@ export type FullNavigationFragment = {
                         article?: {
                           __typename?: 'Article'
                           id: string
-                          title: string
+                          publishedAt: string
+                          updatedAt: string
                           preTitle?: string | null
+                          title: string
                           lead?: string | null
+                          slug: string
                           url: string
+                          tags: Array<string>
                           blocks: Array<
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
-                            | {__typename: 'HTMLBlock'}
+                            | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
                                 caption?: string | null
@@ -3880,8 +4259,12 @@ export type FullNavigationFragment = {
                             | {__typename: 'ListicleBlock'}
                             | {__typename: 'PolisConversationBlock'}
                             | {__typename: 'PollBlock'}
-                            | {__typename: 'QuoteBlock'}
-                            | {__typename: 'RichTextBlock'}
+                            | {
+                                __typename: 'QuoteBlock'
+                                quote?: string | null
+                                author?: string | null
+                              }
+                            | {__typename: 'RichTextBlock'; richText: Node[]}
                             | {__typename: 'SoundCloudTrackBlock'}
                             | {__typename: 'TeaserGridBlock'}
                             | {__typename: 'TeaserGridFlexBlock'}
@@ -3895,6 +4278,35 @@ export type FullNavigationFragment = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
                         } | null
                       }
                     | {
@@ -4075,8 +4487,14 @@ export type NavigationListQuery = {
           article?: {
             __typename?: 'Article'
             id: string
+            publishedAt: string
+            updatedAt: string
+            preTitle?: string | null
+            title: string
+            lead?: string | null
             slug: string
             url: string
+            tags: Array<string>
             blocks: Array<
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'CommentBlock'}
@@ -4177,17 +4595,21 @@ export type NavigationListQuery = {
                           article?: {
                             __typename?: 'Article'
                             id: string
-                            title: string
+                            publishedAt: string
+                            updatedAt: string
                             preTitle?: string | null
+                            title: string
                             lead?: string | null
+                            slug: string
                             url: string
+                            tags: Array<string>
                             blocks: Array<
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
-                              | {__typename: 'HTMLBlock'}
+                              | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
                                   caption?: string | null
@@ -4227,8 +4649,12 @@ export type NavigationListQuery = {
                               | {__typename: 'ListicleBlock'}
                               | {__typename: 'PolisConversationBlock'}
                               | {__typename: 'PollBlock'}
-                              | {__typename: 'QuoteBlock'}
-                              | {__typename: 'RichTextBlock'}
+                              | {
+                                  __typename: 'QuoteBlock'
+                                  quote?: string | null
+                                  author?: string | null
+                                }
+                              | {__typename: 'RichTextBlock'; richText: Node[]}
                               | {__typename: 'SoundCloudTrackBlock'}
                               | {__typename: 'TeaserGridBlock'}
                               | {__typename: 'TeaserGridFlexBlock'}
@@ -4242,6 +4668,35 @@ export type NavigationListQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
                           } | null
                         }
                       | {
@@ -4440,6 +4895,35 @@ export type NavigationListQuery = {
                 focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
               } | null
             }>
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
           } | null
         }
       | {__typename?: 'ExternalNavigationLink'; label: string; url: string}
@@ -4551,17 +5035,21 @@ export type NavigationListQuery = {
                           article?: {
                             __typename?: 'Article'
                             id: string
-                            title: string
+                            publishedAt: string
+                            updatedAt: string
                             preTitle?: string | null
+                            title: string
                             lead?: string | null
+                            slug: string
                             url: string
+                            tags: Array<string>
                             blocks: Array<
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
-                              | {__typename: 'HTMLBlock'}
+                              | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
                                   caption?: string | null
@@ -4601,8 +5089,12 @@ export type NavigationListQuery = {
                               | {__typename: 'ListicleBlock'}
                               | {__typename: 'PolisConversationBlock'}
                               | {__typename: 'PollBlock'}
-                              | {__typename: 'QuoteBlock'}
-                              | {__typename: 'RichTextBlock'}
+                              | {
+                                  __typename: 'QuoteBlock'
+                                  quote?: string | null
+                                  author?: string | null
+                                }
+                              | {__typename: 'RichTextBlock'; richText: Node[]}
                               | {__typename: 'SoundCloudTrackBlock'}
                               | {__typename: 'TeaserGridBlock'}
                               | {__typename: 'TeaserGridFlexBlock'}
@@ -4616,6 +5108,35 @@ export type NavigationListQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
                           } | null
                         }
                       | {
@@ -4799,8 +5320,14 @@ export type NavigationQuery = {
           article?: {
             __typename?: 'Article'
             id: string
+            publishedAt: string
+            updatedAt: string
+            preTitle?: string | null
+            title: string
+            lead?: string | null
             slug: string
             url: string
+            tags: Array<string>
             blocks: Array<
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'CommentBlock'}
@@ -4901,17 +5428,21 @@ export type NavigationQuery = {
                           article?: {
                             __typename?: 'Article'
                             id: string
-                            title: string
+                            publishedAt: string
+                            updatedAt: string
                             preTitle?: string | null
+                            title: string
                             lead?: string | null
+                            slug: string
                             url: string
+                            tags: Array<string>
                             blocks: Array<
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
-                              | {__typename: 'HTMLBlock'}
+                              | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
                                   caption?: string | null
@@ -4951,8 +5482,12 @@ export type NavigationQuery = {
                               | {__typename: 'ListicleBlock'}
                               | {__typename: 'PolisConversationBlock'}
                               | {__typename: 'PollBlock'}
-                              | {__typename: 'QuoteBlock'}
-                              | {__typename: 'RichTextBlock'}
+                              | {
+                                  __typename: 'QuoteBlock'
+                                  quote?: string | null
+                                  author?: string | null
+                                }
+                              | {__typename: 'RichTextBlock'; richText: Node[]}
                               | {__typename: 'SoundCloudTrackBlock'}
                               | {__typename: 'TeaserGridBlock'}
                               | {__typename: 'TeaserGridFlexBlock'}
@@ -4966,6 +5501,35 @@ export type NavigationQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
                           } | null
                         }
                       | {
@@ -5164,6 +5728,35 @@ export type NavigationQuery = {
                 focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
               } | null
             }>
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
           } | null
         }
       | {__typename?: 'ExternalNavigationLink'; label: string; url: string}
@@ -5275,17 +5868,21 @@ export type NavigationQuery = {
                           article?: {
                             __typename?: 'Article'
                             id: string
-                            title: string
+                            publishedAt: string
+                            updatedAt: string
                             preTitle?: string | null
+                            title: string
                             lead?: string | null
+                            slug: string
                             url: string
+                            tags: Array<string>
                             blocks: Array<
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
-                              | {__typename: 'HTMLBlock'}
+                              | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
                                   caption?: string | null
@@ -5325,8 +5922,12 @@ export type NavigationQuery = {
                               | {__typename: 'ListicleBlock'}
                               | {__typename: 'PolisConversationBlock'}
                               | {__typename: 'PollBlock'}
-                              | {__typename: 'QuoteBlock'}
-                              | {__typename: 'RichTextBlock'}
+                              | {
+                                  __typename: 'QuoteBlock'
+                                  quote?: string | null
+                                  author?: string | null
+                                }
+                              | {__typename: 'RichTextBlock'; richText: Node[]}
                               | {__typename: 'SoundCloudTrackBlock'}
                               | {__typename: 'TeaserGridBlock'}
                               | {__typename: 'TeaserGridFlexBlock'}
@@ -5340,6 +5941,35 @@ export type NavigationQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
                           } | null
                         }
                       | {
@@ -5604,17 +6234,21 @@ export type FullPageFragment = {
                 article?: {
                   __typename?: 'Article'
                   id: string
-                  title: string
+                  publishedAt: string
+                  updatedAt: string
                   preTitle?: string | null
+                  title: string
                   lead?: string | null
+                  slug: string
                   url: string
+                  tags: Array<string>
                   blocks: Array<
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
-                    | {__typename: 'HTMLBlock'}
+                    | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
                         caption?: string | null
@@ -5654,8 +6288,8 @@ export type FullPageFragment = {
                     | {__typename: 'ListicleBlock'}
                     | {__typename: 'PolisConversationBlock'}
                     | {__typename: 'PollBlock'}
-                    | {__typename: 'QuoteBlock'}
-                    | {__typename: 'RichTextBlock'}
+                    | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                    | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
                     | {__typename: 'TeaserGridBlock'}
                     | {__typename: 'TeaserGridFlexBlock'}
@@ -5665,6 +6299,35 @@ export type FullPageFragment = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
                 } | null
               }
             | {
@@ -5924,17 +6587,21 @@ export type PageQuery = {
                   article?: {
                     __typename?: 'Article'
                     id: string
-                    title: string
+                    publishedAt: string
+                    updatedAt: string
                     preTitle?: string | null
+                    title: string
                     lead?: string | null
+                    slug: string
                     url: string
+                    tags: Array<string>
                     blocks: Array<
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
-                      | {__typename: 'HTMLBlock'}
+                      | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
                           caption?: string | null
@@ -5974,8 +6641,8 @@ export type PageQuery = {
                       | {__typename: 'ListicleBlock'}
                       | {__typename: 'PolisConversationBlock'}
                       | {__typename: 'PollBlock'}
-                      | {__typename: 'QuoteBlock'}
-                      | {__typename: 'RichTextBlock'}
+                      | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                      | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
                       | {__typename: 'TeaserGridBlock'}
                       | {__typename: 'TeaserGridFlexBlock'}
@@ -5985,6 +6652,35 @@ export type PageQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
                   } | null
                 }
               | {
@@ -6749,6 +7445,46 @@ export const FullEventFragmentDoc = gql`
   }
   ${FullImageFragmentDoc}
 `
+export const ArticleWithoutTeasersFragmentDoc = gql`
+  fragment ArticleWithoutTeasers on Article {
+    id
+    publishedAt
+    updatedAt
+    preTitle
+    title
+    lead
+    slug
+    url
+    tags
+    blocks {
+      __typename
+      ... on TitleBlock {
+        title
+        lead
+      }
+      ... on ImageBlock {
+        caption
+        image {
+          ...FullImage
+        }
+      }
+      ... on QuoteBlock {
+        quote
+        author
+      }
+      ... on RichTextBlock {
+        richText
+      }
+      ... on HTMLBlock {
+        html
+      }
+    }
+    image {
+      ...FullImage
+    }
+  }
+  ${FullImageFragmentDoc}
+`
 export const FullPageFragmentDoc = gql`
   fragment FullPage on Page {
     id
@@ -6794,24 +7530,7 @@ export const FullPageFragmentDoc = gql`
               title
               lead
               article {
-                id
-                title
-                preTitle
-                lead
-                url
-                blocks {
-                  __typename
-                  ... on TitleBlock {
-                    title
-                    lead
-                  }
-                  ... on ImageBlock {
-                    caption
-                    image {
-                      ...FullImage
-                    }
-                  }
-                }
+                ...ArticleWithoutTeasers
               }
             }
             ... on PageTeaser {
@@ -6862,6 +7581,7 @@ export const FullPageFragmentDoc = gql`
     }
   }
   ${FullImageFragmentDoc}
+  ${ArticleWithoutTeasersFragmentDoc}
 `
 export const FullAuthorFragmentDoc = gql`
   fragment FullAuthor on Author {
@@ -6883,31 +7603,8 @@ export const FullAuthorFragmentDoc = gql`
 `
 export const FullArticleFragmentDoc = gql`
   fragment FullArticle on Article {
-    id
-    slug
-    url
+    ...ArticleWithoutTeasers
     blocks {
-      __typename
-      ... on TitleBlock {
-        title
-        lead
-      }
-      ... on ImageBlock {
-        caption
-        image {
-          ...FullImage
-        }
-      }
-      ... on QuoteBlock {
-        quote
-        author
-      }
-      ... on RichTextBlock {
-        richText
-      }
-      ... on HTMLBlock {
-        html
-      }
       ... on TeaserGridFlexBlock {
         flexTeasers {
           alignment {
@@ -6926,24 +7623,7 @@ export const FullArticleFragmentDoc = gql`
               title
               lead
               article {
-                id
-                title
-                preTitle
-                lead
-                url
-                blocks {
-                  __typename
-                  ... on TitleBlock {
-                    title
-                    lead
-                  }
-                  ... on ImageBlock {
-                    caption
-                    image {
-                      ...FullImage
-                    }
-                  }
-                }
+                ...ArticleWithoutTeasers
               }
             }
             ... on PageTeaser {
@@ -6996,6 +7676,7 @@ export const FullArticleFragmentDoc = gql`
       ...FullAuthor
     }
   }
+  ${ArticleWithoutTeasersFragmentDoc}
   ${FullImageFragmentDoc}
   ${FullAuthorFragmentDoc}
 `
