@@ -1,8 +1,8 @@
-import {css} from '@emotion/react'
-import {Meta} from '@storybook/react'
-import {action} from '@storybook/addon-actions'
 import {AuthorListDocument, AuthorQuery} from '@wepublish/website/api'
-import {AuthorList} from './author-list'
+import {action} from '@storybook/addon-actions'
+import {Meta} from '@storybook/react'
+import {AuthorListContainer} from './author-list-container'
+import {css} from '@emotion/react'
 
 const author = {
   __typename: 'Author',
@@ -257,8 +257,8 @@ const author = {
 } as AuthorQuery['author']
 
 export default {
-  component: AuthorList,
-  title: 'Components/AuthorList'
+  component: AuthorListContainer,
+  title: 'Container/AuthorList'
 } as Meta
 
 export const Default = {
@@ -277,61 +277,8 @@ export const Default = {
           result: {
             data: {
               authors: {
-                nodes: [
-                  author,
-                  {...author, id: '2'},
-                  {...author, id: '3'},
-                  {...author, id: '4'},
-                  {...author, id: '5'},
-                  {...author, id: '6'},
-                  {...author, id: '7'},
-                  {...author, id: '8'},
-                  {...author, id: '9'},
-                  {...author, id: '10'},
-                  {...author, id: '11'}
-                ],
-                totalCount: 11,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                  endCursor: null,
-                  startCursor: null
-                }
-              }
-            }
-          }
-        }
-      ]
-    }
-  }
-}
-
-export const WithFilters = {
-  args: {
-    onQuery: action('onQuery'),
-    skip: 5,
-    take: 5
-  },
-
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: AuthorListDocument,
-            variables: {skip: 5, take: 5}
-          },
-          result: {
-            data: {
-              authors: {
-                nodes: [
-                  {...author, id: '6'},
-                  {...author, id: '7'},
-                  {...author, id: '8'},
-                  {...author, id: '9'},
-                  {...author, id: '10'}
-                ],
-                totalCount: 5,
+                nodes: [author, {...author, id: '2'}, {...author, id: '3'}],
+                totalCount: 3,
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,
@@ -364,20 +311,8 @@ export const WithClassName = {
           result: {
             data: {
               authors: {
-                nodes: [
-                  author,
-                  {...author, id: '2'},
-                  {...author, id: '3'},
-                  {...author, id: '4'},
-                  {...author, id: '5'},
-                  {...author, id: '6'},
-                  {...author, id: '7'},
-                  {...author, id: '8'},
-                  {...author, id: '9'},
-                  {...author, id: '10'},
-                  {...author, id: '11'}
-                ],
-                totalCount: 11,
+                nodes: [author, {...author, id: '2'}, {...author, id: '3'}],
+                totalCount: 3,
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,
@@ -412,110 +347,8 @@ export const WithEmotion = {
           result: {
             data: {
               authors: {
-                nodes: [
-                  author,
-                  {...author, id: '2'},
-                  {...author, id: '3'},
-                  {...author, id: '4'},
-                  {...author, id: '5'},
-                  {...author, id: '6'},
-                  {...author, id: '7'},
-                  {...author, id: '8'},
-                  {...author, id: '9'},
-                  {...author, id: '10'},
-                  {...author, id: '11'}
-                ],
-                totalCount: 11,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                  endCursor: null,
-                  startCursor: null
-                }
-              }
-            }
-          }
-        }
-      ]
-    }
-  }
-}
-
-export const WithoutJobTitle = {
-  args: {
-    onQuery: action('onQuery')
-  },
-
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: AuthorListDocument,
-            variables: {}
-          },
-          result: {
-            data: {
-              authors: {
-                nodes: [
-                  author,
-                  {...author, id: '2', jobTitle: null},
-                  {...author, id: '3'},
-                  {...author, id: '4', jobTitle: null},
-                  {...author, id: '5', jobTitle: null},
-                  {...author, id: '6'},
-                  {...author, id: '7', jobTitle: null},
-                  {...author, id: '8'},
-                  {...author, id: '9', jobTitle: null},
-                  {...author, id: '10'},
-                  {...author, id: '11'}
-                ],
-                totalCount: 11,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                  endCursor: null,
-                  startCursor: null
-                }
-              }
-            }
-          }
-        }
-      ]
-    }
-  }
-}
-
-export const WithoutImage = {
-  args: {
-    onQuery: action('onQuery')
-  },
-
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: AuthorListDocument,
-            variables: {}
-          },
-          result: {
-            data: {
-              authors: {
-                nodes: [
-                  author,
-                  {...author, id: '2', image: null},
-                  {...author, id: '3', image: null},
-                  {...author, id: '4', image: null},
-                  {...author, id: '5', image: null},
-                  {...author, id: '6'},
-                  {...author, id: '7'},
-                  {...author, id: '8', image: null},
-                  {...author, id: '9', image: null},
-                  {...author, id: '10'},
-                  {...author, id: '11'}
-                ],
-                totalCount: 11,
+                nodes: [author, {...author, id: '2'}, {...author, id: '3'}],
+                totalCount: 3,
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,

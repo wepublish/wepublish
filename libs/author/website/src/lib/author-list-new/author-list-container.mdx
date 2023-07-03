@@ -1,0 +1,33 @@
+import {Meta, Story, Canvas, CodeOrSourceMdx} from '@storybook/blocks'
+import * as stories from './author-list-container.stories'
+import LinkTo from '@storybook/addon-links/react'
+
+<Meta of={stories} />
+
+# Author List Container
+
+> The Author List Container gets authors and renders it as an <LinkTo kind="Components/AuthorList" story="Default">Author component</LinkTo>.
+
+## Override `AuthorListItem`
+
+To replace the `AuthorListItem` component that is being rendered by a custom component, one can override it like this:
+
+<CodeOrSourceMdx>
+```typescript
+import {WebsiteBuilderProvider, BuilderAuthorListItemProps} from '@wepublish/website'
+
+const MyAuthorListItem = (props: BuilderAuthorListItemProps) => <div>My Author List Item</div>
+
+export default function () {
+  return (
+    <WebsiteBuilderProvider Author={MyAuthorListItem}>
+      <AuthorListContainer />
+    </WebsiteBuilderProvider>
+  )
+}
+```
+</CodeOrSourceMdx>
+
+<Canvas>
+  <Story of={stories.Default} />
+</Canvas>

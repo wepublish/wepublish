@@ -1,7 +1,7 @@
 import {TextField, ThemeProvider} from '@mui/material'
 import {Article} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
-import {Author, AuthorChip} from '@wepublish/author/website'
+import {Author, AuthorChip, AuthorList, AuthorListItem} from '@wepublish/author/website'
 import {
   BlockRenderer,
   HtmlBlock,
@@ -48,6 +48,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
       <WebsiteBuilderProvider
         Author={Author}
         AuthorChip={AuthorChip}
+        AuthorList={AuthorList}
+        AuthorListItem={AuthorListItem}
         Article={Article}
         Navbar={Navbar}
         Footer={Footer}
