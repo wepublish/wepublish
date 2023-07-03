@@ -22,7 +22,7 @@ import {
   Toggle as RToggle
 } from 'rsuite'
 
-import {AuthorCheckPicker} from '../authorCheckPicker/author-check-picker'
+import {AuthorCheckPicker} from '../panel/authorCheckPicker'
 
 const {Group} = RForm
 
