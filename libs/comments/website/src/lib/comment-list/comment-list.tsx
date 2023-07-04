@@ -1,4 +1,5 @@
 import {styled} from '@mui/material'
+import {Comment} from '@wepublish/website/api'
 import {BuilderCommentListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const CommentListWrapper = styled('article')`
@@ -15,7 +16,11 @@ export const CommentList = ({data, className}: BuilderCommentListProps) => {
   return (
     <CommentListWrapper className={className}>
       {data?.comments?.map(comment => (
-        <CommentListItem key={comment.id} {...comment} />
+        <CommentListItem
+          key={comment.id}
+          {...comment}
+          children={(comment.children as Comment[]) ?? []}
+        />
       ))}
 
       {!data?.comments.length && <Alert severity="info">Keine Kommentare vorhanden.</Alert>}

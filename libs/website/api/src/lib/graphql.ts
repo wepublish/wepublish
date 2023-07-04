@@ -190,7 +190,7 @@ export type Comment = {
   __typename?: 'Comment'
   authorType: CommentAuthorType
   calculatedRatings?: Maybe<Array<Maybe<CalculatedRating>>>
-  children?: Maybe<Array<Maybe<Comment>>>
+  children: Array<Comment>
   createdAt: Scalars['DateTime']
   guestUserImage?: Maybe<Image>
   guestUsername?: Maybe<Scalars['String']>
@@ -6232,7 +6232,7 @@ export type FullCommentFragment = {
   state: CommentState
   source?: string | null
   guestUsername?: string | null
-  children?: Array<{
+  children: Array<{
     __typename?: 'Comment'
     id: string
     itemID: string
@@ -6249,7 +6249,7 @@ export type FullCommentFragment = {
     state: CommentState
     source?: string | null
     guestUsername?: string | null
-    children?: Array<{
+    children: Array<{
       __typename?: 'Comment'
       id: string
       itemID: string
@@ -6266,7 +6266,7 @@ export type FullCommentFragment = {
       state: CommentState
       source?: string | null
       guestUsername?: string | null
-      children?: Array<{
+      children: Array<{
         __typename?: 'Comment'
         id: string
         itemID: string
@@ -6283,7 +6283,7 @@ export type FullCommentFragment = {
         state: CommentState
         source?: string | null
         guestUsername?: string | null
-        children?: Array<{
+        children: Array<{
           __typename?: 'Comment'
           id: string
           itemID: string
@@ -6300,7 +6300,7 @@ export type FullCommentFragment = {
           state: CommentState
           source?: string | null
           guestUsername?: string | null
-          children?: Array<{
+          children: Array<{
             __typename?: 'Comment'
             id: string
             itemID: string
@@ -6429,7 +6429,7 @@ export type FullCommentFragment = {
               answerId: string
               value?: number | null
             }>
-          } | null> | null
+          }>
           tags?: Array<{
             __typename?: 'Tag'
             id: string
@@ -6542,7 +6542,7 @@ export type FullCommentFragment = {
             answerId: string
             value?: number | null
           }>
-        } | null> | null
+        }>
         tags?: Array<{
           __typename?: 'Tag'
           id: string
@@ -6655,7 +6655,7 @@ export type FullCommentFragment = {
           answerId: string
           value?: number | null
         }>
-      } | null> | null
+      }>
       tags?: Array<{
         __typename?: 'Tag'
         id: string
@@ -6768,7 +6768,7 @@ export type FullCommentFragment = {
         answerId: string
         value?: number | null
       }>
-    } | null> | null
+    }>
     tags?: Array<{
       __typename?: 'Tag'
       id: string
@@ -6881,7 +6881,7 @@ export type FullCommentFragment = {
       answerId: string
       value?: number | null
     }>
-  } | null> | null
+  }>
   tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null; type?: TagType | null}> | null
   user?: {
     __typename?: 'User'
@@ -7016,7 +7016,7 @@ export type CommentListQuery = {
     state: CommentState
     source?: string | null
     guestUsername?: string | null
-    children?: Array<{
+    children: Array<{
       __typename?: 'Comment'
       id: string
       itemID: string
@@ -7033,7 +7033,7 @@ export type CommentListQuery = {
       state: CommentState
       source?: string | null
       guestUsername?: string | null
-      children?: Array<{
+      children: Array<{
         __typename?: 'Comment'
         id: string
         itemID: string
@@ -7050,7 +7050,7 @@ export type CommentListQuery = {
         state: CommentState
         source?: string | null
         guestUsername?: string | null
-        children?: Array<{
+        children: Array<{
           __typename?: 'Comment'
           id: string
           itemID: string
@@ -7067,7 +7067,7 @@ export type CommentListQuery = {
           state: CommentState
           source?: string | null
           guestUsername?: string | null
-          children?: Array<{
+          children: Array<{
             __typename?: 'Comment'
             id: string
             itemID: string
@@ -7084,7 +7084,7 @@ export type CommentListQuery = {
             state: CommentState
             source?: string | null
             guestUsername?: string | null
-            children?: Array<{
+            children: Array<{
               __typename?: 'Comment'
               id: string
               itemID: string
@@ -7213,7 +7213,7 @@ export type CommentListQuery = {
                 answerId: string
                 value?: number | null
               }>
-            } | null> | null
+            }>
             tags?: Array<{
               __typename?: 'Tag'
               id: string
@@ -7326,7 +7326,7 @@ export type CommentListQuery = {
               answerId: string
               value?: number | null
             }>
-          } | null> | null
+          }>
           tags?: Array<{
             __typename?: 'Tag'
             id: string
@@ -7439,7 +7439,7 @@ export type CommentListQuery = {
             answerId: string
             value?: number | null
           }>
-        } | null> | null
+        }>
         tags?: Array<{
           __typename?: 'Tag'
           id: string
@@ -7552,7 +7552,7 @@ export type CommentListQuery = {
           answerId: string
           value?: number | null
         }>
-      } | null> | null
+      }>
       tags?: Array<{
         __typename?: 'Tag'
         id: string
@@ -7665,7 +7665,7 @@ export type CommentListQuery = {
         answerId: string
         value?: number | null
       }>
-    } | null> | null
+    }>
     tags?: Array<{
       __typename?: 'Tag'
       id: string
