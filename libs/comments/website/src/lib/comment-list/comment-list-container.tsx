@@ -9,6 +9,7 @@ import {
 } from '@wepublish/website/builder'
 
 export type CommentListContainerProps = {
+  id: string
   onQuery?: (
     queryResult: Pick<QueryResult<CommentListQuery>, 'data' | 'loading' | 'error' | 'fetchMore'>
   ) => void
@@ -19,18 +20,20 @@ export function CommentListContainer({
   onQuery,
   className,
   variables,
+  id,
   onVariablesChange
 }: CommentListContainerProps) {
   const {CommentList} = useWebsiteBuilder()
   const {data, loading, error, fetchMore} = useCommentListQuery({
-    variables
+    variables: {
+      ...variables,
+      itemId: id
+    }
   })
 
   useEffect(() => {
     onQuery?.({data, loading, error, fetchMore})
   }, [data, loading, error, fetchMore, onQuery])
-
-  console.log(data)
 
   return (
     <CommentList

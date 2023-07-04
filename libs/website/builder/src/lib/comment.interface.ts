@@ -6,7 +6,7 @@ export type BuilderCommentListProps = Pick<
   'data' | 'loading' | 'error'
 > & {
   className?: string
-  variables?: CommentListQueryVariables
+  variables?: Omit<CommentListQueryVariables, 'itemId'>
   onVariablesChange?: (variables: Partial<CommentListQueryVariables>) => void
 }
 
