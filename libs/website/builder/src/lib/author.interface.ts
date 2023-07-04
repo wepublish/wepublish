@@ -3,7 +3,8 @@ import {
   AuthorQuery,
   AuthorListQuery,
   FullAuthorFragment,
-  AuthorListQueryVariables
+  AuthorListQueryVariables,
+  Author
 } from '@wepublish/website/api'
 import {ComponentType} from 'react'
 
@@ -17,8 +18,7 @@ export type BuilderAuthorChipProps = {
   className?: string
 }
 
-export type BuilderAuthorListItemProps = {
-  author: FullAuthorFragment
+export type BuilderAuthorListItemProps = Author & {
   className?: string
 }
 
@@ -27,7 +27,6 @@ export type BuilderAuthorListProps = Pick<
   'data' | 'loading' | 'error'
 > & {
   className?: string
-  authors?: ComponentType<BuilderAuthorChipProps>
   variables?: Partial<AuthorListQueryVariables>
   onVariablesChange?: (variables: Partial<AuthorListQueryVariables>) => void
 }

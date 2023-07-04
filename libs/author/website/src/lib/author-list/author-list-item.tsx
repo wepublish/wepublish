@@ -1,4 +1,4 @@
-import {FullAuthorFragment} from '@wepublish/website/api'
+import {Author} from '@wepublish/website/api'
 import {Theme, styled, css, useTheme} from '@mui/material'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 
@@ -7,12 +7,13 @@ export const AuthorListItemImageWrapper = styled('div')`
   height: 240px;
 `
 
+export const AuthorListItemContent = styled('div')``
+
 const wrapperStyles = (theme: Theme) => css`
   display: grid;
   gap: ${theme.spacing(3)};
-  grid-template-rows: 240px 1fr;
   width: 240px;
-  align-items: flex-start;
+  align-content: flex-start;
   text-align: center;
   text-decoration: none;
   color: inherit;
@@ -22,28 +23,29 @@ const imageStyles = css`
   border-radius: 50%;
 `
 
-type AuthorListItemProps = {
-  className?: string
-  author: FullAuthorFragment
-}
-
-export function AuthorListItem({className, author}: AuthorListItemProps) {
+export function AuthorListItem({
+  className,
+  slug,
+  image,
+  name,
+  jobTitle
+}: Author & {className?: string}) {
   const theme = useTheme()
   const {
     elements: {Image, Paragraph, H6, Link}
   } = useWebsiteBuilder()
 
   return (
-    <Link css={wrapperStyles(theme)} className={className} href={author.slug}>
+    <Link css={wrapperStyles(theme)} className={className} href={slug}>
       <AuthorListItemImageWrapper>
-        {author.image && <Image image={author.image} square css={imageStyles} />}
+        {image && <Image image={image} square css={imageStyles} />}
       </AuthorListItemImageWrapper>
 
-      <div>
-        <H6>{author.name}</H6>
+      <AuthorListItemContent>
+        <H6>{name}</H6>
 
-        {author.jobTitle && <Paragraph gutterBottom={false}>{author.jobTitle}</Paragraph>}
-      </div>
+        {jobTitle && <Paragraph gutterBottom={false}>{jobTitle}</Paragraph>}
+      </AuthorListItemContent>
     </Link>
   )
 }

@@ -14,7 +14,7 @@ export const AuthorList = ({data, className}: BuilderAuthorListProps) => {
   return (
     <AuthorListWrapper className={className}>
       {data?.authors?.nodes.map(author => (
-        <AuthorListItem key={author.id} author={author} />
+        <AuthorListItem key={author.id} {...author} />
       ))}
     </AuthorListWrapper>
   )

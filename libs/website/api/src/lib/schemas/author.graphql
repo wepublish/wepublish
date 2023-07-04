@@ -22,8 +22,8 @@ query Author($id: ID, $slug: Slug) {
   }
 }
 
-query AuthorList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
-  authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+query AuthorList($filter: AuthorFilter, $cursor: ID, $take: Int, $skip: Int) {
+  authors(filter: $filter, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...FullAuthor
     }
