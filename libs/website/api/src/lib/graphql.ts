@@ -190,7 +190,7 @@ export type Comment = {
   __typename?: 'Comment'
   authorType: CommentAuthorType
   calculatedRatings?: Maybe<Array<Maybe<CalculatedRating>>>
-  children: Array<Comment>
+  children?: Maybe<Array<Maybe<Comment>>>
   createdAt: Scalars['DateTime']
   guestUserImage?: Maybe<Image>
   guestUsername?: Maybe<Scalars['String']>
@@ -301,6 +301,8 @@ export type Event = {
   __typename?: 'Event'
   description?: Maybe<Scalars['RichText']>
   endsAt?: Maybe<Scalars['DateTime']>
+  externalSourceId?: Maybe<Scalars['String']>
+  externalSourceName?: Maybe<Scalars['String']>
   id: Scalars['ID']
   image?: Maybe<Image>
   location?: Maybe<Scalars['String']>
@@ -974,6 +976,8 @@ export type Query = {
   event: Event
   /** This query returns a list of events */
   events?: Maybe<EventConnection>
+  /** This query returns a list of original ids of imported events */
+  importedEventsIds?: Maybe<Array<Maybe<Scalars['String']>>>
   /** This query returns the invoices  of the authenticated user. */
   invoices: Array<Invoice>
   /** This query returns the user. */
@@ -1367,12 +1371,14 @@ export type OverriddenRating = {
 export type ArticleWithoutBlocksFragment = {
   __typename?: 'Article'
   id: string
+  publishedAt: string
+  updatedAt: string
+  preTitle?: string | null
+  title: string
+  lead?: string | null
   slug: string
   breaking: boolean
-  lead?: string | null
-  publishedAt: string
   tags: Array<string>
-  title: string
   url: string
   socialMediaDescription?: string | null
   socialMediaTitle?: string | null
@@ -1478,12 +1484,14 @@ export type ArticleWithoutBlocksFragment = {
 export type FullArticleFragment = {
   __typename?: 'Article'
   id: string
+  publishedAt: string
+  updatedAt: string
+  preTitle?: string | null
+  title: string
+  lead?: string | null
   slug: string
   breaking: boolean
-  lead?: string | null
-  publishedAt: string
   tags: Array<string>
-  title: string
   url: string
   socialMediaDescription?: string | null
   socialMediaTitle?: string | null
@@ -1578,12 +1586,14 @@ export type FullArticleFragment = {
               article?: {
                 __typename?: 'Article'
                 id: string
+                publishedAt: string
+                updatedAt: string
+                preTitle?: string | null
+                title: string
+                lead?: string | null
                 slug: string
                 breaking: boolean
-                lead?: string | null
-                publishedAt: string
                 tags: Array<string>
-                title: string
                 url: string
                 socialMediaDescription?: string | null
                 socialMediaTitle?: string | null
@@ -1992,12 +2002,14 @@ export type FullArticleFragment = {
                 article?: {
                   __typename?: 'Article'
                   id: string
+                  publishedAt: string
+                  updatedAt: string
+                  preTitle?: string | null
+                  title: string
+                  lead?: string | null
                   slug: string
                   breaking: boolean
-                  lead?: string | null
-                  publishedAt: string
                   tags: Array<string>
-                  title: string
                   url: string
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
@@ -2477,12 +2489,14 @@ export type ArticleQuery = {
   article?: {
     __typename?: 'Article'
     id: string
+    publishedAt: string
+    updatedAt: string
+    preTitle?: string | null
+    title: string
+    lead?: string | null
     slug: string
     breaking: boolean
-    lead?: string | null
-    publishedAt: string
     tags: Array<string>
-    title: string
     url: string
     socialMediaDescription?: string | null
     socialMediaTitle?: string | null
@@ -2577,12 +2591,14 @@ export type ArticleQuery = {
                 article?: {
                   __typename?: 'Article'
                   id: string
+                  publishedAt: string
+                  updatedAt: string
+                  preTitle?: string | null
+                  title: string
+                  lead?: string | null
                   slug: string
                   breaking: boolean
-                  lead?: string | null
-                  publishedAt: string
                   tags: Array<string>
-                  title: string
                   url: string
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
@@ -2991,12 +3007,14 @@ export type ArticleQuery = {
                   article?: {
                     __typename?: 'Article'
                     id: string
+                    publishedAt: string
+                    updatedAt: string
+                    preTitle?: string | null
+                    title: string
+                    lead?: string | null
                     slug: string
                     breaking: boolean
-                    lead?: string | null
-                    publishedAt: string
                     tags: Array<string>
-                    title: string
                     url: string
                     socialMediaDescription?: string | null
                     socialMediaTitle?: string | null
@@ -3478,12 +3496,14 @@ export type PeerArticleQuery = {
   peerArticle?: {
     __typename?: 'Article'
     id: string
+    publishedAt: string
+    updatedAt: string
+    preTitle?: string | null
+    title: string
+    lead?: string | null
     slug: string
     breaking: boolean
-    lead?: string | null
-    publishedAt: string
     tags: Array<string>
-    title: string
     url: string
     socialMediaDescription?: string | null
     socialMediaTitle?: string | null
@@ -3578,12 +3598,14 @@ export type PeerArticleQuery = {
                 article?: {
                   __typename?: 'Article'
                   id: string
+                  publishedAt: string
+                  updatedAt: string
+                  preTitle?: string | null
+                  title: string
+                  lead?: string | null
                   slug: string
                   breaking: boolean
-                  lead?: string | null
-                  publishedAt: string
                   tags: Array<string>
-                  title: string
                   url: string
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
@@ -3992,12 +4014,14 @@ export type PeerArticleQuery = {
                   article?: {
                     __typename?: 'Article'
                     id: string
+                    publishedAt: string
+                    updatedAt: string
+                    preTitle?: string | null
+                    title: string
+                    lead?: string | null
                     slug: string
                     breaking: boolean
-                    lead?: string | null
-                    publishedAt: string
                     tags: Array<string>
-                    title: string
                     url: string
                     socialMediaDescription?: string | null
                     socialMediaTitle?: string | null
@@ -4705,12 +4729,14 @@ type FullTeaser_ArticleTeaser_Fragment = {
   article?: {
     __typename?: 'Article'
     id: string
+    publishedAt: string
+    updatedAt: string
+    preTitle?: string | null
+    title: string
+    lead?: string | null
     slug: string
     breaking: boolean
-    lead?: string | null
-    publishedAt: string
     tags: Array<string>
-    title: string
     url: string
     socialMediaDescription?: string | null
     socialMediaTitle?: string | null
@@ -5194,12 +5220,14 @@ type FullBlock_TeaserGridBlock_Fragment = {
         article?: {
           __typename?: 'Article'
           id: string
+          publishedAt: string
+          updatedAt: string
+          preTitle?: string | null
+          title: string
+          lead?: string | null
           slug: string
           breaking: boolean
-          lead?: string | null
-          publishedAt: string
           tags: Array<string>
-          title: string
           url: string
           socialMediaDescription?: string | null
           socialMediaTitle?: string | null
@@ -5609,12 +5637,14 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
           article?: {
             __typename?: 'Article'
             id: string
+            publishedAt: string
+            updatedAt: string
+            preTitle?: string | null
+            title: string
+            lead?: string | null
             slug: string
             breaking: boolean
-            lead?: string | null
-            publishedAt: string
             tags: Array<string>
-            title: string
             url: string
             socialMediaDescription?: string | null
             socialMediaTitle?: string | null
@@ -6202,7 +6232,7 @@ export type FullCommentFragment = {
   state: CommentState
   source?: string | null
   guestUsername?: string | null
-  children: Array<{
+  children?: Array<{
     __typename?: 'Comment'
     id: string
     itemID: string
@@ -6219,7 +6249,7 @@ export type FullCommentFragment = {
     state: CommentState
     source?: string | null
     guestUsername?: string | null
-    children: Array<{
+    children?: Array<{
       __typename?: 'Comment'
       id: string
       itemID: string
@@ -6236,7 +6266,7 @@ export type FullCommentFragment = {
       state: CommentState
       source?: string | null
       guestUsername?: string | null
-      children: Array<{
+      children?: Array<{
         __typename?: 'Comment'
         id: string
         itemID: string
@@ -6253,7 +6283,7 @@ export type FullCommentFragment = {
         state: CommentState
         source?: string | null
         guestUsername?: string | null
-        children: Array<{
+        children?: Array<{
           __typename?: 'Comment'
           id: string
           itemID: string
@@ -6270,7 +6300,7 @@ export type FullCommentFragment = {
           state: CommentState
           source?: string | null
           guestUsername?: string | null
-          children: Array<{
+          children?: Array<{
             __typename?: 'Comment'
             id: string
             itemID: string
@@ -6399,7 +6429,7 @@ export type FullCommentFragment = {
               answerId: string
               value?: number | null
             }>
-          }>
+          } | null> | null
           tags?: Array<{
             __typename?: 'Tag'
             id: string
@@ -6512,7 +6542,7 @@ export type FullCommentFragment = {
             answerId: string
             value?: number | null
           }>
-        }>
+        } | null> | null
         tags?: Array<{
           __typename?: 'Tag'
           id: string
@@ -6625,7 +6655,7 @@ export type FullCommentFragment = {
           answerId: string
           value?: number | null
         }>
-      }>
+      } | null> | null
       tags?: Array<{
         __typename?: 'Tag'
         id: string
@@ -6738,7 +6768,7 @@ export type FullCommentFragment = {
         answerId: string
         value?: number | null
       }>
-    }>
+    } | null> | null
     tags?: Array<{
       __typename?: 'Tag'
       id: string
@@ -6851,7 +6881,7 @@ export type FullCommentFragment = {
       answerId: string
       value?: number | null
     }>
-  }>
+  } | null> | null
   tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null; type?: TagType | null}> | null
   user?: {
     __typename?: 'User'
@@ -6986,7 +7016,7 @@ export type CommentListQuery = {
     state: CommentState
     source?: string | null
     guestUsername?: string | null
-    children: Array<{
+    children?: Array<{
       __typename?: 'Comment'
       id: string
       itemID: string
@@ -7003,7 +7033,7 @@ export type CommentListQuery = {
       state: CommentState
       source?: string | null
       guestUsername?: string | null
-      children: Array<{
+      children?: Array<{
         __typename?: 'Comment'
         id: string
         itemID: string
@@ -7020,7 +7050,7 @@ export type CommentListQuery = {
         state: CommentState
         source?: string | null
         guestUsername?: string | null
-        children: Array<{
+        children?: Array<{
           __typename?: 'Comment'
           id: string
           itemID: string
@@ -7037,7 +7067,7 @@ export type CommentListQuery = {
           state: CommentState
           source?: string | null
           guestUsername?: string | null
-          children: Array<{
+          children?: Array<{
             __typename?: 'Comment'
             id: string
             itemID: string
@@ -7054,7 +7084,7 @@ export type CommentListQuery = {
             state: CommentState
             source?: string | null
             guestUsername?: string | null
-            children: Array<{
+            children?: Array<{
               __typename?: 'Comment'
               id: string
               itemID: string
@@ -7183,7 +7213,7 @@ export type CommentListQuery = {
                 answerId: string
                 value?: number | null
               }>
-            }>
+            } | null> | null
             tags?: Array<{
               __typename?: 'Tag'
               id: string
@@ -7296,7 +7326,7 @@ export type CommentListQuery = {
               answerId: string
               value?: number | null
             }>
-          }>
+          } | null> | null
           tags?: Array<{
             __typename?: 'Tag'
             id: string
@@ -7409,7 +7439,7 @@ export type CommentListQuery = {
             answerId: string
             value?: number | null
           }>
-        }>
+        } | null> | null
         tags?: Array<{
           __typename?: 'Tag'
           id: string
@@ -7522,7 +7552,7 @@ export type CommentListQuery = {
           answerId: string
           value?: number | null
         }>
-      }>
+      } | null> | null
       tags?: Array<{
         __typename?: 'Tag'
         id: string
@@ -7635,7 +7665,7 @@ export type CommentListQuery = {
         answerId: string
         value?: number | null
       }>
-    }>
+    } | null> | null
     tags?: Array<{
       __typename?: 'Tag'
       id: string
@@ -8093,12 +8123,14 @@ export type FullNavigationFragment = {
         article?: {
           __typename?: 'Article'
           id: string
+          publishedAt: string
+          updatedAt: string
+          preTitle?: string | null
+          title: string
+          lead?: string | null
           slug: string
           breaking: boolean
-          lead?: string | null
-          publishedAt: string
           tags: Array<string>
-          title: string
           url: string
           socialMediaDescription?: string | null
           socialMediaTitle?: string | null
@@ -8193,12 +8225,14 @@ export type FullNavigationFragment = {
                       article?: {
                         __typename?: 'Article'
                         id: string
+                        publishedAt: string
+                        updatedAt: string
+                        preTitle?: string | null
+                        title: string
+                        lead?: string | null
                         slug: string
                         breaking: boolean
-                        lead?: string | null
-                        publishedAt: string
                         tags: Array<string>
-                        title: string
                         url: string
                         socialMediaDescription?: string | null
                         socialMediaTitle?: string | null
@@ -8629,12 +8663,14 @@ export type FullNavigationFragment = {
                         article?: {
                           __typename?: 'Article'
                           id: string
+                          publishedAt: string
+                          updatedAt: string
+                          preTitle?: string | null
+                          title: string
+                          lead?: string | null
                           slug: string
                           breaking: boolean
-                          lead?: string | null
-                          publishedAt: string
                           tags: Array<string>
-                          title: string
                           url: string
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
@@ -9233,12 +9269,14 @@ export type FullNavigationFragment = {
                       article?: {
                         __typename?: 'Article'
                         id: string
+                        publishedAt: string
+                        updatedAt: string
+                        preTitle?: string | null
+                        title: string
+                        lead?: string | null
                         slug: string
                         breaking: boolean
-                        lead?: string | null
-                        publishedAt: string
                         tags: Array<string>
-                        title: string
                         url: string
                         socialMediaDescription?: string | null
                         socialMediaTitle?: string | null
@@ -9669,12 +9707,14 @@ export type FullNavigationFragment = {
                         article?: {
                           __typename?: 'Article'
                           id: string
+                          publishedAt: string
+                          updatedAt: string
+                          preTitle?: string | null
+                          title: string
+                          lead?: string | null
                           slug: string
                           breaking: boolean
-                          lead?: string | null
-                          publishedAt: string
                           tags: Array<string>
-                          title: string
                           url: string
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
@@ -10148,12 +10188,14 @@ export type NavigationListQuery = {
           article?: {
             __typename?: 'Article'
             id: string
+            publishedAt: string
+            updatedAt: string
+            preTitle?: string | null
+            title: string
+            lead?: string | null
             slug: string
             breaking: boolean
-            lead?: string | null
-            publishedAt: string
             tags: Array<string>
-            title: string
             url: string
             socialMediaDescription?: string | null
             socialMediaTitle?: string | null
@@ -10248,12 +10290,14 @@ export type NavigationListQuery = {
                         article?: {
                           __typename?: 'Article'
                           id: string
+                          publishedAt: string
+                          updatedAt: string
+                          preTitle?: string | null
+                          title: string
+                          lead?: string | null
                           slug: string
                           breaking: boolean
-                          lead?: string | null
-                          publishedAt: string
                           tags: Array<string>
-                          title: string
                           url: string
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
@@ -10692,12 +10736,14 @@ export type NavigationListQuery = {
                           article?: {
                             __typename?: 'Article'
                             id: string
+                            publishedAt: string
+                            updatedAt: string
+                            preTitle?: string | null
+                            title: string
+                            lead?: string | null
                             slug: string
                             breaking: boolean
-                            lead?: string | null
-                            publishedAt: string
                             tags: Array<string>
-                            title: string
                             url: string
                             socialMediaDescription?: string | null
                             socialMediaTitle?: string | null
@@ -11296,12 +11342,14 @@ export type NavigationListQuery = {
                         article?: {
                           __typename?: 'Article'
                           id: string
+                          publishedAt: string
+                          updatedAt: string
+                          preTitle?: string | null
+                          title: string
+                          lead?: string | null
                           slug: string
                           breaking: boolean
-                          lead?: string | null
-                          publishedAt: string
                           tags: Array<string>
-                          title: string
                           url: string
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
@@ -11740,12 +11788,14 @@ export type NavigationListQuery = {
                           article?: {
                             __typename?: 'Article'
                             id: string
+                            publishedAt: string
+                            updatedAt: string
+                            preTitle?: string | null
+                            title: string
+                            lead?: string | null
                             slug: string
                             breaking: boolean
-                            lead?: string | null
-                            publishedAt: string
                             tags: Array<string>
-                            title: string
                             url: string
                             socialMediaDescription?: string | null
                             socialMediaTitle?: string | null
@@ -12222,12 +12272,14 @@ export type NavigationQuery = {
           article?: {
             __typename?: 'Article'
             id: string
+            publishedAt: string
+            updatedAt: string
+            preTitle?: string | null
+            title: string
+            lead?: string | null
             slug: string
             breaking: boolean
-            lead?: string | null
-            publishedAt: string
             tags: Array<string>
-            title: string
             url: string
             socialMediaDescription?: string | null
             socialMediaTitle?: string | null
@@ -12322,12 +12374,14 @@ export type NavigationQuery = {
                         article?: {
                           __typename?: 'Article'
                           id: string
+                          publishedAt: string
+                          updatedAt: string
+                          preTitle?: string | null
+                          title: string
+                          lead?: string | null
                           slug: string
                           breaking: boolean
-                          lead?: string | null
-                          publishedAt: string
                           tags: Array<string>
-                          title: string
                           url: string
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
@@ -12766,12 +12820,14 @@ export type NavigationQuery = {
                           article?: {
                             __typename?: 'Article'
                             id: string
+                            publishedAt: string
+                            updatedAt: string
+                            preTitle?: string | null
+                            title: string
+                            lead?: string | null
                             slug: string
                             breaking: boolean
-                            lead?: string | null
-                            publishedAt: string
                             tags: Array<string>
-                            title: string
                             url: string
                             socialMediaDescription?: string | null
                             socialMediaTitle?: string | null
@@ -13370,12 +13426,14 @@ export type NavigationQuery = {
                         article?: {
                           __typename?: 'Article'
                           id: string
+                          publishedAt: string
+                          updatedAt: string
+                          preTitle?: string | null
+                          title: string
+                          lead?: string | null
                           slug: string
                           breaking: boolean
-                          lead?: string | null
-                          publishedAt: string
                           tags: Array<string>
-                          title: string
                           url: string
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
@@ -13814,12 +13872,14 @@ export type NavigationQuery = {
                           article?: {
                             __typename?: 'Article'
                             id: string
+                            publishedAt: string
+                            updatedAt: string
+                            preTitle?: string | null
+                            title: string
+                            lead?: string | null
                             slug: string
                             breaking: boolean
-                            lead?: string | null
-                            publishedAt: string
                             tags: Array<string>
-                            title: string
                             url: string
                             socialMediaDescription?: string | null
                             socialMediaTitle?: string | null
@@ -14449,12 +14509,14 @@ export type FullPageFragment = {
               article?: {
                 __typename?: 'Article'
                 id: string
+                publishedAt: string
+                updatedAt: string
+                preTitle?: string | null
+                title: string
+                lead?: string | null
                 slug: string
                 breaking: boolean
-                lead?: string | null
-                publishedAt: string
                 tags: Array<string>
-                title: string
                 url: string
                 socialMediaDescription?: string | null
                 socialMediaTitle?: string | null
@@ -14863,12 +14925,14 @@ export type FullPageFragment = {
                 article?: {
                   __typename?: 'Article'
                   id: string
+                  publishedAt: string
+                  updatedAt: string
+                  preTitle?: string | null
+                  title: string
+                  lead?: string | null
                   slug: string
                   breaking: boolean
-                  lead?: string | null
-                  publishedAt: string
                   tags: Array<string>
-                  title: string
                   url: string
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
@@ -15407,12 +15471,14 @@ export type PageQuery = {
                 article?: {
                   __typename?: 'Article'
                   id: string
+                  publishedAt: string
+                  updatedAt: string
+                  preTitle?: string | null
+                  title: string
+                  lead?: string | null
                   slug: string
                   breaking: boolean
-                  lead?: string | null
-                  publishedAt: string
                   tags: Array<string>
-                  title: string
                   url: string
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
@@ -15821,12 +15887,14 @@ export type PageQuery = {
                   article?: {
                     __typename?: 'Article'
                     id: string
+                    publishedAt: string
+                    updatedAt: string
+                    preTitle?: string | null
+                    title: string
+                    lead?: string | null
                     slug: string
                     breaking: boolean
-                    lead?: string | null
-                    publishedAt: string
                     tags: Array<string>
-                    title: string
                     url: string
                     socialMediaDescription?: string | null
                     socialMediaTitle?: string | null
@@ -16994,6 +17062,11 @@ export const FullAuthorFragmentDoc = gql`
 export const ArticleWithoutBlocksFragmentDoc = gql`
   fragment ArticleWithoutBlocks on Article {
     id
+    publishedAt
+    updatedAt
+    preTitle
+    title
+    lead
     slug
     breaking
     lead

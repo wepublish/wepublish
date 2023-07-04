@@ -23,6 +23,7 @@ import {
   BuilderTeaserProps,
   BuilderTitleBlockProps
 } from './blocks.interface'
+import {BuilderCommentListItemProps, BuilderCommentListProps} from './comment.interface'
 import {
   BuilderEventListItemProps,
   BuilderEventListProps,
@@ -43,8 +44,12 @@ import {BuilderPayInvoicesProps} from './pay-invoices.interface'
 import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
 import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
-import {BuilderAlertProps, BuilderButtonProps, BuilderTextFieldProps} from './ui.interface'
-import {BuilderCommentListItemProps, BuilderCommentListProps} from './comment.interface'
+import {
+  BuilderAlertProps,
+  BuilderButtonProps,
+  BuilderIconButtonProps,
+  BuilderTextFieldProps
+} from './ui.interface'
 
 const NoComponent = () => null
 
@@ -73,6 +78,7 @@ export type WebsiteBuilderComponents = {
     Alert: ComponentType<BuilderAlertProps>
     TextField: ComponentType<BuilderTextFieldProps>
     Button: ComponentType<BuilderButtonProps>
+    IconButton: ComponentType<BuilderIconButtonProps>
     H1: ComponentType<BuilderHeadingProps>
     H2: ComponentType<BuilderHeadingProps>
     H3: ComponentType<BuilderHeadingProps>
@@ -134,6 +140,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     Alert: NoComponent,
     TextField: NoComponent,
     Button: NoComponent,
+    IconButton: NoComponent,
     H1: NoComponent,
     H2: NoComponent,
     H3: NoComponent,

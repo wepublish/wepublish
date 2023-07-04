@@ -3,7 +3,7 @@
 exports[`CommentList Container should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-1ul8u7n"
+    class="css-fucig6"
   >
     <article
       class="css-2klgun"
@@ -5171,7 +5171,7 @@ https://unsplash.it/200/200 200w"
 exports[`CommentList Container should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname css-1ul8u7n"
+    class="extra-classname css-fucig6"
   >
     <article
       class="css-2klgun"
@@ -10339,7 +10339,7 @@ https://unsplash.it/200/200 200w"
 exports[`CommentList Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="css-1ul8u7n"
+    class="css-fucig6"
   >
     <article
       class="css-2klgun"

@@ -165,7 +165,7 @@ export type Comment = {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
   calculatedRatings?: Maybe<Array<Maybe<CalculatedRating>>>;
-  children: Array<Comment>;
+  children?: Maybe<Array<Maybe<Comment>>>;
   createdAt: Scalars['DateTime'];
   guestUserImage?: Maybe<Image>;
   guestUsername?: Maybe<Scalars['String']>;
@@ -276,6 +276,8 @@ export type Event = {
   __typename?: 'Event';
   description?: Maybe<Scalars['RichText']>;
   endsAt?: Maybe<Scalars['DateTime']>;
+  externalSourceId?: Maybe<Scalars['String']>;
+  externalSourceName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   image?: Maybe<Image>;
   location?: Maybe<Scalars['String']>;
@@ -969,6 +971,8 @@ export type Query = {
   event: Event;
   /** This query returns a list of events */
   events?: Maybe<EventConnection>;
+  /** This query returns a list of original ids of imported events */
+  importedEventsIds?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** This query returns the invoices  of the authenticated user. */
   invoices: Array<Invoice>;
   /** This query returns the user. */

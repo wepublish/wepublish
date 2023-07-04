@@ -1,0 +1,51 @@
+fragment ImportableEventRef on Event {
+  id
+  name
+  description
+  status
+  location
+  externalSourceId
+  externalSourceName
+  imageUrl
+  startsAt
+  endsAt
+}
+
+# queries
+query ImportedEventList(
+  $filter: ImportedEventFilter
+  $order: Int
+  $skip: Int
+  $take: Int
+  $sort: ImportedEventSort
+) {
+  importedEvents(filter: $filter, order: $order, skip: $skip, take: $take, sort: $sort) {
+    nodes {
+      ...ImportableEventRef
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query ImportedEvent($filter: SingleEventFilter!) {
+  importedEvent(filter: $filter) {
+    ...ImportableEventRef
+  }
+}
+
+query ImportedEventsIds {
+  importedEventsIds
+}
+
+# mutations
+mutation createEvent($filter: CreateEventArgs!) {
+  createEvent(filter: $filter)
+}

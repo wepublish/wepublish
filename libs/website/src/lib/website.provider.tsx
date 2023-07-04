@@ -1,4 +1,4 @@
-import {TextField, ThemeProvider} from '@mui/material'
+import {GlobalStyles, Theme, ThemeProvider, css, TextField} from '@mui/material'
 import {Article} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {Author, AuthorChip} from '@wepublish/author/website'
@@ -27,6 +27,7 @@ import {
   H4,
   H5,
   H6,
+  IconButton,
   Link,
   ListItem,
   OrderedList,
@@ -43,6 +44,25 @@ import {CommentList, CommentListItem} from '@wepublish/comments/website'
 export type WebsiteProps = PropsWithChildren
 
 const dateFormatter = (date: Date) => format(date, 'dd.MM.yyyy HH:mm')
+
+const styles = (theme: Theme) => css`
+  html {
+    font-family: ${theme.typography.fontFamily};
+  }
+
+  * {
+    text-wrap: pretty;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
+`
 
 export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
   <ThemeProvider theme={theme}>
@@ -66,6 +86,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           TextField,
           Alert,
           Button,
+          IconButton,
           H1,
           H2,
           H3,
@@ -94,6 +115,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         date={{
           format: dateFormatter
         }}>
+        <GlobalStyles styles={styles} />
         {children}
       </WebsiteBuilderProvider>
     </IconContext.Provider>

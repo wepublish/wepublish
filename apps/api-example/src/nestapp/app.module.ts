@@ -1,17 +1,20 @@
-import {Module, Global} from '@nestjs/common'
-import {ApiModule} from '@wepublish/nest-modules'
-import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
-import {
-  SettingModule,
-  DashboardModule,
-  AuthenticationModule,
-  PermissionModule,
-  ConsentModule,
-  MediaAdapterService,
-  KarmaMediaAdapter
-} from '@wepublish/api'
+import {Global, Module} from '@nestjs/common'
 import {ConfigModule, ConfigService} from '@nestjs/config'
+import {GraphQLModule} from '@nestjs/graphql'
+import {
+  AgendaBaselService,
+  AuthenticationModule,
+  ConsentModule,
+  DashboardModule,
+  EventsImportModule,
+  KarmaMediaAdapter,
+  MediaAdapterService,
+  PermissionModule,
+  SettingModule
+} from '@wepublish/api'
+import {ApiModule} from '@wepublish/nest-modules'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 import {URL} from 'url'
 import {JobsModule} from '@wepublish/jobs'
 
@@ -20,6 +23,7 @@ import {JobsModule} from '@wepublish/jobs'
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
+      resolvers: {RichText: GraphQLRichText},
       autoSchemaFile: './apps/api-example/schema-v2.graphql',
       sortSchema: true,
       path: 'v2',
@@ -35,6 +39,10 @@ import {JobsModule} from '@wepublish/jobs'
     PermissionModule,
     ConsentModule,
     SettingModule,
+    EventsImportModule.registerAsync({
+      useFactory: (agendaBasel: AgendaBaselService) => [agendaBasel],
+      inject: [AgendaBaselService]
+    }),
     JobsModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({

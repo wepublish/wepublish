@@ -1,5 +1,5 @@
 import {GraphQLScalarType, valueFromASTUntyped} from 'graphql'
-import {isObject, isString, isArray, isBoolean} from '../utility'
+import {is} from 'ramda'
 
 export enum ElementNodeType {
   H1 = 'heading-one',
@@ -118,7 +118,7 @@ const TableCellNodeFieldsArr: string[] = [
 const ElementNodeTypeArr: string[] = Object.values(ElementNodeType)
 
 export function parseRichTextNode(value: unknown, path: string[] = []): RichTextNode {
-  if (!isObject(value)) {
+  if (!is(Object, value)) {
     throw createRichTextError(`Expected object, found ${value}.`, path)
   }
 
@@ -136,37 +136,37 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
       }
     }
 
-    if (!isString(value.text)) {
+    if (!is(String, value.text)) {
       throw createRichTextError(`Expected string found ${value.text}`, [...path, 'text'])
     }
 
-    if (value.bold != undefined && !isBoolean(value.bold)) {
+    if (value.bold != undefined && !is(Boolean, value.bold)) {
       throw createRichTextError(`Expected boolean found ${value.bold}`, [...path, 'bold'])
     }
 
-    if (value.italic != undefined && !isBoolean(value.italic)) {
+    if (value.italic != undefined && !is(Boolean, value.italic)) {
       throw createRichTextError(`Expected boolean found ${value.italic}`, [...path, 'italic'])
     }
 
-    if (value.underline != undefined && !isBoolean(value.underline)) {
+    if (value.underline != undefined && !is(Boolean, value.underline)) {
       throw createRichTextError(`Expected boolean found ${value.underline}`, [...path, 'underline'])
     }
 
-    if (value.strikethrough != undefined && !isBoolean(value.strikethrough)) {
+    if (value.strikethrough != undefined && !is(Boolean, value.strikethrough)) {
       throw createRichTextError(`Expected boolean found ${value.strikethrough}`, [
         ...path,
         'strikethrough'
       ])
     }
 
-    if (value.superscript != undefined && !isBoolean(value.superscript)) {
+    if (value.superscript != undefined && !is(Boolean, value.superscript)) {
       throw createRichTextError(`Expected boolean found ${value.superscript}`, [
         ...path,
         'superscript'
       ])
     }
 
-    if (value.subscript != undefined && !isBoolean(value.subscript)) {
+    if (value.subscript != undefined && !is(Boolean, value.subscript)) {
       throw createRichTextError(`Expected boolean found ${value.subscript}`, [...path, 'subscript'])
     }
 
@@ -199,11 +199,11 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
       }
     }
 
-    if (!isArray(value.children)) {
+    if (!Array.isArray(value.children)) {
       throw createRichTextError(`Expected array found ${value.children}`, [...path, 'children'])
     }
 
-    if (!isString(value.type) || !ElementNodeTypeArr.includes(value.type)) {
+    if (!is(String, value.type) || !ElementNodeTypeArr.includes(value.type)) {
       throw createRichTextError(
         `Expected one of ${JSON.stringify(ElementNodeTypeArr)} found ${value.type}`,
         [...path, 'type']
@@ -214,12 +214,12 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
 
     switch (type) {
       case ElementNodeType.Link: {
-        if (!isString(value.url)) {
+        if (!is(String, value.url)) {
           // TODO: Check URL for malicious content.
           throw createRichTextError(`Expected string found ${value.url}`, [...path, 'url'])
         }
 
-        if (value.title != undefined && !isString(value.title)) {
+        if (value.title != undefined && !is(String, value.title)) {
           throw createRichTextError(`Expected string found ${value.title}`, [...path, 'title'])
         }
 
@@ -234,7 +234,7 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
       }
 
       case ElementNodeType.TableCell: {
-        if (!isString(value.borderColor)) {
+        if (!is(String, value.borderColor)) {
           // TODO: Check URL for malicious content.
           throw createRichTextError(`Expected string found ${value.borderColor}`, [
             ...path,

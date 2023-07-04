@@ -1,5 +1,10 @@
 fragment ArticleWithoutBlocks on Article {
   id
+  publishedAt
+  updatedAt
+  preTitle
+  title
+  lead
   slug
   breaking
   lead
