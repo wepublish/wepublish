@@ -27,8 +27,66 @@ fragment BlockWithoutTeaser on Block {
   }
 }
 
+fragment FullTeaser on Teaser {
+  ... on ArticleTeaser {
+    style
+
+    image {
+      ...FullImage
+    }
+
+    preTitle
+    title
+    lead
+
+    article {
+      ...ArticleWithoutBlocks
+
+      blocks {
+        ...BlockWithoutTeaser
+      }
+    }
+  }
+
+  ... on PageTeaser {
+    style
+
+    image {
+      ...FullImage
+    }
+
+    preTitle
+    title
+    lead
+
+    page {
+      ...PageWithoutBlocks
+
+      blocks {
+        ...BlockWithoutTeaser
+      }
+    }
+  }
+
+  ... on CustomTeaser {
+    style
+
+    image {
+      ...FullImage
+    }
+
+    preTitle
+    title
+    lead
+    contentUrl
+    properties {
+      key
+      value
+    }
+  }
+}
+
 fragment FullBlock on Block {
-  __typename
   ...BlockWithoutTeaser
 
   ... on TeaserGridFlexBlock {
@@ -41,69 +99,15 @@ fragment FullBlock on Block {
       }
 
       teaser {
-        ... on ArticleTeaser {
-          style
-
-          image {
-            ...FullImage
-          }
-
-          preTitle
-          title
-          lead
-
-          article {
-            id
-            title
-            preTitle
-            lead
-            url
-            blocks {
-              ...BlockWithoutTeaser
-            }
-          }
-        }
-
-        ... on PageTeaser {
-          style
-
-          image {
-            ...FullImage
-          }
-
-          preTitle
-          title
-          lead
-
-          page {
-            id
-            title
-            description
-            url
-            blocks {
-              __typename
-              ...BlockWithoutTeaser
-            }
-          }
-        }
-
-        ... on CustomTeaser {
-          style
-
-          image {
-            ...FullImage
-          }
-
-          preTitle
-          title
-          lead
-          contentUrl
-          properties {
-            key
-            value
-          }
-        }
+        ...FullTeaser
       }
     }
+  }
+
+  ... on TeaserGridBlock {
+    teasers {
+      ...FullTeaser
+    }
+    numColumns
   }
 }

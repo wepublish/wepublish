@@ -11,11 +11,18 @@ import {
 import Head from 'next/head'
 import Script from 'next/script'
 import {ComponentType, PropsWithChildren, memo, useCallback, useState} from 'react'
+import {InMemoryCache} from '@apollo/client'
+
+const cache = new InMemoryCache({
+  possibleTypes: ApiV1.possibleTypes.possibleTypes,
+  resultCaching: false,
+  addTypename: false
+})
 
 export const parameters = {
   apolloClient: {
     MockedProvider,
-    addTypename: false
+    cache
   },
   options: {
     storySort: {

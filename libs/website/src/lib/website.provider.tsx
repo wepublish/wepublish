@@ -9,6 +9,7 @@ import {
   QuoteBlock,
   RichTextBlock,
   Teaser,
+  TeaserGridBlock,
   TeaserGridFlexBlock,
   TitleBlock
 } from '@wepublish/block-content/website'
@@ -104,6 +105,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           HTML: HtmlBlock,
           RichText: RichTextBlock,
           TeaserGridFlex: TeaserGridFlexBlock,
+          TeaserGrid: TeaserGridBlock,
           Teaser
         }}
         richtext={{RenderElement, RenderLeaf}}
