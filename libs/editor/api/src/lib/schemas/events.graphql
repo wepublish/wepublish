@@ -4,6 +4,8 @@ fragment EventRef on Event {
   description
   status
   location
+  externalSourceId
+  externalSourceName
   image {
     ...ImageRef
   }
@@ -45,6 +47,10 @@ query Event($id: ID!) {
   }
 }
 
+query ImportedEventsIds {
+  importedEventsIds
+}
+
 mutation CreateEvent(
   $name: String!
   $description: RichText
@@ -53,6 +59,8 @@ mutation CreateEvent(
   $endsAt: DateTime
   $imageId: ID
   $tagIds: [ID!]
+  $externalSourceId: String
+  $externalSourceName: String
 ) {
   createEvent(
     name: $name
@@ -62,6 +70,8 @@ mutation CreateEvent(
     endsAt: $endsAt
     imageId: $imageId
     tagIds: $tagIds
+    externalSourceId: $externalSourceId
+    externalSourceName: $externalSourceName
   ) {
     ...EventRef
   }
@@ -77,6 +87,8 @@ mutation UpdateEvent(
   $endsAt: DateTime
   $imageId: ID
   $tagIds: [ID!]
+  $externalSourceId: String
+  $externalSourceName: String
 ) {
   updateEvent(
     id: $id
@@ -88,6 +100,8 @@ mutation UpdateEvent(
     endsAt: $endsAt
     imageId: $imageId
     tagIds: $tagIds
+    externalSourceId: $externalSourceId
+    externalSourceName: $externalSourceName
   ) {
     ...EventRef
   }

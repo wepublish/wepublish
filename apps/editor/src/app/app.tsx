@@ -11,6 +11,7 @@ import {
   UserConsentList
 } from '@wepublish/consent/editor'
 import {TagType} from '@wepublish/editor/api'
+import {ImportableEventListView} from '@wepublish/events/import/editor'
 import {
   AuthContext,
   AuthDispatchActionType,
@@ -351,6 +352,15 @@ export function App() {
               element={
                 <Base>
                   <TagList type={TagType.Event} />
+                </Base>
+              }
+            />
+
+            <Route
+              path="events/import"
+              element={
+                <Base>
+                  <ImportableEventListView />
                 </Base>
               }
             />

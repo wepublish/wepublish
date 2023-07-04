@@ -1,4 +1,4 @@
-import {RichTextNode} from '../graphql/richText'
+import {RichTextNode} from '@wepublish/richtext/api'
 
 export interface AuthorLink {
   title: string

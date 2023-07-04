@@ -14,7 +14,7 @@ import {
   CanTakeActionOnComment,
   CanUpdateComments
 } from '@wepublish/permissions/api'
-import {RichTextNode} from '../richText'
+import {RichTextNode} from '@wepublish/richtext/api'
 
 export const takeActionOnComment = (
   id: string,

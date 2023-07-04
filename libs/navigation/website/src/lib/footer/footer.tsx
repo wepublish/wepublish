@@ -1,6 +1,6 @@
 import {Container, css, styled} from '@mui/material'
 import {BuilderFooterProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {NavigationQuery} from '@wepublish/website/api'
+import {navigationLinkToUrl} from '../link-to-url'
 
 const FooterWrapper = styled('footer')`
   align-self: flex-end;
@@ -37,22 +37,7 @@ const FooterLinks = styled('nav')`
   `}
 `
 
-export type FooterProps = BuilderFooterProps
-
-const navigationLinkToUrl = <T extends NonNullable<NavigationQuery['navigation']>>(
-  link: T['links'][number]
-): string | undefined => {
-  switch (link.__typename) {
-    case 'ArticleNavigationLink':
-      return link.article?.url
-    case 'PageNavigationLink':
-      return link.page?.url
-    case 'ExternalNavigationLink':
-      return link.url
-  }
-}
-
-export function Footer({className, data, loading, error, children}: FooterProps) {
+export function Footer({className, data, loading, error, children}: BuilderFooterProps) {
   const {
     elements: {Link}
   } = useWebsiteBuilder()

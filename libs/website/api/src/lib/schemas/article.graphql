@@ -1,5 +1,10 @@
 fragment ArticleWithoutBlocks on Article {
   id
+  publishedAt
+  updatedAt
+  preTitle
+  title
+  lead
   slug
   breaking
   lead
@@ -7,7 +12,6 @@ fragment ArticleWithoutBlocks on Article {
   tags
   title
   url
-
   authors {
     ...FullAuthor
   }
