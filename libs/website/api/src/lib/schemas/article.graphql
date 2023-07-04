@@ -1,4 +1,4 @@
-fragment ArticleWithoutTeasers on Article {
+fragment ArticleWithoutBlocks on Article {
   id
   publishedAt
   updatedAt
@@ -6,127 +6,32 @@ fragment ArticleWithoutTeasers on Article {
   title
   lead
   slug
-  url
+  breaking
+  lead
+  publishedAt
   tags
-  blocks {
-    __typename
-
-    ... on TitleBlock {
-      title
-      lead
-    }
-
-    ... on ImageBlock {
-      caption
-      image {
-        ...FullImage
-      }
-    }
-
-    ... on QuoteBlock {
-      quote
-      author
-    }
-
-    ... on RichTextBlock {
-      richText
-    }
-
-    ... on HTMLBlock {
-      html
-    }
+  title
+  url
+  authors {
+    ...FullAuthor
   }
 
   image {
     ...FullImage
   }
+
+  socialMediaDescription
+  socialMediaTitle
+  socialMediaImage {
+    ...FullImage
+  }
 }
 
 fragment FullArticle on Article {
-  ...ArticleWithoutTeasers
+  ...ArticleWithoutBlocks
+
   blocks {
-    ... on TeaserGridFlexBlock {
-      flexTeasers {
-        alignment {
-          x
-          y
-          w
-          h
-        }
-
-        teaser {
-          ... on ArticleTeaser {
-            style
-
-            image {
-              ...FullImage
-            }
-
-            preTitle
-            title
-            lead
-
-            article {
-              ...ArticleWithoutTeasers
-            }
-          }
-
-          ... on PageTeaser {
-            style
-
-            image {
-              ...FullImage
-            }
-
-            preTitle
-            title
-            lead
-
-            page {
-              id
-              title
-              description
-              url
-              blocks {
-                __typename
-
-                ... on TitleBlock {
-                  title
-                  lead
-                }
-
-                ... on ImageBlock {
-                  caption
-                  image {
-                    ...FullImage
-                  }
-                }
-              }
-            }
-          }
-
-          ... on CustomTeaser {
-            style
-
-            image {
-              ...FullImage
-            }
-
-            preTitle
-            title
-            lead
-            contentUrl
-            properties {
-              key
-              value
-            }
-          }
-        }
-      }
-    }
-  }
-  authors {
-    ...FullAuthor
+    ...FullBlock
   }
 }
 

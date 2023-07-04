@@ -7,6 +7,7 @@ import {isRichTextBlock} from './richtext-block'
 import {isTeaserGridFlexBlock} from './teaser-grid-flex-block'
 import {isTitleBlock} from './title-block'
 import {cond} from 'ramda'
+import {isTeaserGridBlock} from './teaser-grid-block'
 
 export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
   const {blocks} = useWebsiteBuilder()
@@ -17,7 +18,8 @@ export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
     [isQuoteBlock, block => <blocks.Quote {...block} />],
     [isRichTextBlock, block => <blocks.RichText {...block} />],
     [isHtmlBlock, block => <blocks.HTML {...block} />],
-    [isTeaserGridFlexBlock, block => <blocks.TeaserGridFlex {...block} />]
+    [isTeaserGridFlexBlock, block => <blocks.TeaserGridFlex {...block} />],
+    [isTeaserGridBlock, block => <blocks.TeaserGrid {...block} />]
   ])(block)
 }
 
