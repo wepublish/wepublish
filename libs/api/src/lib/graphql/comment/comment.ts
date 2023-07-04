@@ -320,7 +320,7 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
       peerId: {type: GraphQLID},
 
       children: {
-        type: GraphQLList(GraphQLPublicComment),
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
         resolve: createProxyingResolver(({id, userID}, _, {prisma: {comment}}) =>
           getPublicChildrenCommentsByParentId(id, userID ?? null, comment)
         )

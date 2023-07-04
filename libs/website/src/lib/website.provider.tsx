@@ -38,6 +38,7 @@ import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {format} from 'date-fns'
 import {PropsWithChildren, memo} from 'react'
 import {IconContext} from 'react-icons'
+import {CommentList, CommentListItem} from '@wepublish/comments/website'
 
 export type WebsiteProps = PropsWithChildren
 
@@ -56,6 +57,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         EventSEO={EventSEO}
         EventList={EventList}
         EventListItem={EventListItem}
+        CommentList={CommentList}
+        CommentListItem={CommentListItem}
         Page={Page}
         LoginForm={LoginForm}
         RegistrationForm={RegistrationForm}

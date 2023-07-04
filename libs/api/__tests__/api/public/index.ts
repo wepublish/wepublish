@@ -165,7 +165,7 @@ export type Comment = {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
   calculatedRatings?: Maybe<Array<Maybe<CalculatedRating>>>;
-  children?: Maybe<Array<Maybe<Comment>>>;
+  children: Array<Comment>;
   createdAt: Scalars['DateTime'];
   guestUserImage?: Maybe<Image>;
   guestUsername?: Maybe<Scalars['String']>;
