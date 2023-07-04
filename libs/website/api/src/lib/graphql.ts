@@ -1390,6 +1390,8 @@ export type ArticleWithoutBlocksFragment = {
     slug: string
     bio?: Node[] | null
     url: string
+    createdAt: string
+    modifiedAt: string
     links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
     image?: {
       __typename?: 'Image'
@@ -1662,6 +1664,8 @@ export type FullArticleFragment = {
                   slug: string
                   bio?: Node[] | null
                   url: string
+                  createdAt: string
+                  modifiedAt: string
                   links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
                   image?: {
                     __typename?: 'Image'
@@ -2078,6 +2082,8 @@ export type FullArticleFragment = {
                     slug: string
                     bio?: Node[] | null
                     url: string
+                    createdAt: string
+                    modifiedAt: string
                     links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
                     image?: {
                       __typename?: 'Image'
@@ -2388,6 +2394,8 @@ export type FullArticleFragment = {
     slug: string
     bio?: Node[] | null
     url: string
+    createdAt: string
+    modifiedAt: string
     links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
     image?: {
       __typename?: 'Image'
@@ -2667,6 +2675,8 @@ export type ArticleQuery = {
                     slug: string
                     bio?: Node[] | null
                     url: string
+                    createdAt: string
+                    modifiedAt: string
                     links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
                     image?: {
                       __typename?: 'Image'
@@ -3083,6 +3093,8 @@ export type ArticleQuery = {
                       slug: string
                       bio?: Node[] | null
                       url: string
+                      createdAt: string
+                      modifiedAt: string
                       links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
                       image?: {
                         __typename?: 'Image'
@@ -3393,6 +3405,8 @@ export type ArticleQuery = {
       slug: string
       bio?: Node[] | null
       url: string
+      createdAt: string
+      modifiedAt: string
       links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
       image?: {
         __typename?: 'Image'
@@ -3674,6 +3688,8 @@ export type PeerArticleQuery = {
                     slug: string
                     bio?: Node[] | null
                     url: string
+                    createdAt: string
+                    modifiedAt: string
                     links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
                     image?: {
                       __typename?: 'Image'
@@ -4090,6 +4106,8 @@ export type PeerArticleQuery = {
                       slug: string
                       bio?: Node[] | null
                       url: string
+                      createdAt: string
+                      modifiedAt: string
                       links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
                       image?: {
                         __typename?: 'Image'
@@ -4400,6 +4418,8 @@ export type PeerArticleQuery = {
       slug: string
       bio?: Node[] | null
       url: string
+      createdAt: string
+      modifiedAt: string
       links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
       image?: {
         __typename?: 'Image'
@@ -4500,6 +4520,8 @@ export type FullAuthorFragment = {
   slug: string
   bio?: Node[] | null
   url: string
+  createdAt: string
+  modifiedAt: string
   links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
   image?: {
     __typename?: 'Image'
@@ -4547,6 +4569,8 @@ export type AuthorQuery = {
     slug: string
     bio?: Node[] | null
     url: string
+    createdAt: string
+    modifiedAt: string
     links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
     image?: {
       __typename?: 'Image'
@@ -4581,7 +4605,7 @@ export type AuthorQuery = {
 }
 
 export type AuthorListQueryVariables = Exact<{
-  filter?: InputMaybe<Scalars['String']>
+  filter?: InputMaybe<AuthorFilter>
   cursor?: InputMaybe<Scalars['ID']>
   take?: InputMaybe<Scalars['Int']>
   skip?: InputMaybe<Scalars['Int']>
@@ -4600,6 +4624,8 @@ export type AuthorListQuery = {
       slug: string
       bio?: Node[] | null
       url: string
+      createdAt: string
+      modifiedAt: string
       links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
       image?: {
         __typename?: 'Image'
@@ -4866,6 +4892,8 @@ type FullTeaser_ArticleTeaser_Fragment = {
       slug: string
       bio?: Node[] | null
       url: string
+      createdAt: string
+      modifiedAt: string
       links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
       image?: {
         __typename?: 'Image'
@@ -5357,6 +5385,8 @@ type FullBlock_TeaserGridBlock_Fragment = {
             slug: string
             bio?: Node[] | null
             url: string
+            createdAt: string
+            modifiedAt: string
             links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
             image?: {
               __typename?: 'Image'
@@ -5774,6 +5804,8 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
               slug: string
               bio?: Node[] | null
               url: string
+              createdAt: string
+              modifiedAt: string
               links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
               image?: {
                 __typename?: 'Image'
@@ -6646,6 +6678,8 @@ export type FullNavigationFragment = {
                           slug: string
                           bio?: Node[] | null
                           url: string
+                          createdAt: string
+                          modifiedAt: string
                           links?: Array<{
                             __typename?: 'AuthorLink'
                             title: string
@@ -7088,6 +7122,8 @@ export type FullNavigationFragment = {
                             slug: string
                             bio?: Node[] | null
                             url: string
+                            createdAt: string
+                            modifiedAt: string
                             links?: Array<{
                               __typename?: 'AuthorLink'
                               title: string
@@ -7414,6 +7450,8 @@ export type FullNavigationFragment = {
             slug: string
             bio?: Node[] | null
             url: string
+            createdAt: string
+            modifiedAt: string
             links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
             image?: {
               __typename?: 'Image'
@@ -7690,6 +7728,8 @@ export type FullNavigationFragment = {
                           slug: string
                           bio?: Node[] | null
                           url: string
+                          createdAt: string
+                          modifiedAt: string
                           links?: Array<{
                             __typename?: 'AuthorLink'
                             title: string
@@ -8132,6 +8172,8 @@ export type FullNavigationFragment = {
                             slug: string
                             bio?: Node[] | null
                             url: string
+                            createdAt: string
+                            modifiedAt: string
                             links?: Array<{
                               __typename?: 'AuthorLink'
                               title: string
@@ -8715,6 +8757,8 @@ export type NavigationListQuery = {
                             slug: string
                             bio?: Node[] | null
                             url: string
+                            createdAt: string
+                            modifiedAt: string
                             links?: Array<{
                               __typename?: 'AuthorLink'
                               title: string
@@ -9161,6 +9205,8 @@ export type NavigationListQuery = {
                               slug: string
                               bio?: Node[] | null
                               url: string
+                              createdAt: string
+                              modifiedAt: string
                               links?: Array<{
                                 __typename?: 'AuthorLink'
                                 title: string
@@ -9487,6 +9533,8 @@ export type NavigationListQuery = {
               slug: string
               bio?: Node[] | null
               url: string
+              createdAt: string
+              modifiedAt: string
               links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
               image?: {
                 __typename?: 'Image'
@@ -9767,6 +9815,8 @@ export type NavigationListQuery = {
                             slug: string
                             bio?: Node[] | null
                             url: string
+                            createdAt: string
+                            modifiedAt: string
                             links?: Array<{
                               __typename?: 'AuthorLink'
                               title: string
@@ -10213,6 +10263,8 @@ export type NavigationListQuery = {
                               slug: string
                               bio?: Node[] | null
                               url: string
+                              createdAt: string
+                              modifiedAt: string
                               links?: Array<{
                                 __typename?: 'AuthorLink'
                                 title: string
@@ -10799,6 +10851,8 @@ export type NavigationQuery = {
                             slug: string
                             bio?: Node[] | null
                             url: string
+                            createdAt: string
+                            modifiedAt: string
                             links?: Array<{
                               __typename?: 'AuthorLink'
                               title: string
@@ -11245,6 +11299,8 @@ export type NavigationQuery = {
                               slug: string
                               bio?: Node[] | null
                               url: string
+                              createdAt: string
+                              modifiedAt: string
                               links?: Array<{
                                 __typename?: 'AuthorLink'
                                 title: string
@@ -11571,6 +11627,8 @@ export type NavigationQuery = {
               slug: string
               bio?: Node[] | null
               url: string
+              createdAt: string
+              modifiedAt: string
               links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
               image?: {
                 __typename?: 'Image'
@@ -11851,6 +11909,8 @@ export type NavigationQuery = {
                             slug: string
                             bio?: Node[] | null
                             url: string
+                            createdAt: string
+                            modifiedAt: string
                             links?: Array<{
                               __typename?: 'AuthorLink'
                               title: string
@@ -12297,6 +12357,8 @@ export type NavigationQuery = {
                               slug: string
                               bio?: Node[] | null
                               url: string
+                              createdAt: string
+                              modifiedAt: string
                               links?: Array<{
                                 __typename?: 'AuthorLink'
                                 title: string
@@ -12926,6 +12988,8 @@ export type FullPageFragment = {
                   slug: string
                   bio?: Node[] | null
                   url: string
+                  createdAt: string
+                  modifiedAt: string
                   links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
                   image?: {
                     __typename?: 'Image'
@@ -13342,6 +13406,8 @@ export type FullPageFragment = {
                     slug: string
                     bio?: Node[] | null
                     url: string
+                    createdAt: string
+                    modifiedAt: string
                     links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
                     image?: {
                       __typename?: 'Image'
@@ -13888,6 +13954,8 @@ export type PageQuery = {
                     slug: string
                     bio?: Node[] | null
                     url: string
+                    createdAt: string
+                    modifiedAt: string
                     links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
                     image?: {
                       __typename?: 'Image'
@@ -14304,6 +14372,8 @@ export type PageQuery = {
                       slug: string
                       bio?: Node[] | null
                       url: string
+                      createdAt: string
+                      modifiedAt: string
                       links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
                       image?: {
                         __typename?: 'Image'
@@ -15232,6 +15302,8 @@ export const FullAuthorFragmentDoc = gql`
     slug
     bio
     url
+    createdAt
+    modifiedAt
     links {
       title
       url
@@ -15602,8 +15674,8 @@ export type AuthorQueryHookResult = ReturnType<typeof useAuthorQuery>
 export type AuthorLazyQueryHookResult = ReturnType<typeof useAuthorLazyQuery>
 export type AuthorQueryResult = Apollo.QueryResult<AuthorQuery, AuthorQueryVariables>
 export const AuthorListDocument = gql`
-  query AuthorList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
-    authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+  query AuthorList($filter: AuthorFilter, $cursor: ID, $take: Int, $skip: Int) {
+    authors(filter: $filter, cursor: $cursor, take: $take, skip: $skip) {
       nodes {
         ...FullAuthor
       }

@@ -5,6 +5,8 @@ fragment FullAuthor on Author {
   slug
   bio
   url
+  createdAt
+  modifiedAt
 
   links {
     title
