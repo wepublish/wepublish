@@ -23,6 +23,11 @@ input ConsentInput {
   slug: String!
 }
 
+input CreateEventArgs {
+  id: String!
+  source: String!
+}
+
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -46,6 +51,45 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Event {
+  createdAt: DateTime!
+  description: RichText!
+  endsAt: DateTime
+  externalSourceId: String!
+  externalSourceName: String!
+  id: String!
+  imageUrl: String
+  location: String!
+  modifiedAt: DateTime!
+  name: String!
+  startsAt: DateTime!
+  status: EventStatus!
+}
+
+enum EventStatus {
+  Cancelled
+  Postponed
+  Rescheduled
+  Scheduled
+}
+
+input ImportedEventFilter {
+  name: String
+}
+
+enum ImportedEventSort {
+  CREATED_AT
+  ENDS_AT
+  MODIFIED_AT
+  STARTS_AT
+}
+
+type ImportedEventsDocument {
+  nodes: [Event!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type Mutation {
   """
   
@@ -53,6 +97,14 @@ type Mutation {
       
   """
   createConsent(consent: ConsentInput!): Consent!
+
+  """
+  
+        Creates and event based on data from importable events list and an id and provider.
+        Also, uploads an image to WePublish Image library.
+      
+  """
+  createEvent(filter: CreateEventArgs!): String!
 
   """
   
@@ -93,6 +145,13 @@ type Mutation {
   updateUserConsent(id: String!, userConsent: UpdateUserConsentInput!): UserConsent!
 }
 
+type PageInfo {
+  endCursor: String!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String!
+}
+
 enum PaymentPeriodicity {
   biannual
   monthly
@@ -130,6 +189,27 @@ type Query {
       
   """
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+
+  """
+  
+        Returns a more detailed version of a single importable event, by id and source (e.g. AgendaBasel).
+      
+  """
+  importedEvent(filter: SingleEventFilter!): Event!
+
+  """
+  
+        Returns a list of imported events from external sources, transformed to match our model.
+      
+  """
+  importedEvents(filter: ImportedEventFilter, order: Int, skip: Int, sort: ImportedEventSort, take: Int): ImportedEventsDocument!
+
+  """
+  
+        Returns a list of external source ids of already imported events.
+      
+  """
+  importedEventsIds: [String!]!
 
   """
   
@@ -176,6 +256,13 @@ type Query {
   """
   userConsents(filter: UserConsentFilter): [UserConsent!]!
   versionInformation: VersionInformation!
+}
+
+scalar RichText
+
+input SingleEventFilter {
+  id: String!
+  source: String!
 }
 
 enum SubscriptionDeactivationReason {
