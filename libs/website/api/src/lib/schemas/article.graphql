@@ -1,7 +1,13 @@
-fragment FullArticle on Article {
+fragment ArticleWithoutTeasers on Article {
   id
+  publishedAt
+  updatedAt
+  preTitle
+  title
+  lead
   slug
   url
+  tags
   blocks {
     __typename
 
@@ -29,7 +35,16 @@ fragment FullArticle on Article {
     ... on HTMLBlock {
       html
     }
+  }
 
+  image {
+    ...FullImage
+  }
+}
+
+fragment FullArticle on Article {
+  ...ArticleWithoutTeasers
+  blocks {
     ... on TeaserGridFlexBlock {
       flexTeasers {
         alignment {
@@ -52,26 +67,7 @@ fragment FullArticle on Article {
             lead
 
             article {
-              id
-              title
-              preTitle
-              lead
-              url
-              blocks {
-                __typename
-
-                ... on TitleBlock {
-                  title
-                  lead
-                }
-
-                ... on ImageBlock {
-                  caption
-                  image {
-                    ...FullImage
-                  }
-                }
-              }
+              ...ArticleWithoutTeasers
             }
           }
 
