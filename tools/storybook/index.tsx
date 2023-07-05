@@ -8,8 +8,6 @@ import {
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
-import Head from 'next/head'
-import Script from 'next/script'
 import {ComponentType, PropsWithChildren, memo, useCallback, useState} from 'react'
 import {InMemoryCache} from '@apollo/client'
 
@@ -71,6 +69,13 @@ const SessionProvider = memo<PropsWithChildren>(({children}) => {
     </SessionTokenContext.Provider>
   )
 })
+
+const Head = ({children}: PropsWithChildren) => <div data-testid="fake-head">{children}</div>
+const Script = ({children, ...data}: PropsWithChildren<any>) => (
+  <script data-testid="fake-script" {...data}>
+    {children}
+  </script>
+)
 
 const withWebsiteProvider = (Story: ComponentType) => (
   <WebsiteProvider>
