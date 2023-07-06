@@ -1,5 +1,12 @@
 import {ApolloServer} from 'apollo-server-express'
-import {ApproveComment, ArticleInput, CreateArticle} from '../api/private'
+import {
+  ApproveComment,
+  ArticleInput,
+  CreateArticle,
+  CreateUser,
+  UpdateComment,
+  UserInput
+} from '../api/private'
 
 import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
 import {AddComment, CommentInput, CommentItemType, Comments} from '../api/public'
@@ -145,5 +152,45 @@ describe('Comments', () => {
     })
 
     expect(getComments.data?.comments[0].user.email).toEqual('dev@wepublish.ch')
+  })
+
+  test('sensitive data of the user associated with the comment is hidden if the user is not me', async () => {
+    // create a new User
+    const newUserEmail = `${generateRandomString()}@wepublish.ch`
+    const input: UserInput = {
+      name: 'Bruce Wayne',
+      email: newUserEmail,
+      emailVerifiedAt: new Date().toISOString(),
+      properties: [],
+      active: true,
+      roleIDs: []
+    }
+    const res = await testServerPrivate.executeOperation({
+      query: CreateUser,
+      variables: {
+        input,
+        password: 'p@$$w0rd'
+      }
+    })
+
+    // update Comment and change related user id
+    await testServerPrivate.executeOperation({
+      query: UpdateComment,
+      variables: {
+        id: commentID,
+        userID: res.data?.createUser.id
+      }
+    })
+
+    // get Comments
+    const getComments = await testServerPublic.executeOperation({
+      query: Comments,
+      variables: {
+        itemID
+      }
+    })
+
+    // I shouldn't be able to see en email of the user if it's not me
+    expect(getComments.data?.comments[0].user.email).toEqual('')
   })
 })

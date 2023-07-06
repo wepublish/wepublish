@@ -6,18 +6,6 @@ fragment FullCommentUser on User {
   flair
   email
 
-  # address {
-  #   ...FullAddress
-  # }
-
-  # paymentProviderCustomers {
-  #   ...FullPaymentProviderCustomer
-  # }
-
-  # oauth2Accounts {
-  #   ...FullOAuth2Account
-  # }
-
   image {
     ...FullImage
   }
@@ -54,17 +42,5 @@ mutation AddComment($input: CommentInput!) {
 query Comments($itemID: ID!, $order: SortOrder, $sort: CommentSort) {
   comments(itemId: $itemID, order: $order, sort: $sort) {
     ...FullComment
-    # nodes {
-    #   ...FullComment
-    # }
-
-    # pageInfo {
-    #   startCursor
-    #   endCursor
-    #   hasNextPage
-    #   hasPreviousPage
-    # }
-
-    # totalCount
   }
 }
