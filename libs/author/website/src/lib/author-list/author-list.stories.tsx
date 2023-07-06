@@ -293,31 +293,6 @@ export const Default = {
   }
 }
 
-export const WithFilters = {
-  args: {
-    data: {
-      authors: {
-        nodes: [
-          {...author, id: '6'},
-          {...author, id: '7'},
-          {...author, id: '8'},
-          {...author, id: '9'},
-          {...author, id: '10'}
-        ],
-        pageInfo: {
-          hasNextPage: false,
-          hasPreviousPage: false,
-          endCursor: null,
-          startCursor: null
-        },
-        totalCount: 5
-      }
-    },
-    variables: {skip: 5, take: 5},
-    onVariablesChange: action('onVariablesChange')
-  }
-}
-
 export const WithLoading = {
   args: {
     data: undefined,

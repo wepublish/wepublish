@@ -3,17 +3,18 @@ import {Theme, styled, css, useTheme} from '@mui/material'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const AuthorListItemImageWrapper = styled('div')`
-  width: 240px;
-  height: 240px;
+  display: grid;
+  width: 100%;
+  aspect-ratio: 1;
 `
 
 export const AuthorListItemContent = styled('div')``
 
 const wrapperStyles = (theme: Theme) => css`
   display: grid;
+  grid-template-rows: max-content 1fr;
   gap: ${theme.spacing(3)};
   width: 240px;
-  align-content: flex-start;
   text-align: center;
   text-decoration: none;
   color: inherit;
