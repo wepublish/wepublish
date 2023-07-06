@@ -8,10 +8,5 @@ export const mapDateFilterToPrisma = (
   return comparison === DateFilterComparison.Equal ? 'equals' : comparison
 }
 
-type IsMeBySessionArgs = {
-  id: string
-  session?: AuthSession
-}
-
-export const isMeBySession = ({id, session}: IsMeBySessionArgs) =>
+export const isMeBySession = (id: string, session: AuthSession) =>
   session?.type === AuthSessionType.User && session.user.id === id

@@ -174,31 +174,31 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
     email: {
       type: GraphQLNonNull(GraphQLString),
       resolve: createProxyingResolver(({email, id}, _, {session}) =>
-        email && isMeBySession({id, session}) ? email : ''
+        email && isMeBySession(id, session) ? email : ''
       )
     },
     preferredName: {
       type: GraphQLString,
       resolve: createProxyingResolver(({preferredName, id}, _, {session}) =>
-        preferredName && isMeBySession({id, session}) ? preferredName : ''
+        preferredName && isMeBySession(id, session) ? preferredName : ''
       )
     },
     address: {
       type: GraphQLUserAddress,
       resolve: createProxyingResolver(({address, id}, _, {session}) =>
-        address && isMeBySession({id, session}) ? address : ''
+        address && isMeBySession(id, session) ? address : ''
       )
     },
     flair: {
       type: GraphQLString,
       resolve: createProxyingResolver(({flair, id}, _, {session}) =>
-        flair && isMeBySession({id, session}) ? flair : ''
+        flair && isMeBySession(id, session) ? flair : ''
       )
     },
     paymentProviderCustomers: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer))),
       resolve: createProxyingResolver(({id}, _, {prisma: {paymentProviderCustomer}, session}) =>
-        id && isMeBySession({id, session})
+        id && isMeBySession(id, session)
           ? paymentProviderCustomer.findMany({
               where: {
                 userId: id
@@ -210,7 +210,7 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
     oauth2Accounts: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOAuth2Account))),
       resolve: createProxyingResolver(({id}, _, {prisma: {userOAuth2Account}, session}) =>
-        id && isMeBySession({id, session})
+        id && isMeBySession(id, session)
           ? userOAuth2Account.findMany({
               where: {
                 userId: id
@@ -222,7 +222,7 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({userImageID, id}, _, {prisma: {image}, session}) =>
-        userImageID && isMeBySession({id, session})
+        userImageID && isMeBySession(id, session)
           ? image.findUnique({
               where: {
                 id: userImageID

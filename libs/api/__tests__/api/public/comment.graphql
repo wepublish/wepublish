@@ -1,4 +1,30 @@
+fragment FullCommentUser on User {
+  id
+  name
+  firstName
+  preferredName
+  flair
+  email
+
+  # address {
+  #   ...FullAddress
+  # }
+
+  # paymentProviderCustomers {
+  #   ...FullPaymentProviderCustomer
+  # }
+
+  # oauth2Accounts {
+  #   ...FullOAuth2Account
+  # }
+
+  image {
+    ...FullImage
+  }
+}
+
 fragment MutationComment on Comment {
+  id
   itemID
   itemType
   user {
@@ -8,8 +34,37 @@ fragment MutationComment on Comment {
   parentID
 }
 
+fragment FullComment on Comment {
+  id
+  user {
+    ...FullCommentUser
+  }
+  createdAt
+  modifiedAt
+  itemID
+  itemType
+}
+
 mutation AddComment($input: CommentInput!) {
   addComment(input: $input) {
     ...MutationComment
+  }
+}
+
+query Comments($itemID: ID!, $order: SortOrder, $sort: CommentSort) {
+  comments(itemId: $itemID, order: $order, sort: $sort) {
+    ...FullComment
+    # nodes {
+    #   ...FullComment
+    # }
+
+    # pageInfo {
+    #   startCursor
+    #   endCursor
+    #   hasNextPage
+    #   hasPreviousPage
+    # }
+
+    # totalCount
   }
 }
