@@ -189,12 +189,7 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
         address && isMeBySession(id, session) ? address : ''
       )
     },
-    flair: {
-      type: GraphQLString,
-      resolve: createProxyingResolver(({flair, id}, _, {session}) =>
-        flair && isMeBySession(id, session) ? flair : ''
-      )
-    },
+    flair: {type: GraphQLString},
     paymentProviderCustomers: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer))),
       resolve: createProxyingResolver(({id}, _, {prisma: {paymentProviderCustomer}, session}) =>
@@ -221,8 +216,8 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
     },
     image: {
       type: GraphQLImage,
-      resolve: createProxyingResolver(({userImageID, id}, _, {prisma: {image}, session}) =>
-        userImageID && isMeBySession(id, session)
+      resolve: createProxyingResolver(({userImageID}, _, {prisma: {image}}) =>
+        userImageID
           ? image.findUnique({
               where: {
                 id: userImageID
