@@ -158,7 +158,10 @@ describe('Comments', () => {
     // create a new User
     const newUserEmail = `${generateRandomString()}@wepublish.ch`
     const input: UserInput = {
-      name: 'Bruce Wayne',
+      name: 'Wayne',
+      firstName: 'Bruce',
+      preferredName: 'Batman',
+      flair: 'Superhero',
       email: newUserEmail,
       emailVerifiedAt: new Date().toISOString(),
       properties: [],
@@ -191,6 +194,8 @@ describe('Comments', () => {
     })
 
     // I shouldn't be able to see en email of the user if it's not me
-    expect(getComments.data?.comments[0].user.email).toEqual('')
+    expect(getComments.data?.comments[0].user).toMatchSnapshot({
+      id: expect.any(String)
+    })
   })
 })

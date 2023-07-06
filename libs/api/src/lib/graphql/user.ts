@@ -177,12 +177,7 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
         email && isMeBySession(id, session) ? email : ''
       )
     },
-    preferredName: {
-      type: GraphQLString,
-      resolve: createProxyingResolver(({preferredName, id}, _, {session}) =>
-        preferredName && isMeBySession(id, session) ? preferredName : ''
-      )
-    },
+    preferredName: {type: GraphQLString},
     address: {
       type: GraphQLUserAddress,
       resolve: createProxyingResolver(({address, id}, _, {session}) =>

@@ -45,3 +45,15 @@ exports[`Comments can get comments 1`] = `
   },
 }
 `;
+
+exports[`Comments sensitive data of the user associated with the comment is hidden if the user is not me 1`] = `
+{
+  "email": "",
+  "firstName": "Bruce",
+  "flair": "Superhero",
+  "id": Any<String>,
+  "image": null,
+  "name": "Wayne",
+  "preferredName": "Batman",
+}
+`;
