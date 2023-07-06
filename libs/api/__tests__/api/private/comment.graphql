@@ -1,0 +1,49 @@
+fragment FullCommentUser on User {
+  id
+  name
+  firstName
+  preferredName
+  flair
+  email
+}
+
+fragment FullComment on Comment {
+  id
+  user {
+    ...FullCommentUser
+  }
+  createdAt
+  modifiedAt
+  itemID
+  itemType
+}
+
+mutation ApproveComment($id: ID!) {
+  approveComment(id: $id) {
+    state
+  }
+}
+
+mutation updateComment(
+  $id: ID!
+  $revision: CommentRevisionUpdateInput
+  $userID: ID
+  $guestUsername: String
+  $guestUserImageID: ID
+  $source: String
+  $tagIds: [ID!]
+  $ratingOverrides: [CommentRatingOverrideUpdateInput!]
+) {
+  updateComment(
+    id: $id
+    revision: $revision
+    userID: $userID
+    guestUsername: $guestUsername
+    guestUserImageID: $guestUserImageID
+    source: $source
+    tagIds: $tagIds
+    ratingOverrides: $ratingOverrides
+  ) {
+    ...FullComment
+  }
+}
