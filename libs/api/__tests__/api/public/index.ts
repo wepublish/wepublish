@@ -1475,14 +1475,27 @@ type FullBlock_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock', v
 
 export type FullBlockFragment = FullBlock_BildwurfAdBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_EventBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_RichTextBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment;
 
-export type MutationCommentFragment = { __typename?: 'Comment', itemID: string, itemType: CommentItemType, text?: Node[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null };
+export type FullCommentUserFragment = { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null };
+
+export type MutationCommentFragment = { __typename?: 'Comment', id: string, itemID: string, itemType: CommentItemType, text?: Node[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null };
+
+export type FullCommentFragment = { __typename?: 'Comment', id: string, createdAt: string, modifiedAt?: string | null, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null } | null };
 
 export type AddCommentMutationVariables = Exact<{
   input: CommentInput;
 }>;
 
 
-export type AddCommentMutation = { __typename?: 'Mutation', addComment: { __typename?: 'Comment', itemID: string, itemType: CommentItemType, text?: Node[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null } };
+export type AddCommentMutation = { __typename?: 'Mutation', addComment: { __typename?: 'Comment', id: string, itemID: string, itemType: CommentItemType, text?: Node[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null } };
+
+export type CommentsQueryVariables = Exact<{
+  itemID: Scalars['ID'];
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<CommentSort>;
+}>;
+
+
+export type CommentsQuery = { __typename?: 'Query', comments: Array<{ __typename?: 'Comment', id: string, createdAt: string, modifiedAt?: string | null, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null } | null }> };
 
 export type EventRefFragment = { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null };
 
@@ -1797,6 +1810,7 @@ export const FullBlock = gql`
 ${FullTeaser}`;
 export const MutationComment = gql`
     fragment MutationComment on Comment {
+  id
   itemID
   itemType
   user {
@@ -1806,24 +1820,6 @@ export const MutationComment = gql`
   parentID
 }
     `;
-export const EventRef = gql`
-    fragment EventRef on Event {
-  id
-  name
-  description
-  status
-  location
-  image {
-    ...ImageRef
-  }
-  tags {
-    id
-    tag
-  }
-  startsAt
-  endsAt
-}
-    ${ImageRef}`;
 export const FullImage = gql`
     fragment FullImage on Image {
   id
@@ -1844,6 +1840,49 @@ export const FullImage = gql`
     y
   }
   ...ImageRef
+}
+    ${ImageRef}`;
+export const FullCommentUser = gql`
+    fragment FullCommentUser on User {
+  id
+  name
+  firstName
+  preferredName
+  flair
+  email
+  image {
+    ...FullImage
+  }
+}
+    ${FullImage}`;
+export const FullComment = gql`
+    fragment FullComment on Comment {
+  id
+  user {
+    ...FullCommentUser
+  }
+  createdAt
+  modifiedAt
+  itemID
+  itemType
+}
+    ${FullCommentUser}`;
+export const EventRef = gql`
+    fragment EventRef on Event {
+  id
+  name
+  description
+  status
+  location
+  image {
+    ...ImageRef
+  }
+  tags {
+    id
+    tag
+  }
+  startsAt
+  endsAt
 }
     ${ImageRef}`;
 export const FullUser = gql`
@@ -1960,6 +1999,13 @@ export const AddComment = gql`
   }
 }
     ${MutationComment}`;
+export const Comments = gql`
+    query Comments($itemID: ID!, $order: SortOrder, $sort: CommentSort) {
+  comments(itemId: $itemID, order: $order, sort: $sort) {
+    ...FullComment
+  }
+}
+    ${FullComment}`;
 export const EventList = gql`
     query EventList($filter: EventFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: EventSort) {
   events(

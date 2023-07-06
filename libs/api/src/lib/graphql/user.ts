@@ -1,27 +1,28 @@
+import {Subscription, User} from '@prisma/client'
 import {
+  GraphQLBoolean,
   GraphQLEnumType,
+  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLString,
-  GraphQLBoolean,
-  GraphQLID
+  GraphQLString
 } from 'graphql'
-import {UserSort} from '../db/user'
-import {GraphQLMetadataProperty, GraphQLMetadataPropertyInput, GraphQLPageInfo} from './common'
-import {Context} from '../context'
-import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-scalars'
-import {GraphQLPublicPayment} from './payment'
-import {Subscription, User} from '@prisma/client'
+import {Context} from '../context'
+import {UserSort, UserWithRelations} from '../db/user'
+import {createProxyingResolver} from '../utility'
+import {GraphQLMetadataProperty, GraphQLMetadataPropertyInput, GraphQLPageInfo} from './common'
+import {GraphQLImage, GraphQLUploadImageInput} from './image'
+import {GraphQLInvoice} from './invoice'
 import {GraphQLMemberPlan, GraphQLPaymentPeriodicity} from './memberPlan'
+import {GraphQLPublicPayment} from './payment'
 import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
 import {GraphQLSubscriptionPeriod} from './subscriptionPeriods'
-import {GraphQLInvoice} from './invoice'
-import {createProxyingResolver} from '../utility'
-import {GraphQLImage, GraphQLUploadImageInput} from './image'
+import {GraphQLUserRole} from './userRole'
+import {isMeBySession} from './utils'
 
 export const GraphQLUserAddress = new GraphQLObjectType({
   name: 'UserAddress',
@@ -159,21 +160,49 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
   }
 })
 
-export const GraphQLPublicUser = new GraphQLObjectType<User, Context>({
+export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Context>({
   name: 'User',
   fields: {
     id: {type: GraphQLNonNull(GraphQLString)},
     name: {type: GraphQLNonNull(GraphQLString)},
     firstName: {type: GraphQLString},
-    email: {type: GraphQLNonNull(GraphQLString)},
+    email: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: createProxyingResolver(({email, id}, _, {session}) =>
+        email && isMeBySession(id, session) ? email : ''
+      )
+    },
     preferredName: {type: GraphQLString},
-    address: {type: GraphQLUserAddress},
+    address: {
+      type: GraphQLUserAddress,
+      resolve: createProxyingResolver(({address, id}, _, {session}) =>
+        address && isMeBySession(id, session) ? address : ''
+      )
+    },
     flair: {type: GraphQLString},
     paymentProviderCustomers: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer)))
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer))),
+      resolve: createProxyingResolver(({id}, _, {prisma: {paymentProviderCustomer}, session}) =>
+        id && isMeBySession(id, session)
+          ? paymentProviderCustomer.findMany({
+              where: {
+                userId: id
+              }
+            })
+          : []
+      )
     },
     oauth2Accounts: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOAuth2Account)))
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOAuth2Account))),
+      resolve: createProxyingResolver(({id}, _, {prisma: {userOAuth2Account}, session}) =>
+        id && isMeBySession(id, session)
+          ? userOAuth2Account.findMany({
+              where: {
+                userId: id
+              }
+            })
+          : []
+      )
     },
     image: {
       type: GraphQLImage,
