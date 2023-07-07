@@ -7,7 +7,7 @@ exports[`Author Tile should render Default 1`] = `
     css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
   >
     <div
-      class="css-zfebdm"
+      class="css-w36x8z"
     />
     <div
       class="css-0"
@@ -27,7 +27,7 @@ exports[`Author Tile should render WithClassName 1`] = `
     css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
   >
     <div
-      class="css-zfebdm"
+      class="css-w36x8z"
     />
     <div
       class="css-0"
@@ -47,7 +47,7 @@ exports[`Author Tile should render WithEmotion 1`] = `
     css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
   >
     <div
-      class="css-zfebdm"
+      class="css-w36x8z"
     />
     <div
       class="css-0"
@@ -67,7 +67,7 @@ exports[`Author Tile should render WithoutImage 1`] = `
     css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
   >
     <div
-      class="css-zfebdm"
+      class="css-w36x8z"
     />
     <div
       class="css-0"
@@ -87,7 +87,7 @@ exports[`Author Tile should render WithoutJobTitle 1`] = `
     css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
   >
     <div
-      class="css-zfebdm"
+      class="css-w36x8z"
     />
     <div
       class="css-0"

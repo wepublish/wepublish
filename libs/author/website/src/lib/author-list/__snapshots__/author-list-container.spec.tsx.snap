@@ -3,7 +3,7 @@
 exports[`AuthorList Container should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-13fkobl"
+    class="css-10bcwk9"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
@@ -11,7 +11,7 @@ exports[`AuthorList Container should render Default 1`] = `
       href="example-slug"
     >
       <div
-        class="css-zfebdm"
+        class="css-w36x8z"
       >
         <img
           alt="DSC07717"
@@ -46,7 +46,7 @@ https://unsplash.it/200/200 200w"
       href="example-slug"
     >
       <div
-        class="css-zfebdm"
+        class="css-w36x8z"
       >
         <img
           alt="DSC07717"
@@ -81,7 +81,7 @@ https://unsplash.it/200/200 200w"
       href="example-slug"
     >
       <div
-        class="css-zfebdm"
+        class="css-w36x8z"
       >
         <img
           alt="DSC07717"
@@ -117,7 +117,7 @@ https://unsplash.it/200/200 200w"
 exports[`AuthorList Container should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname css-13fkobl"
+    class="extra-classname css-10bcwk9"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
@@ -125,7 +125,7 @@ exports[`AuthorList Container should render WithClassName 1`] = `
       href="example-slug"
     >
       <div
-        class="css-zfebdm"
+        class="css-w36x8z"
       >
         <img
           alt="DSC07717"
@@ -160,7 +160,7 @@ https://unsplash.it/200/200 200w"
       href="example-slug"
     >
       <div
-        class="css-zfebdm"
+        class="css-w36x8z"
       >
         <img
           alt="DSC07717"
@@ -195,7 +195,7 @@ https://unsplash.it/200/200 200w"
       href="example-slug"
     >
       <div
-        class="css-zfebdm"
+        class="css-w36x8z"
       >
         <img
           alt="DSC07717"
@@ -231,7 +231,7 @@ https://unsplash.it/200/200 200w"
 exports[`AuthorList Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="css-13fkobl"
+    class="css-10bcwk9"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
@@ -239,7 +239,7 @@ exports[`AuthorList Container should render WithEmotion 1`] = `
       href="example-slug"
     >
       <div
-        class="css-zfebdm"
+        class="css-w36x8z"
       >
         <img
           alt="DSC07717"
@@ -274,7 +274,7 @@ https://unsplash.it/200/200 200w"
       href="example-slug"
     >
       <div
-        class="css-zfebdm"
+        class="css-w36x8z"
       >
         <img
           alt="DSC07717"
@@ -309,7 +309,7 @@ https://unsplash.it/200/200 200w"
       href="example-slug"
     >
       <div
-        class="css-zfebdm"
+        class="css-w36x8z"
       >
         <img
           alt="DSC07717"

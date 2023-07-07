@@ -11,6 +11,8 @@ const author = {
   slug: 'example-slug',
   name: 'Example Name',
   jobTitle: 'Co-Geschäftsleitung & Chefredaktor',
+  createdAt: '2023-02-24T09:00:00.000Z',
+  modifiedAt: '2023-02-25T07:30:00.000Z',
   url: 'https://example.com',
   bio: [
     {
