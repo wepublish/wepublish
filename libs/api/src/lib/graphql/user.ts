@@ -187,26 +187,14 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
     flair: {type: GraphQLString},
     paymentProviderCustomers: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer))),
-      resolve: createProxyingResolver(({id}, _, {prisma: {paymentProviderCustomer}, session}) =>
-        id && isMeBySession(id, session)
-          ? paymentProviderCustomer.findMany({
-              where: {
-                userId: id
-              }
-            })
-          : []
+      resolve: createProxyingResolver(({id, paymentProviderCustomers}, _, {session}) =>
+        id && isMeBySession(id, session) ? paymentProviderCustomers : []
       )
     },
     oauth2Accounts: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOAuth2Account))),
-      resolve: createProxyingResolver(({id}, _, {prisma: {userOAuth2Account}, session}) =>
-        id && isMeBySession(id, session)
-          ? userOAuth2Account.findMany({
-              where: {
-                userId: id
-              }
-            })
-          : []
+      resolve: createProxyingResolver(({id, oauth2Accounts}, _, {session}) =>
+        id && isMeBySession(id, session) ? oauth2Accounts : []
       )
     },
     image: {
