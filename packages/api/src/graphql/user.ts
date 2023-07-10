@@ -9,7 +9,7 @@ import {
   GraphQLBoolean,
   GraphQLID
 } from 'graphql'
-import {UserSort} from '../db/user'
+import {UserSort, UserWithRelations} from '../db/user'
 import {GraphQLMetadataProperty, GraphQLMetadataPropertyInput, GraphQLPageInfo} from './common'
 import {Context} from '../context'
 import {GraphQLUserRole} from './userRole'
@@ -22,6 +22,7 @@ import {GraphQLSubscriptionPeriod} from './subscriptionPeriods'
 import {GraphQLInvoice} from './invoice'
 import {createProxyingResolver} from '../utility'
 import {GraphQLImage, GraphQLUploadImageInput} from './image'
+import {Session, SessionType} from '../db/session'
 
 export const GraphQLUserAddress = new GraphQLObjectType({
   name: 'UserAddress',
@@ -158,20 +159,39 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
   }
 })
 
-export const GraphQLPublicUser = new GraphQLObjectType<User, Context>({
+const isMeBySession = (id: string, session: Session) =>
+  session?.type === SessionType.User && session.user.id === id
+
+export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Context>({
   name: 'User',
   fields: {
     id: {type: GraphQLNonNull(GraphQLString)},
     name: {type: GraphQLNonNull(GraphQLString)},
     firstName: {type: GraphQLString},
-    email: {type: GraphQLNonNull(GraphQLString)},
+    email: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: createProxyingResolver(({email, id}, _, {session}) =>
+        email && isMeBySession(id, session) ? email : ''
+      )
+    },
     preferredName: {type: GraphQLString},
-    address: {type: GraphQLUserAddress},
+    address: {
+      type: GraphQLUserAddress,
+      resolve: createProxyingResolver(({address, id}, _, {session}) =>
+        address && isMeBySession(id, session) ? address : ''
+      )
+    },
     paymentProviderCustomers: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer)))
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer))),
+      resolve: createProxyingResolver(({id, paymentProviderCustomer}, _, {session}) =>
+        id && isMeBySession(id, session) ? paymentProviderCustomer : []
+      )
     },
     oauth2Accounts: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOAuth2Account)))
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOAuth2Account))),
+      resolve: createProxyingResolver(({id, userOAuth2Account}, _, {session}) =>
+        id && isMeBySession(id, session) ? userOAuth2Account : []
+      )
     },
     image: {
       type: GraphQLImage,
