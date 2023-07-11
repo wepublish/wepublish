@@ -159,7 +159,7 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
   }
 })
 
-const isMeBySession = (id: string, session: Session) =>
+const isMeBySession = (id: string, session?: Session | null) =>
   session?.type === SessionType.User && session.user.id === id
 
 export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Context>({
@@ -183,14 +183,14 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
     },
     paymentProviderCustomers: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer))),
-      resolve: createProxyingResolver(({id, paymentProviderCustomer}, _, {session}) =>
-        id && isMeBySession(id, session) ? paymentProviderCustomer : []
+      resolve: createProxyingResolver(({id, paymentProviderCustomers}, _, {session}) =>
+        id && isMeBySession(id, session) ? paymentProviderCustomers : []
       )
     },
     oauth2Accounts: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOAuth2Account))),
-      resolve: createProxyingResolver(({id, userOAuth2Account}, _, {session}) =>
-        id && isMeBySession(id, session) ? userOAuth2Account : []
+      resolve: createProxyingResolver(({id, oauth2Accounts}, _, {session}) =>
+        id && isMeBySession(id, session) ? oauth2Accounts : []
       )
     },
     image: {
