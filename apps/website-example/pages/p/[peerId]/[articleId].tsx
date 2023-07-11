@@ -30,7 +30,12 @@ export function PeerArticleById({article}: PeerArticleByIdProps) {
 
       <ArticleWrapper>
         <H5 component={'h2'}>Kommentare</H5>
-        <CommentListContainer id={articleId as string} />
+
+        <CommentListContainer
+          id={articleId as string}
+          type={ApiV1.CommentItemType.PeerArticle}
+          peerId={peerId as string}
+        />
       </ArticleWrapper>
     </>
   )

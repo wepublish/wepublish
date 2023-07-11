@@ -29,7 +29,7 @@ export default function ArticleById({article}: ArticleByIdProps) {
 
       <ArticleWrapper>
         <H5 component={'h2'}>Kommentare</H5>
-        <CommentListContainer id={id as string} />
+        <CommentListContainer id={id as string} type={ApiV1.CommentItemType.Article} />
       </ArticleWrapper>
     </>
   )

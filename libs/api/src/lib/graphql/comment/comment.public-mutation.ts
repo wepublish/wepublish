@@ -15,6 +15,7 @@ import {
   CommentAuthenticationError,
   CommentLengthError,
   NotAuthorisedError,
+  NotFound,
   PeerIdMissingCommentError,
   UserInputError
 } from '../../error'
@@ -99,7 +100,7 @@ export const addPublicComment = async (
 }
 
 export const updatePublicComment = async (
-  input: {id: Comment['id']} & Prisma.CommentsRevisionsCreateInput,
+  input: {id: Comment['id']} & Pick<Prisma.CommentsRevisionsCreateInput, 'text' | 'title' | 'lead'>,
   authenticateUser: Context['authenticateUser'],
   commentClient: PrismaClient['comment'],
   settingsClient: PrismaClient['setting']
@@ -113,11 +114,14 @@ export const updatePublicComment = async (
     include: {revisions: {orderBy: {createdAt: 'asc'}}}
   })
 
-  if (!comment) return null
+  if (!comment) {
+    throw new NotFound('comment', input.id)
+  }
 
   if (user.id !== comment?.userID) {
     throw new NotAuthorisedError()
   }
+
   const commentEditingSetting = await settingsClient.findUnique({
     where: {
       name: SettingName.ALLOW_COMMENT_EDITING
@@ -128,14 +132,16 @@ export const updatePublicComment = async (
     throw new UserInputError('Comment state must be pending user changes')
   }
 
-  const {id, text} = input
+  const {id, text, title, lead} = input
 
   const updatedComment = await commentClient.update({
     where: {id},
     data: {
       revisions: {
         create: {
-          text
+          text: text ?? comment?.revisions.at(-1)?.text,
+          title: title ?? comment?.revisions.at(-1)?.title,
+          lead: lead ?? comment?.revisions.at(-1)?.lead
         }
       },
       state: CommentState.pendingApproval
@@ -143,5 +149,10 @@ export const updatePublicComment = async (
     include: {revisions: {orderBy: {createdAt: 'asc'}}}
   })
 
-  return {...updatedComment, text}
+  return {
+    ...updatedComment,
+    text: updatedComment.revisions.at(-1)?.text,
+    title: updatedComment.revisions.at(-1)?.title,
+    lead: updatedComment.revisions.at(-1)?.lead
+  }
 }

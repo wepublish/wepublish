@@ -14,13 +14,16 @@ import {InMemoryCache} from '@apollo/client'
 const cache = new InMemoryCache({
   possibleTypes: ApiV1.possibleTypes.possibleTypes,
   resultCaching: false,
-  addTypename: false
+  addTypename: false,
+  canonizeResults: true,
+  resultCacheMaxSize: 0
 })
 
 export const parameters = {
   apolloClient: {
     MockedProvider,
-    cache
+    cache,
+    showWarnings: false
   },
   options: {
     storySort: {
