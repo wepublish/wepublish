@@ -1,7 +1,7 @@
-import {GlobalStyles, Theme, ThemeProvider, css, TextField} from '@mui/material'
-import {Article} from '@wepublish/article/website'
+import {GlobalStyles, TextField, Theme, ThemeProvider, css} from '@mui/material'
+import {Article, ArticleSEO} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
-import {Author, AuthorChip} from '@wepublish/author/website'
+import {Author, AuthorChip, AuthorList, AuthorListItem} from '@wepublish/author/website'
 import {
   BlockRenderer,
   HtmlBlock,
@@ -16,7 +16,7 @@ import {
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
 import {Image} from '@wepublish/image/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
-import {Page} from '@wepublish/page/website'
+import {Page, PageSEO} from '@wepublish/page/website'
 import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
 import {
   Alert,
@@ -70,7 +70,10 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
       <WebsiteBuilderProvider
         Author={Author}
         AuthorChip={AuthorChip}
+        AuthorList={AuthorList}
+        AuthorListItem={AuthorListItem}
         Article={Article}
+        ArticleSEO={ArticleSEO}
         Navbar={Navbar}
         Footer={Footer}
         Event={Event}
@@ -80,6 +83,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         CommentList={CommentList}
         CommentListItem={CommentListItem}
         Page={Page}
+        PageSEO={PageSEO}
         LoginForm={LoginForm}
         RegistrationForm={RegistrationForm}
         elements={{

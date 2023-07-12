@@ -9,9 +9,14 @@ import {
   useContext
 } from 'react'
 import {PartialDeep} from 'type-fest'
-import {BuilderArticleProps} from './article.interface'
+import {BuilderArticleProps, BuilderArticleSEOProps} from './article.interface'
 import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
-import {BuilderAuthorChipProps, BuilderAuthorProps} from './author.interface'
+import {
+  BuilderAuthorChipProps,
+  BuilderAuthorProps,
+  BuilderAuthorListItemProps,
+  BuilderAuthorListProps
+} from './author.interface'
 import {
   BuilderBlockRendererProps,
   BuilderHTMLBlockProps,
@@ -39,7 +44,7 @@ import {
 } from './lists.interface'
 import {BuilderMemberPlansProps} from './member-plans.interface'
 import {BuilderNavbarProps} from './navbar.interface'
-import {BuilderPageProps} from './page.interface'
+import {BuilderPageProps, BuilderPageSEOProps} from './page.interface'
 import {BuilderPayInvoicesProps} from './pay-invoices.interface'
 import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
 import {BuilderSubscribeProps} from './subscribe.interface'
@@ -62,9 +67,13 @@ export type WebsiteBuilderComponents = {
   Subscribe: ComponentType<BuilderSubscribeProps>
   PayInvoices: ComponentType<BuilderPayInvoicesProps>
   Page: ComponentType<BuilderPageProps>
+  PageSEO: ComponentType<BuilderPageSEOProps>
   Article: ComponentType<BuilderArticleProps>
+  ArticleSEO: ComponentType<BuilderArticleSEOProps>
   Author: ComponentType<BuilderAuthorProps>
   AuthorChip: ComponentType<BuilderAuthorChipProps>
+  AuthorListItem: ComponentType<BuilderAuthorListItemProps>
+  AuthorList: ComponentType<BuilderAuthorListProps>
   Event: ComponentType<BuilderEventProps>
   EventSEO: ComponentType<BuilderEventSEOProps>
   EventList: ComponentType<BuilderEventListProps>
@@ -124,9 +133,13 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   Subscribe: NoComponent,
   PayInvoices: NoComponent,
   Page: NoComponent,
+  PageSEO: NoComponent,
   Article: NoComponent,
+  ArticleSEO: NoComponent,
   Author: NoComponent,
   AuthorChip: NoComponent,
+  AuthorList: NoComponent,
+  AuthorListItem: NoComponent,
   Event: NoComponent,
   EventSEO: NoComponent,
   EventList: NoComponent,

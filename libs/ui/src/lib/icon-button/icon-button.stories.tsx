@@ -1,13 +1,14 @@
 import {Meta} from '@storybook/react'
 import {IconButton} from './icon-button'
+import {MdAdd} from 'react-icons/md'
 
 export default {
   component: IconButton,
-  title: 'Icon Button'
+  title: 'UI'
 } as Meta
 
 export const Default = {
   args: {
-    children: 'Click me'
+    children: <MdAdd />
   }
 }

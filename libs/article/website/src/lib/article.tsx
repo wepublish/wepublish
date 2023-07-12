@@ -1,6 +1,6 @@
 import {styled} from '@mui/material'
 import {BuilderArticleProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Block} from '@wepublish/website/api'
+import {Article as ArticleType, Block} from '@wepublish/website/api'
 import {Blocks} from '@wepublish/block-content/website'
 
 export const ArticleWrapper = styled('article')`
@@ -17,10 +17,12 @@ export const ArticleInfoWrapper = styled('section')`
 `
 
 export function Article({className, data, loading, error}: BuilderArticleProps) {
-  const {AuthorChip} = useWebsiteBuilder()
+  const {AuthorChip, ArticleSEO} = useWebsiteBuilder()
 
   return (
     <ArticleWrapper className={className}>
+      {data?.article && <ArticleSEO article={data.article as ArticleType} />}
+
       <Blocks blocks={(data?.article?.blocks as Block[]) ?? []} />
 
       <ArticleInfoWrapper>

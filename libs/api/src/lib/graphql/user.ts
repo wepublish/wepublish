@@ -27,6 +27,7 @@ import {GraphQLSubscriptionPeriod} from './subscriptionPeriods'
 import {GraphQLInvoice} from './invoice'
 import {createProxyingResolver} from '../utility'
 import {GraphQLImage, GraphQLUploadImageInput} from './image'
+import {isMeBySession} from './utils'
 
 export const GraphQLUserAddress = new GraphQLObjectType({
   name: 'UserAddress',
@@ -170,15 +171,31 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
     id: {type: GraphQLNonNull(GraphQLString)},
     name: {type: GraphQLNonNull(GraphQLString)},
     firstName: {type: GraphQLString},
-    email: {type: GraphQLNonNull(GraphQLString)},
+    email: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: createProxyingResolver(({email, id}, _, {session}) =>
+        email && isMeBySession(id, session) ? email : ''
+      )
+    },
     preferredName: {type: GraphQLString},
-    address: {type: GraphQLUserAddress},
+    address: {
+      type: GraphQLUserAddress,
+      resolve: createProxyingResolver(({address, id}, _, {session}) =>
+        address && isMeBySession(id, session) ? address : ''
+      )
+    },
     flair: {type: GraphQLString},
     paymentProviderCustomers: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer)))
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer))),
+      resolve: createProxyingResolver(({id, paymentProviderCustomers}, _, {session}) =>
+        id && isMeBySession(id, session) ? paymentProviderCustomers : []
+      )
     },
     oauth2Accounts: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOAuth2Account)))
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOAuth2Account))),
+      resolve: createProxyingResolver(({id, oauth2Accounts}, _, {session}) =>
+        id && isMeBySession(id, session) ? oauth2Accounts : []
+      )
     },
     image: {
       type: GraphQLImage,
@@ -194,9 +211,8 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
     },
     properties: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublic))),
-      resolve: ({properties}) => {
-        return properties.filter(property => property.public).map(({key, value}) => ({key, value}))
-      }
+      resolve: ({properties}) =>
+        properties.filter(property => property.public).map(({key, value}) => ({key, value}))
     }
   }
 })
