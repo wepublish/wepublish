@@ -1,23 +1,42 @@
-import {PeerArticleContainer, ApiV1} from '@wepublish/website'
-import {useRouter} from 'next/router'
+import {
+  ApiV1,
+  ArticleWrapper,
+  CommentListContainer,
+  PeerArticleContainer,
+  useWebsiteBuilder
+} from '@wepublish/website'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
+import {useRouter} from 'next/router'
 
-export function ArticleById() {
+type PeerArticleByIdProps = {
+  article?: ApiV1.Article
+}
+
+export function PeerArticleById({article}: PeerArticleByIdProps) {
   const {
     query: {peerId, articleId}
   } = useRouter()
 
+  const {
+    ArticleSEO,
+    elements: {H5}
+  } = useWebsiteBuilder()
+
   return (
     <>
-      {peerId && articleId && (
-        <PeerArticleContainer peerId={peerId as string} articleId={articleId as string} />
-      )}
+      {article && <ArticleSEO article={article} />}
+      <PeerArticleContainer peerId={peerId as string} articleId={articleId as string} />
+
+      <ArticleWrapper>
+        <H5 component={'h2'}>Kommentare</H5>
+        <CommentListContainer id={articleId as string} />
+      </ArticleWrapper>
     </>
   )
 }
 
-export default ArticleById
+export default PeerArticleById
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {

@@ -1,4 +1,10 @@
-import {ApiV1, ArticleContainer, ArticleSEO} from '@wepublish/website'
+import {
+  ApiV1,
+  ArticleContainer,
+  ArticleWrapper,
+  CommentListContainer,
+  useWebsiteBuilder
+} from '@wepublish/website'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -11,11 +17,20 @@ export default function ArticleById({article}: ArticleByIdProps) {
   const {
     query: {id}
   } = useRouter()
+  const {
+    ArticleSEO,
+    elements: {H5}
+  } = useWebsiteBuilder()
 
   return (
     <>
       {article && <ArticleSEO article={article} />}
       <ArticleContainer id={id as string} />
+
+      <ArticleWrapper>
+        <H5 component={'h2'}>Kommentare</H5>
+        <CommentListContainer id={id as string} />
+      </ArticleWrapper>
     </>
   )
 }
