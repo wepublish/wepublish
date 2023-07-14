@@ -7,6 +7,9 @@ npm-debug.log
 .changelog
 coverage/
 screenshots
+
+# Nx
+tmp
 .env.local
 
 # Next.js
