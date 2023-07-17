@@ -300,7 +300,21 @@ const page = {
       image
     },
     {
-      __typename: 'ImageGalleryBlock'
+      __typename: 'ImageGalleryBlock',
+      images: [
+        {
+          caption: 'Caption',
+          image
+        },
+        {
+          caption: 'Caption',
+          image
+        },
+        {
+          caption: 'Caption',
+          image
+        }
+      ]
     },
     {
       __typename: 'ListicleBlock'
