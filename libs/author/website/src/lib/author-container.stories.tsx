@@ -253,8 +253,10 @@ const author = {
     squareLargeURL: 'https://unsplash.it/500/500',
     squareMediumURL: 'https://unsplash.it/300/300',
     squareSmallURL: 'https://unsplash.it/200/200'
-  }
-} as Exclude<AuthorQuery['author'], undefined | null>
+  },
+  createdAt: '2023-01-01',
+  modifiedAt: '2023-01-01'
+} as NonNullable<AuthorQuery['author']>
 
 export default {
   component: AuthorContainer,

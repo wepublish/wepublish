@@ -1,7 +1,8 @@
-import {usePeerArticleQuery, PeerArticleQuery} from '@wepublish/website/api'
 import {QueryResult} from '@apollo/client'
-import {useEffect} from 'react'
+import {ArticleWrapper} from '@wepublish/article/website'
+import {PeerArticleQuery, usePeerArticleQuery, usePeerQuery} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {useEffect} from 'react'
 
 type PeerIdOrSlug =
   | {articleId: string; peerId?: string; peerSlug?: never}
@@ -20,7 +21,7 @@ export function PeerArticleContainer({
   articleId,
   className
 }: PeerArticleContainerProps) {
-  const {Article} = useWebsiteBuilder()
+  const {Article, PeerInformation} = useWebsiteBuilder()
   const {data, loading, error, refetch} = usePeerArticleQuery({
     variables: {
       peerId,
@@ -29,23 +30,34 @@ export function PeerArticleContainer({
     }
   })
 
+  const peer = usePeerQuery({
+    variables: {
+      id: peerId,
+      slug: peerSlug
+    }
+  })
+
   useEffect(() => {
     onQuery?.({data, loading, error, refetch})
   }, [data, loading, error, refetch, onQuery])
 
   return (
-    <Article
-      data={
-        data
-          ? {
-              article: data.peerArticle,
-              __typename: data.__typename
-            }
-          : data
-      }
-      loading={loading}
-      error={error}
-      className={className}
-    />
+    <ArticleWrapper>
+      <PeerInformation data={peer.data} loading={peer.loading} error={peer.error} />
+
+      <Article
+        data={
+          data
+            ? {
+                article: data.peerArticle,
+                __typename: data.__typename
+              }
+            : data
+        }
+        loading={loading}
+        error={error}
+        className={className}
+      />
+    </ArticleWrapper>
   )
 }

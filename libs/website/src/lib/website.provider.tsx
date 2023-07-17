@@ -40,6 +40,7 @@ import {format} from 'date-fns'
 import {PropsWithChildren, memo} from 'react'
 import {IconContext} from 'react-icons'
 import {CommentList, CommentListItem} from '@wepublish/comments/website'
+import {PeerInformation} from '@wepublish/peering/website'
 
 export type WebsiteProps = PropsWithChildren
 
@@ -74,6 +75,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         AuthorListItem={AuthorListItem}
         Article={Article}
         ArticleSEO={ArticleSEO}
+        PeerInformation={PeerInformation}
         Navbar={Navbar}
         Footer={Footer}
         Event={Event}
