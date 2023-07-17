@@ -1587,7 +1587,42 @@ export type FullArticleFragment = {
           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
         } | null
       }
-    | {__typename: 'ImageGalleryBlock'}
+    | {
+        __typename: 'ImageGalleryBlock'
+        images: Array<{
+          __typename?: 'GalleryImageEdge'
+          caption?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+        }>
+      }
     | {__typename: 'InstagramPostBlock'}
     | {__typename: 'LinkPageBreakBlock'}
     | {__typename: 'ListicleBlock'}
@@ -1689,7 +1724,42 @@ export type FullArticleFragment = {
                         focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                       } | null
                     }
-                  | {__typename: 'ImageGalleryBlock'}
+                  | {
+                      __typename: 'ImageGalleryBlock'
+                      images: Array<{
+                        __typename?: 'GalleryImageEdge'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }>
+                    }
                   | {__typename: 'InstagramPostBlock'}
                   | {__typename: 'LinkPageBreakBlock'}
                   | {__typename: 'ListicleBlock'}
@@ -1931,7 +2001,42 @@ export type FullArticleFragment = {
                         focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                       } | null
                     }
-                  | {__typename: 'ImageGalleryBlock'}
+                  | {
+                      __typename: 'ImageGalleryBlock'
+                      images: Array<{
+                        __typename?: 'GalleryImageEdge'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }>
+                    }
                   | {__typename: 'InstagramPostBlock'}
                   | {__typename: 'LinkPageBreakBlock'}
                   | {__typename: 'ListicleBlock'}
@@ -2107,7 +2212,42 @@ export type FullArticleFragment = {
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
-                    | {__typename: 'ImageGalleryBlock'}
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
                     | {__typename: 'ListicleBlock'}
@@ -2349,7 +2489,42 @@ export type FullArticleFragment = {
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
-                    | {__typename: 'ImageGalleryBlock'}
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
                     | {__typename: 'ListicleBlock'}
@@ -2598,7 +2773,42 @@ export type ArticleQuery = {
             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
           } | null
         }
-      | {__typename: 'ImageGalleryBlock'}
+      | {
+          __typename: 'ImageGalleryBlock'
+          images: Array<{
+            __typename?: 'GalleryImageEdge'
+            caption?: string | null
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+          }>
+        }
       | {__typename: 'InstagramPostBlock'}
       | {__typename: 'LinkPageBreakBlock'}
       | {__typename: 'ListicleBlock'}
@@ -2700,7 +2910,42 @@ export type ArticleQuery = {
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
-                    | {__typename: 'ImageGalleryBlock'}
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
                     | {__typename: 'ListicleBlock'}
@@ -2942,7 +3187,42 @@ export type ArticleQuery = {
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
-                    | {__typename: 'ImageGalleryBlock'}
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
                     | {__typename: 'ListicleBlock'}
@@ -3118,7 +3398,42 @@ export type ArticleQuery = {
                             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                         }
-                      | {__typename: 'ImageGalleryBlock'}
+                      | {
+                          __typename: 'ImageGalleryBlock'
+                          images: Array<{
+                            __typename?: 'GalleryImageEdge'
+                            caption?: string | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                        }
                       | {__typename: 'InstagramPostBlock'}
                       | {__typename: 'LinkPageBreakBlock'}
                       | {__typename: 'ListicleBlock'}
@@ -3360,7 +3675,42 @@ export type ArticleQuery = {
                             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                         }
-                      | {__typename: 'ImageGalleryBlock'}
+                      | {
+                          __typename: 'ImageGalleryBlock'
+                          images: Array<{
+                            __typename?: 'GalleryImageEdge'
+                            caption?: string | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                        }
                       | {__typename: 'InstagramPostBlock'}
                       | {__typename: 'LinkPageBreakBlock'}
                       | {__typename: 'ListicleBlock'}
@@ -3611,7 +3961,42 @@ export type PeerArticleQuery = {
             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
           } | null
         }
-      | {__typename: 'ImageGalleryBlock'}
+      | {
+          __typename: 'ImageGalleryBlock'
+          images: Array<{
+            __typename?: 'GalleryImageEdge'
+            caption?: string | null
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+          }>
+        }
       | {__typename: 'InstagramPostBlock'}
       | {__typename: 'LinkPageBreakBlock'}
       | {__typename: 'ListicleBlock'}
@@ -3713,7 +4098,42 @@ export type PeerArticleQuery = {
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
-                    | {__typename: 'ImageGalleryBlock'}
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
                     | {__typename: 'ListicleBlock'}
@@ -3955,7 +4375,42 @@ export type PeerArticleQuery = {
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
-                    | {__typename: 'ImageGalleryBlock'}
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
                     | {__typename: 'ListicleBlock'}
@@ -4131,7 +4586,42 @@ export type PeerArticleQuery = {
                             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                         }
-                      | {__typename: 'ImageGalleryBlock'}
+                      | {
+                          __typename: 'ImageGalleryBlock'
+                          images: Array<{
+                            __typename?: 'GalleryImageEdge'
+                            caption?: string | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                        }
                       | {__typename: 'InstagramPostBlock'}
                       | {__typename: 'LinkPageBreakBlock'}
                       | {__typename: 'ListicleBlock'}
@@ -4373,7 +4863,42 @@ export type PeerArticleQuery = {
                             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                         }
-                      | {__typename: 'ImageGalleryBlock'}
+                      | {
+                          __typename: 'ImageGalleryBlock'
+                          images: Array<{
+                            __typename?: 'GalleryImageEdge'
+                            caption?: string | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                        }
                       | {__typename: 'InstagramPostBlock'}
                       | {__typename: 'LinkPageBreakBlock'}
                       | {__typename: 'ListicleBlock'}
@@ -4763,7 +5288,42 @@ type BlockWithoutTeaser_ImageBlock_Fragment = {
   } | null
 }
 
-type BlockWithoutTeaser_ImageGalleryBlock_Fragment = {__typename: 'ImageGalleryBlock'}
+type BlockWithoutTeaser_ImageGalleryBlock_Fragment = {
+  __typename: 'ImageGalleryBlock'
+  images: Array<{
+    __typename?: 'GalleryImageEdge'
+    caption?: string | null
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+  }>
+}
 
 type BlockWithoutTeaser_InstagramPostBlock_Fragment = {__typename: 'InstagramPostBlock'}
 
@@ -4917,7 +5477,42 @@ type FullTeaser_ArticleTeaser_Fragment = {
             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
           } | null
         }
-      | {__typename: 'ImageGalleryBlock'}
+      | {
+          __typename: 'ImageGalleryBlock'
+          images: Array<{
+            __typename?: 'GalleryImageEdge'
+            caption?: string | null
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+          }>
+        }
       | {__typename: 'InstagramPostBlock'}
       | {__typename: 'LinkPageBreakBlock'}
       | {__typename: 'ListicleBlock'}
@@ -5162,7 +5757,42 @@ type FullTeaser_PageTeaser_Fragment = {
             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
           } | null
         }
-      | {__typename: 'ImageGalleryBlock'}
+      | {
+          __typename: 'ImageGalleryBlock'
+          images: Array<{
+            __typename?: 'GalleryImageEdge'
+            caption?: string | null
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+          }>
+        }
       | {__typename: 'InstagramPostBlock'}
       | {__typename: 'LinkPageBreakBlock'}
       | {__typename: 'ListicleBlock'}
@@ -5295,7 +5925,42 @@ type FullBlock_ImageBlock_Fragment = {
   } | null
 }
 
-type FullBlock_ImageGalleryBlock_Fragment = {__typename: 'ImageGalleryBlock'}
+type FullBlock_ImageGalleryBlock_Fragment = {
+  __typename: 'ImageGalleryBlock'
+  images: Array<{
+    __typename?: 'GalleryImageEdge'
+    caption?: string | null
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+  }>
+}
 
 type FullBlock_InstagramPostBlock_Fragment = {__typename: 'InstagramPostBlock'}
 
@@ -5410,7 +6075,42 @@ type FullBlock_TeaserGridBlock_Fragment = {
                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                 } | null
               }
-            | {__typename: 'ImageGalleryBlock'}
+            | {
+                __typename: 'ImageGalleryBlock'
+                images: Array<{
+                  __typename?: 'GalleryImageEdge'
+                  caption?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                }>
+              }
             | {__typename: 'InstagramPostBlock'}
             | {__typename: 'LinkPageBreakBlock'}
             | {__typename: 'ListicleBlock'}
@@ -5652,7 +6352,42 @@ type FullBlock_TeaserGridBlock_Fragment = {
                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                 } | null
               }
-            | {__typename: 'ImageGalleryBlock'}
+            | {
+                __typename: 'ImageGalleryBlock'
+                images: Array<{
+                  __typename?: 'GalleryImageEdge'
+                  caption?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                }>
+              }
             | {__typename: 'InstagramPostBlock'}
             | {__typename: 'LinkPageBreakBlock'}
             | {__typename: 'ListicleBlock'}
@@ -5829,7 +6564,42 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
-              | {__typename: 'ImageGalleryBlock'}
+              | {
+                  __typename: 'ImageGalleryBlock'
+                  images: Array<{
+                    __typename?: 'GalleryImageEdge'
+                    caption?: string | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                  }>
+                }
               | {__typename: 'InstagramPostBlock'}
               | {__typename: 'LinkPageBreakBlock'}
               | {__typename: 'ListicleBlock'}
@@ -6071,7 +6841,42 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
-              | {__typename: 'ImageGalleryBlock'}
+              | {
+                  __typename: 'ImageGalleryBlock'
+                  images: Array<{
+                    __typename?: 'GalleryImageEdge'
+                    caption?: string | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                  }>
+                }
               | {__typename: 'InstagramPostBlock'}
               | {__typename: 'LinkPageBreakBlock'}
               | {__typename: 'ListicleBlock'}
@@ -9893,7 +10698,42 @@ export type FullNavigationFragment = {
                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                 } | null
               }
-            | {__typename: 'ImageGalleryBlock'}
+            | {
+                __typename: 'ImageGalleryBlock'
+                images: Array<{
+                  __typename?: 'GalleryImageEdge'
+                  caption?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                }>
+              }
             | {__typename: 'InstagramPostBlock'}
             | {__typename: 'LinkPageBreakBlock'}
             | {__typename: 'ListicleBlock'}
@@ -9995,7 +10835,42 @@ export type FullNavigationFragment = {
                                 focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                               } | null
                             }
-                          | {__typename: 'ImageGalleryBlock'}
+                          | {
+                              __typename: 'ImageGalleryBlock'
+                              images: Array<{
+                                __typename?: 'GalleryImageEdge'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }>
+                            }
                           | {__typename: 'InstagramPostBlock'}
                           | {__typename: 'LinkPageBreakBlock'}
                           | {__typename: 'ListicleBlock'}
@@ -10249,7 +11124,42 @@ export type FullNavigationFragment = {
                                 focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                               } | null
                             }
-                          | {__typename: 'ImageGalleryBlock'}
+                          | {
+                              __typename: 'ImageGalleryBlock'
+                              images: Array<{
+                                __typename?: 'GalleryImageEdge'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }>
+                            }
                           | {__typename: 'InstagramPostBlock'}
                           | {__typename: 'LinkPageBreakBlock'}
                           | {__typename: 'ListicleBlock'}
@@ -10435,7 +11345,42 @@ export type FullNavigationFragment = {
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
-                            | {__typename: 'ImageGalleryBlock'}
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
                             | {__typename: 'InstagramPostBlock'}
                             | {__typename: 'LinkPageBreakBlock'}
                             | {__typename: 'ListicleBlock'}
@@ -10693,7 +11638,42 @@ export type FullNavigationFragment = {
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
-                            | {__typename: 'ImageGalleryBlock'}
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
                             | {__typename: 'InstagramPostBlock'}
                             | {__typename: 'LinkPageBreakBlock'}
                             | {__typename: 'ListicleBlock'}
@@ -10943,7 +11923,42 @@ export type FullNavigationFragment = {
                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                 } | null
               }
-            | {__typename: 'ImageGalleryBlock'}
+            | {
+                __typename: 'ImageGalleryBlock'
+                images: Array<{
+                  __typename?: 'GalleryImageEdge'
+                  caption?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                }>
+              }
             | {__typename: 'InstagramPostBlock'}
             | {__typename: 'LinkPageBreakBlock'}
             | {__typename: 'ListicleBlock'}
@@ -11045,7 +12060,42 @@ export type FullNavigationFragment = {
                                 focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                               } | null
                             }
-                          | {__typename: 'ImageGalleryBlock'}
+                          | {
+                              __typename: 'ImageGalleryBlock'
+                              images: Array<{
+                                __typename?: 'GalleryImageEdge'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }>
+                            }
                           | {__typename: 'InstagramPostBlock'}
                           | {__typename: 'LinkPageBreakBlock'}
                           | {__typename: 'ListicleBlock'}
@@ -11299,7 +12349,42 @@ export type FullNavigationFragment = {
                                 focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                               } | null
                             }
-                          | {__typename: 'ImageGalleryBlock'}
+                          | {
+                              __typename: 'ImageGalleryBlock'
+                              images: Array<{
+                                __typename?: 'GalleryImageEdge'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }>
+                            }
                           | {__typename: 'InstagramPostBlock'}
                           | {__typename: 'LinkPageBreakBlock'}
                           | {__typename: 'ListicleBlock'}
@@ -11485,7 +12570,42 @@ export type FullNavigationFragment = {
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
-                            | {__typename: 'ImageGalleryBlock'}
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
                             | {__typename: 'InstagramPostBlock'}
                             | {__typename: 'LinkPageBreakBlock'}
                             | {__typename: 'ListicleBlock'}
@@ -11743,7 +12863,42 @@ export type FullNavigationFragment = {
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
-                            | {__typename: 'ImageGalleryBlock'}
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
                             | {__typename: 'InstagramPostBlock'}
                             | {__typename: 'LinkPageBreakBlock'}
                             | {__typename: 'ListicleBlock'}
@@ -11968,7 +13123,42 @@ export type NavigationListQuery = {
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
-              | {__typename: 'ImageGalleryBlock'}
+              | {
+                  __typename: 'ImageGalleryBlock'
+                  images: Array<{
+                    __typename?: 'GalleryImageEdge'
+                    caption?: string | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                  }>
+                }
               | {__typename: 'InstagramPostBlock'}
               | {__typename: 'LinkPageBreakBlock'}
               | {__typename: 'ListicleBlock'}
@@ -12070,7 +13260,42 @@ export type NavigationListQuery = {
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
-                            | {__typename: 'ImageGalleryBlock'}
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
                             | {__typename: 'InstagramPostBlock'}
                             | {__typename: 'LinkPageBreakBlock'}
                             | {__typename: 'ListicleBlock'}
@@ -12328,7 +13553,42 @@ export type NavigationListQuery = {
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
-                            | {__typename: 'ImageGalleryBlock'}
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
                             | {__typename: 'InstagramPostBlock'}
                             | {__typename: 'LinkPageBreakBlock'}
                             | {__typename: 'ListicleBlock'}
@@ -12518,7 +13778,46 @@ export type NavigationListQuery = {
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
-                              | {__typename: 'ImageGalleryBlock'}
+                              | {
+                                  __typename: 'ImageGalleryBlock'
+                                  images: Array<{
+                                    __typename?: 'GalleryImageEdge'
+                                    caption?: string | null
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                  }>
+                                }
                               | {__typename: 'InstagramPostBlock'}
                               | {__typename: 'LinkPageBreakBlock'}
                               | {__typename: 'ListicleBlock'}
@@ -12776,7 +14075,46 @@ export type NavigationListQuery = {
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
-                              | {__typename: 'ImageGalleryBlock'}
+                              | {
+                                  __typename: 'ImageGalleryBlock'
+                                  images: Array<{
+                                    __typename?: 'GalleryImageEdge'
+                                    caption?: string | null
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                  }>
+                                }
                               | {__typename: 'InstagramPostBlock'}
                               | {__typename: 'LinkPageBreakBlock'}
                               | {__typename: 'ListicleBlock'}
@@ -13026,7 +14364,42 @@ export type NavigationListQuery = {
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
-              | {__typename: 'ImageGalleryBlock'}
+              | {
+                  __typename: 'ImageGalleryBlock'
+                  images: Array<{
+                    __typename?: 'GalleryImageEdge'
+                    caption?: string | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                  }>
+                }
               | {__typename: 'InstagramPostBlock'}
               | {__typename: 'LinkPageBreakBlock'}
               | {__typename: 'ListicleBlock'}
@@ -13128,7 +14501,42 @@ export type NavigationListQuery = {
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
-                            | {__typename: 'ImageGalleryBlock'}
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
                             | {__typename: 'InstagramPostBlock'}
                             | {__typename: 'LinkPageBreakBlock'}
                             | {__typename: 'ListicleBlock'}
@@ -13386,7 +14794,42 @@ export type NavigationListQuery = {
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
-                            | {__typename: 'ImageGalleryBlock'}
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
                             | {__typename: 'InstagramPostBlock'}
                             | {__typename: 'LinkPageBreakBlock'}
                             | {__typename: 'ListicleBlock'}
@@ -13576,7 +15019,46 @@ export type NavigationListQuery = {
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
-                              | {__typename: 'ImageGalleryBlock'}
+                              | {
+                                  __typename: 'ImageGalleryBlock'
+                                  images: Array<{
+                                    __typename?: 'GalleryImageEdge'
+                                    caption?: string | null
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                  }>
+                                }
                               | {__typename: 'InstagramPostBlock'}
                               | {__typename: 'LinkPageBreakBlock'}
                               | {__typename: 'ListicleBlock'}
@@ -13834,7 +15316,46 @@ export type NavigationListQuery = {
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
-                              | {__typename: 'ImageGalleryBlock'}
+                              | {
+                                  __typename: 'ImageGalleryBlock'
+                                  images: Array<{
+                                    __typename?: 'GalleryImageEdge'
+                                    caption?: string | null
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                  }>
+                                }
                               | {__typename: 'InstagramPostBlock'}
                               | {__typename: 'LinkPageBreakBlock'}
                               | {__typename: 'ListicleBlock'}
@@ -14062,7 +15583,42 @@ export type NavigationQuery = {
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
-              | {__typename: 'ImageGalleryBlock'}
+              | {
+                  __typename: 'ImageGalleryBlock'
+                  images: Array<{
+                    __typename?: 'GalleryImageEdge'
+                    caption?: string | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                  }>
+                }
               | {__typename: 'InstagramPostBlock'}
               | {__typename: 'LinkPageBreakBlock'}
               | {__typename: 'ListicleBlock'}
@@ -14164,7 +15720,42 @@ export type NavigationQuery = {
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
-                            | {__typename: 'ImageGalleryBlock'}
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
                             | {__typename: 'InstagramPostBlock'}
                             | {__typename: 'LinkPageBreakBlock'}
                             | {__typename: 'ListicleBlock'}
@@ -14422,7 +16013,42 @@ export type NavigationQuery = {
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
-                            | {__typename: 'ImageGalleryBlock'}
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
                             | {__typename: 'InstagramPostBlock'}
                             | {__typename: 'LinkPageBreakBlock'}
                             | {__typename: 'ListicleBlock'}
@@ -14612,7 +16238,46 @@ export type NavigationQuery = {
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
-                              | {__typename: 'ImageGalleryBlock'}
+                              | {
+                                  __typename: 'ImageGalleryBlock'
+                                  images: Array<{
+                                    __typename?: 'GalleryImageEdge'
+                                    caption?: string | null
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                  }>
+                                }
                               | {__typename: 'InstagramPostBlock'}
                               | {__typename: 'LinkPageBreakBlock'}
                               | {__typename: 'ListicleBlock'}
@@ -14870,7 +16535,46 @@ export type NavigationQuery = {
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
-                              | {__typename: 'ImageGalleryBlock'}
+                              | {
+                                  __typename: 'ImageGalleryBlock'
+                                  images: Array<{
+                                    __typename?: 'GalleryImageEdge'
+                                    caption?: string | null
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                  }>
+                                }
                               | {__typename: 'InstagramPostBlock'}
                               | {__typename: 'LinkPageBreakBlock'}
                               | {__typename: 'ListicleBlock'}
@@ -15120,7 +16824,42 @@ export type NavigationQuery = {
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
-              | {__typename: 'ImageGalleryBlock'}
+              | {
+                  __typename: 'ImageGalleryBlock'
+                  images: Array<{
+                    __typename?: 'GalleryImageEdge'
+                    caption?: string | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                  }>
+                }
               | {__typename: 'InstagramPostBlock'}
               | {__typename: 'LinkPageBreakBlock'}
               | {__typename: 'ListicleBlock'}
@@ -15222,7 +16961,42 @@ export type NavigationQuery = {
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
-                            | {__typename: 'ImageGalleryBlock'}
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
                             | {__typename: 'InstagramPostBlock'}
                             | {__typename: 'LinkPageBreakBlock'}
                             | {__typename: 'ListicleBlock'}
@@ -15480,7 +17254,42 @@ export type NavigationQuery = {
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
-                            | {__typename: 'ImageGalleryBlock'}
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
                             | {__typename: 'InstagramPostBlock'}
                             | {__typename: 'LinkPageBreakBlock'}
                             | {__typename: 'ListicleBlock'}
@@ -15670,7 +17479,46 @@ export type NavigationQuery = {
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
-                              | {__typename: 'ImageGalleryBlock'}
+                              | {
+                                  __typename: 'ImageGalleryBlock'
+                                  images: Array<{
+                                    __typename?: 'GalleryImageEdge'
+                                    caption?: string | null
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                  }>
+                                }
                               | {__typename: 'InstagramPostBlock'}
                               | {__typename: 'LinkPageBreakBlock'}
                               | {__typename: 'ListicleBlock'}
@@ -15928,7 +17776,46 @@ export type NavigationQuery = {
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
-                              | {__typename: 'ImageGalleryBlock'}
+                              | {
+                                  __typename: 'ImageGalleryBlock'
+                                  images: Array<{
+                                    __typename?: 'GalleryImageEdge'
+                                    caption?: string | null
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                  }>
+                                }
                               | {__typename: 'InstagramPostBlock'}
                               | {__typename: 'LinkPageBreakBlock'}
                               | {__typename: 'ListicleBlock'}
@@ -16207,7 +18094,42 @@ export type FullPageFragment = {
           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
         } | null
       }
-    | {__typename: 'ImageGalleryBlock'}
+    | {
+        __typename: 'ImageGalleryBlock'
+        images: Array<{
+          __typename?: 'GalleryImageEdge'
+          caption?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+        }>
+      }
     | {__typename: 'InstagramPostBlock'}
     | {__typename: 'LinkPageBreakBlock'}
     | {__typename: 'ListicleBlock'}
@@ -16309,7 +18231,42 @@ export type FullPageFragment = {
                         focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                       } | null
                     }
-                  | {__typename: 'ImageGalleryBlock'}
+                  | {
+                      __typename: 'ImageGalleryBlock'
+                      images: Array<{
+                        __typename?: 'GalleryImageEdge'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }>
+                    }
                   | {__typename: 'InstagramPostBlock'}
                   | {__typename: 'LinkPageBreakBlock'}
                   | {__typename: 'ListicleBlock'}
@@ -16551,7 +18508,42 @@ export type FullPageFragment = {
                         focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                       } | null
                     }
-                  | {__typename: 'ImageGalleryBlock'}
+                  | {
+                      __typename: 'ImageGalleryBlock'
+                      images: Array<{
+                        __typename?: 'GalleryImageEdge'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }>
+                    }
                   | {__typename: 'InstagramPostBlock'}
                   | {__typename: 'LinkPageBreakBlock'}
                   | {__typename: 'ListicleBlock'}
@@ -16727,7 +18719,42 @@ export type FullPageFragment = {
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
-                    | {__typename: 'ImageGalleryBlock'}
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
                     | {__typename: 'ListicleBlock'}
@@ -16969,7 +18996,42 @@ export type FullPageFragment = {
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
-                    | {__typename: 'ImageGalleryBlock'}
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
                     | {__typename: 'ListicleBlock'}
@@ -17173,7 +19235,42 @@ export type PageQuery = {
             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
           } | null
         }
-      | {__typename: 'ImageGalleryBlock'}
+      | {
+          __typename: 'ImageGalleryBlock'
+          images: Array<{
+            __typename?: 'GalleryImageEdge'
+            caption?: string | null
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+          }>
+        }
       | {__typename: 'InstagramPostBlock'}
       | {__typename: 'LinkPageBreakBlock'}
       | {__typename: 'ListicleBlock'}
@@ -17275,7 +19372,42 @@ export type PageQuery = {
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
-                    | {__typename: 'ImageGalleryBlock'}
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
                     | {__typename: 'ListicleBlock'}
@@ -17517,7 +19649,42 @@ export type PageQuery = {
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
-                    | {__typename: 'ImageGalleryBlock'}
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
                     | {__typename: 'ListicleBlock'}
@@ -17693,7 +19860,42 @@ export type PageQuery = {
                             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                         }
-                      | {__typename: 'ImageGalleryBlock'}
+                      | {
+                          __typename: 'ImageGalleryBlock'
+                          images: Array<{
+                            __typename?: 'GalleryImageEdge'
+                            caption?: string | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                        }
                       | {__typename: 'InstagramPostBlock'}
                       | {__typename: 'LinkPageBreakBlock'}
                       | {__typename: 'ListicleBlock'}
@@ -17935,7 +20137,42 @@ export type PageQuery = {
                             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                         }
-                      | {__typename: 'ImageGalleryBlock'}
+                      | {
+                          __typename: 'ImageGalleryBlock'
+                          images: Array<{
+                            __typename?: 'GalleryImageEdge'
+                            caption?: string | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                        }
                       | {__typename: 'InstagramPostBlock'}
                       | {__typename: 'LinkPageBreakBlock'}
                       | {__typename: 'ListicleBlock'}
@@ -18806,6 +21043,14 @@ export const BlockWithoutTeaserFragmentDoc = gql`
       caption
       image {
         ...FullImage
+      }
+    }
+    ... on ImageGalleryBlock {
+      images {
+        caption
+        image {
+          ...FullImage
+        }
       }
     }
     ... on QuoteBlock {

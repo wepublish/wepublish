@@ -6,6 +6,7 @@ import {
   BlockRenderer,
   HtmlBlock,
   ImageBlock,
+  ImageGalleryBlock,
   QuoteBlock,
   RichTextBlock,
   Teaser,
@@ -13,6 +14,7 @@ import {
   TeaserGridFlexBlock,
   TitleBlock
 } from '@wepublish/block-content/website'
+import {CommentList, CommentListItem} from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
 import {Image} from '@wepublish/image/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
@@ -109,6 +111,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Renderer: BlockRenderer,
           Title: TitleBlock,
           Image: ImageBlock,
+          ImageGallery: ImageGalleryBlock,
           Quote: QuoteBlock,
           HTML: HtmlBlock,
           RichText: RichTextBlock,
