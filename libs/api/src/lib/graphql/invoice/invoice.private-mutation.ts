@@ -93,7 +93,7 @@ export const markInvoiceAsPaid = async (
 
   const invoice = await prismaClient.invoice.findUnique({
     where: {
-      id: id
+      id
     },
     include: {
       subscriptionPeriods: true

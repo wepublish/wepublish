@@ -14,7 +14,7 @@ import {
   TeaserGridFlexBlock,
   TitleBlock
 } from '@wepublish/block-content/website'
-import {CommentList, CommentListItem} from '@wepublish/comments/website'
+import {CommentEditor, CommentList, CommentListItem} from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
 import {Image} from '@wepublish/image/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
@@ -41,7 +41,6 @@ import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {format} from 'date-fns'
 import {PropsWithChildren, memo} from 'react'
 import {IconContext} from 'react-icons'
-import {CommentList, CommentListItem, CommentEditor} from '@wepublish/comments/website'
 
 export type WebsiteProps = PropsWithChildren
 
