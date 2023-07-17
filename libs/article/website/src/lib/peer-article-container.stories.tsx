@@ -76,7 +76,9 @@ const author = {
       __typename: 'AuthorLink'
     }
   ],
-  image
+  image,
+  createdAt: '2023-01-01',
+  modifiedAt: '2023-01-01'
 } as FullAuthorFragment
 
 const article = {
@@ -303,7 +305,21 @@ const article = {
       image
     },
     {
-      __typename: 'ImageGalleryBlock'
+      __typename: 'ImageGalleryBlock',
+      images: [
+        {
+          caption: 'Caption',
+          image
+        },
+        {
+          caption: 'Caption',
+          image
+        },
+        {
+          caption: 'Caption',
+          image
+        }
+      ]
     },
     {
       __typename: 'ListicleBlock'
