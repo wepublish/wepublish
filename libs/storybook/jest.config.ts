@@ -1,11 +1,10 @@
 /* eslint-disable */
 export default {
-  displayName: 'ui',
+  displayName: 'storybook',
   preset: '../../jest.preset.js',
   transform: {
     '^.+\\.[tj]sx?$': ['@swc/jest', {jsc: {transform: {react: {runtime: 'automatic'}}}}]
   },
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
-  coverageDirectory: '../../coverage/libs/ui',
-  setupFiles: ['./setup-tests.tsx']
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
+  coverageDirectory: '../../coverage/libs/storybook'
 }

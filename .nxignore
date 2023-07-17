@@ -1,2 +1,3 @@
 libs/testing
+libs/storybook
 apps/api-example/schema-v2.graphql
