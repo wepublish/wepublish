@@ -160,19 +160,22 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
 
     authors: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
-      resolve: createProxyingResolver(({authors}, args, {loaders}) => {
-        return loaders.authorsByID.loadMany(authors.map(({authorId}) => authorId))
+      resolve: createProxyingResolver(async ({authors}, args, {loaders}) => {
+        return (await loaders.authorsByID.loadMany(authors.map(({authorId}) => authorId))).filter(
+          Boolean
+        )
       })
     },
-
     breaking: {type: GraphQLNonNull(GraphQLBoolean)},
 
     socialMediaTitle: {type: GraphQLString},
     socialMediaDescription: {type: GraphQLString},
     socialMediaAuthors: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
-      resolve: createProxyingResolver(({socialMediaAuthors}, args, {loaders}) => {
-        return loaders.authorsByID.loadMany(socialMediaAuthors.map(({authorId}) => authorId))
+      resolve: createProxyingResolver(async ({socialMediaAuthors}, args, {loaders}) => {
+        return (
+          await loaders.authorsByID.loadMany(socialMediaAuthors.map(({authorId}) => authorId))
+        ).filter(Boolean)
       })
     },
     socialMediaImage: {
@@ -288,13 +291,15 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
       },
 
       authors: {
-        type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
-        resolve: createProxyingResolver(({authors, hideAuthor}, args, {loaders}) => {
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
+        resolve: createProxyingResolver(async ({authors, hideAuthor}, args, {loaders}) => {
           if (hideAuthor) {
             return []
           }
 
-          return authors.map(({authorId}) => loaders.authorsByID.load(authorId))
+          return (await loaders.authorsByID.loadMany(authors.map(({authorId}) => authorId))).filter(
+            Boolean
+          )
         })
       },
 
@@ -304,13 +309,17 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
       socialMediaDescription: {type: GraphQLString},
       socialMediaAuthors: {
         type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
-        resolve: createProxyingResolver(({socialMediaAuthors, hideAuthor}, args, {loaders}) => {
-          if (hideAuthor) {
-            return []
-          }
+        resolve: createProxyingResolver(
+          async ({socialMediaAuthors, hideAuthor}, args, {loaders}) => {
+            if (hideAuthor) {
+              return []
+            }
 
-          return loaders.authorsByID.loadMany(socialMediaAuthors.map(({authorId}) => authorId))
-        })
+            return (
+              await loaders.authorsByID.loadMany(socialMediaAuthors.map(({authorId}) => authorId))
+            ).filter(Boolean)
+          }
+        )
       },
       socialMediaImage: {
         type: GraphQLImage,

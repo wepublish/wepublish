@@ -28,7 +28,7 @@ import {unselectPassword} from '@wepublish/user/api'
 import {createProxyingResolver} from '../../utility'
 import {CalculatedRating, getPublicChildrenCommentsByParentId} from './comment.public-queries'
 import {GraphQLPageInfo} from '../common'
-import {GraphQLRichText} from '../richText'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 import {GraphQLPublicUser, GraphQLUser} from '../user'
 import {GraphQLTag} from '../tag/tag'
 import {GraphQLImage} from '../image'
@@ -320,7 +320,7 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
       peerId: {type: GraphQLID},
 
       children: {
-        type: GraphQLList(GraphQLPublicComment),
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
         resolve: createProxyingResolver(({id, userID}, _, {prisma: {comment}}) =>
           getPublicChildrenCommentsByParentId(id, userID ?? null, comment)
         )

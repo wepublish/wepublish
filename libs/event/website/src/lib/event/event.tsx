@@ -3,7 +3,7 @@ import {BuilderEventProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdDateRange, MdLocationCity} from 'react-icons/md'
 import {EventSEO} from './event-seo'
 
-export const EventWrapper = styled('div')`
+export const EventWrapper = styled('article')`
   display: grid;
   gap: ${({theme}) => theme.spacing(1)};
 `

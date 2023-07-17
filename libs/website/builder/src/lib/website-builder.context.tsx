@@ -9,17 +9,27 @@ import {
   useContext
 } from 'react'
 import {PartialDeep} from 'type-fest'
-import {BuilderArticleProps} from './article.interface'
+import {BuilderArticleProps, BuilderArticleSEOProps} from './article.interface'
+import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
 import {
+  BuilderAuthorChipProps,
+  BuilderAuthorProps,
+  BuilderAuthorListItemProps,
+  BuilderAuthorListProps
+} from './author.interface'
+import {
+  BuilderBlockRendererProps,
   BuilderHTMLBlockProps,
   BuilderImageBlockProps,
+  BuilderImageGalleryBlockProps,
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
+  BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
   BuilderTeaserProps,
   BuilderTitleBlockProps
 } from './blocks.interface'
-import {BuilderButtonProps} from './button.interface'
+import {BuilderCommentListItemProps, BuilderCommentListProps} from './comment.interface'
 import {
   BuilderEventListItemProps,
   BuilderEventListProps,
@@ -27,6 +37,7 @@ import {
   BuilderEventSEOProps
 } from './event.interface'
 import {BuilderFooterProps} from './footer.interface'
+import {BuilderImageProps} from './image.interface'
 import {
   BuilderListItemProps,
   BuilderOrderedListProps,
@@ -34,12 +45,17 @@ import {
 } from './lists.interface'
 import {BuilderMemberPlansProps} from './member-plans.interface'
 import {BuilderNavbarProps} from './navbar.interface'
-import {BuilderPageProps} from './page.interface'
+import {BuilderPageProps, BuilderPageSEOProps} from './page.interface'
 import {BuilderPayInvoicesProps} from './pay-invoices.interface'
 import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
 import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
-import {BuilderImageProps} from './image.interface'
+import {
+  BuilderAlertProps,
+  BuilderButtonProps,
+  BuilderIconButtonProps,
+  BuilderTextFieldProps
+} from './ui.interface'
 
 const NoComponent = () => null
 
@@ -52,14 +68,27 @@ export type WebsiteBuilderComponents = {
   Subscribe: ComponentType<BuilderSubscribeProps>
   PayInvoices: ComponentType<BuilderPayInvoicesProps>
   Page: ComponentType<BuilderPageProps>
+  PageSEO: ComponentType<BuilderPageSEOProps>
   Article: ComponentType<BuilderArticleProps>
+  ArticleSEO: ComponentType<BuilderArticleSEOProps>
+  Author: ComponentType<BuilderAuthorProps>
+  AuthorChip: ComponentType<BuilderAuthorChipProps>
+  AuthorListItem: ComponentType<BuilderAuthorListItemProps>
+  AuthorList: ComponentType<BuilderAuthorListProps>
   Event: ComponentType<BuilderEventProps>
   EventSEO: ComponentType<BuilderEventSEOProps>
   EventList: ComponentType<BuilderEventListProps>
   EventListItem: ComponentType<BuilderEventListItemProps>
+  CommentList: ComponentType<BuilderCommentListProps>
+  CommentListItem: ComponentType<BuilderCommentListItemProps>
+  LoginForm: ComponentType<BuilderLoginFormProps>
+  RegistrationForm: ComponentType<BuilderRegistrationFormProps>
 
   elements: {
+    Alert: ComponentType<BuilderAlertProps>
+    TextField: ComponentType<BuilderTextFieldProps>
     Button: ComponentType<BuilderButtonProps>
+    IconButton: ComponentType<BuilderIconButtonProps>
     H1: ComponentType<BuilderHeadingProps>
     H2: ComponentType<BuilderHeadingProps>
     H3: ComponentType<BuilderHeadingProps>
@@ -80,12 +109,15 @@ export type WebsiteBuilderComponents = {
   }
 
   blocks: {
+    Renderer: ComponentType<BuilderBlockRendererProps>
     Title: ComponentType<BuilderTitleBlockProps>
     Image: ComponentType<BuilderImageBlockProps>
+    ImageGallery: ComponentType<BuilderImageGalleryBlockProps>
     Quote: ComponentType<BuilderQuoteBlockProps>
     RichText: ComponentType<BuilderRichTextBlockProps>
     HTML: ComponentType<BuilderHTMLBlockProps>
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
+    TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
   }
 
@@ -103,14 +135,27 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   Subscribe: NoComponent,
   PayInvoices: NoComponent,
   Page: NoComponent,
+  PageSEO: NoComponent,
   Article: NoComponent,
+  ArticleSEO: NoComponent,
+  Author: NoComponent,
+  AuthorChip: NoComponent,
+  AuthorList: NoComponent,
+  AuthorListItem: NoComponent,
   Event: NoComponent,
   EventSEO: NoComponent,
   EventList: NoComponent,
   EventListItem: NoComponent,
+  CommentList: NoComponent,
+  CommentListItem: NoComponent,
+  LoginForm: NoComponent,
+  RegistrationForm: NoComponent,
 
   elements: {
+    Alert: NoComponent,
+    TextField: NoComponent,
     Button: NoComponent,
+    IconButton: NoComponent,
     H1: NoComponent,
     H2: NoComponent,
     H3: NoComponent,
@@ -131,12 +176,15 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   },
 
   blocks: {
+    Renderer: NoComponent,
     Title: NoComponent,
     Image: NoComponent,
+    ImageGallery: NoComponent,
     Quote: NoComponent,
     RichText: NoComponent,
     HTML: NoComponent,
     TeaserGridFlex: NoComponent,
+    TeaserGrid: NoComponent,
     Teaser: NoComponent
   },
 

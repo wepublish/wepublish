@@ -1,5 +1,5 @@
 const fs = require('fs')
-const {spawn, exec} = require('child_process')
+const {exec} = require('child_process')
 const {slugify} = require('./utilities')
 
 try {
@@ -234,27 +234,19 @@ async function applyWebsite() {
             {
               name: appName,
               image,
-              command: ['node', 'dist/apps/website-example/main.js'],
+              command: [
+                'sh',
+                '-c',
+                'npx nx build website-example --prod && npx next start dist/apps/website-example/ -p 8000'
+              ],
               env: [
                 {
                   name: 'NODE_ENV',
                   value: `production`
                 },
                 {
-                  name: 'HOST_ENV',
-                  value: envSwitch(ENVIRONMENT_NAME, 'production', 'development')
-                },
-                {
-                  name: 'CANONICAL_HOST',
-                  value: envSwitch(ENVIRONMENT_NAME, `https://${domain}`, `https://${devDomain}`)
-                },
-                {
                   name: 'API_URL',
                   value: `https://${domainAPI}`
-                },
-                {
-                  name: 'ALLOWED_HOSTS',
-                  value: `${domainCn},${domainSan}`
                 }
               ],
               ports: [

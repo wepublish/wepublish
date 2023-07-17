@@ -24,7 +24,7 @@ import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../../context'
 import {ConnectionResult} from '../../db/common'
 import {GraphQLPageInfo} from '../common'
-import {GraphQLRichText} from '../richText'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 import {PollSort} from './poll.private-queries'
 
 const validateVoteValue = (voteValue: unknown): number => {

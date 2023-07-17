@@ -1,19 +1,35 @@
 import {styled} from '@mui/material'
-import {BuilderArticleProps} from '@wepublish/website/builder'
-import {Block} from '@wepublish/website/api'
+import {BuilderArticleProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {Article as ArticleType, Block} from '@wepublish/website/api'
 import {Blocks} from '@wepublish/block-content/website'
 
-export type ArticleProps = BuilderArticleProps
-
-const ArticleWrapper = styled('div')`
+export const ArticleWrapper = styled('article')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
 `
 
-export function Article({className, data, loading, error}: ArticleProps) {
+export const ArticleInfoWrapper = styled('section')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(3)};
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  justify-self: center;
+`
+
+export function Article({className, data, loading, error}: BuilderArticleProps) {
+  const {AuthorChip, ArticleSEO} = useWebsiteBuilder()
+
   return (
     <ArticleWrapper className={className}>
+      {data?.article && <ArticleSEO article={data.article as ArticleType} />}
+
       <Blocks blocks={(data?.article?.blocks as Block[]) ?? []} />
+
+      <ArticleInfoWrapper>
+        {data?.article?.authors.map(author => (
+          <AuthorChip key={author.id} author={author} />
+        ))}
+      </ArticleInfoWrapper>
     </ArticleWrapper>
   )
 }

@@ -1,27 +1,30 @@
 import {Meta} from '@storybook/react'
-import {UnorderedList, OrderedList, ListItem} from './lists'
-import {ComponentProps} from 'react'
+import {ListItem, OrderedList, UnorderedList} from './lists'
 
 export default {
-  title: 'Lists'
+  title: 'UI/Lists'
 } as Meta
 
 export const Unordered = {
   component: UnorderedList,
-  render: (args: ComponentProps<typeof UnorderedList>) => (
-    <UnorderedList {...args}>
-      <ListItem>One</ListItem>
-      <ListItem>Two</ListItem>
-    </UnorderedList>
-  )
+  args: {
+    children: (
+      <>
+        <ListItem>One</ListItem>
+        <ListItem>Two</ListItem>
+      </>
+    )
+  }
 }
 
 export const Ordered = {
   component: OrderedList,
-  render: (args: ComponentProps<typeof OrderedList>) => (
-    <OrderedList {...args}>
-      <ListItem>One</ListItem>
-      <ListItem>Two</ListItem>
-    </OrderedList>
-  )
+  args: {
+    children: (
+      <>
+        <ListItem>One</ListItem>
+        <ListItem>Two</ListItem>
+      </>
+    )
+  }
 }
