@@ -43,7 +43,12 @@ export function PeerArticleContainer({
 
   return (
     <ArticleWrapper>
-      <PeerInformation data={peer.data} loading={peer.loading} error={peer.error} />
+      <PeerInformation
+        data={peer.data}
+        loading={peer.loading}
+        error={peer.error}
+        originUrl={data?.peerArticle?.url}
+      />
 
       <Article
         data={

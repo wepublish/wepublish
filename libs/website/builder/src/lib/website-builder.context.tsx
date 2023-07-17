@@ -21,6 +21,7 @@ import {
   BuilderBlockRendererProps,
   BuilderHTMLBlockProps,
   BuilderImageBlockProps,
+  BuilderImageGalleryBlockProps,
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
   BuilderTeaserGridBlockProps,
@@ -113,6 +114,7 @@ export type WebsiteBuilderComponents = {
     Renderer: ComponentType<BuilderBlockRendererProps>
     Title: ComponentType<BuilderTitleBlockProps>
     Image: ComponentType<BuilderImageBlockProps>
+    ImageGallery: ComponentType<BuilderImageGalleryBlockProps>
     Quote: ComponentType<BuilderQuoteBlockProps>
     RichText: ComponentType<BuilderRichTextBlockProps>
     HTML: ComponentType<BuilderHTMLBlockProps>
@@ -180,6 +182,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     Renderer: NoComponent,
     Title: NoComponent,
     Image: NoComponent,
+    ImageGallery: NoComponent,
     Quote: NoComponent,
     RichText: NoComponent,
     HTML: NoComponent,

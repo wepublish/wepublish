@@ -13,6 +13,15 @@ fragment BlockWithoutTeaser on Block {
     }
   }
 
+  ... on ImageGalleryBlock {
+    images {
+      caption
+      image {
+        ...FullImage
+      }
+    }
+  }
+
   ... on QuoteBlock {
     quote
     author
