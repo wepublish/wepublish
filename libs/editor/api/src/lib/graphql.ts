@@ -628,9 +628,9 @@ export type FullCommentRatingSystem = {
 
 export type FullPoll = {
   __typename?: 'FullPoll';
-  answers?: Maybe<Array<PollAnswerWithVoteCount>>;
+  answers: Array<PollAnswerWithVoteCount>;
   closedAt?: Maybe<Scalars['DateTime']>;
-  externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
+  externalVoteSources: Array<PollExternalVoteSource>;
   id: Scalars['ID'];
   infoText?: Maybe<Scalars['RichText']>;
   opensAt: Scalars['DateTime'];
@@ -1828,7 +1828,7 @@ export type PollConnection = {
 
 export type PollExternalVote = {
   __typename?: 'PollExternalVote';
-  amount?: Maybe<Scalars['VoteValue']>;
+  amount: Scalars['VoteValue'];
   answerId: Scalars['ID'];
   id: Scalars['ID'];
 };
@@ -1837,7 +1837,7 @@ export type PollExternalVoteSource = {
   __typename?: 'PollExternalVoteSource';
   id: Scalars['ID'];
   source?: Maybe<Scalars['String']>;
-  voteAmounts?: Maybe<Array<PollExternalVote>>;
+  voteAmounts: Array<PollExternalVote>;
 };
 
 export type PollFilter = {
@@ -3502,7 +3502,7 @@ export type DeletePeerMutationVariables = Exact<{
 
 export type DeletePeerMutation = { __typename?: 'Mutation', deletePeer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null };
 
-export type PollExternalVoteSourceFragment = { __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: number | null }> | null };
+export type PollExternalVoteSourceFragment = { __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> };
 
 export type CreatePollMutationVariables = Exact<{
   opensAt?: InputMaybe<Scalars['DateTime']>;
@@ -3524,7 +3524,7 @@ export type UpdatePollMutationVariables = Exact<{
 }>;
 
 
-export type UpdatePollMutation = { __typename?: 'Mutation', updatePoll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: Node[] | null, answers?: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }> | null, externalVoteSources?: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: number | null }> | null }> | null } | null };
+export type UpdatePollMutation = { __typename?: 'Mutation', updatePoll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: Node[] | null, answers: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }>, externalVoteSources: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> }> } | null };
 
 export type DeletePollMutationVariables = Exact<{
   deletePollId: Scalars['ID'];
@@ -3554,14 +3554,14 @@ export type CreatePollExternalVoteSourceMutationVariables = Exact<{
 }>;
 
 
-export type CreatePollExternalVoteSourceMutation = { __typename?: 'Mutation', createPollExternalVoteSource?: { __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: number | null }> | null } | null };
+export type CreatePollExternalVoteSourceMutation = { __typename?: 'Mutation', createPollExternalVoteSource?: { __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> } | null };
 
 export type DeletePollExternalVoteSourceMutationVariables = Exact<{
   deletePollExternalVoteSourceId: Scalars['ID'];
 }>;
 
 
-export type DeletePollExternalVoteSourceMutation = { __typename?: 'Mutation', deletePollExternalVoteSource?: { __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: number | null }> | null } | null };
+export type DeletePollExternalVoteSourceMutation = { __typename?: 'Mutation', deletePollExternalVoteSource?: { __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> } | null };
 
 export type PollsQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['ID']>;
@@ -3580,7 +3580,7 @@ export type PollQueryVariables = Exact<{
 }>;
 
 
-export type PollQuery = { __typename?: 'Query', poll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: Node[] | null, answers?: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }> | null, externalVoteSources?: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts?: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount?: number | null }> | null }> | null } | null };
+export type PollQuery = { __typename?: 'Query', poll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: Node[] | null, answers: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }>, externalVoteSources: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> }> } | null };
 
 export type FullSettingFragment = { __typename?: 'Setting', id: string, name: SettingName, value: any, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null } | null };
 

@@ -1,6 +1,11 @@
 import {ApolloError} from '@apollo/client'
 import {Meta} from '@storybook/react'
-import {FullAuthorFragment, FullImageFragment, PageQuery} from '@wepublish/website/api'
+import {
+  FullAuthorFragment,
+  FullImageFragment,
+  FullPollFragment,
+  PageQuery
+} from '@wepublish/website/api'
 import {Page} from './page'
 
 const image = {
@@ -72,6 +77,57 @@ const author = {
   ],
   image
 } as FullAuthorFragment
+
+const poll = {
+  __typename: 'FullPoll',
+  id: '1234',
+  question: 'Question',
+  infoText: [
+    {
+      type: 'paragraph',
+      children: [
+        {
+          text: 'Normal text,'
+        }
+      ]
+    }
+  ],
+  externalVoteSources: [
+    {
+      id: '1234',
+      voteAmounts: [
+        {
+          id: '1',
+          __typename: 'PollExternalVote',
+          amount: 10,
+          answerId: '1234'
+        },
+        {
+          id: '2',
+          __typename: 'PollExternalVote',
+          amount: 5,
+          answerId: '1234-1234'
+        }
+      ]
+    }
+  ],
+  opensAt: '2023-01-01',
+  closedAt: '2033-01-01',
+  answers: [
+    {
+      id: '1234',
+      pollId: '1234',
+      votes: 1,
+      answer: 'Ja'
+    },
+    {
+      id: '1234-1234',
+      pollId: '1234',
+      votes: 5,
+      answer: 'Nein'
+    }
+  ]
+} as FullPollFragment
 
 const page = {
   __typename: 'Page',
@@ -1917,7 +1973,8 @@ const page = {
       html: '<div>Some HTML embed</div>\n<script>console.log("Some HTML embed")</script>'
     },
     {
-      __typename: 'PollBlock'
+      __typename: 'PollBlock',
+      poll
     },
     {
       __typename: 'CommentBlock'

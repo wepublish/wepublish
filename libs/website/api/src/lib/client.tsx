@@ -29,7 +29,8 @@ export const getV1ApiClient = (
       possibleTypes: possibleTypes.possibleTypes,
       ...cacheConfig
     }).restore(cache ?? {}),
-    ssrMode: typeof window === 'undefined'
+    ssrMode: typeof window === 'undefined',
+    assumeImmutableResults: true
   })
 }
 

@@ -34,6 +34,12 @@ fragment BlockWithoutTeaser on Block {
   ... on HTMLBlock {
     html
   }
+
+  ... on PollBlock {
+    poll {
+      ...FullPoll
+    }
+  }
 }
 
 fragment FullTeaser on Teaser {

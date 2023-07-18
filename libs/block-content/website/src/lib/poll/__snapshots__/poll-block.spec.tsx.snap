@@ -1,0 +1,748 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Poll Block should render AlreadyVoted 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <h1
+      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+    >
+      Question
+    </h1>
+    <div
+      class="css-0"
+    >
+      <div
+        data-gramm="false"
+        data-slate-editor="true"
+        data-slate-node="value"
+        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+      >
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+      </div>
+    </div>
+    <div
+      class="css-sxg9br"
+    >
+      <div
+        class="css-chr1eq"
+      >
+        <div
+          class="css-10czf35"
+        >
+          <div
+            class="css-1ezgv1"
+          >
+            Ja
+          </div>
+          <div
+            class="css-1ezgv1"
+          >
+            52%
+          </div>
+        </div>
+        <div
+          class="css-1yix0yk"
+        >
+          <div
+            class="css-114fc7i"
+          />
+          <div
+            class="css-1dbf9i0"
+          >
+            11 Stimmen
+          </div>
+        </div>
+      </div>
+      <div
+        class="css-chr1eq"
+      >
+        <div
+          class="css-10czf35"
+        >
+          <div
+            class="css-1ezgv1"
+          >
+            Nein
+          </div>
+          <div
+            class="css-1ezgv1"
+          >
+            48%
+          </div>
+        </div>
+        <div
+          class="css-1yix0yk"
+        >
+          <div
+            class="css-1gwaxo3"
+          />
+          <div
+            class="css-1aswy5a"
+          >
+            10 Stimmen
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="css-17xtbym"
+    >
+      21 Stimmen – Schliesst am 01.01.2033 00:00
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Poll Block should render Closed 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <h1
+      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+    >
+      Question
+    </h1>
+    <div
+      class="css-0"
+    >
+      <div
+        data-gramm="false"
+        data-slate-editor="true"
+        data-slate-node="value"
+        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+      >
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+      </div>
+    </div>
+    <div
+      class="css-sxg9br"
+    >
+      <div
+        class="css-chr1eq"
+      >
+        <div
+          class="css-10czf35"
+        >
+          <div
+            class="css-1ezgv1"
+          >
+            Ja
+          </div>
+          <div
+            class="css-1ezgv1"
+          >
+            52%
+          </div>
+        </div>
+        <div
+          class="css-1yix0yk"
+        >
+          <div
+            class="css-t1j8sa"
+          />
+          <div
+            class="css-1aswy5a"
+          >
+            11 Stimmen
+          </div>
+        </div>
+      </div>
+      <div
+        class="css-chr1eq"
+      >
+        <div
+          class="css-10czf35"
+        >
+          <div
+            class="css-1ezgv1"
+          >
+            Nein
+          </div>
+          <div
+            class="css-1ezgv1"
+          >
+            48%
+          </div>
+        </div>
+        <div
+          class="css-1yix0yk"
+        >
+          <div
+            class="css-a029zd"
+          />
+          <div
+            class="css-1dbf9i0"
+          >
+            10 Stimmen
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="css-17xtbym"
+    >
+      21 Stimmen – Abstimmung beendet.
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Poll Block should render Default 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <h1
+      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+    >
+      Question
+    </h1>
+    <div
+      class="css-0"
+    >
+      <div
+        data-gramm="false"
+        data-slate-editor="true"
+        data-slate-node="value"
+        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+      >
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+      </div>
+    </div>
+    <div
+      class="css-sxg9br"
+    >
+      <div
+        class="css-chr1eq"
+      >
+        <div
+          class="css-10czf35"
+        >
+          <div
+            class="css-1ezgv1"
+          >
+            Ja
+          </div>
+          <div
+            class="css-1ezgv1"
+          >
+            52%
+          </div>
+        </div>
+        <div
+          class="css-1yix0yk"
+        >
+          <div
+            class="css-t1j8sa"
+          />
+          <div
+            class="css-1aswy5a"
+          >
+            11 Stimmen
+          </div>
+        </div>
+      </div>
+      <div
+        class="css-chr1eq"
+      >
+        <div
+          class="css-10czf35"
+        >
+          <div
+            class="css-1ezgv1"
+          >
+            Nein
+          </div>
+          <div
+            class="css-1ezgv1"
+          >
+            48%
+          </div>
+        </div>
+        <div
+          class="css-1yix0yk"
+        >
+          <div
+            class="css-a029zd"
+          />
+          <div
+            class="css-1dbf9i0"
+          >
+            10 Stimmen
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="css-17xtbym"
+    >
+      21 Stimmen – Schliesst am 01.01.2033 00:00
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Poll Block should render Voting 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <h1
+      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+    >
+      Question
+    </h1>
+    <div
+      class="css-0"
+    >
+      <div
+        data-gramm="false"
+        data-slate-editor="true"
+        data-slate-node="value"
+        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+      >
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+      </div>
+    </div>
+    <div
+      class="css-sxg9br"
+    >
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="button"
+      >
+        Ja
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="button"
+      >
+        Nein
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+    </div>
+    <div
+      class="css-17xtbym"
+    >
+      21 Stimmen – Schliesst am 01.01.2033 00:00
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Poll Block should render VotingPlay 1`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -33,33 +33,73 @@
+        </div>
+      </div>
+      <div
+        class="css-sxg9br"
+      >
+-       <button
+-         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
+-         tabindex="0"
+-         type="button"
++       <div
++         class="css-chr1eq"
++       >
++         <div
++           class="css-10czf35"
++         >
++           <div
++             class="css-1ezgv1"
+            >
+              Ja
+-         <span
+-           class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
++           </div>
++           <div
++             class="css-1ezgv1"
++           >
++             55%
++           </div>
++         </div>
++         <div
++           class="css-1yix0yk"
++         >
++           <div
++             class="css-tr1tzc"
+            />
+-       </button>
+-       <button
+-         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
+-         tabindex="0"
+-         type="button"
++           <div
++             class="css-1aswy5a"
++           >
++             12 Stimmen
++           </div>
++         </div>
++       </div>
++       <div
++         class="css-chr1eq"
++       >
++         <div
++           class="css-10czf35"
+          >
++           <div
++             class="css-1ezgv1"
++           >
+              Nein
+-         <span
+-           class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
++           </div>
++           <div
++             class="css-1ezgv1"
++           >
++             45%
++           </div>
++         </div>
++         <div
++           class="css-1yix0yk"
++         >
++           <div
++             class="css-vbeob1"
+            />
+-       </button>
++           <div
++             class="css-1dbf9i0"
++           >
++             10 Stimmen
++           </div>
+          </div>
++       </div>
++     </div>
+      <div
+        class="css-17xtbym"
+      >
+-       21 Stimmen – Schliesst am 01.01.2033 00:00
++       22 Stimmen – Schliesst am 01.01.2033 00:00
+      </div>
+    </article>
+  </DocumentFragment>"
+`;
+
+exports[`Poll Block should render WithClassName 1`] = `
+<DocumentFragment>
+  <article
+    class="extra-classname css-2klgun"
+  >
+    <h1
+      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+    >
+      Question
+    </h1>
+    <div
+      class="css-0"
+    >
+      <div
+        data-gramm="false"
+        data-slate-editor="true"
+        data-slate-node="value"
+        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+      >
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+      </div>
+    </div>
+    <div
+      class="css-sxg9br"
+    >
+      <div
+        class="css-chr1eq"
+      >
+        <div
+          class="css-10czf35"
+        >
+          <div
+            class="css-1ezgv1"
+          >
+            Ja
+          </div>
+          <div
+            class="css-1ezgv1"
+          >
+            52%
+          </div>
+        </div>
+        <div
+          class="css-1yix0yk"
+        >
+          <div
+            class="css-t1j8sa"
+          />
+          <div
+            class="css-1aswy5a"
+          >
+            11 Stimmen
+          </div>
+        </div>
+      </div>
+      <div
+        class="css-chr1eq"
+      >
+        <div
+          class="css-10czf35"
+        >
+          <div
+            class="css-1ezgv1"
+          >
+            Nein
+          </div>
+          <div
+            class="css-1ezgv1"
+          >
+            48%
+          </div>
+        </div>
+        <div
+          class="css-1yix0yk"
+        >
+          <div
+            class="css-a029zd"
+          />
+          <div
+            class="css-1dbf9i0"
+          >
+            10 Stimmen
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="css-17xtbym"
+    >
+      21 Stimmen – Schliesst am 01.01.2033 00:00
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Poll Block should render WithEmotion 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <h1
+      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+    >
+      Question
+    </h1>
+    <div
+      class="css-0"
+    >
+      <div
+        data-gramm="false"
+        data-slate-editor="true"
+        data-slate-node="value"
+        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+      >
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+      </div>
+    </div>
+    <div
+      class="css-sxg9br"
+    >
+      <div
+        class="css-chr1eq"
+      >
+        <div
+          class="css-10czf35"
+        >
+          <div
+            class="css-1ezgv1"
+          >
+            Ja
+          </div>
+          <div
+            class="css-1ezgv1"
+          >
+            52%
+          </div>
+        </div>
+        <div
+          class="css-1yix0yk"
+        >
+          <div
+            class="css-t1j8sa"
+          />
+          <div
+            class="css-1aswy5a"
+          >
+            11 Stimmen
+          </div>
+        </div>
+      </div>
+      <div
+        class="css-chr1eq"
+      >
+        <div
+          class="css-10czf35"
+        >
+          <div
+            class="css-1ezgv1"
+          >
+            Nein
+          </div>
+          <div
+            class="css-1ezgv1"
+          >
+            48%
+          </div>
+        </div>
+        <div
+          class="css-1yix0yk"
+        >
+          <div
+            class="css-a029zd"
+          />
+          <div
+            class="css-1dbf9i0"
+          >
+            10 Stimmen
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="css-17xtbym"
+    >
+      21 Stimmen – Schliesst am 01.01.2033 00:00
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Poll Block should render WithError 1`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -56,10 +56,35 @@
+        >
+          Something went wrong with the user vote.
+        </div>
+      </div>
+      <div
++       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1hdyuqk-MuiPaper-root-MuiAlert-root"
++       role="alert"
++     >
++       <div
++         class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
++       >
++         <svg
++           aria-hidden="true"
++           class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
++           data-testid="ErrorOutlineIcon"
++           focusable="false"
++           viewBox="0 0 24 24"
++         >
++           <path
++             d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
++           />
++         </svg>
++       </div>
++       <div
++         class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
++       >
++         Something went wrong with the poll vote.
++       </div>
++     </div>
++     <div
+        class="css-sxg9br"
+      >
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
+          tabindex="0""
+`;

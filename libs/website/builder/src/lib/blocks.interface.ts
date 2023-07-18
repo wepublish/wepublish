@@ -1,15 +1,16 @@
 import {
+  Block,
   FlexAlignment,
   HtmlBlock,
   ImageBlock,
   ImageGalleryBlock,
+  PollBlock,
   QuoteBlock,
   RichTextBlock,
-  TeaserGridFlexBlock,
-  TitleBlock,
   Teaser,
-  Block,
-  TeaserGridBlock
+  TeaserGridBlock,
+  TeaserGridFlexBlock,
+  TitleBlock
 } from '@wepublish/website/api'
 
 export type BuilderBlockRendererProps = {block: Block}
@@ -19,6 +20,7 @@ export type BuilderImageGalleryBlockProps = ImageGalleryBlock & {className?: str
 export type BuilderQuoteBlockProps = QuoteBlock & {className?: string}
 export type BuilderRichTextBlockProps = RichTextBlock & {className?: string}
 export type BuilderHTMLBlockProps = HtmlBlock & {className?: string}
+export type BuilderPollBlockProps = PollBlock & {className?: string}
 export type BuilderTeaserGridFlexBlockProps = TeaserGridFlexBlock & {
   className?: string
   showLead?: boolean

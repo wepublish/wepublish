@@ -7,11 +7,12 @@ export const CommentListWrapper = styled('article')`
   gap: ${({theme}) => theme.spacing(4)};
 `
 
-export const CommentList = ({data, className}: BuilderCommentListProps) => {
+export const CommentList = ({data, error, loading, className}: BuilderCommentListProps) => {
   const {
     CommentListItem,
     elements: {Alert}
   } = useWebsiteBuilder()
+  const noComments = !error && !loading && !data?.comments.length
 
   return (
     <CommentListWrapper className={className}>
@@ -23,7 +24,7 @@ export const CommentList = ({data, className}: BuilderCommentListProps) => {
         />
       ))}
 
-      {!data?.comments.length && <Alert severity="info">Keine Kommentare vorhanden.</Alert>}
+      {noComments && <Alert severity="info">Keine Kommentare vorhanden.</Alert>}
     </CommentListWrapper>
   )
 }
