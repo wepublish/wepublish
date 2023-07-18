@@ -12,6 +12,13 @@ fragment ArticleWithoutBlocks on Article {
   tags
   title
   url
+  comments {
+    ...FullComment
+  }
+  properties {
+    key
+    value
+  }
 
   authors {
     ...FullAuthor
@@ -23,6 +30,9 @@ fragment ArticleWithoutBlocks on Article {
 
   socialMediaDescription
   socialMediaTitle
+  socialMediaAuthors {
+    ...FullAuthor
+  }
   socialMediaImage {
     ...FullImage
   }
@@ -45,5 +55,22 @@ query Article($slug: Slug, $id: ID) {
 query PeerArticle($peerSlug: Slug, $peerId: ID, $articleId: ID!) {
   peerArticle(peerSlug: $peerSlug, peerID: $peerId, id: $articleId) {
     ...FullArticle
+  }
+}
+
+query ArticleList($filter: ArticleFilter, $cursor: ID, $take: Int) {
+  articles(take: $take, cursor: $cursor, filter: $filter) {
+    nodes {
+      ...FullArticle
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
   }
 }

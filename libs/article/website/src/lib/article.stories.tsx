@@ -74,7 +74,7 @@ const author = {
   image
 } as FullAuthorFragment
 
-const article = {
+export const article = {
   __typename: 'Article',
   id: 'clgp1hfio50331801rejmrk6sj3',
   title: 'title',

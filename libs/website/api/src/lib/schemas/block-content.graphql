@@ -34,6 +34,10 @@ fragment BlockWithoutTeaser on Block {
   ... on HTMLBlock {
     html
   }
+
+  ... on BildwurfAdBlock {
+    zoneID
+  }
 }
 
 fragment FullTeaser on Teaser {
