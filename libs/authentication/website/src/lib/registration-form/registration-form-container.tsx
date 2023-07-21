@@ -39,7 +39,9 @@ export function RegistrationFormContainer({
   const challenge = useChallengeQuery()
 
   useEffect(() => {
-    onRegister?.(registerData)
+    if (registerData.called) {
+      onRegister?.(registerData)
+    }
   }, [registerData, onRegister])
 
   useEffect(() => {

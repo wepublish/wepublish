@@ -34,7 +34,11 @@ import {
   BuilderTeaserProps,
   BuilderTitleBlockProps
 } from './blocks.interface'
-import {BuilderCommentListItemProps, BuilderCommentListProps} from './comment.interface'
+import {
+  BuilderCommentEditorProps,
+  BuilderCommentListItemProps,
+  BuilderCommentListProps
+} from './comment.interface'
 import {
   BuilderEventListItemProps,
   BuilderEventListProps,
@@ -88,6 +92,7 @@ export type WebsiteBuilderComponents = {
   EventListItem: ComponentType<BuilderEventListItemProps>
   CommentList: ComponentType<BuilderCommentListProps>
   CommentListItem: ComponentType<BuilderCommentListItemProps>
+  CommentEditor: ComponentType<BuilderCommentEditorProps>
   LoginForm: ComponentType<BuilderLoginFormProps>
   RegistrationForm: ComponentType<BuilderRegistrationFormProps>
 
@@ -157,6 +162,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   ArticleListItem: NoComponent,
   CommentList: NoComponent,
   CommentListItem: NoComponent,
+  CommentEditor: NoComponent,
   LoginForm: NoComponent,
   RegistrationForm: NoComponent,
 

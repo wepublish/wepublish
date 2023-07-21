@@ -85,6 +85,10 @@ const LogoWrapper = styled(Logo)`
   height: 40px;
 `
 
+const NavBar = styled(NavbarContainer)`
+  background-color: ${({theme}) => theme.palette.common.white};
+`
+
 function CustomApp({Component, pageProps}: AppProps) {
   const theme = useTheme()
   const globalStyles = useMemo(() => tsriArticleStyles(theme), [theme])
@@ -111,7 +115,7 @@ function CustomApp({Component, pageProps}: AppProps) {
             </Head>
 
             <Spacer>
-              <NavbarContainer categorySlugs={['categories']} slug="main" />
+              <NavBar categorySlugs={['categories']} slug="main" />
 
               <main>
                 <MainSpacer>

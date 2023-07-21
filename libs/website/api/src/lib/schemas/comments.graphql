@@ -89,3 +89,15 @@ query CommentList($itemId: ID!, $order: SortOrder, $sort: CommentSort) {
     ...FullComment
   }
 }
+
+mutation AddComment($input: CommentInput!) {
+  addComment(input: $input) {
+    ...FullComment
+  }
+}
+
+mutation EditComment($input: CommentUpdateInput!) {
+  updateComment(input: $input) {
+    ...FullComment
+  }
+}

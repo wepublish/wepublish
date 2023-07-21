@@ -687,7 +687,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     setting: {
       type: GraphQLSetting,
-      args: {name: {type: GraphQLString}},
+      args: {name: {type: GraphQLNonNull(GraphQLString)}},
       resolve: (root, {name}, {authenticate, prisma: {setting}}) =>
         getSetting(name, authenticate, setting)
     },
