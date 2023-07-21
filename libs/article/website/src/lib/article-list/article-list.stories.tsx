@@ -1,5 +1,4 @@
 import {Meta} from '@storybook/react'
-import {action} from '@storybook/addon-actions'
 import {ArticleList} from './article-list'
 import {article} from '../article.stories'
 import {ApolloError} from '@apollo/client'
@@ -36,16 +35,14 @@ export const Default = {
         totalCount: 11
       }
     },
-    variables: {},
-    onVariablesChange: action('onVariablesChange')
+    variables: {}
   }
 }
 
 export const WithLoading = {
   args: {
     data: undefined,
-    loading: true,
-    onVariablesChange: action('onVariablesChange')
+    loading: true
   }
 }
 
@@ -55,8 +52,7 @@ export const WithError = {
     loading: false,
     error: new ApolloError({
       errorMessage: 'Article list error'
-    }),
-    onVariablesChange: action('onVariablesChange')
+    })
   }
 }
 
@@ -86,8 +82,7 @@ export const WithClassName = {
         totalCount: 11
       }
     },
-    className: 'extra-classname',
-    onVariablesChange: action('onVariablesChange')
+    className: 'extra-classname'
   }
 }
 
@@ -119,8 +114,7 @@ export const WithEmotion = {
     },
     css: css`
       background-color: #eee;
-    `,
-    onVariablesChange: action('onVariablesChange')
+    `
   }
 }
 
@@ -150,7 +144,6 @@ export const WithoutImage = {
         totalCount: 11
       }
     },
-    variables: {},
-    onVariablesChange: action('onVariablesChange')
+    variables: {}
   }
 }
