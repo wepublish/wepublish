@@ -1,6 +1,7 @@
 import {BuilderBlockRendererProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Block as BlockType} from '@wepublish/website/api'
 import {isHtmlBlock} from './html-block'
+import {isEmbedBlock} from './embed-block'
 import {isImageBlock} from './image-block'
 import {isQuoteBlock} from './quote-block'
 import {isRichTextBlock} from './richtext-block'
@@ -20,6 +21,7 @@ export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
     [isQuoteBlock, block => <blocks.Quote {...block} />],
     [isRichTextBlock, block => <blocks.RichText {...block} />],
     [isHtmlBlock, block => <blocks.HTML {...block} />],
+    [isEmbedBlock, block => <blocks.Embed {...block} />],
     [isTeaserGridFlexBlock, block => <blocks.TeaserGridFlex {...block} />],
     [isTeaserGridBlock, block => <blocks.TeaserGrid {...block} />]
   ])(block)

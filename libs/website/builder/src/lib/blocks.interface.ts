@@ -1,6 +1,7 @@
 import {
   FlexAlignment,
   HtmlBlock,
+  EmbedBlock,
   ImageBlock,
   ImageGalleryBlock,
   QuoteBlock,
@@ -19,6 +20,7 @@ export type BuilderImageGalleryBlockProps = ImageGalleryBlock & {className?: str
 export type BuilderQuoteBlockProps = QuoteBlock & {className?: string}
 export type BuilderRichTextBlockProps = RichTextBlock & {className?: string}
 export type BuilderHTMLBlockProps = HtmlBlock & {className?: string}
+// export type BuilderEmbedBlockProps = EmbedBlock & {className?: string} // todo why EmbedBlock looks like this? should that be changed?
 export type BuilderTeaserGridFlexBlockProps = TeaserGridFlexBlock & {
   className?: string
   showLead?: boolean
@@ -32,4 +34,9 @@ export type BuilderTeaserProps = {
   teaser?: Teaser | null
   alignment: FlexAlignment
   showLead?: boolean
+} & {className?: string}
+
+// todo temp?
+export type BuilderEmbedBlockProps = {
+  value?: any
 } & {className?: string}
