@@ -5134,6 +5134,8 @@ export type AuthorListQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['ID']>
   take?: InputMaybe<Scalars['Int']>
   skip?: InputMaybe<Scalars['Int']>
+  sort?: InputMaybe<AuthorSort>
+  order?: InputMaybe<SortOrder>
 }>
 
 export type AuthorListQuery = {
@@ -19738,8 +19740,22 @@ export type AuthorQueryHookResult = ReturnType<typeof useAuthorQuery>
 export type AuthorLazyQueryHookResult = ReturnType<typeof useAuthorLazyQuery>
 export type AuthorQueryResult = Apollo.QueryResult<AuthorQuery, AuthorQueryVariables>
 export const AuthorListDocument = gql`
-  query AuthorList($filter: AuthorFilter, $cursor: ID, $take: Int, $skip: Int) {
-    authors(filter: $filter, cursor: $cursor, take: $take, skip: $skip) {
+  query AuthorList(
+    $filter: AuthorFilter
+    $cursor: ID
+    $take: Int
+    $skip: Int
+    $sort: AuthorSort
+    $order: SortOrder
+  ) {
+    authors(
+      filter: $filter
+      cursor: $cursor
+      sort: $sort
+      order: $order
+      take: $take
+      skip: $skip
+    ) {
       nodes {
         ...FullAuthor
       }
@@ -19771,6 +19787,8 @@ export const AuthorListDocument = gql`
  *      cursor: // value for 'cursor'
  *      take: // value for 'take'
  *      skip: // value for 'skip'
+ *      sort: // value for 'sort'
+ *      order: // value for 'order'
  *   },
  * });
  */
