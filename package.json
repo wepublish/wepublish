@@ -16,13 +16,17 @@
     "watch:editor": "nx serve editor",
     "watch:api-example": "nx serve api-example",
     "watch:website-example": "nx serve website-example",
-    "generate:api:api": "nx generate-api api",
-    "generate:editor:api": "nx generate-api editor",
+    "generate-api": "graphql-codegen -r dotenv/config --config codegen.yml",
     "changelog": "node -r dotenv/config ./node_modules/.bin/lerna-changelog",
     "publish": "lerna publish from-package --ignore-scripts --no-verify-access",
     "start:docker": "docker-compose up --detach database pgadmin media",
     "prettier": "prettier --write \"{packages,services}/**/*.{js,ts,tsx,json}\"",
     "prepare": "prisma generate"
+  },
+  "nx": {
+    "includedScripts": [
+      "generate-api"
+    ]
   },
   "devDependencies": {
     "@babel/core": "7.12.13",
