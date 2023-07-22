@@ -306,7 +306,7 @@ async function applyWebsite() {
 }
 
 async function applyStorybook() {
-  const servicePort = 8000
+  const servicePort = 80
   const app = 'storybook'
   const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
 
@@ -382,6 +382,9 @@ async function applyStorybook() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '1m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
+        'kubernetes.io/ingress.class': 'nginx',
+        'nginx.ingress.kubernetes.io/add-base-url': 'true',
+        'nginx.ingress.kubernetes.io/rewrite-target': './dist/storybook/website/',
         ...envSwitch(
           ENVIRONMENT_NAME,
           {
@@ -449,11 +452,6 @@ async function applyStorybook() {
             {
               name: appName,
               image,
-              command: [
-                'sh',
-                '-c',
-                'npx -y http-server ./dist/storybook/website -d false -p 8000 -g -b --proxy http://localhost:8000/'
-              ],
               env: [],
               ports: [
                 {
