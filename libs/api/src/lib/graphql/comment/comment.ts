@@ -28,11 +28,12 @@ import {unselectPassword} from '@wepublish/user/api'
 import {createProxyingResolver} from '../../utility'
 import {CalculatedRating, getPublicChildrenCommentsByParentId} from './comment.public-queries'
 import {GraphQLPageInfo} from '../common'
-import {GraphQLRichText} from '../richText'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 import {GraphQLPublicUser, GraphQLUser} from '../user'
 import {GraphQLTag} from '../tag/tag'
 import {GraphQLImage} from '../image'
 import {GraphQLCommentRatingSystemAnswer} from '../comment-rating/comment-rating'
+import {AuthSessionType} from '@wepublish/authentication/api'
 
 export const GraphQLCommentState = new GraphQLEnumType({
   name: 'CommentState',
@@ -128,9 +129,9 @@ export const GraphQLPublicCommentUpdateInput = new GraphQLInputObjectType({
   name: 'CommentUpdateInput',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
-    text: {
-      type: new GraphQLNonNull(GraphQLRichText)
-    }
+    text: {type: GraphQLRichText},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString}
   }
 })
 
@@ -320,10 +321,12 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
       peerId: {type: GraphQLID},
 
       children: {
-        type: GraphQLList(GraphQLPublicComment),
-        resolve: createProxyingResolver(({id, userID}, _, {prisma: {comment}}) =>
-          getPublicChildrenCommentsByParentId(id, userID ?? null, comment)
-        )
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
+        resolve: createProxyingResolver(({id}, _, {session, prisma: {comment}}) => {
+          const userId = session?.type === AuthSessionType.User ? session.user.id : null
+
+          return getPublicChildrenCommentsByParentId(id, userId, comment)
+        })
       },
 
       title: {type: GraphQLString},

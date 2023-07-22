@@ -21,7 +21,14 @@ export type Scalars = {
   RichText: Node[]
   Slug: string
   Upload: File
+  Value: any
   VoteValue: number
+}
+
+export type AllowedSettingVals = {
+  __typename?: 'AllowedSettingVals'
+  boolChoice?: Maybe<Scalars['Boolean']>
+  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>
 }
 
 export type Article = {
@@ -190,7 +197,7 @@ export type Comment = {
   __typename?: 'Comment'
   authorType: CommentAuthorType
   calculatedRatings?: Maybe<Array<Maybe<CalculatedRating>>>
-  children?: Maybe<Array<Maybe<Comment>>>
+  children: Array<Comment>
   createdAt: Scalars['DateTime']
   guestUserImage?: Maybe<Image>
   guestUsername?: Maybe<Scalars['String']>
@@ -273,7 +280,9 @@ export enum CommentState {
 
 export type CommentUpdateInput = {
   id: Scalars['ID']
-  text: Scalars['RichText']
+  lead?: InputMaybe<Scalars['String']>
+  text?: InputMaybe<Scalars['RichText']>
+  title?: InputMaybe<Scalars['String']>
 }
 
 export type CustomTeaser = {
@@ -301,6 +310,8 @@ export type Event = {
   __typename?: 'Event'
   description?: Maybe<Scalars['RichText']>
   endsAt?: Maybe<Scalars['DateTime']>
+  externalSourceId?: Maybe<Scalars['String']>
+  externalSourceName?: Maybe<Scalars['String']>
   id: Scalars['ID']
   image?: Maybe<Image>
   location?: Maybe<Scalars['String']>
@@ -974,6 +985,8 @@ export type Query = {
   event: Event
   /** This query returns a list of events */
   events?: Maybe<EventConnection>
+  /** This query returns a list of original ids of imported events */
+  importedEventsIds?: Maybe<Array<Maybe<Scalars['String']>>>
   /** This query returns the invoices  of the authenticated user. */
   invoices: Array<Invoice>
   /** This query returns the user. */
@@ -1001,6 +1014,8 @@ export type Query = {
   /** This query returns a poll with all the needed data */
   poll: FullPoll
   ratingSystem: FullCommentRatingSystem
+  setting?: Maybe<Setting>
+  settings: Array<Setting>
   /** This query returns the subscriptions of the authenticated user. */
   subscriptions: Array<Subscription>
   /** This query returns a list of tags */
@@ -1120,6 +1135,10 @@ export type QueryPollArgs = {
   id: Scalars['ID']
 }
 
+export type QuerySettingArgs = {
+  name: Scalars['String']
+}
+
 export type QueryTagsArgs = {
   cursor?: InputMaybe<Scalars['ID']>
   filter?: InputMaybe<TagFilter>
@@ -1171,6 +1190,41 @@ export type SessionWithToken = {
   expiresAt: Scalars['DateTime']
   token: Scalars['String']
   user: User
+}
+
+export type Setting = {
+  __typename?: 'Setting'
+  id: Scalars['ID']
+  name: SettingName
+  settingRestriction?: Maybe<SettingRestriction>
+  value: Scalars['Value']
+}
+
+export enum SettingName {
+  AllowCommentEditing = 'ALLOW_COMMENT_EDITING',
+  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
+  AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
+  AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
+  CommentCharLimit = 'COMMENT_CHAR_LIMIT',
+  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
+  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES',
+  MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
+  MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
+  MakeNewDeactivationsApiPublic = 'MAKE_NEW_DEACTIVATIONS_API_PUBLIC',
+  MakeNewSubscribersApiPublic = 'MAKE_NEW_SUBSCRIBERS_API_PUBLIC',
+  MakeRenewingSubscribersApiPublic = 'MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC',
+  MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
+  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
+  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN'
+}
+
+export type SettingRestriction = {
+  __typename?: 'SettingRestriction'
+  allowedValues?: Maybe<AllowedSettingVals>
+  inputLength?: Maybe<Scalars['Int']>
+  maxValue?: Maybe<Scalars['Int']>
+  minValue?: Maybe<Scalars['Int']>
 }
 
 export enum SortOrder {
@@ -1364,11 +1418,135 @@ export type OverriddenRating = {
   value?: Maybe<Scalars['Int']>
 }
 
+export type ArticleWithoutBlocksFragment = {
+  __typename?: 'Article'
+  id: string
+  publishedAt: string
+  updatedAt: string
+  preTitle?: string | null
+  title: string
+  lead?: string | null
+  slug: string
+  breaking: boolean
+  tags: Array<string>
+  url: string
+  socialMediaDescription?: string | null
+  socialMediaTitle?: string | null
+  authors: Array<{
+    __typename?: 'Author'
+    id: string
+    name: string
+    jobTitle?: string | null
+    slug: string
+    bio?: Node[] | null
+    url: string
+    createdAt: string
+    modifiedAt: string
+    links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+  }>
+  image?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    title?: string | null
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
+  socialMediaImage?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    title?: string | null
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
+}
+
 export type FullArticleFragment = {
   __typename?: 'Article'
   id: string
+  publishedAt: string
+  updatedAt: string
+  preTitle?: string | null
+  title: string
+  lead?: string | null
   slug: string
+  breaking: boolean
+  tags: Array<string>
   url: string
+  socialMediaDescription?: string | null
+  socialMediaTitle?: string | null
   blocks: Array<
     | {__typename: 'BildwurfAdBlock'}
     | {__typename: 'CommentBlock'}
@@ -1409,7 +1587,42 @@ export type FullArticleFragment = {
           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
         } | null
       }
-    | {__typename: 'ImageGalleryBlock'}
+    | {
+        __typename: 'ImageGalleryBlock'
+        images: Array<{
+          __typename?: 'GalleryImageEdge'
+          caption?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+        }>
+      }
     | {__typename: 'InstagramPostBlock'}
     | {__typename: 'LinkPageBreakBlock'}
     | {__typename: 'ListicleBlock'}
@@ -1418,7 +1631,492 @@ export type FullArticleFragment = {
     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
     | {__typename: 'RichTextBlock'; richText: Node[]}
     | {__typename: 'SoundCloudTrackBlock'}
-    | {__typename: 'TeaserGridBlock'}
+    | {
+        __typename: 'TeaserGridBlock'
+        numColumns: number
+        teasers: Array<
+          | {
+              __typename?: 'ArticleTeaser'
+              style: TeaserStyle
+              preTitle?: string | null
+              title?: string | null
+              lead?: string | null
+              image?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              article?: {
+                __typename?: 'Article'
+                id: string
+                publishedAt: string
+                updatedAt: string
+                preTitle?: string | null
+                title: string
+                lead?: string | null
+                slug: string
+                breaking: boolean
+                tags: Array<string>
+                url: string
+                socialMediaDescription?: string | null
+                socialMediaTitle?: string | null
+                blocks: Array<
+                  | {__typename: 'BildwurfAdBlock'}
+                  | {__typename: 'CommentBlock'}
+                  | {__typename: 'EmbedBlock'}
+                  | {__typename: 'EventBlock'}
+                  | {__typename: 'FacebookPostBlock'}
+                  | {__typename: 'HTMLBlock'; html?: string | null}
+                  | {
+                      __typename: 'ImageBlock'
+                      caption?: string | null
+                      image?: {
+                        __typename?: 'Image'
+                        id: string
+                        createdAt: string
+                        modifiedAt: string
+                        filename?: string | null
+                        format: string
+                        mimeType: string
+                        extension: string
+                        width: number
+                        height: number
+                        fileSize: number
+                        title?: string | null
+                        description?: string | null
+                        tags: Array<string>
+                        source?: string | null
+                        link?: string | null
+                        license?: string | null
+                        url?: string | null
+                        bigURL?: string | null
+                        largeURL?: string | null
+                        mediumURL?: string | null
+                        smallURL?: string | null
+                        squareBigURL?: string | null
+                        squareLargeURL?: string | null
+                        squareMediumURL?: string | null
+                        squareSmallURL?: string | null
+                        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                      } | null
+                    }
+                  | {
+                      __typename: 'ImageGalleryBlock'
+                      images: Array<{
+                        __typename?: 'GalleryImageEdge'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }>
+                    }
+                  | {__typename: 'InstagramPostBlock'}
+                  | {__typename: 'LinkPageBreakBlock'}
+                  | {__typename: 'ListicleBlock'}
+                  | {__typename: 'PolisConversationBlock'}
+                  | {__typename: 'PollBlock'}
+                  | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                  | {__typename: 'RichTextBlock'; richText: Node[]}
+                  | {__typename: 'SoundCloudTrackBlock'}
+                  | {__typename: 'TeaserGridBlock'}
+                  | {__typename: 'TeaserGridFlexBlock'}
+                  | {__typename: 'TikTokVideoBlock'}
+                  | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+                  | {__typename: 'TwitterTweetBlock'}
+                  | {__typename: 'VimeoVideoBlock'}
+                  | {__typename: 'YouTubeVideoBlock'}
+                >
+                authors: Array<{
+                  __typename?: 'Author'
+                  id: string
+                  name: string
+                  jobTitle?: string | null
+                  slug: string
+                  bio?: Node[] | null
+                  url: string
+                  createdAt: string
+                  modifiedAt: string
+                  links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                }>
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                socialMediaImage?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+              } | null
+            }
+          | {
+              __typename?: 'CustomTeaser'
+              style: TeaserStyle
+              preTitle?: string | null
+              title?: string | null
+              lead?: string | null
+              contentUrl?: string | null
+              image?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+            }
+          | {__typename?: 'EventTeaser'}
+          | {
+              __typename?: 'PageTeaser'
+              style: TeaserStyle
+              preTitle?: string | null
+              title?: string | null
+              lead?: string | null
+              image?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              page?: {
+                __typename?: 'Page'
+                id: string
+                slug: string
+                description?: string | null
+                tags: Array<string>
+                title: string
+                url: string
+                socialMediaDescription?: string | null
+                socialMediaTitle?: string | null
+                blocks: Array<
+                  | {__typename: 'BildwurfAdBlock'}
+                  | {__typename: 'CommentBlock'}
+                  | {__typename: 'EmbedBlock'}
+                  | {__typename: 'EventBlock'}
+                  | {__typename: 'FacebookPostBlock'}
+                  | {__typename: 'HTMLBlock'; html?: string | null}
+                  | {
+                      __typename: 'ImageBlock'
+                      caption?: string | null
+                      image?: {
+                        __typename?: 'Image'
+                        id: string
+                        createdAt: string
+                        modifiedAt: string
+                        filename?: string | null
+                        format: string
+                        mimeType: string
+                        extension: string
+                        width: number
+                        height: number
+                        fileSize: number
+                        title?: string | null
+                        description?: string | null
+                        tags: Array<string>
+                        source?: string | null
+                        link?: string | null
+                        license?: string | null
+                        url?: string | null
+                        bigURL?: string | null
+                        largeURL?: string | null
+                        mediumURL?: string | null
+                        smallURL?: string | null
+                        squareBigURL?: string | null
+                        squareLargeURL?: string | null
+                        squareMediumURL?: string | null
+                        squareSmallURL?: string | null
+                        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                      } | null
+                    }
+                  | {
+                      __typename: 'ImageGalleryBlock'
+                      images: Array<{
+                        __typename?: 'GalleryImageEdge'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }>
+                    }
+                  | {__typename: 'InstagramPostBlock'}
+                  | {__typename: 'LinkPageBreakBlock'}
+                  | {__typename: 'ListicleBlock'}
+                  | {__typename: 'PolisConversationBlock'}
+                  | {__typename: 'PollBlock'}
+                  | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                  | {__typename: 'RichTextBlock'; richText: Node[]}
+                  | {__typename: 'SoundCloudTrackBlock'}
+                  | {__typename: 'TeaserGridBlock'}
+                  | {__typename: 'TeaserGridFlexBlock'}
+                  | {__typename: 'TikTokVideoBlock'}
+                  | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+                  | {__typename: 'TwitterTweetBlock'}
+                  | {__typename: 'VimeoVideoBlock'}
+                  | {__typename: 'YouTubeVideoBlock'}
+                >
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                socialMediaImage?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+              } | null
+            }
+          | {__typename?: 'PeerArticleTeaser'}
+          | null
+        >
+      }
     | {
         __typename: 'TeaserGridFlexBlock'
         flexTeasers: Array<{
@@ -1463,17 +2161,24 @@ export type FullArticleFragment = {
                 article?: {
                   __typename?: 'Article'
                   id: string
-                  title: string
+                  publishedAt: string
+                  updatedAt: string
                   preTitle?: string | null
+                  title: string
                   lead?: string | null
+                  slug: string
+                  breaking: boolean
+                  tags: Array<string>
                   url: string
+                  socialMediaDescription?: string | null
+                  socialMediaTitle?: string | null
                   blocks: Array<
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
-                    | {__typename: 'HTMLBlock'}
+                    | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
                         caption?: string | null
@@ -1507,14 +2212,49 @@ export type FullArticleFragment = {
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
-                    | {__typename: 'ImageGalleryBlock'}
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
                     | {__typename: 'ListicleBlock'}
                     | {__typename: 'PolisConversationBlock'}
                     | {__typename: 'PollBlock'}
-                    | {__typename: 'QuoteBlock'}
-                    | {__typename: 'RichTextBlock'}
+                    | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                    | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
                     | {__typename: 'TeaserGridBlock'}
                     | {__typename: 'TeaserGridFlexBlock'}
@@ -1524,6 +2264,105 @@ export type FullArticleFragment = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  authors: Array<{
+                    __typename?: 'Author'
+                    id: string
+                    name: string
+                    jobTitle?: string | null
+                    slug: string
+                    bio?: Node[] | null
+                    url: string
+                    createdAt: string
+                    modifiedAt: string
+                    links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                  }>
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  socialMediaImage?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
                 } | null
               }
             | {
@@ -1603,16 +2442,20 @@ export type FullArticleFragment = {
                 page?: {
                   __typename?: 'Page'
                   id: string
-                  title: string
+                  slug: string
                   description?: string | null
+                  tags: Array<string>
+                  title: string
                   url: string
+                  socialMediaDescription?: string | null
+                  socialMediaTitle?: string | null
                   blocks: Array<
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
-                    | {__typename: 'HTMLBlock'}
+                    | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
                         caption?: string | null
@@ -1646,14 +2489,49 @@ export type FullArticleFragment = {
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
-                    | {__typename: 'ImageGalleryBlock'}
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
                     | {__typename: 'ListicleBlock'}
                     | {__typename: 'PolisConversationBlock'}
                     | {__typename: 'PollBlock'}
-                    | {__typename: 'QuoteBlock'}
-                    | {__typename: 'RichTextBlock'}
+                    | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                    | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
                     | {__typename: 'TeaserGridBlock'}
                     | {__typename: 'TeaserGridFlexBlock'}
@@ -1663,6 +2541,64 @@ export type FullArticleFragment = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  socialMediaImage?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
                 } | null
               }
             | {__typename?: 'PeerArticleTeaser'}
@@ -1683,6 +2619,8 @@ export type FullArticleFragment = {
     slug: string
     bio?: Node[] | null
     url: string
+    createdAt: string
+    modifiedAt: string
     links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
     image?: {
       __typename?: 'Image'
@@ -1714,6 +2652,64 @@ export type FullArticleFragment = {
       focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
     } | null
   }>
+  image?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    title?: string | null
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
+  socialMediaImage?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    title?: string | null
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
 }
 
 export type ArticleQueryVariables = Exact<{
@@ -1726,8 +2722,17 @@ export type ArticleQuery = {
   article?: {
     __typename?: 'Article'
     id: string
+    publishedAt: string
+    updatedAt: string
+    preTitle?: string | null
+    title: string
+    lead?: string | null
     slug: string
+    breaking: boolean
+    tags: Array<string>
     url: string
+    socialMediaDescription?: string | null
+    socialMediaTitle?: string | null
     blocks: Array<
       | {__typename: 'BildwurfAdBlock'}
       | {__typename: 'CommentBlock'}
@@ -1768,7 +2773,42 @@ export type ArticleQuery = {
             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
           } | null
         }
-      | {__typename: 'ImageGalleryBlock'}
+      | {
+          __typename: 'ImageGalleryBlock'
+          images: Array<{
+            __typename?: 'GalleryImageEdge'
+            caption?: string | null
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+          }>
+        }
       | {__typename: 'InstagramPostBlock'}
       | {__typename: 'LinkPageBreakBlock'}
       | {__typename: 'ListicleBlock'}
@@ -1777,7 +2817,492 @@ export type ArticleQuery = {
       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
       | {__typename: 'RichTextBlock'; richText: Node[]}
       | {__typename: 'SoundCloudTrackBlock'}
-      | {__typename: 'TeaserGridBlock'}
+      | {
+          __typename: 'TeaserGridBlock'
+          numColumns: number
+          teasers: Array<
+            | {
+                __typename?: 'ArticleTeaser'
+                style: TeaserStyle
+                preTitle?: string | null
+                title?: string | null
+                lead?: string | null
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                article?: {
+                  __typename?: 'Article'
+                  id: string
+                  publishedAt: string
+                  updatedAt: string
+                  preTitle?: string | null
+                  title: string
+                  lead?: string | null
+                  slug: string
+                  breaking: boolean
+                  tags: Array<string>
+                  url: string
+                  socialMediaDescription?: string | null
+                  socialMediaTitle?: string | null
+                  blocks: Array<
+                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'CommentBlock'}
+                    | {__typename: 'EmbedBlock'}
+                    | {__typename: 'EventBlock'}
+                    | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'HTMLBlock'; html?: string | null}
+                    | {
+                        __typename: 'ImageBlock'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
+                    | {__typename: 'InstagramPostBlock'}
+                    | {__typename: 'LinkPageBreakBlock'}
+                    | {__typename: 'ListicleBlock'}
+                    | {__typename: 'PolisConversationBlock'}
+                    | {__typename: 'PollBlock'}
+                    | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                    | {__typename: 'RichTextBlock'; richText: Node[]}
+                    | {__typename: 'SoundCloudTrackBlock'}
+                    | {__typename: 'TeaserGridBlock'}
+                    | {__typename: 'TeaserGridFlexBlock'}
+                    | {__typename: 'TikTokVideoBlock'}
+                    | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+                    | {__typename: 'TwitterTweetBlock'}
+                    | {__typename: 'VimeoVideoBlock'}
+                    | {__typename: 'YouTubeVideoBlock'}
+                  >
+                  authors: Array<{
+                    __typename?: 'Author'
+                    id: string
+                    name: string
+                    jobTitle?: string | null
+                    slug: string
+                    bio?: Node[] | null
+                    url: string
+                    createdAt: string
+                    modifiedAt: string
+                    links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                  }>
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  socialMediaImage?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                } | null
+              }
+            | {
+                __typename?: 'CustomTeaser'
+                style: TeaserStyle
+                preTitle?: string | null
+                title?: string | null
+                lead?: string | null
+                contentUrl?: string | null
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+              }
+            | {__typename?: 'EventTeaser'}
+            | {
+                __typename?: 'PageTeaser'
+                style: TeaserStyle
+                preTitle?: string | null
+                title?: string | null
+                lead?: string | null
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                page?: {
+                  __typename?: 'Page'
+                  id: string
+                  slug: string
+                  description?: string | null
+                  tags: Array<string>
+                  title: string
+                  url: string
+                  socialMediaDescription?: string | null
+                  socialMediaTitle?: string | null
+                  blocks: Array<
+                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'CommentBlock'}
+                    | {__typename: 'EmbedBlock'}
+                    | {__typename: 'EventBlock'}
+                    | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'HTMLBlock'; html?: string | null}
+                    | {
+                        __typename: 'ImageBlock'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
+                    | {__typename: 'InstagramPostBlock'}
+                    | {__typename: 'LinkPageBreakBlock'}
+                    | {__typename: 'ListicleBlock'}
+                    | {__typename: 'PolisConversationBlock'}
+                    | {__typename: 'PollBlock'}
+                    | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                    | {__typename: 'RichTextBlock'; richText: Node[]}
+                    | {__typename: 'SoundCloudTrackBlock'}
+                    | {__typename: 'TeaserGridBlock'}
+                    | {__typename: 'TeaserGridFlexBlock'}
+                    | {__typename: 'TikTokVideoBlock'}
+                    | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+                    | {__typename: 'TwitterTweetBlock'}
+                    | {__typename: 'VimeoVideoBlock'}
+                    | {__typename: 'YouTubeVideoBlock'}
+                  >
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  socialMediaImage?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                } | null
+              }
+            | {__typename?: 'PeerArticleTeaser'}
+            | null
+          >
+        }
       | {
           __typename: 'TeaserGridFlexBlock'
           flexTeasers: Array<{
@@ -1822,17 +3347,24 @@ export type ArticleQuery = {
                   article?: {
                     __typename?: 'Article'
                     id: string
-                    title: string
+                    publishedAt: string
+                    updatedAt: string
                     preTitle?: string | null
+                    title: string
                     lead?: string | null
+                    slug: string
+                    breaking: boolean
+                    tags: Array<string>
                     url: string
+                    socialMediaDescription?: string | null
+                    socialMediaTitle?: string | null
                     blocks: Array<
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
-                      | {__typename: 'HTMLBlock'}
+                      | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
                           caption?: string | null
@@ -1866,14 +3398,49 @@ export type ArticleQuery = {
                             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                         }
-                      | {__typename: 'ImageGalleryBlock'}
+                      | {
+                          __typename: 'ImageGalleryBlock'
+                          images: Array<{
+                            __typename?: 'GalleryImageEdge'
+                            caption?: string | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                        }
                       | {__typename: 'InstagramPostBlock'}
                       | {__typename: 'LinkPageBreakBlock'}
                       | {__typename: 'ListicleBlock'}
                       | {__typename: 'PolisConversationBlock'}
                       | {__typename: 'PollBlock'}
-                      | {__typename: 'QuoteBlock'}
-                      | {__typename: 'RichTextBlock'}
+                      | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                      | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
                       | {__typename: 'TeaserGridBlock'}
                       | {__typename: 'TeaserGridFlexBlock'}
@@ -1883,6 +3450,105 @@ export type ArticleQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    authors: Array<{
+                      __typename?: 'Author'
+                      id: string
+                      name: string
+                      jobTitle?: string | null
+                      slug: string
+                      bio?: Node[] | null
+                      url: string
+                      createdAt: string
+                      modifiedAt: string
+                      links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+                      image?: {
+                        __typename?: 'Image'
+                        id: string
+                        createdAt: string
+                        modifiedAt: string
+                        filename?: string | null
+                        format: string
+                        mimeType: string
+                        extension: string
+                        width: number
+                        height: number
+                        fileSize: number
+                        title?: string | null
+                        description?: string | null
+                        tags: Array<string>
+                        source?: string | null
+                        link?: string | null
+                        license?: string | null
+                        url?: string | null
+                        bigURL?: string | null
+                        largeURL?: string | null
+                        mediumURL?: string | null
+                        smallURL?: string | null
+                        squareBigURL?: string | null
+                        squareLargeURL?: string | null
+                        squareMediumURL?: string | null
+                        squareSmallURL?: string | null
+                        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                      } | null
+                    }>
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    socialMediaImage?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
                   } | null
                 }
               | {
@@ -1962,16 +3628,20 @@ export type ArticleQuery = {
                   page?: {
                     __typename?: 'Page'
                     id: string
-                    title: string
+                    slug: string
                     description?: string | null
+                    tags: Array<string>
+                    title: string
                     url: string
+                    socialMediaDescription?: string | null
+                    socialMediaTitle?: string | null
                     blocks: Array<
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
-                      | {__typename: 'HTMLBlock'}
+                      | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
                           caption?: string | null
@@ -2005,14 +3675,49 @@ export type ArticleQuery = {
                             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                         }
-                      | {__typename: 'ImageGalleryBlock'}
+                      | {
+                          __typename: 'ImageGalleryBlock'
+                          images: Array<{
+                            __typename?: 'GalleryImageEdge'
+                            caption?: string | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                        }
                       | {__typename: 'InstagramPostBlock'}
                       | {__typename: 'LinkPageBreakBlock'}
                       | {__typename: 'ListicleBlock'}
                       | {__typename: 'PolisConversationBlock'}
                       | {__typename: 'PollBlock'}
-                      | {__typename: 'QuoteBlock'}
-                      | {__typename: 'RichTextBlock'}
+                      | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                      | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
                       | {__typename: 'TeaserGridBlock'}
                       | {__typename: 'TeaserGridFlexBlock'}
@@ -2022,6 +3727,64 @@ export type ArticleQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    socialMediaImage?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
                   } | null
                 }
               | {__typename?: 'PeerArticleTeaser'}
@@ -2042,6 +3805,8 @@ export type ArticleQuery = {
       slug: string
       bio?: Node[] | null
       url: string
+      createdAt: string
+      modifiedAt: string
       links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
       image?: {
         __typename?: 'Image'
@@ -2073,6 +3838,64 @@ export type ArticleQuery = {
         focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
       } | null
     }>
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    socialMediaImage?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
   } | null
 }
 
@@ -2087,8 +3910,17 @@ export type PeerArticleQuery = {
   peerArticle?: {
     __typename?: 'Article'
     id: string
+    publishedAt: string
+    updatedAt: string
+    preTitle?: string | null
+    title: string
+    lead?: string | null
     slug: string
+    breaking: boolean
+    tags: Array<string>
     url: string
+    socialMediaDescription?: string | null
+    socialMediaTitle?: string | null
     blocks: Array<
       | {__typename: 'BildwurfAdBlock'}
       | {__typename: 'CommentBlock'}
@@ -2129,7 +3961,42 @@ export type PeerArticleQuery = {
             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
           } | null
         }
-      | {__typename: 'ImageGalleryBlock'}
+      | {
+          __typename: 'ImageGalleryBlock'
+          images: Array<{
+            __typename?: 'GalleryImageEdge'
+            caption?: string | null
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+          }>
+        }
       | {__typename: 'InstagramPostBlock'}
       | {__typename: 'LinkPageBreakBlock'}
       | {__typename: 'ListicleBlock'}
@@ -2138,7 +4005,492 @@ export type PeerArticleQuery = {
       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
       | {__typename: 'RichTextBlock'; richText: Node[]}
       | {__typename: 'SoundCloudTrackBlock'}
-      | {__typename: 'TeaserGridBlock'}
+      | {
+          __typename: 'TeaserGridBlock'
+          numColumns: number
+          teasers: Array<
+            | {
+                __typename?: 'ArticleTeaser'
+                style: TeaserStyle
+                preTitle?: string | null
+                title?: string | null
+                lead?: string | null
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                article?: {
+                  __typename?: 'Article'
+                  id: string
+                  publishedAt: string
+                  updatedAt: string
+                  preTitle?: string | null
+                  title: string
+                  lead?: string | null
+                  slug: string
+                  breaking: boolean
+                  tags: Array<string>
+                  url: string
+                  socialMediaDescription?: string | null
+                  socialMediaTitle?: string | null
+                  blocks: Array<
+                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'CommentBlock'}
+                    | {__typename: 'EmbedBlock'}
+                    | {__typename: 'EventBlock'}
+                    | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'HTMLBlock'; html?: string | null}
+                    | {
+                        __typename: 'ImageBlock'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
+                    | {__typename: 'InstagramPostBlock'}
+                    | {__typename: 'LinkPageBreakBlock'}
+                    | {__typename: 'ListicleBlock'}
+                    | {__typename: 'PolisConversationBlock'}
+                    | {__typename: 'PollBlock'}
+                    | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                    | {__typename: 'RichTextBlock'; richText: Node[]}
+                    | {__typename: 'SoundCloudTrackBlock'}
+                    | {__typename: 'TeaserGridBlock'}
+                    | {__typename: 'TeaserGridFlexBlock'}
+                    | {__typename: 'TikTokVideoBlock'}
+                    | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+                    | {__typename: 'TwitterTweetBlock'}
+                    | {__typename: 'VimeoVideoBlock'}
+                    | {__typename: 'YouTubeVideoBlock'}
+                  >
+                  authors: Array<{
+                    __typename?: 'Author'
+                    id: string
+                    name: string
+                    jobTitle?: string | null
+                    slug: string
+                    bio?: Node[] | null
+                    url: string
+                    createdAt: string
+                    modifiedAt: string
+                    links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                  }>
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  socialMediaImage?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                } | null
+              }
+            | {
+                __typename?: 'CustomTeaser'
+                style: TeaserStyle
+                preTitle?: string | null
+                title?: string | null
+                lead?: string | null
+                contentUrl?: string | null
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+              }
+            | {__typename?: 'EventTeaser'}
+            | {
+                __typename?: 'PageTeaser'
+                style: TeaserStyle
+                preTitle?: string | null
+                title?: string | null
+                lead?: string | null
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                page?: {
+                  __typename?: 'Page'
+                  id: string
+                  slug: string
+                  description?: string | null
+                  tags: Array<string>
+                  title: string
+                  url: string
+                  socialMediaDescription?: string | null
+                  socialMediaTitle?: string | null
+                  blocks: Array<
+                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'CommentBlock'}
+                    | {__typename: 'EmbedBlock'}
+                    | {__typename: 'EventBlock'}
+                    | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'HTMLBlock'; html?: string | null}
+                    | {
+                        __typename: 'ImageBlock'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
+                    | {__typename: 'InstagramPostBlock'}
+                    | {__typename: 'LinkPageBreakBlock'}
+                    | {__typename: 'ListicleBlock'}
+                    | {__typename: 'PolisConversationBlock'}
+                    | {__typename: 'PollBlock'}
+                    | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                    | {__typename: 'RichTextBlock'; richText: Node[]}
+                    | {__typename: 'SoundCloudTrackBlock'}
+                    | {__typename: 'TeaserGridBlock'}
+                    | {__typename: 'TeaserGridFlexBlock'}
+                    | {__typename: 'TikTokVideoBlock'}
+                    | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+                    | {__typename: 'TwitterTweetBlock'}
+                    | {__typename: 'VimeoVideoBlock'}
+                    | {__typename: 'YouTubeVideoBlock'}
+                  >
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  socialMediaImage?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                } | null
+              }
+            | {__typename?: 'PeerArticleTeaser'}
+            | null
+          >
+        }
       | {
           __typename: 'TeaserGridFlexBlock'
           flexTeasers: Array<{
@@ -2183,17 +4535,24 @@ export type PeerArticleQuery = {
                   article?: {
                     __typename?: 'Article'
                     id: string
-                    title: string
+                    publishedAt: string
+                    updatedAt: string
                     preTitle?: string | null
+                    title: string
                     lead?: string | null
+                    slug: string
+                    breaking: boolean
+                    tags: Array<string>
                     url: string
+                    socialMediaDescription?: string | null
+                    socialMediaTitle?: string | null
                     blocks: Array<
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
-                      | {__typename: 'HTMLBlock'}
+                      | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
                           caption?: string | null
@@ -2227,14 +4586,49 @@ export type PeerArticleQuery = {
                             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                         }
-                      | {__typename: 'ImageGalleryBlock'}
+                      | {
+                          __typename: 'ImageGalleryBlock'
+                          images: Array<{
+                            __typename?: 'GalleryImageEdge'
+                            caption?: string | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                        }
                       | {__typename: 'InstagramPostBlock'}
                       | {__typename: 'LinkPageBreakBlock'}
                       | {__typename: 'ListicleBlock'}
                       | {__typename: 'PolisConversationBlock'}
                       | {__typename: 'PollBlock'}
-                      | {__typename: 'QuoteBlock'}
-                      | {__typename: 'RichTextBlock'}
+                      | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                      | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
                       | {__typename: 'TeaserGridBlock'}
                       | {__typename: 'TeaserGridFlexBlock'}
@@ -2244,6 +4638,105 @@ export type PeerArticleQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    authors: Array<{
+                      __typename?: 'Author'
+                      id: string
+                      name: string
+                      jobTitle?: string | null
+                      slug: string
+                      bio?: Node[] | null
+                      url: string
+                      createdAt: string
+                      modifiedAt: string
+                      links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+                      image?: {
+                        __typename?: 'Image'
+                        id: string
+                        createdAt: string
+                        modifiedAt: string
+                        filename?: string | null
+                        format: string
+                        mimeType: string
+                        extension: string
+                        width: number
+                        height: number
+                        fileSize: number
+                        title?: string | null
+                        description?: string | null
+                        tags: Array<string>
+                        source?: string | null
+                        link?: string | null
+                        license?: string | null
+                        url?: string | null
+                        bigURL?: string | null
+                        largeURL?: string | null
+                        mediumURL?: string | null
+                        smallURL?: string | null
+                        squareBigURL?: string | null
+                        squareLargeURL?: string | null
+                        squareMediumURL?: string | null
+                        squareSmallURL?: string | null
+                        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                      } | null
+                    }>
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    socialMediaImage?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
                   } | null
                 }
               | {
@@ -2323,16 +4816,20 @@ export type PeerArticleQuery = {
                   page?: {
                     __typename?: 'Page'
                     id: string
-                    title: string
+                    slug: string
                     description?: string | null
+                    tags: Array<string>
+                    title: string
                     url: string
+                    socialMediaDescription?: string | null
+                    socialMediaTitle?: string | null
                     blocks: Array<
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
-                      | {__typename: 'HTMLBlock'}
+                      | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
                           caption?: string | null
@@ -2366,14 +4863,49 @@ export type PeerArticleQuery = {
                             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                         }
-                      | {__typename: 'ImageGalleryBlock'}
+                      | {
+                          __typename: 'ImageGalleryBlock'
+                          images: Array<{
+                            __typename?: 'GalleryImageEdge'
+                            caption?: string | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                        }
                       | {__typename: 'InstagramPostBlock'}
                       | {__typename: 'LinkPageBreakBlock'}
                       | {__typename: 'ListicleBlock'}
                       | {__typename: 'PolisConversationBlock'}
                       | {__typename: 'PollBlock'}
-                      | {__typename: 'QuoteBlock'}
-                      | {__typename: 'RichTextBlock'}
+                      | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                      | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
                       | {__typename: 'TeaserGridBlock'}
                       | {__typename: 'TeaserGridFlexBlock'}
@@ -2383,6 +4915,64 @@ export type PeerArticleQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    socialMediaImage?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
                   } | null
                 }
               | {__typename?: 'PeerArticleTeaser'}
@@ -2403,6 +4993,8 @@ export type PeerArticleQuery = {
       slug: string
       bio?: Node[] | null
       url: string
+      createdAt: string
+      modifiedAt: string
       links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
       image?: {
         __typename?: 'Image'
@@ -2434,6 +5026,64 @@ export type PeerArticleQuery = {
         focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
       } | null
     }>
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    socialMediaImage?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
   } | null
 }
 
@@ -2445,6 +5095,8 @@ export type FullAuthorFragment = {
   slug: string
   bio?: Node[] | null
   url: string
+  createdAt: string
+  modifiedAt: string
   links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
   image?: {
     __typename?: 'Image'
@@ -2492,6 +5144,8 @@ export type AuthorQuery = {
     slug: string
     bio?: Node[] | null
     url: string
+    createdAt: string
+    modifiedAt: string
     links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
     image?: {
       __typename?: 'Image'
@@ -2523,6 +5177,69 @@ export type AuthorQuery = {
       focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
     } | null
   } | null
+}
+
+export type AuthorListQueryVariables = Exact<{
+  filter?: InputMaybe<AuthorFilter>
+  cursor?: InputMaybe<Scalars['ID']>
+  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']>
+}>
+
+export type AuthorListQuery = {
+  __typename?: 'Query'
+  authors: {
+    __typename?: 'AuthorConnection'
+    totalCount: number
+    nodes: Array<{
+      __typename?: 'Author'
+      id: string
+      name: string
+      jobTitle?: string | null
+      slug: string
+      bio?: Node[] | null
+      url: string
+      createdAt: string
+      modifiedAt: string
+      links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+      image?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        title?: string | null
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        url?: string | null
+        bigURL?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+    }>
+    pageInfo: {
+      __typename?: 'PageInfo'
+      startCursor?: string | null
+      endCursor?: string | null
+      hasNextPage: boolean
+      hasPreviousPage: boolean
+    }
+  }
 }
 
 type BlockWithoutTeaser_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'}
@@ -2571,7 +5288,42 @@ type BlockWithoutTeaser_ImageBlock_Fragment = {
   } | null
 }
 
-type BlockWithoutTeaser_ImageGalleryBlock_Fragment = {__typename: 'ImageGalleryBlock'}
+type BlockWithoutTeaser_ImageGalleryBlock_Fragment = {
+  __typename: 'ImageGalleryBlock'
+  images: Array<{
+    __typename?: 'GalleryImageEdge'
+    caption?: string | null
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+  }>
+}
 
 type BlockWithoutTeaser_InstagramPostBlock_Fragment = {__typename: 'InstagramPostBlock'}
 
@@ -2636,6 +5388,497 @@ export type BlockWithoutTeaserFragment =
   | BlockWithoutTeaser_VimeoVideoBlock_Fragment
   | BlockWithoutTeaser_YouTubeVideoBlock_Fragment
 
+type FullTeaser_ArticleTeaser_Fragment = {
+  __typename?: 'ArticleTeaser'
+  style: TeaserStyle
+  preTitle?: string | null
+  title?: string | null
+  lead?: string | null
+  image?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    title?: string | null
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
+  article?: {
+    __typename?: 'Article'
+    id: string
+    publishedAt: string
+    updatedAt: string
+    preTitle?: string | null
+    title: string
+    lead?: string | null
+    slug: string
+    breaking: boolean
+    tags: Array<string>
+    url: string
+    socialMediaDescription?: string | null
+    socialMediaTitle?: string | null
+    blocks: Array<
+      | {__typename: 'BildwurfAdBlock'}
+      | {__typename: 'CommentBlock'}
+      | {__typename: 'EmbedBlock'}
+      | {__typename: 'EventBlock'}
+      | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'HTMLBlock'; html?: string | null}
+      | {
+          __typename: 'ImageBlock'
+          caption?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+        }
+      | {
+          __typename: 'ImageGalleryBlock'
+          images: Array<{
+            __typename?: 'GalleryImageEdge'
+            caption?: string | null
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+          }>
+        }
+      | {__typename: 'InstagramPostBlock'}
+      | {__typename: 'LinkPageBreakBlock'}
+      | {__typename: 'ListicleBlock'}
+      | {__typename: 'PolisConversationBlock'}
+      | {__typename: 'PollBlock'}
+      | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+      | {__typename: 'RichTextBlock'; richText: Node[]}
+      | {__typename: 'SoundCloudTrackBlock'}
+      | {__typename: 'TeaserGridBlock'}
+      | {__typename: 'TeaserGridFlexBlock'}
+      | {__typename: 'TikTokVideoBlock'}
+      | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+      | {__typename: 'TwitterTweetBlock'}
+      | {__typename: 'VimeoVideoBlock'}
+      | {__typename: 'YouTubeVideoBlock'}
+    >
+    authors: Array<{
+      __typename?: 'Author'
+      id: string
+      name: string
+      jobTitle?: string | null
+      slug: string
+      bio?: Node[] | null
+      url: string
+      createdAt: string
+      modifiedAt: string
+      links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+      image?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        title?: string | null
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        url?: string | null
+        bigURL?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+    }>
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    socialMediaImage?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+  } | null
+}
+
+type FullTeaser_CustomTeaser_Fragment = {
+  __typename?: 'CustomTeaser'
+  style: TeaserStyle
+  preTitle?: string | null
+  title?: string | null
+  lead?: string | null
+  contentUrl?: string | null
+  image?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    title?: string | null
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
+  properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+}
+
+type FullTeaser_EventTeaser_Fragment = {__typename?: 'EventTeaser'}
+
+type FullTeaser_PageTeaser_Fragment = {
+  __typename?: 'PageTeaser'
+  style: TeaserStyle
+  preTitle?: string | null
+  title?: string | null
+  lead?: string | null
+  image?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    title?: string | null
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
+  page?: {
+    __typename?: 'Page'
+    id: string
+    slug: string
+    description?: string | null
+    tags: Array<string>
+    title: string
+    url: string
+    socialMediaDescription?: string | null
+    socialMediaTitle?: string | null
+    blocks: Array<
+      | {__typename: 'BildwurfAdBlock'}
+      | {__typename: 'CommentBlock'}
+      | {__typename: 'EmbedBlock'}
+      | {__typename: 'EventBlock'}
+      | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'HTMLBlock'; html?: string | null}
+      | {
+          __typename: 'ImageBlock'
+          caption?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+        }
+      | {
+          __typename: 'ImageGalleryBlock'
+          images: Array<{
+            __typename?: 'GalleryImageEdge'
+            caption?: string | null
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+          }>
+        }
+      | {__typename: 'InstagramPostBlock'}
+      | {__typename: 'LinkPageBreakBlock'}
+      | {__typename: 'ListicleBlock'}
+      | {__typename: 'PolisConversationBlock'}
+      | {__typename: 'PollBlock'}
+      | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+      | {__typename: 'RichTextBlock'; richText: Node[]}
+      | {__typename: 'SoundCloudTrackBlock'}
+      | {__typename: 'TeaserGridBlock'}
+      | {__typename: 'TeaserGridFlexBlock'}
+      | {__typename: 'TikTokVideoBlock'}
+      | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+      | {__typename: 'TwitterTweetBlock'}
+      | {__typename: 'VimeoVideoBlock'}
+      | {__typename: 'YouTubeVideoBlock'}
+    >
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    socialMediaImage?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+  } | null
+}
+
+type FullTeaser_PeerArticleTeaser_Fragment = {__typename?: 'PeerArticleTeaser'}
+
+export type FullTeaserFragment =
+  | FullTeaser_ArticleTeaser_Fragment
+  | FullTeaser_CustomTeaser_Fragment
+  | FullTeaser_EventTeaser_Fragment
+  | FullTeaser_PageTeaser_Fragment
+  | FullTeaser_PeerArticleTeaser_Fragment
+
 type FullBlock_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'}
 
 type FullBlock_CommentBlock_Fragment = {__typename: 'CommentBlock'}
@@ -2682,7 +5925,42 @@ type FullBlock_ImageBlock_Fragment = {
   } | null
 }
 
-type FullBlock_ImageGalleryBlock_Fragment = {__typename: 'ImageGalleryBlock'}
+type FullBlock_ImageGalleryBlock_Fragment = {
+  __typename: 'ImageGalleryBlock'
+  images: Array<{
+    __typename?: 'GalleryImageEdge'
+    caption?: string | null
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+  }>
+}
 
 type FullBlock_InstagramPostBlock_Fragment = {__typename: 'InstagramPostBlock'}
 
@@ -2704,7 +5982,492 @@ type FullBlock_RichTextBlock_Fragment = {__typename: 'RichTextBlock'; richText: 
 
 type FullBlock_SoundCloudTrackBlock_Fragment = {__typename: 'SoundCloudTrackBlock'}
 
-type FullBlock_TeaserGridBlock_Fragment = {__typename: 'TeaserGridBlock'}
+type FullBlock_TeaserGridBlock_Fragment = {
+  __typename: 'TeaserGridBlock'
+  numColumns: number
+  teasers: Array<
+    | {
+        __typename?: 'ArticleTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        image?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          format: string
+          mimeType: string
+          extension: string
+          width: number
+          height: number
+          fileSize: number
+          title?: string | null
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
+          url?: string | null
+          bigURL?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+        article?: {
+          __typename?: 'Article'
+          id: string
+          publishedAt: string
+          updatedAt: string
+          preTitle?: string | null
+          title: string
+          lead?: string | null
+          slug: string
+          breaking: boolean
+          tags: Array<string>
+          url: string
+          socialMediaDescription?: string | null
+          socialMediaTitle?: string | null
+          blocks: Array<
+            | {__typename: 'BildwurfAdBlock'}
+            | {__typename: 'CommentBlock'}
+            | {__typename: 'EmbedBlock'}
+            | {__typename: 'EventBlock'}
+            | {__typename: 'FacebookPostBlock'}
+            | {__typename: 'HTMLBlock'; html?: string | null}
+            | {
+                __typename: 'ImageBlock'
+                caption?: string | null
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+              }
+            | {
+                __typename: 'ImageGalleryBlock'
+                images: Array<{
+                  __typename?: 'GalleryImageEdge'
+                  caption?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                }>
+              }
+            | {__typename: 'InstagramPostBlock'}
+            | {__typename: 'LinkPageBreakBlock'}
+            | {__typename: 'ListicleBlock'}
+            | {__typename: 'PolisConversationBlock'}
+            | {__typename: 'PollBlock'}
+            | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+            | {__typename: 'RichTextBlock'; richText: Node[]}
+            | {__typename: 'SoundCloudTrackBlock'}
+            | {__typename: 'TeaserGridBlock'}
+            | {__typename: 'TeaserGridFlexBlock'}
+            | {__typename: 'TikTokVideoBlock'}
+            | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+            | {__typename: 'TwitterTweetBlock'}
+            | {__typename: 'VimeoVideoBlock'}
+            | {__typename: 'YouTubeVideoBlock'}
+          >
+          authors: Array<{
+            __typename?: 'Author'
+            id: string
+            name: string
+            jobTitle?: string | null
+            slug: string
+            bio?: Node[] | null
+            url: string
+            createdAt: string
+            modifiedAt: string
+            links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+          }>
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          socialMediaImage?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+        } | null
+      }
+    | {
+        __typename?: 'CustomTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        contentUrl?: string | null
+        image?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          format: string
+          mimeType: string
+          extension: string
+          width: number
+          height: number
+          fileSize: number
+          title?: string | null
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
+          url?: string | null
+          bigURL?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+        properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+      }
+    | {__typename?: 'EventTeaser'}
+    | {
+        __typename?: 'PageTeaser'
+        style: TeaserStyle
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        image?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          format: string
+          mimeType: string
+          extension: string
+          width: number
+          height: number
+          fileSize: number
+          title?: string | null
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
+          url?: string | null
+          bigURL?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+        page?: {
+          __typename?: 'Page'
+          id: string
+          slug: string
+          description?: string | null
+          tags: Array<string>
+          title: string
+          url: string
+          socialMediaDescription?: string | null
+          socialMediaTitle?: string | null
+          blocks: Array<
+            | {__typename: 'BildwurfAdBlock'}
+            | {__typename: 'CommentBlock'}
+            | {__typename: 'EmbedBlock'}
+            | {__typename: 'EventBlock'}
+            | {__typename: 'FacebookPostBlock'}
+            | {__typename: 'HTMLBlock'; html?: string | null}
+            | {
+                __typename: 'ImageBlock'
+                caption?: string | null
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+              }
+            | {
+                __typename: 'ImageGalleryBlock'
+                images: Array<{
+                  __typename?: 'GalleryImageEdge'
+                  caption?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                }>
+              }
+            | {__typename: 'InstagramPostBlock'}
+            | {__typename: 'LinkPageBreakBlock'}
+            | {__typename: 'ListicleBlock'}
+            | {__typename: 'PolisConversationBlock'}
+            | {__typename: 'PollBlock'}
+            | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+            | {__typename: 'RichTextBlock'; richText: Node[]}
+            | {__typename: 'SoundCloudTrackBlock'}
+            | {__typename: 'TeaserGridBlock'}
+            | {__typename: 'TeaserGridFlexBlock'}
+            | {__typename: 'TikTokVideoBlock'}
+            | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+            | {__typename: 'TwitterTweetBlock'}
+            | {__typename: 'VimeoVideoBlock'}
+            | {__typename: 'YouTubeVideoBlock'}
+          >
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          socialMediaImage?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+        } | null
+      }
+    | {__typename?: 'PeerArticleTeaser'}
+    | null
+  >
+}
 
 type FullBlock_TeaserGridFlexBlock_Fragment = {
   __typename: 'TeaserGridFlexBlock'
@@ -2750,10 +6513,17 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
           article?: {
             __typename?: 'Article'
             id: string
-            title: string
+            publishedAt: string
+            updatedAt: string
             preTitle?: string | null
+            title: string
             lead?: string | null
+            slug: string
+            breaking: boolean
+            tags: Array<string>
             url: string
+            socialMediaDescription?: string | null
+            socialMediaTitle?: string | null
             blocks: Array<
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'CommentBlock'}
@@ -2794,7 +6564,42 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
-              | {__typename: 'ImageGalleryBlock'}
+              | {
+                  __typename: 'ImageGalleryBlock'
+                  images: Array<{
+                    __typename?: 'GalleryImageEdge'
+                    caption?: string | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                  }>
+                }
               | {__typename: 'InstagramPostBlock'}
               | {__typename: 'LinkPageBreakBlock'}
               | {__typename: 'ListicleBlock'}
@@ -2811,6 +6616,105 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
               | {__typename: 'VimeoVideoBlock'}
               | {__typename: 'YouTubeVideoBlock'}
             >
+            authors: Array<{
+              __typename?: 'Author'
+              id: string
+              name: string
+              jobTitle?: string | null
+              slug: string
+              bio?: Node[] | null
+              url: string
+              createdAt: string
+              modifiedAt: string
+              links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+              image?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+            }>
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            socialMediaImage?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
           } | null
         }
       | {
@@ -2890,9 +6794,13 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
           page?: {
             __typename?: 'Page'
             id: string
-            title: string
+            slug: string
             description?: string | null
+            tags: Array<string>
+            title: string
             url: string
+            socialMediaDescription?: string | null
+            socialMediaTitle?: string | null
             blocks: Array<
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'CommentBlock'}
@@ -2933,7 +6841,42 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
-              | {__typename: 'ImageGalleryBlock'}
+              | {
+                  __typename: 'ImageGalleryBlock'
+                  images: Array<{
+                    __typename?: 'GalleryImageEdge'
+                    caption?: string | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                  }>
+                }
               | {__typename: 'InstagramPostBlock'}
               | {__typename: 'LinkPageBreakBlock'}
               | {__typename: 'ListicleBlock'}
@@ -2950,6 +6893,64 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
               | {__typename: 'VimeoVideoBlock'}
               | {__typename: 'YouTubeVideoBlock'}
             >
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            socialMediaImage?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
           } | null
         }
       | {__typename?: 'PeerArticleTeaser'}
@@ -3005,6 +7006,3302 @@ export type ChallengeQuery = {
     challengeID?: string | null
     challenge?: string | null
     validUntil?: string | null
+  }
+}
+
+export type FullCommentRatingSystemAnswerFragment = {
+  __typename?: 'CommentRatingSystemAnswer'
+  id: string
+  ratingSystemId: string
+  answer?: string | null
+  type: RatingSystemType
+}
+
+export type FullCalculatedRatingFragment = {
+  __typename?: 'CalculatedRating'
+  count: number
+  total: number
+  mean: number
+  answer?: {
+    __typename?: 'CommentRatingSystemAnswer'
+    id: string
+    ratingSystemId: string
+    answer?: string | null
+    type: RatingSystemType
+  } | null
+}
+
+export type FullOverriddenRatingFragment = {
+  __typename?: 'overriddenRating'
+  answerId: string
+  value?: number | null
+}
+
+export type CommentWithoutNestingFragment = {
+  __typename?: 'Comment'
+  id: string
+  itemID: string
+  itemType: CommentItemType
+  peerId?: string | null
+  parentID?: string | null
+  createdAt: string
+  modifiedAt?: string | null
+  title?: string | null
+  lead?: string | null
+  text?: Node[] | null
+  authorType: CommentAuthorType
+  rejectionReason?: string | null
+  state: CommentState
+  source?: string | null
+  guestUsername?: string | null
+  tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null; type?: TagType | null}> | null
+  user?: {
+    __typename?: 'User'
+    id: string
+    name: string
+    firstName?: string | null
+    preferredName?: string | null
+    flair?: string | null
+    email: string
+    address?: {
+      __typename?: 'UserAddress'
+      company?: string | null
+      streetAddress?: string | null
+      streetAddress2?: string | null
+      zipCode?: string | null
+      city?: string | null
+      country?: string | null
+    } | null
+    paymentProviderCustomers: Array<{
+      __typename?: 'PaymentProviderCustomer'
+      paymentProviderID: string
+      customerID: string
+    }>
+    oauth2Accounts: Array<{
+      __typename?: 'OAuth2Account'
+      type: string
+      provider: string
+      scope: string
+    }>
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+  } | null
+  guestUserImage?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    title?: string | null
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
+  calculatedRatings?: Array<{
+    __typename?: 'CalculatedRating'
+    count: number
+    total: number
+    mean: number
+    answer?: {
+      __typename?: 'CommentRatingSystemAnswer'
+      id: string
+      ratingSystemId: string
+      answer?: string | null
+      type: RatingSystemType
+    } | null
+  } | null> | null
+  overriddenRatings: Array<{
+    __typename?: 'overriddenRating'
+    answerId: string
+    value?: number | null
+  }>
+}
+
+export type FullCommentFragment = {
+  __typename?: 'Comment'
+  id: string
+  itemID: string
+  itemType: CommentItemType
+  peerId?: string | null
+  parentID?: string | null
+  createdAt: string
+  modifiedAt?: string | null
+  title?: string | null
+  lead?: string | null
+  text?: Node[] | null
+  authorType: CommentAuthorType
+  rejectionReason?: string | null
+  state: CommentState
+  source?: string | null
+  guestUsername?: string | null
+  children: Array<{
+    __typename?: 'Comment'
+    id: string
+    itemID: string
+    itemType: CommentItemType
+    peerId?: string | null
+    parentID?: string | null
+    createdAt: string
+    modifiedAt?: string | null
+    title?: string | null
+    lead?: string | null
+    text?: Node[] | null
+    authorType: CommentAuthorType
+    rejectionReason?: string | null
+    state: CommentState
+    source?: string | null
+    guestUsername?: string | null
+    children: Array<{
+      __typename?: 'Comment'
+      id: string
+      itemID: string
+      itemType: CommentItemType
+      peerId?: string | null
+      parentID?: string | null
+      createdAt: string
+      modifiedAt?: string | null
+      title?: string | null
+      lead?: string | null
+      text?: Node[] | null
+      authorType: CommentAuthorType
+      rejectionReason?: string | null
+      state: CommentState
+      source?: string | null
+      guestUsername?: string | null
+      children: Array<{
+        __typename?: 'Comment'
+        id: string
+        itemID: string
+        itemType: CommentItemType
+        peerId?: string | null
+        parentID?: string | null
+        createdAt: string
+        modifiedAt?: string | null
+        title?: string | null
+        lead?: string | null
+        text?: Node[] | null
+        authorType: CommentAuthorType
+        rejectionReason?: string | null
+        state: CommentState
+        source?: string | null
+        guestUsername?: string | null
+        children: Array<{
+          __typename?: 'Comment'
+          id: string
+          itemID: string
+          itemType: CommentItemType
+          peerId?: string | null
+          parentID?: string | null
+          createdAt: string
+          modifiedAt?: string | null
+          title?: string | null
+          lead?: string | null
+          text?: Node[] | null
+          authorType: CommentAuthorType
+          rejectionReason?: string | null
+          state: CommentState
+          source?: string | null
+          guestUsername?: string | null
+          children: Array<{
+            __typename?: 'Comment'
+            id: string
+            itemID: string
+            itemType: CommentItemType
+            peerId?: string | null
+            parentID?: string | null
+            createdAt: string
+            modifiedAt?: string | null
+            title?: string | null
+            lead?: string | null
+            text?: Node[] | null
+            authorType: CommentAuthorType
+            rejectionReason?: string | null
+            state: CommentState
+            source?: string | null
+            guestUsername?: string | null
+            tags?: Array<{
+              __typename?: 'Tag'
+              id: string
+              tag?: string | null
+              type?: TagType | null
+            }> | null
+            user?: {
+              __typename?: 'User'
+              id: string
+              name: string
+              firstName?: string | null
+              preferredName?: string | null
+              flair?: string | null
+              email: string
+              address?: {
+                __typename?: 'UserAddress'
+                company?: string | null
+                streetAddress?: string | null
+                streetAddress2?: string | null
+                zipCode?: string | null
+                city?: string | null
+                country?: string | null
+              } | null
+              paymentProviderCustomers: Array<{
+                __typename?: 'PaymentProviderCustomer'
+                paymentProviderID: string
+                customerID: string
+              }>
+              oauth2Accounts: Array<{
+                __typename?: 'OAuth2Account'
+                type: string
+                provider: string
+                scope: string
+              }>
+              image?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+            } | null
+            guestUserImage?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            calculatedRatings?: Array<{
+              __typename?: 'CalculatedRating'
+              count: number
+              total: number
+              mean: number
+              answer?: {
+                __typename?: 'CommentRatingSystemAnswer'
+                id: string
+                ratingSystemId: string
+                answer?: string | null
+                type: RatingSystemType
+              } | null
+            } | null> | null
+            overriddenRatings: Array<{
+              __typename?: 'overriddenRating'
+              answerId: string
+              value?: number | null
+            }>
+          }>
+          tags?: Array<{
+            __typename?: 'Tag'
+            id: string
+            tag?: string | null
+            type?: TagType | null
+          }> | null
+          user?: {
+            __typename?: 'User'
+            id: string
+            name: string
+            firstName?: string | null
+            preferredName?: string | null
+            flair?: string | null
+            email: string
+            address?: {
+              __typename?: 'UserAddress'
+              company?: string | null
+              streetAddress?: string | null
+              streetAddress2?: string | null
+              zipCode?: string | null
+              city?: string | null
+              country?: string | null
+            } | null
+            paymentProviderCustomers: Array<{
+              __typename?: 'PaymentProviderCustomer'
+              paymentProviderID: string
+              customerID: string
+            }>
+            oauth2Accounts: Array<{
+              __typename?: 'OAuth2Account'
+              type: string
+              provider: string
+              scope: string
+            }>
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+          } | null
+          guestUserImage?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          calculatedRatings?: Array<{
+            __typename?: 'CalculatedRating'
+            count: number
+            total: number
+            mean: number
+            answer?: {
+              __typename?: 'CommentRatingSystemAnswer'
+              id: string
+              ratingSystemId: string
+              answer?: string | null
+              type: RatingSystemType
+            } | null
+          } | null> | null
+          overriddenRatings: Array<{
+            __typename?: 'overriddenRating'
+            answerId: string
+            value?: number | null
+          }>
+        }>
+        tags?: Array<{
+          __typename?: 'Tag'
+          id: string
+          tag?: string | null
+          type?: TagType | null
+        }> | null
+        user?: {
+          __typename?: 'User'
+          id: string
+          name: string
+          firstName?: string | null
+          preferredName?: string | null
+          flair?: string | null
+          email: string
+          address?: {
+            __typename?: 'UserAddress'
+            company?: string | null
+            streetAddress?: string | null
+            streetAddress2?: string | null
+            zipCode?: string | null
+            city?: string | null
+            country?: string | null
+          } | null
+          paymentProviderCustomers: Array<{
+            __typename?: 'PaymentProviderCustomer'
+            paymentProviderID: string
+            customerID: string
+          }>
+          oauth2Accounts: Array<{
+            __typename?: 'OAuth2Account'
+            type: string
+            provider: string
+            scope: string
+          }>
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+        } | null
+        guestUserImage?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          format: string
+          mimeType: string
+          extension: string
+          width: number
+          height: number
+          fileSize: number
+          title?: string | null
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
+          url?: string | null
+          bigURL?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+        calculatedRatings?: Array<{
+          __typename?: 'CalculatedRating'
+          count: number
+          total: number
+          mean: number
+          answer?: {
+            __typename?: 'CommentRatingSystemAnswer'
+            id: string
+            ratingSystemId: string
+            answer?: string | null
+            type: RatingSystemType
+          } | null
+        } | null> | null
+        overriddenRatings: Array<{
+          __typename?: 'overriddenRating'
+          answerId: string
+          value?: number | null
+        }>
+      }>
+      tags?: Array<{
+        __typename?: 'Tag'
+        id: string
+        tag?: string | null
+        type?: TagType | null
+      }> | null
+      user?: {
+        __typename?: 'User'
+        id: string
+        name: string
+        firstName?: string | null
+        preferredName?: string | null
+        flair?: string | null
+        email: string
+        address?: {
+          __typename?: 'UserAddress'
+          company?: string | null
+          streetAddress?: string | null
+          streetAddress2?: string | null
+          zipCode?: string | null
+          city?: string | null
+          country?: string | null
+        } | null
+        paymentProviderCustomers: Array<{
+          __typename?: 'PaymentProviderCustomer'
+          paymentProviderID: string
+          customerID: string
+        }>
+        oauth2Accounts: Array<{
+          __typename?: 'OAuth2Account'
+          type: string
+          provider: string
+          scope: string
+        }>
+        image?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          format: string
+          mimeType: string
+          extension: string
+          width: number
+          height: number
+          fileSize: number
+          title?: string | null
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
+          url?: string | null
+          bigURL?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+        properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+      } | null
+      guestUserImage?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        title?: string | null
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        url?: string | null
+        bigURL?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+      calculatedRatings?: Array<{
+        __typename?: 'CalculatedRating'
+        count: number
+        total: number
+        mean: number
+        answer?: {
+          __typename?: 'CommentRatingSystemAnswer'
+          id: string
+          ratingSystemId: string
+          answer?: string | null
+          type: RatingSystemType
+        } | null
+      } | null> | null
+      overriddenRatings: Array<{
+        __typename?: 'overriddenRating'
+        answerId: string
+        value?: number | null
+      }>
+    }>
+    tags?: Array<{
+      __typename?: 'Tag'
+      id: string
+      tag?: string | null
+      type?: TagType | null
+    }> | null
+    user?: {
+      __typename?: 'User'
+      id: string
+      name: string
+      firstName?: string | null
+      preferredName?: string | null
+      flair?: string | null
+      email: string
+      address?: {
+        __typename?: 'UserAddress'
+        company?: string | null
+        streetAddress?: string | null
+        streetAddress2?: string | null
+        zipCode?: string | null
+        city?: string | null
+        country?: string | null
+      } | null
+      paymentProviderCustomers: Array<{
+        __typename?: 'PaymentProviderCustomer'
+        paymentProviderID: string
+        customerID: string
+      }>
+      oauth2Accounts: Array<{
+        __typename?: 'OAuth2Account'
+        type: string
+        provider: string
+        scope: string
+      }>
+      image?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        title?: string | null
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        url?: string | null
+        bigURL?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+      properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+    } | null
+    guestUserImage?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    calculatedRatings?: Array<{
+      __typename?: 'CalculatedRating'
+      count: number
+      total: number
+      mean: number
+      answer?: {
+        __typename?: 'CommentRatingSystemAnswer'
+        id: string
+        ratingSystemId: string
+        answer?: string | null
+        type: RatingSystemType
+      } | null
+    } | null> | null
+    overriddenRatings: Array<{
+      __typename?: 'overriddenRating'
+      answerId: string
+      value?: number | null
+    }>
+  }>
+  tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null; type?: TagType | null}> | null
+  user?: {
+    __typename?: 'User'
+    id: string
+    name: string
+    firstName?: string | null
+    preferredName?: string | null
+    flair?: string | null
+    email: string
+    address?: {
+      __typename?: 'UserAddress'
+      company?: string | null
+      streetAddress?: string | null
+      streetAddress2?: string | null
+      zipCode?: string | null
+      city?: string | null
+      country?: string | null
+    } | null
+    paymentProviderCustomers: Array<{
+      __typename?: 'PaymentProviderCustomer'
+      paymentProviderID: string
+      customerID: string
+    }>
+    oauth2Accounts: Array<{
+      __typename?: 'OAuth2Account'
+      type: string
+      provider: string
+      scope: string
+    }>
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+  } | null
+  guestUserImage?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    title?: string | null
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
+  calculatedRatings?: Array<{
+    __typename?: 'CalculatedRating'
+    count: number
+    total: number
+    mean: number
+    answer?: {
+      __typename?: 'CommentRatingSystemAnswer'
+      id: string
+      ratingSystemId: string
+      answer?: string | null
+      type: RatingSystemType
+    } | null
+  } | null> | null
+  overriddenRatings: Array<{
+    __typename?: 'overriddenRating'
+    answerId: string
+    value?: number | null
+  }>
+}
+
+export type CommentListQueryVariables = Exact<{
+  itemId: Scalars['ID']
+  order?: InputMaybe<SortOrder>
+  sort?: InputMaybe<CommentSort>
+}>
+
+export type CommentListQuery = {
+  __typename?: 'Query'
+  comments: Array<{
+    __typename?: 'Comment'
+    id: string
+    itemID: string
+    itemType: CommentItemType
+    peerId?: string | null
+    parentID?: string | null
+    createdAt: string
+    modifiedAt?: string | null
+    title?: string | null
+    lead?: string | null
+    text?: Node[] | null
+    authorType: CommentAuthorType
+    rejectionReason?: string | null
+    state: CommentState
+    source?: string | null
+    guestUsername?: string | null
+    children: Array<{
+      __typename?: 'Comment'
+      id: string
+      itemID: string
+      itemType: CommentItemType
+      peerId?: string | null
+      parentID?: string | null
+      createdAt: string
+      modifiedAt?: string | null
+      title?: string | null
+      lead?: string | null
+      text?: Node[] | null
+      authorType: CommentAuthorType
+      rejectionReason?: string | null
+      state: CommentState
+      source?: string | null
+      guestUsername?: string | null
+      children: Array<{
+        __typename?: 'Comment'
+        id: string
+        itemID: string
+        itemType: CommentItemType
+        peerId?: string | null
+        parentID?: string | null
+        createdAt: string
+        modifiedAt?: string | null
+        title?: string | null
+        lead?: string | null
+        text?: Node[] | null
+        authorType: CommentAuthorType
+        rejectionReason?: string | null
+        state: CommentState
+        source?: string | null
+        guestUsername?: string | null
+        children: Array<{
+          __typename?: 'Comment'
+          id: string
+          itemID: string
+          itemType: CommentItemType
+          peerId?: string | null
+          parentID?: string | null
+          createdAt: string
+          modifiedAt?: string | null
+          title?: string | null
+          lead?: string | null
+          text?: Node[] | null
+          authorType: CommentAuthorType
+          rejectionReason?: string | null
+          state: CommentState
+          source?: string | null
+          guestUsername?: string | null
+          children: Array<{
+            __typename?: 'Comment'
+            id: string
+            itemID: string
+            itemType: CommentItemType
+            peerId?: string | null
+            parentID?: string | null
+            createdAt: string
+            modifiedAt?: string | null
+            title?: string | null
+            lead?: string | null
+            text?: Node[] | null
+            authorType: CommentAuthorType
+            rejectionReason?: string | null
+            state: CommentState
+            source?: string | null
+            guestUsername?: string | null
+            children: Array<{
+              __typename?: 'Comment'
+              id: string
+              itemID: string
+              itemType: CommentItemType
+              peerId?: string | null
+              parentID?: string | null
+              createdAt: string
+              modifiedAt?: string | null
+              title?: string | null
+              lead?: string | null
+              text?: Node[] | null
+              authorType: CommentAuthorType
+              rejectionReason?: string | null
+              state: CommentState
+              source?: string | null
+              guestUsername?: string | null
+              tags?: Array<{
+                __typename?: 'Tag'
+                id: string
+                tag?: string | null
+                type?: TagType | null
+              }> | null
+              user?: {
+                __typename?: 'User'
+                id: string
+                name: string
+                firstName?: string | null
+                preferredName?: string | null
+                flair?: string | null
+                email: string
+                address?: {
+                  __typename?: 'UserAddress'
+                  company?: string | null
+                  streetAddress?: string | null
+                  streetAddress2?: string | null
+                  zipCode?: string | null
+                  city?: string | null
+                  country?: string | null
+                } | null
+                paymentProviderCustomers: Array<{
+                  __typename?: 'PaymentProviderCustomer'
+                  paymentProviderID: string
+                  customerID: string
+                }>
+                oauth2Accounts: Array<{
+                  __typename?: 'OAuth2Account'
+                  type: string
+                  provider: string
+                  scope: string
+                }>
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+              } | null
+              guestUserImage?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              calculatedRatings?: Array<{
+                __typename?: 'CalculatedRating'
+                count: number
+                total: number
+                mean: number
+                answer?: {
+                  __typename?: 'CommentRatingSystemAnswer'
+                  id: string
+                  ratingSystemId: string
+                  answer?: string | null
+                  type: RatingSystemType
+                } | null
+              } | null> | null
+              overriddenRatings: Array<{
+                __typename?: 'overriddenRating'
+                answerId: string
+                value?: number | null
+              }>
+            }>
+            tags?: Array<{
+              __typename?: 'Tag'
+              id: string
+              tag?: string | null
+              type?: TagType | null
+            }> | null
+            user?: {
+              __typename?: 'User'
+              id: string
+              name: string
+              firstName?: string | null
+              preferredName?: string | null
+              flair?: string | null
+              email: string
+              address?: {
+                __typename?: 'UserAddress'
+                company?: string | null
+                streetAddress?: string | null
+                streetAddress2?: string | null
+                zipCode?: string | null
+                city?: string | null
+                country?: string | null
+              } | null
+              paymentProviderCustomers: Array<{
+                __typename?: 'PaymentProviderCustomer'
+                paymentProviderID: string
+                customerID: string
+              }>
+              oauth2Accounts: Array<{
+                __typename?: 'OAuth2Account'
+                type: string
+                provider: string
+                scope: string
+              }>
+              image?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+            } | null
+            guestUserImage?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            calculatedRatings?: Array<{
+              __typename?: 'CalculatedRating'
+              count: number
+              total: number
+              mean: number
+              answer?: {
+                __typename?: 'CommentRatingSystemAnswer'
+                id: string
+                ratingSystemId: string
+                answer?: string | null
+                type: RatingSystemType
+              } | null
+            } | null> | null
+            overriddenRatings: Array<{
+              __typename?: 'overriddenRating'
+              answerId: string
+              value?: number | null
+            }>
+          }>
+          tags?: Array<{
+            __typename?: 'Tag'
+            id: string
+            tag?: string | null
+            type?: TagType | null
+          }> | null
+          user?: {
+            __typename?: 'User'
+            id: string
+            name: string
+            firstName?: string | null
+            preferredName?: string | null
+            flair?: string | null
+            email: string
+            address?: {
+              __typename?: 'UserAddress'
+              company?: string | null
+              streetAddress?: string | null
+              streetAddress2?: string | null
+              zipCode?: string | null
+              city?: string | null
+              country?: string | null
+            } | null
+            paymentProviderCustomers: Array<{
+              __typename?: 'PaymentProviderCustomer'
+              paymentProviderID: string
+              customerID: string
+            }>
+            oauth2Accounts: Array<{
+              __typename?: 'OAuth2Account'
+              type: string
+              provider: string
+              scope: string
+            }>
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+          } | null
+          guestUserImage?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          calculatedRatings?: Array<{
+            __typename?: 'CalculatedRating'
+            count: number
+            total: number
+            mean: number
+            answer?: {
+              __typename?: 'CommentRatingSystemAnswer'
+              id: string
+              ratingSystemId: string
+              answer?: string | null
+              type: RatingSystemType
+            } | null
+          } | null> | null
+          overriddenRatings: Array<{
+            __typename?: 'overriddenRating'
+            answerId: string
+            value?: number | null
+          }>
+        }>
+        tags?: Array<{
+          __typename?: 'Tag'
+          id: string
+          tag?: string | null
+          type?: TagType | null
+        }> | null
+        user?: {
+          __typename?: 'User'
+          id: string
+          name: string
+          firstName?: string | null
+          preferredName?: string | null
+          flair?: string | null
+          email: string
+          address?: {
+            __typename?: 'UserAddress'
+            company?: string | null
+            streetAddress?: string | null
+            streetAddress2?: string | null
+            zipCode?: string | null
+            city?: string | null
+            country?: string | null
+          } | null
+          paymentProviderCustomers: Array<{
+            __typename?: 'PaymentProviderCustomer'
+            paymentProviderID: string
+            customerID: string
+          }>
+          oauth2Accounts: Array<{
+            __typename?: 'OAuth2Account'
+            type: string
+            provider: string
+            scope: string
+          }>
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+        } | null
+        guestUserImage?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          format: string
+          mimeType: string
+          extension: string
+          width: number
+          height: number
+          fileSize: number
+          title?: string | null
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
+          url?: string | null
+          bigURL?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+        calculatedRatings?: Array<{
+          __typename?: 'CalculatedRating'
+          count: number
+          total: number
+          mean: number
+          answer?: {
+            __typename?: 'CommentRatingSystemAnswer'
+            id: string
+            ratingSystemId: string
+            answer?: string | null
+            type: RatingSystemType
+          } | null
+        } | null> | null
+        overriddenRatings: Array<{
+          __typename?: 'overriddenRating'
+          answerId: string
+          value?: number | null
+        }>
+      }>
+      tags?: Array<{
+        __typename?: 'Tag'
+        id: string
+        tag?: string | null
+        type?: TagType | null
+      }> | null
+      user?: {
+        __typename?: 'User'
+        id: string
+        name: string
+        firstName?: string | null
+        preferredName?: string | null
+        flair?: string | null
+        email: string
+        address?: {
+          __typename?: 'UserAddress'
+          company?: string | null
+          streetAddress?: string | null
+          streetAddress2?: string | null
+          zipCode?: string | null
+          city?: string | null
+          country?: string | null
+        } | null
+        paymentProviderCustomers: Array<{
+          __typename?: 'PaymentProviderCustomer'
+          paymentProviderID: string
+          customerID: string
+        }>
+        oauth2Accounts: Array<{
+          __typename?: 'OAuth2Account'
+          type: string
+          provider: string
+          scope: string
+        }>
+        image?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          format: string
+          mimeType: string
+          extension: string
+          width: number
+          height: number
+          fileSize: number
+          title?: string | null
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
+          url?: string | null
+          bigURL?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+        properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+      } | null
+      guestUserImage?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        title?: string | null
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        url?: string | null
+        bigURL?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+      calculatedRatings?: Array<{
+        __typename?: 'CalculatedRating'
+        count: number
+        total: number
+        mean: number
+        answer?: {
+          __typename?: 'CommentRatingSystemAnswer'
+          id: string
+          ratingSystemId: string
+          answer?: string | null
+          type: RatingSystemType
+        } | null
+      } | null> | null
+      overriddenRatings: Array<{
+        __typename?: 'overriddenRating'
+        answerId: string
+        value?: number | null
+      }>
+    }>
+    tags?: Array<{
+      __typename?: 'Tag'
+      id: string
+      tag?: string | null
+      type?: TagType | null
+    }> | null
+    user?: {
+      __typename?: 'User'
+      id: string
+      name: string
+      firstName?: string | null
+      preferredName?: string | null
+      flair?: string | null
+      email: string
+      address?: {
+        __typename?: 'UserAddress'
+        company?: string | null
+        streetAddress?: string | null
+        streetAddress2?: string | null
+        zipCode?: string | null
+        city?: string | null
+        country?: string | null
+      } | null
+      paymentProviderCustomers: Array<{
+        __typename?: 'PaymentProviderCustomer'
+        paymentProviderID: string
+        customerID: string
+      }>
+      oauth2Accounts: Array<{
+        __typename?: 'OAuth2Account'
+        type: string
+        provider: string
+        scope: string
+      }>
+      image?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        title?: string | null
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        url?: string | null
+        bigURL?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+      properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+    } | null
+    guestUserImage?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    calculatedRatings?: Array<{
+      __typename?: 'CalculatedRating'
+      count: number
+      total: number
+      mean: number
+      answer?: {
+        __typename?: 'CommentRatingSystemAnswer'
+        id: string
+        ratingSystemId: string
+        answer?: string | null
+        type: RatingSystemType
+      } | null
+    } | null> | null
+    overriddenRatings: Array<{
+      __typename?: 'overriddenRating'
+      answerId: string
+      value?: number | null
+    }>
+  }>
+}
+
+export type AddCommentMutationVariables = Exact<{
+  input: CommentInput
+}>
+
+export type AddCommentMutation = {
+  __typename?: 'Mutation'
+  addComment: {
+    __typename?: 'Comment'
+    id: string
+    itemID: string
+    itemType: CommentItemType
+    peerId?: string | null
+    parentID?: string | null
+    createdAt: string
+    modifiedAt?: string | null
+    title?: string | null
+    lead?: string | null
+    text?: Node[] | null
+    authorType: CommentAuthorType
+    rejectionReason?: string | null
+    state: CommentState
+    source?: string | null
+    guestUsername?: string | null
+    children: Array<{
+      __typename?: 'Comment'
+      id: string
+      itemID: string
+      itemType: CommentItemType
+      peerId?: string | null
+      parentID?: string | null
+      createdAt: string
+      modifiedAt?: string | null
+      title?: string | null
+      lead?: string | null
+      text?: Node[] | null
+      authorType: CommentAuthorType
+      rejectionReason?: string | null
+      state: CommentState
+      source?: string | null
+      guestUsername?: string | null
+      children: Array<{
+        __typename?: 'Comment'
+        id: string
+        itemID: string
+        itemType: CommentItemType
+        peerId?: string | null
+        parentID?: string | null
+        createdAt: string
+        modifiedAt?: string | null
+        title?: string | null
+        lead?: string | null
+        text?: Node[] | null
+        authorType: CommentAuthorType
+        rejectionReason?: string | null
+        state: CommentState
+        source?: string | null
+        guestUsername?: string | null
+        children: Array<{
+          __typename?: 'Comment'
+          id: string
+          itemID: string
+          itemType: CommentItemType
+          peerId?: string | null
+          parentID?: string | null
+          createdAt: string
+          modifiedAt?: string | null
+          title?: string | null
+          lead?: string | null
+          text?: Node[] | null
+          authorType: CommentAuthorType
+          rejectionReason?: string | null
+          state: CommentState
+          source?: string | null
+          guestUsername?: string | null
+          children: Array<{
+            __typename?: 'Comment'
+            id: string
+            itemID: string
+            itemType: CommentItemType
+            peerId?: string | null
+            parentID?: string | null
+            createdAt: string
+            modifiedAt?: string | null
+            title?: string | null
+            lead?: string | null
+            text?: Node[] | null
+            authorType: CommentAuthorType
+            rejectionReason?: string | null
+            state: CommentState
+            source?: string | null
+            guestUsername?: string | null
+            children: Array<{
+              __typename?: 'Comment'
+              id: string
+              itemID: string
+              itemType: CommentItemType
+              peerId?: string | null
+              parentID?: string | null
+              createdAt: string
+              modifiedAt?: string | null
+              title?: string | null
+              lead?: string | null
+              text?: Node[] | null
+              authorType: CommentAuthorType
+              rejectionReason?: string | null
+              state: CommentState
+              source?: string | null
+              guestUsername?: string | null
+              tags?: Array<{
+                __typename?: 'Tag'
+                id: string
+                tag?: string | null
+                type?: TagType | null
+              }> | null
+              user?: {
+                __typename?: 'User'
+                id: string
+                name: string
+                firstName?: string | null
+                preferredName?: string | null
+                flair?: string | null
+                email: string
+                address?: {
+                  __typename?: 'UserAddress'
+                  company?: string | null
+                  streetAddress?: string | null
+                  streetAddress2?: string | null
+                  zipCode?: string | null
+                  city?: string | null
+                  country?: string | null
+                } | null
+                paymentProviderCustomers: Array<{
+                  __typename?: 'PaymentProviderCustomer'
+                  paymentProviderID: string
+                  customerID: string
+                }>
+                oauth2Accounts: Array<{
+                  __typename?: 'OAuth2Account'
+                  type: string
+                  provider: string
+                  scope: string
+                }>
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+              } | null
+              guestUserImage?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              calculatedRatings?: Array<{
+                __typename?: 'CalculatedRating'
+                count: number
+                total: number
+                mean: number
+                answer?: {
+                  __typename?: 'CommentRatingSystemAnswer'
+                  id: string
+                  ratingSystemId: string
+                  answer?: string | null
+                  type: RatingSystemType
+                } | null
+              } | null> | null
+              overriddenRatings: Array<{
+                __typename?: 'overriddenRating'
+                answerId: string
+                value?: number | null
+              }>
+            }>
+            tags?: Array<{
+              __typename?: 'Tag'
+              id: string
+              tag?: string | null
+              type?: TagType | null
+            }> | null
+            user?: {
+              __typename?: 'User'
+              id: string
+              name: string
+              firstName?: string | null
+              preferredName?: string | null
+              flair?: string | null
+              email: string
+              address?: {
+                __typename?: 'UserAddress'
+                company?: string | null
+                streetAddress?: string | null
+                streetAddress2?: string | null
+                zipCode?: string | null
+                city?: string | null
+                country?: string | null
+              } | null
+              paymentProviderCustomers: Array<{
+                __typename?: 'PaymentProviderCustomer'
+                paymentProviderID: string
+                customerID: string
+              }>
+              oauth2Accounts: Array<{
+                __typename?: 'OAuth2Account'
+                type: string
+                provider: string
+                scope: string
+              }>
+              image?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+            } | null
+            guestUserImage?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            calculatedRatings?: Array<{
+              __typename?: 'CalculatedRating'
+              count: number
+              total: number
+              mean: number
+              answer?: {
+                __typename?: 'CommentRatingSystemAnswer'
+                id: string
+                ratingSystemId: string
+                answer?: string | null
+                type: RatingSystemType
+              } | null
+            } | null> | null
+            overriddenRatings: Array<{
+              __typename?: 'overriddenRating'
+              answerId: string
+              value?: number | null
+            }>
+          }>
+          tags?: Array<{
+            __typename?: 'Tag'
+            id: string
+            tag?: string | null
+            type?: TagType | null
+          }> | null
+          user?: {
+            __typename?: 'User'
+            id: string
+            name: string
+            firstName?: string | null
+            preferredName?: string | null
+            flair?: string | null
+            email: string
+            address?: {
+              __typename?: 'UserAddress'
+              company?: string | null
+              streetAddress?: string | null
+              streetAddress2?: string | null
+              zipCode?: string | null
+              city?: string | null
+              country?: string | null
+            } | null
+            paymentProviderCustomers: Array<{
+              __typename?: 'PaymentProviderCustomer'
+              paymentProviderID: string
+              customerID: string
+            }>
+            oauth2Accounts: Array<{
+              __typename?: 'OAuth2Account'
+              type: string
+              provider: string
+              scope: string
+            }>
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+          } | null
+          guestUserImage?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          calculatedRatings?: Array<{
+            __typename?: 'CalculatedRating'
+            count: number
+            total: number
+            mean: number
+            answer?: {
+              __typename?: 'CommentRatingSystemAnswer'
+              id: string
+              ratingSystemId: string
+              answer?: string | null
+              type: RatingSystemType
+            } | null
+          } | null> | null
+          overriddenRatings: Array<{
+            __typename?: 'overriddenRating'
+            answerId: string
+            value?: number | null
+          }>
+        }>
+        tags?: Array<{
+          __typename?: 'Tag'
+          id: string
+          tag?: string | null
+          type?: TagType | null
+        }> | null
+        user?: {
+          __typename?: 'User'
+          id: string
+          name: string
+          firstName?: string | null
+          preferredName?: string | null
+          flair?: string | null
+          email: string
+          address?: {
+            __typename?: 'UserAddress'
+            company?: string | null
+            streetAddress?: string | null
+            streetAddress2?: string | null
+            zipCode?: string | null
+            city?: string | null
+            country?: string | null
+          } | null
+          paymentProviderCustomers: Array<{
+            __typename?: 'PaymentProviderCustomer'
+            paymentProviderID: string
+            customerID: string
+          }>
+          oauth2Accounts: Array<{
+            __typename?: 'OAuth2Account'
+            type: string
+            provider: string
+            scope: string
+          }>
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+        } | null
+        guestUserImage?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          format: string
+          mimeType: string
+          extension: string
+          width: number
+          height: number
+          fileSize: number
+          title?: string | null
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
+          url?: string | null
+          bigURL?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+        calculatedRatings?: Array<{
+          __typename?: 'CalculatedRating'
+          count: number
+          total: number
+          mean: number
+          answer?: {
+            __typename?: 'CommentRatingSystemAnswer'
+            id: string
+            ratingSystemId: string
+            answer?: string | null
+            type: RatingSystemType
+          } | null
+        } | null> | null
+        overriddenRatings: Array<{
+          __typename?: 'overriddenRating'
+          answerId: string
+          value?: number | null
+        }>
+      }>
+      tags?: Array<{
+        __typename?: 'Tag'
+        id: string
+        tag?: string | null
+        type?: TagType | null
+      }> | null
+      user?: {
+        __typename?: 'User'
+        id: string
+        name: string
+        firstName?: string | null
+        preferredName?: string | null
+        flair?: string | null
+        email: string
+        address?: {
+          __typename?: 'UserAddress'
+          company?: string | null
+          streetAddress?: string | null
+          streetAddress2?: string | null
+          zipCode?: string | null
+          city?: string | null
+          country?: string | null
+        } | null
+        paymentProviderCustomers: Array<{
+          __typename?: 'PaymentProviderCustomer'
+          paymentProviderID: string
+          customerID: string
+        }>
+        oauth2Accounts: Array<{
+          __typename?: 'OAuth2Account'
+          type: string
+          provider: string
+          scope: string
+        }>
+        image?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          format: string
+          mimeType: string
+          extension: string
+          width: number
+          height: number
+          fileSize: number
+          title?: string | null
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
+          url?: string | null
+          bigURL?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+        properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+      } | null
+      guestUserImage?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        title?: string | null
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        url?: string | null
+        bigURL?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+      calculatedRatings?: Array<{
+        __typename?: 'CalculatedRating'
+        count: number
+        total: number
+        mean: number
+        answer?: {
+          __typename?: 'CommentRatingSystemAnswer'
+          id: string
+          ratingSystemId: string
+          answer?: string | null
+          type: RatingSystemType
+        } | null
+      } | null> | null
+      overriddenRatings: Array<{
+        __typename?: 'overriddenRating'
+        answerId: string
+        value?: number | null
+      }>
+    }>
+    tags?: Array<{
+      __typename?: 'Tag'
+      id: string
+      tag?: string | null
+      type?: TagType | null
+    }> | null
+    user?: {
+      __typename?: 'User'
+      id: string
+      name: string
+      firstName?: string | null
+      preferredName?: string | null
+      flair?: string | null
+      email: string
+      address?: {
+        __typename?: 'UserAddress'
+        company?: string | null
+        streetAddress?: string | null
+        streetAddress2?: string | null
+        zipCode?: string | null
+        city?: string | null
+        country?: string | null
+      } | null
+      paymentProviderCustomers: Array<{
+        __typename?: 'PaymentProviderCustomer'
+        paymentProviderID: string
+        customerID: string
+      }>
+      oauth2Accounts: Array<{
+        __typename?: 'OAuth2Account'
+        type: string
+        provider: string
+        scope: string
+      }>
+      image?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        title?: string | null
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        url?: string | null
+        bigURL?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+      properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+    } | null
+    guestUserImage?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    calculatedRatings?: Array<{
+      __typename?: 'CalculatedRating'
+      count: number
+      total: number
+      mean: number
+      answer?: {
+        __typename?: 'CommentRatingSystemAnswer'
+        id: string
+        ratingSystemId: string
+        answer?: string | null
+        type: RatingSystemType
+      } | null
+    } | null> | null
+    overriddenRatings: Array<{
+      __typename?: 'overriddenRating'
+      answerId: string
+      value?: number | null
+    }>
+  }
+}
+
+export type EditCommentMutationVariables = Exact<{
+  input: CommentUpdateInput
+}>
+
+export type EditCommentMutation = {
+  __typename?: 'Mutation'
+  updateComment: {
+    __typename?: 'Comment'
+    id: string
+    itemID: string
+    itemType: CommentItemType
+    peerId?: string | null
+    parentID?: string | null
+    createdAt: string
+    modifiedAt?: string | null
+    title?: string | null
+    lead?: string | null
+    text?: Node[] | null
+    authorType: CommentAuthorType
+    rejectionReason?: string | null
+    state: CommentState
+    source?: string | null
+    guestUsername?: string | null
+    children: Array<{
+      __typename?: 'Comment'
+      id: string
+      itemID: string
+      itemType: CommentItemType
+      peerId?: string | null
+      parentID?: string | null
+      createdAt: string
+      modifiedAt?: string | null
+      title?: string | null
+      lead?: string | null
+      text?: Node[] | null
+      authorType: CommentAuthorType
+      rejectionReason?: string | null
+      state: CommentState
+      source?: string | null
+      guestUsername?: string | null
+      children: Array<{
+        __typename?: 'Comment'
+        id: string
+        itemID: string
+        itemType: CommentItemType
+        peerId?: string | null
+        parentID?: string | null
+        createdAt: string
+        modifiedAt?: string | null
+        title?: string | null
+        lead?: string | null
+        text?: Node[] | null
+        authorType: CommentAuthorType
+        rejectionReason?: string | null
+        state: CommentState
+        source?: string | null
+        guestUsername?: string | null
+        children: Array<{
+          __typename?: 'Comment'
+          id: string
+          itemID: string
+          itemType: CommentItemType
+          peerId?: string | null
+          parentID?: string | null
+          createdAt: string
+          modifiedAt?: string | null
+          title?: string | null
+          lead?: string | null
+          text?: Node[] | null
+          authorType: CommentAuthorType
+          rejectionReason?: string | null
+          state: CommentState
+          source?: string | null
+          guestUsername?: string | null
+          children: Array<{
+            __typename?: 'Comment'
+            id: string
+            itemID: string
+            itemType: CommentItemType
+            peerId?: string | null
+            parentID?: string | null
+            createdAt: string
+            modifiedAt?: string | null
+            title?: string | null
+            lead?: string | null
+            text?: Node[] | null
+            authorType: CommentAuthorType
+            rejectionReason?: string | null
+            state: CommentState
+            source?: string | null
+            guestUsername?: string | null
+            children: Array<{
+              __typename?: 'Comment'
+              id: string
+              itemID: string
+              itemType: CommentItemType
+              peerId?: string | null
+              parentID?: string | null
+              createdAt: string
+              modifiedAt?: string | null
+              title?: string | null
+              lead?: string | null
+              text?: Node[] | null
+              authorType: CommentAuthorType
+              rejectionReason?: string | null
+              state: CommentState
+              source?: string | null
+              guestUsername?: string | null
+              tags?: Array<{
+                __typename?: 'Tag'
+                id: string
+                tag?: string | null
+                type?: TagType | null
+              }> | null
+              user?: {
+                __typename?: 'User'
+                id: string
+                name: string
+                firstName?: string | null
+                preferredName?: string | null
+                flair?: string | null
+                email: string
+                address?: {
+                  __typename?: 'UserAddress'
+                  company?: string | null
+                  streetAddress?: string | null
+                  streetAddress2?: string | null
+                  zipCode?: string | null
+                  city?: string | null
+                  country?: string | null
+                } | null
+                paymentProviderCustomers: Array<{
+                  __typename?: 'PaymentProviderCustomer'
+                  paymentProviderID: string
+                  customerID: string
+                }>
+                oauth2Accounts: Array<{
+                  __typename?: 'OAuth2Account'
+                  type: string
+                  provider: string
+                  scope: string
+                }>
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+              } | null
+              guestUserImage?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              calculatedRatings?: Array<{
+                __typename?: 'CalculatedRating'
+                count: number
+                total: number
+                mean: number
+                answer?: {
+                  __typename?: 'CommentRatingSystemAnswer'
+                  id: string
+                  ratingSystemId: string
+                  answer?: string | null
+                  type: RatingSystemType
+                } | null
+              } | null> | null
+              overriddenRatings: Array<{
+                __typename?: 'overriddenRating'
+                answerId: string
+                value?: number | null
+              }>
+            }>
+            tags?: Array<{
+              __typename?: 'Tag'
+              id: string
+              tag?: string | null
+              type?: TagType | null
+            }> | null
+            user?: {
+              __typename?: 'User'
+              id: string
+              name: string
+              firstName?: string | null
+              preferredName?: string | null
+              flair?: string | null
+              email: string
+              address?: {
+                __typename?: 'UserAddress'
+                company?: string | null
+                streetAddress?: string | null
+                streetAddress2?: string | null
+                zipCode?: string | null
+                city?: string | null
+                country?: string | null
+              } | null
+              paymentProviderCustomers: Array<{
+                __typename?: 'PaymentProviderCustomer'
+                paymentProviderID: string
+                customerID: string
+              }>
+              oauth2Accounts: Array<{
+                __typename?: 'OAuth2Account'
+                type: string
+                provider: string
+                scope: string
+              }>
+              image?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+            } | null
+            guestUserImage?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            calculatedRatings?: Array<{
+              __typename?: 'CalculatedRating'
+              count: number
+              total: number
+              mean: number
+              answer?: {
+                __typename?: 'CommentRatingSystemAnswer'
+                id: string
+                ratingSystemId: string
+                answer?: string | null
+                type: RatingSystemType
+              } | null
+            } | null> | null
+            overriddenRatings: Array<{
+              __typename?: 'overriddenRating'
+              answerId: string
+              value?: number | null
+            }>
+          }>
+          tags?: Array<{
+            __typename?: 'Tag'
+            id: string
+            tag?: string | null
+            type?: TagType | null
+          }> | null
+          user?: {
+            __typename?: 'User'
+            id: string
+            name: string
+            firstName?: string | null
+            preferredName?: string | null
+            flair?: string | null
+            email: string
+            address?: {
+              __typename?: 'UserAddress'
+              company?: string | null
+              streetAddress?: string | null
+              streetAddress2?: string | null
+              zipCode?: string | null
+              city?: string | null
+              country?: string | null
+            } | null
+            paymentProviderCustomers: Array<{
+              __typename?: 'PaymentProviderCustomer'
+              paymentProviderID: string
+              customerID: string
+            }>
+            oauth2Accounts: Array<{
+              __typename?: 'OAuth2Account'
+              type: string
+              provider: string
+              scope: string
+            }>
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+          } | null
+          guestUserImage?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          calculatedRatings?: Array<{
+            __typename?: 'CalculatedRating'
+            count: number
+            total: number
+            mean: number
+            answer?: {
+              __typename?: 'CommentRatingSystemAnswer'
+              id: string
+              ratingSystemId: string
+              answer?: string | null
+              type: RatingSystemType
+            } | null
+          } | null> | null
+          overriddenRatings: Array<{
+            __typename?: 'overriddenRating'
+            answerId: string
+            value?: number | null
+          }>
+        }>
+        tags?: Array<{
+          __typename?: 'Tag'
+          id: string
+          tag?: string | null
+          type?: TagType | null
+        }> | null
+        user?: {
+          __typename?: 'User'
+          id: string
+          name: string
+          firstName?: string | null
+          preferredName?: string | null
+          flair?: string | null
+          email: string
+          address?: {
+            __typename?: 'UserAddress'
+            company?: string | null
+            streetAddress?: string | null
+            streetAddress2?: string | null
+            zipCode?: string | null
+            city?: string | null
+            country?: string | null
+          } | null
+          paymentProviderCustomers: Array<{
+            __typename?: 'PaymentProviderCustomer'
+            paymentProviderID: string
+            customerID: string
+          }>
+          oauth2Accounts: Array<{
+            __typename?: 'OAuth2Account'
+            type: string
+            provider: string
+            scope: string
+          }>
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+        } | null
+        guestUserImage?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          format: string
+          mimeType: string
+          extension: string
+          width: number
+          height: number
+          fileSize: number
+          title?: string | null
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
+          url?: string | null
+          bigURL?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+        calculatedRatings?: Array<{
+          __typename?: 'CalculatedRating'
+          count: number
+          total: number
+          mean: number
+          answer?: {
+            __typename?: 'CommentRatingSystemAnswer'
+            id: string
+            ratingSystemId: string
+            answer?: string | null
+            type: RatingSystemType
+          } | null
+        } | null> | null
+        overriddenRatings: Array<{
+          __typename?: 'overriddenRating'
+          answerId: string
+          value?: number | null
+        }>
+      }>
+      tags?: Array<{
+        __typename?: 'Tag'
+        id: string
+        tag?: string | null
+        type?: TagType | null
+      }> | null
+      user?: {
+        __typename?: 'User'
+        id: string
+        name: string
+        firstName?: string | null
+        preferredName?: string | null
+        flair?: string | null
+        email: string
+        address?: {
+          __typename?: 'UserAddress'
+          company?: string | null
+          streetAddress?: string | null
+          streetAddress2?: string | null
+          zipCode?: string | null
+          city?: string | null
+          country?: string | null
+        } | null
+        paymentProviderCustomers: Array<{
+          __typename?: 'PaymentProviderCustomer'
+          paymentProviderID: string
+          customerID: string
+        }>
+        oauth2Accounts: Array<{
+          __typename?: 'OAuth2Account'
+          type: string
+          provider: string
+          scope: string
+        }>
+        image?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          format: string
+          mimeType: string
+          extension: string
+          width: number
+          height: number
+          fileSize: number
+          title?: string | null
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
+          url?: string | null
+          bigURL?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+        properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+      } | null
+      guestUserImage?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        title?: string | null
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        url?: string | null
+        bigURL?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+      calculatedRatings?: Array<{
+        __typename?: 'CalculatedRating'
+        count: number
+        total: number
+        mean: number
+        answer?: {
+          __typename?: 'CommentRatingSystemAnswer'
+          id: string
+          ratingSystemId: string
+          answer?: string | null
+          type: RatingSystemType
+        } | null
+      } | null> | null
+      overriddenRatings: Array<{
+        __typename?: 'overriddenRating'
+        answerId: string
+        value?: number | null
+      }>
+    }>
+    tags?: Array<{
+      __typename?: 'Tag'
+      id: string
+      tag?: string | null
+      type?: TagType | null
+    }> | null
+    user?: {
+      __typename?: 'User'
+      id: string
+      name: string
+      firstName?: string | null
+      preferredName?: string | null
+      flair?: string | null
+      email: string
+      address?: {
+        __typename?: 'UserAddress'
+        company?: string | null
+        streetAddress?: string | null
+        streetAddress2?: string | null
+        zipCode?: string | null
+        city?: string | null
+        country?: string | null
+      } | null
+      paymentProviderCustomers: Array<{
+        __typename?: 'PaymentProviderCustomer'
+        paymentProviderID: string
+        customerID: string
+      }>
+      oauth2Accounts: Array<{
+        __typename?: 'OAuth2Account'
+        type: string
+        provider: string
+        scope: string
+      }>
+      image?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        title?: string | null
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        url?: string | null
+        bigURL?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+      properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+    } | null
+    guestUserImage?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    calculatedRatings?: Array<{
+      __typename?: 'CalculatedRating'
+      count: number
+      total: number
+      mean: number
+      answer?: {
+        __typename?: 'CommentRatingSystemAnswer'
+        id: string
+        ratingSystemId: string
+        answer?: string | null
+        type: RatingSystemType
+      } | null
+    } | null> | null
+    overriddenRatings: Array<{
+      __typename?: 'overriddenRating'
+      answerId: string
+      value?: number | null
+    }>
   }
 }
 
@@ -3350,8 +10647,17 @@ export type FullNavigationFragment = {
         article?: {
           __typename?: 'Article'
           id: string
+          publishedAt: string
+          updatedAt: string
+          preTitle?: string | null
+          title: string
+          lead?: string | null
           slug: string
+          breaking: boolean
+          tags: Array<string>
           url: string
+          socialMediaDescription?: string | null
+          socialMediaTitle?: string | null
           blocks: Array<
             | {__typename: 'BildwurfAdBlock'}
             | {__typename: 'CommentBlock'}
@@ -3392,7 +10698,42 @@ export type FullNavigationFragment = {
                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                 } | null
               }
-            | {__typename: 'ImageGalleryBlock'}
+            | {
+                __typename: 'ImageGalleryBlock'
+                images: Array<{
+                  __typename?: 'GalleryImageEdge'
+                  caption?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                }>
+              }
             | {__typename: 'InstagramPostBlock'}
             | {__typename: 'LinkPageBreakBlock'}
             | {__typename: 'ListicleBlock'}
@@ -3401,7 +10742,508 @@ export type FullNavigationFragment = {
             | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
             | {__typename: 'RichTextBlock'; richText: Node[]}
             | {__typename: 'SoundCloudTrackBlock'}
-            | {__typename: 'TeaserGridBlock'}
+            | {
+                __typename: 'TeaserGridBlock'
+                numColumns: number
+                teasers: Array<
+                  | {
+                      __typename?: 'ArticleTeaser'
+                      style: TeaserStyle
+                      preTitle?: string | null
+                      title?: string | null
+                      lead?: string | null
+                      image?: {
+                        __typename?: 'Image'
+                        id: string
+                        createdAt: string
+                        modifiedAt: string
+                        filename?: string | null
+                        format: string
+                        mimeType: string
+                        extension: string
+                        width: number
+                        height: number
+                        fileSize: number
+                        title?: string | null
+                        description?: string | null
+                        tags: Array<string>
+                        source?: string | null
+                        link?: string | null
+                        license?: string | null
+                        url?: string | null
+                        bigURL?: string | null
+                        largeURL?: string | null
+                        mediumURL?: string | null
+                        smallURL?: string | null
+                        squareBigURL?: string | null
+                        squareLargeURL?: string | null
+                        squareMediumURL?: string | null
+                        squareSmallURL?: string | null
+                        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                      } | null
+                      article?: {
+                        __typename?: 'Article'
+                        id: string
+                        publishedAt: string
+                        updatedAt: string
+                        preTitle?: string | null
+                        title: string
+                        lead?: string | null
+                        slug: string
+                        breaking: boolean
+                        tags: Array<string>
+                        url: string
+                        socialMediaDescription?: string | null
+                        socialMediaTitle?: string | null
+                        blocks: Array<
+                          | {__typename: 'BildwurfAdBlock'}
+                          | {__typename: 'CommentBlock'}
+                          | {__typename: 'EmbedBlock'}
+                          | {__typename: 'EventBlock'}
+                          | {__typename: 'FacebookPostBlock'}
+                          | {__typename: 'HTMLBlock'; html?: string | null}
+                          | {
+                              __typename: 'ImageBlock'
+                              caption?: string | null
+                              image?: {
+                                __typename?: 'Image'
+                                id: string
+                                createdAt: string
+                                modifiedAt: string
+                                filename?: string | null
+                                format: string
+                                mimeType: string
+                                extension: string
+                                width: number
+                                height: number
+                                fileSize: number
+                                title?: string | null
+                                description?: string | null
+                                tags: Array<string>
+                                source?: string | null
+                                link?: string | null
+                                license?: string | null
+                                url?: string | null
+                                bigURL?: string | null
+                                largeURL?: string | null
+                                mediumURL?: string | null
+                                smallURL?: string | null
+                                squareBigURL?: string | null
+                                squareLargeURL?: string | null
+                                squareMediumURL?: string | null
+                                squareSmallURL?: string | null
+                                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                              } | null
+                            }
+                          | {
+                              __typename: 'ImageGalleryBlock'
+                              images: Array<{
+                                __typename?: 'GalleryImageEdge'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }>
+                            }
+                          | {__typename: 'InstagramPostBlock'}
+                          | {__typename: 'LinkPageBreakBlock'}
+                          | {__typename: 'ListicleBlock'}
+                          | {__typename: 'PolisConversationBlock'}
+                          | {__typename: 'PollBlock'}
+                          | {
+                              __typename: 'QuoteBlock'
+                              quote?: string | null
+                              author?: string | null
+                            }
+                          | {__typename: 'RichTextBlock'; richText: Node[]}
+                          | {__typename: 'SoundCloudTrackBlock'}
+                          | {__typename: 'TeaserGridBlock'}
+                          | {__typename: 'TeaserGridFlexBlock'}
+                          | {__typename: 'TikTokVideoBlock'}
+                          | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+                          | {__typename: 'TwitterTweetBlock'}
+                          | {__typename: 'VimeoVideoBlock'}
+                          | {__typename: 'YouTubeVideoBlock'}
+                        >
+                        authors: Array<{
+                          __typename?: 'Author'
+                          id: string
+                          name: string
+                          jobTitle?: string | null
+                          slug: string
+                          bio?: Node[] | null
+                          url: string
+                          createdAt: string
+                          modifiedAt: string
+                          links?: Array<{
+                            __typename?: 'AuthorLink'
+                            title: string
+                            url: string
+                          }> | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        socialMediaImage?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      } | null
+                    }
+                  | {
+                      __typename?: 'CustomTeaser'
+                      style: TeaserStyle
+                      preTitle?: string | null
+                      title?: string | null
+                      lead?: string | null
+                      contentUrl?: string | null
+                      image?: {
+                        __typename?: 'Image'
+                        id: string
+                        createdAt: string
+                        modifiedAt: string
+                        filename?: string | null
+                        format: string
+                        mimeType: string
+                        extension: string
+                        width: number
+                        height: number
+                        fileSize: number
+                        title?: string | null
+                        description?: string | null
+                        tags: Array<string>
+                        source?: string | null
+                        link?: string | null
+                        license?: string | null
+                        url?: string | null
+                        bigURL?: string | null
+                        largeURL?: string | null
+                        mediumURL?: string | null
+                        smallURL?: string | null
+                        squareBigURL?: string | null
+                        squareLargeURL?: string | null
+                        squareMediumURL?: string | null
+                        squareSmallURL?: string | null
+                        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                      } | null
+                      properties: Array<{
+                        __typename?: 'PublicProperties'
+                        key: string
+                        value: string
+                      }>
+                    }
+                  | {__typename?: 'EventTeaser'}
+                  | {
+                      __typename?: 'PageTeaser'
+                      style: TeaserStyle
+                      preTitle?: string | null
+                      title?: string | null
+                      lead?: string | null
+                      image?: {
+                        __typename?: 'Image'
+                        id: string
+                        createdAt: string
+                        modifiedAt: string
+                        filename?: string | null
+                        format: string
+                        mimeType: string
+                        extension: string
+                        width: number
+                        height: number
+                        fileSize: number
+                        title?: string | null
+                        description?: string | null
+                        tags: Array<string>
+                        source?: string | null
+                        link?: string | null
+                        license?: string | null
+                        url?: string | null
+                        bigURL?: string | null
+                        largeURL?: string | null
+                        mediumURL?: string | null
+                        smallURL?: string | null
+                        squareBigURL?: string | null
+                        squareLargeURL?: string | null
+                        squareMediumURL?: string | null
+                        squareSmallURL?: string | null
+                        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                      } | null
+                      page?: {
+                        __typename?: 'Page'
+                        id: string
+                        slug: string
+                        description?: string | null
+                        tags: Array<string>
+                        title: string
+                        url: string
+                        socialMediaDescription?: string | null
+                        socialMediaTitle?: string | null
+                        blocks: Array<
+                          | {__typename: 'BildwurfAdBlock'}
+                          | {__typename: 'CommentBlock'}
+                          | {__typename: 'EmbedBlock'}
+                          | {__typename: 'EventBlock'}
+                          | {__typename: 'FacebookPostBlock'}
+                          | {__typename: 'HTMLBlock'; html?: string | null}
+                          | {
+                              __typename: 'ImageBlock'
+                              caption?: string | null
+                              image?: {
+                                __typename?: 'Image'
+                                id: string
+                                createdAt: string
+                                modifiedAt: string
+                                filename?: string | null
+                                format: string
+                                mimeType: string
+                                extension: string
+                                width: number
+                                height: number
+                                fileSize: number
+                                title?: string | null
+                                description?: string | null
+                                tags: Array<string>
+                                source?: string | null
+                                link?: string | null
+                                license?: string | null
+                                url?: string | null
+                                bigURL?: string | null
+                                largeURL?: string | null
+                                mediumURL?: string | null
+                                smallURL?: string | null
+                                squareBigURL?: string | null
+                                squareLargeURL?: string | null
+                                squareMediumURL?: string | null
+                                squareSmallURL?: string | null
+                                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                              } | null
+                            }
+                          | {
+                              __typename: 'ImageGalleryBlock'
+                              images: Array<{
+                                __typename?: 'GalleryImageEdge'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }>
+                            }
+                          | {__typename: 'InstagramPostBlock'}
+                          | {__typename: 'LinkPageBreakBlock'}
+                          | {__typename: 'ListicleBlock'}
+                          | {__typename: 'PolisConversationBlock'}
+                          | {__typename: 'PollBlock'}
+                          | {
+                              __typename: 'QuoteBlock'
+                              quote?: string | null
+                              author?: string | null
+                            }
+                          | {__typename: 'RichTextBlock'; richText: Node[]}
+                          | {__typename: 'SoundCloudTrackBlock'}
+                          | {__typename: 'TeaserGridBlock'}
+                          | {__typename: 'TeaserGridFlexBlock'}
+                          | {__typename: 'TikTokVideoBlock'}
+                          | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+                          | {__typename: 'TwitterTweetBlock'}
+                          | {__typename: 'VimeoVideoBlock'}
+                          | {__typename: 'YouTubeVideoBlock'}
+                        >
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        socialMediaImage?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      } | null
+                    }
+                  | {__typename?: 'PeerArticleTeaser'}
+                  | null
+                >
+              }
             | {
                 __typename: 'TeaserGridFlexBlock'
                 flexTeasers: Array<{
@@ -3452,17 +11294,24 @@ export type FullNavigationFragment = {
                         article?: {
                           __typename?: 'Article'
                           id: string
-                          title: string
+                          publishedAt: string
+                          updatedAt: string
                           preTitle?: string | null
+                          title: string
                           lead?: string | null
+                          slug: string
+                          breaking: boolean
+                          tags: Array<string>
                           url: string
+                          socialMediaDescription?: string | null
+                          socialMediaTitle?: string | null
                           blocks: Array<
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
-                            | {__typename: 'HTMLBlock'}
+                            | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
                                 caption?: string | null
@@ -3496,14 +11345,53 @@ export type FullNavigationFragment = {
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
-                            | {__typename: 'ImageGalleryBlock'}
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
                             | {__typename: 'InstagramPostBlock'}
                             | {__typename: 'LinkPageBreakBlock'}
                             | {__typename: 'ListicleBlock'}
                             | {__typename: 'PolisConversationBlock'}
                             | {__typename: 'PollBlock'}
-                            | {__typename: 'QuoteBlock'}
-                            | {__typename: 'RichTextBlock'}
+                            | {
+                                __typename: 'QuoteBlock'
+                                quote?: string | null
+                                author?: string | null
+                              }
+                            | {__typename: 'RichTextBlock'; richText: Node[]}
                             | {__typename: 'SoundCloudTrackBlock'}
                             | {__typename: 'TeaserGridBlock'}
                             | {__typename: 'TeaserGridFlexBlock'}
@@ -3517,6 +11405,109 @@ export type FullNavigationFragment = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          authors: Array<{
+                            __typename?: 'Author'
+                            id: string
+                            name: string
+                            jobTitle?: string | null
+                            slug: string
+                            bio?: Node[] | null
+                            url: string
+                            createdAt: string
+                            modifiedAt: string
+                            links?: Array<{
+                              __typename?: 'AuthorLink'
+                              title: string
+                              url: string
+                            }> | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          socialMediaImage?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
                         } | null
                       }
                     | {
@@ -3600,16 +11591,20 @@ export type FullNavigationFragment = {
                         page?: {
                           __typename?: 'Page'
                           id: string
-                          title: string
+                          slug: string
                           description?: string | null
+                          tags: Array<string>
+                          title: string
                           url: string
+                          socialMediaDescription?: string | null
+                          socialMediaTitle?: string | null
                           blocks: Array<
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
-                            | {__typename: 'HTMLBlock'}
+                            | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
                                 caption?: string | null
@@ -3643,14 +11638,53 @@ export type FullNavigationFragment = {
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
-                            | {__typename: 'ImageGalleryBlock'}
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
                             | {__typename: 'InstagramPostBlock'}
                             | {__typename: 'LinkPageBreakBlock'}
                             | {__typename: 'ListicleBlock'}
                             | {__typename: 'PolisConversationBlock'}
                             | {__typename: 'PollBlock'}
-                            | {__typename: 'QuoteBlock'}
-                            | {__typename: 'RichTextBlock'}
+                            | {
+                                __typename: 'QuoteBlock'
+                                quote?: string | null
+                                author?: string | null
+                              }
+                            | {__typename: 'RichTextBlock'; richText: Node[]}
                             | {__typename: 'SoundCloudTrackBlock'}
                             | {__typename: 'TeaserGridBlock'}
                             | {__typename: 'TeaserGridFlexBlock'}
@@ -3664,6 +11698,64 @@ export type FullNavigationFragment = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          socialMediaImage?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
                         } | null
                       }
                     | {__typename?: 'PeerArticleTeaser'}
@@ -3684,6 +11776,8 @@ export type FullNavigationFragment = {
             slug: string
             bio?: Node[] | null
             url: string
+            createdAt: string
+            modifiedAt: string
             links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
             image?: {
               __typename?: 'Image'
@@ -3715,6 +11809,64 @@ export type FullNavigationFragment = {
               focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
             } | null
           }>
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          socialMediaImage?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
         } | null
       }
     | {__typename?: 'ExternalNavigationLink'; label: string; url: string}
@@ -3725,7 +11877,12 @@ export type FullNavigationFragment = {
           __typename?: 'Page'
           id: string
           slug: string
+          description?: string | null
+          tags: Array<string>
+          title: string
           url: string
+          socialMediaDescription?: string | null
+          socialMediaTitle?: string | null
           blocks: Array<
             | {__typename: 'BildwurfAdBlock'}
             | {__typename: 'CommentBlock'}
@@ -3766,7 +11923,42 @@ export type FullNavigationFragment = {
                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                 } | null
               }
-            | {__typename: 'ImageGalleryBlock'}
+            | {
+                __typename: 'ImageGalleryBlock'
+                images: Array<{
+                  __typename?: 'GalleryImageEdge'
+                  caption?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                }>
+              }
             | {__typename: 'InstagramPostBlock'}
             | {__typename: 'LinkPageBreakBlock'}
             | {__typename: 'ListicleBlock'}
@@ -3775,7 +11967,508 @@ export type FullNavigationFragment = {
             | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
             | {__typename: 'RichTextBlock'; richText: Node[]}
             | {__typename: 'SoundCloudTrackBlock'}
-            | {__typename: 'TeaserGridBlock'}
+            | {
+                __typename: 'TeaserGridBlock'
+                numColumns: number
+                teasers: Array<
+                  | {
+                      __typename?: 'ArticleTeaser'
+                      style: TeaserStyle
+                      preTitle?: string | null
+                      title?: string | null
+                      lead?: string | null
+                      image?: {
+                        __typename?: 'Image'
+                        id: string
+                        createdAt: string
+                        modifiedAt: string
+                        filename?: string | null
+                        format: string
+                        mimeType: string
+                        extension: string
+                        width: number
+                        height: number
+                        fileSize: number
+                        title?: string | null
+                        description?: string | null
+                        tags: Array<string>
+                        source?: string | null
+                        link?: string | null
+                        license?: string | null
+                        url?: string | null
+                        bigURL?: string | null
+                        largeURL?: string | null
+                        mediumURL?: string | null
+                        smallURL?: string | null
+                        squareBigURL?: string | null
+                        squareLargeURL?: string | null
+                        squareMediumURL?: string | null
+                        squareSmallURL?: string | null
+                        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                      } | null
+                      article?: {
+                        __typename?: 'Article'
+                        id: string
+                        publishedAt: string
+                        updatedAt: string
+                        preTitle?: string | null
+                        title: string
+                        lead?: string | null
+                        slug: string
+                        breaking: boolean
+                        tags: Array<string>
+                        url: string
+                        socialMediaDescription?: string | null
+                        socialMediaTitle?: string | null
+                        blocks: Array<
+                          | {__typename: 'BildwurfAdBlock'}
+                          | {__typename: 'CommentBlock'}
+                          | {__typename: 'EmbedBlock'}
+                          | {__typename: 'EventBlock'}
+                          | {__typename: 'FacebookPostBlock'}
+                          | {__typename: 'HTMLBlock'; html?: string | null}
+                          | {
+                              __typename: 'ImageBlock'
+                              caption?: string | null
+                              image?: {
+                                __typename?: 'Image'
+                                id: string
+                                createdAt: string
+                                modifiedAt: string
+                                filename?: string | null
+                                format: string
+                                mimeType: string
+                                extension: string
+                                width: number
+                                height: number
+                                fileSize: number
+                                title?: string | null
+                                description?: string | null
+                                tags: Array<string>
+                                source?: string | null
+                                link?: string | null
+                                license?: string | null
+                                url?: string | null
+                                bigURL?: string | null
+                                largeURL?: string | null
+                                mediumURL?: string | null
+                                smallURL?: string | null
+                                squareBigURL?: string | null
+                                squareLargeURL?: string | null
+                                squareMediumURL?: string | null
+                                squareSmallURL?: string | null
+                                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                              } | null
+                            }
+                          | {
+                              __typename: 'ImageGalleryBlock'
+                              images: Array<{
+                                __typename?: 'GalleryImageEdge'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }>
+                            }
+                          | {__typename: 'InstagramPostBlock'}
+                          | {__typename: 'LinkPageBreakBlock'}
+                          | {__typename: 'ListicleBlock'}
+                          | {__typename: 'PolisConversationBlock'}
+                          | {__typename: 'PollBlock'}
+                          | {
+                              __typename: 'QuoteBlock'
+                              quote?: string | null
+                              author?: string | null
+                            }
+                          | {__typename: 'RichTextBlock'; richText: Node[]}
+                          | {__typename: 'SoundCloudTrackBlock'}
+                          | {__typename: 'TeaserGridBlock'}
+                          | {__typename: 'TeaserGridFlexBlock'}
+                          | {__typename: 'TikTokVideoBlock'}
+                          | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+                          | {__typename: 'TwitterTweetBlock'}
+                          | {__typename: 'VimeoVideoBlock'}
+                          | {__typename: 'YouTubeVideoBlock'}
+                        >
+                        authors: Array<{
+                          __typename?: 'Author'
+                          id: string
+                          name: string
+                          jobTitle?: string | null
+                          slug: string
+                          bio?: Node[] | null
+                          url: string
+                          createdAt: string
+                          modifiedAt: string
+                          links?: Array<{
+                            __typename?: 'AuthorLink'
+                            title: string
+                            url: string
+                          }> | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        socialMediaImage?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      } | null
+                    }
+                  | {
+                      __typename?: 'CustomTeaser'
+                      style: TeaserStyle
+                      preTitle?: string | null
+                      title?: string | null
+                      lead?: string | null
+                      contentUrl?: string | null
+                      image?: {
+                        __typename?: 'Image'
+                        id: string
+                        createdAt: string
+                        modifiedAt: string
+                        filename?: string | null
+                        format: string
+                        mimeType: string
+                        extension: string
+                        width: number
+                        height: number
+                        fileSize: number
+                        title?: string | null
+                        description?: string | null
+                        tags: Array<string>
+                        source?: string | null
+                        link?: string | null
+                        license?: string | null
+                        url?: string | null
+                        bigURL?: string | null
+                        largeURL?: string | null
+                        mediumURL?: string | null
+                        smallURL?: string | null
+                        squareBigURL?: string | null
+                        squareLargeURL?: string | null
+                        squareMediumURL?: string | null
+                        squareSmallURL?: string | null
+                        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                      } | null
+                      properties: Array<{
+                        __typename?: 'PublicProperties'
+                        key: string
+                        value: string
+                      }>
+                    }
+                  | {__typename?: 'EventTeaser'}
+                  | {
+                      __typename?: 'PageTeaser'
+                      style: TeaserStyle
+                      preTitle?: string | null
+                      title?: string | null
+                      lead?: string | null
+                      image?: {
+                        __typename?: 'Image'
+                        id: string
+                        createdAt: string
+                        modifiedAt: string
+                        filename?: string | null
+                        format: string
+                        mimeType: string
+                        extension: string
+                        width: number
+                        height: number
+                        fileSize: number
+                        title?: string | null
+                        description?: string | null
+                        tags: Array<string>
+                        source?: string | null
+                        link?: string | null
+                        license?: string | null
+                        url?: string | null
+                        bigURL?: string | null
+                        largeURL?: string | null
+                        mediumURL?: string | null
+                        smallURL?: string | null
+                        squareBigURL?: string | null
+                        squareLargeURL?: string | null
+                        squareMediumURL?: string | null
+                        squareSmallURL?: string | null
+                        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                      } | null
+                      page?: {
+                        __typename?: 'Page'
+                        id: string
+                        slug: string
+                        description?: string | null
+                        tags: Array<string>
+                        title: string
+                        url: string
+                        socialMediaDescription?: string | null
+                        socialMediaTitle?: string | null
+                        blocks: Array<
+                          | {__typename: 'BildwurfAdBlock'}
+                          | {__typename: 'CommentBlock'}
+                          | {__typename: 'EmbedBlock'}
+                          | {__typename: 'EventBlock'}
+                          | {__typename: 'FacebookPostBlock'}
+                          | {__typename: 'HTMLBlock'; html?: string | null}
+                          | {
+                              __typename: 'ImageBlock'
+                              caption?: string | null
+                              image?: {
+                                __typename?: 'Image'
+                                id: string
+                                createdAt: string
+                                modifiedAt: string
+                                filename?: string | null
+                                format: string
+                                mimeType: string
+                                extension: string
+                                width: number
+                                height: number
+                                fileSize: number
+                                title?: string | null
+                                description?: string | null
+                                tags: Array<string>
+                                source?: string | null
+                                link?: string | null
+                                license?: string | null
+                                url?: string | null
+                                bigURL?: string | null
+                                largeURL?: string | null
+                                mediumURL?: string | null
+                                smallURL?: string | null
+                                squareBigURL?: string | null
+                                squareLargeURL?: string | null
+                                squareMediumURL?: string | null
+                                squareSmallURL?: string | null
+                                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                              } | null
+                            }
+                          | {
+                              __typename: 'ImageGalleryBlock'
+                              images: Array<{
+                                __typename?: 'GalleryImageEdge'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }>
+                            }
+                          | {__typename: 'InstagramPostBlock'}
+                          | {__typename: 'LinkPageBreakBlock'}
+                          | {__typename: 'ListicleBlock'}
+                          | {__typename: 'PolisConversationBlock'}
+                          | {__typename: 'PollBlock'}
+                          | {
+                              __typename: 'QuoteBlock'
+                              quote?: string | null
+                              author?: string | null
+                            }
+                          | {__typename: 'RichTextBlock'; richText: Node[]}
+                          | {__typename: 'SoundCloudTrackBlock'}
+                          | {__typename: 'TeaserGridBlock'}
+                          | {__typename: 'TeaserGridFlexBlock'}
+                          | {__typename: 'TikTokVideoBlock'}
+                          | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+                          | {__typename: 'TwitterTweetBlock'}
+                          | {__typename: 'VimeoVideoBlock'}
+                          | {__typename: 'YouTubeVideoBlock'}
+                        >
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        socialMediaImage?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      } | null
+                    }
+                  | {__typename?: 'PeerArticleTeaser'}
+                  | null
+                >
+              }
             | {
                 __typename: 'TeaserGridFlexBlock'
                 flexTeasers: Array<{
@@ -3826,17 +12519,24 @@ export type FullNavigationFragment = {
                         article?: {
                           __typename?: 'Article'
                           id: string
-                          title: string
+                          publishedAt: string
+                          updatedAt: string
                           preTitle?: string | null
+                          title: string
                           lead?: string | null
+                          slug: string
+                          breaking: boolean
+                          tags: Array<string>
                           url: string
+                          socialMediaDescription?: string | null
+                          socialMediaTitle?: string | null
                           blocks: Array<
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
-                            | {__typename: 'HTMLBlock'}
+                            | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
                                 caption?: string | null
@@ -3870,14 +12570,53 @@ export type FullNavigationFragment = {
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
-                            | {__typename: 'ImageGalleryBlock'}
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
                             | {__typename: 'InstagramPostBlock'}
                             | {__typename: 'LinkPageBreakBlock'}
                             | {__typename: 'ListicleBlock'}
                             | {__typename: 'PolisConversationBlock'}
                             | {__typename: 'PollBlock'}
-                            | {__typename: 'QuoteBlock'}
-                            | {__typename: 'RichTextBlock'}
+                            | {
+                                __typename: 'QuoteBlock'
+                                quote?: string | null
+                                author?: string | null
+                              }
+                            | {__typename: 'RichTextBlock'; richText: Node[]}
                             | {__typename: 'SoundCloudTrackBlock'}
                             | {__typename: 'TeaserGridBlock'}
                             | {__typename: 'TeaserGridFlexBlock'}
@@ -3891,6 +12630,109 @@ export type FullNavigationFragment = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          authors: Array<{
+                            __typename?: 'Author'
+                            id: string
+                            name: string
+                            jobTitle?: string | null
+                            slug: string
+                            bio?: Node[] | null
+                            url: string
+                            createdAt: string
+                            modifiedAt: string
+                            links?: Array<{
+                              __typename?: 'AuthorLink'
+                              title: string
+                              url: string
+                            }> | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          socialMediaImage?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
                         } | null
                       }
                     | {
@@ -3974,16 +12816,20 @@ export type FullNavigationFragment = {
                         page?: {
                           __typename?: 'Page'
                           id: string
-                          title: string
+                          slug: string
                           description?: string | null
+                          tags: Array<string>
+                          title: string
                           url: string
+                          socialMediaDescription?: string | null
+                          socialMediaTitle?: string | null
                           blocks: Array<
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
-                            | {__typename: 'HTMLBlock'}
+                            | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
                                 caption?: string | null
@@ -4017,14 +12863,53 @@ export type FullNavigationFragment = {
                                   focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                 } | null
                               }
-                            | {__typename: 'ImageGalleryBlock'}
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
                             | {__typename: 'InstagramPostBlock'}
                             | {__typename: 'LinkPageBreakBlock'}
                             | {__typename: 'ListicleBlock'}
                             | {__typename: 'PolisConversationBlock'}
                             | {__typename: 'PollBlock'}
-                            | {__typename: 'QuoteBlock'}
-                            | {__typename: 'RichTextBlock'}
+                            | {
+                                __typename: 'QuoteBlock'
+                                quote?: string | null
+                                author?: string | null
+                              }
+                            | {__typename: 'RichTextBlock'; richText: Node[]}
                             | {__typename: 'SoundCloudTrackBlock'}
                             | {__typename: 'TeaserGridBlock'}
                             | {__typename: 'TeaserGridFlexBlock'}
@@ -4038,6 +12923,64 @@ export type FullNavigationFragment = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          socialMediaImage?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
                         } | null
                       }
                     | {__typename?: 'PeerArticleTeaser'}
@@ -4050,6 +12993,64 @@ export type FullNavigationFragment = {
             | {__typename: 'VimeoVideoBlock'}
             | {__typename: 'YouTubeVideoBlock'}
           >
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          socialMediaImage?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
         } | null
       }
   >
@@ -4071,8 +13072,17 @@ export type NavigationListQuery = {
           article?: {
             __typename?: 'Article'
             id: string
+            publishedAt: string
+            updatedAt: string
+            preTitle?: string | null
+            title: string
+            lead?: string | null
             slug: string
+            breaking: boolean
+            tags: Array<string>
             url: string
+            socialMediaDescription?: string | null
+            socialMediaTitle?: string | null
             blocks: Array<
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'CommentBlock'}
@@ -4113,7 +13123,42 @@ export type NavigationListQuery = {
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
-              | {__typename: 'ImageGalleryBlock'}
+              | {
+                  __typename: 'ImageGalleryBlock'
+                  images: Array<{
+                    __typename?: 'GalleryImageEdge'
+                    caption?: string | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                  }>
+                }
               | {__typename: 'InstagramPostBlock'}
               | {__typename: 'LinkPageBreakBlock'}
               | {__typename: 'ListicleBlock'}
@@ -4122,7 +13167,516 @@ export type NavigationListQuery = {
               | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
               | {__typename: 'RichTextBlock'; richText: Node[]}
               | {__typename: 'SoundCloudTrackBlock'}
-              | {__typename: 'TeaserGridBlock'}
+              | {
+                  __typename: 'TeaserGridBlock'
+                  numColumns: number
+                  teasers: Array<
+                    | {
+                        __typename?: 'ArticleTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        article?: {
+                          __typename?: 'Article'
+                          id: string
+                          publishedAt: string
+                          updatedAt: string
+                          preTitle?: string | null
+                          title: string
+                          lead?: string | null
+                          slug: string
+                          breaking: boolean
+                          tags: Array<string>
+                          url: string
+                          socialMediaDescription?: string | null
+                          socialMediaTitle?: string | null
+                          blocks: Array<
+                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'CommentBlock'}
+                            | {__typename: 'EmbedBlock'}
+                            | {__typename: 'EventBlock'}
+                            | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'HTMLBlock'; html?: string | null}
+                            | {
+                                __typename: 'ImageBlock'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
+                            | {__typename: 'InstagramPostBlock'}
+                            | {__typename: 'LinkPageBreakBlock'}
+                            | {__typename: 'ListicleBlock'}
+                            | {__typename: 'PolisConversationBlock'}
+                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'QuoteBlock'
+                                quote?: string | null
+                                author?: string | null
+                              }
+                            | {__typename: 'RichTextBlock'; richText: Node[]}
+                            | {__typename: 'SoundCloudTrackBlock'}
+                            | {__typename: 'TeaserGridBlock'}
+                            | {__typename: 'TeaserGridFlexBlock'}
+                            | {__typename: 'TikTokVideoBlock'}
+                            | {
+                                __typename: 'TitleBlock'
+                                title?: string | null
+                                lead?: string | null
+                              }
+                            | {__typename: 'TwitterTweetBlock'}
+                            | {__typename: 'VimeoVideoBlock'}
+                            | {__typename: 'YouTubeVideoBlock'}
+                          >
+                          authors: Array<{
+                            __typename?: 'Author'
+                            id: string
+                            name: string
+                            jobTitle?: string | null
+                            slug: string
+                            bio?: Node[] | null
+                            url: string
+                            createdAt: string
+                            modifiedAt: string
+                            links?: Array<{
+                              __typename?: 'AuthorLink'
+                              title: string
+                              url: string
+                            }> | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          socialMediaImage?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        } | null
+                      }
+                    | {
+                        __typename?: 'CustomTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        contentUrl?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        properties: Array<{
+                          __typename?: 'PublicProperties'
+                          key: string
+                          value: string
+                        }>
+                      }
+                    | {__typename?: 'EventTeaser'}
+                    | {
+                        __typename?: 'PageTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        page?: {
+                          __typename?: 'Page'
+                          id: string
+                          slug: string
+                          description?: string | null
+                          tags: Array<string>
+                          title: string
+                          url: string
+                          socialMediaDescription?: string | null
+                          socialMediaTitle?: string | null
+                          blocks: Array<
+                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'CommentBlock'}
+                            | {__typename: 'EmbedBlock'}
+                            | {__typename: 'EventBlock'}
+                            | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'HTMLBlock'; html?: string | null}
+                            | {
+                                __typename: 'ImageBlock'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
+                            | {__typename: 'InstagramPostBlock'}
+                            | {__typename: 'LinkPageBreakBlock'}
+                            | {__typename: 'ListicleBlock'}
+                            | {__typename: 'PolisConversationBlock'}
+                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'QuoteBlock'
+                                quote?: string | null
+                                author?: string | null
+                              }
+                            | {__typename: 'RichTextBlock'; richText: Node[]}
+                            | {__typename: 'SoundCloudTrackBlock'}
+                            | {__typename: 'TeaserGridBlock'}
+                            | {__typename: 'TeaserGridFlexBlock'}
+                            | {__typename: 'TikTokVideoBlock'}
+                            | {
+                                __typename: 'TitleBlock'
+                                title?: string | null
+                                lead?: string | null
+                              }
+                            | {__typename: 'TwitterTweetBlock'}
+                            | {__typename: 'VimeoVideoBlock'}
+                            | {__typename: 'YouTubeVideoBlock'}
+                          >
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          socialMediaImage?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        } | null
+                      }
+                    | {__typename?: 'PeerArticleTeaser'}
+                    | null
+                  >
+                }
               | {
                   __typename: 'TeaserGridFlexBlock'
                   flexTeasers: Array<{
@@ -4173,17 +13727,24 @@ export type NavigationListQuery = {
                           article?: {
                             __typename?: 'Article'
                             id: string
-                            title: string
+                            publishedAt: string
+                            updatedAt: string
                             preTitle?: string | null
+                            title: string
                             lead?: string | null
+                            slug: string
+                            breaking: boolean
+                            tags: Array<string>
                             url: string
+                            socialMediaDescription?: string | null
+                            socialMediaTitle?: string | null
                             blocks: Array<
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
-                              | {__typename: 'HTMLBlock'}
+                              | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
                                   caption?: string | null
@@ -4217,14 +13778,57 @@ export type NavigationListQuery = {
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
-                              | {__typename: 'ImageGalleryBlock'}
+                              | {
+                                  __typename: 'ImageGalleryBlock'
+                                  images: Array<{
+                                    __typename?: 'GalleryImageEdge'
+                                    caption?: string | null
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                  }>
+                                }
                               | {__typename: 'InstagramPostBlock'}
                               | {__typename: 'LinkPageBreakBlock'}
                               | {__typename: 'ListicleBlock'}
                               | {__typename: 'PolisConversationBlock'}
                               | {__typename: 'PollBlock'}
-                              | {__typename: 'QuoteBlock'}
-                              | {__typename: 'RichTextBlock'}
+                              | {
+                                  __typename: 'QuoteBlock'
+                                  quote?: string | null
+                                  author?: string | null
+                                }
+                              | {__typename: 'RichTextBlock'; richText: Node[]}
                               | {__typename: 'SoundCloudTrackBlock'}
                               | {__typename: 'TeaserGridBlock'}
                               | {__typename: 'TeaserGridFlexBlock'}
@@ -4238,6 +13842,109 @@ export type NavigationListQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            authors: Array<{
+                              __typename?: 'Author'
+                              id: string
+                              name: string
+                              jobTitle?: string | null
+                              slug: string
+                              bio?: Node[] | null
+                              url: string
+                              createdAt: string
+                              modifiedAt: string
+                              links?: Array<{
+                                __typename?: 'AuthorLink'
+                                title: string
+                                url: string
+                              }> | null
+                              image?: {
+                                __typename?: 'Image'
+                                id: string
+                                createdAt: string
+                                modifiedAt: string
+                                filename?: string | null
+                                format: string
+                                mimeType: string
+                                extension: string
+                                width: number
+                                height: number
+                                fileSize: number
+                                title?: string | null
+                                description?: string | null
+                                tags: Array<string>
+                                source?: string | null
+                                link?: string | null
+                                license?: string | null
+                                url?: string | null
+                                bigURL?: string | null
+                                largeURL?: string | null
+                                mediumURL?: string | null
+                                smallURL?: string | null
+                                squareBigURL?: string | null
+                                squareLargeURL?: string | null
+                                squareMediumURL?: string | null
+                                squareSmallURL?: string | null
+                                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                              } | null
+                            }>
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            socialMediaImage?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
                           } | null
                         }
                       | {
@@ -4321,16 +14028,20 @@ export type NavigationListQuery = {
                           page?: {
                             __typename?: 'Page'
                             id: string
-                            title: string
+                            slug: string
                             description?: string | null
+                            tags: Array<string>
+                            title: string
                             url: string
+                            socialMediaDescription?: string | null
+                            socialMediaTitle?: string | null
                             blocks: Array<
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
-                              | {__typename: 'HTMLBlock'}
+                              | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
                                   caption?: string | null
@@ -4364,14 +14075,57 @@ export type NavigationListQuery = {
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
-                              | {__typename: 'ImageGalleryBlock'}
+                              | {
+                                  __typename: 'ImageGalleryBlock'
+                                  images: Array<{
+                                    __typename?: 'GalleryImageEdge'
+                                    caption?: string | null
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                  }>
+                                }
                               | {__typename: 'InstagramPostBlock'}
                               | {__typename: 'LinkPageBreakBlock'}
                               | {__typename: 'ListicleBlock'}
                               | {__typename: 'PolisConversationBlock'}
                               | {__typename: 'PollBlock'}
-                              | {__typename: 'QuoteBlock'}
-                              | {__typename: 'RichTextBlock'}
+                              | {
+                                  __typename: 'QuoteBlock'
+                                  quote?: string | null
+                                  author?: string | null
+                                }
+                              | {__typename: 'RichTextBlock'; richText: Node[]}
                               | {__typename: 'SoundCloudTrackBlock'}
                               | {__typename: 'TeaserGridBlock'}
                               | {__typename: 'TeaserGridFlexBlock'}
@@ -4385,6 +14139,64 @@ export type NavigationListQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            socialMediaImage?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
                           } | null
                         }
                       | {__typename?: 'PeerArticleTeaser'}
@@ -4405,6 +14217,8 @@ export type NavigationListQuery = {
               slug: string
               bio?: Node[] | null
               url: string
+              createdAt: string
+              modifiedAt: string
               links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
               image?: {
                 __typename?: 'Image'
@@ -4436,6 +14250,64 @@ export type NavigationListQuery = {
                 focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
               } | null
             }>
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            socialMediaImage?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
           } | null
         }
       | {__typename?: 'ExternalNavigationLink'; label: string; url: string}
@@ -4446,7 +14318,12 @@ export type NavigationListQuery = {
             __typename?: 'Page'
             id: string
             slug: string
+            description?: string | null
+            tags: Array<string>
+            title: string
             url: string
+            socialMediaDescription?: string | null
+            socialMediaTitle?: string | null
             blocks: Array<
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'CommentBlock'}
@@ -4487,7 +14364,42 @@ export type NavigationListQuery = {
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
-              | {__typename: 'ImageGalleryBlock'}
+              | {
+                  __typename: 'ImageGalleryBlock'
+                  images: Array<{
+                    __typename?: 'GalleryImageEdge'
+                    caption?: string | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                  }>
+                }
               | {__typename: 'InstagramPostBlock'}
               | {__typename: 'LinkPageBreakBlock'}
               | {__typename: 'ListicleBlock'}
@@ -4496,7 +14408,516 @@ export type NavigationListQuery = {
               | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
               | {__typename: 'RichTextBlock'; richText: Node[]}
               | {__typename: 'SoundCloudTrackBlock'}
-              | {__typename: 'TeaserGridBlock'}
+              | {
+                  __typename: 'TeaserGridBlock'
+                  numColumns: number
+                  teasers: Array<
+                    | {
+                        __typename?: 'ArticleTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        article?: {
+                          __typename?: 'Article'
+                          id: string
+                          publishedAt: string
+                          updatedAt: string
+                          preTitle?: string | null
+                          title: string
+                          lead?: string | null
+                          slug: string
+                          breaking: boolean
+                          tags: Array<string>
+                          url: string
+                          socialMediaDescription?: string | null
+                          socialMediaTitle?: string | null
+                          blocks: Array<
+                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'CommentBlock'}
+                            | {__typename: 'EmbedBlock'}
+                            | {__typename: 'EventBlock'}
+                            | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'HTMLBlock'; html?: string | null}
+                            | {
+                                __typename: 'ImageBlock'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
+                            | {__typename: 'InstagramPostBlock'}
+                            | {__typename: 'LinkPageBreakBlock'}
+                            | {__typename: 'ListicleBlock'}
+                            | {__typename: 'PolisConversationBlock'}
+                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'QuoteBlock'
+                                quote?: string | null
+                                author?: string | null
+                              }
+                            | {__typename: 'RichTextBlock'; richText: Node[]}
+                            | {__typename: 'SoundCloudTrackBlock'}
+                            | {__typename: 'TeaserGridBlock'}
+                            | {__typename: 'TeaserGridFlexBlock'}
+                            | {__typename: 'TikTokVideoBlock'}
+                            | {
+                                __typename: 'TitleBlock'
+                                title?: string | null
+                                lead?: string | null
+                              }
+                            | {__typename: 'TwitterTweetBlock'}
+                            | {__typename: 'VimeoVideoBlock'}
+                            | {__typename: 'YouTubeVideoBlock'}
+                          >
+                          authors: Array<{
+                            __typename?: 'Author'
+                            id: string
+                            name: string
+                            jobTitle?: string | null
+                            slug: string
+                            bio?: Node[] | null
+                            url: string
+                            createdAt: string
+                            modifiedAt: string
+                            links?: Array<{
+                              __typename?: 'AuthorLink'
+                              title: string
+                              url: string
+                            }> | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          socialMediaImage?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        } | null
+                      }
+                    | {
+                        __typename?: 'CustomTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        contentUrl?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        properties: Array<{
+                          __typename?: 'PublicProperties'
+                          key: string
+                          value: string
+                        }>
+                      }
+                    | {__typename?: 'EventTeaser'}
+                    | {
+                        __typename?: 'PageTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        page?: {
+                          __typename?: 'Page'
+                          id: string
+                          slug: string
+                          description?: string | null
+                          tags: Array<string>
+                          title: string
+                          url: string
+                          socialMediaDescription?: string | null
+                          socialMediaTitle?: string | null
+                          blocks: Array<
+                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'CommentBlock'}
+                            | {__typename: 'EmbedBlock'}
+                            | {__typename: 'EventBlock'}
+                            | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'HTMLBlock'; html?: string | null}
+                            | {
+                                __typename: 'ImageBlock'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
+                            | {__typename: 'InstagramPostBlock'}
+                            | {__typename: 'LinkPageBreakBlock'}
+                            | {__typename: 'ListicleBlock'}
+                            | {__typename: 'PolisConversationBlock'}
+                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'QuoteBlock'
+                                quote?: string | null
+                                author?: string | null
+                              }
+                            | {__typename: 'RichTextBlock'; richText: Node[]}
+                            | {__typename: 'SoundCloudTrackBlock'}
+                            | {__typename: 'TeaserGridBlock'}
+                            | {__typename: 'TeaserGridFlexBlock'}
+                            | {__typename: 'TikTokVideoBlock'}
+                            | {
+                                __typename: 'TitleBlock'
+                                title?: string | null
+                                lead?: string | null
+                              }
+                            | {__typename: 'TwitterTweetBlock'}
+                            | {__typename: 'VimeoVideoBlock'}
+                            | {__typename: 'YouTubeVideoBlock'}
+                          >
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          socialMediaImage?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        } | null
+                      }
+                    | {__typename?: 'PeerArticleTeaser'}
+                    | null
+                  >
+                }
               | {
                   __typename: 'TeaserGridFlexBlock'
                   flexTeasers: Array<{
@@ -4547,17 +14968,24 @@ export type NavigationListQuery = {
                           article?: {
                             __typename?: 'Article'
                             id: string
-                            title: string
+                            publishedAt: string
+                            updatedAt: string
                             preTitle?: string | null
+                            title: string
                             lead?: string | null
+                            slug: string
+                            breaking: boolean
+                            tags: Array<string>
                             url: string
+                            socialMediaDescription?: string | null
+                            socialMediaTitle?: string | null
                             blocks: Array<
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
-                              | {__typename: 'HTMLBlock'}
+                              | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
                                   caption?: string | null
@@ -4591,14 +15019,57 @@ export type NavigationListQuery = {
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
-                              | {__typename: 'ImageGalleryBlock'}
+                              | {
+                                  __typename: 'ImageGalleryBlock'
+                                  images: Array<{
+                                    __typename?: 'GalleryImageEdge'
+                                    caption?: string | null
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                  }>
+                                }
                               | {__typename: 'InstagramPostBlock'}
                               | {__typename: 'LinkPageBreakBlock'}
                               | {__typename: 'ListicleBlock'}
                               | {__typename: 'PolisConversationBlock'}
                               | {__typename: 'PollBlock'}
-                              | {__typename: 'QuoteBlock'}
-                              | {__typename: 'RichTextBlock'}
+                              | {
+                                  __typename: 'QuoteBlock'
+                                  quote?: string | null
+                                  author?: string | null
+                                }
+                              | {__typename: 'RichTextBlock'; richText: Node[]}
                               | {__typename: 'SoundCloudTrackBlock'}
                               | {__typename: 'TeaserGridBlock'}
                               | {__typename: 'TeaserGridFlexBlock'}
@@ -4612,6 +15083,109 @@ export type NavigationListQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            authors: Array<{
+                              __typename?: 'Author'
+                              id: string
+                              name: string
+                              jobTitle?: string | null
+                              slug: string
+                              bio?: Node[] | null
+                              url: string
+                              createdAt: string
+                              modifiedAt: string
+                              links?: Array<{
+                                __typename?: 'AuthorLink'
+                                title: string
+                                url: string
+                              }> | null
+                              image?: {
+                                __typename?: 'Image'
+                                id: string
+                                createdAt: string
+                                modifiedAt: string
+                                filename?: string | null
+                                format: string
+                                mimeType: string
+                                extension: string
+                                width: number
+                                height: number
+                                fileSize: number
+                                title?: string | null
+                                description?: string | null
+                                tags: Array<string>
+                                source?: string | null
+                                link?: string | null
+                                license?: string | null
+                                url?: string | null
+                                bigURL?: string | null
+                                largeURL?: string | null
+                                mediumURL?: string | null
+                                smallURL?: string | null
+                                squareBigURL?: string | null
+                                squareLargeURL?: string | null
+                                squareMediumURL?: string | null
+                                squareSmallURL?: string | null
+                                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                              } | null
+                            }>
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            socialMediaImage?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
                           } | null
                         }
                       | {
@@ -4695,16 +15269,20 @@ export type NavigationListQuery = {
                           page?: {
                             __typename?: 'Page'
                             id: string
-                            title: string
+                            slug: string
                             description?: string | null
+                            tags: Array<string>
+                            title: string
                             url: string
+                            socialMediaDescription?: string | null
+                            socialMediaTitle?: string | null
                             blocks: Array<
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
-                              | {__typename: 'HTMLBlock'}
+                              | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
                                   caption?: string | null
@@ -4738,14 +15316,57 @@ export type NavigationListQuery = {
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
-                              | {__typename: 'ImageGalleryBlock'}
+                              | {
+                                  __typename: 'ImageGalleryBlock'
+                                  images: Array<{
+                                    __typename?: 'GalleryImageEdge'
+                                    caption?: string | null
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                  }>
+                                }
                               | {__typename: 'InstagramPostBlock'}
                               | {__typename: 'LinkPageBreakBlock'}
                               | {__typename: 'ListicleBlock'}
                               | {__typename: 'PolisConversationBlock'}
                               | {__typename: 'PollBlock'}
-                              | {__typename: 'QuoteBlock'}
-                              | {__typename: 'RichTextBlock'}
+                              | {
+                                  __typename: 'QuoteBlock'
+                                  quote?: string | null
+                                  author?: string | null
+                                }
+                              | {__typename: 'RichTextBlock'; richText: Node[]}
                               | {__typename: 'SoundCloudTrackBlock'}
                               | {__typename: 'TeaserGridBlock'}
                               | {__typename: 'TeaserGridFlexBlock'}
@@ -4759,6 +15380,64 @@ export type NavigationListQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            socialMediaImage?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
                           } | null
                         }
                       | {__typename?: 'PeerArticleTeaser'}
@@ -4771,6 +15450,64 @@ export type NavigationListQuery = {
               | {__typename: 'VimeoVideoBlock'}
               | {__typename: 'YouTubeVideoBlock'}
             >
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            socialMediaImage?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
           } | null
         }
     >
@@ -4795,8 +15532,17 @@ export type NavigationQuery = {
           article?: {
             __typename?: 'Article'
             id: string
+            publishedAt: string
+            updatedAt: string
+            preTitle?: string | null
+            title: string
+            lead?: string | null
             slug: string
+            breaking: boolean
+            tags: Array<string>
             url: string
+            socialMediaDescription?: string | null
+            socialMediaTitle?: string | null
             blocks: Array<
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'CommentBlock'}
@@ -4837,7 +15583,42 @@ export type NavigationQuery = {
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
-              | {__typename: 'ImageGalleryBlock'}
+              | {
+                  __typename: 'ImageGalleryBlock'
+                  images: Array<{
+                    __typename?: 'GalleryImageEdge'
+                    caption?: string | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                  }>
+                }
               | {__typename: 'InstagramPostBlock'}
               | {__typename: 'LinkPageBreakBlock'}
               | {__typename: 'ListicleBlock'}
@@ -4846,7 +15627,516 @@ export type NavigationQuery = {
               | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
               | {__typename: 'RichTextBlock'; richText: Node[]}
               | {__typename: 'SoundCloudTrackBlock'}
-              | {__typename: 'TeaserGridBlock'}
+              | {
+                  __typename: 'TeaserGridBlock'
+                  numColumns: number
+                  teasers: Array<
+                    | {
+                        __typename?: 'ArticleTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        article?: {
+                          __typename?: 'Article'
+                          id: string
+                          publishedAt: string
+                          updatedAt: string
+                          preTitle?: string | null
+                          title: string
+                          lead?: string | null
+                          slug: string
+                          breaking: boolean
+                          tags: Array<string>
+                          url: string
+                          socialMediaDescription?: string | null
+                          socialMediaTitle?: string | null
+                          blocks: Array<
+                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'CommentBlock'}
+                            | {__typename: 'EmbedBlock'}
+                            | {__typename: 'EventBlock'}
+                            | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'HTMLBlock'; html?: string | null}
+                            | {
+                                __typename: 'ImageBlock'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
+                            | {__typename: 'InstagramPostBlock'}
+                            | {__typename: 'LinkPageBreakBlock'}
+                            | {__typename: 'ListicleBlock'}
+                            | {__typename: 'PolisConversationBlock'}
+                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'QuoteBlock'
+                                quote?: string | null
+                                author?: string | null
+                              }
+                            | {__typename: 'RichTextBlock'; richText: Node[]}
+                            | {__typename: 'SoundCloudTrackBlock'}
+                            | {__typename: 'TeaserGridBlock'}
+                            | {__typename: 'TeaserGridFlexBlock'}
+                            | {__typename: 'TikTokVideoBlock'}
+                            | {
+                                __typename: 'TitleBlock'
+                                title?: string | null
+                                lead?: string | null
+                              }
+                            | {__typename: 'TwitterTweetBlock'}
+                            | {__typename: 'VimeoVideoBlock'}
+                            | {__typename: 'YouTubeVideoBlock'}
+                          >
+                          authors: Array<{
+                            __typename?: 'Author'
+                            id: string
+                            name: string
+                            jobTitle?: string | null
+                            slug: string
+                            bio?: Node[] | null
+                            url: string
+                            createdAt: string
+                            modifiedAt: string
+                            links?: Array<{
+                              __typename?: 'AuthorLink'
+                              title: string
+                              url: string
+                            }> | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          socialMediaImage?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        } | null
+                      }
+                    | {
+                        __typename?: 'CustomTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        contentUrl?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        properties: Array<{
+                          __typename?: 'PublicProperties'
+                          key: string
+                          value: string
+                        }>
+                      }
+                    | {__typename?: 'EventTeaser'}
+                    | {
+                        __typename?: 'PageTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        page?: {
+                          __typename?: 'Page'
+                          id: string
+                          slug: string
+                          description?: string | null
+                          tags: Array<string>
+                          title: string
+                          url: string
+                          socialMediaDescription?: string | null
+                          socialMediaTitle?: string | null
+                          blocks: Array<
+                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'CommentBlock'}
+                            | {__typename: 'EmbedBlock'}
+                            | {__typename: 'EventBlock'}
+                            | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'HTMLBlock'; html?: string | null}
+                            | {
+                                __typename: 'ImageBlock'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
+                            | {__typename: 'InstagramPostBlock'}
+                            | {__typename: 'LinkPageBreakBlock'}
+                            | {__typename: 'ListicleBlock'}
+                            | {__typename: 'PolisConversationBlock'}
+                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'QuoteBlock'
+                                quote?: string | null
+                                author?: string | null
+                              }
+                            | {__typename: 'RichTextBlock'; richText: Node[]}
+                            | {__typename: 'SoundCloudTrackBlock'}
+                            | {__typename: 'TeaserGridBlock'}
+                            | {__typename: 'TeaserGridFlexBlock'}
+                            | {__typename: 'TikTokVideoBlock'}
+                            | {
+                                __typename: 'TitleBlock'
+                                title?: string | null
+                                lead?: string | null
+                              }
+                            | {__typename: 'TwitterTweetBlock'}
+                            | {__typename: 'VimeoVideoBlock'}
+                            | {__typename: 'YouTubeVideoBlock'}
+                          >
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          socialMediaImage?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        } | null
+                      }
+                    | {__typename?: 'PeerArticleTeaser'}
+                    | null
+                  >
+                }
               | {
                   __typename: 'TeaserGridFlexBlock'
                   flexTeasers: Array<{
@@ -4897,17 +16187,24 @@ export type NavigationQuery = {
                           article?: {
                             __typename?: 'Article'
                             id: string
-                            title: string
+                            publishedAt: string
+                            updatedAt: string
                             preTitle?: string | null
+                            title: string
                             lead?: string | null
+                            slug: string
+                            breaking: boolean
+                            tags: Array<string>
                             url: string
+                            socialMediaDescription?: string | null
+                            socialMediaTitle?: string | null
                             blocks: Array<
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
-                              | {__typename: 'HTMLBlock'}
+                              | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
                                   caption?: string | null
@@ -4941,14 +16238,57 @@ export type NavigationQuery = {
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
-                              | {__typename: 'ImageGalleryBlock'}
+                              | {
+                                  __typename: 'ImageGalleryBlock'
+                                  images: Array<{
+                                    __typename?: 'GalleryImageEdge'
+                                    caption?: string | null
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                  }>
+                                }
                               | {__typename: 'InstagramPostBlock'}
                               | {__typename: 'LinkPageBreakBlock'}
                               | {__typename: 'ListicleBlock'}
                               | {__typename: 'PolisConversationBlock'}
                               | {__typename: 'PollBlock'}
-                              | {__typename: 'QuoteBlock'}
-                              | {__typename: 'RichTextBlock'}
+                              | {
+                                  __typename: 'QuoteBlock'
+                                  quote?: string | null
+                                  author?: string | null
+                                }
+                              | {__typename: 'RichTextBlock'; richText: Node[]}
                               | {__typename: 'SoundCloudTrackBlock'}
                               | {__typename: 'TeaserGridBlock'}
                               | {__typename: 'TeaserGridFlexBlock'}
@@ -4962,6 +16302,109 @@ export type NavigationQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            authors: Array<{
+                              __typename?: 'Author'
+                              id: string
+                              name: string
+                              jobTitle?: string | null
+                              slug: string
+                              bio?: Node[] | null
+                              url: string
+                              createdAt: string
+                              modifiedAt: string
+                              links?: Array<{
+                                __typename?: 'AuthorLink'
+                                title: string
+                                url: string
+                              }> | null
+                              image?: {
+                                __typename?: 'Image'
+                                id: string
+                                createdAt: string
+                                modifiedAt: string
+                                filename?: string | null
+                                format: string
+                                mimeType: string
+                                extension: string
+                                width: number
+                                height: number
+                                fileSize: number
+                                title?: string | null
+                                description?: string | null
+                                tags: Array<string>
+                                source?: string | null
+                                link?: string | null
+                                license?: string | null
+                                url?: string | null
+                                bigURL?: string | null
+                                largeURL?: string | null
+                                mediumURL?: string | null
+                                smallURL?: string | null
+                                squareBigURL?: string | null
+                                squareLargeURL?: string | null
+                                squareMediumURL?: string | null
+                                squareSmallURL?: string | null
+                                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                              } | null
+                            }>
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            socialMediaImage?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
                           } | null
                         }
                       | {
@@ -5045,16 +16488,20 @@ export type NavigationQuery = {
                           page?: {
                             __typename?: 'Page'
                             id: string
-                            title: string
+                            slug: string
                             description?: string | null
+                            tags: Array<string>
+                            title: string
                             url: string
+                            socialMediaDescription?: string | null
+                            socialMediaTitle?: string | null
                             blocks: Array<
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
-                              | {__typename: 'HTMLBlock'}
+                              | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
                                   caption?: string | null
@@ -5088,14 +16535,57 @@ export type NavigationQuery = {
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
-                              | {__typename: 'ImageGalleryBlock'}
+                              | {
+                                  __typename: 'ImageGalleryBlock'
+                                  images: Array<{
+                                    __typename?: 'GalleryImageEdge'
+                                    caption?: string | null
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                  }>
+                                }
                               | {__typename: 'InstagramPostBlock'}
                               | {__typename: 'LinkPageBreakBlock'}
                               | {__typename: 'ListicleBlock'}
                               | {__typename: 'PolisConversationBlock'}
                               | {__typename: 'PollBlock'}
-                              | {__typename: 'QuoteBlock'}
-                              | {__typename: 'RichTextBlock'}
+                              | {
+                                  __typename: 'QuoteBlock'
+                                  quote?: string | null
+                                  author?: string | null
+                                }
+                              | {__typename: 'RichTextBlock'; richText: Node[]}
                               | {__typename: 'SoundCloudTrackBlock'}
                               | {__typename: 'TeaserGridBlock'}
                               | {__typename: 'TeaserGridFlexBlock'}
@@ -5109,6 +16599,64 @@ export type NavigationQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            socialMediaImage?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
                           } | null
                         }
                       | {__typename?: 'PeerArticleTeaser'}
@@ -5129,6 +16677,8 @@ export type NavigationQuery = {
               slug: string
               bio?: Node[] | null
               url: string
+              createdAt: string
+              modifiedAt: string
               links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
               image?: {
                 __typename?: 'Image'
@@ -5160,6 +16710,64 @@ export type NavigationQuery = {
                 focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
               } | null
             }>
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            socialMediaImage?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
           } | null
         }
       | {__typename?: 'ExternalNavigationLink'; label: string; url: string}
@@ -5170,7 +16778,12 @@ export type NavigationQuery = {
             __typename?: 'Page'
             id: string
             slug: string
+            description?: string | null
+            tags: Array<string>
+            title: string
             url: string
+            socialMediaDescription?: string | null
+            socialMediaTitle?: string | null
             blocks: Array<
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'CommentBlock'}
@@ -5211,7 +16824,42 @@ export type NavigationQuery = {
                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                   } | null
                 }
-              | {__typename: 'ImageGalleryBlock'}
+              | {
+                  __typename: 'ImageGalleryBlock'
+                  images: Array<{
+                    __typename?: 'GalleryImageEdge'
+                    caption?: string | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                  }>
+                }
               | {__typename: 'InstagramPostBlock'}
               | {__typename: 'LinkPageBreakBlock'}
               | {__typename: 'ListicleBlock'}
@@ -5220,7 +16868,516 @@ export type NavigationQuery = {
               | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
               | {__typename: 'RichTextBlock'; richText: Node[]}
               | {__typename: 'SoundCloudTrackBlock'}
-              | {__typename: 'TeaserGridBlock'}
+              | {
+                  __typename: 'TeaserGridBlock'
+                  numColumns: number
+                  teasers: Array<
+                    | {
+                        __typename?: 'ArticleTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        article?: {
+                          __typename?: 'Article'
+                          id: string
+                          publishedAt: string
+                          updatedAt: string
+                          preTitle?: string | null
+                          title: string
+                          lead?: string | null
+                          slug: string
+                          breaking: boolean
+                          tags: Array<string>
+                          url: string
+                          socialMediaDescription?: string | null
+                          socialMediaTitle?: string | null
+                          blocks: Array<
+                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'CommentBlock'}
+                            | {__typename: 'EmbedBlock'}
+                            | {__typename: 'EventBlock'}
+                            | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'HTMLBlock'; html?: string | null}
+                            | {
+                                __typename: 'ImageBlock'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
+                            | {__typename: 'InstagramPostBlock'}
+                            | {__typename: 'LinkPageBreakBlock'}
+                            | {__typename: 'ListicleBlock'}
+                            | {__typename: 'PolisConversationBlock'}
+                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'QuoteBlock'
+                                quote?: string | null
+                                author?: string | null
+                              }
+                            | {__typename: 'RichTextBlock'; richText: Node[]}
+                            | {__typename: 'SoundCloudTrackBlock'}
+                            | {__typename: 'TeaserGridBlock'}
+                            | {__typename: 'TeaserGridFlexBlock'}
+                            | {__typename: 'TikTokVideoBlock'}
+                            | {
+                                __typename: 'TitleBlock'
+                                title?: string | null
+                                lead?: string | null
+                              }
+                            | {__typename: 'TwitterTweetBlock'}
+                            | {__typename: 'VimeoVideoBlock'}
+                            | {__typename: 'YouTubeVideoBlock'}
+                          >
+                          authors: Array<{
+                            __typename?: 'Author'
+                            id: string
+                            name: string
+                            jobTitle?: string | null
+                            slug: string
+                            bio?: Node[] | null
+                            url: string
+                            createdAt: string
+                            modifiedAt: string
+                            links?: Array<{
+                              __typename?: 'AuthorLink'
+                              title: string
+                              url: string
+                            }> | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          socialMediaImage?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        } | null
+                      }
+                    | {
+                        __typename?: 'CustomTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        contentUrl?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        properties: Array<{
+                          __typename?: 'PublicProperties'
+                          key: string
+                          value: string
+                        }>
+                      }
+                    | {__typename?: 'EventTeaser'}
+                    | {
+                        __typename?: 'PageTeaser'
+                        style: TeaserStyle
+                        preTitle?: string | null
+                        title?: string | null
+                        lead?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        page?: {
+                          __typename?: 'Page'
+                          id: string
+                          slug: string
+                          description?: string | null
+                          tags: Array<string>
+                          title: string
+                          url: string
+                          socialMediaDescription?: string | null
+                          socialMediaTitle?: string | null
+                          blocks: Array<
+                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'CommentBlock'}
+                            | {__typename: 'EmbedBlock'}
+                            | {__typename: 'EventBlock'}
+                            | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'HTMLBlock'; html?: string | null}
+                            | {
+                                __typename: 'ImageBlock'
+                                caption?: string | null
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                              }
+                            | {
+                                __typename: 'ImageGalleryBlock'
+                                images: Array<{
+                                  __typename?: 'GalleryImageEdge'
+                                  caption?: string | null
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                }>
+                              }
+                            | {__typename: 'InstagramPostBlock'}
+                            | {__typename: 'LinkPageBreakBlock'}
+                            | {__typename: 'ListicleBlock'}
+                            | {__typename: 'PolisConversationBlock'}
+                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'QuoteBlock'
+                                quote?: string | null
+                                author?: string | null
+                              }
+                            | {__typename: 'RichTextBlock'; richText: Node[]}
+                            | {__typename: 'SoundCloudTrackBlock'}
+                            | {__typename: 'TeaserGridBlock'}
+                            | {__typename: 'TeaserGridFlexBlock'}
+                            | {__typename: 'TikTokVideoBlock'}
+                            | {
+                                __typename: 'TitleBlock'
+                                title?: string | null
+                                lead?: string | null
+                              }
+                            | {__typename: 'TwitterTweetBlock'}
+                            | {__typename: 'VimeoVideoBlock'}
+                            | {__typename: 'YouTubeVideoBlock'}
+                          >
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          socialMediaImage?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        } | null
+                      }
+                    | {__typename?: 'PeerArticleTeaser'}
+                    | null
+                  >
+                }
               | {
                   __typename: 'TeaserGridFlexBlock'
                   flexTeasers: Array<{
@@ -5271,17 +17428,24 @@ export type NavigationQuery = {
                           article?: {
                             __typename?: 'Article'
                             id: string
-                            title: string
+                            publishedAt: string
+                            updatedAt: string
                             preTitle?: string | null
+                            title: string
                             lead?: string | null
+                            slug: string
+                            breaking: boolean
+                            tags: Array<string>
                             url: string
+                            socialMediaDescription?: string | null
+                            socialMediaTitle?: string | null
                             blocks: Array<
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
-                              | {__typename: 'HTMLBlock'}
+                              | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
                                   caption?: string | null
@@ -5315,14 +17479,57 @@ export type NavigationQuery = {
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
-                              | {__typename: 'ImageGalleryBlock'}
+                              | {
+                                  __typename: 'ImageGalleryBlock'
+                                  images: Array<{
+                                    __typename?: 'GalleryImageEdge'
+                                    caption?: string | null
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                  }>
+                                }
                               | {__typename: 'InstagramPostBlock'}
                               | {__typename: 'LinkPageBreakBlock'}
                               | {__typename: 'ListicleBlock'}
                               | {__typename: 'PolisConversationBlock'}
                               | {__typename: 'PollBlock'}
-                              | {__typename: 'QuoteBlock'}
-                              | {__typename: 'RichTextBlock'}
+                              | {
+                                  __typename: 'QuoteBlock'
+                                  quote?: string | null
+                                  author?: string | null
+                                }
+                              | {__typename: 'RichTextBlock'; richText: Node[]}
                               | {__typename: 'SoundCloudTrackBlock'}
                               | {__typename: 'TeaserGridBlock'}
                               | {__typename: 'TeaserGridFlexBlock'}
@@ -5336,6 +17543,109 @@ export type NavigationQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            authors: Array<{
+                              __typename?: 'Author'
+                              id: string
+                              name: string
+                              jobTitle?: string | null
+                              slug: string
+                              bio?: Node[] | null
+                              url: string
+                              createdAt: string
+                              modifiedAt: string
+                              links?: Array<{
+                                __typename?: 'AuthorLink'
+                                title: string
+                                url: string
+                              }> | null
+                              image?: {
+                                __typename?: 'Image'
+                                id: string
+                                createdAt: string
+                                modifiedAt: string
+                                filename?: string | null
+                                format: string
+                                mimeType: string
+                                extension: string
+                                width: number
+                                height: number
+                                fileSize: number
+                                title?: string | null
+                                description?: string | null
+                                tags: Array<string>
+                                source?: string | null
+                                link?: string | null
+                                license?: string | null
+                                url?: string | null
+                                bigURL?: string | null
+                                largeURL?: string | null
+                                mediumURL?: string | null
+                                smallURL?: string | null
+                                squareBigURL?: string | null
+                                squareLargeURL?: string | null
+                                squareMediumURL?: string | null
+                                squareSmallURL?: string | null
+                                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                              } | null
+                            }>
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            socialMediaImage?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
                           } | null
                         }
                       | {
@@ -5419,16 +17729,20 @@ export type NavigationQuery = {
                           page?: {
                             __typename?: 'Page'
                             id: string
-                            title: string
+                            slug: string
                             description?: string | null
+                            tags: Array<string>
+                            title: string
                             url: string
+                            socialMediaDescription?: string | null
+                            socialMediaTitle?: string | null
                             blocks: Array<
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
-                              | {__typename: 'HTMLBlock'}
+                              | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
                                   caption?: string | null
@@ -5462,14 +17776,57 @@ export type NavigationQuery = {
                                     focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                                   } | null
                                 }
-                              | {__typename: 'ImageGalleryBlock'}
+                              | {
+                                  __typename: 'ImageGalleryBlock'
+                                  images: Array<{
+                                    __typename?: 'GalleryImageEdge'
+                                    caption?: string | null
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                  }>
+                                }
                               | {__typename: 'InstagramPostBlock'}
                               | {__typename: 'LinkPageBreakBlock'}
                               | {__typename: 'ListicleBlock'}
                               | {__typename: 'PolisConversationBlock'}
                               | {__typename: 'PollBlock'}
-                              | {__typename: 'QuoteBlock'}
-                              | {__typename: 'RichTextBlock'}
+                              | {
+                                  __typename: 'QuoteBlock'
+                                  quote?: string | null
+                                  author?: string | null
+                                }
+                              | {__typename: 'RichTextBlock'; richText: Node[]}
                               | {__typename: 'SoundCloudTrackBlock'}
                               | {__typename: 'TeaserGridBlock'}
                               | {__typename: 'TeaserGridFlexBlock'}
@@ -5483,6 +17840,64 @@ export type NavigationQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            socialMediaImage?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
                           } | null
                         }
                       | {__typename?: 'PeerArticleTeaser'}
@@ -5495,9 +17910,137 @@ export type NavigationQuery = {
               | {__typename: 'VimeoVideoBlock'}
               | {__typename: 'YouTubeVideoBlock'}
             >
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            socialMediaImage?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
           } | null
         }
     >
+  } | null
+}
+
+export type PageWithoutBlocksFragment = {
+  __typename?: 'Page'
+  id: string
+  slug: string
+  description?: string | null
+  tags: Array<string>
+  title: string
+  url: string
+  socialMediaDescription?: string | null
+  socialMediaTitle?: string | null
+  image?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    title?: string | null
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
+  socialMediaImage?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    title?: string | null
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
   } | null
 }
 
@@ -5505,7 +18048,12 @@ export type FullPageFragment = {
   __typename?: 'Page'
   id: string
   slug: string
+  description?: string | null
+  tags: Array<string>
+  title: string
   url: string
+  socialMediaDescription?: string | null
+  socialMediaTitle?: string | null
   blocks: Array<
     | {__typename: 'BildwurfAdBlock'}
     | {__typename: 'CommentBlock'}
@@ -5546,7 +18094,42 @@ export type FullPageFragment = {
           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
         } | null
       }
-    | {__typename: 'ImageGalleryBlock'}
+    | {
+        __typename: 'ImageGalleryBlock'
+        images: Array<{
+          __typename?: 'GalleryImageEdge'
+          caption?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+        }>
+      }
     | {__typename: 'InstagramPostBlock'}
     | {__typename: 'LinkPageBreakBlock'}
     | {__typename: 'ListicleBlock'}
@@ -5555,7 +18138,492 @@ export type FullPageFragment = {
     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
     | {__typename: 'RichTextBlock'; richText: Node[]}
     | {__typename: 'SoundCloudTrackBlock'}
-    | {__typename: 'TeaserGridBlock'}
+    | {
+        __typename: 'TeaserGridBlock'
+        numColumns: number
+        teasers: Array<
+          | {
+              __typename?: 'ArticleTeaser'
+              style: TeaserStyle
+              preTitle?: string | null
+              title?: string | null
+              lead?: string | null
+              image?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              article?: {
+                __typename?: 'Article'
+                id: string
+                publishedAt: string
+                updatedAt: string
+                preTitle?: string | null
+                title: string
+                lead?: string | null
+                slug: string
+                breaking: boolean
+                tags: Array<string>
+                url: string
+                socialMediaDescription?: string | null
+                socialMediaTitle?: string | null
+                blocks: Array<
+                  | {__typename: 'BildwurfAdBlock'}
+                  | {__typename: 'CommentBlock'}
+                  | {__typename: 'EmbedBlock'}
+                  | {__typename: 'EventBlock'}
+                  | {__typename: 'FacebookPostBlock'}
+                  | {__typename: 'HTMLBlock'; html?: string | null}
+                  | {
+                      __typename: 'ImageBlock'
+                      caption?: string | null
+                      image?: {
+                        __typename?: 'Image'
+                        id: string
+                        createdAt: string
+                        modifiedAt: string
+                        filename?: string | null
+                        format: string
+                        mimeType: string
+                        extension: string
+                        width: number
+                        height: number
+                        fileSize: number
+                        title?: string | null
+                        description?: string | null
+                        tags: Array<string>
+                        source?: string | null
+                        link?: string | null
+                        license?: string | null
+                        url?: string | null
+                        bigURL?: string | null
+                        largeURL?: string | null
+                        mediumURL?: string | null
+                        smallURL?: string | null
+                        squareBigURL?: string | null
+                        squareLargeURL?: string | null
+                        squareMediumURL?: string | null
+                        squareSmallURL?: string | null
+                        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                      } | null
+                    }
+                  | {
+                      __typename: 'ImageGalleryBlock'
+                      images: Array<{
+                        __typename?: 'GalleryImageEdge'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }>
+                    }
+                  | {__typename: 'InstagramPostBlock'}
+                  | {__typename: 'LinkPageBreakBlock'}
+                  | {__typename: 'ListicleBlock'}
+                  | {__typename: 'PolisConversationBlock'}
+                  | {__typename: 'PollBlock'}
+                  | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                  | {__typename: 'RichTextBlock'; richText: Node[]}
+                  | {__typename: 'SoundCloudTrackBlock'}
+                  | {__typename: 'TeaserGridBlock'}
+                  | {__typename: 'TeaserGridFlexBlock'}
+                  | {__typename: 'TikTokVideoBlock'}
+                  | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+                  | {__typename: 'TwitterTweetBlock'}
+                  | {__typename: 'VimeoVideoBlock'}
+                  | {__typename: 'YouTubeVideoBlock'}
+                >
+                authors: Array<{
+                  __typename?: 'Author'
+                  id: string
+                  name: string
+                  jobTitle?: string | null
+                  slug: string
+                  bio?: Node[] | null
+                  url: string
+                  createdAt: string
+                  modifiedAt: string
+                  links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                }>
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                socialMediaImage?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+              } | null
+            }
+          | {
+              __typename?: 'CustomTeaser'
+              style: TeaserStyle
+              preTitle?: string | null
+              title?: string | null
+              lead?: string | null
+              contentUrl?: string | null
+              image?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+            }
+          | {__typename?: 'EventTeaser'}
+          | {
+              __typename?: 'PageTeaser'
+              style: TeaserStyle
+              preTitle?: string | null
+              title?: string | null
+              lead?: string | null
+              image?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              page?: {
+                __typename?: 'Page'
+                id: string
+                slug: string
+                description?: string | null
+                tags: Array<string>
+                title: string
+                url: string
+                socialMediaDescription?: string | null
+                socialMediaTitle?: string | null
+                blocks: Array<
+                  | {__typename: 'BildwurfAdBlock'}
+                  | {__typename: 'CommentBlock'}
+                  | {__typename: 'EmbedBlock'}
+                  | {__typename: 'EventBlock'}
+                  | {__typename: 'FacebookPostBlock'}
+                  | {__typename: 'HTMLBlock'; html?: string | null}
+                  | {
+                      __typename: 'ImageBlock'
+                      caption?: string | null
+                      image?: {
+                        __typename?: 'Image'
+                        id: string
+                        createdAt: string
+                        modifiedAt: string
+                        filename?: string | null
+                        format: string
+                        mimeType: string
+                        extension: string
+                        width: number
+                        height: number
+                        fileSize: number
+                        title?: string | null
+                        description?: string | null
+                        tags: Array<string>
+                        source?: string | null
+                        link?: string | null
+                        license?: string | null
+                        url?: string | null
+                        bigURL?: string | null
+                        largeURL?: string | null
+                        mediumURL?: string | null
+                        smallURL?: string | null
+                        squareBigURL?: string | null
+                        squareLargeURL?: string | null
+                        squareMediumURL?: string | null
+                        squareSmallURL?: string | null
+                        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                      } | null
+                    }
+                  | {
+                      __typename: 'ImageGalleryBlock'
+                      images: Array<{
+                        __typename?: 'GalleryImageEdge'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }>
+                    }
+                  | {__typename: 'InstagramPostBlock'}
+                  | {__typename: 'LinkPageBreakBlock'}
+                  | {__typename: 'ListicleBlock'}
+                  | {__typename: 'PolisConversationBlock'}
+                  | {__typename: 'PollBlock'}
+                  | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                  | {__typename: 'RichTextBlock'; richText: Node[]}
+                  | {__typename: 'SoundCloudTrackBlock'}
+                  | {__typename: 'TeaserGridBlock'}
+                  | {__typename: 'TeaserGridFlexBlock'}
+                  | {__typename: 'TikTokVideoBlock'}
+                  | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+                  | {__typename: 'TwitterTweetBlock'}
+                  | {__typename: 'VimeoVideoBlock'}
+                  | {__typename: 'YouTubeVideoBlock'}
+                >
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                socialMediaImage?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+              } | null
+            }
+          | {__typename?: 'PeerArticleTeaser'}
+          | null
+        >
+      }
     | {
         __typename: 'TeaserGridFlexBlock'
         flexTeasers: Array<{
@@ -5600,17 +18668,24 @@ export type FullPageFragment = {
                 article?: {
                   __typename?: 'Article'
                   id: string
-                  title: string
+                  publishedAt: string
+                  updatedAt: string
                   preTitle?: string | null
+                  title: string
                   lead?: string | null
+                  slug: string
+                  breaking: boolean
+                  tags: Array<string>
                   url: string
+                  socialMediaDescription?: string | null
+                  socialMediaTitle?: string | null
                   blocks: Array<
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
-                    | {__typename: 'HTMLBlock'}
+                    | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
                         caption?: string | null
@@ -5644,14 +18719,49 @@ export type FullPageFragment = {
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
-                    | {__typename: 'ImageGalleryBlock'}
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
                     | {__typename: 'ListicleBlock'}
                     | {__typename: 'PolisConversationBlock'}
                     | {__typename: 'PollBlock'}
-                    | {__typename: 'QuoteBlock'}
-                    | {__typename: 'RichTextBlock'}
+                    | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                    | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
                     | {__typename: 'TeaserGridBlock'}
                     | {__typename: 'TeaserGridFlexBlock'}
@@ -5661,6 +18771,105 @@ export type FullPageFragment = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  authors: Array<{
+                    __typename?: 'Author'
+                    id: string
+                    name: string
+                    jobTitle?: string | null
+                    slug: string
+                    bio?: Node[] | null
+                    url: string
+                    createdAt: string
+                    modifiedAt: string
+                    links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                  }>
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  socialMediaImage?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
                 } | null
               }
             | {
@@ -5740,16 +18949,20 @@ export type FullPageFragment = {
                 page?: {
                   __typename?: 'Page'
                   id: string
-                  title: string
+                  slug: string
                   description?: string | null
+                  tags: Array<string>
+                  title: string
                   url: string
+                  socialMediaDescription?: string | null
+                  socialMediaTitle?: string | null
                   blocks: Array<
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
-                    | {__typename: 'HTMLBlock'}
+                    | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
                         caption?: string | null
@@ -5783,14 +18996,49 @@ export type FullPageFragment = {
                           focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                         } | null
                       }
-                    | {__typename: 'ImageGalleryBlock'}
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
                     | {__typename: 'InstagramPostBlock'}
                     | {__typename: 'LinkPageBreakBlock'}
                     | {__typename: 'ListicleBlock'}
                     | {__typename: 'PolisConversationBlock'}
                     | {__typename: 'PollBlock'}
-                    | {__typename: 'QuoteBlock'}
-                    | {__typename: 'RichTextBlock'}
+                    | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                    | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
                     | {__typename: 'TeaserGridBlock'}
                     | {__typename: 'TeaserGridFlexBlock'}
@@ -5800,6 +19048,64 @@ export type FullPageFragment = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  socialMediaImage?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
                 } | null
               }
             | {__typename?: 'PeerArticleTeaser'}
@@ -5812,6 +19118,64 @@ export type FullPageFragment = {
     | {__typename: 'VimeoVideoBlock'}
     | {__typename: 'YouTubeVideoBlock'}
   >
+  image?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    title?: string | null
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
+  socialMediaImage?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    format: string
+    mimeType: string
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    title?: string | null
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    url?: string | null
+    bigURL?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    smallURL?: string | null
+    squareBigURL?: string | null
+    squareLargeURL?: string | null
+    squareMediumURL?: string | null
+    squareSmallURL?: string | null
+    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+  } | null
 }
 
 export type PageQueryVariables = Exact<{
@@ -5825,7 +19189,12 @@ export type PageQuery = {
     __typename?: 'Page'
     id: string
     slug: string
+    description?: string | null
+    tags: Array<string>
+    title: string
     url: string
+    socialMediaDescription?: string | null
+    socialMediaTitle?: string | null
     blocks: Array<
       | {__typename: 'BildwurfAdBlock'}
       | {__typename: 'CommentBlock'}
@@ -5866,7 +19235,42 @@ export type PageQuery = {
             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
           } | null
         }
-      | {__typename: 'ImageGalleryBlock'}
+      | {
+          __typename: 'ImageGalleryBlock'
+          images: Array<{
+            __typename?: 'GalleryImageEdge'
+            caption?: string | null
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+          }>
+        }
       | {__typename: 'InstagramPostBlock'}
       | {__typename: 'LinkPageBreakBlock'}
       | {__typename: 'ListicleBlock'}
@@ -5875,7 +19279,492 @@ export type PageQuery = {
       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
       | {__typename: 'RichTextBlock'; richText: Node[]}
       | {__typename: 'SoundCloudTrackBlock'}
-      | {__typename: 'TeaserGridBlock'}
+      | {
+          __typename: 'TeaserGridBlock'
+          numColumns: number
+          teasers: Array<
+            | {
+                __typename?: 'ArticleTeaser'
+                style: TeaserStyle
+                preTitle?: string | null
+                title?: string | null
+                lead?: string | null
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                article?: {
+                  __typename?: 'Article'
+                  id: string
+                  publishedAt: string
+                  updatedAt: string
+                  preTitle?: string | null
+                  title: string
+                  lead?: string | null
+                  slug: string
+                  breaking: boolean
+                  tags: Array<string>
+                  url: string
+                  socialMediaDescription?: string | null
+                  socialMediaTitle?: string | null
+                  blocks: Array<
+                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'CommentBlock'}
+                    | {__typename: 'EmbedBlock'}
+                    | {__typename: 'EventBlock'}
+                    | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'HTMLBlock'; html?: string | null}
+                    | {
+                        __typename: 'ImageBlock'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
+                    | {__typename: 'InstagramPostBlock'}
+                    | {__typename: 'LinkPageBreakBlock'}
+                    | {__typename: 'ListicleBlock'}
+                    | {__typename: 'PolisConversationBlock'}
+                    | {__typename: 'PollBlock'}
+                    | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                    | {__typename: 'RichTextBlock'; richText: Node[]}
+                    | {__typename: 'SoundCloudTrackBlock'}
+                    | {__typename: 'TeaserGridBlock'}
+                    | {__typename: 'TeaserGridFlexBlock'}
+                    | {__typename: 'TikTokVideoBlock'}
+                    | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+                    | {__typename: 'TwitterTweetBlock'}
+                    | {__typename: 'VimeoVideoBlock'}
+                    | {__typename: 'YouTubeVideoBlock'}
+                  >
+                  authors: Array<{
+                    __typename?: 'Author'
+                    id: string
+                    name: string
+                    jobTitle?: string | null
+                    slug: string
+                    bio?: Node[] | null
+                    url: string
+                    createdAt: string
+                    modifiedAt: string
+                    links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                  }>
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  socialMediaImage?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                } | null
+              }
+            | {
+                __typename?: 'CustomTeaser'
+                style: TeaserStyle
+                preTitle?: string | null
+                title?: string | null
+                lead?: string | null
+                contentUrl?: string | null
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+              }
+            | {__typename?: 'EventTeaser'}
+            | {
+                __typename?: 'PageTeaser'
+                style: TeaserStyle
+                preTitle?: string | null
+                title?: string | null
+                lead?: string | null
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                page?: {
+                  __typename?: 'Page'
+                  id: string
+                  slug: string
+                  description?: string | null
+                  tags: Array<string>
+                  title: string
+                  url: string
+                  socialMediaDescription?: string | null
+                  socialMediaTitle?: string | null
+                  blocks: Array<
+                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'CommentBlock'}
+                    | {__typename: 'EmbedBlock'}
+                    | {__typename: 'EventBlock'}
+                    | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'HTMLBlock'; html?: string | null}
+                    | {
+                        __typename: 'ImageBlock'
+                        caption?: string | null
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                      }
+                    | {
+                        __typename: 'ImageGalleryBlock'
+                        images: Array<{
+                          __typename?: 'GalleryImageEdge'
+                          caption?: string | null
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                        }>
+                      }
+                    | {__typename: 'InstagramPostBlock'}
+                    | {__typename: 'LinkPageBreakBlock'}
+                    | {__typename: 'ListicleBlock'}
+                    | {__typename: 'PolisConversationBlock'}
+                    | {__typename: 'PollBlock'}
+                    | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                    | {__typename: 'RichTextBlock'; richText: Node[]}
+                    | {__typename: 'SoundCloudTrackBlock'}
+                    | {__typename: 'TeaserGridBlock'}
+                    | {__typename: 'TeaserGridFlexBlock'}
+                    | {__typename: 'TikTokVideoBlock'}
+                    | {__typename: 'TitleBlock'; title?: string | null; lead?: string | null}
+                    | {__typename: 'TwitterTweetBlock'}
+                    | {__typename: 'VimeoVideoBlock'}
+                    | {__typename: 'YouTubeVideoBlock'}
+                  >
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  socialMediaImage?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                } | null
+              }
+            | {__typename?: 'PeerArticleTeaser'}
+            | null
+          >
+        }
       | {
           __typename: 'TeaserGridFlexBlock'
           flexTeasers: Array<{
@@ -5920,17 +19809,24 @@ export type PageQuery = {
                   article?: {
                     __typename?: 'Article'
                     id: string
-                    title: string
+                    publishedAt: string
+                    updatedAt: string
                     preTitle?: string | null
+                    title: string
                     lead?: string | null
+                    slug: string
+                    breaking: boolean
+                    tags: Array<string>
                     url: string
+                    socialMediaDescription?: string | null
+                    socialMediaTitle?: string | null
                     blocks: Array<
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
-                      | {__typename: 'HTMLBlock'}
+                      | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
                           caption?: string | null
@@ -5964,14 +19860,49 @@ export type PageQuery = {
                             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                         }
-                      | {__typename: 'ImageGalleryBlock'}
+                      | {
+                          __typename: 'ImageGalleryBlock'
+                          images: Array<{
+                            __typename?: 'GalleryImageEdge'
+                            caption?: string | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                        }
                       | {__typename: 'InstagramPostBlock'}
                       | {__typename: 'LinkPageBreakBlock'}
                       | {__typename: 'ListicleBlock'}
                       | {__typename: 'PolisConversationBlock'}
                       | {__typename: 'PollBlock'}
-                      | {__typename: 'QuoteBlock'}
-                      | {__typename: 'RichTextBlock'}
+                      | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                      | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
                       | {__typename: 'TeaserGridBlock'}
                       | {__typename: 'TeaserGridFlexBlock'}
@@ -5981,6 +19912,105 @@ export type PageQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    authors: Array<{
+                      __typename?: 'Author'
+                      id: string
+                      name: string
+                      jobTitle?: string | null
+                      slug: string
+                      bio?: Node[] | null
+                      url: string
+                      createdAt: string
+                      modifiedAt: string
+                      links?: Array<{__typename?: 'AuthorLink'; title: string; url: string}> | null
+                      image?: {
+                        __typename?: 'Image'
+                        id: string
+                        createdAt: string
+                        modifiedAt: string
+                        filename?: string | null
+                        format: string
+                        mimeType: string
+                        extension: string
+                        width: number
+                        height: number
+                        fileSize: number
+                        title?: string | null
+                        description?: string | null
+                        tags: Array<string>
+                        source?: string | null
+                        link?: string | null
+                        license?: string | null
+                        url?: string | null
+                        bigURL?: string | null
+                        largeURL?: string | null
+                        mediumURL?: string | null
+                        smallURL?: string | null
+                        squareBigURL?: string | null
+                        squareLargeURL?: string | null
+                        squareMediumURL?: string | null
+                        squareSmallURL?: string | null
+                        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                      } | null
+                    }>
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    socialMediaImage?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
                   } | null
                 }
               | {
@@ -6060,16 +20090,20 @@ export type PageQuery = {
                   page?: {
                     __typename?: 'Page'
                     id: string
-                    title: string
+                    slug: string
                     description?: string | null
+                    tags: Array<string>
+                    title: string
                     url: string
+                    socialMediaDescription?: string | null
+                    socialMediaTitle?: string | null
                     blocks: Array<
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
-                      | {__typename: 'HTMLBlock'}
+                      | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
                           caption?: string | null
@@ -6103,14 +20137,49 @@ export type PageQuery = {
                             focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
                           } | null
                         }
-                      | {__typename: 'ImageGalleryBlock'}
+                      | {
+                          __typename: 'ImageGalleryBlock'
+                          images: Array<{
+                            __typename?: 'GalleryImageEdge'
+                            caption?: string | null
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                          }>
+                        }
                       | {__typename: 'InstagramPostBlock'}
                       | {__typename: 'LinkPageBreakBlock'}
                       | {__typename: 'ListicleBlock'}
                       | {__typename: 'PolisConversationBlock'}
                       | {__typename: 'PollBlock'}
-                      | {__typename: 'QuoteBlock'}
-                      | {__typename: 'RichTextBlock'}
+                      | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
+                      | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
                       | {__typename: 'TeaserGridBlock'}
                       | {__typename: 'TeaserGridFlexBlock'}
@@ -6120,6 +20189,64 @@ export type PageQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    socialMediaImage?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
                   } | null
                 }
               | {__typename?: 'PeerArticleTeaser'}
@@ -6132,7 +20259,95 @@ export type PageQuery = {
       | {__typename: 'VimeoVideoBlock'}
       | {__typename: 'YouTubeVideoBlock'}
     >
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    socialMediaImage?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
   } | null
+}
+
+export type FullSettingFragment = {
+  __typename?: 'Setting'
+  id: string
+  name: SettingName
+  value: any
+}
+
+export type SettingListQueryVariables = Exact<{[key: string]: never}>
+
+export type SettingListQuery = {
+  __typename?: 'Query'
+  settings: Array<{__typename?: 'Setting'; id: string; name: SettingName; value: any}>
+}
+
+export type SettingQueryVariables = Exact<{
+  name: Scalars['String']
+}>
+
+export type SettingQuery = {
+  __typename?: 'Query'
+  setting?: {__typename?: 'Setting'; id: string; name: SettingName; value: any} | null
+}
+
+export type FullTagFragment = {
+  __typename?: 'Tag'
+  id: string
+  tag?: string | null
+  type?: TagType | null
 }
 
 export type FullPropertyFragment = {__typename?: 'PublicProperties'; key: string; value: string}
@@ -6588,6 +20803,36 @@ export type RegisterMutation = {
   }
 }
 
+export const FullTagFragmentDoc = gql`
+  fragment FullTag on Tag {
+    id
+    tag
+    type
+  }
+`
+export const FullAddressFragmentDoc = gql`
+  fragment FullAddress on UserAddress {
+    company
+    streetAddress
+    streetAddress2
+    zipCode
+    city
+    country
+  }
+`
+export const FullPaymentProviderCustomerFragmentDoc = gql`
+  fragment FullPaymentProviderCustomer on PaymentProviderCustomer {
+    paymentProviderID
+    customerID
+  }
+`
+export const FullOAuth2AccountFragmentDoc = gql`
+  fragment FullOAuth2Account on OAuth2Account {
+    type
+    provider
+    scope
+  }
+`
 export const ImageUrLsFragmentDoc = gql`
   fragment ImageURLs on Image {
     url
@@ -6627,431 +20872,6 @@ export const FullImageFragmentDoc = gql`
   }
   ${ImageUrLsFragmentDoc}
 `
-export const BlockWithoutTeaserFragmentDoc = gql`
-  fragment BlockWithoutTeaser on Block {
-    __typename
-    ... on TitleBlock {
-      title
-      lead
-    }
-    ... on ImageBlock {
-      caption
-      image {
-        ...FullImage
-      }
-    }
-    ... on QuoteBlock {
-      quote
-      author
-    }
-    ... on RichTextBlock {
-      richText
-    }
-    ... on HTMLBlock {
-      html
-    }
-  }
-  ${FullImageFragmentDoc}
-`
-export const FullBlockFragmentDoc = gql`
-  fragment FullBlock on Block {
-    __typename
-    ...BlockWithoutTeaser
-    ... on TeaserGridFlexBlock {
-      flexTeasers {
-        alignment {
-          x
-          y
-          w
-          h
-        }
-        teaser {
-          ... on ArticleTeaser {
-            style
-            image {
-              ...FullImage
-            }
-            preTitle
-            title
-            lead
-            article {
-              id
-              title
-              preTitle
-              lead
-              url
-              blocks {
-                ...BlockWithoutTeaser
-              }
-            }
-          }
-          ... on PageTeaser {
-            style
-            image {
-              ...FullImage
-            }
-            preTitle
-            title
-            lead
-            page {
-              id
-              title
-              description
-              url
-              blocks {
-                __typename
-                ...BlockWithoutTeaser
-              }
-            }
-          }
-          ... on CustomTeaser {
-            style
-            image {
-              ...FullImage
-            }
-            preTitle
-            title
-            lead
-            contentUrl
-            properties {
-              key
-              value
-            }
-          }
-        }
-      }
-    }
-  }
-  ${BlockWithoutTeaserFragmentDoc}
-  ${FullImageFragmentDoc}
-`
-export const FullEventFragmentDoc = gql`
-  fragment FullEvent on Event {
-    id
-    name
-    description
-    status
-    location
-    image {
-      ...FullImage
-    }
-    tags {
-      id
-      tag
-    }
-    startsAt
-    endsAt
-    url
-  }
-  ${FullImageFragmentDoc}
-`
-export const FullPageFragmentDoc = gql`
-  fragment FullPage on Page {
-    id
-    slug
-    url
-    blocks {
-      __typename
-      ... on TitleBlock {
-        title
-        lead
-      }
-      ... on ImageBlock {
-        caption
-        image {
-          ...FullImage
-        }
-      }
-      ... on QuoteBlock {
-        quote
-        author
-      }
-      ... on RichTextBlock {
-        richText
-      }
-      ... on HTMLBlock {
-        html
-      }
-      ... on TeaserGridFlexBlock {
-        flexTeasers {
-          alignment {
-            x
-            y
-            w
-            h
-          }
-          teaser {
-            ... on ArticleTeaser {
-              style
-              image {
-                ...FullImage
-              }
-              preTitle
-              title
-              lead
-              article {
-                id
-                title
-                preTitle
-                lead
-                url
-                blocks {
-                  __typename
-                  ... on TitleBlock {
-                    title
-                    lead
-                  }
-                  ... on ImageBlock {
-                    caption
-                    image {
-                      ...FullImage
-                    }
-                  }
-                }
-              }
-            }
-            ... on PageTeaser {
-              style
-              image {
-                ...FullImage
-              }
-              preTitle
-              title
-              lead
-              page {
-                id
-                title
-                description
-                url
-                blocks {
-                  __typename
-                  ... on TitleBlock {
-                    title
-                    lead
-                  }
-                  ... on ImageBlock {
-                    caption
-                    image {
-                      ...FullImage
-                    }
-                  }
-                }
-              }
-            }
-            ... on CustomTeaser {
-              style
-              image {
-                ...FullImage
-              }
-              preTitle
-              title
-              lead
-              contentUrl
-              properties {
-                key
-                value
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  ${FullImageFragmentDoc}
-`
-export const FullAuthorFragmentDoc = gql`
-  fragment FullAuthor on Author {
-    id
-    name
-    jobTitle
-    slug
-    bio
-    url
-    links {
-      title
-      url
-    }
-    image {
-      ...FullImage
-    }
-  }
-  ${FullImageFragmentDoc}
-`
-export const FullArticleFragmentDoc = gql`
-  fragment FullArticle on Article {
-    id
-    slug
-    url
-    blocks {
-      __typename
-      ... on TitleBlock {
-        title
-        lead
-      }
-      ... on ImageBlock {
-        caption
-        image {
-          ...FullImage
-        }
-      }
-      ... on QuoteBlock {
-        quote
-        author
-      }
-      ... on RichTextBlock {
-        richText
-      }
-      ... on HTMLBlock {
-        html
-      }
-      ... on TeaserGridFlexBlock {
-        flexTeasers {
-          alignment {
-            x
-            y
-            w
-            h
-          }
-          teaser {
-            ... on ArticleTeaser {
-              style
-              image {
-                ...FullImage
-              }
-              preTitle
-              title
-              lead
-              article {
-                id
-                title
-                preTitle
-                lead
-                url
-                blocks {
-                  __typename
-                  ... on TitleBlock {
-                    title
-                    lead
-                  }
-                  ... on ImageBlock {
-                    caption
-                    image {
-                      ...FullImage
-                    }
-                  }
-                }
-              }
-            }
-            ... on PageTeaser {
-              style
-              image {
-                ...FullImage
-              }
-              preTitle
-              title
-              lead
-              page {
-                id
-                title
-                description
-                url
-                blocks {
-                  __typename
-                  ... on TitleBlock {
-                    title
-                    lead
-                  }
-                  ... on ImageBlock {
-                    caption
-                    image {
-                      ...FullImage
-                    }
-                  }
-                }
-              }
-            }
-            ... on CustomTeaser {
-              style
-              image {
-                ...FullImage
-              }
-              preTitle
-              title
-              lead
-              contentUrl
-              properties {
-                key
-                value
-              }
-            }
-          }
-        }
-      }
-    }
-    authors {
-      ...FullAuthor
-    }
-  }
-  ${FullImageFragmentDoc}
-  ${FullAuthorFragmentDoc}
-`
-export const FullNavigationFragmentDoc = gql`
-  fragment FullNavigation on Navigation {
-    id
-    key
-    name
-    links {
-      ... on PageNavigationLink {
-        label
-        page {
-          ...FullPage
-        }
-      }
-      ... on ArticleNavigationLink {
-        label
-        article {
-          ...FullArticle
-        }
-      }
-      ... on ExternalNavigationLink {
-        label
-        url
-      }
-    }
-  }
-  ${FullPageFragmentDoc}
-  ${FullArticleFragmentDoc}
-`
-export const FullUserSessionFragmentDoc = gql`
-  fragment FullUserSession on UserSession {
-    token
-    expiresAt
-    createdAt
-  }
-`
-export const FullAddressFragmentDoc = gql`
-  fragment FullAddress on UserAddress {
-    company
-    streetAddress
-    streetAddress2
-    zipCode
-    city
-    country
-  }
-`
-export const FullPaymentProviderCustomerFragmentDoc = gql`
-  fragment FullPaymentProviderCustomer on PaymentProviderCustomer {
-    paymentProviderID
-    customerID
-  }
-`
-export const FullOAuth2AccountFragmentDoc = gql`
-  fragment FullOAuth2Account on OAuth2Account {
-    type
-    provider
-    scope
-  }
-`
 export const FullPropertyFragmentDoc = gql`
   fragment FullProperty on PublicProperties {
     key
@@ -7087,6 +20907,353 @@ export const FullUserFragmentDoc = gql`
   ${FullOAuth2AccountFragmentDoc}
   ${FullImageFragmentDoc}
   ${FullPropertyFragmentDoc}
+`
+export const FullCommentRatingSystemAnswerFragmentDoc = gql`
+  fragment FullCommentRatingSystemAnswer on CommentRatingSystemAnswer {
+    id
+    ratingSystemId
+    answer
+    type
+  }
+`
+export const FullCalculatedRatingFragmentDoc = gql`
+  fragment FullCalculatedRating on CalculatedRating {
+    count
+    total
+    mean
+    answer {
+      ...FullCommentRatingSystemAnswer
+    }
+  }
+  ${FullCommentRatingSystemAnswerFragmentDoc}
+`
+export const FullOverriddenRatingFragmentDoc = gql`
+  fragment FullOverriddenRating on overriddenRating {
+    answerId
+    value
+  }
+`
+export const CommentWithoutNestingFragmentDoc = gql`
+  fragment CommentWithoutNesting on Comment {
+    id
+    itemID
+    itemType
+    peerId
+    parentID
+    createdAt
+    modifiedAt
+    title
+    lead
+    text
+    authorType
+    rejectionReason
+    state
+    tags {
+      ...FullTag
+    }
+    user {
+      ...FullUser
+    }
+    source
+    guestUsername
+    guestUserImage {
+      ...FullImage
+    }
+    calculatedRatings {
+      ...FullCalculatedRating
+    }
+    overriddenRatings {
+      ...FullOverriddenRating
+    }
+  }
+  ${FullTagFragmentDoc}
+  ${FullUserFragmentDoc}
+  ${FullImageFragmentDoc}
+  ${FullCalculatedRatingFragmentDoc}
+  ${FullOverriddenRatingFragmentDoc}
+`
+export const FullCommentFragmentDoc = gql`
+  fragment FullComment on Comment {
+    ...CommentWithoutNesting
+    children {
+      ...CommentWithoutNesting
+      children {
+        ...CommentWithoutNesting
+        children {
+          ...CommentWithoutNesting
+          children {
+            ...CommentWithoutNesting
+            children {
+              ...CommentWithoutNesting
+            }
+          }
+        }
+      }
+    }
+  }
+  ${CommentWithoutNestingFragmentDoc}
+`
+export const FullEventFragmentDoc = gql`
+  fragment FullEvent on Event {
+    id
+    name
+    description
+    status
+    location
+    image {
+      ...FullImage
+    }
+    tags {
+      id
+      tag
+    }
+    startsAt
+    endsAt
+    url
+  }
+  ${FullImageFragmentDoc}
+`
+export const PageWithoutBlocksFragmentDoc = gql`
+  fragment PageWithoutBlocks on Page {
+    id
+    slug
+    description
+    tags
+    title
+    url
+    image {
+      ...FullImage
+    }
+    socialMediaDescription
+    socialMediaTitle
+    socialMediaImage {
+      ...FullImage
+    }
+  }
+  ${FullImageFragmentDoc}
+`
+export const BlockWithoutTeaserFragmentDoc = gql`
+  fragment BlockWithoutTeaser on Block {
+    __typename
+    ... on TitleBlock {
+      title
+      lead
+    }
+    ... on ImageBlock {
+      caption
+      image {
+        ...FullImage
+      }
+    }
+    ... on ImageGalleryBlock {
+      images {
+        caption
+        image {
+          ...FullImage
+        }
+      }
+    }
+    ... on QuoteBlock {
+      quote
+      author
+    }
+    ... on RichTextBlock {
+      richText
+    }
+    ... on HTMLBlock {
+      html
+    }
+  }
+  ${FullImageFragmentDoc}
+`
+export const FullAuthorFragmentDoc = gql`
+  fragment FullAuthor on Author {
+    id
+    name
+    jobTitle
+    slug
+    bio
+    url
+    createdAt
+    modifiedAt
+    links {
+      title
+      url
+    }
+    image {
+      ...FullImage
+    }
+  }
+  ${FullImageFragmentDoc}
+`
+export const ArticleWithoutBlocksFragmentDoc = gql`
+  fragment ArticleWithoutBlocks on Article {
+    id
+    publishedAt
+    updatedAt
+    preTitle
+    title
+    lead
+    slug
+    breaking
+    lead
+    publishedAt
+    tags
+    title
+    url
+    authors {
+      ...FullAuthor
+    }
+    image {
+      ...FullImage
+    }
+    socialMediaDescription
+    socialMediaTitle
+    socialMediaImage {
+      ...FullImage
+    }
+  }
+  ${FullAuthorFragmentDoc}
+  ${FullImageFragmentDoc}
+`
+export const FullTeaserFragmentDoc = gql`
+  fragment FullTeaser on Teaser {
+    ... on ArticleTeaser {
+      style
+      image {
+        ...FullImage
+      }
+      preTitle
+      title
+      lead
+      article {
+        ...ArticleWithoutBlocks
+        blocks {
+          ...BlockWithoutTeaser
+        }
+      }
+    }
+    ... on PageTeaser {
+      style
+      image {
+        ...FullImage
+      }
+      preTitle
+      title
+      lead
+      page {
+        ...PageWithoutBlocks
+        blocks {
+          ...BlockWithoutTeaser
+        }
+      }
+    }
+    ... on CustomTeaser {
+      style
+      image {
+        ...FullImage
+      }
+      preTitle
+      title
+      lead
+      contentUrl
+      properties {
+        key
+        value
+      }
+    }
+  }
+  ${FullImageFragmentDoc}
+  ${ArticleWithoutBlocksFragmentDoc}
+  ${BlockWithoutTeaserFragmentDoc}
+  ${PageWithoutBlocksFragmentDoc}
+`
+export const FullBlockFragmentDoc = gql`
+  fragment FullBlock on Block {
+    ...BlockWithoutTeaser
+    ... on TeaserGridFlexBlock {
+      flexTeasers {
+        alignment {
+          x
+          y
+          w
+          h
+        }
+        teaser {
+          ...FullTeaser
+        }
+      }
+    }
+    ... on TeaserGridBlock {
+      teasers {
+        ...FullTeaser
+      }
+      numColumns
+    }
+  }
+  ${BlockWithoutTeaserFragmentDoc}
+  ${FullTeaserFragmentDoc}
+`
+export const FullPageFragmentDoc = gql`
+  fragment FullPage on Page {
+    ...PageWithoutBlocks
+    blocks {
+      ...FullBlock
+    }
+  }
+  ${PageWithoutBlocksFragmentDoc}
+  ${FullBlockFragmentDoc}
+`
+export const FullArticleFragmentDoc = gql`
+  fragment FullArticle on Article {
+    ...ArticleWithoutBlocks
+    blocks {
+      ...FullBlock
+    }
+  }
+  ${ArticleWithoutBlocksFragmentDoc}
+  ${FullBlockFragmentDoc}
+`
+export const FullNavigationFragmentDoc = gql`
+  fragment FullNavigation on Navigation {
+    id
+    key
+    name
+    links {
+      ... on PageNavigationLink {
+        label
+        page {
+          ...FullPage
+        }
+      }
+      ... on ArticleNavigationLink {
+        label
+        article {
+          ...FullArticle
+        }
+      }
+      ... on ExternalNavigationLink {
+        label
+        url
+      }
+    }
+  }
+  ${FullPageFragmentDoc}
+  ${FullArticleFragmentDoc}
+`
+export const FullSettingFragmentDoc = gql`
+  fragment FullSetting on Setting {
+    id
+    name
+    value
+  }
+`
+export const FullUserSessionFragmentDoc = gql`
+  fragment FullUserSession on UserSession {
+    token
+    expiresAt
+    createdAt
+  }
 `
 export const FullSessionWithTokenFragmentDoc = gql`
   fragment FullSessionWithToken on SessionWithToken {
@@ -7226,6 +21393,58 @@ export function useAuthorLazyQuery(
 export type AuthorQueryHookResult = ReturnType<typeof useAuthorQuery>
 export type AuthorLazyQueryHookResult = ReturnType<typeof useAuthorLazyQuery>
 export type AuthorQueryResult = Apollo.QueryResult<AuthorQuery, AuthorQueryVariables>
+export const AuthorListDocument = gql`
+  query AuthorList($filter: AuthorFilter, $cursor: ID, $take: Int, $skip: Int) {
+    authors(filter: $filter, cursor: $cursor, take: $take, skip: $skip) {
+      nodes {
+        ...FullAuthor
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+  }
+  ${FullAuthorFragmentDoc}
+`
+
+/**
+ * __useAuthorListQuery__
+ *
+ * To run a query within a React component, call `useAuthorListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAuthorListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAuthorListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useAuthorListQuery(
+  baseOptions?: Apollo.QueryHookOptions<AuthorListQuery, AuthorListQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<AuthorListQuery, AuthorListQueryVariables>(AuthorListDocument, options)
+}
+export function useAuthorListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<AuthorListQuery, AuthorListQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<AuthorListQuery, AuthorListQueryVariables>(AuthorListDocument, options)
+}
+export type AuthorListQueryHookResult = ReturnType<typeof useAuthorListQuery>
+export type AuthorListLazyQueryHookResult = ReturnType<typeof useAuthorListLazyQuery>
+export type AuthorListQueryResult = Apollo.QueryResult<AuthorListQuery, AuthorListQueryVariables>
 export const ChallengeDocument = gql`
   query Challenge {
     challenge {
@@ -7266,6 +21485,141 @@ export function useChallengeLazyQuery(
 export type ChallengeQueryHookResult = ReturnType<typeof useChallengeQuery>
 export type ChallengeLazyQueryHookResult = ReturnType<typeof useChallengeLazyQuery>
 export type ChallengeQueryResult = Apollo.QueryResult<ChallengeQuery, ChallengeQueryVariables>
+export const CommentListDocument = gql`
+  query CommentList($itemId: ID!, $order: SortOrder, $sort: CommentSort) {
+    comments(itemId: $itemId, order: $order, sort: $sort) {
+      ...FullComment
+    }
+  }
+  ${FullCommentFragmentDoc}
+`
+
+/**
+ * __useCommentListQuery__
+ *
+ * To run a query within a React component, call `useCommentListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommentListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentListQuery({
+ *   variables: {
+ *      itemId: // value for 'itemId'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useCommentListQuery(
+  baseOptions: Apollo.QueryHookOptions<CommentListQuery, CommentListQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<CommentListQuery, CommentListQueryVariables>(CommentListDocument, options)
+}
+export function useCommentListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<CommentListQuery, CommentListQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<CommentListQuery, CommentListQueryVariables>(
+    CommentListDocument,
+    options
+  )
+}
+export type CommentListQueryHookResult = ReturnType<typeof useCommentListQuery>
+export type CommentListLazyQueryHookResult = ReturnType<typeof useCommentListLazyQuery>
+export type CommentListQueryResult = Apollo.QueryResult<CommentListQuery, CommentListQueryVariables>
+export const AddCommentDocument = gql`
+  mutation AddComment($input: CommentInput!) {
+    addComment(input: $input) {
+      ...FullComment
+    }
+  }
+  ${FullCommentFragmentDoc}
+`
+export type AddCommentMutationFn = Apollo.MutationFunction<
+  AddCommentMutation,
+  AddCommentMutationVariables
+>
+
+/**
+ * __useAddCommentMutation__
+ *
+ * To run a mutation, you first call `useAddCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addCommentMutation, { data, loading, error }] = useAddCommentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<AddCommentMutation, AddCommentMutationVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useMutation<AddCommentMutation, AddCommentMutationVariables>(
+    AddCommentDocument,
+    options
+  )
+}
+export type AddCommentMutationHookResult = ReturnType<typeof useAddCommentMutation>
+export type AddCommentMutationResult = Apollo.MutationResult<AddCommentMutation>
+export type AddCommentMutationOptions = Apollo.BaseMutationOptions<
+  AddCommentMutation,
+  AddCommentMutationVariables
+>
+export const EditCommentDocument = gql`
+  mutation EditComment($input: CommentUpdateInput!) {
+    updateComment(input: $input) {
+      ...FullComment
+    }
+  }
+  ${FullCommentFragmentDoc}
+`
+export type EditCommentMutationFn = Apollo.MutationFunction<
+  EditCommentMutation,
+  EditCommentMutationVariables
+>
+
+/**
+ * __useEditCommentMutation__
+ *
+ * To run a mutation, you first call `useEditCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editCommentMutation, { data, loading, error }] = useEditCommentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useEditCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<EditCommentMutation, EditCommentMutationVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useMutation<EditCommentMutation, EditCommentMutationVariables>(
+    EditCommentDocument,
+    options
+  )
+}
+export type EditCommentMutationHookResult = ReturnType<typeof useEditCommentMutation>
+export type EditCommentMutationResult = Apollo.MutationResult<EditCommentMutation>
+export type EditCommentMutationOptions = Apollo.BaseMutationOptions<
+  EditCommentMutation,
+  EditCommentMutationVariables
+>
 export const EventListDocument = gql`
   query EventList(
     $filter: EventFilter
@@ -7882,6 +22236,88 @@ export function usePageLazyQuery(
 export type PageQueryHookResult = ReturnType<typeof usePageQuery>
 export type PageLazyQueryHookResult = ReturnType<typeof usePageLazyQuery>
 export type PageQueryResult = Apollo.QueryResult<PageQuery, PageQueryVariables>
+export const SettingListDocument = gql`
+  query SettingList {
+    settings {
+      ...FullSetting
+    }
+  }
+  ${FullSettingFragmentDoc}
+`
+
+/**
+ * __useSettingListQuery__
+ *
+ * To run a query within a React component, call `useSettingListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSettingListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSettingListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSettingListQuery(
+  baseOptions?: Apollo.QueryHookOptions<SettingListQuery, SettingListQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options)
+}
+export function useSettingListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<SettingListQuery, SettingListQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<SettingListQuery, SettingListQueryVariables>(
+    SettingListDocument,
+    options
+  )
+}
+export type SettingListQueryHookResult = ReturnType<typeof useSettingListQuery>
+export type SettingListLazyQueryHookResult = ReturnType<typeof useSettingListLazyQuery>
+export type SettingListQueryResult = Apollo.QueryResult<SettingListQuery, SettingListQueryVariables>
+export const SettingDocument = gql`
+  query Setting($name: String!) {
+    setting(name: $name) {
+      ...FullSetting
+    }
+  }
+  ${FullSettingFragmentDoc}
+`
+
+/**
+ * __useSettingQuery__
+ *
+ * To run a query within a React component, call `useSettingQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSettingQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSettingQuery({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useSettingQuery(
+  baseOptions: Apollo.QueryHookOptions<SettingQuery, SettingQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<SettingQuery, SettingQueryVariables>(SettingDocument, options)
+}
+export function useSettingLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<SettingQuery, SettingQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<SettingQuery, SettingQueryVariables>(SettingDocument, options)
+}
+export type SettingQueryHookResult = ReturnType<typeof useSettingQuery>
+export type SettingLazyQueryHookResult = ReturnType<typeof useSettingLazyQuery>
+export type SettingQueryResult = Apollo.QueryResult<SettingQuery, SettingQueryVariables>
 export const MeDocument = gql`
   query Me {
     me {
@@ -8127,3 +22563,42 @@ export type RegisterMutationOptions = Apollo.BaseMutationOptions<
   RegisterMutation,
   RegisterMutationVariables
 >
+
+export interface PossibleTypesResultData {
+  possibleTypes: {
+    [key: string]: string[]
+  }
+}
+const result: PossibleTypesResultData = {
+  possibleTypes: {
+    BaseNavigationLink: ['ArticleNavigationLink', 'ExternalNavigationLink', 'PageNavigationLink'],
+    Block: [
+      'BildwurfAdBlock',
+      'CommentBlock',
+      'EmbedBlock',
+      'EventBlock',
+      'FacebookPostBlock',
+      'HTMLBlock',
+      'ImageBlock',
+      'ImageGalleryBlock',
+      'InstagramPostBlock',
+      'LinkPageBreakBlock',
+      'ListicleBlock',
+      'PolisConversationBlock',
+      'PollBlock',
+      'QuoteBlock',
+      'RichTextBlock',
+      'SoundCloudTrackBlock',
+      'TeaserGridBlock',
+      'TeaserGridFlexBlock',
+      'TikTokVideoBlock',
+      'TitleBlock',
+      'TwitterTweetBlock',
+      'VimeoVideoBlock',
+      'YouTubeVideoBlock'
+    ],
+    NavigationLink: ['ArticleNavigationLink', 'ExternalNavigationLink', 'PageNavigationLink'],
+    Teaser: ['ArticleTeaser', 'CustomTeaser', 'EventTeaser', 'PageTeaser', 'PeerArticleTeaser']
+  }
+}
+export default result

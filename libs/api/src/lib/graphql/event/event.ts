@@ -16,7 +16,7 @@ import {ConnectionResult} from '../../db/common'
 import {createProxyingResolver} from '../../utility'
 import {GraphQLPageInfo} from '../common'
 import {GraphQLImage} from '../image'
-import {GraphQLRichText} from '../richText'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 import {GraphQLTag} from '../tag/tag'
 import {EventSort} from './event.query'
 
@@ -42,6 +42,9 @@ export const GraphQLEvent = new GraphQLObjectType<Event, Context>({
     location: {type: GraphQLString},
     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
     endsAt: {type: GraphQLDateTime},
+
+    externalSourceId: {type: GraphQLString},
+    externalSourceName: {type: GraphQLString},
 
     tags: {
       type: GraphQLList(GraphQLNonNull(GraphQLTag)),

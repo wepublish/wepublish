@@ -63,7 +63,7 @@ import {
   GraphQLEventSort
 } from './event/event'
 import {getAdminEvents} from './event/event.private-queries'
-import {EventSort, getEvent} from './event/event.query'
+import {EventSort, getEvent, getImportedEventsIds} from './event/event.query'
 import {GraphQLImage, GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort} from './image'
 import {getAdminImages, getImageById} from './image/image.private-queries'
 import {
@@ -687,7 +687,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     setting: {
       type: GraphQLSetting,
-      args: {name: {type: GraphQLString}},
+      args: {name: {type: GraphQLNonNull(GraphQLString)}},
       resolve: (root, {name}, {authenticate, prisma: {setting}}) =>
         getSetting(name, authenticate, setting)
     },
@@ -771,6 +771,12 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLID}
       },
       resolve: (root, {id}, {prisma: {event}}) => getEvent(id, event)
+    },
+
+    importedEventsIds: {
+      type: GraphQLList(GraphQLString),
+      description: 'This query returns a list of original ids of imported events',
+      resolve: (root, _, {prisma: {event}}) => getImportedEventsIds(event)
     },
 
     // Stats

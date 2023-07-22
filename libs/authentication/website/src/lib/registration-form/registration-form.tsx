@@ -32,7 +32,7 @@ const addressStyles = css`
   grid-column-end: 4;
 `
 
-const ChallengeWrapper = styled('div')`
+export const RegistrationChallengeWrapper = styled('div')`
   display: grid;
   grid-template-columns: minmax(max-content, 200px) 200px;
   align-items: center;
@@ -40,7 +40,7 @@ const ChallengeWrapper = styled('div')`
   justify-content: flex-start;
 `
 
-const Challenge = styled('div')`
+export const RegistrationChallenge = styled('div')`
   height: 100%;
   display: grid;
 
@@ -267,8 +267,8 @@ export function RegistrationForm<T extends OptionalKeysOf<RegisterMutationVariab
       </RegistrationInputForm>
 
       {challenge.data && (
-        <ChallengeWrapper>
-          <Challenge
+        <RegistrationChallengeWrapper>
+          <RegistrationChallenge
             dangerouslySetInnerHTML={{
               __html:
                 challenge.data.challenge.challenge
@@ -285,7 +285,7 @@ export function RegistrationForm<T extends OptionalKeysOf<RegisterMutationVariab
               <TextField {...field} label={'Captcha'} error={!!error} helperText={error?.message} />
             )}
           />
-        </ChallengeWrapper>
+        </RegistrationChallengeWrapper>
       )}
 
       {challenge.error && <Alert severity="error">{challenge.error.message}</Alert>}

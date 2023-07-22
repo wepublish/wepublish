@@ -1,12 +1,45 @@
 import styled from '@emotion/styled'
 import {Meta, StoryFn} from '@storybook/react'
-import {Block} from '@wepublish/website/api'
+import {Block, FullImageFragment} from '@wepublish/website/api'
 import {Blocks} from './blocks'
 
 export default {
   component: Blocks,
   title: 'Blocks/Blocks'
 } as Meta
+
+const image = {
+  __typename: 'Image',
+  id: 'ljh9FHAvHAs0AxC',
+  mimeType: 'image/jpg',
+  format: 'jpg',
+  createdAt: '2023-04-18T12:38:56.369Z',
+  modifiedAt: '2023-04-18T12:38:56.371Z',
+  filename: 'DSC07717',
+  extension: '.JPG',
+  width: 4000,
+  height: 6000,
+  fileSize: 8667448,
+  description: null,
+  tags: [],
+  source: null,
+  link: null,
+  license: null,
+  focalPoint: {
+    x: 0.5,
+    y: 0.5
+  },
+  title: null,
+  url: 'https://unsplash.it/500/281',
+  bigURL: 'https://unsplash.it/800/400',
+  largeURL: 'https://unsplash.it/500/300',
+  mediumURL: 'https://unsplash.it/300/200',
+  smallURL: 'https://unsplash.it/200/100',
+  squareBigURL: 'https://unsplash.it/800/800',
+  squareLargeURL: 'https://unsplash.it/500/500',
+  squareMediumURL: 'https://unsplash.it/300/300',
+  squareSmallURL: 'https://unsplash.it/200/200'
+} as FullImageFragment
 
 const blocks = [
   {
@@ -214,34 +247,24 @@ const blocks = [
   {
     __typename: 'ImageBlock',
     caption: 'Caption',
-    image: {
-      id: 'ljh9FHAvHAs0AxC',
-      createdAt: '2023-04-18T12:38:56.369Z',
-      modifiedAt: '2023-04-18T12:38:56.371Z',
-      filename: 'DSC07717',
-      extension: '.JPG',
-      width: 4000,
-      height: 6000,
-      fileSize: 8667448,
-      description: null,
-      tags: [],
-      source: null,
-      link: null,
-      license: null,
-      focalPoint: {
-        x: 0.5,
-        y: 0.5
-      },
-      title: null,
-      url: 'https://unsplash.it/500/281',
-      bigURL: 'https://unsplash.it/800/800',
-      largeURL: 'https://unsplash.it/500/500',
-      mediumURL: 'https://unsplash.it/300/300',
-      smallURL: 'https://unsplash.it/200/200'
-    }
+    image
   },
   {
-    __typename: 'ImageGalleryBlock'
+    __typename: 'ImageGalleryBlock',
+    images: [
+      {
+        caption: 'Caption',
+        image
+      },
+      {
+        caption: 'Caption',
+        image
+      },
+      {
+        caption: 'Caption',
+        image
+      }
+    ]
   },
   {
     __typename: 'ListicleBlock'
@@ -258,10 +281,508 @@ const blocks = [
     __typename: 'EmbedBlock'
   },
   {
-    __typename: 'TeaserGridBlock'
+    __typename: 'TeaserGridBlock',
+    numColumns: 1,
+    teasers: [
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image,
+        preTitle: 'Pre Title',
+        title: 'Title',
+        lead: 'Lead',
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ]
+        }
+      },
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image: null,
+        preTitle: null,
+        title: null,
+        lead: null,
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ]
+        }
+      },
+      {
+        __typename: 'PageTeaser',
+        style: 'DEFAULT',
+        image,
+        preTitle: 'Pre Title',
+        title: 'Title',
+        lead: 'Lead',
+        page: {
+          id: 'cl95fumlq261901phgrctx4mz',
+          title: 'Home',
+          description: '',
+          url: 'https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/',
+          blocks: [
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'EventBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            },
+            {
+              __typename: 'LinkPageBreakBlock'
+            },
+            {
+              __typename: 'TitleBlock',
+              title: 'Das ist ein Titel',
+              lead: null
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: 'Das ist eine Bildunterschrift',
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            }
+          ]
+        }
+      },
+      {
+        __typename: 'PageTeaser',
+        style: 'DEFAULT',
+        image: null,
+        preTitle: null,
+        title: null,
+        lead: null,
+        page: {
+          id: 'cl95fumlq261901phgrctx4mz',
+          title: 'Home',
+          description: '',
+          url: 'https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/',
+          blocks: [
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'EventBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            },
+            {
+              __typename: 'LinkPageBreakBlock'
+            },
+            {
+              __typename: 'TitleBlock',
+              title: 'Das ist ein Titel',
+              lead: null
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: 'Das ist eine Bildunterschrift',
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            }
+          ]
+        }
+      },
+      {
+        __typename: 'CustomTeaser',
+        style: 'DEFAULT',
+        image,
+        preTitle: 'Pre Title',
+        title: 'Title',
+        lead: 'Lead',
+        contentUrl: 'https://google.com',
+        properties: []
+      }
+    ]
   },
   {
-    __typename: 'TeaserGridBlock'
+    __typename: 'TeaserGridBlock',
+    numColumns: 3,
+    teasers: [
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image,
+        preTitle: 'Pre Title',
+        title: 'Title',
+        lead: 'Lead',
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ]
+        }
+      },
+      {
+        __typename: 'ArticleTeaser',
+        style: 'DEFAULT',
+        image: null,
+        preTitle: null,
+        title: null,
+        lead: null,
+        article: {
+          id: 'clg2cxnig57497901rej8i9ubj1',
+          title: 'Chur solidarisiert sich mit der Ukraine',
+          preTitle: null,
+          lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. ',
+          url: 'https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine',
+          blocks: [
+            {
+              __typename: 'TitleBlock',
+              title: 'Chur solidarisiert sich mit der Ukraine',
+              lead: 'Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. '
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            }
+          ]
+        }
+      },
+      {
+        __typename: 'PageTeaser',
+        style: 'DEFAULT',
+        image,
+        preTitle: 'Pre Title',
+        title: 'Title',
+        lead: 'Lead',
+        page: {
+          id: 'cl95fumlq261901phgrctx4mz',
+          title: 'Home',
+          description: '',
+          url: 'https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/',
+          blocks: [
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'EventBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            },
+            {
+              __typename: 'LinkPageBreakBlock'
+            },
+            {
+              __typename: 'TitleBlock',
+              title: 'Das ist ein Titel',
+              lead: null
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: 'Das ist eine Bildunterschrift',
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            }
+          ]
+        }
+      },
+      {
+        __typename: 'PageTeaser',
+        style: 'DEFAULT',
+        image: null,
+        preTitle: null,
+        title: null,
+        lead: null,
+        page: {
+          id: 'cl95fumlq261901phgrctx4mz',
+          title: 'Home',
+          description: '',
+          url: 'https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/',
+          blocks: [
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'EventBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: null,
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            },
+            {
+              __typename: 'LinkPageBreakBlock'
+            },
+            {
+              __typename: 'TitleBlock',
+              title: 'Das ist ein Titel',
+              lead: null
+            },
+            {
+              __typename: 'ImageBlock',
+              caption: 'Das ist eine Bildunterschrift',
+              image
+            },
+            {
+              __typename: 'RichTextBlock'
+            },
+            {
+              __typename: 'TeaserGridBlock'
+            }
+          ]
+        }
+      },
+      {
+        __typename: 'CustomTeaser',
+        style: 'DEFAULT',
+        image,
+        preTitle: 'Pre Title',
+        title: 'Title',
+        lead: 'Lead',
+        contentUrl: 'https://google.com',
+        properties: []
+      }
+    ]
   },
   {
     __typename: 'TeaserGridFlexBlock',
@@ -276,20 +797,7 @@ const blocks = [
         teaser: {
           __typename: 'ArticleTeaser',
           style: 'DEFAULT',
-          image: {
-            id: 'ljh9FHAvHAs0AxC',
-            filename: 'DSC07717',
-            extension: '.JPG',
-            title: null,
-            description: null,
-            width: 4000,
-            height: 6000,
-            url: 'https://unsplash.it/500/281',
-            bigURL: 'https://unsplash.it/800/800',
-            largeURL: 'https://unsplash.it/500/500',
-            mediumURL: 'https://unsplash.it/300/300',
-            smallURL: 'https://unsplash.it/200/200'
-          },
+          image,
           preTitle: 'Pre Title',
           title: 'Title',
           lead: 'Lead',
@@ -308,32 +816,7 @@ const blocks = [
               {
                 __typename: 'ImageBlock',
                 caption: null,
-                image: {
-                  id: 'Ca9dRSDJknEtNM6',
-                  createdAt: '2023-03-16T10:52:48.814Z',
-                  modifiedAt: '2023-03-16T10:52:48.857Z',
-                  filename: '220226115806_lom',
-                  extension: '.jpg',
-                  width: 4000,
-                  height: 2667,
-                  fileSize: 2150341,
-                  description:
-                    'Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)',
-                  tags: [],
-                  source: 'KEYSTONE / Manuel Lopez',
-                  link: null,
-                  license: null,
-                  focalPoint: {
-                    x: 0.5,
-                    y: 0.5
-                  },
-                  title: 'SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST',
-                  url: 'https://unsplash.it/500/281',
-                  bigURL: 'https://unsplash.it/800/800',
-                  largeURL: 'https://unsplash.it/500/500',
-                  mediumURL: 'https://unsplash.it/300/300',
-                  smallURL: 'https://unsplash.it/200/200'
-                }
+                image
               },
               {
                 __typename: 'RichTextBlock'
@@ -371,32 +854,7 @@ const blocks = [
               {
                 __typename: 'ImageBlock',
                 caption: null,
-                image: {
-                  id: 'Ca9dRSDJknEtNM6',
-                  createdAt: '2023-03-16T10:52:48.814Z',
-                  modifiedAt: '2023-03-16T10:52:48.857Z',
-                  filename: '220226115806_lom',
-                  extension: '.jpg',
-                  width: 4000,
-                  height: 2667,
-                  fileSize: 2150341,
-                  description:
-                    'Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)',
-                  tags: [],
-                  source: 'KEYSTONE / Manuel Lopez',
-                  link: null,
-                  license: null,
-                  focalPoint: {
-                    x: 0.5,
-                    y: 0.5
-                  },
-                  title: 'SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST',
-                  url: 'https://unsplash.it/500/281',
-                  bigURL: 'https://unsplash.it/800/800',
-                  largeURL: 'https://unsplash.it/500/500',
-                  mediumURL: 'https://unsplash.it/300/300',
-                  smallURL: 'https://unsplash.it/200/200'
-                }
+                image
               },
               {
                 __typename: 'RichTextBlock'
@@ -415,20 +873,7 @@ const blocks = [
         teaser: {
           __typename: 'PageTeaser',
           style: 'DEFAULT',
-          image: {
-            id: 'ljh9FHAvHAs0AxC',
-            filename: 'DSC07717',
-            extension: '.JPG',
-            title: null,
-            description: null,
-            width: 4000,
-            height: 6000,
-            url: 'https://unsplash.it/500/281',
-            bigURL: 'https://unsplash.it/800/800',
-            largeURL: 'https://unsplash.it/500/500',
-            mediumURL: 'https://unsplash.it/300/300',
-            smallURL: 'https://unsplash.it/200/200'
-          },
+          image,
           preTitle: 'Pre Title',
           title: 'Title',
           lead: 'Lead',
@@ -453,38 +898,7 @@ const blocks = [
               {
                 __typename: 'ImageBlock',
                 caption: null,
-                image: {
-                  id: '8TgBNHynpsJcBO3',
-                  mimeType: 'image/jpg',
-                  format: 'jpg',
-                  createdAt: '2023-04-18T12:38:56.369Z',
-                  modifiedAt: '2023-04-18T12:38:56.371Z',
-                  filename: 'DSC07717',
-                  extension: '.JPG',
-                  width: 4000,
-                  height: 6000,
-                  fileSize: 8667448,
-                  description: null,
-                  tags: [],
-                  source: null,
-                  link: null,
-                  license: null,
-                  focalPoint: {
-                    x: 0.5,
-                    y: 0.5
-                  },
-                  title: null,
-                  url: 'https://unsplash.it/500/281',
-                  bigURL: 'https://unsplash.it/800/400',
-                  largeURL: 'https://unsplash.it/500/300',
-                  mediumURL: 'https://unsplash.it/300/200',
-                  smallURL: 'https://unsplash.it/200/100',
-                  squareBigURL: 'https://unsplash.it/800/800',
-                  squareLargeURL: 'https://unsplash.it/500/500',
-                  squareMediumURL: 'https://unsplash.it/300/300',
-                  squareSmallURL: 'https://unsplash.it/200/200',
-                  __typename: 'Image'
-                }
+                image
               },
               {
                 __typename: 'TeaserGridBlock'
@@ -498,38 +912,7 @@ const blocks = [
               {
                 __typename: 'ImageBlock',
                 caption: null,
-                image: {
-                  id: '8TgBNHynpsJcBO3',
-                  mimeType: 'image/jpg',
-                  format: 'jpg',
-                  createdAt: '2023-04-18T12:38:56.369Z',
-                  modifiedAt: '2023-04-18T12:38:56.371Z',
-                  filename: 'DSC07717',
-                  extension: '.JPG',
-                  width: 4000,
-                  height: 6000,
-                  fileSize: 8667448,
-                  description: null,
-                  tags: [],
-                  source: null,
-                  link: null,
-                  license: null,
-                  focalPoint: {
-                    x: 0.5,
-                    y: 0.5
-                  },
-                  title: null,
-                  url: 'https://unsplash.it/500/281',
-                  bigURL: 'https://unsplash.it/800/400',
-                  largeURL: 'https://unsplash.it/500/300',
-                  mediumURL: 'https://unsplash.it/300/200',
-                  smallURL: 'https://unsplash.it/200/100',
-                  squareBigURL: 'https://unsplash.it/800/800',
-                  squareLargeURL: 'https://unsplash.it/500/500',
-                  squareMediumURL: 'https://unsplash.it/300/300',
-                  squareSmallURL: 'https://unsplash.it/200/200',
-                  __typename: 'Image'
-                }
+                image
               },
               {
                 __typename: 'TeaserGridBlock'
@@ -540,38 +923,7 @@ const blocks = [
               {
                 __typename: 'ImageBlock',
                 caption: null,
-                image: {
-                  id: '8TgBNHynpsJcBO3',
-                  mimeType: 'image/jpg',
-                  format: 'jpg',
-                  createdAt: '2023-04-18T12:38:56.369Z',
-                  modifiedAt: '2023-04-18T12:38:56.371Z',
-                  filename: 'DSC07717',
-                  extension: '.JPG',
-                  width: 4000,
-                  height: 6000,
-                  fileSize: 8667448,
-                  description: null,
-                  tags: [],
-                  source: null,
-                  link: null,
-                  license: null,
-                  focalPoint: {
-                    x: 0.5,
-                    y: 0.5
-                  },
-                  title: null,
-                  url: 'https://unsplash.it/500/281',
-                  bigURL: 'https://unsplash.it/800/400',
-                  largeURL: 'https://unsplash.it/500/300',
-                  mediumURL: 'https://unsplash.it/300/200',
-                  smallURL: 'https://unsplash.it/200/100',
-                  squareBigURL: 'https://unsplash.it/800/800',
-                  squareLargeURL: 'https://unsplash.it/500/500',
-                  squareMediumURL: 'https://unsplash.it/300/300',
-                  squareSmallURL: 'https://unsplash.it/200/200',
-                  __typename: 'Image'
-                }
+                image
               },
               {
                 __typename: 'TeaserGridBlock'
@@ -579,32 +931,7 @@ const blocks = [
               {
                 __typename: 'ImageBlock',
                 caption: null,
-                image: {
-                  id: 'EjkHi6FuKY4LVKp',
-                  createdAt: '2022-11-09T15:35:02.433Z',
-                  modifiedAt: '2022-11-09T15:35:02.434Z',
-                  filename: 's',
-                  extension: '.jpg',
-                  width: 900,
-                  height: 717,
-                  fileSize: 364910,
-                  description: null,
-                  tags: [],
-                  source:
-                    'Public domain mark / Baugeschichtliches Archiv, falls bekannt bitte FotografIn angeben',
-                  link: null,
-                  license: null,
-                  focalPoint: {
-                    x: 0.5,
-                    y: 0.5
-                  },
-                  title: 'Limmathaus',
-                  url: 'https://unsplash.it/500/281',
-                  bigURL: 'https://unsplash.it/800/800',
-                  largeURL: 'https://unsplash.it/500/500',
-                  mediumURL: 'https://unsplash.it/300/300',
-                  smallURL: 'https://unsplash.it/200/200'
-                }
+                image
               },
               {
                 __typename: 'RichTextBlock'
@@ -620,32 +947,7 @@ const blocks = [
               {
                 __typename: 'ImageBlock',
                 caption: 'Das ist eine Bildunterschrift',
-                image: {
-                  id: 'EjkHi6FuKY4LVKp',
-                  createdAt: '2022-11-09T15:35:02.433Z',
-                  modifiedAt: '2022-11-09T15:35:02.434Z',
-                  filename: 's',
-                  extension: '.jpg',
-                  width: 900,
-                  height: 717,
-                  fileSize: 364910,
-                  description: null,
-                  tags: [],
-                  source:
-                    'Public domain mark / Baugeschichtliches Archiv, falls bekannt bitte FotografIn angeben',
-                  link: null,
-                  license: null,
-                  focalPoint: {
-                    x: 0.5,
-                    y: 0.5
-                  },
-                  title: 'Limmathaus',
-                  url: 'https://unsplash.it/500/281',
-                  bigURL: 'https://unsplash.it/800/800',
-                  largeURL: 'https://unsplash.it/500/500',
-                  mediumURL: 'https://unsplash.it/300/300',
-                  smallURL: 'https://unsplash.it/200/200'
-                }
+                image
               },
               {
                 __typename: 'RichTextBlock'
@@ -692,38 +994,7 @@ const blocks = [
               {
                 __typename: 'ImageBlock',
                 caption: null,
-                image: {
-                  id: '8TgBNHynpsJcBO3',
-                  mimeType: 'image/jpg',
-                  format: 'jpg',
-                  createdAt: '2023-04-18T12:38:56.369Z',
-                  modifiedAt: '2023-04-18T12:38:56.371Z',
-                  filename: 'DSC07717',
-                  extension: '.JPG',
-                  width: 4000,
-                  height: 6000,
-                  fileSize: 8667448,
-                  description: null,
-                  tags: [],
-                  source: null,
-                  link: null,
-                  license: null,
-                  focalPoint: {
-                    x: 0.5,
-                    y: 0.5
-                  },
-                  title: null,
-                  url: 'https://unsplash.it/500/281',
-                  bigURL: 'https://unsplash.it/800/400',
-                  largeURL: 'https://unsplash.it/500/300',
-                  mediumURL: 'https://unsplash.it/300/200',
-                  smallURL: 'https://unsplash.it/200/100',
-                  squareBigURL: 'https://unsplash.it/800/800',
-                  squareLargeURL: 'https://unsplash.it/500/500',
-                  squareMediumURL: 'https://unsplash.it/300/300',
-                  squareSmallURL: 'https://unsplash.it/200/200',
-                  __typename: 'Image'
-                }
+                image
               },
               {
                 __typename: 'TeaserGridBlock'
@@ -737,38 +1008,7 @@ const blocks = [
               {
                 __typename: 'ImageBlock',
                 caption: null,
-                image: {
-                  id: '8TgBNHynpsJcBO3',
-                  mimeType: 'image/jpg',
-                  format: 'jpg',
-                  createdAt: '2023-04-18T12:38:56.369Z',
-                  modifiedAt: '2023-04-18T12:38:56.371Z',
-                  filename: 'DSC07717',
-                  extension: '.JPG',
-                  width: 4000,
-                  height: 6000,
-                  fileSize: 8667448,
-                  description: null,
-                  tags: [],
-                  source: null,
-                  link: null,
-                  license: null,
-                  focalPoint: {
-                    x: 0.5,
-                    y: 0.5
-                  },
-                  title: null,
-                  url: 'https://unsplash.it/500/281',
-                  bigURL: 'https://unsplash.it/800/400',
-                  largeURL: 'https://unsplash.it/500/300',
-                  mediumURL: 'https://unsplash.it/300/200',
-                  smallURL: 'https://unsplash.it/200/100',
-                  squareBigURL: 'https://unsplash.it/800/800',
-                  squareLargeURL: 'https://unsplash.it/500/500',
-                  squareMediumURL: 'https://unsplash.it/300/300',
-                  squareSmallURL: 'https://unsplash.it/200/200',
-                  __typename: 'Image'
-                }
+                image
               },
               {
                 __typename: 'TeaserGridBlock'
@@ -779,38 +1019,7 @@ const blocks = [
               {
                 __typename: 'ImageBlock',
                 caption: null,
-                image: {
-                  id: '8TgBNHynpsJcBO3',
-                  mimeType: 'image/jpg',
-                  format: 'jpg',
-                  createdAt: '2023-04-18T12:38:56.369Z',
-                  modifiedAt: '2023-04-18T12:38:56.371Z',
-                  filename: 'DSC07717',
-                  extension: '.JPG',
-                  width: 4000,
-                  height: 6000,
-                  fileSize: 8667448,
-                  description: null,
-                  tags: [],
-                  source: null,
-                  link: null,
-                  license: null,
-                  focalPoint: {
-                    x: 0.5,
-                    y: 0.5
-                  },
-                  title: null,
-                  url: 'https://unsplash.it/500/281',
-                  bigURL: 'https://unsplash.it/800/400',
-                  largeURL: 'https://unsplash.it/500/300',
-                  mediumURL: 'https://unsplash.it/300/200',
-                  smallURL: 'https://unsplash.it/200/100',
-                  squareBigURL: 'https://unsplash.it/800/800',
-                  squareLargeURL: 'https://unsplash.it/500/500',
-                  squareMediumURL: 'https://unsplash.it/300/300',
-                  squareSmallURL: 'https://unsplash.it/200/200',
-                  __typename: 'Image'
-                }
+                image
               },
               {
                 __typename: 'TeaserGridBlock'
@@ -818,32 +1027,7 @@ const blocks = [
               {
                 __typename: 'ImageBlock',
                 caption: null,
-                image: {
-                  id: 'EjkHi6FuKY4LVKp',
-                  createdAt: '2022-11-09T15:35:02.433Z',
-                  modifiedAt: '2022-11-09T15:35:02.434Z',
-                  filename: 's',
-                  extension: '.jpg',
-                  width: 900,
-                  height: 717,
-                  fileSize: 364910,
-                  description: null,
-                  tags: [],
-                  source:
-                    'Public domain mark / Baugeschichtliches Archiv, falls bekannt bitte FotografIn angeben',
-                  link: null,
-                  license: null,
-                  focalPoint: {
-                    x: 0.5,
-                    y: 0.5
-                  },
-                  title: 'Limmathaus',
-                  url: 'https://unsplash.it/500/281',
-                  bigURL: 'https://unsplash.it/800/800',
-                  largeURL: 'https://unsplash.it/500/500',
-                  mediumURL: 'https://unsplash.it/300/300',
-                  smallURL: 'https://unsplash.it/200/200'
-                }
+                image
               },
               {
                 __typename: 'RichTextBlock'
@@ -859,32 +1043,7 @@ const blocks = [
               {
                 __typename: 'ImageBlock',
                 caption: 'Das ist eine Bildunterschrift',
-                image: {
-                  id: 'EjkHi6FuKY4LVKp',
-                  createdAt: '2022-11-09T15:35:02.433Z',
-                  modifiedAt: '2022-11-09T15:35:02.434Z',
-                  filename: 's',
-                  extension: '.jpg',
-                  width: 900,
-                  height: 717,
-                  fileSize: 364910,
-                  description: null,
-                  tags: [],
-                  source:
-                    'Public domain mark / Baugeschichtliches Archiv, falls bekannt bitte FotografIn angeben',
-                  link: null,
-                  license: null,
-                  focalPoint: {
-                    x: 0.5,
-                    y: 0.5
-                  },
-                  title: 'Limmathaus',
-                  url: 'https://unsplash.it/500/281',
-                  bigURL: 'https://unsplash.it/800/800',
-                  largeURL: 'https://unsplash.it/500/500',
-                  mediumURL: 'https://unsplash.it/300/300',
-                  smallURL: 'https://unsplash.it/200/200'
-                }
+                image
               },
               {
                 __typename: 'RichTextBlock'
@@ -906,20 +1065,7 @@ const blocks = [
         teaser: {
           __typename: 'CustomTeaser',
           style: 'DEFAULT',
-          image: {
-            id: 'ljh9FHAvHAs0AxC',
-            filename: 'DSC07717',
-            extension: '.JPG',
-            title: null,
-            description: null,
-            width: 4000,
-            height: 6000,
-            url: 'https://unsplash.it/500/281',
-            bigURL: 'https://unsplash.it/800/800',
-            largeURL: 'https://unsplash.it/500/500',
-            mediumURL: 'https://unsplash.it/300/300',
-            smallURL: 'https://unsplash.it/200/200'
-          },
+          image,
           preTitle: 'Pre Title',
           title: 'Title',
           lead: 'Lead',

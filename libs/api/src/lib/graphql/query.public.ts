@@ -44,7 +44,7 @@ import {
   GraphQLEventFilter,
   GraphQLEventSort
 } from './event/event'
-import {EventSort, getEvent, getEvents} from './event/event.query'
+import {EventSort, getEvent, getEvents, getImportedEventsIds} from './event/event.query'
 import {GraphQLPublicInvoice} from './invoice'
 import {getPublicInvoices} from './invoice/invoice.public-queries'
 import {getActiveMemberPlans} from './member-plan/member-plan.public-queries'
@@ -70,18 +70,17 @@ import {GraphQLPublicPhrase} from './phrase/phrase'
 import {queryPhrase} from './phrase/phrase.public-queries'
 import {GraphQLFullPoll} from './poll/poll'
 import {getPoll, userPollVote} from './poll/poll.public-queries'
+import {GraphQLSetting} from './setting'
+import {getSetting, getSettings} from './setting/setting.public-queries'
 import {GraphQLSlug} from './slug'
 import {GraphQLPublicSubscription} from './subscription'
 import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
-import {getTags, TagSort} from './tag/tag.query'
+import {TagSort, getTags} from './tag/tag.query'
 import {GraphQLPublicUser} from './user'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
   fields: {
-    // Settings
-    // ========
-
     peerProfile: {
       type: GraphQLNonNull(GraphQLPeerProfile),
       description: 'This query returns the peer profile.',
@@ -300,8 +299,22 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       description: 'This query returns the comments of an item.',
-      resolve: (root, {itemId, sort, order}, {prisma: {comment, commentRatingSystemAnswer}}) =>
-        getPublicCommentsForItemById(itemId, null, sort, order, commentRatingSystemAnswer, comment)
+      resolve: (
+        root,
+        {itemId, sort, order},
+        {session, prisma: {comment, commentRatingSystemAnswer}}
+      ) => {
+        const userId = session?.type === AuthSessionType.User ? session.user.id : null
+
+        return getPublicCommentsForItemById(
+          itemId,
+          userId,
+          sort,
+          order,
+          commentRatingSystemAnswer,
+          comment
+        )
+      }
     },
 
     userCommentRatings: {
@@ -566,6 +579,12 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       resolve: (root, {id}, {prisma: {event}}) => getEvent(id, event)
     },
 
+    importedEventsIds: {
+      type: GraphQLList(GraphQLString),
+      description: 'This query returns a list of original ids of imported events',
+      resolve: (root, {prisma: {event}}) => getImportedEventsIds(event)
+    },
+
     // Tag
     // ==========
 
@@ -596,6 +615,20 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {query}, {prisma, loaders}) =>
         queryPhrase(query, prisma, loaders.publicArticles, loaders.publicPagesByID)
+    },
+
+    // Setting
+    // ======
+
+    setting: {
+      type: GraphQLSetting,
+      args: {name: {type: GraphQLNonNull(GraphQLString)}},
+      resolve: (root, {name}, {prisma: {setting}}) => getSetting(name, setting)
+    },
+
+    settings: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSetting))),
+      resolve: (root, _, {prisma: {setting}}) => getSettings(setting)
     }
   }
 })

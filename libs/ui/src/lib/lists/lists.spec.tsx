@@ -1,14 +1,25 @@
 import {render} from '@testing-library/react'
-import * as stories from './lists.stories'
-import {composeStories} from '@storybook/react'
 
-const storiesCmp = composeStories(stories)
+import {UnorderedList, OrderedList} from './lists'
 
-describe('Lists', () => {
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, () => {
-      const {asFragment} = render(<Component />)
-      expect(asFragment()).toMatchSnapshot()
-    })
+describe('UnorderedList', () => {
+  it('should render successfully', () => {
+    const {baseElement} = render(
+      <UnorderedList>
+        <li>Foobar</li>
+      </UnorderedList>
+    )
+    expect(baseElement).toMatchSnapshot()
+  })
+})
+
+describe('OrderedList', () => {
+  it('should render successfully', () => {
+    const {baseElement} = render(
+      <OrderedList>
+        <li>Foobar</li>
+      </OrderedList>
+    )
+    expect(baseElement).toMatchSnapshot()
   })
 })

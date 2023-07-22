@@ -1,0 +1,17 @@
+fragment FullSetting on Setting {
+  id
+  name
+  value
+}
+
+query SettingList {
+  settings {
+    ...FullSetting
+  }
+}
+
+query Setting($name: String!) {
+  setting(name: $name) {
+    ...FullSetting
+  }
+}

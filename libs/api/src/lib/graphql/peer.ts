@@ -13,7 +13,7 @@ import {GraphQLImage} from './image'
 import {GraphQLColor} from './color'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {createProxyingResolver, delegateToPeerSchema} from '../utility'
-import {GraphQLRichText} from './richText'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 import {Peer} from '@prisma/client'
 
 export const GraphQLPeerProfileInput = new GraphQLInputObjectType({

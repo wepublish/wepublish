@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Comments can be created with bare minimum 1`] = `
+{
+  "data": {
+    "addComment": {
+      "id": Any<String>,
+      "itemID": Any<String>,
+      "itemType": "Article",
+      "parentID": null,
+      "text": Any<Object>,
+      "user": Any<Object>,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": {
+    "headers": Headers {
+      Symbol(map): {},
+    },
+  },
+}
+`;
+
+exports[`Comments sensitive data of the user associated with the comment is hidden if the user is not me 1`] = `
+{
+  "email": "",
+  "firstName": "Bruce",
+  "flair": "Superhero",
+  "id": Any<String>,
+  "image": null,
+  "name": "Wayne",
+  "preferredName": "Batman",
+}
+`;

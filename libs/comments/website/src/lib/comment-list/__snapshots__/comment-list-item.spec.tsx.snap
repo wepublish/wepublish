@@ -1,0 +1,2104 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Comment List Item should render AnonymousCommenting 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <header
+      class="css-1leo96"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        loading="lazy"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+      <div
+        class="css-0"
+      >
+        <div
+          class="css-k4nxkm"
+        >
+          Signed Up User
+          <div
+            class="css-j9thgz"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>
+                Member
+              </title>
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="css-1hojzn"
+        >
+          Flair
+        </div>
+      </div>
+    </header>
+    <div
+      class="css-0"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          de Finibus Bonorum et Malorum
+        </strong>
+      </h1>
+      <div
+        class="css-0"
+      >
+        <div
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            data-slate-node="element"
+          >
+            <span
+              data-slate-node="text"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="css-1c53z8g"
+    >
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall css-1knaqv7-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
+            />
+          </svg>
+        </span>
+        Antworten
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Comment List Item should render AnonymousUser 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <header
+      class="css-1leo96"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        loading="lazy"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+      <div
+        class="css-0"
+      >
+        <div
+          class="css-k4nxkm"
+        >
+          Dr. Anonymous
+        </div>
+        <div
+          class="css-cspwej"
+        >
+          Source
+        </div>
+      </div>
+    </header>
+    <div
+      class="css-0"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          de Finibus Bonorum et Malorum
+        </strong>
+      </h1>
+      <div
+        class="css-0"
+      >
+        <div
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            data-slate-node="element"
+          >
+            <span
+              data-slate-node="text"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Comment List Item should render Commenting 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <header
+      class="css-1leo96"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        loading="lazy"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+      <div
+        class="css-0"
+      >
+        <div
+          class="css-k4nxkm"
+        >
+          Signed Up User
+          <div
+            class="css-j9thgz"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>
+                Member
+              </title>
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="css-1hojzn"
+        >
+          Flair
+        </div>
+      </div>
+    </header>
+    <div
+      class="css-0"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          de Finibus Bonorum et Malorum
+        </strong>
+      </h1>
+      <div
+        class="css-0"
+      >
+        <div
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            data-slate-node="element"
+          >
+            <span
+              data-slate-node="text"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="css-1c53z8g"
+    >
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall css-1knaqv7-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
+            />
+          </svg>
+        </span>
+        Antworten
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Comment List Item should render Editing 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <header
+      class="css-1leo96"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        loading="lazy"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+      <div
+        class="css-0"
+      >
+        <div
+          class="css-k4nxkm"
+        >
+          Signed Up User
+          <div
+            class="css-j9thgz"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>
+                Member
+              </title>
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="css-1hojzn"
+        >
+          Flair
+        </div>
+      </div>
+    </header>
+    <div
+      class="css-0"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          de Finibus Bonorum et Malorum
+        </strong>
+      </h1>
+      <div
+        class="css-0"
+      >
+        <div
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            data-slate-node="element"
+          >
+            <span
+              data-slate-node="text"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="css-1c53z8g"
+    >
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall css-1knaqv7-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
+            />
+          </svg>
+        </span>
+        Antworten
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall css-1knaqv7-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 000-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+            />
+          </svg>
+        </span>
+        Editieren
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Comment List Item should render Nested 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <header
+      class="css-1leo96"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        loading="lazy"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+      <div
+        class="css-0"
+      >
+        <div
+          class="css-k4nxkm"
+        >
+          Signed Up User
+          <div
+            class="css-j9thgz"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>
+                Member
+              </title>
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="css-1hojzn"
+        >
+          Flair
+        </div>
+      </div>
+    </header>
+    <div
+      class="css-0"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          de Finibus Bonorum et Malorum
+        </strong>
+      </h1>
+      <div
+        class="css-0"
+      >
+        <div
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            data-slate-node="element"
+          >
+            <span
+              data-slate-node="text"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <aside
+      class="css-1gt9xe8"
+    >
+      <article
+        class="css-2klgun"
+      >
+        <header
+          class="css-1leo96"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            loading="lazy"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+          <div
+            class="css-0"
+          >
+            <div
+              class="css-k4nxkm"
+            >
+              Signed Up User
+              <div
+                class="css-j9thgz"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <title>
+                    Member
+                  </title>
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div
+              class="css-1hojzn"
+            >
+              Flair
+            </div>
+          </div>
+        </header>
+        <div
+          class="css-0"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              de Finibus Bonorum et Malorum
+            </strong>
+          </h1>
+          <div
+            class="css-0"
+          >
+            <div
+              data-gramm="false"
+              data-slate-editor="true"
+              data-slate-node="value"
+              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+            >
+              <p
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                data-slate-node="element"
+              >
+                <span
+                  data-slate-node="text"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                  </span>
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside
+          class="css-1gt9xe8"
+        >
+          <article
+            class="css-2klgun"
+          >
+            <header
+              class="css-1leo96"
+            >
+              <img
+                alt="DSC07717"
+                class="css-1qnf57e"
+                height="6000"
+                loading="lazy"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title=""
+                width="4000"
+              />
+              <div
+                class="css-0"
+              >
+                <div
+                  class="css-k4nxkm"
+                >
+                  Signed Up User
+                  <div
+                    class="css-j9thgz"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-width="0"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <title>
+                        Member
+                      </title>
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                      />
+                      <path
+                        d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  class="css-1hojzn"
+                >
+                  Flair
+                </div>
+              </div>
+            </header>
+            <div
+              class="css-0"
+            >
+              <h1
+                class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+              >
+                <strong>
+                  de Finibus Bonorum et Malorum
+                </strong>
+              </h1>
+              <div
+                class="css-0"
+              >
+                <div
+                  data-gramm="false"
+                  data-slate-editor="true"
+                  data-slate-node="value"
+                  style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+                >
+                  <p
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                    data-slate-node="element"
+                  >
+                    <span
+                      data-slate-node="text"
+                    >
+                      <span
+                        data-slate-string="true"
+                      >
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                      </span>
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </aside>
+      </article>
+      <article
+        class="css-2klgun"
+      >
+        <header
+          class="css-1leo96"
+        >
+          <img
+            alt="DSC07717"
+            class="css-1qnf57e"
+            height="6000"
+            loading="lazy"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title=""
+            width="4000"
+          />
+          <div
+            class="css-0"
+          >
+            <div
+              class="css-k4nxkm"
+            >
+              Dr. Anonymous
+            </div>
+            <div
+              class="css-cspwej"
+            >
+              Source
+            </div>
+          </div>
+        </header>
+        <div
+          class="css-0"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            <strong>
+              de Finibus Bonorum et Malorum
+            </strong>
+          </h1>
+          <div
+            class="css-0"
+          >
+            <div
+              data-gramm="false"
+              data-slate-editor="true"
+              data-slate-node="value"
+              style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+            >
+              <p
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                data-slate-node="element"
+              >
+                <span
+                  data-slate-node="text"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                  </span>
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <aside
+          class="css-1gt9xe8"
+        >
+          <article
+            class="css-2klgun"
+          >
+            <header
+              class="css-1leo96"
+            >
+              <img
+                alt="DSC07717"
+                class="css-1qnf57e"
+                height="6000"
+                loading="lazy"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title=""
+                width="4000"
+              />
+              <div
+                class="css-0"
+              >
+                <div
+                  class="css-k4nxkm"
+                >
+                  Signed Up User
+                  <div
+                    class="css-j9thgz"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-width="0"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <title>
+                        Member
+                      </title>
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                      />
+                      <path
+                        d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  class="css-1hojzn"
+                >
+                  Flair
+                </div>
+              </div>
+            </header>
+            <div
+              class="css-0"
+            >
+              <h1
+                class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+              >
+                <strong>
+                  de Finibus Bonorum et Malorum
+                </strong>
+              </h1>
+              <div
+                class="css-0"
+              >
+                <div
+                  data-gramm="false"
+                  data-slate-editor="true"
+                  data-slate-node="value"
+                  style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+                >
+                  <p
+                    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                    data-slate-node="element"
+                  >
+                    <span
+                      data-slate-node="text"
+                    >
+                      <span
+                        data-slate-string="true"
+                      >
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                      </span>
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </aside>
+      </article>
+    </aside>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Comment List Item should render PendingApproval 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <header
+      class="css-1leo96"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        loading="lazy"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+      <div
+        class="css-0"
+      >
+        <div
+          class="css-k4nxkm"
+        >
+          Signed Up User
+          <div
+            class="css-j9thgz"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>
+                Member
+              </title>
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="css-1hojzn"
+        >
+          Flair
+        </div>
+      </div>
+    </header>
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardInfo MuiAlert-standard css-1fuz9qr-MuiPaper-root-MuiAlert-root"
+      role="alert"
+    >
+      <div
+        class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
+          data-testid="InfoOutlinedIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20, 12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10, 10 0 0,0 12,2M11,17H13V11H11V17Z"
+          />
+        </svg>
+      </div>
+      <div
+        class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
+      >
+        Kommentar wartet auf Freischaltung.
+      </div>
+    </div>
+    <div
+      class="css-0"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          de Finibus Bonorum et Malorum
+        </strong>
+      </h1>
+      <div
+        class="css-0"
+      >
+        <div
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            data-slate-node="element"
+          >
+            <span
+              data-slate-node="text"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Comment List Item should render PendingUserChanges 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <header
+      class="css-1leo96"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        loading="lazy"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+      <div
+        class="css-0"
+      >
+        <div
+          class="css-k4nxkm"
+        >
+          Signed Up User
+          <div
+            class="css-j9thgz"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>
+                Member
+              </title>
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="css-1hojzn"
+        >
+          Flair
+        </div>
+      </div>
+    </header>
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardWarning MuiAlert-standard css-to2f46-MuiPaper-root-MuiAlert-root"
+      role="alert"
+    >
+      <div
+        class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
+          data-testid="ReportProblemOutlinedIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M12 5.99L19.53 19H4.47L12 5.99M12 2L1 21h22L12 2zm1 14h-2v2h2v-2zm0-6h-2v4h2v-4z"
+          />
+        </svg>
+      </div>
+      <div
+        class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
+      >
+        Kommentar muss editiert werden bevor Freischaltung.
+      </div>
+    </div>
+    <div
+      class="css-0"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          de Finibus Bonorum et Malorum
+        </strong>
+      </h1>
+      <div
+        class="css-0"
+      >
+        <div
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            data-slate-node="element"
+          >
+            <span
+              data-slate-node="text"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="css-1c53z8g"
+    >
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall css-1knaqv7-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
+            />
+          </svg>
+        </span>
+        Antworten
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall css-1knaqv7-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 000-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+            />
+          </svg>
+        </span>
+        Editieren
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Comment List Item should render Rejected 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <header
+      class="css-1leo96"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        loading="lazy"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+      <div
+        class="css-0"
+      >
+        <div
+          class="css-k4nxkm"
+        >
+          Signed Up User
+          <div
+            class="css-j9thgz"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>
+                Member
+              </title>
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="css-1hojzn"
+        >
+          Flair
+        </div>
+      </div>
+    </header>
+    <div
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1hdyuqk-MuiPaper-root-MuiAlert-root"
+      role="alert"
+    >
+      <div
+        class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
+          data-testid="ErrorOutlineIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+          />
+        </svg>
+      </div>
+      <div
+        class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
+      >
+        Kommentar wurde nicht freigeschalten.
+      </div>
+    </div>
+    <div
+      class="css-0"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          de Finibus Bonorum et Malorum
+        </strong>
+      </h1>
+      <div
+        class="css-0"
+      >
+        <div
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            data-slate-node="element"
+          >
+            <span
+              data-slate-node="text"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Comment List Item should render VerifiedUser 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <header
+      class="css-1leo96"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        loading="lazy"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+      <div
+        class="css-0"
+      >
+        <div
+          class="css-k4nxkm"
+        >
+          Signed Up User
+          <div
+            class="css-j9thgz"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>
+                Member
+              </title>
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="css-1hojzn"
+        >
+          Flair
+        </div>
+      </div>
+    </header>
+    <div
+      class="css-0"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          de Finibus Bonorum et Malorum
+        </strong>
+      </h1>
+      <div
+        class="css-0"
+      >
+        <div
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            data-slate-node="element"
+          >
+            <span
+              data-slate-node="text"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Comment List Item should render WithClassName 1`] = `
+<DocumentFragment>
+  <article
+    class="extra-classname css-2klgun"
+  >
+    <header
+      class="css-1leo96"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        loading="lazy"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+      <div
+        class="css-0"
+      >
+        <div
+          class="css-k4nxkm"
+        >
+          Signed Up User
+          <div
+            class="css-j9thgz"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>
+                Member
+              </title>
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="css-1hojzn"
+        >
+          Flair
+        </div>
+      </div>
+    </header>
+    <div
+      class="css-0"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          de Finibus Bonorum et Malorum
+        </strong>
+      </h1>
+      <div
+        class="css-0"
+      >
+        <div
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            data-slate-node="element"
+          >
+            <span
+              data-slate-node="text"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Comment List Item should render WithEmotion 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <header
+      class="css-1leo96"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        loading="lazy"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+      <div
+        class="css-0"
+      >
+        <div
+          class="css-k4nxkm"
+        >
+          Signed Up User
+          <div
+            class="css-j9thgz"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>
+                Member
+              </title>
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="css-1hojzn"
+        >
+          Flair
+        </div>
+      </div>
+    </header>
+    <div
+      class="css-0"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          de Finibus Bonorum et Malorum
+        </strong>
+      </h1>
+      <div
+        class="css-0"
+      >
+        <div
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            data-slate-node="element"
+          >
+            <span
+              data-slate-node="text"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Comment List Item should render WithoutFlair 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <header
+      class="css-1leo96"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        loading="lazy"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+      <div
+        class="css-0"
+      >
+        <div
+          class="css-k4nxkm"
+        >
+          Signed Up User
+          <div
+            class="css-j9thgz"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>
+                Member
+              </title>
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="css-1hojzn"
+        >
+          Source
+        </div>
+      </div>
+    </header>
+    <div
+      class="css-0"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          de Finibus Bonorum et Malorum
+        </strong>
+      </h1>
+      <div
+        class="css-0"
+      >
+        <div
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            data-slate-node="element"
+          >
+            <span
+              data-slate-node="text"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Comment List Item should render WithoutImage 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <header
+      class="css-1leo96"
+    >
+      <svg
+        css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+        fill="currentColor"
+        height="1em"
+        stroke="currentColor"
+        stroke-width="0"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+        <path
+          d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+        />
+      </svg>
+      <div
+        class="css-0"
+      >
+        <div
+          class="css-k4nxkm"
+        >
+          Signed Up User
+          <div
+            class="css-j9thgz"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>
+                Member
+              </title>
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="css-1hojzn"
+        >
+          Flair
+        </div>
+      </div>
+    </header>
+    <div
+      class="css-0"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          de Finibus Bonorum et Malorum
+        </strong>
+      </h1>
+      <div
+        class="css-0"
+      >
+        <div
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            data-slate-node="element"
+          >
+            <span
+              data-slate-node="text"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Comment List Item should render WithoutPreferredName 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <header
+      class="css-1leo96"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        loading="lazy"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+      <div
+        class="css-0"
+      >
+        <div
+          class="css-k4nxkm"
+        >
+          Fallback User
+          <div
+            class="css-j9thgz"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>
+                Member
+              </title>
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="css-1hojzn"
+        >
+          Flair
+        </div>
+      </div>
+    </header>
+    <div
+      class="css-0"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          de Finibus Bonorum et Malorum
+        </strong>
+      </h1>
+      <div
+        class="css-0"
+      >
+        <div
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            data-slate-node="element"
+          >
+            <span
+              data-slate-node="text"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Comment List Item should render WithoutSource 1`] = `
+<DocumentFragment>
+  <article
+    class="css-2klgun"
+  >
+    <header
+      class="css-1leo96"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        loading="lazy"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+      <div
+        class="css-0"
+      >
+        <div
+          class="css-k4nxkm"
+        >
+          Signed Up User
+          <div
+            class="css-j9thgz"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>
+                Member
+              </title>
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div
+      class="css-0"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          de Finibus Bonorum et Malorum
+        </strong>
+      </h1>
+      <div
+        class="css-0"
+      >
+        <div
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            data-slate-node="element"
+          >
+            <span
+              data-slate-node="text"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </article>
+</DocumentFragment>
+`;
