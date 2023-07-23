@@ -143,6 +143,7 @@
     "jest": "29.4.3",
     "jest-environment-jsdom": "29.4.3",
     "jest-fetch-mock": "^3.0.3",
+    "jest-watch-typeahead": "^2.2.2",
     "jsdom": "~20.0.3",
     "lerna": "^3.22.1",
     "lerna-changelog": "^1.0.1",
