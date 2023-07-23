@@ -3,7 +3,7 @@
 exports[`AuthorList Container should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-10bcwk9"
+    class="css-13fkobl"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
@@ -117,7 +117,7 @@ https://unsplash.it/200/200 200w"
 exports[`AuthorList Container should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname css-10bcwk9"
+    class="extra-classname css-13fkobl"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
@@ -231,7 +231,7 @@ https://unsplash.it/200/200 200w"
 exports[`AuthorList Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="css-10bcwk9"
+    class="css-13fkobl"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
