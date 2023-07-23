@@ -1,32 +1,12 @@
 import {Meta} from '@storybook/react'
-import {CustomTeaser, FullImageFragment} from '@wepublish/website/api'
+import {image} from '@wepublish/testing/fixtures/graphql'
+import {CustomTeaser} from '@wepublish/website/api'
 import {Teaser} from './teaser'
 
 export default {
   component: Teaser,
   title: 'Blocks/Teaser/Custom'
 } as Meta
-
-const image = {
-  id: '1234',
-  createdAt: new Date().toDateString(),
-  modifiedAt: new Date().toDateString(),
-  extension: '.jpg',
-  fileSize: 1,
-  format: '',
-  height: 500,
-  width: 500,
-  mimeType: 'image/jpg',
-  tags: [],
-  description: 'An image description',
-  title: 'An image title',
-  filename: 'An image filename',
-  url: 'https://unsplash.it/500/500',
-  bigURL: 'https://unsplash.it/800/800',
-  largeURL: 'https://unsplash.it/500/500',
-  mediumURL: 'https://unsplash.it/300/300',
-  smallURL: 'https://unsplash.it/200/200'
-} as FullImageFragment
 
 const customTeaser = {
   style: 'DEFAULT',
