@@ -1256,7 +1256,8 @@
       "noUserErrorMessage": "Bitte wähle den/die Benutzer:in",
       "noTokenErrorMessage": "Bitte gib den Token ein",
       "invalidRange": "Ungültiger Wert. Bitte Zahl zwischen {{min}} und {{max}} eingeben.",
-      "required": "Dieses Feld ist erforderlich"
+      "required": "Dieses Feld ist erforderlich",
+      "minimalAmountPerMonth": "Der Minimalbetrag / Monat ist {{amount}} chf."
     },
     "invoice": {
       "manuallyPaidByAdmin": "Durch Administrator als bezahlt markiert.",

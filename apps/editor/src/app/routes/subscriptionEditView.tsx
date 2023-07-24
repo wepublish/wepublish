@@ -404,7 +404,12 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     user: StringType().isRequired(t('errorMessages.noUserErrorMessage')),
     currency: NumberType()
       .isRequired(t('errorMessages.noAmountErrorMessage'))
-      .min(memberPlan?.amountPerMonthMin || 0),
+      .min(
+        memberPlan?.amountPerMonthMin || 0,
+        t(`errorMessages.minimalAmountPerMonth`, {
+          amount: (memberPlan?.amountPerMonthMin || 0) / 100
+        })
+      ),
     paymentPeriodicity: StringType().isRequired(
       t('errorMessages.noPaymentPeriodicityErrorMessage')
     ),

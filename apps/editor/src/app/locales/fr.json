@@ -1229,7 +1229,8 @@
       "noUserErrorMessage": "Veuillez sélectionner un·e utilisateur·trice",
       "noTokenErrorMessage": "Veuillez entrer un token",
       "invalidRange": "La valeur doit être comprise entre {{min}} et {{max}}.",
-      "required": "Ce champ est requis"
+      "required": "Ce champ est requis",
+      "minimalAmountPerMonth": "Le montant minimum / mois est de {{amount}} chf."
     },
     "invoice": {
       "manuallyPaidByAdmin": "Marqué comme payé par l'administrateur.",
