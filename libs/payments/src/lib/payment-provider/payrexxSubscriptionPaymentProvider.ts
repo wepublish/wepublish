@@ -325,7 +325,8 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
           subscriptionID: subscription.id,
           description: `Abo ${memberPlan.name}`,
           paidAt: new Date(),
-          canceledAt: null
+          canceledAt: null,
+          scheduledDeactivationAt: add(new Date(), {days: 10})
         }
       })
 

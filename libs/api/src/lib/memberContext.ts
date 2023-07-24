@@ -24,7 +24,8 @@ import {MailContext} from '@wepublish/mails'
 import {PaymentProvider} from '@wepublish/payments'
 import {logger} from '@wepublish/utils'
 import {ONE_DAY_IN_MILLISECONDS, ONE_MONTH_IN_MILLISECONDS} from './utility'
-import {SubscriptionEventDictionary} from '@wepublish/membership/api'
+import {SubscriptionEventDictionary, Action, LookupActionInput} from '@wepublish/membership/api'
+import {add} from 'date-fns'
 
 export interface HandleSubscriptionChangeProps {
   subscription: SubscriptionWithRelations
@@ -251,12 +252,36 @@ export class MemberContext implements MemberContext {
         return null
       }
 
+      const subscriptionFlows = await this.getActionsForSubscriptions({
+        memberplanId: subscription.memberPlanID,
+        paymentMethodId: subscription.paymentMethodID,
+        periodicity: subscription.paymentPeriodicity,
+        autorenwal: subscription.autoRenew,
+        events: [SubscriptionEvent.DEACTIVATION_UNPAID]
+      })
+      const subscriptionFlowActionDeactivationUnpaid = subscriptionFlows.find(
+        a => (a.type = SubscriptionEvent.DEACTIVATION_UNPAID)
+      )
+
+      if (!subscriptionFlowActionDeactivationUnpaid) {
+        logger('memberContext').info(
+          'Subscription flow for subscription with id "%s" not found',
+          subscription.id
+        )
+        return null
+      }
+
+      const deactivationDate = add(subscription.paidUntil, {
+        days: subscriptionFlowActionDeactivationUnpaid.daysAwayFromEnding
+      })
+
       const newInvoice = await this.prisma.invoice.create({
         data: {
           subscriptionID: subscription.id,
           description: `Membership from ${startDate.toISOString()} for ${user.name || user.email}`,
           mail: user.email,
           dueAt: startDate,
+          scheduledDeactivationAt: deactivationDate,
           items: {
             create: {
               name: 'Membership',
@@ -618,5 +643,8 @@ export class MemberContext implements MemberContext {
       subscription,
       subscriptionEvent
     )
+  }
+  async getActionsForSubscriptions(query: LookupActionInput): Promise<Action[]> {
+    return new SubscriptionEventDictionary(this.prisma).getActionsForSubscriptions(query)
   }
 }

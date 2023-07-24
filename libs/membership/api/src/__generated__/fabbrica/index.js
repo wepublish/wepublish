@@ -2830,6 +2830,13 @@ function autoGenerateInvoiceScalarsOrEnums({seq}) {
       isId: false,
       isUnique: false,
       seq
+    }),
+    scheduledDeactivationAt: getScalarFieldValueGenerator().DateTime({
+      modelName: 'Invoice',
+      fieldName: 'scheduledDeactivationAt',
+      isId: false,
+      isUnique: false,
+      seq
     })
   }
 }
