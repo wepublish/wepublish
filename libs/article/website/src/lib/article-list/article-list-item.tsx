@@ -30,6 +30,7 @@ export const wrapperStyles = (theme: Theme) => css`
 
 const imageStyles = css`
   min-height: inherit;
+  object-fit: cover;
 `
 
 export function ArticleListItem({className, ...data}: Article & {className?: string}) {
@@ -37,8 +38,6 @@ export function ArticleListItem({className, ...data}: Article & {className?: str
   const {
     elements: {Image, Paragraph, H5, Link}
   } = useWebsiteBuilder()
-
-  console.log('data', data)
 
   return (
     <Link css={wrapperStyles(theme)} className={className} href={data.slug}>
