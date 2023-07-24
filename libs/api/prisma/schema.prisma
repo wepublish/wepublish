@@ -424,7 +424,7 @@ model MailLog {
   state                   MailLogState
   sentDate                DateTime
   mailProviderID          String
-  mailIdentifier          String @unique
+  mailIdentifier          String
   mailTemplate            MailTemplate @relation(fields: [mailTemplateId], references: [id])
   mailTemplateId          String @db.Uuid
   mailData                String?

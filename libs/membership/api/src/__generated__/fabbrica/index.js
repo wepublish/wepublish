@@ -2948,7 +2948,7 @@ function autoGenerateMailLogScalarsOrEnums({seq}) {
       modelName: 'MailLog',
       fieldName: 'mailIdentifier',
       isId: false,
-      isUnique: true,
+      isUnique: false,
       seq
     })
   }
