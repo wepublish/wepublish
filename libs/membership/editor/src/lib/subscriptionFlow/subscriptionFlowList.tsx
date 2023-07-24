@@ -285,12 +285,14 @@ function SubscriptionFlowList() {
       <ListViewContainer>
         <ListViewHeader>
           <h2>
-            <MdTune />
+            <MdTune style={{marginRight: '4px'}} />
             {defaultFlowOnly
               ? t('subscriptionFlow.titleDefaultSettings')
-              : `${memberPlan?.name || ''} ${t('subscriptionFlow.titleSettings')}`}
+              : `«${memberPlan?.name || ''}»`}
           </h2>
-          <Typography variant="subtitle1">{t('subscriptionFlow.settingsDescription')}</Typography>
+          {!defaultFlowOnly && (
+            <Typography variant="subtitle1">{t('subscriptionFlow.settingsDescription')}</Typography>
+          )}
         </ListViewHeader>
       </ListViewContainer>
       <TableContainer style={{marginTop: '16px', overflow: 'hidden', overflowAnchor: 'none'}}>

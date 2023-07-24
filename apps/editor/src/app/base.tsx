@@ -553,7 +553,7 @@ export function Base({children}: BaseProps) {
                         href="/mailtemplates"
                         active={path === 'mailtemplates'}
                         icon={<MdMail />}>
-                        {t('navbar.mailtemplates')}
+                        {t('navbar.mailTemplates')}
                       </Nav.Item>
                     </PermissionControl>
 
