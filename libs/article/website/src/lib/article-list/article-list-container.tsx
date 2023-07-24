@@ -13,9 +13,14 @@ export type ArticleListContainerProps = {
     queryResult: Pick<QueryResult<ArticleListQuery>, 'data' | 'loading' | 'error' | 'fetchMore'>
   ) => void
 } & BuilderContainerProps &
-  BuilderArticleListProps
+  Pick<BuilderArticleListProps, 'variables' | 'onVariablesChange'>
 
-export function ArticleListContainer({onQuery, className, variables}: ArticleListContainerProps) {
+export function ArticleListContainer({
+  onQuery,
+  className,
+  variables,
+  onVariablesChange
+}: ArticleListContainerProps) {
   const {ArticleList} = useWebsiteBuilder()
   const {data, loading, error, fetchMore} = useArticleListQuery({
     variables
