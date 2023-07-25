@@ -125,6 +125,7 @@ const Navigation = styled(Nav)`
 const ChildrenContainer = styled(Container)`
   padding: 60px 40px 40px 40px;
   overflow-y: auto;
+  max-width: calc(100vw - 260px);
 `
 
 export function Base({children}: BaseProps) {

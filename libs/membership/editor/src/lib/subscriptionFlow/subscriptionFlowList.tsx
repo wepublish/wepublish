@@ -295,7 +295,7 @@ function SubscriptionFlowList() {
           )}
         </ListViewHeader>
       </ListViewContainer>
-      <TableContainer style={{marginTop: '16px', overflow: 'hidden', overflowAnchor: 'none'}}>
+      <TableContainer style={{marginTop: '16px', maxWidth: '100%'}}>
         <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>
           <GraphqlClientContext.Provider
             value={{

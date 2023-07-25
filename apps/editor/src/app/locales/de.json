@@ -617,7 +617,7 @@
         "MONTHLY": "Monatlich"
       },
       "priceRange": "Preis-(spanne) in CHF",
-      "title": "Memberpläne",
+      "title": "Abo Pläne",
       "fixPriceDescription": "Bei false kann der Preis eine Preisspanne sein",
       "minimumMonthlyAmount": "Minimaler monatlicher Betrag CHF",
       "slug": "Slug",
