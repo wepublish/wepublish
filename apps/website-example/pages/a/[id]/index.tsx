@@ -9,27 +9,21 @@ import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
-type ArticleByIdProps = {
-  article?: ApiV1.Article
-}
-
-export default function ArticleById({article}: ArticleByIdProps) {
+export default function ArticleById() {
   const {
     query: {id}
   } = useRouter()
   const {
-    ArticleSEO,
     elements: {H5}
   } = useWebsiteBuilder()
 
   return (
     <>
-      {article && <ArticleSEO article={article} />}
       <ArticleContainer id={id as string} />
 
       <ArticleWrapper>
         <H5 component={'h2'}>Kommentare</H5>
-        <CommentListContainer id={id as string} />
+        <CommentListContainer id={id as string} type={ApiV1.CommentItemType.Article} />
       </ArticleWrapper>
     </>
   )
@@ -38,7 +32,7 @@ export default function ArticleById({article}: ArticleByIdProps) {
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],
-    fallback: true
+    fallback: 'blocking'
   }
 }
 
@@ -47,17 +41,25 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
   const {publicRuntimeConfig} = getConfig()
 
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
-  const data = await client.query({
-    query: ApiV1.ArticleDocument,
-    variables: {
-      id
-    }
-  })
+  await Promise.all([
+    client.query({
+      query: ApiV1.ArticleDocument,
+      variables: {
+        id
+      }
+    }),
+    client.query({
+      query: ApiV1.CommentListDocument,
+      variables: {
+        itemId: id
+      }
+    })
+  ])
+
+  const props = ApiV1.addClientCacheToV1Props(client, {})
 
   return {
-    props: {
-      article: data?.data?.article
-    },
+    props,
     revalidate: 60 // every 60 seconds
   }
 }

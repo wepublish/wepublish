@@ -19,7 +19,14 @@ export type Scalars = {
   RichText: Node[];
   Slug: string;
   Upload: File;
+  Value: any;
   VoteValue: number;
+};
+
+export type AllowedSettingVals = {
+  __typename?: 'AllowedSettingVals';
+  boolChoice?: Maybe<Scalars['Boolean']>;
+  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type Article = {
@@ -248,7 +255,9 @@ export enum CommentState {
 
 export type CommentUpdateInput = {
   id: Scalars['ID'];
-  text: Scalars['RichText'];
+  lead?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['RichText']>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type CustomTeaser = {
@@ -1000,6 +1009,8 @@ export type Query = {
   /** This query returns a poll with all the needed data */
   poll: FullPoll;
   ratingSystem: FullCommentRatingSystem;
+  setting?: Maybe<Setting>;
+  settings: Array<Setting>;
   /** This query returns the subscriptions of the authenticated user. */
   subscriptions: Array<Subscription>;
   /** This query returns a list of tags */
@@ -1138,6 +1149,11 @@ export type QueryPollArgs = {
 };
 
 
+export type QuerySettingArgs = {
+  name: Scalars['String'];
+};
+
+
 export type QueryTagsArgs = {
   cursor?: InputMaybe<Scalars['ID']>;
   filter?: InputMaybe<TagFilter>;
@@ -1191,6 +1207,41 @@ export type SessionWithToken = {
   expiresAt: Scalars['DateTime'];
   token: Scalars['String'];
   user: User;
+};
+
+export type Setting = {
+  __typename?: 'Setting';
+  id: Scalars['ID'];
+  name: SettingName;
+  settingRestriction?: Maybe<SettingRestriction>;
+  value: Scalars['Value'];
+};
+
+export enum SettingName {
+  AllowCommentEditing = 'ALLOW_COMMENT_EDITING',
+  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
+  AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
+  AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
+  CommentCharLimit = 'COMMENT_CHAR_LIMIT',
+  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
+  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES',
+  MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
+  MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
+  MakeNewDeactivationsApiPublic = 'MAKE_NEW_DEACTIVATIONS_API_PUBLIC',
+  MakeNewSubscribersApiPublic = 'MAKE_NEW_SUBSCRIBERS_API_PUBLIC',
+  MakeRenewingSubscribersApiPublic = 'MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC',
+  MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
+  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
+  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN'
+}
+
+export type SettingRestriction = {
+  __typename?: 'SettingRestriction';
+  allowedValues?: Maybe<AllowedSettingVals>;
+  inputLength?: Maybe<Scalars['Int']>;
+  maxValue?: Maybe<Scalars['Int']>;
+  minValue?: Maybe<Scalars['Int']>;
 };
 
 export enum SortOrder {

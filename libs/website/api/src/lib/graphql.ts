@@ -21,7 +21,14 @@ export type Scalars = {
   RichText: Node[]
   Slug: string
   Upload: File
+  Value: any
   VoteValue: number
+}
+
+export type AllowedSettingVals = {
+  __typename?: 'AllowedSettingVals'
+  boolChoice?: Maybe<Scalars['Boolean']>
+  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>
 }
 
 export type Article = {
@@ -273,7 +280,9 @@ export enum CommentState {
 
 export type CommentUpdateInput = {
   id: Scalars['ID']
-  text: Scalars['RichText']
+  lead?: InputMaybe<Scalars['String']>
+  text?: InputMaybe<Scalars['RichText']>
+  title?: InputMaybe<Scalars['String']>
 }
 
 export type CustomTeaser = {
@@ -1005,6 +1014,8 @@ export type Query = {
   /** This query returns a poll with all the needed data */
   poll: FullPoll
   ratingSystem: FullCommentRatingSystem
+  setting?: Maybe<Setting>
+  settings: Array<Setting>
   /** This query returns the subscriptions of the authenticated user. */
   subscriptions: Array<Subscription>
   /** This query returns a list of tags */
@@ -1124,6 +1135,10 @@ export type QueryPollArgs = {
   id: Scalars['ID']
 }
 
+export type QuerySettingArgs = {
+  name: Scalars['String']
+}
+
 export type QueryTagsArgs = {
   cursor?: InputMaybe<Scalars['ID']>
   filter?: InputMaybe<TagFilter>
@@ -1175,6 +1190,41 @@ export type SessionWithToken = {
   expiresAt: Scalars['DateTime']
   token: Scalars['String']
   user: User
+}
+
+export type Setting = {
+  __typename?: 'Setting'
+  id: Scalars['ID']
+  name: SettingName
+  settingRestriction?: Maybe<SettingRestriction>
+  value: Scalars['Value']
+}
+
+export enum SettingName {
+  AllowCommentEditing = 'ALLOW_COMMENT_EDITING',
+  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
+  AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
+  AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
+  CommentCharLimit = 'COMMENT_CHAR_LIMIT',
+  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
+  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES',
+  MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
+  MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
+  MakeNewDeactivationsApiPublic = 'MAKE_NEW_DEACTIVATIONS_API_PUBLIC',
+  MakeNewSubscribersApiPublic = 'MAKE_NEW_SUBSCRIBERS_API_PUBLIC',
+  MakeRenewingSubscribersApiPublic = 'MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC',
+  MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
+  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
+  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN'
+}
+
+export type SettingRestriction = {
+  __typename?: 'SettingRestriction'
+  allowedValues?: Maybe<AllowedSettingVals>
+  inputLength?: Maybe<Scalars['Int']>
+  maxValue?: Maybe<Scalars['Int']>
+  minValue?: Maybe<Scalars['Int']>
 }
 
 export enum SortOrder {
@@ -5134,6 +5184,8 @@ export type AuthorListQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['ID']>
   take?: InputMaybe<Scalars['Int']>
   skip?: InputMaybe<Scalars['Int']>
+  sort?: InputMaybe<AuthorSort>
+  order?: InputMaybe<SortOrder>
 }>
 
 export type AuthorListQuery = {
@@ -8677,6 +8729,1582 @@ export type CommentListQuery = {
       value?: number | null
     }>
   }>
+}
+
+export type AddCommentMutationVariables = Exact<{
+  input: CommentInput
+}>
+
+export type AddCommentMutation = {
+  __typename?: 'Mutation'
+  addComment: {
+    __typename?: 'Comment'
+    id: string
+    itemID: string
+    itemType: CommentItemType
+    peerId?: string | null
+    parentID?: string | null
+    createdAt: string
+    modifiedAt?: string | null
+    title?: string | null
+    lead?: string | null
+    text?: Node[] | null
+    authorType: CommentAuthorType
+    rejectionReason?: string | null
+    state: CommentState
+    source?: string | null
+    guestUsername?: string | null
+    children: Array<{
+      __typename?: 'Comment'
+      id: string
+      itemID: string
+      itemType: CommentItemType
+      peerId?: string | null
+      parentID?: string | null
+      createdAt: string
+      modifiedAt?: string | null
+      title?: string | null
+      lead?: string | null
+      text?: Node[] | null
+      authorType: CommentAuthorType
+      rejectionReason?: string | null
+      state: CommentState
+      source?: string | null
+      guestUsername?: string | null
+      children: Array<{
+        __typename?: 'Comment'
+        id: string
+        itemID: string
+        itemType: CommentItemType
+        peerId?: string | null
+        parentID?: string | null
+        createdAt: string
+        modifiedAt?: string | null
+        title?: string | null
+        lead?: string | null
+        text?: Node[] | null
+        authorType: CommentAuthorType
+        rejectionReason?: string | null
+        state: CommentState
+        source?: string | null
+        guestUsername?: string | null
+        children: Array<{
+          __typename?: 'Comment'
+          id: string
+          itemID: string
+          itemType: CommentItemType
+          peerId?: string | null
+          parentID?: string | null
+          createdAt: string
+          modifiedAt?: string | null
+          title?: string | null
+          lead?: string | null
+          text?: Node[] | null
+          authorType: CommentAuthorType
+          rejectionReason?: string | null
+          state: CommentState
+          source?: string | null
+          guestUsername?: string | null
+          children: Array<{
+            __typename?: 'Comment'
+            id: string
+            itemID: string
+            itemType: CommentItemType
+            peerId?: string | null
+            parentID?: string | null
+            createdAt: string
+            modifiedAt?: string | null
+            title?: string | null
+            lead?: string | null
+            text?: Node[] | null
+            authorType: CommentAuthorType
+            rejectionReason?: string | null
+            state: CommentState
+            source?: string | null
+            guestUsername?: string | null
+            children: Array<{
+              __typename?: 'Comment'
+              id: string
+              itemID: string
+              itemType: CommentItemType
+              peerId?: string | null
+              parentID?: string | null
+              createdAt: string
+              modifiedAt?: string | null
+              title?: string | null
+              lead?: string | null
+              text?: Node[] | null
+              authorType: CommentAuthorType
+              rejectionReason?: string | null
+              state: CommentState
+              source?: string | null
+              guestUsername?: string | null
+              tags?: Array<{
+                __typename?: 'Tag'
+                id: string
+                tag?: string | null
+                type?: TagType | null
+              }> | null
+              user?: {
+                __typename?: 'User'
+                id: string
+                name: string
+                firstName?: string | null
+                preferredName?: string | null
+                flair?: string | null
+                email: string
+                address?: {
+                  __typename?: 'UserAddress'
+                  company?: string | null
+                  streetAddress?: string | null
+                  streetAddress2?: string | null
+                  zipCode?: string | null
+                  city?: string | null
+                  country?: string | null
+                } | null
+                paymentProviderCustomers: Array<{
+                  __typename?: 'PaymentProviderCustomer'
+                  paymentProviderID: string
+                  customerID: string
+                }>
+                oauth2Accounts: Array<{
+                  __typename?: 'OAuth2Account'
+                  type: string
+                  provider: string
+                  scope: string
+                }>
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+              } | null
+              guestUserImage?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              calculatedRatings?: Array<{
+                __typename?: 'CalculatedRating'
+                count: number
+                total: number
+                mean: number
+                answer?: {
+                  __typename?: 'CommentRatingSystemAnswer'
+                  id: string
+                  ratingSystemId: string
+                  answer?: string | null
+                  type: RatingSystemType
+                } | null
+              } | null> | null
+              overriddenRatings: Array<{
+                __typename?: 'overriddenRating'
+                answerId: string
+                value?: number | null
+              }>
+            }>
+            tags?: Array<{
+              __typename?: 'Tag'
+              id: string
+              tag?: string | null
+              type?: TagType | null
+            }> | null
+            user?: {
+              __typename?: 'User'
+              id: string
+              name: string
+              firstName?: string | null
+              preferredName?: string | null
+              flair?: string | null
+              email: string
+              address?: {
+                __typename?: 'UserAddress'
+                company?: string | null
+                streetAddress?: string | null
+                streetAddress2?: string | null
+                zipCode?: string | null
+                city?: string | null
+                country?: string | null
+              } | null
+              paymentProviderCustomers: Array<{
+                __typename?: 'PaymentProviderCustomer'
+                paymentProviderID: string
+                customerID: string
+              }>
+              oauth2Accounts: Array<{
+                __typename?: 'OAuth2Account'
+                type: string
+                provider: string
+                scope: string
+              }>
+              image?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+            } | null
+            guestUserImage?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            calculatedRatings?: Array<{
+              __typename?: 'CalculatedRating'
+              count: number
+              total: number
+              mean: number
+              answer?: {
+                __typename?: 'CommentRatingSystemAnswer'
+                id: string
+                ratingSystemId: string
+                answer?: string | null
+                type: RatingSystemType
+              } | null
+            } | null> | null
+            overriddenRatings: Array<{
+              __typename?: 'overriddenRating'
+              answerId: string
+              value?: number | null
+            }>
+          }>
+          tags?: Array<{
+            __typename?: 'Tag'
+            id: string
+            tag?: string | null
+            type?: TagType | null
+          }> | null
+          user?: {
+            __typename?: 'User'
+            id: string
+            name: string
+            firstName?: string | null
+            preferredName?: string | null
+            flair?: string | null
+            email: string
+            address?: {
+              __typename?: 'UserAddress'
+              company?: string | null
+              streetAddress?: string | null
+              streetAddress2?: string | null
+              zipCode?: string | null
+              city?: string | null
+              country?: string | null
+            } | null
+            paymentProviderCustomers: Array<{
+              __typename?: 'PaymentProviderCustomer'
+              paymentProviderID: string
+              customerID: string
+            }>
+            oauth2Accounts: Array<{
+              __typename?: 'OAuth2Account'
+              type: string
+              provider: string
+              scope: string
+            }>
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+          } | null
+          guestUserImage?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          calculatedRatings?: Array<{
+            __typename?: 'CalculatedRating'
+            count: number
+            total: number
+            mean: number
+            answer?: {
+              __typename?: 'CommentRatingSystemAnswer'
+              id: string
+              ratingSystemId: string
+              answer?: string | null
+              type: RatingSystemType
+            } | null
+          } | null> | null
+          overriddenRatings: Array<{
+            __typename?: 'overriddenRating'
+            answerId: string
+            value?: number | null
+          }>
+        }>
+        tags?: Array<{
+          __typename?: 'Tag'
+          id: string
+          tag?: string | null
+          type?: TagType | null
+        }> | null
+        user?: {
+          __typename?: 'User'
+          id: string
+          name: string
+          firstName?: string | null
+          preferredName?: string | null
+          flair?: string | null
+          email: string
+          address?: {
+            __typename?: 'UserAddress'
+            company?: string | null
+            streetAddress?: string | null
+            streetAddress2?: string | null
+            zipCode?: string | null
+            city?: string | null
+            country?: string | null
+          } | null
+          paymentProviderCustomers: Array<{
+            __typename?: 'PaymentProviderCustomer'
+            paymentProviderID: string
+            customerID: string
+          }>
+          oauth2Accounts: Array<{
+            __typename?: 'OAuth2Account'
+            type: string
+            provider: string
+            scope: string
+          }>
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+        } | null
+        guestUserImage?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          format: string
+          mimeType: string
+          extension: string
+          width: number
+          height: number
+          fileSize: number
+          title?: string | null
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
+          url?: string | null
+          bigURL?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+        calculatedRatings?: Array<{
+          __typename?: 'CalculatedRating'
+          count: number
+          total: number
+          mean: number
+          answer?: {
+            __typename?: 'CommentRatingSystemAnswer'
+            id: string
+            ratingSystemId: string
+            answer?: string | null
+            type: RatingSystemType
+          } | null
+        } | null> | null
+        overriddenRatings: Array<{
+          __typename?: 'overriddenRating'
+          answerId: string
+          value?: number | null
+        }>
+      }>
+      tags?: Array<{
+        __typename?: 'Tag'
+        id: string
+        tag?: string | null
+        type?: TagType | null
+      }> | null
+      user?: {
+        __typename?: 'User'
+        id: string
+        name: string
+        firstName?: string | null
+        preferredName?: string | null
+        flair?: string | null
+        email: string
+        address?: {
+          __typename?: 'UserAddress'
+          company?: string | null
+          streetAddress?: string | null
+          streetAddress2?: string | null
+          zipCode?: string | null
+          city?: string | null
+          country?: string | null
+        } | null
+        paymentProviderCustomers: Array<{
+          __typename?: 'PaymentProviderCustomer'
+          paymentProviderID: string
+          customerID: string
+        }>
+        oauth2Accounts: Array<{
+          __typename?: 'OAuth2Account'
+          type: string
+          provider: string
+          scope: string
+        }>
+        image?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          format: string
+          mimeType: string
+          extension: string
+          width: number
+          height: number
+          fileSize: number
+          title?: string | null
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
+          url?: string | null
+          bigURL?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+        properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+      } | null
+      guestUserImage?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        title?: string | null
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        url?: string | null
+        bigURL?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+      calculatedRatings?: Array<{
+        __typename?: 'CalculatedRating'
+        count: number
+        total: number
+        mean: number
+        answer?: {
+          __typename?: 'CommentRatingSystemAnswer'
+          id: string
+          ratingSystemId: string
+          answer?: string | null
+          type: RatingSystemType
+        } | null
+      } | null> | null
+      overriddenRatings: Array<{
+        __typename?: 'overriddenRating'
+        answerId: string
+        value?: number | null
+      }>
+    }>
+    tags?: Array<{
+      __typename?: 'Tag'
+      id: string
+      tag?: string | null
+      type?: TagType | null
+    }> | null
+    user?: {
+      __typename?: 'User'
+      id: string
+      name: string
+      firstName?: string | null
+      preferredName?: string | null
+      flair?: string | null
+      email: string
+      address?: {
+        __typename?: 'UserAddress'
+        company?: string | null
+        streetAddress?: string | null
+        streetAddress2?: string | null
+        zipCode?: string | null
+        city?: string | null
+        country?: string | null
+      } | null
+      paymentProviderCustomers: Array<{
+        __typename?: 'PaymentProviderCustomer'
+        paymentProviderID: string
+        customerID: string
+      }>
+      oauth2Accounts: Array<{
+        __typename?: 'OAuth2Account'
+        type: string
+        provider: string
+        scope: string
+      }>
+      image?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        title?: string | null
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        url?: string | null
+        bigURL?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+      properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+    } | null
+    guestUserImage?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    calculatedRatings?: Array<{
+      __typename?: 'CalculatedRating'
+      count: number
+      total: number
+      mean: number
+      answer?: {
+        __typename?: 'CommentRatingSystemAnswer'
+        id: string
+        ratingSystemId: string
+        answer?: string | null
+        type: RatingSystemType
+      } | null
+    } | null> | null
+    overriddenRatings: Array<{
+      __typename?: 'overriddenRating'
+      answerId: string
+      value?: number | null
+    }>
+  }
+}
+
+export type EditCommentMutationVariables = Exact<{
+  input: CommentUpdateInput
+}>
+
+export type EditCommentMutation = {
+  __typename?: 'Mutation'
+  updateComment: {
+    __typename?: 'Comment'
+    id: string
+    itemID: string
+    itemType: CommentItemType
+    peerId?: string | null
+    parentID?: string | null
+    createdAt: string
+    modifiedAt?: string | null
+    title?: string | null
+    lead?: string | null
+    text?: Node[] | null
+    authorType: CommentAuthorType
+    rejectionReason?: string | null
+    state: CommentState
+    source?: string | null
+    guestUsername?: string | null
+    children: Array<{
+      __typename?: 'Comment'
+      id: string
+      itemID: string
+      itemType: CommentItemType
+      peerId?: string | null
+      parentID?: string | null
+      createdAt: string
+      modifiedAt?: string | null
+      title?: string | null
+      lead?: string | null
+      text?: Node[] | null
+      authorType: CommentAuthorType
+      rejectionReason?: string | null
+      state: CommentState
+      source?: string | null
+      guestUsername?: string | null
+      children: Array<{
+        __typename?: 'Comment'
+        id: string
+        itemID: string
+        itemType: CommentItemType
+        peerId?: string | null
+        parentID?: string | null
+        createdAt: string
+        modifiedAt?: string | null
+        title?: string | null
+        lead?: string | null
+        text?: Node[] | null
+        authorType: CommentAuthorType
+        rejectionReason?: string | null
+        state: CommentState
+        source?: string | null
+        guestUsername?: string | null
+        children: Array<{
+          __typename?: 'Comment'
+          id: string
+          itemID: string
+          itemType: CommentItemType
+          peerId?: string | null
+          parentID?: string | null
+          createdAt: string
+          modifiedAt?: string | null
+          title?: string | null
+          lead?: string | null
+          text?: Node[] | null
+          authorType: CommentAuthorType
+          rejectionReason?: string | null
+          state: CommentState
+          source?: string | null
+          guestUsername?: string | null
+          children: Array<{
+            __typename?: 'Comment'
+            id: string
+            itemID: string
+            itemType: CommentItemType
+            peerId?: string | null
+            parentID?: string | null
+            createdAt: string
+            modifiedAt?: string | null
+            title?: string | null
+            lead?: string | null
+            text?: Node[] | null
+            authorType: CommentAuthorType
+            rejectionReason?: string | null
+            state: CommentState
+            source?: string | null
+            guestUsername?: string | null
+            children: Array<{
+              __typename?: 'Comment'
+              id: string
+              itemID: string
+              itemType: CommentItemType
+              peerId?: string | null
+              parentID?: string | null
+              createdAt: string
+              modifiedAt?: string | null
+              title?: string | null
+              lead?: string | null
+              text?: Node[] | null
+              authorType: CommentAuthorType
+              rejectionReason?: string | null
+              state: CommentState
+              source?: string | null
+              guestUsername?: string | null
+              tags?: Array<{
+                __typename?: 'Tag'
+                id: string
+                tag?: string | null
+                type?: TagType | null
+              }> | null
+              user?: {
+                __typename?: 'User'
+                id: string
+                name: string
+                firstName?: string | null
+                preferredName?: string | null
+                flair?: string | null
+                email: string
+                address?: {
+                  __typename?: 'UserAddress'
+                  company?: string | null
+                  streetAddress?: string | null
+                  streetAddress2?: string | null
+                  zipCode?: string | null
+                  city?: string | null
+                  country?: string | null
+                } | null
+                paymentProviderCustomers: Array<{
+                  __typename?: 'PaymentProviderCustomer'
+                  paymentProviderID: string
+                  customerID: string
+                }>
+                oauth2Accounts: Array<{
+                  __typename?: 'OAuth2Account'
+                  type: string
+                  provider: string
+                  scope: string
+                }>
+                image?: {
+                  __typename?: 'Image'
+                  id: string
+                  createdAt: string
+                  modifiedAt: string
+                  filename?: string | null
+                  format: string
+                  mimeType: string
+                  extension: string
+                  width: number
+                  height: number
+                  fileSize: number
+                  title?: string | null
+                  description?: string | null
+                  tags: Array<string>
+                  source?: string | null
+                  link?: string | null
+                  license?: string | null
+                  url?: string | null
+                  bigURL?: string | null
+                  largeURL?: string | null
+                  mediumURL?: string | null
+                  smallURL?: string | null
+                  squareBigURL?: string | null
+                  squareLargeURL?: string | null
+                  squareMediumURL?: string | null
+                  squareSmallURL?: string | null
+                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                } | null
+                properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+              } | null
+              guestUserImage?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              calculatedRatings?: Array<{
+                __typename?: 'CalculatedRating'
+                count: number
+                total: number
+                mean: number
+                answer?: {
+                  __typename?: 'CommentRatingSystemAnswer'
+                  id: string
+                  ratingSystemId: string
+                  answer?: string | null
+                  type: RatingSystemType
+                } | null
+              } | null> | null
+              overriddenRatings: Array<{
+                __typename?: 'overriddenRating'
+                answerId: string
+                value?: number | null
+              }>
+            }>
+            tags?: Array<{
+              __typename?: 'Tag'
+              id: string
+              tag?: string | null
+              type?: TagType | null
+            }> | null
+            user?: {
+              __typename?: 'User'
+              id: string
+              name: string
+              firstName?: string | null
+              preferredName?: string | null
+              flair?: string | null
+              email: string
+              address?: {
+                __typename?: 'UserAddress'
+                company?: string | null
+                streetAddress?: string | null
+                streetAddress2?: string | null
+                zipCode?: string | null
+                city?: string | null
+                country?: string | null
+              } | null
+              paymentProviderCustomers: Array<{
+                __typename?: 'PaymentProviderCustomer'
+                paymentProviderID: string
+                customerID: string
+              }>
+              oauth2Accounts: Array<{
+                __typename?: 'OAuth2Account'
+                type: string
+                provider: string
+                scope: string
+              }>
+              image?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+            } | null
+            guestUserImage?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            calculatedRatings?: Array<{
+              __typename?: 'CalculatedRating'
+              count: number
+              total: number
+              mean: number
+              answer?: {
+                __typename?: 'CommentRatingSystemAnswer'
+                id: string
+                ratingSystemId: string
+                answer?: string | null
+                type: RatingSystemType
+              } | null
+            } | null> | null
+            overriddenRatings: Array<{
+              __typename?: 'overriddenRating'
+              answerId: string
+              value?: number | null
+            }>
+          }>
+          tags?: Array<{
+            __typename?: 'Tag'
+            id: string
+            tag?: string | null
+            type?: TagType | null
+          }> | null
+          user?: {
+            __typename?: 'User'
+            id: string
+            name: string
+            firstName?: string | null
+            preferredName?: string | null
+            flair?: string | null
+            email: string
+            address?: {
+              __typename?: 'UserAddress'
+              company?: string | null
+              streetAddress?: string | null
+              streetAddress2?: string | null
+              zipCode?: string | null
+              city?: string | null
+              country?: string | null
+            } | null
+            paymentProviderCustomers: Array<{
+              __typename?: 'PaymentProviderCustomer'
+              paymentProviderID: string
+              customerID: string
+            }>
+            oauth2Accounts: Array<{
+              __typename?: 'OAuth2Account'
+              type: string
+              provider: string
+              scope: string
+            }>
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+          } | null
+          guestUserImage?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          calculatedRatings?: Array<{
+            __typename?: 'CalculatedRating'
+            count: number
+            total: number
+            mean: number
+            answer?: {
+              __typename?: 'CommentRatingSystemAnswer'
+              id: string
+              ratingSystemId: string
+              answer?: string | null
+              type: RatingSystemType
+            } | null
+          } | null> | null
+          overriddenRatings: Array<{
+            __typename?: 'overriddenRating'
+            answerId: string
+            value?: number | null
+          }>
+        }>
+        tags?: Array<{
+          __typename?: 'Tag'
+          id: string
+          tag?: string | null
+          type?: TagType | null
+        }> | null
+        user?: {
+          __typename?: 'User'
+          id: string
+          name: string
+          firstName?: string | null
+          preferredName?: string | null
+          flair?: string | null
+          email: string
+          address?: {
+            __typename?: 'UserAddress'
+            company?: string | null
+            streetAddress?: string | null
+            streetAddress2?: string | null
+            zipCode?: string | null
+            city?: string | null
+            country?: string | null
+          } | null
+          paymentProviderCustomers: Array<{
+            __typename?: 'PaymentProviderCustomer'
+            paymentProviderID: string
+            customerID: string
+          }>
+          oauth2Accounts: Array<{
+            __typename?: 'OAuth2Account'
+            type: string
+            provider: string
+            scope: string
+          }>
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+        } | null
+        guestUserImage?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          format: string
+          mimeType: string
+          extension: string
+          width: number
+          height: number
+          fileSize: number
+          title?: string | null
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
+          url?: string | null
+          bigURL?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+        calculatedRatings?: Array<{
+          __typename?: 'CalculatedRating'
+          count: number
+          total: number
+          mean: number
+          answer?: {
+            __typename?: 'CommentRatingSystemAnswer'
+            id: string
+            ratingSystemId: string
+            answer?: string | null
+            type: RatingSystemType
+          } | null
+        } | null> | null
+        overriddenRatings: Array<{
+          __typename?: 'overriddenRating'
+          answerId: string
+          value?: number | null
+        }>
+      }>
+      tags?: Array<{
+        __typename?: 'Tag'
+        id: string
+        tag?: string | null
+        type?: TagType | null
+      }> | null
+      user?: {
+        __typename?: 'User'
+        id: string
+        name: string
+        firstName?: string | null
+        preferredName?: string | null
+        flair?: string | null
+        email: string
+        address?: {
+          __typename?: 'UserAddress'
+          company?: string | null
+          streetAddress?: string | null
+          streetAddress2?: string | null
+          zipCode?: string | null
+          city?: string | null
+          country?: string | null
+        } | null
+        paymentProviderCustomers: Array<{
+          __typename?: 'PaymentProviderCustomer'
+          paymentProviderID: string
+          customerID: string
+        }>
+        oauth2Accounts: Array<{
+          __typename?: 'OAuth2Account'
+          type: string
+          provider: string
+          scope: string
+        }>
+        image?: {
+          __typename?: 'Image'
+          id: string
+          createdAt: string
+          modifiedAt: string
+          filename?: string | null
+          format: string
+          mimeType: string
+          extension: string
+          width: number
+          height: number
+          fileSize: number
+          title?: string | null
+          description?: string | null
+          tags: Array<string>
+          source?: string | null
+          link?: string | null
+          license?: string | null
+          url?: string | null
+          bigURL?: string | null
+          largeURL?: string | null
+          mediumURL?: string | null
+          smallURL?: string | null
+          squareBigURL?: string | null
+          squareLargeURL?: string | null
+          squareMediumURL?: string | null
+          squareSmallURL?: string | null
+          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+        } | null
+        properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+      } | null
+      guestUserImage?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        title?: string | null
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        url?: string | null
+        bigURL?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+      calculatedRatings?: Array<{
+        __typename?: 'CalculatedRating'
+        count: number
+        total: number
+        mean: number
+        answer?: {
+          __typename?: 'CommentRatingSystemAnswer'
+          id: string
+          ratingSystemId: string
+          answer?: string | null
+          type: RatingSystemType
+        } | null
+      } | null> | null
+      overriddenRatings: Array<{
+        __typename?: 'overriddenRating'
+        answerId: string
+        value?: number | null
+      }>
+    }>
+    tags?: Array<{
+      __typename?: 'Tag'
+      id: string
+      tag?: string | null
+      type?: TagType | null
+    }> | null
+    user?: {
+      __typename?: 'User'
+      id: string
+      name: string
+      firstName?: string | null
+      preferredName?: string | null
+      flair?: string | null
+      email: string
+      address?: {
+        __typename?: 'UserAddress'
+        company?: string | null
+        streetAddress?: string | null
+        streetAddress2?: string | null
+        zipCode?: string | null
+        city?: string | null
+        country?: string | null
+      } | null
+      paymentProviderCustomers: Array<{
+        __typename?: 'PaymentProviderCustomer'
+        paymentProviderID: string
+        customerID: string
+      }>
+      oauth2Accounts: Array<{
+        __typename?: 'OAuth2Account'
+        type: string
+        provider: string
+        scope: string
+      }>
+      image?: {
+        __typename?: 'Image'
+        id: string
+        createdAt: string
+        modifiedAt: string
+        filename?: string | null
+        format: string
+        mimeType: string
+        extension: string
+        width: number
+        height: number
+        fileSize: number
+        title?: string | null
+        description?: string | null
+        tags: Array<string>
+        source?: string | null
+        link?: string | null
+        license?: string | null
+        url?: string | null
+        bigURL?: string | null
+        largeURL?: string | null
+        mediumURL?: string | null
+        smallURL?: string | null
+        squareBigURL?: string | null
+        squareLargeURL?: string | null
+        squareMediumURL?: string | null
+        squareSmallURL?: string | null
+        focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+      } | null
+      properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
+    } | null
+    guestUserImage?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    calculatedRatings?: Array<{
+      __typename?: 'CalculatedRating'
+      count: number
+      total: number
+      mean: number
+      answer?: {
+        __typename?: 'CommentRatingSystemAnswer'
+        id: string
+        ratingSystemId: string
+        answer?: string | null
+        type: RatingSystemType
+      } | null
+    } | null> | null
+    overriddenRatings: Array<{
+      __typename?: 'overriddenRating'
+      answerId: string
+      value?: number | null
+    }>
+  }
 }
 
 export type FullEventFragment = {
@@ -18694,6 +20322,29 @@ export type PageQuery = {
   } | null
 }
 
+export type FullSettingFragment = {
+  __typename?: 'Setting'
+  id: string
+  name: SettingName
+  value: any
+}
+
+export type SettingListQueryVariables = Exact<{[key: string]: never}>
+
+export type SettingListQuery = {
+  __typename?: 'Query'
+  settings: Array<{__typename?: 'Setting'; id: string; name: SettingName; value: any}>
+}
+
+export type SettingQueryVariables = Exact<{
+  name: Scalars['String']
+}>
+
+export type SettingQuery = {
+  __typename?: 'Query'
+  setting?: {__typename?: 'Setting'; id: string; name: SettingName; value: any} | null
+}
+
 export type FullTagFragment = {
   __typename?: 'Tag'
   id: string
@@ -19592,6 +21243,13 @@ export const FullNavigationFragmentDoc = gql`
   ${FullPageFragmentDoc}
   ${FullArticleFragmentDoc}
 `
+export const FullSettingFragmentDoc = gql`
+  fragment FullSetting on Setting {
+    id
+    name
+    value
+  }
+`
 export const FullUserSessionFragmentDoc = gql`
   fragment FullUserSession on UserSession {
     token
@@ -19738,8 +21396,22 @@ export type AuthorQueryHookResult = ReturnType<typeof useAuthorQuery>
 export type AuthorLazyQueryHookResult = ReturnType<typeof useAuthorLazyQuery>
 export type AuthorQueryResult = Apollo.QueryResult<AuthorQuery, AuthorQueryVariables>
 export const AuthorListDocument = gql`
-  query AuthorList($filter: AuthorFilter, $cursor: ID, $take: Int, $skip: Int) {
-    authors(filter: $filter, cursor: $cursor, take: $take, skip: $skip) {
+  query AuthorList(
+    $filter: AuthorFilter
+    $cursor: ID
+    $take: Int
+    $skip: Int
+    $sort: AuthorSort
+    $order: SortOrder
+  ) {
+    authors(
+      filter: $filter
+      cursor: $cursor
+      sort: $sort
+      order: $order
+      take: $take
+      skip: $skip
+    ) {
       nodes {
         ...FullAuthor
       }
@@ -19771,6 +21443,8 @@ export const AuthorListDocument = gql`
  *      cursor: // value for 'cursor'
  *      take: // value for 'take'
  *      skip: // value for 'skip'
+ *      sort: // value for 'sort'
+ *      order: // value for 'order'
  *   },
  * });
  */
@@ -19874,6 +21548,96 @@ export function useCommentListLazyQuery(
 export type CommentListQueryHookResult = ReturnType<typeof useCommentListQuery>
 export type CommentListLazyQueryHookResult = ReturnType<typeof useCommentListLazyQuery>
 export type CommentListQueryResult = Apollo.QueryResult<CommentListQuery, CommentListQueryVariables>
+export const AddCommentDocument = gql`
+  mutation AddComment($input: CommentInput!) {
+    addComment(input: $input) {
+      ...FullComment
+    }
+  }
+  ${FullCommentFragmentDoc}
+`
+export type AddCommentMutationFn = Apollo.MutationFunction<
+  AddCommentMutation,
+  AddCommentMutationVariables
+>
+
+/**
+ * __useAddCommentMutation__
+ *
+ * To run a mutation, you first call `useAddCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addCommentMutation, { data, loading, error }] = useAddCommentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<AddCommentMutation, AddCommentMutationVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useMutation<AddCommentMutation, AddCommentMutationVariables>(
+    AddCommentDocument,
+    options
+  )
+}
+export type AddCommentMutationHookResult = ReturnType<typeof useAddCommentMutation>
+export type AddCommentMutationResult = Apollo.MutationResult<AddCommentMutation>
+export type AddCommentMutationOptions = Apollo.BaseMutationOptions<
+  AddCommentMutation,
+  AddCommentMutationVariables
+>
+export const EditCommentDocument = gql`
+  mutation EditComment($input: CommentUpdateInput!) {
+    updateComment(input: $input) {
+      ...FullComment
+    }
+  }
+  ${FullCommentFragmentDoc}
+`
+export type EditCommentMutationFn = Apollo.MutationFunction<
+  EditCommentMutation,
+  EditCommentMutationVariables
+>
+
+/**
+ * __useEditCommentMutation__
+ *
+ * To run a mutation, you first call `useEditCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editCommentMutation, { data, loading, error }] = useEditCommentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useEditCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<EditCommentMutation, EditCommentMutationVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useMutation<EditCommentMutation, EditCommentMutationVariables>(
+    EditCommentDocument,
+    options
+  )
+}
+export type EditCommentMutationHookResult = ReturnType<typeof useEditCommentMutation>
+export type EditCommentMutationResult = Apollo.MutationResult<EditCommentMutation>
+export type EditCommentMutationOptions = Apollo.BaseMutationOptions<
+  EditCommentMutation,
+  EditCommentMutationVariables
+>
 export const EventListDocument = gql`
   query EventList(
     $filter: EventFilter
@@ -20490,6 +22254,88 @@ export function usePageLazyQuery(
 export type PageQueryHookResult = ReturnType<typeof usePageQuery>
 export type PageLazyQueryHookResult = ReturnType<typeof usePageLazyQuery>
 export type PageQueryResult = Apollo.QueryResult<PageQuery, PageQueryVariables>
+export const SettingListDocument = gql`
+  query SettingList {
+    settings {
+      ...FullSetting
+    }
+  }
+  ${FullSettingFragmentDoc}
+`
+
+/**
+ * __useSettingListQuery__
+ *
+ * To run a query within a React component, call `useSettingListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSettingListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSettingListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSettingListQuery(
+  baseOptions?: Apollo.QueryHookOptions<SettingListQuery, SettingListQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options)
+}
+export function useSettingListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<SettingListQuery, SettingListQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<SettingListQuery, SettingListQueryVariables>(
+    SettingListDocument,
+    options
+  )
+}
+export type SettingListQueryHookResult = ReturnType<typeof useSettingListQuery>
+export type SettingListLazyQueryHookResult = ReturnType<typeof useSettingListLazyQuery>
+export type SettingListQueryResult = Apollo.QueryResult<SettingListQuery, SettingListQueryVariables>
+export const SettingDocument = gql`
+  query Setting($name: String!) {
+    setting(name: $name) {
+      ...FullSetting
+    }
+  }
+  ${FullSettingFragmentDoc}
+`
+
+/**
+ * __useSettingQuery__
+ *
+ * To run a query within a React component, call `useSettingQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSettingQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSettingQuery({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useSettingQuery(
+  baseOptions: Apollo.QueryHookOptions<SettingQuery, SettingQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<SettingQuery, SettingQueryVariables>(SettingDocument, options)
+}
+export function useSettingLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<SettingQuery, SettingQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<SettingQuery, SettingQueryVariables>(SettingDocument, options)
+}
+export type SettingQueryHookResult = ReturnType<typeof useSettingQuery>
+export type SettingLazyQueryHookResult = ReturnType<typeof useSettingLazyQuery>
+export type SettingQueryResult = Apollo.QueryResult<SettingQuery, SettingQueryVariables>
 export const MeDocument = gql`
   query Me {
     me {

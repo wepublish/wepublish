@@ -16,13 +16,17 @@
     "watch:editor": "nx serve editor",
     "watch:api-example": "nx serve api-example",
     "watch:website-example": "nx serve website-example",
-    "generate:api:api": "nx generate-api api",
-    "generate:editor:api": "nx generate-api editor",
+    "generate-api": "graphql-codegen -r dotenv/config --config codegen.yml",
     "changelog": "node -r dotenv/config ./node_modules/.bin/lerna-changelog",
     "publish": "lerna publish from-package --ignore-scripts --no-verify-access",
     "start:docker": "docker-compose up --detach database pgadmin media",
     "prettier": "prettier --write \"{packages,services}/**/*.{js,ts,tsx,json}\"",
     "prepare": "prisma generate"
+  },
+  "nx": {
+    "includedScripts": [
+      "generate-api"
+    ]
   },
   "devDependencies": {
     "@babel/core": "7.12.13",
@@ -139,6 +143,7 @@
     "jest": "29.4.3",
     "jest-environment-jsdom": "29.4.3",
     "jest-fetch-mock": "^3.0.3",
+    "jest-watch-typeahead": "^2.2.2",
     "jsdom": "~20.0.3",
     "lerna": "^3.22.1",
     "lerna-changelog": "^1.0.1",
@@ -231,6 +236,7 @@
     "graphql-upload": "^13.0.0",
     "i18next": "23.0.2",
     "i18next-browser-languagedetector": "^7.0.2",
+    "immer": "^10.0.2",
     "isbot": "^3.6.5",
     "js-cookie": "^3.0.1",
     "jsonwebtoken": "^9.0.0",
