@@ -9,6 +9,7 @@ import {
   MetadataPropertyFragment,
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
+  useCancelSubscriptionMutation,
   useCreateSubscriptionMutation,
   useInvoicesQuery,
   useMemberPlanListQuery,
@@ -215,6 +216,8 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
 
   const [updateSubscription, {loading: isUpdating, error: updateError}] =
     useUpdateSubscriptionMutation()
+  const [cancelSubscription, {loading: isCancel, error: cancelError}] =
+    useCancelSubscriptionMutation()
 
   const [createSubscription, {loading: isCreating, error: createError}] =
     useCreateSubscriptionMutation()
@@ -242,6 +245,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     isCreating ||
     isMemberPlanLoading ||
     isUpdating ||
+    isCancel ||
     isPaymentMethodLoading ||
     loadError !== undefined ||
     loadErrorInvoices !== undefined ||
@@ -270,23 +274,29 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
       loadMemberPlanError?.message ??
       updateError?.message ??
       paymentMethodLoadError?.message ??
-      loadErrorInvoices?.message
+      loadErrorInvoices?.message ??
+      cancelError?.message
     if (error)
       toaster.push(
         <Message type="error" showIcon closable duration={0}>
           {error}
         </Message>
       )
-  }, [loadError, updateError, loadMemberPlanError, paymentMethodLoadError, loadErrorInvoices])
+  }, [
+    loadError,
+    updateError,
+    loadMemberPlanError,
+    paymentMethodLoadError,
+    loadErrorInvoices,
+    cancelError
+  ])
 
   const inputBase = {
     monthlyAmount,
     paymentPeriodicity,
     autoRenew,
     startsAt: startsAt.toISOString(),
-    paidUntil: paidUntil ? paidUntil.toISOString() : null,
-    properties,
-    deactivation
+    properties
   }
 
   const goBackLink = editedUserId ? `/users/edit/${editedUserId}` : '/subscriptions'
@@ -356,43 +366,14 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
 
   async function handleDeactivation(date: Date, reason: SubscriptionDeactivationReason) {
     if (!id || !memberPlan || !paymentMethod || !user?.id) return
-    const {data} = await updateSubscription({
+    const {data} = await cancelSubscription({
       variables: {
-        id,
-        input: {
-          ...inputBase,
-          userID: user.id,
-          deactivation: {
-            reason,
-            date: date.toISOString()
-          },
-          paymentMethodID: paymentMethod.id,
-          memberPlanID: memberPlan.id
-        }
+        reason,
+        cancelSubscriptionId: id
       }
     })
-    if (data?.updateSubscription) {
-      setDeactivation(data.updateSubscription.deactivation)
-    }
-    await reloadInvoices()
-  }
-  async function handleReactivation() {
-    if (!id || !memberPlan || !paymentMethod || !user?.id) return
-    const {data} = await updateSubscription({
-      variables: {
-        id,
-        input: {
-          ...inputBase,
-          userID: user.id,
-          memberPlanID: memberPlan.id,
-          paymentMethodID: paymentMethod.id,
-          deactivation: null
-        }
-      }
-    })
-
-    if (data?.updateSubscription) {
-      setDeactivation(data.updateSubscription.deactivation)
+    if (data?.cancelSubscription) {
+      setDeactivation(data.cancelSubscription.deactivation)
     }
     await reloadInvoices()
   }
@@ -449,14 +430,10 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
               {showInvoiceHistory() && (
                 <IconButtonMarginRight
                   appearance="ghost"
-                  disabled={isDisabled}
+                  disabled={isDisabled || isDeactivated}
                   onClick={() => setDeactivationPanelOpen(true)}>
                   <MdUnpublished />
-                  {t(
-                    deactivation
-                      ? 'userSubscriptionEdit.deactivation.title.deactivated'
-                      : 'userSubscriptionEdit.deactivation.title.activated'
-                  )}
+                  {t('userSubscriptionEdit.deactivation.title.activated')}
                 </IconButtonMarginRight>
               )}
               <ButtonMarginRight
@@ -467,7 +444,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
               </ButtonMarginRight>
               <Button
                 appearance="primary"
-                loading={isDisabled}
+                loading={isDisabled || isDeactivated}
                 type="submit"
                 data-testid="saveAndCloseButton"
                 onClick={() => setCloseAfterSave(true)}>
@@ -481,7 +458,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
             <Col xs={12}>
               <RGrid fluid>
                 {deactivation && (
-                  <Message showIcon type="info">
+                  <Message showIcon type="error" style={{marginBottom: '12px'}}>
                     {t(
                       new Date(deactivation.date) < new Date()
                         ? 'userSubscriptionEdit.deactivation.isDeactivated'
@@ -628,7 +605,6 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                     />
                   </Group>
                 </RPanel>
-                {/* <RPanel>{subscriptionActionsView()}</RPanel> */}
               </RGrid>
             </Col>
 
@@ -660,13 +636,8 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
               displayName={user.preferredName || user.name || user.email}
               userEmail={user.email}
               paidUntil={paidUntil ?? undefined}
-              isDeactivated={!!deactivation}
               onDeactivate={async data => {
                 await handleDeactivation(data.date, data.reason)
-                setDeactivationPanelOpen(false)
-              }}
-              onReactivate={async () => {
-                await handleReactivation()
                 setDeactivationPanelOpen(false)
               }}
               onClose={() => setDeactivationPanelOpen(false)}

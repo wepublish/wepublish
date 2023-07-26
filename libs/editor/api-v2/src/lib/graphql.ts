@@ -326,6 +326,7 @@ export enum SubscriptionEvent {
   DeactivationByUser = 'DEACTIVATION_BY_USER',
   DeactivationUnpaid = 'DEACTIVATION_UNPAID',
   InvoiceCreation = 'INVOICE_CREATION',
+  Reactivation = 'REACTIVATION',
   RenewalFailed = 'RENEWAL_FAILED',
   RenewalSuccess = 'RENEWAL_SUCCESS',
   Subscribe = 'SUBSCRIBE'

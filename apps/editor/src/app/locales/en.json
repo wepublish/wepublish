@@ -1193,7 +1193,7 @@
       "autoRenewDescription": "Renew the subscription automatically",
       "createTitle": "Create Subscription",
       "deactivation": {
-        "isDeactivated": "The subscription is deactivated since {{date, ccc PP p}} and needs to be reactivated before editing.",
+        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Probably, a new subscription can be created.",
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}",
         "modalTitle": {
           "deactivated": "Activate subscription?",
