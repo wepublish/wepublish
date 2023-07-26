@@ -3,7 +3,7 @@
 exports[`Navbar Container should render Default 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1eos4ad"
+    class="css-4i0nrb"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-pivuyh-MuiPaper-root-MuiAppBar-root"
@@ -54,7 +54,7 @@ exports[`Navbar Container should render Default 1`] = `
 exports[`Navbar Container should render WithClassName 1`] = `
 <DocumentFragment>
   <nav
-    class="extra-classname css-1eos4ad"
+    class="extra-classname css-4i0nrb"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-pivuyh-MuiPaper-root-MuiAppBar-root"
@@ -105,7 +105,7 @@ exports[`Navbar Container should render WithClassName 1`] = `
 exports[`Navbar Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1eos4ad"
+    class="css-4i0nrb"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-pivuyh-MuiPaper-root-MuiAppBar-root"

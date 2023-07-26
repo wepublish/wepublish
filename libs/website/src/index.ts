@@ -11,6 +11,7 @@ export * from '@wepublish/authentication/website'
 export * from '@wepublish/author/website'
 export * from '@wepublish/comments/website'
 export * from '@wepublish/feed/website'
+export * from '@wepublish/peering/website'
 
 export * from '@wepublish/website/builder'
 export * as ApiV1 from '@wepublish/website/api'

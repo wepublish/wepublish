@@ -7,19 +7,21 @@ import {Reducer, useReducer} from 'react'
 import {MdClose, MdMenu} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
 
-export const NavbarWrapper = styled('nav')<{isMenuOpen: boolean}>`
+export const NavbarWrapper = styled('nav')`
   position: sticky;
   top: 0;
   left: 0;
   right: 0;
-
-  ${({isMenuOpen, theme}) =>
-    isMenuOpen &&
-    css`
-      background-color: ${theme.palette.primary.main};
-      color: ${theme.palette.primary.contrastText};
-    `}
+  z-index: 10;
 `
+
+const appBarStyles = (theme: Theme, isMenuOpen: boolean) =>
+  isMenuOpen
+    ? css`
+        background-color: ${theme.palette.primary.main};
+        color: ${theme.palette.primary.contrastText};
+      `
+    : undefined
 
 export const NavbarInnerWrapper = styled(Toolbar)`
   display: flex;
@@ -59,10 +61,10 @@ export function Navbar({
   loading,
   error
 }: BuilderNavbarProps) {
+  const theme = useTheme()
   const {
     elements: {IconButton, Link}
   } = useWebsiteBuilder()
-
   const [isMenuOpen, toggleMenu] = useReducer<Reducer<boolean, void>>(state => !state, false)
 
   const mainItems = data?.navigations?.find(({key}) => key === slug)
@@ -77,8 +79,12 @@ export function Navbar({
   }, [] as FullNavigationFragment[])
 
   return (
-    <NavbarWrapper isMenuOpen={isMenuOpen} className={className}>
-      <AppBar position="static" elevation={0} color={'transparent'}>
+    <NavbarWrapper className={className}>
+      <AppBar
+        position="static"
+        elevation={0}
+        color={'transparent'}
+        css={appBarStyles(theme, isMenuOpen)}>
         <NavbarInnerWrapper>
           <NavbarMain>
             <IconButton
