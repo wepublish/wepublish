@@ -9,5 +9,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   res
     .status(200)
     .setHeader('Content-Type', 'application/xml')
-    .send((await getFeed(req)).json1())
+    .send((await getFeed(req)).atom1())
 }
