@@ -1065,10 +1065,9 @@
       "settings": "Paramètres",
       "peerArticles": "Articles pairables",
       "subscriptions": "Abonnements",
-      "subscriptionSettings": "Mailing d'abonnement",
+      "subscriptionSettings": "Default Mailing",
       "mailTemplates": "Modèles de courriels",
       "subscriptionPlans": "Plans d'abonnement",
-      "subscriptions": "Abonnements",
       "consents": "Consentement",
       "userConsents": "Consentement de l'utilisateur"
     },
