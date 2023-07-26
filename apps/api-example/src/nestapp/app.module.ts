@@ -27,7 +27,6 @@ import {
 } from '@wepublish/payments'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {URL} from 'url'
-import {JobsModule} from '@wepublish/jobs'
 import {SlackMailProvider} from '../app/slack-mail-provider'
 
 @Global()
@@ -193,13 +192,6 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
     ConsentModule,
     SettingModule,
     ScheduleModule.forRoot(),
-    JobsModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: (config: ConfigService) => ({
-        databaseUrl: config.getOrThrow('DATABASE_URL')
-      }),
-      inject: [ConfigService]
-    }),
     ConfigModule.forRoot()
   ],
   exports: [MediaAdapterService],
