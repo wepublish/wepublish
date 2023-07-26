@@ -1211,7 +1211,7 @@
           "deactivated": "Reactivate",
           "activated": "Deactivate"
         },
-        "help": "Deactivated subscriptions can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true",
+        "help": "Deactivated subscriptions can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true. Once deactivated, the subscription cannot be reactivated.",
         "date": "Deactivation Date",
         "dateFrom": "Deactivation date (from)",
         "dateTo": "Deactivation date (to)",
