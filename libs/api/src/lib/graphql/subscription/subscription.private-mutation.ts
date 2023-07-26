@@ -73,7 +73,7 @@ export const createSubscription = async (
   const {roles} = authenticate()
   authorise(CanCreateSubscription, roles)
 
-  const subscription = await memberContext.createSubscription(
+  const newSubscriptionWithInvoice = await memberContext.createSubscription(
     subscriptionClient,
     input['userID'],
     input['paymentMethodID'],
@@ -85,7 +85,7 @@ export const createSubscription = async (
     input['startsAt']
   )
 
-  return subscription
+  return newSubscriptionWithInvoice.subscription
 }
 
 type UpdateSubscriptionInput = Prisma.SubscriptionUncheckedUpdateInput & {
