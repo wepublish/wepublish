@@ -194,7 +194,7 @@ export const onInvoiceUpdate =
 
       // in case of multiple periods we need to send a renewal member subscription instead of the default new member subscription mail
       if (periods.length > 1) {
-        subscriptionEvent = SubscriptionEvent.REACTIVATION
+        subscriptionEvent = SubscriptionEvent.SUBSCRIBE // old SubscriptionEvent.REACTIVATION => Only to fix types temp
       }
 
       // send mails including login link
