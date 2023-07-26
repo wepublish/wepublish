@@ -60,7 +60,7 @@ export const MailTemplatesContext = createContext<FullMailTemplateFragment[]>([]
  * TYPES
  */
 
-const USER_ACTION_EVENTS = [
+export const USER_ACTION_EVENTS = [
   SubscriptionEvent.Subscribe,
   SubscriptionEvent.RenewalSuccess,
   SubscriptionEvent.RenewalFailed,
@@ -69,7 +69,7 @@ const USER_ACTION_EVENTS = [
 ] as const
 type UserActionEvents = (typeof USER_ACTION_EVENTS)[number]
 
-const NON_USER_ACTION_EVENTS = [
+export const NON_USER_ACTION_EVENTS = [
   SubscriptionEvent.InvoiceCreation,
   SubscriptionEvent.DeactivationUnpaid,
   SubscriptionEvent.Custom

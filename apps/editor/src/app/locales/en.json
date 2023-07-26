@@ -746,7 +746,7 @@
       "userRoles": "User Roles",
       "users": "Users",
       "usersAndMembers": "Users & Subscriptions",
-      "subscriptionSettings": "Subscription Mailing",
+      "subscriptionSettings": "Default Mailing",
       "mailTemplates": "E-Mail Templates",
       "subscriptionPlans": "Subscription Plans",
       "systemMails": "System Mails",
@@ -1418,7 +1418,9 @@
         "remoteMissing": "Template '{{internalName}}' removed at {{provider}}",
         "unused": "Template '{{internalName}}' is unused",
         "error": "Unknown error"
-      }
+      },
+      "showPlaceholders": "Placeholder Documentation",
+      "goToPlaceholders": "Available Placeholders"
     },
     "subscriptionFlow": {
       "subscribe": "Subscribe",
@@ -1497,6 +1499,26 @@
       "createdBy": "by {{creator}}",
       "user": "User",
       "memberPlan": "Member Plan: {{plan}}"
+    },
+    "placeholderList": {
+      "description": {
+        "optional_subscription_memberPlan_name": "Name des Subscription-Plans. Z.B. Jahres-Abo.",
+        "optional_subscription_paymentMethod_name": "Name der Payment-Methode. Z.B. Stripe",
+        "optional_subscription_autoRenew": "Ob das Abo automatisch erneuert wird. Die Werte sind true oder false",
+        "optional_subscription_monthlyAmount": "Monatlicher Betrag in Rappen. Z.B. 1000 für 10 chf / Monat.",
+        "optional_subscription_paymentPeriodicity": "Periodizität des Abos. Mögliche Werte sind: yearly, biannual, quarterly, monthly",
+        "optional_subscriptionID": "Eindeutige ID der Subscription.",
+        "user_id": "Eindeutige ID des Users.",
+        "user_email": "E-Mail des Users.",
+        "user_name": "Nachname des Users.",
+        "user_firstName": "Vorname des Users",
+        "jwt": "jwt steht für JSON Web Token. Mit diesem Token kann sich der User einloggen. Hierzu muss das Token in der URL an das Frontend übergeben werden. In der Regel in dem man ?jwt=TOKEN an die URL anhängt. Rechter Hand findest du ein Beispiel."
+      },
+      "header": "Liste der verfügbaren Placeholder",
+      "subtitle": "Bitte beachte, dass die Placeholder je nach Mail unterschiedlich sind. Wenn etwa ein Login-Link verschickt wird, hat dieses Mail nicht die gleichen Placeholder, wie bei einer Erneuerung des Abos.",
+      "placeholder": "Placeholder",
+      "descriptionTitle": "Beschreibung",
+      "example": "Beispiel im Template"
     }
   }
 }
