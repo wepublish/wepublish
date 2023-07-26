@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {createContext, ReactNode, useContext, useEffect, useMemo, useRef, useState} from 'react'
 
-import {useScript} from '../../utility'
+import {useScript} from './utility'
 
 const Wrapper = styled.div`
   display: flex;

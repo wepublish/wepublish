@@ -1,6 +1,6 @@
 import {useEffect} from 'react'
 
-import {useScript} from '../../utility'
+import {useScript} from './utility'
 
 export interface PolisEmbedProps {
   conversationID: string

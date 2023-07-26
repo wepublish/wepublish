@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {useEffect} from 'react'
 
-import {useScript} from '../../utility'
+import {useScript} from './utility'
 
 const Bildwurf = styled.div`
   pointer-events: none;

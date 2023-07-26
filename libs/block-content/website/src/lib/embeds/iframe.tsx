@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import {transformCssStringToObject} from '../../utility'
+import {transformCssStringToObject} from './utility'
 
 const Iframe = styled.div`
   width: 100%;

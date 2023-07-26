@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {createContext, ReactNode, useContext, useEffect} from 'react'
 
-import {useScript} from '../../utility'
+import {useScript} from './utility'
 
 const InstagramEmbed = styled.div`
   display: flex;

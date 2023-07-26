@@ -13,6 +13,8 @@ import {TwitterTweetEmbed} from './embeds/twitter'
 import {VimeoVideoEmbed} from './embeds/vimeo'
 import {YouTubeVideoEmbed} from './embeds/youTube'
 
+import {EmbedBlockValue} from './embeds/types'
+
 export const isEmbedBlock = (block: Block): block is EmbedBlockType =>
   block.__typename === 'EmbedBlock'
 
@@ -31,9 +33,9 @@ export const EmbedBlockWrapper = styled('div')``
 //   | BildwurfAdEmbed
 //   | OtherEmbed
 
-// export interface EmbedPreviewProps {
-//   readonly value: EmbedBlockValue
-// }
+export interface EmbedPreviewProps {
+  readonly value: EmbedBlockValue
+}
 
 export enum EmbedType {
   FacebookPost = 'facebookPost',
@@ -96,8 +98,11 @@ export function EmbedPreview({value}: any) {
   }
 }
 
-export const EmbedBlock = ({value, className}: BuilderEmbedBlockProps) => (
-  <EmbedBlockWrapper className={className}>
-    <EmbedPreview value={value} />
-  </EmbedBlockWrapper>
-)
+export const EmbedBlock = ({value, className}: BuilderEmbedBlockProps) => {
+  console.log('value', value)
+  return (
+    <EmbedBlockWrapper className={className}>
+      <EmbedPreview value={value} />
+    </EmbedBlockWrapper>
+  )
+}
