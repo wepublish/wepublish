@@ -2383,7 +2383,7 @@ const article = {
       __typename: 'EventBlock'
     }
   ]
-} as Exclude<ArticleQuery['article'], undefined | null>
+} as NonNullable<ArticleQuery['article']>
 
 export default {
   component: Article,

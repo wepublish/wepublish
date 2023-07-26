@@ -19,6 +19,7 @@ import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/websit
 import {Image} from '@wepublish/image/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page, PageSEO} from '@wepublish/page/website'
+import {PeerInformation} from '@wepublish/peering/website'
 import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
 import {
   Alert,
@@ -75,6 +76,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         AuthorListItem={AuthorListItem}
         Article={Article}
         ArticleSEO={ArticleSEO}
+        PeerInformation={PeerInformation}
         Navbar={Navbar}
         Footer={Footer}
         Event={Event}

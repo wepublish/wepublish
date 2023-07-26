@@ -60,6 +60,7 @@ import {
   BuilderIconButtonProps,
   BuilderTextFieldProps
 } from './ui.interface'
+import {BuilderPeerProps} from './peer.interface'
 
 const NoComponent = () => null
 
@@ -75,6 +76,7 @@ export type WebsiteBuilderComponents = {
   PageSEO: ComponentType<BuilderPageSEOProps>
   Article: ComponentType<BuilderArticleProps>
   ArticleSEO: ComponentType<BuilderArticleSEOProps>
+  PeerInformation: ComponentType<BuilderPeerProps>
   Author: ComponentType<BuilderAuthorProps>
   AuthorChip: ComponentType<BuilderAuthorChipProps>
   AuthorListItem: ComponentType<BuilderAuthorListItemProps>
@@ -143,6 +145,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   PageSEO: NoComponent,
   Article: NoComponent,
   ArticleSEO: NoComponent,
+  PeerInformation: NoComponent,
   Author: NoComponent,
   AuthorChip: NoComponent,
   AuthorList: NoComponent,

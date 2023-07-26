@@ -76,7 +76,9 @@ const author = {
       __typename: 'AuthorLink'
     }
   ],
-  image
+  image,
+  createdAt: '2023-01-01',
+  modifiedAt: '2023-01-01'
 } as FullAuthorFragment
 
 const page = {
@@ -1932,7 +1934,7 @@ const page = {
       __typename: 'EventBlock'
     }
   ]
-} as Exclude<PageQuery['page'], undefined | null>
+} as NonNullable<PageQuery['page']>
 
 export default {
   component: PageContainer,
