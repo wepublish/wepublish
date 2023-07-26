@@ -27,15 +27,6 @@ interface DecoratedEvent {
     | SubscriptionEvent.RenewalSuccess
     | SubscriptionEvent.RenewalFailed
     | SubscriptionEvent.DeactivationByUser
-    | SubscriptionEvent.Reactivation
-    | SubscriptionEvent.InvoiceCreation
-    | SubscriptionEvent.DeactivationUnpaid
-    | SubscriptionEvent.Custom
-    | SubscriptionEvent.Subscribe
-    | SubscriptionEvent.RenewalSuccess
-    | SubscriptionEvent.RenewalFailed
-    | SubscriptionEvent.DeactivationByUser
-    | SubscriptionEvent.Reactivation
     | SubscriptionEvent.InvoiceCreation
     | SubscriptionEvent.DeactivationUnpaid
     | SubscriptionEvent.Custom
