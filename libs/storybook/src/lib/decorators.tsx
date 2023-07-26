@@ -1,4 +1,3 @@
-import {MockedProvider} from '@apollo/client/testing'
 import {Global} from '@emotion/react'
 import {CssBaseline, css} from '@mui/material'
 import {Preview} from '@storybook/react'
@@ -9,37 +8,6 @@ import {
   WebsiteProvider
 } from '@wepublish/website'
 import {ComponentType, PropsWithChildren, memo, useCallback, useState} from 'react'
-import {InMemoryCache} from '@apollo/client'
-
-const cache = new InMemoryCache({
-  possibleTypes: ApiV1.possibleTypes.possibleTypes,
-  resultCaching: false,
-  addTypename: false
-})
-
-export const parameters = {
-  apolloClient: {
-    MockedProvider,
-    cache
-  },
-  options: {
-    storySort: {
-      includeName: true,
-      method: 'alphabetical',
-      order: [
-        'Getting Started',
-        'Overview',
-        'Installation',
-        'Usage',
-        'Learn',
-        'FAQ',
-        'Glossary',
-        '*',
-        'Item'
-      ]
-    }
-  }
-} as Preview['parameters']
 
 const SessionProvider = memo<PropsWithChildren>(({children}) => {
   const [token, setToken] = useState<ApiV1.UserSession | null>()
