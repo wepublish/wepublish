@@ -64,8 +64,7 @@ const USER_ACTION_EVENTS = [
   SubscriptionEvent.Subscribe,
   SubscriptionEvent.RenewalSuccess,
   SubscriptionEvent.RenewalFailed,
-  SubscriptionEvent.DeactivationByUser,
-  SubscriptionEvent.Reactivation
+  SubscriptionEvent.DeactivationByUser
 ] as const
 type UserActionEvents = (typeof USER_ACTION_EVENTS)[number]
 

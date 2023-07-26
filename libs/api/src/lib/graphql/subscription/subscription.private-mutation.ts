@@ -7,7 +7,7 @@ import {
 } from '@wepublish/permissions/api'
 import {Prisma, PrismaClient, SubscriptionDeactivationReason} from '@prisma/client'
 import {unselectPassword} from '@wepublish/user/api'
-import {NotFound, UserSubscriptionAlreadyDeactivated} from '../../error'
+import {MonthlyAmountNotEnough, NotFound, UserSubscriptionAlreadyDeactivated} from '../../error'
 import {MemberContext} from '../../memberContext'
 
 export const deleteSubscriptionById = (
@@ -73,23 +73,17 @@ export const createSubscription = async (
   const {roles} = authenticate()
   authorise(CanCreateSubscription, roles)
 
-  const subscription = await subscriptionClient.create({
-    data: {
-      ...input,
-      properties: {
-        createMany: {
-          data: properties
-        }
-      }
-    },
-    include: {
-      deactivation: true,
-      periods: true,
-      properties: true
-    }
-  })
-
-  await memberContext.renewSubscriptionForUser({subscription})
+  const subscription = await memberContext.createSubscription(
+    subscriptionClient,
+    input['userID'],
+    input['paymentMethodID'],
+    input['paymentPeriodicity'],
+    input['monthlyAmount'],
+    input['memberPlanID'],
+    properties,
+    input['autoRenew'],
+    input['startsAt']
+  )
 
   return subscription
 }

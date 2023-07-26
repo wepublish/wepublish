@@ -259,7 +259,7 @@ export class MemberContext implements MemberContext {
         events: [SubscriptionEvent.DEACTIVATION_UNPAID]
       })
       const subscriptionFlowActionDeactivationUnpaid = subscriptionFlows.find(
-        a => (a.type = SubscriptionEvent.DEACTIVATION_UNPAID)
+        a => a.type === SubscriptionEvent.DEACTIVATION_UNPAID
       )
 
       if (!subscriptionFlowActionDeactivationUnpaid) {
@@ -269,8 +269,7 @@ export class MemberContext implements MemberContext {
         )
         return null
       }
-
-      const deactivationDate = add(subscription.paidUntil, {
+      const deactivationDate = add(subscription.paidUntil || new Date(), {
         days: subscriptionFlowActionDeactivationUnpaid.daysAwayFromEnding
       })
 
@@ -306,7 +305,10 @@ export class MemberContext implements MemberContext {
         }
       })
 
-      logger('memberContext').info('Renewed subscription with id %s', subscription.id)
+      logger('memberContext').info(
+        'Renewed or created fresh subscription with id %s',
+        subscription.id
+      )
 
       return newInvoice
     } catch (error) {
@@ -586,23 +588,24 @@ export class MemberContext implements MemberContext {
   async createSubscription(
     subscriptionClient: PrismaClient['subscription'],
     userID: string,
-    paymentMethod: PaymentMethod,
+    paymentMethodId: string,
     paymentPeriodicity: PaymentPeriodicity,
     monthlyAmount: number,
-    memberPlan: MemberPlan,
+    memberPlanId: string,
     properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[],
-    autoRenew: boolean
-  ): Promise<SubscriptionWithRelations> {
+    autoRenew: boolean,
+    startsAt?: Date | string
+  ): Promise<{subscription: SubscriptionWithRelations; invoice: InvoiceWithItems}> {
     const subscription = await subscriptionClient.create({
       data: {
         userID,
-        startsAt: new Date(),
+        startsAt: startsAt ? startsAt : new Date(),
         modifiedAt: new Date(),
-        paymentMethodID: paymentMethod.id,
+        paymentMethodID: paymentMethodId,
         paymentPeriodicity,
         paidUntil: null,
         monthlyAmount,
-        memberPlanID: memberPlan.id,
+        memberPlanID: memberPlanId,
         properties: {
           createMany: {
             data: properties
@@ -622,7 +625,15 @@ export class MemberContext implements MemberContext {
       throw new InternalError()
     }
 
-    return subscription
+    const invoice = await this.renewSubscriptionForUser({subscription})
+
+    // Send subscribe mail
+    await this.sendMailForSubscriptionEvent(SubscriptionEvent.SUBSCRIBE, subscription, {})
+
+    return {
+      subscription,
+      invoice
+    }
   }
 
   async getSubscriptionTemplateIdentifier(

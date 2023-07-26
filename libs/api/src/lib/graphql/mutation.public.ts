@@ -379,21 +379,18 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const session = await createUserSession(user, sessionTTL, prisma.session, prisma.userRole)
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
-        const subscription = await memberContext.createSubscription(
+        const newSubscriptionWithInvoice = await memberContext.createSubscription(
           prisma.subscription,
           user.id,
-          paymentMethod,
+          paymentMethod.id,
           paymentPeriodicity,
           monthlyAmount,
-          memberPlan,
+          memberPlan.id,
           properties,
           autoRenew
         )
-
-        // Create Periods, Invoices and Payment
-        const invoice = await memberContext.renewSubscriptionForUser({
-          subscription
-        })
+        const subscription = newSubscriptionWithInvoice.subscription
+        const invoice = newSubscriptionWithInvoice.invoice
 
         if (!invoice) {
           logger('mutation.public').error(
@@ -482,21 +479,18 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
-        const subscription = await memberContext.createSubscription(
+        const newSubscriptionWithInvoice = await memberContext.createSubscription(
           prisma.subscription,
           user.id,
-          paymentMethod,
+          paymentMethod.id,
           paymentPeriodicity,
           monthlyAmount,
-          memberPlan,
+          memberPlan.id,
           properties,
           autoRenew
         )
-
-        // Create Periods, Invoices and Payment
-        const invoice = await memberContext.renewSubscriptionForUser({
-          subscription
-        })
+        const subscription = newSubscriptionWithInvoice.subscription
+        const invoice = newSubscriptionWithInvoice.invoice
 
         if (!invoice) {
           logger('mutation.public').error(
