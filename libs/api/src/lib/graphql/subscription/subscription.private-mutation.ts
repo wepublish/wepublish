@@ -3,12 +3,12 @@ import {authorise} from '../permissions'
 import {
   CanCancelSubscription,
   CanCreateSubscription,
-  CanDeleteSubscription,
-  CanReactivateSubscription
+  CanDeleteSubscription
 } from '@wepublish/permissions/api'
 import {Prisma, PrismaClient, SubscriptionDeactivationReason} from '@prisma/client'
 import {unselectPassword} from '@wepublish/user/api'
 import {NotFound} from '../../error'
+import {MemberContext} from '../../memberContext'
 
 export const deleteSubscriptionById = (
   id: string,
@@ -30,14 +30,17 @@ export const deleteSubscriptionById = (
   })
 }
 
-export const cancelSubscriptionById = (
+export const cancelSubscriptionById = async (
   id: string,
   reason: SubscriptionDeactivationReason,
   authenticate: Context['authenticate'],
-  subscription: PrismaClient['subscription']
+  subscription: PrismaClient['subscription'],
+  memberContext: MemberContext
 ) => {
   const {roles} = authenticate()
   authorise(CanCancelSubscription, roles)
+
+  await memberContext.cancelInvoicesForSubscription(id)
 
   return subscription.update({
     where: {
@@ -49,31 +52,6 @@ export const cancelSubscriptionById = (
           date: new Date(),
           reason: reason
         }
-      }
-    },
-    include: {
-      deactivation: true,
-      periods: true,
-      properties: true
-    }
-  })
-}
-
-export const reactivateSubscriptionById = (
-  id: string,
-  authenticate: Context['authenticate'],
-  subscription: PrismaClient['subscription']
-) => {
-  const {roles} = authenticate()
-  authorise(CanReactivateSubscription, roles)
-
-  return subscription.update({
-    where: {
-      id: id
-    },
-    data: {
-      deactivation: {
-        delete: true
       }
     },
     include: {
@@ -181,11 +159,6 @@ export const updateAdminSubscription = async (
   })
 
   if (!updatedSubscription) throw new NotFound('subscription', id)
-
-  // cancel open invoices if subscription is deactivated
-  if (deactivation !== null) {
-    await memberContext.cancelInvoicesForSubscription(id)
-  }
 
   return await memberContext.handleSubscriptionChange({
     subscription: updatedSubscription
