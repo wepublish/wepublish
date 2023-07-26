@@ -62,7 +62,7 @@ export interface MemberContext {
 
   chargeInvoice(props: ChargeInvoiceProps): Promise<boolean | Payment>
 
-  deactivateSubscription(props: DeactivateSubscriptionForUserProps): Promise<void>
+  deactivateSubscription(props: DeactivateSubscriptionForUserProps): Promise<Subscription>
 }
 
 export interface MemberContextProps {
@@ -471,14 +471,14 @@ export class MemberContext implements MemberContext {
   async deactivateSubscription({
     subscription,
     deactivationReason
-  }: DeactivateSubscriptionForUserProps): Promise<void> {
+  }: DeactivateSubscriptionForUserProps): Promise<Subscription> {
     const now = new Date()
     const deactivationDate =
       subscription.paidUntil !== null && subscription.paidUntil > now ? subscription.paidUntil : now
 
     await this.cancelInvoicesForSubscription(subscription.id)
 
-    await this.prisma.subscription.update({
+    const updatedSubscription: Subscription = await this.prisma.subscription.update({
       where: {id: subscription.id},
       data: {
         deactivation: {
@@ -493,11 +493,16 @@ export class MemberContext implements MemberContext {
             }
           }
         }
+      },
+      include: {
+        deactivation: true,
+        properties: true
       }
     })
 
     // Send deactivation Mail
     await this.sendSubscriptionDeactivationMail(subscription, deactivationReason)
+    return updatedSubscription
   }
 
   /**

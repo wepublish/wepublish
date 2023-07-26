@@ -175,25 +175,30 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
   }, [invoicesData?.invoices?.nodes])
 
   useEffect(() => {
-    if (data?.subscription) {
-      setUser(data.subscription.user)
-      setMemberPlan(data.subscription.memberPlan)
-      setPaymentPeriodicity(data.subscription.paymentPeriodicity)
-      setMonthlyAmount(data.subscription.monthlyAmount)
-      setAutoRenew(data.subscription.autoRenew)
-      setStartsAt(new Date(data.subscription.startsAt))
-      setPaidUntil(data.subscription.paidUntil ? new Date(data.subscription.paidUntil) : null)
-      setPaymentMethod(data.subscription.paymentMethod)
-      setProperties(
-        data.subscription.properties.map(({key, value, public: isPublic}) => ({
-          key,
-          value,
-          public: isPublic
-        }))
-      )
-      setDeactivation(data.subscription.deactivation)
-    }
+    setSubscriptionProperties(data?.subscription)
   }, [data?.subscription])
+
+  function setSubscriptionProperties(subscription?: FullSubscriptionFragment | null) {
+    if (!subscription) {
+      return
+    }
+    setUser(subscription.user)
+    setMemberPlan(subscription.memberPlan)
+    setPaymentPeriodicity(subscription.paymentPeriodicity)
+    setMonthlyAmount(subscription.monthlyAmount)
+    setAutoRenew(subscription.autoRenew)
+    setStartsAt(new Date(subscription.startsAt))
+    setPaidUntil(subscription.paidUntil ? new Date(subscription.paidUntil) : null)
+    setPaymentMethod(subscription.paymentMethod)
+    setProperties(
+      subscription.properties.map(({key, value, public: isPublic}) => ({
+        key,
+        value,
+        public: isPublic
+      }))
+    )
+    setDeactivation(subscription.deactivation)
+  }
 
   const {
     data: memberPlanData,
@@ -372,9 +377,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
         cancelSubscriptionId: id
       }
     })
-    if (data?.cancelSubscription) {
-      setDeactivation(data.cancelSubscription.deactivation)
-    }
+    if (data?.cancelSubscription) onSave?.(data.cancelSubscription)
     await reloadInvoices()
   }
 
@@ -443,8 +446,9 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                 {id ? t('save') : t('create')}
               </ButtonMarginRight>
               <Button
+                disabled={isDisabled || isDeactivated}
                 appearance="primary"
-                loading={isDisabled || isDeactivated}
+                loading={isDisabled}
                 type="submit"
                 data-testid="saveAndCloseButton"
                 onClick={() => setCloseAfterSave(true)}>
