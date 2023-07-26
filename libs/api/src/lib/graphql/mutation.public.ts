@@ -815,20 +815,13 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           }
         })
 
-        if (!subscription) throw new NotFound('subscription', id)
+        if (!subscription || subscription.userID !== user.id) throw new NotFound('subscription', id)
 
         if (subscription.deactivation)
           throw new UserSubscriptionAlreadyDeactivated(subscription.deactivation.date)
 
-        const now = new Date()
-        const deactivationDate =
-          subscription.paidUntil !== null && subscription.paidUntil > now
-            ? subscription.paidUntil
-            : now
-
-        await memberContext.deactivateSubscriptionForUser({
-          subscriptionID: subscription.id,
-          deactivationDate,
+        await memberContext.deactivateSubscription({
+          subscription,
           deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated
         })
 

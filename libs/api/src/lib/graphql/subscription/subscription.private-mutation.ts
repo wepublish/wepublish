@@ -7,7 +7,7 @@ import {
 } from '@wepublish/permissions/api'
 import {Prisma, PrismaClient, SubscriptionDeactivationReason} from '@prisma/client'
 import {unselectPassword} from '@wepublish/user/api'
-import {NotFound} from '../../error'
+import {NotFound, UserSubscriptionAlreadyDeactivated} from '../../error'
 import {MemberContext} from '../../memberContext'
 
 export const deleteSubscriptionById = (
@@ -34,31 +34,29 @@ export const cancelSubscriptionById = async (
   id: string,
   reason: SubscriptionDeactivationReason,
   authenticate: Context['authenticate'],
-  subscription: PrismaClient['subscription'],
+  subscriptionDB: PrismaClient['subscription'],
   memberContext: MemberContext
 ) => {
   const {roles} = authenticate()
   authorise(CanCancelSubscription, roles)
 
-  await memberContext.cancelInvoicesForSubscription(id)
-
-  return subscription.update({
-    where: {
-      id: id
-    },
-    data: {
-      deactivation: {
-        create: {
-          date: new Date(),
-          reason: reason
-        }
-      }
-    },
+  const subscription = await subscriptionDB.findUnique({
+    where: {id},
     include: {
       deactivation: true,
       periods: true,
       properties: true
     }
+  })
+
+  if (!subscription) throw new NotFound('subscription', id)
+
+  if (subscription.deactivation)
+    throw new UserSubscriptionAlreadyDeactivated(subscription.deactivation.date)
+
+  await memberContext.deactivateSubscription({
+    subscription,
+    deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated
   })
 }
 

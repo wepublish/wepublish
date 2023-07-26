@@ -43,8 +43,7 @@ export interface ChargeInvoiceProps {
 }
 
 export interface DeactivateSubscriptionForUserProps {
-  subscriptionID: string
-  deactivationDate?: Date
+  subscription: Subscription
   deactivationReason?: SubscriptionDeactivationReason
 }
 
@@ -63,7 +62,7 @@ export interface MemberContext {
 
   chargeInvoice(props: ChargeInvoiceProps): Promise<boolean | Payment>
 
-  deactivateSubscriptionForUser(props: DeactivateSubscriptionForUserProps): Promise<void>
+  deactivateSubscription(props: DeactivateSubscriptionForUserProps): Promise<void>
 }
 
 export interface MemberContextProps {
@@ -467,31 +466,19 @@ export class MemberContext implements MemberContext {
     }
   }
 
-  async deactivateSubscriptionForUser({
-    subscriptionID,
-    deactivationDate,
+  async deactivateSubscription({
+    subscription,
     deactivationReason
   }: DeactivateSubscriptionForUserProps): Promise<void> {
-    const subscription = await this.prisma.subscription.findUnique({
-      where: {id: subscriptionID},
-      include: {
-        deactivation: true,
-        periods: true,
-        properties: true
-      }
-    })
+    const now = new Date()
+    const deactivationDate =
+      subscription.paidUntil !== null && subscription.paidUntil > now ? subscription.paidUntil : now
 
-    if (!subscription) {
-      logger('memberContext').info('Subscription with id "%s" does not exist', subscriptionID)
-      return
-    }
-
-    await this.cancelInvoicesForSubscription(subscriptionID)
+    await this.cancelInvoicesForSubscription(subscription.id)
 
     await this.prisma.subscription.update({
-      where: {id: subscriptionID},
+      where: {id: subscription.id},
       data: {
-        paymentPeriodicity: subscription.paymentPeriodicity as PaymentPeriodicity,
         deactivation: {
           upsert: {
             create: {
@@ -506,6 +493,9 @@ export class MemberContext implements MemberContext {
         }
       }
     })
+
+    // Send deactivation Mail
+    await this.sendSubscriptionDeactivationMail(subscription, deactivationReason)
   }
 
   /**
@@ -646,5 +636,53 @@ export class MemberContext implements MemberContext {
   }
   async getActionsForSubscriptions(query: LookupActionInput): Promise<Action[]> {
     return new SubscriptionEventDictionary(this.prisma).getActionsForSubscriptions(query)
+  }
+
+  async sendSubscriptionDeactivationMail(
+    subscription: Subscription,
+    deactivation: SubscriptionDeactivationReason
+  ) {
+    let event: SubscriptionEvent = SubscriptionEvent.DEACTIVATION_BY_USER
+    if (deactivation === SubscriptionDeactivationReason.invoiceNotPaid) {
+      event = SubscriptionEvent.DEACTIVATION_UNPAID
+    }
+    return this.sendMailForSubscriptionEvent(event, subscription, {})
+  }
+
+  async sendMailForSubscriptionEvent(
+    subscriptionEvent: SubscriptionEvent,
+    subscription: Subscription,
+    optionalData: Record<string, any>
+  ) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: subscription.userID
+      },
+      select: unselectPassword
+    })
+    if (!user) {
+      logger('events').warn(`User not found %s`, subscription.userID)
+      return
+    }
+
+    const remoteTemplate = await this.getSubscriptionTemplateIdentifier(
+      subscription,
+      subscriptionEvent
+    )
+
+    if (!remoteTemplate) {
+      logger('events').warn(`User not found %s`, subscription.userID)
+      return
+    }
+
+    await this.mailContext.sendMail({
+      externalMailTemplateId: remoteTemplate,
+      recipient: user,
+      optionalData: {
+        subscription,
+        ...optionalData
+      },
+      mailType: mailLogType.UserFlow
+    })
   }
 }
