@@ -1,0 +1,168 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Embed Block should render Default 1`] = `
+<DocumentFragment>
+  <div
+    class="css-0"
+  >
+    <div
+      class="css-1ago99h"
+    >
+      <div
+        style="position: relative; padding-top: 75%; min-height: 45px;"
+      >
+        <iframe
+          allowfullscreen=""
+          frameborder="0"
+          sandbox=""
+          scrolling="no"
+          src="http://www.example.com/"
+          style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;"
+          title=""
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Embed Block should render Other 1`] = `
+<DocumentFragment>
+  <div
+    class="css-0"
+  >
+    <div
+      class="css-1ago99h"
+    >
+      <div
+        style="position: relative; padding-top: 114.00000000000001%; min-height: 45px;"
+      >
+        <iframe
+          allowfullscreen=""
+          frameborder="0"
+          sandbox=""
+          scrolling="no"
+          src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Fladolcekita%2Fposts%2Fpfbid02JcJeoMg7KasRL8dNjgRJJDFiU8YzeBzEeGeXtqpsE2bnTmeH2y6LRsu7RnmhkPxel&show_text=true&width=500"
+          style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;"
+          title=""
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Embed Block should render Soundcloud 1`] = `
+<DocumentFragment>
+  <div
+    class="css-0"
+  >
+    <iframe
+      frameborder="0"
+      height="300"
+      scrolling="no"
+      src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/744469711&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+      title="soundcloud-track"
+      width="100%"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Embed Block should render TikTok 1`] = `
+<DocumentFragment>
+  <div
+    class="css-0"
+  >
+    <div
+      class="css-okwg8n"
+    >
+      <a
+        rel="noreferrer"
+        target="_blank"
+      >
+        <p
+          class="css-1xxe9l9"
+        >
+          @scout2015
+        </p>
+      </a>
+      <p
+        class="css-1xxe9l9"
+      />
+      <a
+        href="https://www.tiktok.com/@scout2015/video/6718335390845095173"
+        rel="noreferrer"
+        target="_blank"
+      >
+        <img
+          class="css-6x4xfr"
+        />
+      </a>
+      <p />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Embed Block should render Vimeo 1`] = `
+<DocumentFragment>
+  <div
+    class="css-0"
+  >
+    <div
+      class="css-19apwdi"
+    >
+      <iframe
+        allowfullscreen=""
+        class="css-cbyafg"
+        src="https://player.vimeo.com/video/104626862"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Embed Block should render WidhtClassName 1`] = `
+<DocumentFragment>
+  <div
+    class="extra-classname css-0"
+  >
+    <div
+      class="css-1ago99h"
+    >
+      <div
+        style="position: relative; padding-top: 75%; min-height: 45px;"
+      >
+        <iframe
+          allowfullscreen=""
+          frameborder="0"
+          sandbox=""
+          scrolling="no"
+          src="http://www.example.com/"
+          style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;"
+          title=""
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Embed Block should render YouTube 1`] = `
+<DocumentFragment>
+  <div
+    class="css-0"
+  >
+    <div
+      class="css-19apwdi"
+    >
+      <iframe
+        allowfullscreen=""
+        class="css-cbyafg"
+        src="https://www.youtube-nocookie.com/embed/CCOdQsZa15o"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -1,7 +1,6 @@
 import {
   FlexAlignment,
   HtmlBlock,
-  EmbedBlock,
   ImageBlock,
   ImageGalleryBlock,
   QuoteBlock,
@@ -10,8 +9,55 @@ import {
   TitleBlock,
   Teaser,
   Block,
-  TeaserGridBlock
+  TeaserGridBlock,
+  TwitterTweetBlock,
+  FacebookPostBlock,
+  // FacebookVideoBlock,
+  InstagramPostBlock,
+  VimeoVideoBlock,
+  YouTubeVideoBlock,
+  SoundCloudTrackBlock,
+  PolisConversationBlock,
+  TikTokVideoBlock,
+  BildwurfAdBlock
 } from '@wepublish/website/api'
+
+export enum EmbedType {
+  FacebookPost = 'facebookPost',
+  FacebookVideo = 'facebookVideo',
+  InstagramPost = 'instagramPost',
+  TwitterTweet = 'twitterTweet',
+  VimeoVideo = 'vimeoVideo',
+  YouTubeVideo = 'youTubeVideo',
+  SoundCloudTrack = 'soundCloudTrack',
+  PolisConversation = 'polisConversation',
+  TikTokVideo = 'tikTokVideo',
+  BildwurfAd = 'bildwurfAd',
+  Other = 'other'
+}
+
+export type EmbedBlockType =
+  | ({type: EmbedType.FacebookPost} & FacebookPostBlock)
+  // | ({type: 'facebookVideo'} & FacebookVideoBlock) todo?
+  | ({type: EmbedType.InstagramPost} & InstagramPostBlock)
+  | ({type: EmbedType.TwitterTweet} & TwitterTweetBlock)
+  | ({type: EmbedType.VimeoVideo} & VimeoVideoBlock)
+  | ({type: EmbedType.YouTubeVideo} & YouTubeVideoBlock)
+  | ({type: EmbedType.SoundCloudTrack} & SoundCloudTrackBlock)
+  | ({type: EmbedType.PolisConversation} & PolisConversationBlock)
+  | ({type: EmbedType.TikTokVideo} & TikTokVideoBlock)
+  | ({type: EmbedType.BildwurfAd} & BildwurfAdBlock)
+  | ({type: EmbedType.Other} & {
+      type: EmbedType.Other
+      url?: string
+      title?: string
+      width?: number
+      height?: number
+      styleCustom?: string
+      sandbox?: string
+    })
+
+export type EmbedBlockValue = {value: EmbedBlockType}
 
 export type BuilderBlockRendererProps = {block: Block}
 export type BuilderTitleBlockProps = TitleBlock & {className?: string}
@@ -20,7 +66,7 @@ export type BuilderImageGalleryBlockProps = ImageGalleryBlock & {className?: str
 export type BuilderQuoteBlockProps = QuoteBlock & {className?: string}
 export type BuilderRichTextBlockProps = RichTextBlock & {className?: string}
 export type BuilderHTMLBlockProps = HtmlBlock & {className?: string}
-export type BuilderEmbedBlockProps = EmbedBlock & {className?: string} // todo why EmbedBlock looks like this? should that be changed?
+export type BuilderEmbedBlockProps = EmbedBlockValue & {className?: string}
 export type BuilderTeaserGridFlexBlockProps = TeaserGridFlexBlock & {
   className?: string
   showLead?: boolean
@@ -34,12 +80,4 @@ export type BuilderTeaserProps = {
   teaser?: Teaser | null
   alignment: FlexAlignment
   showLead?: boolean
-} & {className?: string}
-
-// todo temp?
-// export type BuilderEmbedBlockProps = {
-//   value?: any
-// } & {className?: string}
-export type BuilderEmbedBlockProps = {
-  value?: any
 } & {className?: string}
