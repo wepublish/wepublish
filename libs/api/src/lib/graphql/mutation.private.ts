@@ -1,4 +1,10 @@
-import {CommentState, Prisma, RatingSystemType, UserEvent} from '@prisma/client'
+import {
+  CommentState,
+  Prisma,
+  RatingSystemType,
+  SubscriptionDeactivationReason,
+  UserEvent
+} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLID,
@@ -131,8 +137,10 @@ import {GraphQLSetting, GraphQLUpdateSettingArgs} from './setting'
 import {updateSettings} from './setting/setting.private-mutation'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {
+  cancelSubscriptionById,
   createSubscription,
   deleteSubscriptionById,
+  reactivateSubscriptionById,
   updateAdminSubscription
 } from './subscription/subscription.private-mutation'
 import {GraphQLTag, GraphQLTagType} from './tag/tag'
@@ -161,6 +169,7 @@ import {
 } from './event/event.private-mutation'
 import {CanSendJWTLogin} from '@wepublish/permissions/api'
 import {mailLogType} from '@wepublish/mails'
+import {GraphQLSubscriptionDeactivationReason} from './subscriptionDeactivation'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -525,6 +534,25 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {id}, {authenticate, prisma: {subscription}}) =>
         deleteSubscriptionById(id, authenticate, subscription)
+    },
+
+    cancelSubscription: {
+      type: GraphQLSubscription,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        reason: {type: GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
+      },
+      resolve: (root, {id, reason}, {authenticate, prisma: {subscription}}) =>
+        cancelSubscriptionById(id, reason, authenticate, subscription)
+    },
+
+    reactivateSubscription: {
+      type: GraphQLSubscription,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      resolve: (root, {id}, {authenticate, prisma: {subscription}}) =>
+        reactivateSubscriptionById(id, authenticate, subscription)
     },
 
     // UserRole

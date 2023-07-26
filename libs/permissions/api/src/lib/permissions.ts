@@ -448,6 +448,18 @@ export const CanDeleteSubscription: Permission = {
   deprecated: false
 }
 
+export const CanCancelSubscription: Permission = {
+  id: 'CAN_DELETE_SUBSCRIPTION',
+  description: 'Allows to delete a subscription',
+  deprecated: false
+}
+
+export const CanReactivateSubscription: Permission = {
+  id: 'CAN_DELETE_SUBSCRIPTION',
+  description: 'Allows to delete a subscription',
+  deprecated: false
+}
+
 export const CanLoginAsOtherUser: Permission = {
   id: 'CAN_LOGIN_AS_OTHER_USER',
   description: 'Allows to login as other user',
