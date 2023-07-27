@@ -95,7 +95,7 @@ type UpdateSubscriptionInput = Prisma.SubscriptionUncheckedUpdateInput & {
 
 export const updateAdminSubscription = async (
   id: string,
-  {properties, deactivation, ...input}: UpdateSubscriptionInput,
+  {properties, ...input}: UpdateSubscriptionInput,
   authenticate: Context['authenticate'],
   memberContext: Context['memberContext'],
   subscriptionClient: PrismaClient['subscription'],
@@ -113,27 +113,10 @@ export const updateAdminSubscription = async (
 
   if (!user) throw new Error('Can not update subscription without user')
 
-  const subscription = await subscriptionClient.findUnique({
-    where: {id},
-    include: {
-      deactivation: true
-    }
-  })
-
   const updatedSubscription = await subscriptionClient.update({
     where: {id},
     data: {
       ...input,
-      deactivation: deactivation
-        ? {
-            upsert: {
-              create: deactivation,
-              update: deactivation
-            }
-          }
-        : {
-            delete: Boolean(subscription?.deactivation)
-          },
       properties: {
         deleteMany: {
           subscriptionId: id
