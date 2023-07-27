@@ -10,6 +10,7 @@ export * from '@wepublish/image/website'
 export * from '@wepublish/authentication/website'
 export * from '@wepublish/author/website'
 export * from '@wepublish/comments/website'
+export * from '@wepublish/feed/website'
 export * from '@wepublish/peering/website'
 
 export * from '@wepublish/website/builder'

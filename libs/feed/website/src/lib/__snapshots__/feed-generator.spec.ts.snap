@@ -1,0 +1,229 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should generate the RSS feed 1`] = `
+"<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>We.Publish Feed</title>
+        <link>undefined</link>
+        <description>undefined</description>
+        <lastBuildDate>Sun, 01 Jan 2023 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>We.Publish (https://github.com/wepublish/wepublish)</generator>
+        <language>de</language>
+        <copyright>We.Publish</copyright>
+        <category>foo</category>
+        <category>bar</category>
+        <item>
+            <title><![CDATA[Title]]></title>
+            <link>https://example.com</link>
+            <guid>clgp1hfio50331801rejmrk6sj3</guid>
+            <pubDate>Sun, 01 Jan 2023 00:00:00 GMT</pubDate>
+            <description><![CDATA[lead]]></description>
+            <content:encoded><![CDATA[<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>]]></content:encoded>
+            <category>foo</category>
+            <category>bar</category>
+            <enclosure url="https://unsplash.it/500/300" length="0" type="image//500/300"/>
+        </item>
+        <item>
+            <title><![CDATA[Title]]></title>
+            <link>https://example.com</link>
+            <guid>clgp1hfio50331801rejmrk6sj3</guid>
+            <pubDate>Sun, 01 Jan 2023 00:00:00 GMT</pubDate>
+            <description><![CDATA[lead]]></description>
+            <content:encoded><![CDATA[<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>]]></content:encoded>
+            <category>foo</category>
+            <category>bar</category>
+            <enclosure url="https://unsplash.it/500/300" length="0" type="image//500/300"/>
+        </item>
+    </channel>
+</rss>"
+`;
+
+exports[`should generate the atom feed 1`] = `
+"<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://wepublish.ch</id>
+    <title>We.Publish Feed</title>
+    <updated>2023-01-01T00:00:00.000Z</updated>
+    <generator>We.Publish (https://github.com/wepublish/wepublish)</generator>
+    <author>
+        <name>Foobar</name>
+        <uri>https://example.com</uri>
+    </author>
+    <rights>We.Publish</rights>
+    <category term="foo"/>
+    <category term="bar"/>
+    <entry>
+        <title type="html"><![CDATA[Title]]></title>
+        <id>https://example.com</id>
+        <link href="https://example.com"/>
+        <updated>2023-01-01T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[lead]]></summary>
+        <content type="html"><![CDATA[<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>]]></content>
+        <author>
+            <name>Foobar</name>
+            <uri>https://example.com</uri>
+        </author>
+        <author>
+            <name>Foobar</name>
+            <uri>https://example.com</uri>
+        </author>
+        <category label="foo" term="foo"/>
+        <category label="bar" term="bar"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Title]]></title>
+        <id>https://example.com</id>
+        <link href="https://example.com"/>
+        <updated>2023-01-01T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[lead]]></summary>
+        <content type="html"><![CDATA[<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>]]></content>
+        <author>
+            <name>Foobar</name>
+            <uri>https://example.com</uri>
+        </author>
+        <author>
+            <name>Foobar</name>
+            <uri>https://example.com</uri>
+        </author>
+        <category label="foo" term="foo"/>
+        <category label="bar" term="bar"/>
+    </entry>
+</feed>"
+`;
+
+exports[`should generate the json feed 1`] = `
+"{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "We.Publish Feed",
+    "author": {
+        "name": "Foobar",
+        "url": "https://example.com"
+    },
+    "items": [
+        {
+            "content_html": "<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href=\\"https://google.com\\">Link</a>, &#x1f600;</p>",
+            "url": "https://example.com",
+            "title": "Title",
+            "summary": "lead",
+            "image": "https://unsplash.it/500/300",
+            "date_modified": "2023-01-01T00:00:00.000Z",
+            "author": {
+                "name": "Foobar",
+                "url": "https://example.com"
+            },
+            "tags": [
+                "foo",
+                "bar"
+            ]
+        },
+        {
+            "content_html": "<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href=\\"https://google.com\\">Link</a>, &#x1f600;</p>",
+            "url": "https://example.com",
+            "title": "Title",
+            "summary": "lead",
+            "image": "https://unsplash.it/500/300",
+            "date_modified": "2023-01-01T00:00:00.000Z",
+            "author": {
+                "name": "Foobar",
+                "url": "https://example.com"
+            },
+            "tags": [
+                "foo",
+                "bar"
+            ]
+        }
+    ]
+}"
+`;
+
+exports[`should setup the feed 1`] = `
+Feed {
+  "addCategory": [Function],
+  "addContributor": [Function],
+  "addExtension": [Function],
+  "addItem": [Function],
+  "atom1": [Function],
+  "categories": [
+    "foo",
+    "bar",
+  ],
+  "contributors": [],
+  "extensions": [],
+  "items": [
+    {
+      "author": [
+        {
+          "link": "https://example.com",
+          "name": "Foobar",
+        },
+        {
+          "link": "https://example.com",
+          "name": "Foobar",
+        },
+      ],
+      "category": [
+        {
+          "name": "foo",
+          "term": "foo",
+        },
+        {
+          "name": "bar",
+          "term": "bar",
+        },
+      ],
+      "content": "<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>",
+      "date": 2023-01-01T00:00:00.000Z,
+      "description": "lead",
+      "guid": "clgp1hfio50331801rejmrk6sj3",
+      "image": "https://unsplash.it/500/300",
+      "link": "https://example.com",
+      "title": "Title",
+    },
+    {
+      "author": [
+        {
+          "link": "https://example.com",
+          "name": "Foobar",
+        },
+        {
+          "link": "https://example.com",
+          "name": "Foobar",
+        },
+      ],
+      "category": [
+        {
+          "name": "foo",
+          "term": "foo",
+        },
+        {
+          "name": "bar",
+          "term": "bar",
+        },
+      ],
+      "content": "<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>",
+      "date": 2023-01-01T00:00:00.000Z,
+      "description": "lead",
+      "guid": "clgp1hfio50331801rejmrk6sj3",
+      "image": "https://unsplash.it/500/300",
+      "link": "https://example.com",
+      "title": "Title",
+    },
+  ],
+  "json1": [Function],
+  "options": {
+    "author": {
+      "link": "https://example.com",
+      "name": "Foobar",
+    },
+    "copyright": "We.Publish",
+    "generator": "We.Publish (https://github.com/wepublish/wepublish)",
+    "id": "https://wepublish.ch",
+    "language": "de",
+    "title": "We.Publish Feed",
+    "updated": 2023-01-01T00:00:00.000Z,
+  },
+  "rss2": [Function],
+}
+`;

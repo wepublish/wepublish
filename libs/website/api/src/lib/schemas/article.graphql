@@ -47,3 +47,27 @@ query PeerArticle($peerSlug: Slug, $peerId: ID, $articleId: ID!) {
     ...FullArticle
   }
 }
+
+query ArticleList(
+  $filter: ArticleFilter
+  $cursor: ID
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: ArticleSort
+) {
+  articles(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...FullArticle
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
