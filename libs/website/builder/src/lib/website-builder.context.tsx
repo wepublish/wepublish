@@ -20,6 +20,7 @@ import {
 import {
   BuilderBlockRendererProps,
   BuilderHTMLBlockProps,
+  BuilderEmbedBlockProps,
   BuilderImageBlockProps,
   BuilderImageGalleryBlockProps,
   BuilderQuoteBlockProps,
@@ -123,6 +124,7 @@ export type WebsiteBuilderComponents = {
     Quote: ComponentType<BuilderQuoteBlockProps>
     RichText: ComponentType<BuilderRichTextBlockProps>
     HTML: ComponentType<BuilderHTMLBlockProps>
+    Embed: ComponentType<BuilderEmbedBlockProps>
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
@@ -188,6 +190,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     Renderer: NoComponent,
     Title: NoComponent,
     Image: NoComponent,
+    Embed: NoComponent,
     ImageGallery: NoComponent,
     Quote: NoComponent,
     RichText: NoComponent,

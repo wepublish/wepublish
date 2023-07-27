@@ -1,15 +1,27 @@
 import {styled} from '@mui/material'
-import {BuilderEmbedBlockProps, EmbedBlockValue} from '@wepublish/website/builder'
-import {Block, EmbedBlock as EmbedBlockType} from '@wepublish/website/api'
+import {BuilderEmbedBlockProps} from '@wepublish/website/builder'
+import {
+  BildwurfAdBlock,
+  Block,
+  EmbedBlock as EmbedBlockType,
+  FacebookPostBlock,
+  FacebookVideoBlock,
+  InstagramPostBlock,
+  SoundCloudTrackBlock,
+  TikTokVideoBlock,
+  TwitterTweetBlock,
+  VimeoVideoBlock,
+  YouTubeVideoBlock
+} from '@wepublish/website/api'
 
 import {BildwurfAdEmbed} from './embeds/bildwurfAd'
-import {FacebookPostEmbed} from './embeds/facebook'
+import {FacebookPostEmbed, FacebookVideoEmbed} from './embeds/facebook'
 import {IframeEmbed} from './embeds/iframe'
 import {InstagramPostEmbed} from './embeds/instagram'
 import {PolisEmbed} from './embeds/polis'
 import {SoundCloudTrackEmbed} from './embeds/soundCloud'
 import {TikTokVideoEmbed} from './embeds/tikTok'
-import {TwitterTweetEmbed} from './embeds/twitter'
+import {TwitterProvider, TwitterTweetEmbed} from './embeds/twitter'
 import {VimeoVideoEmbed} from './embeds/vimeo'
 import {YouTubeVideoEmbed} from './embeds/youTube'
 
@@ -18,49 +30,91 @@ import {EmbedType} from './embeds/types'
 export const isEmbedBlock = (block: Block): block is EmbedBlockType =>
   block.__typename === 'EmbedBlock'
 
+export const isInstagramBlock = (block: Block): block is InstagramPostBlock =>
+  block.__typename === 'InstagramPostBlock'
+
+export const isFacebookPostBlock = (block: Block): block is FacebookPostBlock =>
+  block.__typename === 'FacebookPostBlock'
+
+export const isFacebookVideoBlock = (block: Block): block is FacebookVideoBlock =>
+  block.__typename === 'FacebookVideoBlock'
+
+export const isTwitterTweetBlock = (block: Block): block is TwitterTweetBlock =>
+  block.__typename === 'TwitterTweetBlock'
+
+export const isBildwurfAdBlock = (block: Block): block is BildwurfAdBlock =>
+  block.__typename === 'BildwurfAdBlock'
+
+export const isSoundCloudTrackBlock = (block: Block): block is SoundCloudTrackBlock =>
+  block.__typename === 'SoundCloudTrackBlock'
+
+export const isYouTubeVideoBlock = (block: Block): block is YouTubeVideoBlock =>
+  block.__typename === 'YouTubeVideoBlock'
+
+export const isVimeoVideoBlock = (block: Block): block is VimeoVideoBlock =>
+  block.__typename === 'VimeoVideoBlock'
+
+export const isTikTokVideoBlock = (block: Block): block is TikTokVideoBlock =>
+  block.__typename === 'TikTokVideoBlock'
+
 export const EmbedBlockWrapper = styled('div')``
 
-export function EmbedPreview({value}: EmbedBlockValue) {
-  switch (value.type) {
+export function EmbedPreview({
+  type,
+  userID,
+  postID,
+  videoID,
+  trackID,
+  conversationID,
+  zoneID,
+  tweetID,
+  title,
+  url,
+  width,
+  height,
+  styleCustom,
+  sandbox
+}: EmbedBlockValue) {
+  switch (type) {
     case EmbedType.FacebookPost:
-      return <FacebookPostEmbed userID={value.userID} postID={value.postID} />
+      return <FacebookPostEmbed userID={userID} postID={postID} />
 
-    // case EmbedType.FacebookVideo:
-    //   return <FacebookVideoEmbed userID={value.userID} videoID={value.videoID} />
+    case EmbedType.FacebookVideo:
+      return <FacebookVideoEmbed userID={userID} videoID={videoID} />
 
     case EmbedType.InstagramPost:
-      return <InstagramPostEmbed postID={value.postID} />
+      return <InstagramPostEmbed postID={postID} />
 
     case EmbedType.TwitterTweet:
-      return <TwitterTweetEmbed userID={value.userID} tweetID={value.tweetID} />
+      return <TwitterTweetEmbed userID={userID} tweetID={tweetID} />
 
     case EmbedType.VimeoVideo:
-      return <VimeoVideoEmbed videoID={value.videoID} />
+      return <VimeoVideoEmbed videoID={videoID} />
 
     case EmbedType.YouTubeVideo:
-      return <YouTubeVideoEmbed videoID={value.videoID} />
+      return <YouTubeVideoEmbed videoID={videoID} />
 
     case EmbedType.SoundCloudTrack:
-      return <SoundCloudTrackEmbed trackID={value.trackID} />
+      return <SoundCloudTrackEmbed trackID={trackID} />
 
     case EmbedType.PolisConversation:
-      return <PolisEmbed conversationID={value.conversationID} />
+      return <PolisEmbed conversationID={conversationID} />
 
     case EmbedType.TikTokVideo:
-      return <TikTokVideoEmbed userID={value.userID} videoID={value.videoID} />
+      return <TikTokVideoEmbed userID={userID} videoID={videoID} />
 
     case EmbedType.BildwurfAd:
-      return <BildwurfAdEmbed zoneID={value.zoneID} />
+      return <BildwurfAdEmbed zoneID={zoneID} />
 
     case EmbedType.Other:
       return (
         <IframeEmbed
-          title={value.title}
-          url={value.url}
-          width={value.width}
-          height={value.height}
-          styleCustom={value.styleCustom}
-          sandbox={value.sandbox}
+          title={title}
+          url={url}
+          width={width}
+          height={height}
+          styleCustom={styleCustom}
+          sandbox={sandbox}
         />
       )
 
@@ -69,11 +123,12 @@ export function EmbedPreview({value}: EmbedBlockValue) {
   }
 }
 
-export const EmbedBlock = ({className, value}: BuilderEmbedBlockProps) => {
-  console.log('value', value)
+export const EmbedBlock = ({className, ...args}: BuilderEmbedBlockProps) => {
   return (
-    <EmbedBlockWrapper className={className}>
-      <EmbedPreview value={value} />
-    </EmbedBlockWrapper>
+    <TwitterProvider>
+      <EmbedBlockWrapper className={className}>
+        <EmbedPreview {...args} />
+      </EmbedBlockWrapper>
+    </TwitterProvider>
   )
 }

@@ -12,7 +12,7 @@ import {
   TeaserGridBlock,
   TwitterTweetBlock,
   FacebookPostBlock,
-  // FacebookVideoBlock,
+  FacebookVideoBlock,
   InstagramPostBlock,
   VimeoVideoBlock,
   YouTubeVideoBlock,
@@ -38,7 +38,7 @@ export enum EmbedType {
 
 export type EmbedBlockType =
   | ({type: EmbedType.FacebookPost} & FacebookPostBlock)
-  // | ({type: 'facebookVideo'} & FacebookVideoBlock) todo?
+  | ({type: EmbedType.FacebookVideo} & FacebookVideoBlock)
   | ({type: EmbedType.InstagramPost} & InstagramPostBlock)
   | ({type: EmbedType.TwitterTweet} & TwitterTweetBlock)
   | ({type: EmbedType.VimeoVideo} & VimeoVideoBlock)
@@ -49,15 +49,13 @@ export type EmbedBlockType =
   | ({type: EmbedType.BildwurfAd} & BildwurfAdBlock)
   | ({type: EmbedType.Other} & {
       type: EmbedType.Other
-      url?: string
-      title?: string
-      width?: number
-      height?: number
-      styleCustom?: string
-      sandbox?: string
+      url?: string | null
+      title?: string | null
+      width?: number | null
+      height?: number | null
+      styleCustom?: string | null
+      sandbox?: string | null
     })
-
-export type EmbedBlockValue = {value: EmbedBlockType}
 
 export type BuilderBlockRendererProps = {block: Block}
 export type BuilderTitleBlockProps = TitleBlock & {className?: string}
@@ -66,7 +64,7 @@ export type BuilderImageGalleryBlockProps = ImageGalleryBlock & {className?: str
 export type BuilderQuoteBlockProps = QuoteBlock & {className?: string}
 export type BuilderRichTextBlockProps = RichTextBlock & {className?: string}
 export type BuilderHTMLBlockProps = HtmlBlock & {className?: string}
-export type BuilderEmbedBlockProps = EmbedBlockValue & {className?: string}
+export type BuilderEmbedBlockProps = EmbedBlockType & {className?: string}
 export type BuilderTeaserGridFlexBlockProps = TeaserGridFlexBlock & {
   className?: string
   showLead?: boolean

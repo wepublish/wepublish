@@ -154,6 +154,7 @@ export type Block =
   | EmbedBlock
   | EventBlock
   | FacebookPostBlock
+  | FacebookVideoBlock
   | HtmlBlock
   | ImageBlock
   | ImageGalleryBlock
@@ -382,6 +383,12 @@ export type FacebookPostBlock = {
   __typename?: 'FacebookPostBlock'
   postID: Scalars['String']
   userID: Scalars['String']
+}
+
+export type FacebookVideoBlock = {
+  __typename?: 'FacebookVideoBlock'
+  userID: Scalars['String']
+  videoID: Scalars['String']
 }
 
 export type FlexAlignment = {
@@ -1553,6 +1560,7 @@ export type FullArticleFragment = {
     | {__typename: 'EmbedBlock'}
     | {__typename: 'EventBlock'}
     | {__typename: 'FacebookPostBlock'}
+    | {__typename: 'FacebookVideoBlock'}
     | {__typename: 'HTMLBlock'; html?: string | null}
     | {
         __typename: 'ImageBlock'
@@ -1690,6 +1698,7 @@ export type FullArticleFragment = {
                   | {__typename: 'EmbedBlock'}
                   | {__typename: 'EventBlock'}
                   | {__typename: 'FacebookPostBlock'}
+                  | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
                   | {
                       __typename: 'ImageBlock'
@@ -1967,6 +1976,7 @@ export type FullArticleFragment = {
                   | {__typename: 'EmbedBlock'}
                   | {__typename: 'EventBlock'}
                   | {__typename: 'FacebookPostBlock'}
+                  | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
                   | {
                       __typename: 'ImageBlock'
@@ -2247,6 +2257,7 @@ export type FullArticleFragment = {
                   | {__typename: 'EmbedBlock'}
                   | {__typename: 'EventBlock'}
                   | {__typename: 'FacebookPostBlock'}
+                  | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
                   | {
                       __typename: 'ImageBlock'
@@ -2498,6 +2509,7 @@ export type FullArticleFragment = {
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -2775,6 +2787,7 @@ export type FullArticleFragment = {
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -3055,6 +3068,7 @@ export type FullArticleFragment = {
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -3379,6 +3393,7 @@ export type ArticleQuery = {
       | {__typename: 'EmbedBlock'}
       | {__typename: 'EventBlock'}
       | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
       | {
           __typename: 'ImageBlock'
@@ -3516,6 +3531,7 @@ export type ArticleQuery = {
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -3793,6 +3809,7 @@ export type ArticleQuery = {
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -4073,6 +4090,7 @@ export type ArticleQuery = {
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -4324,6 +4342,7 @@ export type ArticleQuery = {
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -4601,6 +4620,7 @@ export type ArticleQuery = {
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -4881,6 +4901,7 @@ export type ArticleQuery = {
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -5207,6 +5228,7 @@ export type PeerArticleQuery = {
       | {__typename: 'EmbedBlock'}
       | {__typename: 'EventBlock'}
       | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
       | {
           __typename: 'ImageBlock'
@@ -5344,6 +5366,7 @@ export type PeerArticleQuery = {
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -5621,6 +5644,7 @@ export type PeerArticleQuery = {
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -5901,6 +5925,7 @@ export type PeerArticleQuery = {
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -6152,6 +6177,7 @@ export type PeerArticleQuery = {
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -6429,6 +6455,7 @@ export type PeerArticleQuery = {
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -6709,6 +6736,7 @@ export type PeerArticleQuery = {
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -7174,6 +7202,8 @@ type BlockWithoutTeaser_EventBlock_Fragment = {__typename: 'EventBlock'}
 
 type BlockWithoutTeaser_FacebookPostBlock_Fragment = {__typename: 'FacebookPostBlock'}
 
+type BlockWithoutTeaser_FacebookVideoBlock_Fragment = {__typename: 'FacebookVideoBlock'}
+
 type BlockWithoutTeaser_HtmlBlock_Fragment = {__typename: 'HTMLBlock'; html?: string | null}
 
 type BlockWithoutTeaser_ImageBlock_Fragment = {
@@ -7291,6 +7321,7 @@ export type BlockWithoutTeaserFragment =
   | BlockWithoutTeaser_EmbedBlock_Fragment
   | BlockWithoutTeaser_EventBlock_Fragment
   | BlockWithoutTeaser_FacebookPostBlock_Fragment
+  | BlockWithoutTeaser_FacebookVideoBlock_Fragment
   | BlockWithoutTeaser_HtmlBlock_Fragment
   | BlockWithoutTeaser_ImageBlock_Fragment
   | BlockWithoutTeaser_ImageGalleryBlock_Fragment
@@ -7365,6 +7396,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
       | {__typename: 'EmbedBlock'}
       | {__typename: 'EventBlock'}
       | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
       | {
           __typename: 'ImageBlock'
@@ -7645,6 +7677,7 @@ type FullTeaser_PageTeaser_Fragment = {
       | {__typename: 'EmbedBlock'}
       | {__typename: 'EventBlock'}
       | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
       | {
           __typename: 'ImageBlock'
@@ -7926,6 +7959,7 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
       | {__typename: 'EmbedBlock'}
       | {__typename: 'EventBlock'}
       | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
       | {
           __typename: 'ImageBlock'
@@ -8131,6 +8165,8 @@ type FullBlock_EventBlock_Fragment = {__typename: 'EventBlock'}
 
 type FullBlock_FacebookPostBlock_Fragment = {__typename: 'FacebookPostBlock'}
 
+type FullBlock_FacebookVideoBlock_Fragment = {__typename: 'FacebookVideoBlock'}
+
 type FullBlock_HtmlBlock_Fragment = {__typename: 'HTMLBlock'; html?: string | null}
 
 type FullBlock_ImageBlock_Fragment = {
@@ -8283,6 +8319,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
             | {__typename: 'EmbedBlock'}
             | {__typename: 'EventBlock'}
             | {__typename: 'FacebookPostBlock'}
+            | {__typename: 'FacebookVideoBlock'}
             | {__typename: 'HTMLBlock'; html?: string | null}
             | {
                 __typename: 'ImageBlock'
@@ -8560,6 +8597,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
             | {__typename: 'EmbedBlock'}
             | {__typename: 'EventBlock'}
             | {__typename: 'FacebookPostBlock'}
+            | {__typename: 'FacebookVideoBlock'}
             | {__typename: 'HTMLBlock'; html?: string | null}
             | {
                 __typename: 'ImageBlock'
@@ -8840,6 +8878,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
             | {__typename: 'EmbedBlock'}
             | {__typename: 'EventBlock'}
             | {__typename: 'FacebookPostBlock'}
+            | {__typename: 'FacebookVideoBlock'}
             | {__typename: 'HTMLBlock'; html?: string | null}
             | {
                 __typename: 'ImageBlock'
@@ -9092,6 +9131,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
               | {__typename: 'EmbedBlock'}
               | {__typename: 'EventBlock'}
               | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
               | {
                   __typename: 'ImageBlock'
@@ -9369,6 +9409,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
               | {__typename: 'EmbedBlock'}
               | {__typename: 'EventBlock'}
               | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
               | {
                   __typename: 'ImageBlock'
@@ -9649,6 +9690,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
               | {__typename: 'EmbedBlock'}
               | {__typename: 'EventBlock'}
               | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
               | {
                   __typename: 'ImageBlock'
@@ -9860,6 +9902,7 @@ export type FullBlockFragment =
   | FullBlock_EmbedBlock_Fragment
   | FullBlock_EventBlock_Fragment
   | FullBlock_FacebookPostBlock_Fragment
+  | FullBlock_FacebookVideoBlock_Fragment
   | FullBlock_HtmlBlock_Fragment
   | FullBlock_ImageBlock_Fragment
   | FullBlock_ImageGalleryBlock_Fragment
@@ -13546,6 +13589,7 @@ export type FullNavigationFragment = {
             | {__typename: 'EmbedBlock'}
             | {__typename: 'EventBlock'}
             | {__typename: 'FacebookPostBlock'}
+            | {__typename: 'FacebookVideoBlock'}
             | {__typename: 'HTMLBlock'; html?: string | null}
             | {
                 __typename: 'ImageBlock'
@@ -13683,6 +13727,7 @@ export type FullNavigationFragment = {
                           | {__typename: 'EmbedBlock'}
                           | {__typename: 'EventBlock'}
                           | {__typename: 'FacebookPostBlock'}
+                          | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
                           | {
                               __typename: 'ImageBlock'
@@ -13972,6 +14017,7 @@ export type FullNavigationFragment = {
                           | {__typename: 'EmbedBlock'}
                           | {__typename: 'EventBlock'}
                           | {__typename: 'FacebookPostBlock'}
+                          | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
                           | {
                               __typename: 'ImageBlock'
@@ -14256,6 +14302,7 @@ export type FullNavigationFragment = {
                           | {__typename: 'EmbedBlock'}
                           | {__typename: 'EventBlock'}
                           | {__typename: 'FacebookPostBlock'}
+                          | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
                           | {
                               __typename: 'ImageBlock'
@@ -14521,6 +14568,7 @@ export type FullNavigationFragment = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -14814,6 +14862,7 @@ export type FullNavigationFragment = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -15102,6 +15151,7 @@ export type FullNavigationFragment = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -15431,6 +15481,7 @@ export type FullNavigationFragment = {
             | {__typename: 'EmbedBlock'}
             | {__typename: 'EventBlock'}
             | {__typename: 'FacebookPostBlock'}
+            | {__typename: 'FacebookVideoBlock'}
             | {__typename: 'HTMLBlock'; html?: string | null}
             | {
                 __typename: 'ImageBlock'
@@ -15568,6 +15619,7 @@ export type FullNavigationFragment = {
                           | {__typename: 'EmbedBlock'}
                           | {__typename: 'EventBlock'}
                           | {__typename: 'FacebookPostBlock'}
+                          | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
                           | {
                               __typename: 'ImageBlock'
@@ -15857,6 +15909,7 @@ export type FullNavigationFragment = {
                           | {__typename: 'EmbedBlock'}
                           | {__typename: 'EventBlock'}
                           | {__typename: 'FacebookPostBlock'}
+                          | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
                           | {
                               __typename: 'ImageBlock'
@@ -16141,6 +16194,7 @@ export type FullNavigationFragment = {
                           | {__typename: 'EmbedBlock'}
                           | {__typename: 'EventBlock'}
                           | {__typename: 'FacebookPostBlock'}
+                          | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
                           | {
                               __typename: 'ImageBlock'
@@ -16406,6 +16460,7 @@ export type FullNavigationFragment = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -16699,6 +16754,7 @@ export type FullNavigationFragment = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -16987,6 +17043,7 @@ export type FullNavigationFragment = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -17291,6 +17348,7 @@ export type NavigationListQuery = {
               | {__typename: 'EmbedBlock'}
               | {__typename: 'EventBlock'}
               | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
               | {
                   __typename: 'ImageBlock'
@@ -17428,6 +17486,7 @@ export type NavigationListQuery = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -17721,6 +17780,7 @@ export type NavigationListQuery = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -18009,6 +18069,7 @@ export type NavigationListQuery = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -18278,6 +18339,7 @@ export type NavigationListQuery = {
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -18575,6 +18637,7 @@ export type NavigationListQuery = {
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -18867,6 +18930,7 @@ export type NavigationListQuery = {
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -19200,6 +19264,7 @@ export type NavigationListQuery = {
               | {__typename: 'EmbedBlock'}
               | {__typename: 'EventBlock'}
               | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
               | {
                   __typename: 'ImageBlock'
@@ -19337,6 +19402,7 @@ export type NavigationListQuery = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -19630,6 +19696,7 @@ export type NavigationListQuery = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -19918,6 +19985,7 @@ export type NavigationListQuery = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -20187,6 +20255,7 @@ export type NavigationListQuery = {
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -20484,6 +20553,7 @@ export type NavigationListQuery = {
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -20776,6 +20846,7 @@ export type NavigationListQuery = {
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -21087,6 +21158,7 @@ export type NavigationQuery = {
               | {__typename: 'EmbedBlock'}
               | {__typename: 'EventBlock'}
               | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
               | {
                   __typename: 'ImageBlock'
@@ -21224,6 +21296,7 @@ export type NavigationQuery = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -21517,6 +21590,7 @@ export type NavigationQuery = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -21805,6 +21879,7 @@ export type NavigationQuery = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -22074,6 +22149,7 @@ export type NavigationQuery = {
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -22371,6 +22447,7 @@ export type NavigationQuery = {
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -22663,6 +22740,7 @@ export type NavigationQuery = {
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -22996,6 +23074,7 @@ export type NavigationQuery = {
               | {__typename: 'EmbedBlock'}
               | {__typename: 'EventBlock'}
               | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
               | {
                   __typename: 'ImageBlock'
@@ -23133,6 +23212,7 @@ export type NavigationQuery = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -23426,6 +23506,7 @@ export type NavigationQuery = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -23714,6 +23795,7 @@ export type NavigationQuery = {
                             | {__typename: 'EmbedBlock'}
                             | {__typename: 'EventBlock'}
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -23983,6 +24065,7 @@ export type NavigationQuery = {
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -24280,6 +24363,7 @@ export type NavigationQuery = {
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -24572,6 +24656,7 @@ export type NavigationQuery = {
                               | {__typename: 'EmbedBlock'}
                               | {__typename: 'EventBlock'}
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -24934,6 +25019,7 @@ export type FullPageFragment = {
     | {__typename: 'EmbedBlock'}
     | {__typename: 'EventBlock'}
     | {__typename: 'FacebookPostBlock'}
+    | {__typename: 'FacebookVideoBlock'}
     | {__typename: 'HTMLBlock'; html?: string | null}
     | {
         __typename: 'ImageBlock'
@@ -25071,6 +25157,7 @@ export type FullPageFragment = {
                   | {__typename: 'EmbedBlock'}
                   | {__typename: 'EventBlock'}
                   | {__typename: 'FacebookPostBlock'}
+                  | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
                   | {
                       __typename: 'ImageBlock'
@@ -25348,6 +25435,7 @@ export type FullPageFragment = {
                   | {__typename: 'EmbedBlock'}
                   | {__typename: 'EventBlock'}
                   | {__typename: 'FacebookPostBlock'}
+                  | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
                   | {
                       __typename: 'ImageBlock'
@@ -25628,6 +25716,7 @@ export type FullPageFragment = {
                   | {__typename: 'EmbedBlock'}
                   | {__typename: 'EventBlock'}
                   | {__typename: 'FacebookPostBlock'}
+                  | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
                   | {
                       __typename: 'ImageBlock'
@@ -25879,6 +25968,7 @@ export type FullPageFragment = {
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -26156,6 +26246,7 @@ export type FullPageFragment = {
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -26436,6 +26527,7 @@ export type FullPageFragment = {
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -26715,6 +26807,7 @@ export type PageQuery = {
       | {__typename: 'EmbedBlock'}
       | {__typename: 'EventBlock'}
       | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
       | {
           __typename: 'ImageBlock'
@@ -26852,6 +26945,7 @@ export type PageQuery = {
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -27129,6 +27223,7 @@ export type PageQuery = {
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -27409,6 +27504,7 @@ export type PageQuery = {
                     | {__typename: 'EmbedBlock'}
                     | {__typename: 'EventBlock'}
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -27660,6 +27756,7 @@ export type PageQuery = {
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -27937,6 +28034,7 @@ export type PageQuery = {
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -28217,6 +28315,7 @@ export type PageQuery = {
                       | {__typename: 'EmbedBlock'}
                       | {__typename: 'EventBlock'}
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -31078,6 +31177,7 @@ const result: PossibleTypesResultData = {
       'EmbedBlock',
       'EventBlock',
       'FacebookPostBlock',
+      'FacebookVideoBlock',
       'HTMLBlock',
       'ImageBlock',
       'ImageGalleryBlock',
