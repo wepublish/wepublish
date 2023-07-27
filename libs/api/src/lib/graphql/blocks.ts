@@ -1257,6 +1257,7 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLImageGalleryBlock,
     GraphQLListicleBlock,
     GraphQLFacebookPostBlock,
+    GraphQLFacebookVideoBlock,
     GraphQLInstagramPostBlock,
     GraphQLTwitterTweetBlock,
     GraphQLVimeoVideoBlock,
