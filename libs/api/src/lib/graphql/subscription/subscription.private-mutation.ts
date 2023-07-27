@@ -1,9 +1,14 @@
 import {Context} from '../../context'
 import {authorise} from '../permissions'
-import {CanCreateSubscription, CanDeleteSubscription} from '@wepublish/permissions/api'
-import {Prisma, PrismaClient} from '@prisma/client'
+import {
+  CanCancelSubscription,
+  CanCreateSubscription,
+  CanDeleteSubscription
+} from '@wepublish/permissions/api'
+import {Prisma, PrismaClient, SubscriptionDeactivationReason} from '@prisma/client'
 import {unselectPassword} from '@wepublish/user/api'
-import {NotFound} from '../../error'
+import {MonthlyAmountNotEnough, NotFound, UserSubscriptionAlreadyDeactivated} from '../../error'
+import {MemberContext} from '../../memberContext'
 
 export const deleteSubscriptionById = (
   id: string,
@@ -25,6 +30,36 @@ export const deleteSubscriptionById = (
   })
 }
 
+export const cancelSubscriptionById = async (
+  id: string,
+  reason: SubscriptionDeactivationReason,
+  authenticate: Context['authenticate'],
+  subscriptionDB: PrismaClient['subscription'],
+  memberContext: MemberContext
+) => {
+  const {roles} = authenticate()
+  authorise(CanCancelSubscription, roles)
+
+  const subscription = await subscriptionDB.findUnique({
+    where: {id},
+    include: {
+      deactivation: true,
+      periods: true,
+      properties: true
+    }
+  })
+
+  if (!subscription) throw new NotFound('subscription', id)
+
+  if (subscription.deactivation)
+    throw new UserSubscriptionAlreadyDeactivated(subscription.deactivation.date)
+
+  return await memberContext.deactivateSubscription({
+    subscription,
+    deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated
+  })
+}
+
 type CreateSubscriptionInput = Prisma.SubscriptionCreateInput & {
   properties: Prisma.MetadataPropertyCreateManySubscriptionInput[]
 }
@@ -38,23 +73,17 @@ export const createSubscription = async (
   const {roles} = authenticate()
   authorise(CanCreateSubscription, roles)
 
-  const subscription = await subscriptionClient.create({
-    data: {
-      ...input,
-      properties: {
-        createMany: {
-          data: properties
-        }
-      }
-    },
-    include: {
-      deactivation: true,
-      periods: true,
-      properties: true
-    }
-  })
-
-  await memberContext.renewSubscriptionForUser({subscription})
+  const {subscription} = await memberContext.createSubscription(
+    subscriptionClient,
+    input['userID'],
+    input['paymentMethodID'],
+    input['paymentPeriodicity'],
+    input['monthlyAmount'],
+    input['memberPlanID'],
+    properties,
+    input['autoRenew'],
+    input['startsAt']
+  )
 
   return subscription
 }
@@ -66,7 +95,7 @@ type UpdateSubscriptionInput = Prisma.SubscriptionUncheckedUpdateInput & {
 
 export const updateAdminSubscription = async (
   id: string,
-  {properties, deactivation, ...input}: UpdateSubscriptionInput,
+  {properties, ...input}: UpdateSubscriptionInput,
   authenticate: Context['authenticate'],
   memberContext: Context['memberContext'],
   subscriptionClient: PrismaClient['subscription'],
@@ -84,27 +113,10 @@ export const updateAdminSubscription = async (
 
   if (!user) throw new Error('Can not update subscription without user')
 
-  const subscription = await subscriptionClient.findUnique({
-    where: {id},
-    include: {
-      deactivation: true
-    }
-  })
-
   const updatedSubscription = await subscriptionClient.update({
     where: {id},
     data: {
       ...input,
-      deactivation: deactivation
-        ? {
-            upsert: {
-              create: deactivation,
-              update: deactivation
-            }
-          }
-        : {
-            delete: Boolean(subscription?.deactivation)
-          },
       properties: {
         deleteMany: {
           subscriptionId: id
@@ -122,11 +134,6 @@ export const updateAdminSubscription = async (
   })
 
   if (!updatedSubscription) throw new NotFound('subscription', id)
-
-  // cancel open invoices if subscription is deactivated
-  if (deactivation !== null) {
-    await memberContext.cancelInvoicesForSubscription(id)
-  }
 
   return await memberContext.handleSubscriptionChange({
     subscription: updatedSubscription

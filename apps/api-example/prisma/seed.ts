@@ -181,13 +181,6 @@ async function seed() {
       subscriptionFlow: {connect: {id: subscriptionFlows[0].id}}
     },
     {
-      id: '987db417-778e-482e-b1b9-06d3dfa54803',
-      event: SubscriptionEvent.REACTIVATION,
-      daysAwayFromEnding: null,
-      mailTemplate: {connect: {id: mailTemplates[0].id}},
-      subscriptionFlow: {connect: {id: subscriptionFlows[0].id}}
-    },
-    {
       id: '96c35c14-9897-48f2-9484-1919b2f8a2a9',
       event: SubscriptionEvent.CUSTOM,
       daysAwayFromEnding: -6,

@@ -9,6 +9,7 @@ import {
   MetadataPropertyFragment,
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
+  useCancelSubscriptionMutation,
   useCreateSubscriptionMutation,
   useInvoicesQuery,
   useMemberPlanListQuery,
@@ -174,25 +175,30 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
   }, [invoicesData?.invoices?.nodes])
 
   useEffect(() => {
-    if (data?.subscription) {
-      setUser(data.subscription.user)
-      setMemberPlan(data.subscription.memberPlan)
-      setPaymentPeriodicity(data.subscription.paymentPeriodicity)
-      setMonthlyAmount(data.subscription.monthlyAmount)
-      setAutoRenew(data.subscription.autoRenew)
-      setStartsAt(new Date(data.subscription.startsAt))
-      setPaidUntil(data.subscription.paidUntil ? new Date(data.subscription.paidUntil) : null)
-      setPaymentMethod(data.subscription.paymentMethod)
-      setProperties(
-        data.subscription.properties.map(({key, value, public: isPublic}) => ({
-          key,
-          value,
-          public: isPublic
-        }))
-      )
-      setDeactivation(data.subscription.deactivation)
-    }
+    setSubscriptionProperties(data?.subscription)
   }, [data?.subscription])
+
+  function setSubscriptionProperties(subscription?: FullSubscriptionFragment | null) {
+    if (!subscription) {
+      return
+    }
+    setUser(subscription.user)
+    setMemberPlan(subscription.memberPlan)
+    setPaymentPeriodicity(subscription.paymentPeriodicity)
+    setMonthlyAmount(subscription.monthlyAmount)
+    setAutoRenew(subscription.autoRenew)
+    setStartsAt(new Date(subscription.startsAt))
+    setPaidUntil(subscription.paidUntil ? new Date(subscription.paidUntil) : null)
+    setPaymentMethod(subscription.paymentMethod)
+    setProperties(
+      subscription.properties.map(({key, value, public: isPublic}) => ({
+        key,
+        value,
+        public: isPublic
+      }))
+    )
+    setDeactivation(subscription.deactivation)
+  }
 
   const {
     data: memberPlanData,
@@ -215,6 +221,8 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
 
   const [updateSubscription, {loading: isUpdating, error: updateError}] =
     useUpdateSubscriptionMutation()
+  const [cancelSubscription, {loading: isCancel, error: cancelError}] =
+    useCancelSubscriptionMutation()
 
   const [createSubscription, {loading: isCreating, error: createError}] =
     useCreateSubscriptionMutation()
@@ -242,6 +250,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     isCreating ||
     isMemberPlanLoading ||
     isUpdating ||
+    isCancel ||
     isPaymentMethodLoading ||
     loadError !== undefined ||
     loadErrorInvoices !== undefined ||
@@ -270,23 +279,29 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
       loadMemberPlanError?.message ??
       updateError?.message ??
       paymentMethodLoadError?.message ??
-      loadErrorInvoices?.message
+      loadErrorInvoices?.message ??
+      cancelError?.message
     if (error)
       toaster.push(
         <Message type="error" showIcon closable duration={0}>
           {error}
         </Message>
       )
-  }, [loadError, updateError, loadMemberPlanError, paymentMethodLoadError, loadErrorInvoices])
+  }, [
+    loadError,
+    updateError,
+    loadMemberPlanError,
+    paymentMethodLoadError,
+    loadErrorInvoices,
+    cancelError
+  ])
 
   const inputBase = {
     monthlyAmount,
     paymentPeriodicity,
     autoRenew,
     startsAt: startsAt.toISOString(),
-    paidUntil: paidUntil ? paidUntil.toISOString() : null,
-    properties,
-    deactivation
+    properties
   }
 
   const goBackLink = editedUserId ? `/users/edit/${editedUserId}` : '/subscriptions'
@@ -356,44 +371,13 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
 
   async function handleDeactivation(date: Date, reason: SubscriptionDeactivationReason) {
     if (!id || !memberPlan || !paymentMethod || !user?.id) return
-    const {data} = await updateSubscription({
+    const {data} = await cancelSubscription({
       variables: {
-        id,
-        input: {
-          ...inputBase,
-          userID: user.id,
-          deactivation: {
-            reason,
-            date: date.toISOString()
-          },
-          paymentMethodID: paymentMethod.id,
-          memberPlanID: memberPlan.id
-        }
+        reason,
+        cancelSubscriptionId: id
       }
     })
-    if (data?.updateSubscription) {
-      setDeactivation(data.updateSubscription.deactivation)
-    }
-    await reloadInvoices()
-  }
-  async function handleReactivation() {
-    if (!id || !memberPlan || !paymentMethod || !user?.id) return
-    const {data} = await updateSubscription({
-      variables: {
-        id,
-        input: {
-          ...inputBase,
-          userID: user.id,
-          memberPlanID: memberPlan.id,
-          paymentMethodID: paymentMethod.id,
-          deactivation: null
-        }
-      }
-    })
-
-    if (data?.updateSubscription) {
-      setDeactivation(data.updateSubscription.deactivation)
-    }
+    if (data?.cancelSubscription) onSave?.(data.cancelSubscription)
     await reloadInvoices()
   }
 
@@ -449,14 +433,10 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
               {showInvoiceHistory() && (
                 <IconButtonMarginRight
                   appearance="ghost"
-                  disabled={isDisabled}
+                  disabled={isDisabled || isDeactivated}
                   onClick={() => setDeactivationPanelOpen(true)}>
                   <MdUnpublished />
-                  {t(
-                    deactivation
-                      ? 'userSubscriptionEdit.deactivation.title.deactivated'
-                      : 'userSubscriptionEdit.deactivation.title.activated'
-                  )}
+                  {t('userSubscriptionEdit.deactivation.title.activated')}
                 </IconButtonMarginRight>
               )}
               <ButtonMarginRight
@@ -466,6 +446,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                 {id ? t('save') : t('create')}
               </ButtonMarginRight>
               <Button
+                disabled={isDisabled || isDeactivated}
                 appearance="primary"
                 loading={isDisabled}
                 type="submit"
@@ -481,7 +462,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
             <Col xs={12}>
               <RGrid fluid>
                 {deactivation && (
-                  <Message showIcon type="info">
+                  <Message showIcon type="error" style={{marginBottom: '12px'}}>
                     {t(
                       new Date(deactivation.date) < new Date()
                         ? 'userSubscriptionEdit.deactivation.isDeactivated'
@@ -628,7 +609,6 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                     />
                   </Group>
                 </RPanel>
-                {/* <RPanel>{subscriptionActionsView()}</RPanel> */}
               </RGrid>
             </Col>
 
@@ -660,13 +640,8 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
               displayName={user.preferredName || user.name || user.email}
               userEmail={user.email}
               paidUntil={paidUntil ?? undefined}
-              isDeactivated={!!deactivation}
               onDeactivate={async data => {
                 await handleDeactivation(data.date, data.reason)
-                setDeactivationPanelOpen(false)
-              }}
-              onReactivate={async () => {
-                await handleReactivation()
                 setDeactivationPanelOpen(false)
               }}
               onClose={() => setDeactivationPanelOpen(false)}

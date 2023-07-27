@@ -166,12 +166,6 @@ describe('PeriodicJobController', () => {
       },
       {
         subscriptionFlowId: defaultFlow.id,
-        mailTemplateName: 'default-REACTIVATION',
-        event: SubscriptionEvent.REACTIVATION,
-        daysAwayFromEnding: null
-      },
-      {
-        subscriptionFlowId: defaultFlow.id,
         mailTemplateName: 'default-CUSTOM1',
         event: SubscriptionEvent.CUSTOM,
         daysAwayFromEnding: -15

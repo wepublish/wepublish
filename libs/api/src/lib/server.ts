@@ -3,7 +3,7 @@ import express, {Application, NextFunction, Request, Response} from 'express'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
 import {contextFromRequest, ContextOptions} from './context'
-import {onInvoiceUpdate, onFindArticle, onFindPage} from './events'
+import {onFindArticle, onFindPage} from './events'
 import {GraphQLWepublishPublicSchema, GraphQLWepublishSchema} from './graphql/schema'
 import {MAIL_WEBHOOK_PATH_PREFIX} from '@wepublish/mails'
 import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments'
@@ -110,8 +110,5 @@ export class WepublishServer {
   private async setupPrismaMiddlewares(): Promise<void> {
     this.opts.prisma.$use(onFindArticle(this.opts.prisma))
     this.opts.prisma.$use(onFindPage(this.opts.prisma))
-
-    const contextWithoutReq = await contextFromRequest(null, this.opts)
-    this.opts.prisma.$use(onInvoiceUpdate(contextWithoutReq))
   }
 }

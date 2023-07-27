@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react'
 import {getApiClientV2, ListViewContainer, ListViewHeader} from '@wepublish/ui/editor'
 import {useTranslation} from 'react-i18next'
-import {NON_USER_ACTION_EVENTS, USER_ACTION_EVENTS} from '@wepublish/membership/editor'
+import {NON_USER_ACTION_EVENTS, USER_ACTION_EVENTS} from '../subscriptionFlow/subscriptionFlowList'
 import {DEFAULT_QUERY_OPTIONS} from '../common'
 import {
   SubscriptionEvent,
@@ -27,15 +27,6 @@ interface DecoratedEvent {
     | SubscriptionEvent.RenewalSuccess
     | SubscriptionEvent.RenewalFailed
     | SubscriptionEvent.DeactivationByUser
-    | SubscriptionEvent.Reactivation
-    | SubscriptionEvent.InvoiceCreation
-    | SubscriptionEvent.DeactivationUnpaid
-    | SubscriptionEvent.Custom
-    | SubscriptionEvent.Subscribe
-    | SubscriptionEvent.RenewalSuccess
-    | SubscriptionEvent.RenewalFailed
-    | SubscriptionEvent.DeactivationByUser
-    | SubscriptionEvent.Reactivation
     | SubscriptionEvent.InvoiceCreation
     | SubscriptionEvent.DeactivationUnpaid
     | SubscriptionEvent.Custom

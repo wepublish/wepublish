@@ -209,12 +209,6 @@ describe('SubscriptionEventDictionary', () => {
       },
       {
         subscriptionFlowId: defaultFlow.id,
-        mailTemplateName: 'default-REACTIVATION',
-        event: SubscriptionEvent.REACTIVATION,
-        daysAwayFromEnding: null
-      },
-      {
-        subscriptionFlowId: defaultFlow.id,
         mailTemplateName: 'default-CUSTOM1',
         event: SubscriptionEvent.CUSTOM,
         daysAwayFromEnding: -15
@@ -272,12 +266,6 @@ describe('SubscriptionEventDictionary', () => {
       },
       {
         subscriptionFlowId: customMemberPlanFlow1.id,
-        mailTemplateName: 'custom1-REACTIVATION',
-        event: SubscriptionEvent.REACTIVATION,
-        daysAwayFromEnding: null
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow1.id,
         mailTemplateName: 'custom1-CUSTOM1',
         event: SubscriptionEvent.CUSTOM,
         daysAwayFromEnding: -10
@@ -323,12 +311,6 @@ describe('SubscriptionEventDictionary', () => {
         subscriptionFlowId: customMemberPlanFlow2.id,
         mailTemplateName: 'custom2-DEACTIVATION_BY_USER',
         event: SubscriptionEvent.DEACTIVATION_BY_USER,
-        daysAwayFromEnding: null
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow2.id,
-        mailTemplateName: 'custom2-REACTIVATION',
-        event: SubscriptionEvent.REACTIVATION,
         daysAwayFromEnding: null
       },
       {
