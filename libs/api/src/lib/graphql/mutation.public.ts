@@ -390,7 +390,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           autoRenew
         )
         const subscription = newSubscriptionWithInvoice.subscription
-        const invoice = newSubscriptionWithInvoice.invoice
 
         if (!invoice) {
           logger('mutation.public').error(
