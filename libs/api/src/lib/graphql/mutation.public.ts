@@ -479,7 +479,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
-        const newSubscriptionWithInvoice = await memberContext.createSubscription(
+        const {subscription, invoice} = await memberContext.createSubscription(
           prisma.subscription,
           user.id,
           paymentMethod.id,
