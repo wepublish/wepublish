@@ -85,7 +85,7 @@ export const createSubscription = async (
     input['startsAt']
   )
 
-  return newSubscriptionWithInvoice.subscription
+  return subscription
 }
 
 type UpdateSubscriptionInput = Prisma.SubscriptionUncheckedUpdateInput & {
