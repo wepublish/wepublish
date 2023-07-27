@@ -40,6 +40,16 @@ fragment BlockWithoutTeaser on Block {
       ...FullEvent
     }
   }
+
+  ... on ListicleBlock {
+    items {
+      title
+      richText
+      image {
+        ...FullImage
+      }
+    }
+  }
 }
 
 fragment FullTeaser on Teaser {

@@ -462,7 +462,51 @@ const page = {
       ]
     },
     {
-      __typename: 'ListicleBlock'
+      __typename: 'ListicleBlock',
+      items: [
+        {
+          title: 'Foobar',
+          richText: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem Ipsum'
+                }
+              ]
+            }
+          ],
+          image
+        },
+        {
+          title: 'Foobar',
+          richText: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem Ipsum'
+                }
+              ]
+            }
+          ],
+          image
+        },
+        {
+          title: 'Foobar',
+          richText: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem Ipsum'
+                }
+              ]
+            }
+          ],
+          image
+        }
+      ]
     },
     {
       __typename: 'QuoteBlock',

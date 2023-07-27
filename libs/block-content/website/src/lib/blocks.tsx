@@ -10,6 +10,7 @@ import {cond} from 'ramda'
 import {isTeaserGridBlock} from './teaser-grid-block'
 import {isImageGalleryBlock} from './image-gallery-block'
 import {isEventBlock} from './event-block'
+import {isListicleBlock} from './listicle-block'
 
 export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
   const {blocks} = useWebsiteBuilder()
@@ -23,7 +24,8 @@ export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
     [isHtmlBlock, block => <blocks.HTML {...block} />],
     [isEventBlock, block => <blocks.Event {...block} />],
     [isTeaserGridFlexBlock, block => <blocks.TeaserGridFlex {...block} />],
-    [isTeaserGridBlock, block => <blocks.TeaserGrid {...block} />]
+    [isTeaserGridBlock, block => <blocks.TeaserGrid {...block} />],
+    [isListicleBlock, block => <blocks.Listicle {...block} />]
   ])(block)
 }
 

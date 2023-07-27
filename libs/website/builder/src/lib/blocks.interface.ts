@@ -10,7 +10,8 @@ import {
   Teaser,
   Block,
   TeaserGridBlock,
-  EventBlock
+  EventBlock,
+  ListicleBlock
 } from '@wepublish/website/api'
 
 export type BuilderBlockRendererProps = {block: Block}
@@ -21,6 +22,7 @@ export type BuilderQuoteBlockProps = QuoteBlock & {className?: string}
 export type BuilderEventBlockProps = EventBlock & {className?: string}
 export type BuilderRichTextBlockProps = RichTextBlock & {className?: string}
 export type BuilderHTMLBlockProps = HtmlBlock & {className?: string}
+export type BuilderListicleBlockProps = ListicleBlock & {className?: string}
 export type BuilderTeaserGridFlexBlockProps = TeaserGridFlexBlock & {
   className?: string
   showLead?: boolean
