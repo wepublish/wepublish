@@ -3,10 +3,10 @@
 exports[`Teaser Grid Flex Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-dkdiq6"
+    class="css-8da6q8 eccf82l0"
   >
     <article
-      class="css-1p0ks0j"
+      class="css-1c7yv3i ed8rouo0"
       x="0"
       y="0"
     >
@@ -15,12 +15,13 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -29,7 +30,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -41,7 +42,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1aj06cw"
+      class="css-ma4mg8 ed8rouo0"
       x="3"
       y="0"
     >
@@ -50,12 +51,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -64,7 +66,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -76,7 +78,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-hgavva"
+      class="css-1uhb78v ed8rouo0"
       x="7"
       y="0"
     >
@@ -85,12 +87,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -99,7 +102,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -111,7 +114,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-2t6kni"
+      class="css-7ztf8r ed8rouo0"
       x="7"
       y="8"
     >
@@ -120,12 +123,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -134,7 +138,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -146,7 +150,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-swar48"
+      class="css-1yt8693 ed8rouo0"
       x="0"
       y="4"
     >
@@ -155,12 +159,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -169,7 +174,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -181,7 +186,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1oxqzs1"
+      class="css-1qybyqv ed8rouo0"
       x="3"
       y="6"
     >
@@ -190,12 +195,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -204,7 +210,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -222,10 +228,10 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-dkdiq6"
+    class="extra-classname css-8da6q8 eccf82l0"
   >
     <article
-      class="css-1p0ks0j"
+      class="css-1c7yv3i ed8rouo0"
       x="0"
       y="0"
     >
@@ -234,12 +240,13 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -248,7 +255,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -260,7 +267,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1aj06cw"
+      class="css-ma4mg8 ed8rouo0"
       x="3"
       y="0"
     >
@@ -269,12 +276,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -283,7 +291,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -295,7 +303,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-hgavva"
+      class="css-1uhb78v ed8rouo0"
       x="7"
       y="0"
     >
@@ -304,12 +312,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -318,7 +327,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -330,7 +339,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-2t6kni"
+      class="css-7ztf8r ed8rouo0"
       x="7"
       y="8"
     >
@@ -339,12 +348,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -353,7 +363,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -365,7 +375,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-swar48"
+      class="css-1yt8693 ed8rouo0"
       x="0"
       y="4"
     >
@@ -374,12 +384,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -388,7 +399,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -400,7 +411,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1oxqzs1"
+      class="css-1qybyqv ed8rouo0"
       x="3"
       y="6"
     >
@@ -409,12 +420,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -423,7 +435,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -441,10 +453,10 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-dkdiq6"
+    class="css-8da6q8 eccf82l0"
   >
     <article
-      class="css-1p0ks0j"
+      class="css-1c7yv3i ed8rouo0"
       x="0"
       y="0"
     >
@@ -453,12 +465,13 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -467,7 +480,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -479,7 +492,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1aj06cw"
+      class="css-ma4mg8 ed8rouo0"
       x="3"
       y="0"
     >
@@ -488,12 +501,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -502,7 +516,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -514,7 +528,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-hgavva"
+      class="css-1uhb78v ed8rouo0"
       x="7"
       y="0"
     >
@@ -523,12 +537,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -537,7 +552,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -549,7 +564,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-2t6kni"
+      class="css-7ztf8r ed8rouo0"
       x="7"
       y="8"
     >
@@ -558,12 +573,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -572,7 +588,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -584,7 +600,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-swar48"
+      class="css-1yt8693 ed8rouo0"
       x="0"
       y="4"
     >
@@ -593,12 +609,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -607,7 +624,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -619,7 +636,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1oxqzs1"
+      class="css-1qybyqv ed8rouo0"
       x="3"
       y="6"
     >
@@ -628,12 +645,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -642,7 +660,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -660,10 +678,10 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Grid Flex Block should render WithShowLoad 1`] = `
 <DocumentFragment>
   <div
-    class="css-dkdiq6"
+    class="css-8da6q8 eccf82l0"
   >
     <article
-      class="css-1p0ks0j"
+      class="css-1c7yv3i ed8rouo0"
       x="0"
       y="0"
     >
@@ -672,12 +690,13 @@ exports[`Teaser Grid Flex Block should render WithShowLoad 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -686,7 +705,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -703,7 +722,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1aj06cw"
+      class="css-ma4mg8 ed8rouo0"
       x="3"
       y="0"
     >
@@ -712,12 +731,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -726,7 +746,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -743,7 +763,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-hgavva"
+      class="css-1uhb78v ed8rouo0"
       x="7"
       y="0"
     >
@@ -752,12 +772,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -766,7 +787,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -783,7 +804,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-2t6kni"
+      class="css-7ztf8r ed8rouo0"
       x="7"
       y="8"
     >
@@ -792,12 +813,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -806,7 +828,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -823,7 +845,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-swar48"
+      class="css-1yt8693 ed8rouo0"
       x="0"
       y="4"
     >
@@ -832,12 +854,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -846,7 +869,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -863,7 +886,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1oxqzs1"
+      class="css-1qybyqv ed8rouo0"
       x="3"
       y="6"
     >
@@ -872,12 +895,13 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-rd719m"
+          class="css-16lxa1r ed8rouo1"
         >
           <img
             alt="An image description"
-            class="css-1qnf57e"
+            class="css-1opieq8-Teaser e1nfkf2e0"
             height="500"
+            loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -886,7 +910,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0"
+            class="css-0 ed8rouo2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"

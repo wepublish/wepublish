@@ -154,6 +154,7 @@ export type Block =
   | EmbedBlock
   | EventBlock
   | FacebookPostBlock
+  | FacebookVideoBlock
   | HtmlBlock
   | ImageBlock
   | ImageGalleryBlock
@@ -382,6 +383,12 @@ export type FacebookPostBlock = {
   __typename?: 'FacebookPostBlock'
   postID: Scalars['String']
   userID: Scalars['String']
+}
+
+export type FacebookVideoBlock = {
+  __typename?: 'FacebookVideoBlock'
+  userID: Scalars['String']
+  videoID: Scalars['String']
 }
 
 export type FlexAlignment = {
@@ -1551,8 +1558,52 @@ export type FullArticleFragment = {
     | {__typename: 'BildwurfAdBlock'}
     | {__typename: 'CommentBlock'}
     | {__typename: 'EmbedBlock'}
-    | {__typename: 'EventBlock'}
+    | {
+        __typename: 'EventBlock'
+        events: Array<{
+          __typename?: 'Event'
+          id: string
+          name: string
+          description?: Node[] | null
+          status: EventStatus
+          location?: string | null
+          startsAt: string
+          endsAt?: string | null
+          url: string
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+        }>
+      }
     | {__typename: 'FacebookPostBlock'}
+    | {__typename: 'FacebookVideoBlock'}
     | {__typename: 'HTMLBlock'; html?: string | null}
     | {
         __typename: 'ImageBlock'
@@ -1688,8 +1739,52 @@ export type FullArticleFragment = {
                   | {__typename: 'BildwurfAdBlock'}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
-                  | {__typename: 'EventBlock'}
+                  | {
+                      __typename: 'EventBlock'
+                      events: Array<{
+                        __typename?: 'Event'
+                        id: string
+                        name: string
+                        description?: Node[] | null
+                        status: EventStatus
+                        location?: string | null
+                        startsAt: string
+                        endsAt?: string | null
+                        url: string
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                      }>
+                    }
                   | {__typename: 'FacebookPostBlock'}
+                  | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
                   | {
                       __typename: 'ImageBlock'
@@ -1965,8 +2060,52 @@ export type FullArticleFragment = {
                   | {__typename: 'BildwurfAdBlock'}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
-                  | {__typename: 'EventBlock'}
+                  | {
+                      __typename: 'EventBlock'
+                      events: Array<{
+                        __typename?: 'Event'
+                        id: string
+                        name: string
+                        description?: Node[] | null
+                        status: EventStatus
+                        location?: string | null
+                        startsAt: string
+                        endsAt?: string | null
+                        url: string
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                      }>
+                    }
                   | {__typename: 'FacebookPostBlock'}
+                  | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
                   | {
                       __typename: 'ImageBlock'
@@ -2245,8 +2384,52 @@ export type FullArticleFragment = {
                   | {__typename: 'BildwurfAdBlock'}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
-                  | {__typename: 'EventBlock'}
+                  | {
+                      __typename: 'EventBlock'
+                      events: Array<{
+                        __typename?: 'Event'
+                        id: string
+                        name: string
+                        description?: Node[] | null
+                        status: EventStatus
+                        location?: string | null
+                        startsAt: string
+                        endsAt?: string | null
+                        url: string
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                      }>
+                    }
                   | {__typename: 'FacebookPostBlock'}
+                  | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
                   | {
                       __typename: 'ImageBlock'
@@ -2496,8 +2679,52 @@ export type FullArticleFragment = {
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -2773,8 +3000,52 @@ export type FullArticleFragment = {
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -3053,8 +3324,52 @@ export type FullArticleFragment = {
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -3377,8 +3692,52 @@ export type ArticleQuery = {
       | {__typename: 'BildwurfAdBlock'}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
-      | {__typename: 'EventBlock'}
+      | {
+          __typename: 'EventBlock'
+          events: Array<{
+            __typename?: 'Event'
+            id: string
+            name: string
+            description?: Node[] | null
+            status: EventStatus
+            location?: string | null
+            startsAt: string
+            endsAt?: string | null
+            url: string
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+          }>
+        }
       | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
       | {
           __typename: 'ImageBlock'
@@ -3514,8 +3873,52 @@ export type ArticleQuery = {
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -3791,8 +4194,52 @@ export type ArticleQuery = {
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -4071,8 +4518,52 @@ export type ArticleQuery = {
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -4322,8 +4813,56 @@ export type ArticleQuery = {
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -4599,8 +5138,56 @@ export type ArticleQuery = {
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -4879,8 +5466,56 @@ export type ArticleQuery = {
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -5205,8 +5840,52 @@ export type PeerArticleQuery = {
       | {__typename: 'BildwurfAdBlock'}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
-      | {__typename: 'EventBlock'}
+      | {
+          __typename: 'EventBlock'
+          events: Array<{
+            __typename?: 'Event'
+            id: string
+            name: string
+            description?: Node[] | null
+            status: EventStatus
+            location?: string | null
+            startsAt: string
+            endsAt?: string | null
+            url: string
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+          }>
+        }
       | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
       | {
           __typename: 'ImageBlock'
@@ -5342,8 +6021,52 @@ export type PeerArticleQuery = {
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -5619,8 +6342,52 @@ export type PeerArticleQuery = {
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -5899,8 +6666,52 @@ export type PeerArticleQuery = {
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -6150,8 +6961,56 @@ export type PeerArticleQuery = {
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -6427,8 +7286,56 @@ export type PeerArticleQuery = {
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -6707,8 +7614,56 @@ export type PeerArticleQuery = {
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -7170,9 +8125,54 @@ type BlockWithoutTeaser_CommentBlock_Fragment = {__typename: 'CommentBlock'}
 
 type BlockWithoutTeaser_EmbedBlock_Fragment = {__typename: 'EmbedBlock'}
 
-type BlockWithoutTeaser_EventBlock_Fragment = {__typename: 'EventBlock'}
+type BlockWithoutTeaser_EventBlock_Fragment = {
+  __typename: 'EventBlock'
+  events: Array<{
+    __typename?: 'Event'
+    id: string
+    name: string
+    description?: Node[] | null
+    status: EventStatus
+    location?: string | null
+    startsAt: string
+    endsAt?: string | null
+    url: string
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+  }>
+}
 
 type BlockWithoutTeaser_FacebookPostBlock_Fragment = {__typename: 'FacebookPostBlock'}
+
+type BlockWithoutTeaser_FacebookVideoBlock_Fragment = {__typename: 'FacebookVideoBlock'}
 
 type BlockWithoutTeaser_HtmlBlock_Fragment = {__typename: 'HTMLBlock'; html?: string | null}
 
@@ -7291,6 +8291,7 @@ export type BlockWithoutTeaserFragment =
   | BlockWithoutTeaser_EmbedBlock_Fragment
   | BlockWithoutTeaser_EventBlock_Fragment
   | BlockWithoutTeaser_FacebookPostBlock_Fragment
+  | BlockWithoutTeaser_FacebookVideoBlock_Fragment
   | BlockWithoutTeaser_HtmlBlock_Fragment
   | BlockWithoutTeaser_ImageBlock_Fragment
   | BlockWithoutTeaser_ImageGalleryBlock_Fragment
@@ -7363,8 +8364,52 @@ type FullTeaser_ArticleTeaser_Fragment = {
       | {__typename: 'BildwurfAdBlock'}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
-      | {__typename: 'EventBlock'}
+      | {
+          __typename: 'EventBlock'
+          events: Array<{
+            __typename?: 'Event'
+            id: string
+            name: string
+            description?: Node[] | null
+            status: EventStatus
+            location?: string | null
+            startsAt: string
+            endsAt?: string | null
+            url: string
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+          }>
+        }
       | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
       | {
           __typename: 'ImageBlock'
@@ -7643,8 +8688,52 @@ type FullTeaser_PageTeaser_Fragment = {
       | {__typename: 'BildwurfAdBlock'}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
-      | {__typename: 'EventBlock'}
+      | {
+          __typename: 'EventBlock'
+          events: Array<{
+            __typename?: 'Event'
+            id: string
+            name: string
+            description?: Node[] | null
+            status: EventStatus
+            location?: string | null
+            startsAt: string
+            endsAt?: string | null
+            url: string
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+          }>
+        }
       | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
       | {
           __typename: 'ImageBlock'
@@ -7924,8 +9013,52 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
       | {__typename: 'BildwurfAdBlock'}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
-      | {__typename: 'EventBlock'}
+      | {
+          __typename: 'EventBlock'
+          events: Array<{
+            __typename?: 'Event'
+            id: string
+            name: string
+            description?: Node[] | null
+            status: EventStatus
+            location?: string | null
+            startsAt: string
+            endsAt?: string | null
+            url: string
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+          }>
+        }
       | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
       | {
           __typename: 'ImageBlock'
@@ -8127,9 +9260,54 @@ type FullBlock_CommentBlock_Fragment = {__typename: 'CommentBlock'}
 
 type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'}
 
-type FullBlock_EventBlock_Fragment = {__typename: 'EventBlock'}
+type FullBlock_EventBlock_Fragment = {
+  __typename: 'EventBlock'
+  events: Array<{
+    __typename?: 'Event'
+    id: string
+    name: string
+    description?: Node[] | null
+    status: EventStatus
+    location?: string | null
+    startsAt: string
+    endsAt?: string | null
+    url: string
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+  }>
+}
 
 type FullBlock_FacebookPostBlock_Fragment = {__typename: 'FacebookPostBlock'}
+
+type FullBlock_FacebookVideoBlock_Fragment = {__typename: 'FacebookVideoBlock'}
 
 type FullBlock_HtmlBlock_Fragment = {__typename: 'HTMLBlock'; html?: string | null}
 
@@ -8281,8 +9459,52 @@ type FullBlock_TeaserGridBlock_Fragment = {
             | {__typename: 'BildwurfAdBlock'}
             | {__typename: 'CommentBlock'}
             | {__typename: 'EmbedBlock'}
-            | {__typename: 'EventBlock'}
+            | {
+                __typename: 'EventBlock'
+                events: Array<{
+                  __typename?: 'Event'
+                  id: string
+                  name: string
+                  description?: Node[] | null
+                  status: EventStatus
+                  location?: string | null
+                  startsAt: string
+                  endsAt?: string | null
+                  url: string
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                }>
+              }
             | {__typename: 'FacebookPostBlock'}
+            | {__typename: 'FacebookVideoBlock'}
             | {__typename: 'HTMLBlock'; html?: string | null}
             | {
                 __typename: 'ImageBlock'
@@ -8558,8 +9780,52 @@ type FullBlock_TeaserGridBlock_Fragment = {
             | {__typename: 'BildwurfAdBlock'}
             | {__typename: 'CommentBlock'}
             | {__typename: 'EmbedBlock'}
-            | {__typename: 'EventBlock'}
+            | {
+                __typename: 'EventBlock'
+                events: Array<{
+                  __typename?: 'Event'
+                  id: string
+                  name: string
+                  description?: Node[] | null
+                  status: EventStatus
+                  location?: string | null
+                  startsAt: string
+                  endsAt?: string | null
+                  url: string
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                }>
+              }
             | {__typename: 'FacebookPostBlock'}
+            | {__typename: 'FacebookVideoBlock'}
             | {__typename: 'HTMLBlock'; html?: string | null}
             | {
                 __typename: 'ImageBlock'
@@ -8838,8 +10104,52 @@ type FullBlock_TeaserGridBlock_Fragment = {
             | {__typename: 'BildwurfAdBlock'}
             | {__typename: 'CommentBlock'}
             | {__typename: 'EmbedBlock'}
-            | {__typename: 'EventBlock'}
+            | {
+                __typename: 'EventBlock'
+                events: Array<{
+                  __typename?: 'Event'
+                  id: string
+                  name: string
+                  description?: Node[] | null
+                  status: EventStatus
+                  location?: string | null
+                  startsAt: string
+                  endsAt?: string | null
+                  url: string
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                }>
+              }
             | {__typename: 'FacebookPostBlock'}
+            | {__typename: 'FacebookVideoBlock'}
             | {__typename: 'HTMLBlock'; html?: string | null}
             | {
                 __typename: 'ImageBlock'
@@ -9090,8 +10400,52 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
-              | {__typename: 'EventBlock'}
+              | {
+                  __typename: 'EventBlock'
+                  events: Array<{
+                    __typename?: 'Event'
+                    id: string
+                    name: string
+                    description?: Node[] | null
+                    status: EventStatus
+                    location?: string | null
+                    startsAt: string
+                    endsAt?: string | null
+                    url: string
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                  }>
+                }
               | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
               | {
                   __typename: 'ImageBlock'
@@ -9367,8 +10721,52 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
-              | {__typename: 'EventBlock'}
+              | {
+                  __typename: 'EventBlock'
+                  events: Array<{
+                    __typename?: 'Event'
+                    id: string
+                    name: string
+                    description?: Node[] | null
+                    status: EventStatus
+                    location?: string | null
+                    startsAt: string
+                    endsAt?: string | null
+                    url: string
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                  }>
+                }
               | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
               | {
                   __typename: 'ImageBlock'
@@ -9647,8 +11045,52 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
-              | {__typename: 'EventBlock'}
+              | {
+                  __typename: 'EventBlock'
+                  events: Array<{
+                    __typename?: 'Event'
+                    id: string
+                    name: string
+                    description?: Node[] | null
+                    status: EventStatus
+                    location?: string | null
+                    startsAt: string
+                    endsAt?: string | null
+                    url: string
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                  }>
+                }
               | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
               | {
                   __typename: 'ImageBlock'
@@ -9860,6 +11302,7 @@ export type FullBlockFragment =
   | FullBlock_EmbedBlock_Fragment
   | FullBlock_EventBlock_Fragment
   | FullBlock_FacebookPostBlock_Fragment
+  | FullBlock_FacebookVideoBlock_Fragment
   | FullBlock_HtmlBlock_Fragment
   | FullBlock_ImageBlock_Fragment
   | FullBlock_ImageGalleryBlock_Fragment
@@ -13544,8 +14987,52 @@ export type FullNavigationFragment = {
             | {__typename: 'BildwurfAdBlock'}
             | {__typename: 'CommentBlock'}
             | {__typename: 'EmbedBlock'}
-            | {__typename: 'EventBlock'}
+            | {
+                __typename: 'EventBlock'
+                events: Array<{
+                  __typename?: 'Event'
+                  id: string
+                  name: string
+                  description?: Node[] | null
+                  status: EventStatus
+                  location?: string | null
+                  startsAt: string
+                  endsAt?: string | null
+                  url: string
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                }>
+              }
             | {__typename: 'FacebookPostBlock'}
+            | {__typename: 'FacebookVideoBlock'}
             | {__typename: 'HTMLBlock'; html?: string | null}
             | {
                 __typename: 'ImageBlock'
@@ -13681,8 +15168,56 @@ export type FullNavigationFragment = {
                           | {__typename: 'BildwurfAdBlock'}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
-                          | {__typename: 'EventBlock'}
+                          | {
+                              __typename: 'EventBlock'
+                              events: Array<{
+                                __typename?: 'Event'
+                                id: string
+                                name: string
+                                description?: Node[] | null
+                                status: EventStatus
+                                location?: string | null
+                                startsAt: string
+                                endsAt?: string | null
+                                url: string
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                                tags?: Array<{
+                                  __typename?: 'Tag'
+                                  id: string
+                                  tag?: string | null
+                                }> | null
+                              }>
+                            }
                           | {__typename: 'FacebookPostBlock'}
+                          | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
                           | {
                               __typename: 'ImageBlock'
@@ -13970,8 +15505,56 @@ export type FullNavigationFragment = {
                           | {__typename: 'BildwurfAdBlock'}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
-                          | {__typename: 'EventBlock'}
+                          | {
+                              __typename: 'EventBlock'
+                              events: Array<{
+                                __typename?: 'Event'
+                                id: string
+                                name: string
+                                description?: Node[] | null
+                                status: EventStatus
+                                location?: string | null
+                                startsAt: string
+                                endsAt?: string | null
+                                url: string
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                                tags?: Array<{
+                                  __typename?: 'Tag'
+                                  id: string
+                                  tag?: string | null
+                                }> | null
+                              }>
+                            }
                           | {__typename: 'FacebookPostBlock'}
+                          | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
                           | {
                               __typename: 'ImageBlock'
@@ -14254,8 +15837,56 @@ export type FullNavigationFragment = {
                           | {__typename: 'BildwurfAdBlock'}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
-                          | {__typename: 'EventBlock'}
+                          | {
+                              __typename: 'EventBlock'
+                              events: Array<{
+                                __typename?: 'Event'
+                                id: string
+                                name: string
+                                description?: Node[] | null
+                                status: EventStatus
+                                location?: string | null
+                                startsAt: string
+                                endsAt?: string | null
+                                url: string
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                                tags?: Array<{
+                                  __typename?: 'Tag'
+                                  id: string
+                                  tag?: string | null
+                                }> | null
+                              }>
+                            }
                           | {__typename: 'FacebookPostBlock'}
+                          | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
                           | {
                               __typename: 'ImageBlock'
@@ -14519,8 +16150,56 @@ export type FullNavigationFragment = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -14812,8 +16491,56 @@ export type FullNavigationFragment = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -15100,8 +16827,56 @@ export type FullNavigationFragment = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -15429,8 +17204,52 @@ export type FullNavigationFragment = {
             | {__typename: 'BildwurfAdBlock'}
             | {__typename: 'CommentBlock'}
             | {__typename: 'EmbedBlock'}
-            | {__typename: 'EventBlock'}
+            | {
+                __typename: 'EventBlock'
+                events: Array<{
+                  __typename?: 'Event'
+                  id: string
+                  name: string
+                  description?: Node[] | null
+                  status: EventStatus
+                  location?: string | null
+                  startsAt: string
+                  endsAt?: string | null
+                  url: string
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                }>
+              }
             | {__typename: 'FacebookPostBlock'}
+            | {__typename: 'FacebookVideoBlock'}
             | {__typename: 'HTMLBlock'; html?: string | null}
             | {
                 __typename: 'ImageBlock'
@@ -15566,8 +17385,56 @@ export type FullNavigationFragment = {
                           | {__typename: 'BildwurfAdBlock'}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
-                          | {__typename: 'EventBlock'}
+                          | {
+                              __typename: 'EventBlock'
+                              events: Array<{
+                                __typename?: 'Event'
+                                id: string
+                                name: string
+                                description?: Node[] | null
+                                status: EventStatus
+                                location?: string | null
+                                startsAt: string
+                                endsAt?: string | null
+                                url: string
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                                tags?: Array<{
+                                  __typename?: 'Tag'
+                                  id: string
+                                  tag?: string | null
+                                }> | null
+                              }>
+                            }
                           | {__typename: 'FacebookPostBlock'}
+                          | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
                           | {
                               __typename: 'ImageBlock'
@@ -15855,8 +17722,56 @@ export type FullNavigationFragment = {
                           | {__typename: 'BildwurfAdBlock'}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
-                          | {__typename: 'EventBlock'}
+                          | {
+                              __typename: 'EventBlock'
+                              events: Array<{
+                                __typename?: 'Event'
+                                id: string
+                                name: string
+                                description?: Node[] | null
+                                status: EventStatus
+                                location?: string | null
+                                startsAt: string
+                                endsAt?: string | null
+                                url: string
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                                tags?: Array<{
+                                  __typename?: 'Tag'
+                                  id: string
+                                  tag?: string | null
+                                }> | null
+                              }>
+                            }
                           | {__typename: 'FacebookPostBlock'}
+                          | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
                           | {
                               __typename: 'ImageBlock'
@@ -16139,8 +18054,56 @@ export type FullNavigationFragment = {
                           | {__typename: 'BildwurfAdBlock'}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
-                          | {__typename: 'EventBlock'}
+                          | {
+                              __typename: 'EventBlock'
+                              events: Array<{
+                                __typename?: 'Event'
+                                id: string
+                                name: string
+                                description?: Node[] | null
+                                status: EventStatus
+                                location?: string | null
+                                startsAt: string
+                                endsAt?: string | null
+                                url: string
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                                tags?: Array<{
+                                  __typename?: 'Tag'
+                                  id: string
+                                  tag?: string | null
+                                }> | null
+                              }>
+                            }
                           | {__typename: 'FacebookPostBlock'}
+                          | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
                           | {
                               __typename: 'ImageBlock'
@@ -16404,8 +18367,56 @@ export type FullNavigationFragment = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -16697,8 +18708,56 @@ export type FullNavigationFragment = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -16985,8 +19044,56 @@ export type FullNavigationFragment = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -17289,8 +19396,52 @@ export type NavigationListQuery = {
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
-              | {__typename: 'EventBlock'}
+              | {
+                  __typename: 'EventBlock'
+                  events: Array<{
+                    __typename?: 'Event'
+                    id: string
+                    name: string
+                    description?: Node[] | null
+                    status: EventStatus
+                    location?: string | null
+                    startsAt: string
+                    endsAt?: string | null
+                    url: string
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                  }>
+                }
               | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
               | {
                   __typename: 'ImageBlock'
@@ -17426,8 +19577,56 @@ export type NavigationListQuery = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -17719,8 +19918,56 @@ export type NavigationListQuery = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -18007,8 +20254,56 @@ export type NavigationListQuery = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -18276,8 +20571,60 @@ export type NavigationListQuery = {
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -18573,8 +20920,60 @@ export type NavigationListQuery = {
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -18865,8 +21264,60 @@ export type NavigationListQuery = {
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -19198,8 +21649,52 @@ export type NavigationListQuery = {
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
-              | {__typename: 'EventBlock'}
+              | {
+                  __typename: 'EventBlock'
+                  events: Array<{
+                    __typename?: 'Event'
+                    id: string
+                    name: string
+                    description?: Node[] | null
+                    status: EventStatus
+                    location?: string | null
+                    startsAt: string
+                    endsAt?: string | null
+                    url: string
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                  }>
+                }
               | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
               | {
                   __typename: 'ImageBlock'
@@ -19335,8 +21830,56 @@ export type NavigationListQuery = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -19628,8 +22171,56 @@ export type NavigationListQuery = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -19916,8 +22507,56 @@ export type NavigationListQuery = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -20185,8 +22824,60 @@ export type NavigationListQuery = {
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -20482,8 +23173,60 @@ export type NavigationListQuery = {
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -20774,8 +23517,60 @@ export type NavigationListQuery = {
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -21085,8 +23880,52 @@ export type NavigationQuery = {
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
-              | {__typename: 'EventBlock'}
+              | {
+                  __typename: 'EventBlock'
+                  events: Array<{
+                    __typename?: 'Event'
+                    id: string
+                    name: string
+                    description?: Node[] | null
+                    status: EventStatus
+                    location?: string | null
+                    startsAt: string
+                    endsAt?: string | null
+                    url: string
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                  }>
+                }
               | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
               | {
                   __typename: 'ImageBlock'
@@ -21222,8 +24061,56 @@ export type NavigationQuery = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -21515,8 +24402,56 @@ export type NavigationQuery = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -21803,8 +24738,56 @@ export type NavigationQuery = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -22072,8 +25055,60 @@ export type NavigationQuery = {
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -22369,8 +25404,60 @@ export type NavigationQuery = {
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -22661,8 +25748,60 @@ export type NavigationQuery = {
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -22994,8 +26133,52 @@ export type NavigationQuery = {
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
-              | {__typename: 'EventBlock'}
+              | {
+                  __typename: 'EventBlock'
+                  events: Array<{
+                    __typename?: 'Event'
+                    id: string
+                    name: string
+                    description?: Node[] | null
+                    status: EventStatus
+                    location?: string | null
+                    startsAt: string
+                    endsAt?: string | null
+                    url: string
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                  }>
+                }
               | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
               | {
                   __typename: 'ImageBlock'
@@ -23131,8 +26314,56 @@ export type NavigationQuery = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -23424,8 +26655,56 @@ export type NavigationQuery = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -23712,8 +26991,56 @@ export type NavigationQuery = {
                             | {__typename: 'BildwurfAdBlock'}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
+                            | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
                             | {
                                 __typename: 'ImageBlock'
@@ -23981,8 +27308,60 @@ export type NavigationQuery = {
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -24278,8 +27657,60 @@ export type NavigationQuery = {
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -24570,8 +28001,60 @@ export type NavigationQuery = {
                               | {__typename: 'BildwurfAdBlock'}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
+                              | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
                               | {
                                   __typename: 'ImageBlock'
@@ -24932,8 +28415,52 @@ export type FullPageFragment = {
     | {__typename: 'BildwurfAdBlock'}
     | {__typename: 'CommentBlock'}
     | {__typename: 'EmbedBlock'}
-    | {__typename: 'EventBlock'}
+    | {
+        __typename: 'EventBlock'
+        events: Array<{
+          __typename?: 'Event'
+          id: string
+          name: string
+          description?: Node[] | null
+          status: EventStatus
+          location?: string | null
+          startsAt: string
+          endsAt?: string | null
+          url: string
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+        }>
+      }
     | {__typename: 'FacebookPostBlock'}
+    | {__typename: 'FacebookVideoBlock'}
     | {__typename: 'HTMLBlock'; html?: string | null}
     | {
         __typename: 'ImageBlock'
@@ -25069,8 +28596,52 @@ export type FullPageFragment = {
                   | {__typename: 'BildwurfAdBlock'}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
-                  | {__typename: 'EventBlock'}
+                  | {
+                      __typename: 'EventBlock'
+                      events: Array<{
+                        __typename?: 'Event'
+                        id: string
+                        name: string
+                        description?: Node[] | null
+                        status: EventStatus
+                        location?: string | null
+                        startsAt: string
+                        endsAt?: string | null
+                        url: string
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                      }>
+                    }
                   | {__typename: 'FacebookPostBlock'}
+                  | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
                   | {
                       __typename: 'ImageBlock'
@@ -25346,8 +28917,52 @@ export type FullPageFragment = {
                   | {__typename: 'BildwurfAdBlock'}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
-                  | {__typename: 'EventBlock'}
+                  | {
+                      __typename: 'EventBlock'
+                      events: Array<{
+                        __typename?: 'Event'
+                        id: string
+                        name: string
+                        description?: Node[] | null
+                        status: EventStatus
+                        location?: string | null
+                        startsAt: string
+                        endsAt?: string | null
+                        url: string
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                      }>
+                    }
                   | {__typename: 'FacebookPostBlock'}
+                  | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
                   | {
                       __typename: 'ImageBlock'
@@ -25626,8 +29241,52 @@ export type FullPageFragment = {
                   | {__typename: 'BildwurfAdBlock'}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
-                  | {__typename: 'EventBlock'}
+                  | {
+                      __typename: 'EventBlock'
+                      events: Array<{
+                        __typename?: 'Event'
+                        id: string
+                        name: string
+                        description?: Node[] | null
+                        status: EventStatus
+                        location?: string | null
+                        startsAt: string
+                        endsAt?: string | null
+                        url: string
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                      }>
+                    }
                   | {__typename: 'FacebookPostBlock'}
+                  | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
                   | {
                       __typename: 'ImageBlock'
@@ -25877,8 +29536,52 @@ export type FullPageFragment = {
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -26154,8 +29857,52 @@ export type FullPageFragment = {
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -26434,8 +30181,52 @@ export type FullPageFragment = {
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -26713,8 +30504,52 @@ export type PageQuery = {
       | {__typename: 'BildwurfAdBlock'}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
-      | {__typename: 'EventBlock'}
+      | {
+          __typename: 'EventBlock'
+          events: Array<{
+            __typename?: 'Event'
+            id: string
+            name: string
+            description?: Node[] | null
+            status: EventStatus
+            location?: string | null
+            startsAt: string
+            endsAt?: string | null
+            url: string
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+          }>
+        }
       | {__typename: 'FacebookPostBlock'}
+      | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
       | {
           __typename: 'ImageBlock'
@@ -26850,8 +30685,52 @@ export type PageQuery = {
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -27127,8 +31006,52 @@ export type PageQuery = {
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -27407,8 +31330,52 @@ export type PageQuery = {
                     | {__typename: 'BildwurfAdBlock'}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
+                    | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
                     | {
                         __typename: 'ImageBlock'
@@ -27658,8 +31625,56 @@ export type PageQuery = {
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -27935,8 +31950,56 @@ export type PageQuery = {
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -28215,8 +32278,56 @@ export type PageQuery = {
                       | {__typename: 'BildwurfAdBlock'}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
+                      | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
                       | {
                           __typename: 'ImageBlock'
@@ -29385,6 +33496,25 @@ export const FullCommentFragmentDoc = gql`
   }
   ${CommentWithoutNestingFragmentDoc}
 `
+export const PageWithoutBlocksFragmentDoc = gql`
+  fragment PageWithoutBlocks on Page {
+    id
+    slug
+    description
+    tags
+    title
+    url
+    image {
+      ...FullImage
+    }
+    socialMediaDescription
+    socialMediaTitle
+    socialMediaImage {
+      ...FullImage
+    }
+  }
+  ${FullImageFragmentDoc}
+`
 export const FullEventFragmentDoc = gql`
   fragment FullEvent on Event {
     id
@@ -29402,25 +33532,6 @@ export const FullEventFragmentDoc = gql`
     startsAt
     endsAt
     url
-  }
-  ${FullImageFragmentDoc}
-`
-export const PageWithoutBlocksFragmentDoc = gql`
-  fragment PageWithoutBlocks on Page {
-    id
-    slug
-    description
-    tags
-    title
-    url
-    image {
-      ...FullImage
-    }
-    socialMediaDescription
-    socialMediaTitle
-    socialMediaImage {
-      ...FullImage
-    }
   }
   ${FullImageFragmentDoc}
 `
@@ -29455,8 +33566,14 @@ export const BlockWithoutTeaserFragmentDoc = gql`
     ... on HTMLBlock {
       html
     }
+    ... on EventBlock {
+      events {
+        ...FullEvent
+      }
+    }
   }
   ${FullImageFragmentDoc}
+  ${FullEventFragmentDoc}
 `
 export const FullAuthorFragmentDoc = gql`
   fragment FullAuthor on Author {
@@ -31078,6 +35195,7 @@ const result: PossibleTypesResultData = {
       'EmbedBlock',
       'EventBlock',
       'FacebookPostBlock',
+      'FacebookVideoBlock',
       'HTMLBlock',
       'ImageBlock',
       'ImageGalleryBlock',

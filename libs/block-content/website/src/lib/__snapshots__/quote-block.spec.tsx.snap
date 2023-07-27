@@ -3,7 +3,7 @@
 exports[`Quote Block should render Default 1`] = `
 <DocumentFragment>
   <blockquote
-    class="css-1q48al4"
+    class="css-si6sqx e1giyv9u0"
   >
     <p
       class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
@@ -22,7 +22,7 @@ exports[`Quote Block should render Default 1`] = `
 exports[`Quote Block should render WithClassName 1`] = `
 <DocumentFragment>
   <blockquote
-    class="extra-classname css-1q48al4"
+    class="extra-classname css-si6sqx e1giyv9u0"
   >
     <p
       class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
@@ -41,7 +41,7 @@ exports[`Quote Block should render WithClassName 1`] = `
 exports[`Quote Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <blockquote
-    class="css-1q48al4"
+    class="css-si6sqx e1giyv9u0"
   >
     <p
       class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"

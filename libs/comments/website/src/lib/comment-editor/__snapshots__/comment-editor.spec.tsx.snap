@@ -3,7 +3,7 @@
 exports[`CommentEditor should render Anonymous 1`] = `
 <DocumentFragment>
   <form
-    class="css-2klgun"
+    class="css-1p44k52 e1aas6vw0"
   >
     <div
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -130,10 +130,10 @@ exports[`CommentEditor should render Anonymous 1`] = `
       </p>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-szb73l e1aas6vw2"
     >
       <div
-        class="css-zxc9jp"
+        class="css-kpaq8o e1aas6vw3"
       >
         <svg
           viewBox="0,0,200,200"
@@ -229,7 +229,7 @@ exports[`CommentEditor should render Anonymous 1`] = `
       </div>
     </div>
     <div
-      class="css-ja06uy"
+      class="css-1q1epor e1aas6vw1"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
@@ -280,7 +280,7 @@ exports[`CommentEditor should render Anonymous 1`] = `
 exports[`CommentEditor should render AnonymousFilled 1`] = `
 <DocumentFragment>
   <form
-    class="css-2klgun"
+    class="css-1p44k52 e1aas6vw0"
   >
     <div
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -407,10 +407,10 @@ exports[`CommentEditor should render AnonymousFilled 1`] = `
       </p>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-szb73l e1aas6vw2"
     >
       <div
-        class="css-zxc9jp"
+        class="css-kpaq8o e1aas6vw3"
       >
         <svg
           viewBox="0,0,200,200"
@@ -506,7 +506,7 @@ exports[`CommentEditor should render AnonymousFilled 1`] = `
       </div>
     </div>
     <div
-      class="css-ja06uy"
+      class="css-1q1epor e1aas6vw1"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
@@ -557,7 +557,7 @@ exports[`CommentEditor should render AnonymousFilled 1`] = `
 exports[`CommentEditor should render AnonymousInvalid 1`] = `
 <DocumentFragment>
   <form
-    class="css-2klgun"
+    class="css-1p44k52 e1aas6vw0"
   >
     <div
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -684,10 +684,10 @@ exports[`CommentEditor should render AnonymousInvalid 1`] = `
       </p>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-szb73l e1aas6vw2"
     >
       <div
-        class="css-zxc9jp"
+        class="css-kpaq8o e1aas6vw3"
       >
         <svg
           viewBox="0,0,200,200"
@@ -783,7 +783,7 @@ exports[`CommentEditor should render AnonymousInvalid 1`] = `
       </div>
     </div>
     <div
-      class="css-ja06uy"
+      class="css-1q1epor e1aas6vw1"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
@@ -834,7 +834,7 @@ exports[`CommentEditor should render AnonymousInvalid 1`] = `
 exports[`CommentEditor should render Cancel 1`] = `
 <DocumentFragment>
   <form
-    class="css-2klgun"
+    class="css-1p44k52 e1aas6vw0"
   >
     <div
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -961,10 +961,10 @@ exports[`CommentEditor should render Cancel 1`] = `
       </p>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-szb73l e1aas6vw2"
     >
       <div
-        class="css-zxc9jp"
+        class="css-kpaq8o e1aas6vw3"
       >
         <svg
           viewBox="0,0,200,200"
@@ -1060,7 +1060,7 @@ exports[`CommentEditor should render Cancel 1`] = `
       </div>
     </div>
     <div
-      class="css-ja06uy"
+      class="css-1q1epor e1aas6vw1"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
@@ -1111,7 +1111,7 @@ exports[`CommentEditor should render Cancel 1`] = `
 exports[`CommentEditor should render LoggedIn 1`] = `
 <DocumentFragment>
   <form
-    class="css-2klgun"
+    class="css-1p44k52 e1aas6vw0"
   >
     <div
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1201,7 +1201,7 @@ exports[`CommentEditor should render LoggedIn 1`] = `
       </p>
     </div>
     <div
-      class="css-ja06uy"
+      class="css-1q1epor e1aas6vw1"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
@@ -1252,7 +1252,7 @@ exports[`CommentEditor should render LoggedIn 1`] = `
 exports[`CommentEditor should render LoggedInFilled 1`] = `
 <DocumentFragment>
   <form
-    class="css-2klgun"
+    class="css-1p44k52 e1aas6vw0"
   >
     <div
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1342,7 +1342,7 @@ exports[`CommentEditor should render LoggedInFilled 1`] = `
       </p>
     </div>
     <div
-      class="css-ja06uy"
+      class="css-1q1epor e1aas6vw1"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
@@ -1393,7 +1393,7 @@ exports[`CommentEditor should render LoggedInFilled 1`] = `
 exports[`CommentEditor should render LoggedInInvalid 1`] = `
 <DocumentFragment>
   <form
-    class="css-2klgun"
+    class="css-1p44k52 e1aas6vw0"
   >
     <div
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1483,7 +1483,7 @@ exports[`CommentEditor should render LoggedInInvalid 1`] = `
       </p>
     </div>
     <div
-      class="css-ja06uy"
+      class="css-1q1epor e1aas6vw1"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
@@ -1534,7 +1534,7 @@ exports[`CommentEditor should render LoggedInInvalid 1`] = `
 exports[`CommentEditor should render WithChallengeError 1`] = `
 <DocumentFragment>
   <form
-    class="css-2klgun"
+    class="css-1p44k52 e1aas6vw0"
   >
     <div
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1686,7 +1686,7 @@ exports[`CommentEditor should render WithChallengeError 1`] = `
       </div>
     </div>
     <div
-      class="css-ja06uy"
+      class="css-1q1epor e1aas6vw1"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
@@ -1737,7 +1737,7 @@ exports[`CommentEditor should render WithChallengeError 1`] = `
 exports[`CommentEditor should render WithError 1`] = `
 <DocumentFragment>
   <form
-    class="css-2klgun"
+    class="css-1p44k52 e1aas6vw0"
   >
     <div
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1864,10 +1864,10 @@ exports[`CommentEditor should render WithError 1`] = `
       </p>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-szb73l e1aas6vw2"
     >
       <div
-        class="css-zxc9jp"
+        class="css-kpaq8o e1aas6vw3"
       >
         <svg
           viewBox="0,0,200,200"
@@ -1988,7 +1988,7 @@ exports[`CommentEditor should render WithError 1`] = `
       </div>
     </div>
     <div
-      class="css-ja06uy"
+      class="css-1q1epor e1aas6vw1"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
