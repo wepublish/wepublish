@@ -40,7 +40,7 @@ export function ArticleListItem({className, ...data}: Article & {className?: str
   } = useWebsiteBuilder()
 
   return (
-    <Link css={wrapperStyles(theme)} className={className} href={data.slug}>
+    <Link css={wrapperStyles(theme)} className={className} href={data.url}>
       <ArticleListItemImageWrapper>
         {data.image && <Image image={data.image} square css={imageStyles} />}
       </ArticleListItemImageWrapper>
