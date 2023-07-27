@@ -3,16 +3,27 @@ import {Article, ArticleSEO} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {Author, AuthorChip, AuthorList, AuthorListItem} from '@wepublish/author/website'
 import {
+  BildwurfAdBlock,
   BlockRenderer,
+  EmbedBlock,
+  FacebookPostBlock,
+  FacebookVideoBlock,
   HtmlBlock,
   ImageBlock,
   ImageGalleryBlock,
+  InstagramPostBlock,
+  PolisConversationBlock,
   QuoteBlock,
   RichTextBlock,
+  SoundCloudTrackBlock,
   Teaser,
   TeaserGridBlock,
   TeaserGridFlexBlock,
-  TitleBlock
+  TikTokVideoBlock,
+  TitleBlock,
+  TwitterTweetBlock,
+  VimeoVideoBlock,
+  YouTubeVideoBlock
 } from '@wepublish/block-content/website'
 import {CommentEditor, CommentList, CommentListItem} from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
@@ -118,7 +129,18 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           RichText: RichTextBlock,
           TeaserGridFlex: TeaserGridFlexBlock,
           TeaserGrid: TeaserGridBlock,
-          Teaser
+          Teaser,
+          BildwurfAd: BildwurfAdBlock,
+          Embed: EmbedBlock,
+          FacebookPost: FacebookPostBlock,
+          FacebookVideo: FacebookVideoBlock,
+          InstagramPost: InstagramPostBlock,
+          PolisConversation: PolisConversationBlock,
+          SoundCloudTrack: SoundCloudTrackBlock,
+          TikTokVideo: TikTokVideoBlock,
+          TwitterTweet: TwitterTweetBlock,
+          VimeoVideo: VimeoVideoBlock,
+          YouTubeVideo: YouTubeVideoBlock
         }}
         richtext={{RenderElement, RenderLeaf}}
         date={{

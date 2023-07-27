@@ -18,17 +18,27 @@ import {
   BuilderAuthorListProps
 } from './author.interface'
 import {
+  BuilderBildwurfAdBlockProps,
   BuilderBlockRendererProps,
-  BuilderHTMLBlockProps,
   BuilderEmbedBlockProps,
+  BuilderFacebookPostBlockProps,
+  BuilderFacebookVideoBlockProps,
+  BuilderHTMLBlockProps,
   BuilderImageBlockProps,
   BuilderImageGalleryBlockProps,
+  BuilderInstagramPostBlockProps,
+  BuilderPolisConversationBlockProps,
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
+  BuilderSoundCloudTrackBlockProps,
   BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
   BuilderTeaserProps,
-  BuilderTitleBlockProps
+  BuilderTikTokVideoBlockProps,
+  BuilderTitleBlockProps,
+  BuilderTwitterTweetBlockProps,
+  BuilderVimeoVideoBlockProps,
+  BuilderYouTubeVideoBlockProps
 } from './blocks.interface'
 import {
   BuilderCommentEditorProps,
@@ -124,6 +134,16 @@ export type WebsiteBuilderComponents = {
     Quote: ComponentType<BuilderQuoteBlockProps>
     RichText: ComponentType<BuilderRichTextBlockProps>
     HTML: ComponentType<BuilderHTMLBlockProps>
+    FacebookPost: ComponentType<BuilderFacebookPostBlockProps>
+    FacebookVideo: ComponentType<BuilderFacebookVideoBlockProps>
+    InstagramPost: ComponentType<BuilderInstagramPostBlockProps>
+    TwitterTweet: ComponentType<BuilderTwitterTweetBlockProps>
+    VimeoVideo: ComponentType<BuilderVimeoVideoBlockProps>
+    YouTubeVideo: ComponentType<BuilderYouTubeVideoBlockProps>
+    SoundCloudTrack: ComponentType<BuilderSoundCloudTrackBlockProps>
+    PolisConversation: ComponentType<BuilderPolisConversationBlockProps>
+    TikTokVideo: ComponentType<BuilderTikTokVideoBlockProps>
+    BildwurfAd: ComponentType<BuilderBildwurfAdBlockProps>
     Embed: ComponentType<BuilderEmbedBlockProps>
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
@@ -190,11 +210,21 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     Renderer: NoComponent,
     Title: NoComponent,
     Image: NoComponent,
-    Embed: NoComponent,
     ImageGallery: NoComponent,
     Quote: NoComponent,
     RichText: NoComponent,
     HTML: NoComponent,
+    FacebookPost: NoComponent,
+    FacebookVideo: NoComponent,
+    InstagramPost: NoComponent,
+    TwitterTweet: NoComponent,
+    VimeoVideo: NoComponent,
+    YouTubeVideo: NoComponent,
+    SoundCloudTrack: NoComponent,
+    PolisConversation: NoComponent,
+    TikTokVideo: NoComponent,
+    BildwurfAd: NoComponent,
+    Embed: NoComponent,
     TeaserGridFlex: NoComponent,
     TeaserGrid: NoComponent,
     Teaser: NoComponent

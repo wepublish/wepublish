@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Facebook Video Block should render Default 1`] = `
+<DocumentFragment>
+  <div
+    class="css-oqxw9v"
+  />
+</DocumentFragment>
+`;
+
+exports[`Facebook Video Block should render WithClassName 1`] = `
+<DocumentFragment>
+  <div
+    class="extra-classname css-oqxw9v"
+  />
+</DocumentFragment>
+`;

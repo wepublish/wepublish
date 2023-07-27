@@ -1,18 +1,6 @@
-import {BuilderBlockRendererProps, EmbedType, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderBlockRendererProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Block as BlockType} from '@wepublish/website/api'
 import {isHtmlBlock} from './html-block'
-import {
-  isEmbedBlock,
-  isBildwurfAdBlock,
-  isFacebookPostBlock,
-  isFacebookVideoBlock,
-  isInstagramBlock,
-  isSoundCloudTrackBlock,
-  isTikTokVideoBlock,
-  isTwitterTweetBlock,
-  isVimeoVideoBlock,
-  isYouTubeVideoBlock
-} from './embed-block'
 import {isImageBlock} from './image-block'
 import {isQuoteBlock} from './quote-block'
 import {isRichTextBlock} from './richtext-block'
@@ -21,30 +9,46 @@ import {isTitleBlock} from './title-block'
 import {cond} from 'ramda'
 import {isTeaserGridBlock} from './teaser-grid-block'
 import {isImageGalleryBlock} from './image-gallery-block'
+import {isEmbedBlock} from './embed-block'
+import {isBildwurfAdBlock} from './bildwurf-ad-block'
+import {isFacebookPostBlock} from './facebook-post-block'
+import {isFacebookVideoBlock} from './facebook-video-block'
+import {isInstagramBlock} from './instagram-post-block'
+import {isSoundCloudTrackBlock} from './sound-cloud-block'
+import {isTikTokVideoBlock} from './tik-tok-video-block'
+import {isTwitterTweetBlock} from './twitter-tweet-block'
+import {isVimeoVideoBlock} from './vimeo-video-block'
+import {isYouTubeVideoBlock} from './youtube-video-block'
 
 export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
   const {blocks} = useWebsiteBuilder()
 
-  return cond([
-    [isTitleBlock, block => <blocks.Title {...block} />],
-    [isImageBlock, block => <blocks.Image {...block} />],
-    [isImageGalleryBlock, block => <blocks.ImageGallery {...block} />],
-    [isQuoteBlock, block => <blocks.Quote {...block} />],
-    [isRichTextBlock, block => <blocks.RichText {...block} />],
-    [isHtmlBlock, block => <blocks.HTML {...block} />],
-    [isTeaserGridFlexBlock, block => <blocks.TeaserGridFlex {...block} />],
-    [isTeaserGridBlock, block => <blocks.TeaserGrid {...block} />],
-    [isEmbedBlock, block => <blocks.Embed type={EmbedType.Other} {...block} />],
-    [isBildwurfAdBlock, block => <blocks.Embed type={EmbedType.BildwurfAd} {...block} />],
-    [isFacebookPostBlock, block => <blocks.Embed type={EmbedType.FacebookPost} {...block} />],
-    [isFacebookVideoBlock, block => <blocks.Embed type={EmbedType.FacebookVideo} {...block} />],
-    [isInstagramBlock, block => <blocks.Embed type={EmbedType.InstagramPost} {...block} />],
-    [isSoundCloudTrackBlock, block => <blocks.Embed type={EmbedType.SoundCloudTrack} {...block} />],
-    [isTikTokVideoBlock, block => <blocks.Embed type={EmbedType.TikTokVideo} {...block} />],
-    [isTwitterTweetBlock, block => <blocks.Embed type={EmbedType.TwitterTweet} {...block} />],
-    [isVimeoVideoBlock, block => <blocks.Embed type={EmbedType.VimeoVideo} {...block} />],
-    [isYouTubeVideoBlock, block => <blocks.Embed type={EmbedType.YouTubeVideo} {...block} />]
-  ])(block)
+  const embedCond = cond([
+    [isEmbedBlock, block => <blocks.Embed {...block} />],
+    [isBildwurfAdBlock, block => <blocks.BildwurfAd {...block} />],
+    [isFacebookPostBlock, block => <blocks.FacebookPost {...block} />],
+    [isFacebookVideoBlock, block => <blocks.FacebookVideo {...block} />],
+    [isInstagramBlock, block => <blocks.InstagramPost {...block} />],
+    [isSoundCloudTrackBlock, block => <blocks.SoundCloudTrack {...block} />],
+    [isTikTokVideoBlock, block => <blocks.TikTokVideo {...block} />],
+    [isTwitterTweetBlock, block => <blocks.TwitterTweet {...block} />],
+    [isVimeoVideoBlock, block => <blocks.VimeoVideo {...block} />],
+    [isYouTubeVideoBlock, block => <blocks.YouTubeVideo {...block} />]
+  ])
+
+  return (
+    embedCond(block) ??
+    cond([
+      [isTitleBlock, block => <blocks.Title {...block} />],
+      [isImageBlock, block => <blocks.Image {...block} />],
+      [isImageGalleryBlock, block => <blocks.ImageGallery {...block} />],
+      [isQuoteBlock, block => <blocks.Quote {...block} />],
+      [isRichTextBlock, block => <blocks.RichText {...block} />],
+      [isHtmlBlock, block => <blocks.HTML {...block} />],
+      [isTeaserGridFlexBlock, block => <blocks.TeaserGridFlex {...block} />],
+      [isTeaserGridBlock, block => <blocks.TeaserGrid {...block} />]
+    ])(block)
+  )
 }
 
 export type BlocksProp = {

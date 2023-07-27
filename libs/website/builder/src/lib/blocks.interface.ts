@@ -19,43 +19,9 @@ import {
   SoundCloudTrackBlock,
   PolisConversationBlock,
   TikTokVideoBlock,
-  BildwurfAdBlock
+  BildwurfAdBlock,
+  EmbedBlock
 } from '@wepublish/website/api'
-
-export enum EmbedType {
-  FacebookPost = 'facebookPost',
-  FacebookVideo = 'facebookVideo',
-  InstagramPost = 'instagramPost',
-  TwitterTweet = 'twitterTweet',
-  VimeoVideo = 'vimeoVideo',
-  YouTubeVideo = 'youTubeVideo',
-  SoundCloudTrack = 'soundCloudTrack',
-  PolisConversation = 'polisConversation',
-  TikTokVideo = 'tikTokVideo',
-  BildwurfAd = 'bildwurfAd',
-  Other = 'other'
-}
-
-export type EmbedBlockType =
-  | ({type: EmbedType.FacebookPost} & FacebookPostBlock)
-  | ({type: EmbedType.FacebookVideo} & FacebookVideoBlock)
-  | ({type: EmbedType.InstagramPost} & InstagramPostBlock)
-  | ({type: EmbedType.TwitterTweet} & TwitterTweetBlock)
-  | ({type: EmbedType.VimeoVideo} & VimeoVideoBlock)
-  | ({type: EmbedType.YouTubeVideo} & YouTubeVideoBlock)
-  | ({type: EmbedType.SoundCloudTrack} & SoundCloudTrackBlock)
-  | ({type: EmbedType.PolisConversation} & PolisConversationBlock)
-  | ({type: EmbedType.TikTokVideo} & TikTokVideoBlock)
-  | ({type: EmbedType.BildwurfAd} & BildwurfAdBlock)
-  | ({type: EmbedType.Other} & {
-      type: EmbedType.Other
-      url?: string | null
-      title?: string | null
-      width?: number | null
-      height?: number | null
-      styleCustom?: string | null
-      sandbox?: string | null
-    })
 
 export type BuilderBlockRendererProps = {block: Block}
 export type BuilderTitleBlockProps = TitleBlock & {className?: string}
@@ -64,7 +30,17 @@ export type BuilderImageGalleryBlockProps = ImageGalleryBlock & {className?: str
 export type BuilderQuoteBlockProps = QuoteBlock & {className?: string}
 export type BuilderRichTextBlockProps = RichTextBlock & {className?: string}
 export type BuilderHTMLBlockProps = HtmlBlock & {className?: string}
-export type BuilderEmbedBlockProps = EmbedBlockType & {className?: string}
+export type BuilderFacebookPostBlockProps = FacebookPostBlock & {className?: string}
+export type BuilderFacebookVideoBlockProps = FacebookVideoBlock & {className?: string}
+export type BuilderInstagramPostBlockProps = InstagramPostBlock & {className?: string}
+export type BuilderTwitterTweetBlockProps = TwitterTweetBlock & {className?: string}
+export type BuilderVimeoVideoBlockProps = VimeoVideoBlock & {className?: string}
+export type BuilderYouTubeVideoBlockProps = YouTubeVideoBlock & {className?: string}
+export type BuilderSoundCloudTrackBlockProps = SoundCloudTrackBlock & {className?: string}
+export type BuilderPolisConversationBlockProps = PolisConversationBlock & {className?: string}
+export type BuilderTikTokVideoBlockProps = TikTokVideoBlock & {className?: string}
+export type BuilderBildwurfAdBlockProps = BildwurfAdBlock & {className?: string}
+export type BuilderEmbedBlockProps = EmbedBlock & {className?: string}
 export type BuilderTeaserGridFlexBlockProps = TeaserGridFlexBlock & {
   className?: string
   showLead?: boolean

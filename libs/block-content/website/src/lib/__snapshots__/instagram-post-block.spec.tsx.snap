@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Instagram Post Block should render Default 1`] = `
+<DocumentFragment>
+  <div
+    class="css-0"
+  />
+</DocumentFragment>
+`;
+
+exports[`Instagram Post Block should render WithClassName 1`] = `
+<DocumentFragment>
+  <div
+    class="extra-classname css-0"
+  />
+</DocumentFragment>
+`;

@@ -1,10 +1,10 @@
 import {render} from '@testing-library/react'
-import * as stories from './embed-block.stories'
+import * as stories from './sound-cloud-block.stories'
 import {composeStories} from '@storybook/react'
 
 const storiesCmp = composeStories(stories)
 
-describe('Embed Block', () => {
+describe('SoundCloud Track Block', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, () => {
       const {asFragment} = render(<Component />)
