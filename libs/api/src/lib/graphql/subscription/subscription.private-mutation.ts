@@ -73,7 +73,7 @@ export const createSubscription = async (
   const {roles} = authenticate()
   authorise(CanCreateSubscription, roles)
 
-  const newSubscriptionWithInvoice = await memberContext.createSubscription(
+  const {subscription} = await memberContext.createSubscription(
     subscriptionClient,
     input['userID'],
     input['paymentMethodID'],
