@@ -13,15 +13,16 @@ import {BuilderArticleProps, BuilderArticleSEOProps} from './article.interface'
 import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
 import {
   BuilderAuthorChipProps,
-  BuilderAuthorProps,
   BuilderAuthorListItemProps,
-  BuilderAuthorListProps
+  BuilderAuthorListProps,
+  BuilderAuthorProps
 } from './author.interface'
 import {
   BuilderBlockRendererProps,
   BuilderHTMLBlockProps,
   BuilderImageBlockProps,
   BuilderImageGalleryBlockProps,
+  BuilderListicleBlockProps,
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
   BuilderTeaserGridBlockProps,
@@ -51,6 +52,7 @@ import {BuilderMemberPlansProps} from './member-plans.interface'
 import {BuilderNavbarProps} from './navbar.interface'
 import {BuilderPageProps, BuilderPageSEOProps} from './page.interface'
 import {BuilderPayInvoicesProps} from './pay-invoices.interface'
+import {BuilderPeerProps} from './peer.interface'
 import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
 import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
@@ -60,7 +62,6 @@ import {
   BuilderIconButtonProps,
   BuilderTextFieldProps
 } from './ui.interface'
-import {BuilderPeerProps} from './peer.interface'
 
 const NoComponent = () => null
 
@@ -123,6 +124,7 @@ export type WebsiteBuilderComponents = {
     Quote: ComponentType<BuilderQuoteBlockProps>
     RichText: ComponentType<BuilderRichTextBlockProps>
     HTML: ComponentType<BuilderHTMLBlockProps>
+    Listicle: ComponentType<BuilderListicleBlockProps>
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
@@ -192,6 +194,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     Quote: NoComponent,
     RichText: NoComponent,
     HTML: NoComponent,
+    Listicle: NoComponent,
     TeaserGridFlex: NoComponent,
     TeaserGrid: NoComponent,
     Teaser: NoComponent
