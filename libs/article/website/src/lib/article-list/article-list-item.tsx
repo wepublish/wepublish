@@ -51,7 +51,7 @@ export function ArticleListItem({className, ...data}: Article & {className?: str
         </Paragraph>
 
         {data.title && <H5>{data.title}</H5>}
-        {data.authors && <Paragraph>von {data.authors.map(a => `${a.name} `)}</Paragraph>}
+        {data.authors && <Paragraph>von {data.authors.map(a => a.name).join(', ')}</Paragraph>}
       </ArticleListItemContent>
     </Link>
   )
