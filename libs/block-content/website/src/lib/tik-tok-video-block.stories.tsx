@@ -3,7 +3,7 @@ import {TikTokVideoBlock} from './tik-tok-video-block'
 
 export default {
   component: TikTokVideoBlock,
-  title: 'Blocks/Tik Tok'
+  title: 'Blocks/TikTok'
 } as Meta
 
 export const Default = {

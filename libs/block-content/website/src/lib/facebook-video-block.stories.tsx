@@ -8,8 +8,8 @@ export default {
 
 export const Default = {
   args: {
-    userID: 'ladolcekita',
-    videoID: '1190669514972266'
+    userID: '100064959061177',
+    videoID: '1310370486335266'
   }
 }
 

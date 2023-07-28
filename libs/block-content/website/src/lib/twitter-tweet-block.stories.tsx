@@ -8,8 +8,8 @@ export default {
 
 export const Default = {
   args: {
-    userID: 'MrBeast',
-    tweetID: '1683176302503772161'
+    userID: 'WePublish_media',
+    tweetID: '1600079498845863937'
   }
 }
 

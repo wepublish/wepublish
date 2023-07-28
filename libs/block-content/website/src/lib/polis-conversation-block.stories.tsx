@@ -3,7 +3,7 @@ import {PolisConversationBlock} from './polis-conversation-block'
 
 export default {
   component: PolisConversationBlock,
-  title: 'Blocks/SoundCloud'
+  title: 'Blocks/Polis Conversation'
 } as Meta
 
 export const Default = {

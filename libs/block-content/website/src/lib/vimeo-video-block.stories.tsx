@@ -3,7 +3,7 @@ import {VimeoVideoBlock} from './vimeo-video-block'
 
 export default {
   component: VimeoVideoBlock,
-  title: 'Blocks/YouTube'
+  title: 'Blocks/Vimeo'
 } as Meta
 
 export const Default = {

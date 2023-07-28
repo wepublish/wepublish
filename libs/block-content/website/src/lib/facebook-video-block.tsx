@@ -1,17 +1,29 @@
 import styled from '@emotion/styled'
 import {Block, FacebookVideoBlock as FacebookVideoBlockType} from '@wepublish/website/api'
 import {BuilderFacebookVideoBlockProps} from '@wepublish/website/builder'
+import ReactPlayer from 'react-player'
 
 export const isFacebookVideoBlock = (block: Block): block is FacebookVideoBlockType =>
   block.__typename === 'FacebookVideoBlock'
 
 export const FacebookVideoBlockWrapper = styled('div')`
-  display: flex;
+  display: grid;
   justify-content: center;
-  min-height: 300px;
-  padding: 20px;
 `
 
-export function FacebookVideoBlock({userID, videoID, className}: BuilderFacebookVideoBlockProps) {
-  return <FacebookVideoBlockWrapper className={className}></FacebookVideoBlockWrapper>
-}
+export const FacebookVideoBlockPlayer = styled(ReactPlayer)``
+
+export const FacebookVideoBlock = ({
+  userID,
+  videoID,
+  className
+}: BuilderFacebookVideoBlockProps) => (
+  <FacebookVideoBlockWrapper className={className}>
+    <FacebookVideoBlockPlayer
+      width={'auto'}
+      height={'auto'}
+      url={`https://www.facebook.com/${userID}/videos/${videoID}/`}
+      controls={true}
+    />
+  </FacebookVideoBlockWrapper>
+)

@@ -75,6 +75,12 @@ const styles = (theme: Theme) => css`
   h6 {
     text-wrap: balance;
   }
+
+  img,
+  iframe {
+    // fixes taking up more space than needed in 'display: block' wrappers
+    vertical-align: bottom;
+  }
 `
 
 export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
