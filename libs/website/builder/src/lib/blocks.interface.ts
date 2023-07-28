@@ -20,7 +20,8 @@ import {
   PolisConversationBlock,
   TikTokVideoBlock,
   BildwurfAdBlock,
-  EmbedBlock
+  EmbedBlock,
+  ListicleBlock
 } from '@wepublish/website/api'
 
 export type BuilderBlockRendererProps = {block: Block}
@@ -41,6 +42,7 @@ export type BuilderPolisConversationBlockProps = PolisConversationBlock & {class
 export type BuilderTikTokVideoBlockProps = TikTokVideoBlock & {className?: string}
 export type BuilderBildwurfAdBlockProps = BildwurfAdBlock & {className?: string}
 export type BuilderEmbedBlockProps = EmbedBlock & {className?: string}
+export type BuilderListicleBlockProps = ListicleBlock & {className?: string}
 export type BuilderTeaserGridFlexBlockProps = TeaserGridFlexBlock & {
   className?: string
   showLead?: boolean

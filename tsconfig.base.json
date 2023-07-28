@@ -46,6 +46,7 @@
       "@wepublish/richtext": ["libs/richtext/src/index.ts"],
       "@wepublish/richtext/api": ["libs/richtext/api/src/index.ts"],
       "@wepublish/richtext/website": ["libs/richtext/website/src/index.ts"],
+      "@wepublish/feed/website": ["libs/feed/website/src/index.ts"],
       "@wepublish/settings/api": ["libs/settings/api/src/index.ts"],
       "@wepublish/storybook": ["libs/storybook/src/index.ts"],
       "@wepublish/testing": ["libs/testing/src/index.ts"],

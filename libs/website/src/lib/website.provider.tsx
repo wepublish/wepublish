@@ -23,7 +23,8 @@ import {
   TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
-  YouTubeVideoBlock
+  YouTubeVideoBlock,
+  ListicleBlock
 } from '@wepublish/block-content/website'
 import {CommentEditor, CommentList, CommentListItem} from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
@@ -133,6 +134,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Quote: QuoteBlock,
           HTML: HtmlBlock,
           RichText: RichTextBlock,
+          Listicle: ListicleBlock,
           TeaserGridFlex: TeaserGridFlexBlock,
           TeaserGrid: TeaserGridBlock,
           Teaser,
