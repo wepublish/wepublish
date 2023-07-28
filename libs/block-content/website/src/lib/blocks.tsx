@@ -19,6 +19,7 @@ import {isTikTokVideoBlock} from './tik-tok-video-block'
 import {isTwitterTweetBlock} from './twitter-tweet-block'
 import {isVimeoVideoBlock} from './vimeo-video-block'
 import {isYouTubeVideoBlock} from './youtube-video-block'
+import {isListicleBlock} from './listicle-block'
 
 export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
   const {blocks} = useWebsiteBuilder()
@@ -46,7 +47,8 @@ export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
       [isRichTextBlock, block => <blocks.RichText {...block} />],
       [isHtmlBlock, block => <blocks.HTML {...block} />],
       [isTeaserGridFlexBlock, block => <blocks.TeaserGridFlex {...block} />],
-      [isTeaserGridBlock, block => <blocks.TeaserGrid {...block} />]
+      [isTeaserGridBlock, block => <blocks.TeaserGrid {...block} />],
+      [isListicleBlock, block => <blocks.Listicle {...block} />]
     ])(block)
   )
 }

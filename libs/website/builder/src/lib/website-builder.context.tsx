@@ -13,9 +13,9 @@ import {BuilderArticleProps, BuilderArticleSEOProps} from './article.interface'
 import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
 import {
   BuilderAuthorChipProps,
-  BuilderAuthorProps,
   BuilderAuthorListItemProps,
-  BuilderAuthorListProps
+  BuilderAuthorListProps,
+  BuilderAuthorProps
 } from './author.interface'
 import {
   BuilderBildwurfAdBlockProps,
@@ -28,6 +28,7 @@ import {
   BuilderImageGalleryBlockProps,
   BuilderInstagramPostBlockProps,
   BuilderPolisConversationBlockProps,
+  BuilderListicleBlockProps,
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
   BuilderSoundCloudTrackBlockProps,
@@ -62,6 +63,7 @@ import {BuilderMemberPlansProps} from './member-plans.interface'
 import {BuilderNavbarProps} from './navbar.interface'
 import {BuilderPageProps, BuilderPageSEOProps} from './page.interface'
 import {BuilderPayInvoicesProps} from './pay-invoices.interface'
+import {BuilderPeerProps} from './peer.interface'
 import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
 import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
@@ -71,7 +73,6 @@ import {
   BuilderIconButtonProps,
   BuilderTextFieldProps
 } from './ui.interface'
-import {BuilderPeerProps} from './peer.interface'
 
 const NoComponent = () => null
 
@@ -145,6 +146,7 @@ export type WebsiteBuilderComponents = {
     TikTokVideo: ComponentType<BuilderTikTokVideoBlockProps>
     BildwurfAd: ComponentType<BuilderBildwurfAdBlockProps>
     Embed: ComponentType<BuilderEmbedBlockProps>
+    Listicle: ComponentType<BuilderListicleBlockProps>
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
@@ -225,6 +227,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     TikTokVideo: NoComponent,
     BildwurfAd: NoComponent,
     Embed: NoComponent,
+    Listicle: NoComponent,
     TeaserGridFlex: NoComponent,
     TeaserGrid: NoComponent,
     Teaser: NoComponent
