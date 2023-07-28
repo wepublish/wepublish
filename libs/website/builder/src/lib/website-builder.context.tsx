@@ -18,15 +18,16 @@ import {
 import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
 import {
   BuilderAuthorChipProps,
-  BuilderAuthorProps,
   BuilderAuthorListItemProps,
-  BuilderAuthorListProps
+  BuilderAuthorListProps,
+  BuilderAuthorProps
 } from './author.interface'
 import {
   BuilderBlockRendererProps,
   BuilderHTMLBlockProps,
   BuilderImageBlockProps,
   BuilderImageGalleryBlockProps,
+  BuilderListicleBlockProps,
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
   BuilderTeaserGridBlockProps,
@@ -56,6 +57,7 @@ import {BuilderMemberPlansProps} from './member-plans.interface'
 import {BuilderNavbarProps} from './navbar.interface'
 import {BuilderPageProps, BuilderPageSEOProps} from './page.interface'
 import {BuilderPayInvoicesProps} from './pay-invoices.interface'
+import {BuilderPeerProps} from './peer.interface'
 import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
 import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
@@ -80,6 +82,7 @@ export type WebsiteBuilderComponents = {
   PageSEO: ComponentType<BuilderPageSEOProps>
   Article: ComponentType<BuilderArticleProps>
   ArticleSEO: ComponentType<BuilderArticleSEOProps>
+  PeerInformation: ComponentType<BuilderPeerProps>
   Author: ComponentType<BuilderAuthorProps>
   AuthorChip: ComponentType<BuilderAuthorChipProps>
   AuthorListItem: ComponentType<BuilderAuthorListItemProps>
@@ -128,6 +131,7 @@ export type WebsiteBuilderComponents = {
     Quote: ComponentType<BuilderQuoteBlockProps>
     RichText: ComponentType<BuilderRichTextBlockProps>
     HTML: ComponentType<BuilderHTMLBlockProps>
+    Listicle: ComponentType<BuilderListicleBlockProps>
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
@@ -150,6 +154,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   PageSEO: NoComponent,
   Article: NoComponent,
   ArticleSEO: NoComponent,
+  PeerInformation: NoComponent,
   Author: NoComponent,
   AuthorChip: NoComponent,
   AuthorList: NoComponent,
@@ -198,6 +203,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     Quote: NoComponent,
     RichText: NoComponent,
     HTML: NoComponent,
+    Listicle: NoComponent,
     TeaserGridFlex: NoComponent,
     TeaserGrid: NoComponent,
     Teaser: NoComponent

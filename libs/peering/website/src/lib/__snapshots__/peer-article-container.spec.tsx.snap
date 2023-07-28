@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PeerArticle Container should render ById 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1thzeso"
+  />
+</DocumentFragment>
+`;
+
+exports[`PeerArticle Container should render BySlug 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1thzeso"
+  />
+</DocumentFragment>
+`;
+
+exports[`PeerArticle Container should render WithClassName 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1thzeso"
+  />
+</DocumentFragment>
+`;
+
+exports[`PeerArticle Container should render WithEmotion 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1thzeso"
+  />
+</DocumentFragment>
+`;

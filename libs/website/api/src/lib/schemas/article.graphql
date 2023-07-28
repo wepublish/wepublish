@@ -60,7 +60,7 @@ query ArticleList(
   $order: SortOrder
   $sort: ArticleSort
 ) {
-  articles(take: $take, cursor: $cursor, filter: $filter, sort: $sort, order: $order, skip: $skip) {
+  articles(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullArticle
     }

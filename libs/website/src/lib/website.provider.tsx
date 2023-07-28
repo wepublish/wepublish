@@ -12,13 +12,15 @@ import {
   Teaser,
   TeaserGridBlock,
   TeaserGridFlexBlock,
-  TitleBlock
+  TitleBlock,
+  ListicleBlock
 } from '@wepublish/block-content/website'
 import {CommentEditor, CommentList, CommentListItem} from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
 import {Image} from '@wepublish/image/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page, PageSEO} from '@wepublish/page/website'
+import {PeerInformation} from '@wepublish/peering/website'
 import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
 import {
   Alert,
@@ -77,6 +79,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         ArticleListItem={ArticleListItem}
         Article={Article}
         ArticleSEO={ArticleSEO}
+        PeerInformation={PeerInformation}
         Navbar={Navbar}
         Footer={Footer}
         Event={Event}
@@ -116,6 +119,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Quote: QuoteBlock,
           HTML: HtmlBlock,
           RichText: RichTextBlock,
+          Listicle: ListicleBlock,
           TeaserGridFlex: TeaserGridFlexBlock,
           TeaserGrid: TeaserGridBlock,
           Teaser

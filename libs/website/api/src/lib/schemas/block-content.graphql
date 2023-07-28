@@ -38,6 +38,16 @@ fragment BlockWithoutTeaser on Block {
   ... on BildwurfAdBlock {
     zoneID
   }
+
+  ... on ListicleBlock {
+    items {
+      title
+      richText
+      image {
+        ...FullImage
+      }
+    }
+  }
 }
 
 fragment FullTeaser on Teaser {
@@ -51,6 +61,30 @@ fragment FullTeaser on Teaser {
     preTitle
     title
     lead
+
+    article {
+      ...ArticleWithoutBlocks
+
+      blocks {
+        ...BlockWithoutTeaser
+      }
+    }
+  }
+
+  ... on PeerArticleTeaser {
+    style
+
+    image {
+      ...FullImage
+    }
+
+    preTitle
+    title
+    lead
+
+    peer {
+      ...FullPeer
+    }
 
     article {
       ...ArticleWithoutBlocks
