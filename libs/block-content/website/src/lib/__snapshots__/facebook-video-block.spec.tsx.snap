@@ -3,15 +3,35 @@
 exports[`Facebook Video Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-oqxw9v"
-  />
+    class="css-1gu3j3w"
+  >
+    <div
+      class="css-0"
+      style="width: auto; height: auto;"
+    />
+  </div>
 </DocumentFragment>
 `;
 
 exports[`Facebook Video Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-oqxw9v"
-  />
+    class="extra-classname css-1gu3j3w"
+  >
+    <div
+      class="css-0"
+      style="width: auto; height: auto;"
+    >
+      <div
+        class="fb-video"
+        data-allowfullscreen="true"
+        data-autoplay="false"
+        data-controls="true"
+        data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
+        id="facebook-player-tafrs"
+        style="width: 100%; height: 100%;"
+      />
+    </div>
+  </div>
 </DocumentFragment>
 `;
