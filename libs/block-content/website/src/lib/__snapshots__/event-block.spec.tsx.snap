@@ -3,17 +3,17 @@
 exports[`Event Block should render Default 1`] = `
 <DocumentFragment>
   <aside
-    class="css-1fqtw9z e19zbbjs0"
+    class="css-19lpgrl e19zbbjs0"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -29,13 +29,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"
@@ -172,10 +172,10 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -191,13 +191,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"
@@ -334,10 +334,10 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -353,13 +353,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"
@@ -496,10 +496,10 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -515,13 +515,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"
@@ -658,10 +658,10 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -677,13 +677,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"
@@ -820,10 +820,10 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -839,13 +839,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"
@@ -984,17 +984,17 @@ https://unsplash.it/200/100 200w"
 exports[`Event Block should render WithClassName 1`] = `
 <DocumentFragment>
   <aside
-    class="extra-classname css-1fqtw9z e19zbbjs0"
+    class="extra-classname css-19lpgrl e19zbbjs0"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -1010,13 +1010,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"
@@ -1153,10 +1153,10 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -1172,13 +1172,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"
@@ -1315,10 +1315,10 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -1334,13 +1334,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"
@@ -1477,10 +1477,10 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -1496,13 +1496,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"
@@ -1639,10 +1639,10 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -1658,13 +1658,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"
@@ -1801,10 +1801,10 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -1820,13 +1820,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"
@@ -1965,17 +1965,17 @@ https://unsplash.it/200/100 200w"
 exports[`Event Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <aside
-    class="css-1fqtw9z e19zbbjs0"
+    class="css-19lpgrl e19zbbjs0"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -1991,13 +1991,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"
@@ -2134,10 +2134,10 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -2153,13 +2153,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"
@@ -2296,10 +2296,10 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -2315,13 +2315,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"
@@ -2458,10 +2458,10 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -2477,13 +2477,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"
@@ -2620,10 +2620,10 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -2639,13 +2639,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"
@@ -2782,10 +2782,10 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ep64vfo0"
+        class="css-2y38b5 ezogaq70"
       >
         <div
-          class="css-0 ep64vfo4"
+          class="css-0 ezogaq74"
         >
           <img
             alt="DSC07717"
@@ -2801,13 +2801,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ep64vfo1"
+          class="css-yr5cju ezogaq71"
         >
           <div
-            class="css-17musyg ep64vfo2"
+            class="css-17musyg ezogaq72"
           >
             <div
-              class="css-12bfk4x ep64vfo3"
+              class="css-12bfk4x ezogaq73"
             >
               <svg
                 fill="currentColor"

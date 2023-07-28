@@ -1,4 +1,4 @@
-import {Theme, css, styled, useTheme} from '@mui/material'
+import {css, styled} from '@mui/material'
 import {Event} from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdDateRange} from 'react-icons/md'
