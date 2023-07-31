@@ -24,6 +24,7 @@ export const FacebookVideoBlock = ({
       height={'auto'}
       url={`https://www.facebook.com/${userID}/videos/${videoID}/`}
       controls={true}
+      config={{facebook: {playerId: 'facebook-player'}}}
     />
   </FacebookVideoBlockWrapper>
 )

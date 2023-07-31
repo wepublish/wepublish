@@ -28,7 +28,7 @@ exports[`Facebook Video Block should render WithClassName 1`] = `
         data-autoplay="false"
         data-controls="true"
         data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
-        id="facebook-player-hmi72"
+        id="facebook-player"
         style="width: 100%; height: 100%;"
       />
     </div>
