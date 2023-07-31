@@ -18,16 +18,11 @@ export function EmbedBlock({
   sandbox,
   className
 }: BuilderEmbedBlockProps) {
-  return (
-    url && (
-      <EmbedBlockWrapper className={className}>
-        <iframe
-          src={url}
-          title={title ?? undefined}
-          allowFullScreen
-          sandbox={sandbox ?? undefined}
-        />
-      </EmbedBlockWrapper>
-    )
+  return url ? (
+    <EmbedBlockWrapper className={className}>
+      <iframe src={url} title={title ?? undefined} allowFullScreen sandbox={sandbox ?? undefined} />
+    </EmbedBlockWrapper>
+  ) : (
+    <div></div>
   )
 }
