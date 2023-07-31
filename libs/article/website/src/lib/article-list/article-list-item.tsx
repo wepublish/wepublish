@@ -18,14 +18,7 @@ export const wrapperStyles = (theme: Theme) => css`
   text-decoration: none;
   color: inherit;
   align-items: stretch;
-
-  ${theme.breakpoints.up('sm')} {
-    width: 330px;
-  }
-
-  ${theme.breakpoints.up('md')} {
-    width: 290px;
-  }
+  align-content: flex-start;
 `
 
 const imageStyles = css`
@@ -50,7 +43,7 @@ export function ArticleListItem({className, ...data}: Article & {className?: str
           {formatDate(new Date(data.publishedAt), 'dd.MM.yyyy')}
         </Paragraph>
 
-        {data.title && <H5>{data.title}</H5>}
+        {data.title && <H5 component="h1">{data.title}</H5>}
         {data.authors && <Paragraph>von {data.authors.map(a => a.name).join(', ')}</Paragraph>}
       </ArticleListItemContent>
     </Link>

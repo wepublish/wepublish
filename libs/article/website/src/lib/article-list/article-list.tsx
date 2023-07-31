@@ -3,15 +3,20 @@ import {BuilderArticleListProps, useWebsiteBuilder} from '@wepublish/website/bui
 
 export const ArticleListWrapper = styled('article')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({theme}) => theme.spacing(4)};
+  grid-template-columns: repeat(1, 1fr);
 
   ${({theme}) => css`
     ${theme.breakpoints.up('sm')} {
-      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
     }
 
     ${theme.breakpoints.up('md')} {
-      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    ${theme.breakpoints.up('lg')} {
+      grid-template-columns: repeat(4, 1fr);
     }
   `}
 `

@@ -3,12 +3,12 @@
 exports[`AuthorList Container should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-nyhpxk"
+    class="css-1uaagpf"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
-      href="slug"
+      href="https://example.com"
     >
       <div
         class="css-1dfpi9n"
@@ -33,22 +33,22 @@ https://unsplash.it/200/200 200w"
         >
           01.01.2023
         </p>
-        <h5
+        <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
-        </h5>
+        </h1>
         <p
           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
         >
-          von Foobar Foobar 
+          von Foobar, Foobar
         </p>
       </div>
     </a>
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
-      href="slug"
+      href="https://example.com"
     >
       <div
         class="css-1dfpi9n"
@@ -73,22 +73,22 @@ https://unsplash.it/200/200 200w"
         >
           01.01.2023
         </p>
-        <h5
+        <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
-        </h5>
+        </h1>
         <p
           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
         >
-          von Foobar Foobar 
+          von Foobar, Foobar
         </p>
       </div>
     </a>
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
-      href="slug"
+      href="https://example.com"
     >
       <div
         class="css-1dfpi9n"
@@ -113,15 +113,15 @@ https://unsplash.it/200/200 200w"
         >
           01.01.2023
         </p>
-        <h5
+        <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
-        </h5>
+        </h1>
         <p
           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
         >
-          von Foobar Foobar 
+          von Foobar, Foobar
         </p>
       </div>
     </a>
@@ -132,12 +132,12 @@ https://unsplash.it/200/200 200w"
 exports[`AuthorList Container should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname css-nyhpxk"
+    class="extra-classname css-1uaagpf"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
-      href="slug"
+      href="https://example.com"
     >
       <div
         class="css-1dfpi9n"
@@ -162,22 +162,22 @@ https://unsplash.it/200/200 200w"
         >
           01.01.2023
         </p>
-        <h5
+        <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
-        </h5>
+        </h1>
         <p
           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
         >
-          von Foobar Foobar 
+          von Foobar, Foobar
         </p>
       </div>
     </a>
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
-      href="slug"
+      href="https://example.com"
     >
       <div
         class="css-1dfpi9n"
@@ -202,22 +202,22 @@ https://unsplash.it/200/200 200w"
         >
           01.01.2023
         </p>
-        <h5
+        <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
-        </h5>
+        </h1>
         <p
           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
         >
-          von Foobar Foobar 
+          von Foobar, Foobar
         </p>
       </div>
     </a>
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
-      href="slug"
+      href="https://example.com"
     >
       <div
         class="css-1dfpi9n"
@@ -242,15 +242,15 @@ https://unsplash.it/200/200 200w"
         >
           01.01.2023
         </p>
-        <h5
+        <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
-        </h5>
+        </h1>
         <p
           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
         >
-          von Foobar Foobar 
+          von Foobar, Foobar
         </p>
       </div>
     </a>
@@ -261,12 +261,12 @@ https://unsplash.it/200/200 200w"
 exports[`AuthorList Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="css-nyhpxk"
+    class="css-1uaagpf"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
-      href="slug"
+      href="https://example.com"
     >
       <div
         class="css-1dfpi9n"
@@ -291,22 +291,22 @@ https://unsplash.it/200/200 200w"
         >
           01.01.2023
         </p>
-        <h5
+        <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
-        </h5>
+        </h1>
         <p
           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
         >
-          von Foobar Foobar 
+          von Foobar, Foobar
         </p>
       </div>
     </a>
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
-      href="slug"
+      href="https://example.com"
     >
       <div
         class="css-1dfpi9n"
@@ -331,22 +331,22 @@ https://unsplash.it/200/200 200w"
         >
           01.01.2023
         </p>
-        <h5
+        <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
-        </h5>
+        </h1>
         <p
           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
         >
-          von Foobar Foobar 
+          von Foobar, Foobar
         </p>
       </div>
     </a>
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
       css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
-      href="slug"
+      href="https://example.com"
     >
       <div
         class="css-1dfpi9n"
@@ -371,15 +371,15 @@ https://unsplash.it/200/200 200w"
         >
           01.01.2023
         </p>
-        <h5
+        <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
-        </h5>
+        </h1>
         <p
           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
         >
-          von Foobar Foobar 
+          von Foobar, Foobar
         </p>
       </div>
     </a>

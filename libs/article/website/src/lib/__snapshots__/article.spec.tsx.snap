@@ -9566,15 +9566,3 @@ https://unsplash.it/200/200 200w"
   </article>
 </DocumentFragment>
 `;
-
-exports[`Article should render article 1`] = `
-<DocumentFragment>
-  <article
-    class="css-1thzeso"
-  >
-    <section
-      class="css-1kbbmi6"
-    />
-  </article>
-</DocumentFragment>
-`;
