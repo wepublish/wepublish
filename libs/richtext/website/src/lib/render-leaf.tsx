@@ -1,13 +1,5 @@
+import {TextFormat} from '@wepublish/richtext'
 import {BuilderRenderLeafProps} from '@wepublish/website/builder'
-
-export enum TextFormat {
-  Bold = 'bold',
-  Italic = 'italic',
-  Underline = 'underline',
-  Strikethrough = 'strikethrough',
-  Superscript = 'superscript',
-  Subscript = 'subscript'
-}
 
 export function RenderLeaf({attributes, children, leaf}: BuilderRenderLeafProps): JSX.Element {
   if (leaf[TextFormat.Bold]) {

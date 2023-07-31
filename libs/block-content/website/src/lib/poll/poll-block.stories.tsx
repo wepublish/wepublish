@@ -13,7 +13,6 @@ import {ComponentType} from 'react'
 import {Node} from 'slate'
 import {PollBlock} from './poll-block'
 import {PollBlockContext} from './poll-block.context'
-import {decorators} from '../../../../../storybook/src/lib/decorators'
 
 const text: Node[] = [
   {

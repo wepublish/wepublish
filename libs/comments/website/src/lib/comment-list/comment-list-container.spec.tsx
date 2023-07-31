@@ -1,15 +1,16 @@
 import {MockedProvider} from '@apollo/client/testing'
 import {composeStories} from '@storybook/react'
-import {render} from '@testing-library/react'
+import {act, render} from '@testing-library/react'
 import {actWait} from '@wepublish/testing'
 import * as stories from './comment-list-container.stories'
+import snapshotDiff from 'snapshot-diff'
 
 const storiesCmp = composeStories(stories)
 
 describe('CommentList Container', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, async () => {
-      const {asFragment} = render(
+      const {asFragment, container} = render(
         <MockedProvider {...Component.parameters?.apolloClient}>
           <Component />
         </MockedProvider>
@@ -17,7 +18,15 @@ describe('CommentList Container', () => {
 
       await actWait()
 
-      expect(asFragment()).toMatchSnapshot()
+      if (Component.play) {
+        const before = asFragment()
+        await act(() => Component.play?.({canvasElement: container}))
+        const after = asFragment()
+
+        expect(snapshotDiff(before, after)).toMatchSnapshot()
+      } else {
+        expect(asFragment()).toMatchSnapshot()
+      }
     })
   })
 })

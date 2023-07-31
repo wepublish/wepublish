@@ -1,5 +1,5 @@
 import {FetchResult, LazyQueryExecFunction, MutationFunctionOptions} from '@apollo/client'
-import {useUser} from '@wepublish/website'
+import {useUser} from '@wepublish/authentication/website'
 import {
   PollVoteMutation,
   PollVoteMutationVariables,
@@ -25,5 +25,5 @@ export const usePollBlock = () => {
     throw new Error('PollBlockContext has not been fully provided.')
   }
 
-  return {fetchUserVote, vote}
+  return {fetchUserVote: fetchUserVote!, vote: vote!}
 }

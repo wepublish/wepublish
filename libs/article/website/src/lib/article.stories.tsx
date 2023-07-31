@@ -371,7 +371,51 @@ const article = {
       ]
     },
     {
-      __typename: 'ListicleBlock'
+      __typename: 'ListicleBlock',
+      items: [
+        {
+          title: 'Foobar',
+          richText: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem Ipsum'
+                }
+              ]
+            }
+          ],
+          image
+        },
+        {
+          title: 'Foobar',
+          richText: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem Ipsum'
+                }
+              ]
+            }
+          ],
+          image
+        },
+        {
+          title: 'Foobar',
+          richText: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem Ipsum'
+                }
+              ]
+            }
+          ],
+          image
+        }
+      ]
     },
     {
       __typename: 'QuoteBlock',
@@ -2440,7 +2484,7 @@ const article = {
       __typename: 'EventBlock'
     }
   ]
-} as Exclude<ArticleQuery['article'], undefined | null>
+} as NonNullable<ArticleQuery['article']>
 
 export default {
   component: Article,

@@ -4,6 +4,7 @@ import {
   HtmlBlock,
   ImageBlock,
   ImageGalleryBlock,
+  ListicleBlock,
   PollBlock,
   QuoteBlock,
   RichTextBlock,
@@ -21,6 +22,7 @@ export type BuilderQuoteBlockProps = QuoteBlock & {className?: string}
 export type BuilderRichTextBlockProps = RichTextBlock & {className?: string}
 export type BuilderHTMLBlockProps = HtmlBlock & {className?: string}
 export type BuilderPollBlockProps = PollBlock & {className?: string}
+export type BuilderListicleBlockProps = ListicleBlock & {className?: string}
 export type BuilderTeaserGridFlexBlockProps = TeaserGridFlexBlock & {
   className?: string
   showLead?: boolean

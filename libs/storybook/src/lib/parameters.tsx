@@ -31,6 +31,7 @@ export const parameters = {
     MockedProvider,
     cache,
     showWarnings: false,
+    assumeImmutableResults: true,
     defaultOptions
   },
   options: {

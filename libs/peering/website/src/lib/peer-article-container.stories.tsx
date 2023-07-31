@@ -6,7 +6,9 @@ import {
   FullImageFragment,
   FullPollFragment,
   PeerArticleDocument,
-  PeerArticleQuery
+  PeerArticleQuery,
+  PeerDocument,
+  PeerQuery
 } from '@wepublish/website/api'
 import {PeerArticleContainer} from './peer-article-container'
 
@@ -132,6 +134,39 @@ const poll = {
     }
   ]
 } as FullPollFragment
+
+const peer = {
+  id: 'clftnfuzh204501muj13hwvcu',
+  name: 'test demo',
+  slug: 'test-demo',
+  isDisabled: false,
+  hostURL: 'https://api.demo.wepublish.media/v1/admin',
+  profile: {
+    name: 'We.Publish',
+    hostURL: 'https://api.demo.wepublish.media',
+    themeColor: '#000000',
+    themeFontColor: '#ffffff',
+    logo: image,
+    callToActionText: [
+      {
+        type: 'paragraph',
+        children: [
+          {
+            text: 'Jetzt We.Publish-Member werden!'
+          }
+        ]
+      }
+    ],
+    callToActionURL: 'https://demo.wepublish.media/',
+    callToActionImage: image,
+    callToActionImageURL: 'https://demo.wepublish.media/',
+    websiteURL: 'https://demo.wepublish.media/',
+    __typename: 'PeerProfile'
+  },
+  createdAt: '2023-01-01',
+  modifiedAt: '2023-01-01',
+  __typename: 'Peer'
+} as NonNullable<PeerQuery['peer']>
 
 const article = {
   __typename: 'Article',
@@ -374,7 +409,51 @@ const article = {
       ]
     },
     {
-      __typename: 'ListicleBlock'
+      __typename: 'ListicleBlock',
+      items: [
+        {
+          title: 'Foobar',
+          richText: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem Ipsum'
+                }
+              ]
+            }
+          ],
+          image
+        },
+        {
+          title: 'Foobar',
+          richText: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem Ipsum'
+                }
+              ]
+            }
+          ],
+          image
+        },
+        {
+          title: 'Foobar',
+          richText: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem Ipsum'
+                }
+              ]
+            }
+          ],
+          image
+        }
+      ]
     },
     {
       __typename: 'QuoteBlock',
@@ -1990,7 +2069,7 @@ const article = {
       __typename: 'EventBlock'
     }
   ]
-} as Exclude<PeerArticleQuery['peerArticle'], undefined | null>
+} as NonNullable<PeerArticleQuery['peerArticle']>
 
 export default {
   component: PeerArticleContainer,
@@ -2001,7 +2080,7 @@ export const ById = {
   args: {
     onQuery: action('onQuery'),
     articleId: article.id,
-    peerId: '1234'
+    peerId: peer.id
   },
 
   parameters: {
@@ -2009,10 +2088,23 @@ export const ById = {
       mocks: [
         {
           request: {
+            query: PeerDocument,
+            variables: {
+              id: peer.id
+            }
+          },
+          result: {
+            data: {
+              peer
+            }
+          }
+        },
+        {
+          request: {
             query: PeerArticleDocument,
             variables: {
               articleId: article.id,
-              peerId: '1234'
+              peerId: peer.id
             }
           },
           result: {
@@ -2030,7 +2122,7 @@ export const BySlug = {
   args: {
     onQuery: action('onQuery'),
     articleId: article.id,
-    peerSlug: 'foobar'
+    peerSlug: peer.slug
   },
 
   parameters: {
@@ -2038,10 +2130,23 @@ export const BySlug = {
       mocks: [
         {
           request: {
+            query: PeerDocument,
+            variables: {
+              slug: peer.slug
+            }
+          },
+          result: {
+            data: {
+              peer
+            }
+          }
+        },
+        {
+          request: {
             query: PeerArticleDocument,
             variables: {
               articleId: article.id,
-              peerSlug: 'foobar'
+              peerSlug: peer.slug
             }
           },
           result: {
@@ -2056,63 +2161,19 @@ export const BySlug = {
 }
 
 export const WithClassName = {
+  ...ById,
   args: {
-    onQuery: action('onQuery'),
-    articleId: article.id,
-    peerId: '1234',
+    ...ById.args,
     className: 'extra-classname'
-  },
-
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: PeerArticleDocument,
-            variables: {
-              articleId: article.id,
-              peerId: '1234'
-            }
-          },
-          result: {
-            data: {
-              peerArticle: article
-            }
-          }
-        }
-      ]
-    }
   }
 }
 
 export const WithEmotion = {
+  ...ById,
   args: {
-    onQuery: action('onQuery'),
-    articleId: article.id,
-    peerId: '1234',
+    ...ById.args,
     css: css`
       background-color: #eee;
     `
-  },
-
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: PeerArticleDocument,
-            variables: {
-              articleId: article.id,
-              peerId: '1234'
-            }
-          },
-          result: {
-            data: {
-              peerArticle: article
-            }
-          }
-        }
-      ]
-    }
   }
 }

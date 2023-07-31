@@ -2156,7 +2156,7 @@ export type QueryRemotePeerProfileArgs = {
 
 
 export type QuerySettingArgs = {
-  name?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
 };
 
 
