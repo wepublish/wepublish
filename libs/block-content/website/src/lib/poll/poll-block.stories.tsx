@@ -1,17 +1,19 @@
-import {css} from '@emotion/react'
-import {Meta, StoryObj} from '@storybook/react'
-import {FullPollFragment, PollVoteDocument, UserPollVoteDocument} from '@wepublish/website/api'
-import {PollBlock} from './poll-block'
-import {Node} from 'slate'
-import {SessionTokenContext} from '@wepublish/authentication/website'
-import {ComponentType} from 'react'
-import {userEvent, within} from '@storybook/testing-library'
 import {ApolloError} from '@apollo/client'
-
-export default {
-  component: PollBlock,
-  title: 'Blocks/Poll'
-} as Meta
+import {css} from '@emotion/react'
+import {action} from '@storybook/addon-actions'
+import {Meta, StoryObj} from '@storybook/react'
+import {userEvent, within} from '@storybook/testing-library'
+import {SessionTokenContext} from '@wepublish/authentication/website'
+import {
+  FullPollFragment,
+  PollVoteMutationResult,
+  UserPollVoteQueryResult
+} from '@wepublish/website/api'
+import {ComponentType} from 'react'
+import {Node} from 'slate'
+import {PollBlock} from './poll-block'
+import {PollBlockContext} from './poll-block.context'
+import {decorators} from '../../../../../storybook/src/lib/decorators'
 
 const text: Node[] = [
   {
@@ -81,6 +83,37 @@ const WithUserDecorator = (Story: ComponentType) => {
   )
 }
 
+const WithPollBlockDecorators =
+  (
+    fetchUserVoteResult?: Pick<UserPollVoteQueryResult, 'data' | 'error'>,
+    voteResult?: Pick<PollVoteMutationResult, 'data' | 'error'>
+  ) =>
+  (Story: ComponentType) => {
+    const vote = async (args: unknown) => {
+      action('vote')(args)
+
+      return voteResult || {}
+    }
+
+    const fetchUserVote = async (args: unknown) => {
+      action('fetchUserVote')(args)
+
+      return fetchUserVoteResult || {}
+    }
+
+    return (
+      <PollBlockContext.Provider value={{vote, fetchUserVote} as any}>
+        <Story />
+      </PollBlockContext.Provider>
+    )
+  }
+
+export default {
+  component: PollBlock,
+  title: 'Blocks/Poll',
+  decorators: [WithPollBlockDecorators()]
+} as Meta
+
 export const Default: StoryObj = {
   args: {
     poll
@@ -96,80 +129,35 @@ export const Closed: StoryObj = {
       closedAt: poll.opensAt
     }
   },
-  decorators: [WithUserDecorator],
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: UserPollVoteDocument,
-            variables: {
-              pollId: poll.id
-            }
-          },
-          result: {
-            data: {
-              userPollVote: null
-            }
-          }
-        }
-      ]
-    }
-  }
+  decorators: [
+    WithUserDecorator,
+    WithPollBlockDecorators({
+      data: {
+        userPollVote: null
+      }
+    })
+  ]
 }
 
 export const Voting: StoryObj = {
   ...Default,
-  decorators: [WithUserDecorator],
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: UserPollVoteDocument,
-            variables: {
-              pollId: poll.id
-            }
-          },
-          result: {
-            data: {
-              userPollVote: null
-            }
-          }
-        },
-        {
-          request: {
-            query: PollVoteDocument,
-            variables: {
-              answerId: poll.answers[0].id
-            }
-          },
-          result: {
-            data: {
-              voteOnPoll: {
-                answerId: poll.answers[0].id
-              }
-            }
-          }
-        },
-        {
-          request: {
-            query: PollVoteDocument,
-            variables: {
-              answerId: poll.answers[1].id
-            }
-          },
-          result: {
-            data: {
-              voteOnPoll: {
-                answerId: poll.answers[1].id
-              }
-            }
+  decorators: [
+    WithUserDecorator,
+    WithPollBlockDecorators(
+      {
+        data: {
+          userPollVote: null
+        }
+      },
+      {
+        data: {
+          voteOnPoll: {
+            answerId: poll.answers[0].id
           }
         }
-      ]
-    }
-  }
+      }
+    )
+  ]
 }
 
 export const VotingPlay: StoryObj = {
@@ -189,67 +177,35 @@ export const VotingPlay: StoryObj = {
 
 export const AlreadyVoted: StoryObj = {
   ...Default,
-  decorators: [WithUserDecorator],
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: UserPollVoteDocument,
-            variables: {
-              pollId: poll.id
-            }
-          },
-          result: {
-            data: {
-              userPollVote: poll.answers[1].id
-            }
-          }
-        }
-      ]
-    }
-  }
+  decorators: [
+    WithUserDecorator,
+    WithPollBlockDecorators({
+      data: {
+        userPollVote: poll.answers[1].id
+      }
+    })
+  ]
 }
 
 export const WithError: StoryObj = {
   ...Default,
-  decorators: [WithUserDecorator],
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: UserPollVoteDocument,
-            variables: {
-              pollId: poll.id
-            }
-          },
-          result: {
-            errors: [
-              new ApolloError({
-                errorMessage: 'Something went wrong with the user vote.'
-              })
-            ]
-          }
-        },
-        {
-          request: {
-            query: PollVoteDocument,
-            variables: {
-              answerId: poll.answers[0].id
-            }
-          },
-          result: {
-            errors: [
-              new ApolloError({
-                errorMessage: 'Something went wrong with the poll vote.'
-              })
-            ]
-          }
-        }
-      ]
-    }
-  },
+  decorators: [
+    WithUserDecorator,
+    WithPollBlockDecorators(
+      {
+        data: undefined,
+        error: new ApolloError({
+          errorMessage: 'Something went wrong with the user vote.'
+        })
+      },
+      {
+        data: undefined,
+        error: new ApolloError({
+          errorMessage: 'Something went wrong with the poll vote.'
+        })
+      }
+    )
+  ],
   play: VotingPlay.play
 }
 

@@ -257,25 +257,25 @@ const author = {
 
 export default {
   component: AuthorListItem,
-  title: 'Components/AuthorListItem'
+  title: 'Components/AuthorList/Item'
 } as Meta
 
 export const Default = {
   args: {
-    author
+    ...author
   }
 }
 
 export const WithClassName = {
   args: {
-    author,
+    ...author,
     className: 'extra-classname'
   }
 }
 
 export const WithEmotion = {
   args: {
-    author,
+    ...author,
     css: css`
       background-color: #eee;
     `
@@ -284,18 +284,14 @@ export const WithEmotion = {
 
 export const WithoutJobTitle = {
   args: {
-    author: {
-      ...author,
-      jobTitle: null
-    }
+    ...author,
+    jobTitle: null
   }
 }
 
 export const WithoutImage = {
   args: {
-    author: {
-      ...author,
-      image: null
-    }
+    ...author,
+    image: null
   }
 }

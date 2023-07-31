@@ -1,6 +1,7 @@
 export * from './lib/blocks'
 export * from './lib/html/html-block'
 export * from './lib/poll/poll-block'
+export * from './lib/poll/poll-block.context'
 export * from './lib/poll/poll-block-result'
 export * from './lib/image/image-block'
 export * from './lib/image-gallery/image-gallery-block'

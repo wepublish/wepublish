@@ -3,12 +3,13 @@ import {useUser} from '@wepublish/authentication/website'
 import {
   Block,
   PollBlock as PollBlockType,
-  usePollVoteMutation,
-  useUserPollVoteLazyQuery
+  PollVoteMutationResult,
+  UserPollVoteQueryResult
 } from '@wepublish/website/api'
 import {BuilderPollBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useEffect, useMemo} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {PollBlockResult} from './poll-block-result'
+import {usePollBlock} from './poll-block.context'
 
 export const isPollBlock = (block: Block): block is PollBlockType =>
   block.__typename === 'PollBlock'
@@ -34,8 +35,19 @@ export const PollBlockMeta = styled('div')`
 `
 
 export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
-  const [fetchUserVote, loggedInVote] = useUserPollVoteLazyQuery()
-  const [vote, voteResult] = usePollVoteMutation()
+  const {vote, fetchUserVote} = usePollBlock()
+
+  const [voteResult, setVoteResult] = useState<
+    Pick<PollVoteMutationResult, 'loading' | 'data' | 'error'>
+  >({
+    loading: false
+  })
+  const [loggedInVote, setLoggedInVote] = useState<
+    Pick<UserPollVoteQueryResult, 'loading' | 'data' | 'error'>
+  >({
+    data: undefined,
+    loading: true
+  })
 
   const {hasUser} = useUser()
   const {
@@ -46,8 +58,8 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
 
   const isOpen = !poll?.closedAt || new Date(poll.closedAt) > new Date()
   const canVote = hasUser && isOpen
-  const userVote = voteResult.data?.voteOnPoll?.answerId || loggedInVote.data?.userPollVote
-  const hasVoted = !!(loggedInVote.data?.userPollVote ?? voteResult.data?.voteOnPoll)
+  const userVote = voteResult?.data?.voteOnPoll?.answerId || loggedInVote?.data?.userPollVote
+  const hasVoted = !!(loggedInVote?.data?.userPollVote ?? voteResult?.data?.voteOnPoll)
 
   const combinedVotes = useMemo(() => {
     const total: Record<string, number> = {}
@@ -68,12 +80,12 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
       }
     }
 
-    if (voteResult.data?.voteOnPoll?.answerId) {
+    if (voteResult?.data?.voteOnPoll?.answerId) {
       total[voteResult.data.voteOnPoll.answerId]++
     }
 
     return total
-  }, [poll, voteResult.data?.voteOnPoll?.answerId])
+  }, [poll, voteResult?.data?.voteOnPoll?.answerId])
 
   const totalVotes = useMemo(
     () => Object.values(combinedVotes).reduce((total, curr) => (total += curr), 0),
@@ -86,7 +98,7 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
         variables: {
           pollId: poll.id
         }
-      })
+      }).then(setLoggedInVote)
     }
   }, [fetchUserVote, poll, hasUser])
 
@@ -106,13 +118,22 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
               color="secondary"
               key={answer.id}
               disabled={voteResult.loading}
-              onClick={() =>
-                vote({
+              onClick={async () => {
+                setVoteResult({
+                  loading: true
+                })
+
+                const result = await vote({
                   variables: {
                     answerId: answer.id
                   }
                 })
-              }>
+
+                setVoteResult({
+                  ...result,
+                  loading: false
+                })
+              }}>
               {answer.answer}
             </Button>
           ))}
