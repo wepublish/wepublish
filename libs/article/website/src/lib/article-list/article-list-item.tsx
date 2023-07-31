@@ -1,12 +1,10 @@
 import {Article} from '@wepublish/website/api'
-import {format as formatDate} from 'date-fns'
 import {Theme, styled, css, useTheme} from '@mui/material'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const ArticleListItemImageWrapper = styled('div')`
   display: grid;
   width: 100%;
-  min-height: 450px;
 `
 
 export const ArticleListItemContent = styled('div')``
@@ -29,7 +27,8 @@ const imageStyles = css`
 export function ArticleListItem({className, ...data}: Article & {className?: string}) {
   const theme = useTheme()
   const {
-    elements: {Image, Paragraph, H5, Link}
+    elements: {Image, Paragraph, H5, Link},
+    date: {format}
   } = useWebsiteBuilder()
 
   return (
@@ -39,9 +38,7 @@ export function ArticleListItem({className, ...data}: Article & {className?: str
       </ArticleListItemImageWrapper>
 
       <ArticleListItemContent>
-        <Paragraph gutterBottom={false}>
-          {formatDate(new Date(data.publishedAt), 'dd.MM.yyyy')}
-        </Paragraph>
+        <Paragraph gutterBottom={false}>{format(new Date(data.publishedAt))}</Paragraph>
 
         {data.title && <H5 component="h1">{data.title}</H5>}
         {data.authors && <Paragraph>von {data.authors.map(a => a.name).join(', ')}</Paragraph>}

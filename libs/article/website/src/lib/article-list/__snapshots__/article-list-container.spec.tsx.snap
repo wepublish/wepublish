@@ -11,7 +11,7 @@ exports[`AuthorList Container should render Default 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1dfpi9n"
+        class="css-inx13t"
       >
         <img
           alt="DSC07717"
@@ -31,7 +31,7 @@ https://unsplash.it/200/200 200w"
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
         >
-          01.01.2023
+          01.01.2023 00:00
         </p>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -51,7 +51,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-1dfpi9n"
+        class="css-inx13t"
       >
         <img
           alt="DSC07717"
@@ -71,7 +71,7 @@ https://unsplash.it/200/200 200w"
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
         >
-          01.01.2023
+          01.01.2023 00:00
         </p>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -91,7 +91,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-1dfpi9n"
+        class="css-inx13t"
       >
         <img
           alt="DSC07717"
@@ -111,7 +111,7 @@ https://unsplash.it/200/200 200w"
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
         >
-          01.01.2023
+          01.01.2023 00:00
         </p>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -140,7 +140,7 @@ exports[`AuthorList Container should render WithClassName 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1dfpi9n"
+        class="css-inx13t"
       >
         <img
           alt="DSC07717"
@@ -160,7 +160,7 @@ https://unsplash.it/200/200 200w"
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
         >
-          01.01.2023
+          01.01.2023 00:00
         </p>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -180,7 +180,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-1dfpi9n"
+        class="css-inx13t"
       >
         <img
           alt="DSC07717"
@@ -200,7 +200,7 @@ https://unsplash.it/200/200 200w"
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
         >
-          01.01.2023
+          01.01.2023 00:00
         </p>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -220,7 +220,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-1dfpi9n"
+        class="css-inx13t"
       >
         <img
           alt="DSC07717"
@@ -240,7 +240,7 @@ https://unsplash.it/200/200 200w"
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
         >
-          01.01.2023
+          01.01.2023 00:00
         </p>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -269,7 +269,7 @@ exports[`AuthorList Container should render WithEmotion 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1dfpi9n"
+        class="css-inx13t"
       >
         <img
           alt="DSC07717"
@@ -289,7 +289,7 @@ https://unsplash.it/200/200 200w"
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
         >
-          01.01.2023
+          01.01.2023 00:00
         </p>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -309,7 +309,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-1dfpi9n"
+        class="css-inx13t"
       >
         <img
           alt="DSC07717"
@@ -329,7 +329,7 @@ https://unsplash.it/200/200 200w"
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
         >
-          01.01.2023
+          01.01.2023 00:00
         </p>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -349,7 +349,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-1dfpi9n"
+        class="css-inx13t"
       >
         <img
           alt="DSC07717"
@@ -369,7 +369,7 @@ https://unsplash.it/200/200 200w"
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
         >
-          01.01.2023
+          01.01.2023 00:00
         </p>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
