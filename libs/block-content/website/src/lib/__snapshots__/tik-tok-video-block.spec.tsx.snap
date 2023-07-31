@@ -4,7 +4,20 @@ exports[`TikTok Video Block should render Default 1`] = `
 <DocumentFragment>
   <div
     class="css-0"
-  />
+  >
+    <div
+      class="css-11k6nwl"
+    >
+      <iframe
+        allow="encrypted-media;"
+        allowfullscreen=""
+        height="800"
+        src="https://www.tiktok.com/embed/6718335390845095173"
+        title="tiktok-embed"
+        width="450"
+      />
+    </div>
+  </div>
 </DocumentFragment>
 `;
 
@@ -12,6 +25,19 @@ exports[`TikTok Video Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
     class="extra-classname css-0"
-  />
+  >
+    <div
+      class="css-11k6nwl"
+    >
+      <iframe
+        allow="encrypted-media;"
+        allowfullscreen=""
+        height="800"
+        src="https://www.tiktok.com/embed/6718335390845095173"
+        title="tiktok-embed"
+        width="450"
+      />
+    </div>
+  </div>
 </DocumentFragment>
 `;
