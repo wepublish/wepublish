@@ -4,17 +4,18 @@ import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {Author, AuthorChip, AuthorList, AuthorListItem} from '@wepublish/author/website'
 import {
   BlockRenderer,
+  EventBlock,
   HtmlBlock,
   ImageBlock,
   ImageGalleryBlock,
+  ListicleBlock,
+  PollBlock,
   QuoteBlock,
   RichTextBlock,
   Teaser,
   TeaserGridBlock,
   TeaserGridFlexBlock,
-  TitleBlock,
-  EventBlock,
-  ListicleBlock
+  TitleBlock
 } from '@wepublish/block-content/website'
 import {CommentEditor, CommentList, CommentListItem} from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
@@ -117,6 +118,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           ImageGallery: ImageGalleryBlock,
           Quote: QuoteBlock,
           HTML: HtmlBlock,
+          Poll: PollBlock,
           RichText: RichTextBlock,
           Event: EventBlock,
           Listicle: ListicleBlock,

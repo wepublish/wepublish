@@ -3,7 +3,7 @@
 exports[`Image Gallery Block should render Default 1`] = `
 <DocumentFragment>
   <figure
-    class="css-7tufii eh6i9nm0"
+    class="css-0 el5cvdz0"
   >
     <ul
       class="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
@@ -347,7 +347,7 @@ https://unsplash.it/200/200?10 200w"
 exports[`Image Gallery Block should render WithClassName 1`] = `
 <DocumentFragment>
   <figure
-    class="extra-classname css-7tufii eh6i9nm0"
+    class="extra-classname css-0 el5cvdz0"
   >
     <ul
       class="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
@@ -691,7 +691,7 @@ https://unsplash.it/200/200?10 200w"
 exports[`Image Gallery Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <figure
-    class="css-7tufii eh6i9nm0"
+    class="css-0 el5cvdz0"
   >
     <ul
       class="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
@@ -1035,7 +1035,7 @@ https://unsplash.it/200/200?10 200w"
 exports[`Image Gallery Block should render WithoutCaption 1`] = `
 <DocumentFragment>
   <figure
-    class="css-7tufii eh6i9nm0"
+    class="css-0 el5cvdz0"
   >
     <ul
       class="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"

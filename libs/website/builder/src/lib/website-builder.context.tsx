@@ -23,6 +23,7 @@ import {
   BuilderHTMLBlockProps,
   BuilderImageBlockProps,
   BuilderImageGalleryBlockProps,
+  BuilderPollBlockProps,
   BuilderListicleBlockProps,
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
@@ -126,6 +127,7 @@ export type WebsiteBuilderComponents = {
     RichText: ComponentType<BuilderRichTextBlockProps>
     HTML: ComponentType<BuilderHTMLBlockProps>
     Event: ComponentType<BuilderEventBlockProps>
+    Poll: ComponentType<BuilderPollBlockProps>
     Listicle: ComponentType<BuilderListicleBlockProps>
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
@@ -197,6 +199,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     RichText: NoComponent,
     HTML: NoComponent,
     Event: NoComponent,
+    Poll: NoComponent,
     Listicle: NoComponent,
     TeaserGridFlex: NoComponent,
     TeaserGrid: NoComponent,

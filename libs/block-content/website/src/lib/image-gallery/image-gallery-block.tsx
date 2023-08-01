@@ -12,10 +12,7 @@ import {Block, ImageGalleryBlock as ImageGalleryBlockType} from '@wepublish/webs
 export const isImageGalleryBlock = (block: Block): block is ImageGalleryBlockType =>
   block.__typename === 'ImageGalleryBlock'
 
-export const ImageGalleryBlockWrapper = styled('figure')`
-  margin: 0;
-  max-width: 100%;
-`
+export const ImageGalleryBlockWrapper = styled('figure')``
 
 export const ImageGalleryBlock = ({images, className}: BuilderImageGalleryBlockProps) => {
   const {
