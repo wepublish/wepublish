@@ -4,6 +4,7 @@ import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {Author, AuthorChip, AuthorList, AuthorListItem} from '@wepublish/author/website'
 import {
   BlockRenderer,
+  EventBlock,
   HtmlBlock,
   ImageBlock,
   ImageGalleryBlock,
@@ -119,6 +120,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           HTML: HtmlBlock,
           Poll: PollBlock,
           RichText: RichTextBlock,
+          Event: EventBlock,
           Listicle: ListicleBlock,
           TeaserGridFlex: TeaserGridFlexBlock,
           TeaserGrid: TeaserGridBlock,

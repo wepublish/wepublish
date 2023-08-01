@@ -3,7 +3,7 @@
 exports[`Poll Block should render AlreadyVoted 1`] = `
 <DocumentFragment>
   <article
-    class="css-2klgun"
+    class="css-1p44k52 e1mpfgg50"
   >
     <h1
       class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
@@ -11,7 +11,7 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
       Question
     </h1>
     <div
-      class="css-0"
+      class="css-0 e1e9qmuq0"
     >
       <div
         data-gramm="false"
@@ -36,7 +36,7 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
       </div>
     </div>
     <div
-      class="css-sxg9br"
+      class="css-taqjlb e1mpfgg51"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
@@ -60,7 +60,7 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
       </button>
     </div>
     <div
-      class="css-17xtbym"
+      class="css-4fpeqm e1mpfgg53"
     >
       21 Stimmen – Schliesst am 01.01.2033 00:00
     </div>
@@ -71,7 +71,7 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
 exports[`Poll Block should render Closed 1`] = `
 <DocumentFragment>
   <article
-    class="css-2klgun"
+    class="css-1p44k52 e1mpfgg50"
   >
     <h1
       class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
@@ -79,7 +79,7 @@ exports[`Poll Block should render Closed 1`] = `
       Question
     </h1>
     <div
-      class="css-0"
+      class="css-0 e1e9qmuq0"
     >
       <div
         data-gramm="false"
@@ -104,63 +104,63 @@ exports[`Poll Block should render Closed 1`] = `
       </div>
     </div>
     <div
-      class="css-sxg9br"
+      class="css-taqjlb e1mpfgg52"
     >
       <div
-        class="css-chr1eq"
+        class="css-lgj0h8 eluy2k80"
       >
         <div
-          class="css-10czf35"
+          class="css-j3wn8j eluy2k81"
         >
           <div
-            class="css-1ezgv1"
+            class="css-10rvbm3 eluy2k82"
           >
             Ja
           </div>
           <div
-            class="css-1ezgv1"
+            class="css-10rvbm3 eluy2k83"
           >
             52%
           </div>
         </div>
         <div
-          class="css-1yix0yk"
+          class="css-1o9tf6e eluy2k84"
         >
           <div
-            class="css-t1j8sa"
+            class="css-1y08goj eluy2k85"
           />
           <div
-            class="css-1aswy5a"
+            class="css-6bql4y eluy2k86"
           >
             11 Stimmen
           </div>
         </div>
       </div>
       <div
-        class="css-chr1eq"
+        class="css-lgj0h8 eluy2k80"
       >
         <div
-          class="css-10czf35"
+          class="css-j3wn8j eluy2k81"
         >
           <div
-            class="css-1ezgv1"
+            class="css-10rvbm3 eluy2k82"
           >
             Nein
           </div>
           <div
-            class="css-1ezgv1"
+            class="css-10rvbm3 eluy2k83"
           >
             48%
           </div>
         </div>
         <div
-          class="css-1yix0yk"
+          class="css-1o9tf6e eluy2k84"
         >
           <div
-            class="css-a029zd"
+            class="css-p42mw0 eluy2k85"
           />
           <div
-            class="css-1dbf9i0"
+            class="css-fvygtq eluy2k86"
           >
             10 Stimmen
           </div>
@@ -168,7 +168,7 @@ exports[`Poll Block should render Closed 1`] = `
       </div>
     </div>
     <div
-      class="css-17xtbym"
+      class="css-4fpeqm e1mpfgg53"
     >
       21 Stimmen – Abstimmung beendet.
     </div>
@@ -179,7 +179,7 @@ exports[`Poll Block should render Closed 1`] = `
 exports[`Poll Block should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-2klgun"
+    class="css-1p44k52 e1mpfgg50"
   >
     <h1
       class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
@@ -187,7 +187,7 @@ exports[`Poll Block should render Default 1`] = `
       Question
     </h1>
     <div
-      class="css-0"
+      class="css-0 e1e9qmuq0"
     >
       <div
         data-gramm="false"
@@ -212,63 +212,63 @@ exports[`Poll Block should render Default 1`] = `
       </div>
     </div>
     <div
-      class="css-sxg9br"
+      class="css-taqjlb e1mpfgg52"
     >
       <div
-        class="css-chr1eq"
+        class="css-lgj0h8 eluy2k80"
       >
         <div
-          class="css-10czf35"
+          class="css-j3wn8j eluy2k81"
         >
           <div
-            class="css-1ezgv1"
+            class="css-10rvbm3 eluy2k82"
           >
             Ja
           </div>
           <div
-            class="css-1ezgv1"
+            class="css-10rvbm3 eluy2k83"
           >
             52%
           </div>
         </div>
         <div
-          class="css-1yix0yk"
+          class="css-1o9tf6e eluy2k84"
         >
           <div
-            class="css-t1j8sa"
+            class="css-1y08goj eluy2k85"
           />
           <div
-            class="css-1aswy5a"
+            class="css-6bql4y eluy2k86"
           >
             11 Stimmen
           </div>
         </div>
       </div>
       <div
-        class="css-chr1eq"
+        class="css-lgj0h8 eluy2k80"
       >
         <div
-          class="css-10czf35"
+          class="css-j3wn8j eluy2k81"
         >
           <div
-            class="css-1ezgv1"
+            class="css-10rvbm3 eluy2k82"
           >
             Nein
           </div>
           <div
-            class="css-1ezgv1"
+            class="css-10rvbm3 eluy2k83"
           >
             48%
           </div>
         </div>
         <div
-          class="css-1yix0yk"
+          class="css-1o9tf6e eluy2k84"
         >
           <div
-            class="css-a029zd"
+            class="css-p42mw0 eluy2k85"
           />
           <div
-            class="css-1dbf9i0"
+            class="css-fvygtq eluy2k86"
           >
             10 Stimmen
           </div>
@@ -276,7 +276,7 @@ exports[`Poll Block should render Default 1`] = `
       </div>
     </div>
     <div
-      class="css-17xtbym"
+      class="css-4fpeqm e1mpfgg53"
     >
       21 Stimmen – Schliesst am 01.01.2033 00:00
     </div>
@@ -287,7 +287,7 @@ exports[`Poll Block should render Default 1`] = `
 exports[`Poll Block should render Voting 1`] = `
 <DocumentFragment>
   <article
-    class="css-2klgun"
+    class="css-1p44k52 e1mpfgg50"
   >
     <h1
       class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
@@ -295,7 +295,7 @@ exports[`Poll Block should render Voting 1`] = `
       Question
     </h1>
     <div
-      class="css-0"
+      class="css-0 e1e9qmuq0"
     >
       <div
         data-gramm="false"
@@ -320,7 +320,7 @@ exports[`Poll Block should render Voting 1`] = `
       </div>
     </div>
     <div
-      class="css-sxg9br"
+      class="css-taqjlb e1mpfgg51"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
@@ -344,7 +344,7 @@ exports[`Poll Block should render Voting 1`] = `
       </button>
     </div>
     <div
-      class="css-17xtbym"
+      class="css-4fpeqm e1mpfgg53"
     >
       21 Stimmen – Schliesst am 01.01.2033 00:00
     </div>
@@ -357,40 +357,43 @@ exports[`Poll Block should render VotingPlay 1`] = `
 - First value
 + Second value
 
-@@ -33,33 +33,73 @@
+@@ -31,35 +31,75 @@
+            </span>
+          </p>
         </div>
       </div>
       <div
-        class="css-sxg9br"
+-       class="css-taqjlb e1mpfgg51"
++       class="css-taqjlb e1mpfgg52"
       >
 -       <button
 -         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
 -         tabindex="0"
 -         type="button"
 +       <div
-+         class="css-chr1eq"
++         class="css-lgj0h8 eluy2k80"
 +       >
 +         <div
-+           class="css-10czf35"
++           class="css-j3wn8j eluy2k81"
 +         >
 +           <div
-+             class="css-1ezgv1"
++             class="css-10rvbm3 eluy2k82"
             >
               Ja
 -         <span
 -           class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
 +           </div>
 +           <div
-+             class="css-1ezgv1"
++             class="css-10rvbm3 eluy2k83"
 +           >
 +             55%
 +           </div>
 +         </div>
 +         <div
-+           class="css-1yix0yk"
++           class="css-1o9tf6e eluy2k84"
 +         >
 +           <div
-+             class="css-tr1tzc"
++             class="css-1vkxa1t eluy2k85"
             />
 -       </button>
 -       <button
@@ -398,48 +401,48 @@ exports[`Poll Block should render VotingPlay 1`] = `
 -         tabindex="0"
 -         type="button"
 +           <div
-+             class="css-1aswy5a"
++             class="css-6bql4y eluy2k86"
 +           >
 +             12 Stimmen
 +           </div>
 +         </div>
 +       </div>
 +       <div
-+         class="css-chr1eq"
++         class="css-lgj0h8 eluy2k80"
 +       >
 +         <div
-+           class="css-10czf35"
++           class="css-j3wn8j eluy2k81"
           >
 +           <div
-+             class="css-1ezgv1"
++             class="css-10rvbm3 eluy2k82"
 +           >
               Nein
 -         <span
 -           class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
 +           </div>
 +           <div
-+             class="css-1ezgv1"
++             class="css-10rvbm3 eluy2k83"
 +           >
 +             45%
 +           </div>
 +         </div>
 +         <div
-+           class="css-1yix0yk"
++           class="css-1o9tf6e eluy2k84"
 +         >
 +           <div
-+             class="css-vbeob1"
++             class="css-1sbrlzb eluy2k85"
             />
 -       </button>
 +           <div
-+             class="css-1dbf9i0"
++             class="css-fvygtq eluy2k86"
 +           >
 +             10 Stimmen
 +           </div>
-          </div>
-+       </div>
++         </div>
+        </div>
 +     </div>
       <div
-        class="css-17xtbym"
+        class="css-4fpeqm e1mpfgg53"
       >
 -       21 Stimmen – Schliesst am 01.01.2033 00:00
 +       22 Stimmen – Schliesst am 01.01.2033 00:00
@@ -451,7 +454,7 @@ exports[`Poll Block should render VotingPlay 1`] = `
 exports[`Poll Block should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname css-2klgun"
+    class="extra-classname css-1p44k52 e1mpfgg50"
   >
     <h1
       class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
@@ -459,7 +462,7 @@ exports[`Poll Block should render WithClassName 1`] = `
       Question
     </h1>
     <div
-      class="css-0"
+      class="css-0 e1e9qmuq0"
     >
       <div
         data-gramm="false"
@@ -484,63 +487,63 @@ exports[`Poll Block should render WithClassName 1`] = `
       </div>
     </div>
     <div
-      class="css-sxg9br"
+      class="css-taqjlb e1mpfgg52"
     >
       <div
-        class="css-chr1eq"
+        class="css-lgj0h8 eluy2k80"
       >
         <div
-          class="css-10czf35"
+          class="css-j3wn8j eluy2k81"
         >
           <div
-            class="css-1ezgv1"
+            class="css-10rvbm3 eluy2k82"
           >
             Ja
           </div>
           <div
-            class="css-1ezgv1"
+            class="css-10rvbm3 eluy2k83"
           >
             52%
           </div>
         </div>
         <div
-          class="css-1yix0yk"
+          class="css-1o9tf6e eluy2k84"
         >
           <div
-            class="css-t1j8sa"
+            class="css-1y08goj eluy2k85"
           />
           <div
-            class="css-1aswy5a"
+            class="css-6bql4y eluy2k86"
           >
             11 Stimmen
           </div>
         </div>
       </div>
       <div
-        class="css-chr1eq"
+        class="css-lgj0h8 eluy2k80"
       >
         <div
-          class="css-10czf35"
+          class="css-j3wn8j eluy2k81"
         >
           <div
-            class="css-1ezgv1"
+            class="css-10rvbm3 eluy2k82"
           >
             Nein
           </div>
           <div
-            class="css-1ezgv1"
+            class="css-10rvbm3 eluy2k83"
           >
             48%
           </div>
         </div>
         <div
-          class="css-1yix0yk"
+          class="css-1o9tf6e eluy2k84"
         >
           <div
-            class="css-a029zd"
+            class="css-p42mw0 eluy2k85"
           />
           <div
-            class="css-1dbf9i0"
+            class="css-fvygtq eluy2k86"
           >
             10 Stimmen
           </div>
@@ -548,7 +551,7 @@ exports[`Poll Block should render WithClassName 1`] = `
       </div>
     </div>
     <div
-      class="css-17xtbym"
+      class="css-4fpeqm e1mpfgg53"
     >
       21 Stimmen – Schliesst am 01.01.2033 00:00
     </div>
@@ -559,7 +562,7 @@ exports[`Poll Block should render WithClassName 1`] = `
 exports[`Poll Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="css-2klgun"
+    class="css-1p44k52 e1mpfgg50"
   >
     <h1
       class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
@@ -567,7 +570,7 @@ exports[`Poll Block should render WithEmotion 1`] = `
       Question
     </h1>
     <div
-      class="css-0"
+      class="css-0 e1e9qmuq0"
     >
       <div
         data-gramm="false"
@@ -592,63 +595,63 @@ exports[`Poll Block should render WithEmotion 1`] = `
       </div>
     </div>
     <div
-      class="css-sxg9br"
+      class="css-taqjlb e1mpfgg52"
     >
       <div
-        class="css-chr1eq"
+        class="css-lgj0h8 eluy2k80"
       >
         <div
-          class="css-10czf35"
+          class="css-j3wn8j eluy2k81"
         >
           <div
-            class="css-1ezgv1"
+            class="css-10rvbm3 eluy2k82"
           >
             Ja
           </div>
           <div
-            class="css-1ezgv1"
+            class="css-10rvbm3 eluy2k83"
           >
             52%
           </div>
         </div>
         <div
-          class="css-1yix0yk"
+          class="css-1o9tf6e eluy2k84"
         >
           <div
-            class="css-t1j8sa"
+            class="css-1y08goj eluy2k85"
           />
           <div
-            class="css-1aswy5a"
+            class="css-6bql4y eluy2k86"
           >
             11 Stimmen
           </div>
         </div>
       </div>
       <div
-        class="css-chr1eq"
+        class="css-lgj0h8 eluy2k80"
       >
         <div
-          class="css-10czf35"
+          class="css-j3wn8j eluy2k81"
         >
           <div
-            class="css-1ezgv1"
+            class="css-10rvbm3 eluy2k82"
           >
             Nein
           </div>
           <div
-            class="css-1ezgv1"
+            class="css-10rvbm3 eluy2k83"
           >
             48%
           </div>
         </div>
         <div
-          class="css-1yix0yk"
+          class="css-1o9tf6e eluy2k84"
         >
           <div
-            class="css-a029zd"
+            class="css-p42mw0 eluy2k85"
           />
           <div
-            class="css-1dbf9i0"
+            class="css-fvygtq eluy2k86"
           >
             10 Stimmen
           </div>
@@ -656,7 +659,7 @@ exports[`Poll Block should render WithEmotion 1`] = `
       </div>
     </div>
     <div
-      class="css-17xtbym"
+      class="css-4fpeqm e1mpfgg53"
     >
       21 Stimmen – Schliesst am 01.01.2033 00:00
     </div>
@@ -725,7 +728,7 @@ exports[`Poll Block should render WithError 1`] = `
 +       </div>
 +     </div>
 +     <div
-        class="css-sxg9br"
+        class="css-taqjlb e1mpfgg51"
       >
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"

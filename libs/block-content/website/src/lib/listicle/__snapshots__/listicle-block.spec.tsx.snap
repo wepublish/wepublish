@@ -3,13 +3,13 @@
 exports[`Listicle Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-gfvdtu"
+    class="css-5ednon e1iakh080"
   >
     <div
-      class="css-owsmlh"
+      class="css-1egb6s2 e1iakh081"
     >
       <div
-        class="css-1shr51n"
+        class="css-1lfpiq0 e1iakh082"
       >
         1
       </div>
@@ -20,8 +20,9 @@ exports[`Listicle Block should render Default 1`] = `
       </h3>
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1a2v9hb e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -30,7 +31,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0"
+        class="css-0 e1e9qmuq0"
       >
         <div
           data-gramm="false"
@@ -56,10 +57,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-owsmlh"
+      class="css-1egb6s2 e1iakh081"
     >
       <div
-        class="css-1shr51n"
+        class="css-1lfpiq0 e1iakh082"
       >
         2
       </div>
@@ -70,8 +71,9 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1a2v9hb e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -80,7 +82,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0"
+        class="css-0 e1e9qmuq0"
       >
         <div
           data-gramm="false"
@@ -106,10 +108,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-owsmlh"
+      class="css-1egb6s2 e1iakh081"
     >
       <div
-        class="css-1shr51n"
+        class="css-1lfpiq0 e1iakh082"
       >
         3
       </div>
@@ -120,8 +122,9 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1a2v9hb e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -130,7 +133,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0"
+        class="css-0 e1e9qmuq0"
       >
         <div
           data-gramm="false"
@@ -156,10 +159,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-owsmlh"
+      class="css-1egb6s2 e1iakh081"
     >
       <div
-        class="css-1shr51n"
+        class="css-1lfpiq0 e1iakh082"
       >
         4
       </div>
@@ -170,8 +173,9 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1a2v9hb e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -180,7 +184,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0"
+        class="css-0 e1e9qmuq0"
       >
         <div
           data-gramm="false"
@@ -212,13 +216,13 @@ https://unsplash.it/200/100 200w"
 exports[`Listicle Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-gfvdtu"
+    class="extra-classname css-5ednon e1iakh080"
   >
     <div
-      class="css-owsmlh"
+      class="css-1egb6s2 e1iakh081"
     >
       <div
-        class="css-1shr51n"
+        class="css-1lfpiq0 e1iakh082"
       >
         1
       </div>
@@ -229,8 +233,9 @@ exports[`Listicle Block should render WithClassName 1`] = `
       </h3>
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1a2v9hb e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -239,7 +244,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0"
+        class="css-0 e1e9qmuq0"
       >
         <div
           data-gramm="false"
@@ -265,10 +270,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-owsmlh"
+      class="css-1egb6s2 e1iakh081"
     >
       <div
-        class="css-1shr51n"
+        class="css-1lfpiq0 e1iakh082"
       >
         2
       </div>
@@ -279,8 +284,9 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1a2v9hb e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -289,7 +295,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0"
+        class="css-0 e1e9qmuq0"
       >
         <div
           data-gramm="false"
@@ -315,10 +321,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-owsmlh"
+      class="css-1egb6s2 e1iakh081"
     >
       <div
-        class="css-1shr51n"
+        class="css-1lfpiq0 e1iakh082"
       >
         3
       </div>
@@ -329,8 +335,9 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1a2v9hb e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -339,7 +346,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0"
+        class="css-0 e1e9qmuq0"
       >
         <div
           data-gramm="false"
@@ -365,10 +372,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-owsmlh"
+      class="css-1egb6s2 e1iakh081"
     >
       <div
-        class="css-1shr51n"
+        class="css-1lfpiq0 e1iakh082"
       >
         4
       </div>
@@ -379,8 +386,9 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1a2v9hb e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -389,7 +397,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0"
+        class="css-0 e1e9qmuq0"
       >
         <div
           data-gramm="false"
@@ -421,13 +429,13 @@ https://unsplash.it/200/100 200w"
 exports[`Listicle Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-gfvdtu"
+    class="css-5ednon e1iakh080"
   >
     <div
-      class="css-owsmlh"
+      class="css-1egb6s2 e1iakh081"
     >
       <div
-        class="css-1shr51n"
+        class="css-1lfpiq0 e1iakh082"
       >
         1
       </div>
@@ -438,8 +446,9 @@ exports[`Listicle Block should render WithEmotion 1`] = `
       </h3>
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1a2v9hb e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -448,7 +457,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0"
+        class="css-0 e1e9qmuq0"
       >
         <div
           data-gramm="false"
@@ -474,10 +483,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-owsmlh"
+      class="css-1egb6s2 e1iakh081"
     >
       <div
-        class="css-1shr51n"
+        class="css-1lfpiq0 e1iakh082"
       >
         2
       </div>
@@ -488,8 +497,9 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1a2v9hb e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -498,7 +508,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0"
+        class="css-0 e1e9qmuq0"
       >
         <div
           data-gramm="false"
@@ -524,10 +534,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-owsmlh"
+      class="css-1egb6s2 e1iakh081"
     >
       <div
-        class="css-1shr51n"
+        class="css-1lfpiq0 e1iakh082"
       >
         3
       </div>
@@ -538,8 +548,9 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1a2v9hb e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -548,7 +559,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0"
+        class="css-0 e1e9qmuq0"
       >
         <div
           data-gramm="false"
@@ -574,10 +585,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-owsmlh"
+      class="css-1egb6s2 e1iakh081"
     >
       <div
-        class="css-1shr51n"
+        class="css-1lfpiq0 e1iakh082"
       >
         4
       </div>
@@ -588,8 +599,9 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1a2v9hb e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -598,7 +610,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0"
+        class="css-0 e1e9qmuq0"
       >
         <div
           data-gramm="false"
@@ -630,13 +642,13 @@ https://unsplash.it/200/100 200w"
 exports[`Listicle Block should render WithoutImage 1`] = `
 <DocumentFragment>
   <div
-    class="css-gfvdtu"
+    class="css-5ednon e1iakh080"
   >
     <div
-      class="css-owsmlh"
+      class="css-1egb6s2 e1iakh081"
     >
       <div
-        class="css-1shr51n"
+        class="css-1lfpiq0 e1iakh082"
       >
         1
       </div>
@@ -647,8 +659,9 @@ exports[`Listicle Block should render WithoutImage 1`] = `
       </h3>
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1a2v9hb e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -657,7 +670,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0"
+        class="css-0 e1e9qmuq0"
       >
         <div
           data-gramm="false"
@@ -683,10 +696,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-owsmlh"
+      class="css-1egb6s2 e1iakh081"
     >
       <div
-        class="css-1shr51n"
+        class="css-1lfpiq0 e1iakh082"
       >
         2
       </div>
@@ -696,7 +709,7 @@ https://unsplash.it/200/100 200w"
         Foobar
       </h3>
       <div
-        class="css-0"
+        class="css-0 e1e9qmuq0"
       >
         <div
           data-gramm="false"
@@ -722,10 +735,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-owsmlh"
+      class="css-1egb6s2 e1iakh081"
     >
       <div
-        class="css-1shr51n"
+        class="css-1lfpiq0 e1iakh082"
       >
         3
       </div>
@@ -736,8 +749,9 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1a2v9hb e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -746,7 +760,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0"
+        class="css-0 e1e9qmuq0"
       >
         <div
           data-gramm="false"
@@ -772,10 +786,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-owsmlh"
+      class="css-1egb6s2 e1iakh081"
     >
       <div
-        class="css-1shr51n"
+        class="css-1lfpiq0 e1iakh082"
       >
         4
       </div>
@@ -785,7 +799,7 @@ https://unsplash.it/200/100 200w"
         Foobar
       </h3>
       <div
-        class="css-0"
+        class="css-0 e1e9qmuq0"
       >
         <div
           data-gramm="false"

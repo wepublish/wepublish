@@ -3,20 +3,20 @@
 exports[`AuthorList should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-13fkobl"
+    class="css-15dwznv e1inpocy0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -26,7 +26,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -41,17 +41,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -61,7 +61,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -76,17 +76,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -96,7 +96,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -111,17 +111,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -131,7 +131,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -146,17 +146,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -166,7 +166,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -181,17 +181,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -201,7 +201,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -216,17 +216,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -236,7 +236,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -251,17 +251,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -271,7 +271,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -286,17 +286,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -306,7 +306,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -321,17 +321,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -341,7 +341,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -356,17 +356,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -376,7 +376,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -397,7 +397,7 @@ https://unsplash.it/200/200 200w"
 exports[`AuthorList should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname css-13fkobl"
+    class="extra-classname css-15dwznv e1inpocy0"
   />
 </DocumentFragment>
 `;
@@ -405,7 +405,7 @@ exports[`AuthorList should render WithClassName 1`] = `
 exports[`AuthorList should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="css-13fkobl"
+    class="css-15dwznv e1inpocy0"
   />
 </DocumentFragment>
 `;
@@ -413,7 +413,7 @@ exports[`AuthorList should render WithEmotion 1`] = `
 exports[`AuthorList should render WithError 1`] = `
 <DocumentFragment>
   <article
-    class="css-13fkobl"
+    class="css-15dwznv e1inpocy0"
   />
 </DocumentFragment>
 `;
@@ -421,7 +421,7 @@ exports[`AuthorList should render WithError 1`] = `
 exports[`AuthorList should render WithLoading 1`] = `
 <DocumentFragment>
   <article
-    class="css-13fkobl"
+    class="css-15dwznv e1inpocy0"
   />
 </DocumentFragment>
 `;
@@ -429,20 +429,20 @@ exports[`AuthorList should render WithLoading 1`] = `
 exports[`AuthorList should render WithoutImage 1`] = `
 <DocumentFragment>
   <article
-    class="css-13fkobl"
+    class="css-15dwznv e1inpocy0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -452,7 +452,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -467,15 +467,14 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       />
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -490,15 +489,14 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       />
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -513,17 +511,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -533,7 +531,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -548,17 +546,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -568,7 +566,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -583,15 +581,14 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       />
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -606,15 +603,14 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       />
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -629,17 +625,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -649,7 +645,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -664,17 +660,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -684,7 +680,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -699,15 +695,14 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       />
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -722,17 +717,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -742,7 +737,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -763,20 +758,20 @@ https://unsplash.it/200/200 200w"
 exports[`AuthorList should render WithoutJobTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-13fkobl"
+    class="css-15dwznv e1inpocy0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -786,7 +781,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -801,17 +796,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -821,7 +816,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -831,17 +826,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -851,7 +846,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -861,17 +856,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -881,42 +876,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
-      >
-        <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
-        >
-          Example Name
-        </h6>
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-        >
-          Co-Geschäftsleitung & Chefredaktor
-        </p>
-      </div>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
-      href="example-slug"
-    >
-      <div
-        class="css-w36x8z"
-      >
-        <img
-          alt="DSC07717"
-          class="css-1qnf57e"
-          height="6000"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title=""
-          width="4000"
-        />
-      </div>
-      <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -931,17 +891,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -951,37 +911,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
-      >
-        <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
-        >
-          Example Name
-        </h6>
-      </div>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
-      href="example-slug"
-    >
-      <div
-        class="css-w36x8z"
-      >
-        <img
-          alt="DSC07717"
-          class="css-1qnf57e"
-          height="6000"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title=""
-          width="4000"
-        />
-      </div>
-      <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -996,17 +926,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1016,7 +946,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -1026,17 +956,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1046,7 +976,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -1061,17 +991,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1081,7 +1011,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -1091,17 +1021,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="example-slug"
     >
       <div
-        class="css-w36x8z"
+        class="css-1dskvzn eyyziki0"
       >
         <img
           alt="DSC07717"
-          class="css-1qnf57e"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
           height="6000"
+          loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1111,7 +1041,72 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0"
+        class="css-0 eyyziki1"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="example-slug"
+    >
+      <div
+        class="css-1dskvzn eyyziki0"
+      >
+        <img
+          alt="DSC07717"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
+          height="6000"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+          width="4000"
+        />
+      </div>
+      <div
+        class="css-0 eyyziki1"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="example-slug"
+    >
+      <div
+        class="css-1dskvzn eyyziki0"
+      >
+        <img
+          alt="DSC07717"
+          class="css-10xre0n-AuthorListItem e1nfkf2e0"
+          height="6000"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+          width="4000"
+        />
+      </div>
+      <div
+        class="css-0 eyyziki1"
       >
         <h6
           class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"

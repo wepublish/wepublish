@@ -53,6 +53,8 @@ export function Image({
       width={image.width}
       height={image.height}
       srcSet={imageArray.join(',\n')}
+      loading={loading}
+      fetchPriority={fetchPriority}
     />
   )
 }
