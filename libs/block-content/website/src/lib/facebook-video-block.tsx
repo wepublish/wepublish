@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import {Block, FacebookVideoBlock as FacebookVideoBlockType} from '@wepublish/website/api'
 import {BuilderFacebookVideoBlockProps} from '@wepublish/website/builder'
 import ReactPlayer from 'react-player'
+import {useId} from 'react'
 
 export const isFacebookVideoBlock = (block: Block): block is FacebookVideoBlockType =>
   block.__typename === 'FacebookVideoBlock'
@@ -17,14 +18,17 @@ export const FacebookVideoBlock = ({
   userID,
   videoID,
   className
-}: BuilderFacebookVideoBlockProps) => (
-  <FacebookVideoBlockWrapper className={className}>
-    <FacebookVideoBlockPlayer
-      width={'auto'}
-      height={'auto'}
-      url={`https://www.facebook.com/${userID}/videos/${videoID}/`}
-      controls={true}
-      config={{facebook: {playerId: 'facebook-player'}}}
-    />
-  </FacebookVideoBlockWrapper>
-)
+}: BuilderFacebookVideoBlockProps) => {
+  const id = useId()
+  return (
+    <FacebookVideoBlockWrapper className={className}>
+      <FacebookVideoBlockPlayer
+        width={'auto'}
+        height={'auto'}
+        url={`https://www.facebook.com/${userID}/videos/${videoID}/`}
+        controls={true}
+        config={{facebook: {playerId: id}}}
+      />
+    </FacebookVideoBlockWrapper>
+  )
+}

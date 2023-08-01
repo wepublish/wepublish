@@ -5,12 +5,17 @@ exports[`Embed Block should render Default 1`] = `
   <div
     class="css-1ago99h"
   >
-    <iframe
-      allowfullscreen=""
-      sandbox=""
-      src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Fchangeclean%2Fvideos%2F3136062856696319%2F&show_text=false&width=560&t=0"
-      title="Title"
-    />
+    <div
+      style="position: relative; padding-top: 56.07142857142857%; min-height: 45px;"
+    >
+      <iframe
+        allowfullscreen=""
+        sandbox=""
+        src="https://www.example.com"
+        style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;"
+        title="Title"
+      />
+    </div>
   </div>
 </DocumentFragment>
 `;
@@ -20,12 +25,17 @@ exports[`Embed Block should render WithClassName 1`] = `
   <div
     class="extra-classname css-1ago99h"
   >
-    <iframe
-      allowfullscreen=""
-      sandbox=""
-      src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Fchangeclean%2Fvideos%2F3136062856696319%2F&show_text=false&width=560&t=0"
-      title="Title"
-    />
+    <div
+      style="position: relative; padding-top: 56.07142857142857%; min-height: 45px;"
+    >
+      <iframe
+        allowfullscreen=""
+        sandbox=""
+        src="https://www.example.com"
+        style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;"
+        title="Title"
+      />
+    </div>
   </div>
 </DocumentFragment>
 `;
