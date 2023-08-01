@@ -7,13 +7,14 @@ import {
   HtmlBlock,
   ImageBlock,
   ImageGalleryBlock,
+  ListicleBlock,
+  PollBlock,
   QuoteBlock,
   RichTextBlock,
   Teaser,
   TeaserGridBlock,
   TeaserGridFlexBlock,
-  TitleBlock,
-  ListicleBlock
+  TitleBlock
 } from '@wepublish/block-content/website'
 import {CommentEditor, CommentList, CommentListItem} from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
@@ -116,6 +117,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           ImageGallery: ImageGalleryBlock,
           Quote: QuoteBlock,
           HTML: HtmlBlock,
+          Poll: PollBlock,
           RichText: RichTextBlock,
           Listicle: ListicleBlock,
           TeaserGridFlex: TeaserGridFlexBlock,

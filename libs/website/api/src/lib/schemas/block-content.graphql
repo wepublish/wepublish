@@ -35,6 +35,12 @@ fragment BlockWithoutTeaser on Block {
     html
   }
 
+  ... on PollBlock {
+    poll {
+      ...FullPoll
+    }
+  }
+
   ... on ListicleBlock {
     items {
       title
