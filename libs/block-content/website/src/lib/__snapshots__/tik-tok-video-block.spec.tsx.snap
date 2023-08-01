@@ -11,10 +11,11 @@ exports[`TikTok Video Block should render Default 1`] = `
       <iframe
         allow="encrypted-media;"
         allowfullscreen=""
-        height="800"
-        src="https://www.tiktok.com/embed/6718335390845095173"
-        title="tiktok-embed"
-        width="450"
+        height="100%"
+        id=":r0:"
+        src="https://www.tiktok.com/embed/v2/6718335390845095173"
+        title="tik-tok-video-block"
+        width="100%"
       />
     </div>
   </div>
@@ -32,10 +33,11 @@ exports[`TikTok Video Block should render WithClassName 1`] = `
       <iframe
         allow="encrypted-media;"
         allowfullscreen=""
-        height="800"
-        src="https://www.tiktok.com/embed/6718335390845095173"
-        title="tiktok-embed"
-        width="450"
+        height="100%"
+        id=":r1:"
+        src="https://www.tiktok.com/embed/v2/6718335390845095173"
+        title="tik-tok-video-block"
+        width="100%"
       />
     </div>
   </div>

@@ -18,8 +18,8 @@ export function VimeoVideoBlock({videoID, className}: BuilderVimeoVideoBlockProp
       <VimeoVideoBlockPlayer
         controls={true}
         url={`https://vimeo.com/${videoID}`}
-        width={'auto'}
-        height={'auto'}
+        width="auto"
+        height="auto"
       />
     </VimeoVideoBlockWrapper>
   )
