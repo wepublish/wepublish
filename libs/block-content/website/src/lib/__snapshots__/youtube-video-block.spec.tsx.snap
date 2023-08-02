@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`YouTube Video Block should render Default 1`] = `
+<DocumentFragment>
+  <div
+    class="css-0 e1naiput0"
+  >
+    <div
+      class="css-zqjcpl e1naiput1"
+      style="width: auto; height: auto;"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`YouTube Video Block should render WithClassName 1`] = `
+<DocumentFragment>
+  <div
+    class="extra-classname css-0 e1naiput0"
+  >
+    <div
+      class="css-zqjcpl e1naiput1"
+      style="width: auto; height: auto;"
+    >
+      <div
+        style="width: 100%; height: 100%;"
+      >
+        <div />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

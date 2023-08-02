@@ -23,19 +23,30 @@ import {
   BuilderAuthorProps
 } from './author.interface'
 import {
+  BuilderBildwurfAdBlockProps,
   BuilderBlockRendererProps,
-  BuilderEventBlockProps,
+  BuilderEmbedBlockProps,
+  BuilderFacebookPostBlockProps,
+  BuilderFacebookVideoBlockProps,
   BuilderHTMLBlockProps,
   BuilderImageBlockProps,
   BuilderImageGalleryBlockProps,
+  BuilderInstagramPostBlockProps,
+  BuilderPolisConversationBlockProps,
+  BuilderEventBlockProps,
   BuilderPollBlockProps,
   BuilderListicleBlockProps,
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
+  BuilderSoundCloudTrackBlockProps,
   BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
   BuilderTeaserProps,
-  BuilderTitleBlockProps
+  BuilderTikTokVideoBlockProps,
+  BuilderTitleBlockProps,
+  BuilderTwitterTweetBlockProps,
+  BuilderVimeoVideoBlockProps,
+  BuilderYouTubeVideoBlockProps
 } from './blocks.interface'
 import {
   BuilderCommentEditorProps,
@@ -74,7 +85,7 @@ const NoComponent = () => null
 
 export type WebsiteBuilderComponents = {
   Head: ComponentType<{children: ReactNode}>
-  Script: ComponentType<{children: ReactNode} & ScriptHTMLAttributes<HTMLScriptElement>>
+  Script: ComponentType<{children?: ReactNode} & ScriptHTMLAttributes<HTMLScriptElement>>
   Navbar: ComponentType<BuilderNavbarProps>
   Footer: ComponentType<BuilderFooterProps>
   MemberPlans: ComponentType<BuilderMemberPlansProps>
@@ -133,6 +144,17 @@ export type WebsiteBuilderComponents = {
     Quote: ComponentType<BuilderQuoteBlockProps>
     RichText: ComponentType<BuilderRichTextBlockProps>
     HTML: ComponentType<BuilderHTMLBlockProps>
+    FacebookPost: ComponentType<BuilderFacebookPostBlockProps>
+    FacebookVideo: ComponentType<BuilderFacebookVideoBlockProps>
+    InstagramPost: ComponentType<BuilderInstagramPostBlockProps>
+    TwitterTweet: ComponentType<BuilderTwitterTweetBlockProps>
+    VimeoVideo: ComponentType<BuilderVimeoVideoBlockProps>
+    YouTubeVideo: ComponentType<BuilderYouTubeVideoBlockProps>
+    SoundCloudTrack: ComponentType<BuilderSoundCloudTrackBlockProps>
+    PolisConversation: ComponentType<BuilderPolisConversationBlockProps>
+    TikTokVideo: ComponentType<BuilderTikTokVideoBlockProps>
+    BildwurfAd: ComponentType<BuilderBildwurfAdBlockProps>
+    Embed: ComponentType<BuilderEmbedBlockProps>
     Event: ComponentType<BuilderEventBlockProps>
     Poll: ComponentType<BuilderPollBlockProps>
     Listicle: ComponentType<BuilderListicleBlockProps>
@@ -207,6 +229,17 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     Quote: NoComponent,
     RichText: NoComponent,
     HTML: NoComponent,
+    FacebookPost: NoComponent,
+    FacebookVideo: NoComponent,
+    InstagramPost: NoComponent,
+    TwitterTweet: NoComponent,
+    VimeoVideo: NoComponent,
+    YouTubeVideo: NoComponent,
+    SoundCloudTrack: NoComponent,
+    PolisConversation: NoComponent,
+    TikTokVideo: NoComponent,
+    BildwurfAd: NoComponent,
+    Embed: NoComponent,
     Event: NoComponent,
     Poll: NoComponent,
     Listicle: NoComponent,

@@ -10557,7 +10557,6 @@ export type ArticleListQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
-                    properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                     authors: Array<{
                       __typename?: 'Author'
                       id: string

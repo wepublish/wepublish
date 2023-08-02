@@ -3,18 +3,29 @@ import {Article, ArticleSEO, ArticleList, ArticleListItem} from '@wepublish/arti
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {Author, AuthorChip, AuthorList, AuthorListItem} from '@wepublish/author/website'
 import {
+  BildwurfAdBlock,
   BlockRenderer,
-  EventBlock,
-  HtmlBlock,
+  EmbedBlock,
+  FacebookPostBlock,
+  FacebookVideoBlock,
   ImageBlock,
   ImageGalleryBlock,
-  ListicleBlock,
+  InstagramPostBlock,
+  PolisConversationBlock,
+  EventBlock,
+  HtmlBlock,
   PollBlock,
   QuoteBlock,
   RichTextBlock,
+  SoundCloudTrackBlock,
   Teaser,
   TeaserGridBlock,
   TeaserGridFlexBlock,
+  TikTokVideoBlock,
+  TwitterTweetBlock,
+  VimeoVideoBlock,
+  YouTubeVideoBlock,
+  ListicleBlock,
   TitleBlock
 } from '@wepublish/block-content/website'
 import {CommentEditor, CommentList, CommentListItem} from '@wepublish/comments/website'
@@ -66,6 +77,12 @@ const styles = (theme: Theme) => css`
   h5,
   h6 {
     text-wrap: balance;
+  }
+
+  img,
+  iframe {
+    // fixes taking up more space than needed in 'display: block' wrappers
+    vertical-align: bottom;
   }
 `
 
@@ -126,7 +143,18 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Listicle: ListicleBlock,
           TeaserGridFlex: TeaserGridFlexBlock,
           TeaserGrid: TeaserGridBlock,
-          Teaser
+          Teaser,
+          BildwurfAd: BildwurfAdBlock,
+          Embed: EmbedBlock,
+          FacebookPost: FacebookPostBlock,
+          FacebookVideo: FacebookVideoBlock,
+          InstagramPost: InstagramPostBlock,
+          PolisConversation: PolisConversationBlock,
+          SoundCloudTrack: SoundCloudTrackBlock,
+          TikTokVideo: TikTokVideoBlock,
+          TwitterTweet: TwitterTweetBlock,
+          VimeoVideo: VimeoVideoBlock,
+          YouTubeVideo: YouTubeVideoBlock
         }}
         richtext={{RenderElement, RenderLeaf}}
         date={{

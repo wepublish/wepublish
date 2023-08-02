@@ -45,6 +45,8 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
   const isEmpty = value.type === EmbedType.Other && value.url === undefined
   const {t} = useTranslation()
 
+  console.log('value', value)
+
   useEffect(() => {
     if (autofocus && isEmpty) {
       setEmbedDialogOpen(true)
