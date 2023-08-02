@@ -4,9 +4,12 @@ import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {Author, AuthorChip, AuthorList, AuthorListItem} from '@wepublish/author/website'
 import {
   BlockRenderer,
+  EventBlock,
   HtmlBlock,
   ImageBlock,
   ImageGalleryBlock,
+  ListicleBlock,
+  PollBlock,
   QuoteBlock,
   RichTextBlock,
   Teaser,
@@ -14,11 +17,12 @@ import {
   TeaserGridFlexBlock,
   TitleBlock
 } from '@wepublish/block-content/website'
-import {CommentList, CommentListItem} from '@wepublish/comments/website'
+import {CommentEditor, CommentList, CommentListItem} from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
 import {Image} from '@wepublish/image/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page, PageSEO} from '@wepublish/page/website'
+import {PeerInformation} from '@wepublish/peering/website'
 import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
 import {
   Alert,
@@ -75,6 +79,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         AuthorListItem={AuthorListItem}
         Article={Article}
         ArticleSEO={ArticleSEO}
+        PeerInformation={PeerInformation}
         Navbar={Navbar}
         Footer={Footer}
         Event={Event}
@@ -83,6 +88,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         EventListItem={EventListItem}
         CommentList={CommentList}
         CommentListItem={CommentListItem}
+        CommentEditor={CommentEditor}
         Page={Page}
         PageSEO={PageSEO}
         LoginForm={LoginForm}
@@ -112,7 +118,10 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           ImageGallery: ImageGalleryBlock,
           Quote: QuoteBlock,
           HTML: HtmlBlock,
+          Poll: PollBlock,
           RichText: RichTextBlock,
+          Event: EventBlock,
+          Listicle: ListicleBlock,
           TeaserGridFlex: TeaserGridFlexBlock,
           TeaserGrid: TeaserGridBlock,
           Teaser

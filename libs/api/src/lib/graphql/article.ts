@@ -341,18 +341,12 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
       comments: {
         type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicComment))),
         resolve: createProxyingResolver(
-          async (
-            {id},
-            _,
-            {session, authenticateUser, prisma: {comment, commentRatingSystemAnswer}}
-          ) => {
-            // if session exists, should get user's un-approved comments as well
-            // if not we should get approved ones
-            const userSession = session?.type === AuthSessionType.User ? authenticateUser() : null
+          async ({id}, _, {session, prisma: {comment, commentRatingSystemAnswer}}) => {
+            const userId = session?.type === AuthSessionType.User ? session.user.id : null
 
             return getPublicCommentsForItemById(
               id,
-              userSession?.user?.id ?? null,
+              userId,
               null,
               -1,
               commentRatingSystemAnswer,

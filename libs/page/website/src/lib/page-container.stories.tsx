@@ -1,6 +1,8 @@
 import {action} from '@storybook/addon-actions'
 import {Meta} from '@storybook/react'
 import {
+  Event,
+  EventStatus,
   FullAuthorFragment,
   FullImageFragment,
   PageDocument,
@@ -42,6 +44,147 @@ const image = {
   squareSmallURL: 'https://unsplash.it/200/200'
 } as FullImageFragment
 
+const event = {
+  id: '16ca80ce-a2d0-44dc-8c87-b735e4b08877',
+  name: 'Cool concert',
+  description: [
+    {
+      type: 'paragraph',
+      children: [
+        {
+          text: 'Lorem ipsum dolor sit amet, '
+        },
+        {
+          text: 'consectetur adipiscing elit, ',
+          bold: true
+        },
+        {
+          text: 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
+          italic: true
+        },
+        {
+          text: 'Ut enim ad minim veniam, ',
+          underline: true
+        },
+        {
+          text: 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
+          strikethrough: true
+        },
+        {
+          text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. '
+        },
+        {
+          text: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        }
+      ]
+    },
+    {
+      type: 'paragraph',
+      children: [
+        {
+          text: 'Lorem ipsum dolor sit amet, '
+        },
+        {
+          text: 'consectetur adipiscing elit, ',
+          bold: true
+        },
+        {
+          text: 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
+          italic: true
+        },
+        {
+          text: 'Ut enim ad minim veniam, ',
+          underline: true
+        },
+        {
+          text: 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
+          strikethrough: true
+        },
+        {
+          text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. '
+        },
+        {
+          text: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        }
+      ]
+    },
+    {
+      type: 'paragraph',
+      children: [
+        {
+          text: 'Lorem ipsum dolor sit amet, '
+        },
+        {
+          text: 'consectetur adipiscing elit, ',
+          bold: true
+        },
+        {
+          text: 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
+          italic: true
+        },
+        {
+          text: 'Ut enim ad minim veniam, ',
+          underline: true
+        },
+        {
+          text: 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
+          strikethrough: true
+        },
+        {
+          text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. '
+        },
+        {
+          text: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        }
+      ]
+    },
+    {
+      type: 'paragraph',
+      children: [
+        {
+          text: 'Lorem ipsum dolor sit amet, '
+        },
+        {
+          text: 'consectetur adipiscing elit, ',
+          bold: true
+        },
+        {
+          text: 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
+          italic: true
+        },
+        {
+          text: 'Ut enim ad minim veniam, ',
+          underline: true
+        },
+        {
+          text: 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
+          strikethrough: true
+        },
+        {
+          text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. '
+        },
+        {
+          text: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        }
+      ]
+    }
+  ],
+  status: EventStatus.Scheduled,
+  location: 'Basel',
+  image,
+  tags: [
+    {
+      id: 'cldwtndha026601nui49kyxrk',
+      tag: 'Concert',
+      __typename: 'Tag'
+    }
+  ],
+  startsAt: '2023-02-24T09:00:00.000Z',
+  endsAt: '2023-02-25T07:30:00.000Z',
+  url: 'https://example.com',
+  __typename: 'Event'
+} as Event
+
 const author = {
   __typename: 'Author',
   id: 'clgp1hfio50331801rejmrk6sj3',
@@ -76,7 +219,9 @@ const author = {
       __typename: 'AuthorLink'
     }
   ],
-  image
+  image,
+  createdAt: '2023-01-01',
+  modifiedAt: '2023-01-01'
 } as FullAuthorFragment
 
 const page = {
@@ -317,7 +462,51 @@ const page = {
       ]
     },
     {
-      __typename: 'ListicleBlock'
+      __typename: 'ListicleBlock',
+      items: [
+        {
+          title: 'Foobar',
+          richText: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem Ipsum'
+                }
+              ]
+            }
+          ],
+          image
+        },
+        {
+          title: 'Foobar',
+          richText: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem Ipsum'
+                }
+              ]
+            }
+          ],
+          image
+        },
+        {
+          title: 'Foobar',
+          richText: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem Ipsum'
+                }
+              ]
+            }
+          ],
+          image
+        }
+      ]
     },
     {
       __typename: 'QuoteBlock',
@@ -1929,10 +2118,11 @@ const page = {
       __typename: 'CommentBlock'
     },
     {
-      __typename: 'EventBlock'
+      __typename: 'EventBlock',
+      events: [event]
     }
   ]
-} as Exclude<PageQuery['page'], undefined | null>
+} as NonNullable<PageQuery['page']>
 
 export default {
   component: PageContainer,

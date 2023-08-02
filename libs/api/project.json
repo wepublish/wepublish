@@ -39,16 +39,6 @@
         "rootDir": ".",
         "updateBuildableProjectDepsInPackageJson": true
       }
-    },
-    "generate-api": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npx graphql-codegen -r dotenv/config --config codegen.yml"
-          }
-        ]
-      }
     }
   },
   "tags": []

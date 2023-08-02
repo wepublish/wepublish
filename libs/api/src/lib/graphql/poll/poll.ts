@@ -95,9 +95,10 @@ export const GraphQLPollAnswerWithVoteCount = new GraphQLObjectType<
 export const GraphQLPollVote = new GraphQLObjectType<PollVote, Context>({
   name: 'PollVote',
   fields: {
+    answerId: {type: new GraphQLNonNull(GraphQLString)},
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     fingerprint: {type: GraphQLString},
-    disabled: {type: GraphQLBoolean}
+    disabled: {type: new GraphQLNonNull(GraphQLBoolean)}
   }
 })
 
@@ -106,7 +107,7 @@ export const GraphQLPollExternalVote = new GraphQLObjectType<PollExternalVote, C
   fields: {
     id: {type: new GraphQLNonNull(GraphQLID)},
     answerId: {type: new GraphQLNonNull(GraphQLID)},
-    amount: {type: VoteValue}
+    amount: {type: new GraphQLNonNull(VoteValue)}
   }
 })
 
@@ -116,7 +117,9 @@ export const GraphQLPollExternalVoteSource = new GraphQLObjectType<PollExternalV
     fields: {
       id: {type: new GraphQLNonNull(GraphQLID)},
       source: {type: GraphQLString},
-      voteAmounts: {type: new GraphQLList(new GraphQLNonNull(GraphQLPollExternalVote))}
+      voteAmounts: {
+        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPollExternalVote)))
+      }
     }
   }
 )
@@ -169,11 +172,11 @@ export const GraphQLFullPoll = new GraphQLObjectType<Poll, Context>({
     infoText: {type: GraphQLRichText},
 
     answers: {
-      type: new GraphQLList(new GraphQLNonNull(GraphQLPollAnswerWithVoteCount))
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPollAnswerWithVoteCount)))
     },
 
     externalVoteSources: {
-      type: new GraphQLList(new GraphQLNonNull(GraphQLPollExternalVoteSource))
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPollExternalVoteSource)))
     }
   }
 })

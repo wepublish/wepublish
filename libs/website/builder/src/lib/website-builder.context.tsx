@@ -13,15 +13,18 @@ import {BuilderArticleProps, BuilderArticleSEOProps} from './article.interface'
 import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
 import {
   BuilderAuthorChipProps,
-  BuilderAuthorProps,
   BuilderAuthorListItemProps,
-  BuilderAuthorListProps
+  BuilderAuthorListProps,
+  BuilderAuthorProps
 } from './author.interface'
 import {
   BuilderBlockRendererProps,
+  BuilderEventBlockProps,
   BuilderHTMLBlockProps,
   BuilderImageBlockProps,
   BuilderImageGalleryBlockProps,
+  BuilderPollBlockProps,
+  BuilderListicleBlockProps,
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
   BuilderTeaserGridBlockProps,
@@ -29,7 +32,11 @@ import {
   BuilderTeaserProps,
   BuilderTitleBlockProps
 } from './blocks.interface'
-import {BuilderCommentListItemProps, BuilderCommentListProps} from './comment.interface'
+import {
+  BuilderCommentEditorProps,
+  BuilderCommentListItemProps,
+  BuilderCommentListProps
+} from './comment.interface'
 import {
   BuilderEventListItemProps,
   BuilderEventListProps,
@@ -47,6 +54,7 @@ import {BuilderMemberPlansProps} from './member-plans.interface'
 import {BuilderNavbarProps} from './navbar.interface'
 import {BuilderPageProps, BuilderPageSEOProps} from './page.interface'
 import {BuilderPayInvoicesProps} from './pay-invoices.interface'
+import {BuilderPeerProps} from './peer.interface'
 import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
 import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
@@ -71,6 +79,7 @@ export type WebsiteBuilderComponents = {
   PageSEO: ComponentType<BuilderPageSEOProps>
   Article: ComponentType<BuilderArticleProps>
   ArticleSEO: ComponentType<BuilderArticleSEOProps>
+  PeerInformation: ComponentType<BuilderPeerProps>
   Author: ComponentType<BuilderAuthorProps>
   AuthorChip: ComponentType<BuilderAuthorChipProps>
   AuthorListItem: ComponentType<BuilderAuthorListItemProps>
@@ -81,6 +90,7 @@ export type WebsiteBuilderComponents = {
   EventListItem: ComponentType<BuilderEventListItemProps>
   CommentList: ComponentType<BuilderCommentListProps>
   CommentListItem: ComponentType<BuilderCommentListItemProps>
+  CommentEditor: ComponentType<BuilderCommentEditorProps>
   LoginForm: ComponentType<BuilderLoginFormProps>
   RegistrationForm: ComponentType<BuilderRegistrationFormProps>
 
@@ -116,6 +126,9 @@ export type WebsiteBuilderComponents = {
     Quote: ComponentType<BuilderQuoteBlockProps>
     RichText: ComponentType<BuilderRichTextBlockProps>
     HTML: ComponentType<BuilderHTMLBlockProps>
+    Event: ComponentType<BuilderEventBlockProps>
+    Poll: ComponentType<BuilderPollBlockProps>
+    Listicle: ComponentType<BuilderListicleBlockProps>
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
@@ -138,6 +151,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   PageSEO: NoComponent,
   Article: NoComponent,
   ArticleSEO: NoComponent,
+  PeerInformation: NoComponent,
   Author: NoComponent,
   AuthorChip: NoComponent,
   AuthorList: NoComponent,
@@ -148,6 +162,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   EventListItem: NoComponent,
   CommentList: NoComponent,
   CommentListItem: NoComponent,
+  CommentEditor: NoComponent,
   LoginForm: NoComponent,
   RegistrationForm: NoComponent,
 
@@ -183,6 +198,9 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     Quote: NoComponent,
     RichText: NoComponent,
     HTML: NoComponent,
+    Event: NoComponent,
+    Poll: NoComponent,
+    Listicle: NoComponent,
     TeaserGridFlex: NoComponent,
     TeaserGrid: NoComponent,
     Teaser: NoComponent
