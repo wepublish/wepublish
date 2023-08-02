@@ -12,6 +12,10 @@ fragment ArticleWithoutBlocks on Article {
   tags
   title
   url
+  properties {
+    key
+    value
+  }
 
   authors {
     ...FullAuthor

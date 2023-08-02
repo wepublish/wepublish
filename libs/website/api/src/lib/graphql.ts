@@ -1440,6 +1440,7 @@ export type ArticleWithoutBlocksFragment = {
   url: string
   socialMediaDescription?: string | null
   socialMediaTitle?: string | null
+  properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
   authors: Array<{
     __typename?: 'Author'
     id: string
@@ -1556,7 +1557,7 @@ export type FullArticleFragment = {
   socialMediaDescription?: string | null
   socialMediaTitle?: string | null
   blocks: Array<
-    | {__typename: 'BildwurfAdBlock'}
+    | {__typename: 'BildwurfAdBlock'; zoneID: string}
     | {__typename: 'CommentBlock'}
     | {__typename: 'EmbedBlock'}
     | {
@@ -1800,7 +1801,7 @@ export type FullArticleFragment = {
                 socialMediaDescription?: string | null
                 socialMediaTitle?: string | null
                 blocks: Array<
-                  | {__typename: 'BildwurfAdBlock'}
+                  | {__typename: 'BildwurfAdBlock'; zoneID: string}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
                   | {
@@ -1998,6 +1999,7 @@ export type FullArticleFragment = {
                   | {__typename: 'VimeoVideoBlock'}
                   | {__typename: 'YouTubeVideoBlock'}
                 >
+                properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                 authors: Array<{
                   __typename?: 'Author'
                   id: string
@@ -2184,7 +2186,7 @@ export type FullArticleFragment = {
                 socialMediaDescription?: string | null
                 socialMediaTitle?: string | null
                 blocks: Array<
-                  | {__typename: 'BildwurfAdBlock'}
+                  | {__typename: 'BildwurfAdBlock'; zoneID: string}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
                   | {
@@ -2571,7 +2573,7 @@ export type FullArticleFragment = {
                 socialMediaDescription?: string | null
                 socialMediaTitle?: string | null
                 blocks: Array<
-                  | {__typename: 'BildwurfAdBlock'}
+                  | {__typename: 'BildwurfAdBlock'; zoneID: string}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
                   | {
@@ -2769,6 +2771,7 @@ export type FullArticleFragment = {
                   | {__typename: 'VimeoVideoBlock'}
                   | {__typename: 'YouTubeVideoBlock'}
                 >
+                properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                 authors: Array<{
                   __typename?: 'Author'
                   id: string
@@ -2929,7 +2932,7 @@ export type FullArticleFragment = {
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
                   blocks: Array<
-                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {
@@ -3127,6 +3130,7 @@ export type FullArticleFragment = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                   authors: Array<{
                     __typename?: 'Author'
                     id: string
@@ -3313,7 +3317,7 @@ export type FullArticleFragment = {
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
                   blocks: Array<
-                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {
@@ -3700,7 +3704,7 @@ export type FullArticleFragment = {
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
                   blocks: Array<
-                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {
@@ -3898,6 +3902,7 @@ export type FullArticleFragment = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                   authors: Array<{
                     __typename?: 'Author'
                     id: string
@@ -4008,6 +4013,7 @@ export type FullArticleFragment = {
     | {__typename: 'VimeoVideoBlock'}
     | {__typename: 'YouTubeVideoBlock'}
   >
+  properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
   authors: Array<{
     __typename?: 'Author'
     id: string
@@ -4131,7 +4137,7 @@ export type ArticleQuery = {
     socialMediaDescription?: string | null
     socialMediaTitle?: string | null
     blocks: Array<
-      | {__typename: 'BildwurfAdBlock'}
+      | {__typename: 'BildwurfAdBlock'; zoneID: string}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
       | {
@@ -4375,7 +4381,7 @@ export type ArticleQuery = {
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
                   blocks: Array<
-                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {
@@ -4573,6 +4579,7 @@ export type ArticleQuery = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                   authors: Array<{
                     __typename?: 'Author'
                     id: string
@@ -4759,7 +4766,7 @@ export type ArticleQuery = {
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
                   blocks: Array<
-                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {
@@ -5146,7 +5153,7 @@ export type ArticleQuery = {
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
                   blocks: Array<
-                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {
@@ -5344,6 +5351,7 @@ export type ArticleQuery = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                   authors: Array<{
                     __typename?: 'Author'
                     id: string
@@ -5504,7 +5512,7 @@ export type ArticleQuery = {
                     socialMediaDescription?: string | null
                     socialMediaTitle?: string | null
                     blocks: Array<
-                      | {__typename: 'BildwurfAdBlock'}
+                      | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {
@@ -5706,6 +5714,7 @@ export type ArticleQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                     authors: Array<{
                       __typename?: 'Author'
                       id: string
@@ -5892,7 +5901,7 @@ export type ArticleQuery = {
                     socialMediaDescription?: string | null
                     socialMediaTitle?: string | null
                     blocks: Array<
-                      | {__typename: 'BildwurfAdBlock'}
+                      | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {
@@ -6283,7 +6292,7 @@ export type ArticleQuery = {
                     socialMediaDescription?: string | null
                     socialMediaTitle?: string | null
                     blocks: Array<
-                      | {__typename: 'BildwurfAdBlock'}
+                      | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {
@@ -6485,6 +6494,7 @@ export type ArticleQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                     authors: Array<{
                       __typename?: 'Author'
                       id: string
@@ -6595,6 +6605,7 @@ export type ArticleQuery = {
       | {__typename: 'VimeoVideoBlock'}
       | {__typename: 'YouTubeVideoBlock'}
     >
+    properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
     authors: Array<{
       __typename?: 'Author'
       id: string
@@ -6720,7 +6731,7 @@ export type PeerArticleQuery = {
     socialMediaDescription?: string | null
     socialMediaTitle?: string | null
     blocks: Array<
-      | {__typename: 'BildwurfAdBlock'}
+      | {__typename: 'BildwurfAdBlock'; zoneID: string}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
       | {
@@ -6964,7 +6975,7 @@ export type PeerArticleQuery = {
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
                   blocks: Array<
-                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {
@@ -7162,6 +7173,7 @@ export type PeerArticleQuery = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                   authors: Array<{
                     __typename?: 'Author'
                     id: string
@@ -7348,7 +7360,7 @@ export type PeerArticleQuery = {
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
                   blocks: Array<
-                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {
@@ -7735,7 +7747,7 @@ export type PeerArticleQuery = {
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
                   blocks: Array<
-                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {
@@ -7933,6 +7945,7 @@ export type PeerArticleQuery = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                   authors: Array<{
                     __typename?: 'Author'
                     id: string
@@ -8093,7 +8106,7 @@ export type PeerArticleQuery = {
                     socialMediaDescription?: string | null
                     socialMediaTitle?: string | null
                     blocks: Array<
-                      | {__typename: 'BildwurfAdBlock'}
+                      | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {
@@ -8295,6 +8308,7 @@ export type PeerArticleQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                     authors: Array<{
                       __typename?: 'Author'
                       id: string
@@ -8481,7 +8495,7 @@ export type PeerArticleQuery = {
                     socialMediaDescription?: string | null
                     socialMediaTitle?: string | null
                     blocks: Array<
-                      | {__typename: 'BildwurfAdBlock'}
+                      | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {
@@ -8872,7 +8886,7 @@ export type PeerArticleQuery = {
                     socialMediaDescription?: string | null
                     socialMediaTitle?: string | null
                     blocks: Array<
-                      | {__typename: 'BildwurfAdBlock'}
+                      | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {
@@ -9074,6 +9088,7 @@ export type PeerArticleQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                     authors: Array<{
                       __typename?: 'Author'
                       id: string
@@ -9184,6 +9199,7 @@ export type PeerArticleQuery = {
       | {__typename: 'VimeoVideoBlock'}
       | {__typename: 'YouTubeVideoBlock'}
     >
+    properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
     authors: Array<{
       __typename?: 'Author'
       id: string
@@ -9315,7 +9331,7 @@ export type ArticleListQuery = {
       socialMediaDescription?: string | null
       socialMediaTitle?: string | null
       blocks: Array<
-        | {__typename: 'BildwurfAdBlock'}
+        | {__typename: 'BildwurfAdBlock'; zoneID: string}
         | {__typename: 'CommentBlock'}
         | {__typename: 'EmbedBlock'}
         | {
@@ -9559,7 +9575,7 @@ export type ArticleListQuery = {
                     socialMediaDescription?: string | null
                     socialMediaTitle?: string | null
                     blocks: Array<
-                      | {__typename: 'BildwurfAdBlock'}
+                      | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {
@@ -9761,6 +9777,7 @@ export type ArticleListQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                     authors: Array<{
                       __typename?: 'Author'
                       id: string
@@ -9947,7 +9964,7 @@ export type ArticleListQuery = {
                     socialMediaDescription?: string | null
                     socialMediaTitle?: string | null
                     blocks: Array<
-                      | {__typename: 'BildwurfAdBlock'}
+                      | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {
@@ -10338,7 +10355,7 @@ export type ArticleListQuery = {
                     socialMediaDescription?: string | null
                     socialMediaTitle?: string | null
                     blocks: Array<
-                      | {__typename: 'BildwurfAdBlock'}
+                      | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {
@@ -10540,6 +10557,7 @@ export type ArticleListQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                     authors: Array<{
                       __typename?: 'Author'
                       id: string
@@ -10700,7 +10718,7 @@ export type ArticleListQuery = {
                       socialMediaDescription?: string | null
                       socialMediaTitle?: string | null
                       blocks: Array<
-                        | {__typename: 'BildwurfAdBlock'}
+                        | {__typename: 'BildwurfAdBlock'; zoneID: string}
                         | {__typename: 'CommentBlock'}
                         | {__typename: 'EmbedBlock'}
                         | {
@@ -10902,6 +10920,11 @@ export type ArticleListQuery = {
                         | {__typename: 'VimeoVideoBlock'}
                         | {__typename: 'YouTubeVideoBlock'}
                       >
+                      properties: Array<{
+                        __typename?: 'PublicProperties'
+                        key: string
+                        value: string
+                      }>
                       authors: Array<{
                         __typename?: 'Author'
                         id: string
@@ -11092,7 +11115,7 @@ export type ArticleListQuery = {
                       socialMediaDescription?: string | null
                       socialMediaTitle?: string | null
                       blocks: Array<
-                        | {__typename: 'BildwurfAdBlock'}
+                        | {__typename: 'BildwurfAdBlock'; zoneID: string}
                         | {__typename: 'CommentBlock'}
                         | {__typename: 'EmbedBlock'}
                         | {
@@ -11483,7 +11506,7 @@ export type ArticleListQuery = {
                       socialMediaDescription?: string | null
                       socialMediaTitle?: string | null
                       blocks: Array<
-                        | {__typename: 'BildwurfAdBlock'}
+                        | {__typename: 'BildwurfAdBlock'; zoneID: string}
                         | {__typename: 'CommentBlock'}
                         | {__typename: 'EmbedBlock'}
                         | {
@@ -11685,6 +11708,11 @@ export type ArticleListQuery = {
                         | {__typename: 'VimeoVideoBlock'}
                         | {__typename: 'YouTubeVideoBlock'}
                       >
+                      properties: Array<{
+                        __typename?: 'PublicProperties'
+                        key: string
+                        value: string
+                      }>
                       authors: Array<{
                         __typename?: 'Author'
                         id: string
@@ -11799,6 +11827,7 @@ export type ArticleListQuery = {
         | {__typename: 'VimeoVideoBlock'}
         | {__typename: 'YouTubeVideoBlock'}
       >
+      properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
       authors: Array<{
         __typename?: 'Author'
         id: string
@@ -12066,7 +12095,7 @@ export type AuthorListQuery = {
   }
 }
 
-type BlockWithoutTeaser_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'}
+type BlockWithoutTeaser_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'; zoneID: string}
 
 type BlockWithoutTeaser_CommentBlock_Fragment = {__typename: 'CommentBlock'}
 
@@ -12371,7 +12400,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
     socialMediaDescription?: string | null
     socialMediaTitle?: string | null
     blocks: Array<
-      | {__typename: 'BildwurfAdBlock'}
+      | {__typename: 'BildwurfAdBlock'; zoneID: string}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
       | {
@@ -12569,6 +12598,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
       | {__typename: 'VimeoVideoBlock'}
       | {__typename: 'YouTubeVideoBlock'}
     >
+    properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
     authors: Array<{
       __typename?: 'Author'
       id: string
@@ -12758,7 +12788,7 @@ type FullTeaser_PageTeaser_Fragment = {
     socialMediaDescription?: string | null
     socialMediaTitle?: string | null
     blocks: Array<
-      | {__typename: 'BildwurfAdBlock'}
+      | {__typename: 'BildwurfAdBlock'; zoneID: string}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
       | {
@@ -13146,7 +13176,7 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
     socialMediaDescription?: string | null
     socialMediaTitle?: string | null
     blocks: Array<
-      | {__typename: 'BildwurfAdBlock'}
+      | {__typename: 'BildwurfAdBlock'; zoneID: string}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
       | {
@@ -13344,6 +13374,7 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
       | {__typename: 'VimeoVideoBlock'}
       | {__typename: 'YouTubeVideoBlock'}
     >
+    properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
     authors: Array<{
       __typename?: 'Author'
       id: string
@@ -13453,7 +13484,7 @@ export type FullTeaserFragment =
   | FullTeaser_PageTeaser_Fragment
   | FullTeaser_PeerArticleTeaser_Fragment
 
-type FullBlock_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'}
+type FullBlock_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'; zoneID: string}
 
 type FullBlock_CommentBlock_Fragment = {__typename: 'CommentBlock'}
 
@@ -13718,7 +13749,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
           socialMediaDescription?: string | null
           socialMediaTitle?: string | null
           blocks: Array<
-            | {__typename: 'BildwurfAdBlock'}
+            | {__typename: 'BildwurfAdBlock'; zoneID: string}
             | {__typename: 'CommentBlock'}
             | {__typename: 'EmbedBlock'}
             | {
@@ -13916,6 +13947,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
             | {__typename: 'VimeoVideoBlock'}
             | {__typename: 'YouTubeVideoBlock'}
           >
+          properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
           authors: Array<{
             __typename?: 'Author'
             id: string
@@ -14102,7 +14134,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
           socialMediaDescription?: string | null
           socialMediaTitle?: string | null
           blocks: Array<
-            | {__typename: 'BildwurfAdBlock'}
+            | {__typename: 'BildwurfAdBlock'; zoneID: string}
             | {__typename: 'CommentBlock'}
             | {__typename: 'EmbedBlock'}
             | {
@@ -14489,7 +14521,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
           socialMediaDescription?: string | null
           socialMediaTitle?: string | null
           blocks: Array<
-            | {__typename: 'BildwurfAdBlock'}
+            | {__typename: 'BildwurfAdBlock'; zoneID: string}
             | {__typename: 'CommentBlock'}
             | {__typename: 'EmbedBlock'}
             | {
@@ -14687,6 +14719,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
             | {__typename: 'VimeoVideoBlock'}
             | {__typename: 'YouTubeVideoBlock'}
           >
+          properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
           authors: Array<{
             __typename?: 'Author'
             id: string
@@ -14848,7 +14881,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
             socialMediaDescription?: string | null
             socialMediaTitle?: string | null
             blocks: Array<
-              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'BildwurfAdBlock'; zoneID: string}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
               | {
@@ -15046,6 +15079,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
               | {__typename: 'VimeoVideoBlock'}
               | {__typename: 'YouTubeVideoBlock'}
             >
+            properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
             authors: Array<{
               __typename?: 'Author'
               id: string
@@ -15232,7 +15266,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
             socialMediaDescription?: string | null
             socialMediaTitle?: string | null
             blocks: Array<
-              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'BildwurfAdBlock'; zoneID: string}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
               | {
@@ -15619,7 +15653,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
             socialMediaDescription?: string | null
             socialMediaTitle?: string | null
             blocks: Array<
-              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'BildwurfAdBlock'; zoneID: string}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
               | {
@@ -15817,6 +15851,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
               | {__typename: 'VimeoVideoBlock'}
               | {__typename: 'YouTubeVideoBlock'}
             >
+            properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
             authors: Array<{
               __typename?: 'Author'
               id: string
@@ -19624,7 +19659,7 @@ export type FullNavigationFragment = {
           socialMediaDescription?: string | null
           socialMediaTitle?: string | null
           blocks: Array<
-            | {__typename: 'BildwurfAdBlock'}
+            | {__typename: 'BildwurfAdBlock'; zoneID: string}
             | {__typename: 'CommentBlock'}
             | {__typename: 'EmbedBlock'}
             | {
@@ -19868,7 +19903,7 @@ export type FullNavigationFragment = {
                         socialMediaDescription?: string | null
                         socialMediaTitle?: string | null
                         blocks: Array<
-                          | {__typename: 'BildwurfAdBlock'}
+                          | {__typename: 'BildwurfAdBlock'; zoneID: string}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
                           | {
@@ -20074,6 +20109,11 @@ export type FullNavigationFragment = {
                           | {__typename: 'VimeoVideoBlock'}
                           | {__typename: 'YouTubeVideoBlock'}
                         >
+                        properties: Array<{
+                          __typename?: 'PublicProperties'
+                          key: string
+                          value: string
+                        }>
                         authors: Array<{
                           __typename?: 'Author'
                           id: string
@@ -20268,7 +20308,7 @@ export type FullNavigationFragment = {
                         socialMediaDescription?: string | null
                         socialMediaTitle?: string | null
                         blocks: Array<
-                          | {__typename: 'BildwurfAdBlock'}
+                          | {__typename: 'BildwurfAdBlock'; zoneID: string}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
                           | {
@@ -20663,7 +20703,7 @@ export type FullNavigationFragment = {
                         socialMediaDescription?: string | null
                         socialMediaTitle?: string | null
                         blocks: Array<
-                          | {__typename: 'BildwurfAdBlock'}
+                          | {__typename: 'BildwurfAdBlock'; zoneID: string}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
                           | {
@@ -20869,6 +20909,11 @@ export type FullNavigationFragment = {
                           | {__typename: 'VimeoVideoBlock'}
                           | {__typename: 'YouTubeVideoBlock'}
                         >
+                        properties: Array<{
+                          __typename?: 'PublicProperties'
+                          key: string
+                          value: string
+                        }>
                         authors: Array<{
                           __typename?: 'Author'
                           id: string
@@ -21039,7 +21084,7 @@ export type FullNavigationFragment = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -21249,6 +21294,11 @@ export type FullNavigationFragment = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          properties: Array<{
+                            __typename?: 'PublicProperties'
+                            key: string
+                            value: string
+                          }>
                           authors: Array<{
                             __typename?: 'Author'
                             id: string
@@ -21443,7 +21493,7 @@ export type FullNavigationFragment = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -21842,7 +21892,7 @@ export type FullNavigationFragment = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -22052,6 +22102,11 @@ export type FullNavigationFragment = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          properties: Array<{
+                            __typename?: 'PublicProperties'
+                            key: string
+                            value: string
+                          }>
                           authors: Array<{
                             __typename?: 'Author'
                             id: string
@@ -22166,6 +22221,7 @@ export type FullNavigationFragment = {
             | {__typename: 'VimeoVideoBlock'}
             | {__typename: 'YouTubeVideoBlock'}
           >
+          properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
           authors: Array<{
             __typename?: 'Author'
             id: string
@@ -22282,7 +22338,7 @@ export type FullNavigationFragment = {
           socialMediaDescription?: string | null
           socialMediaTitle?: string | null
           blocks: Array<
-            | {__typename: 'BildwurfAdBlock'}
+            | {__typename: 'BildwurfAdBlock'; zoneID: string}
             | {__typename: 'CommentBlock'}
             | {__typename: 'EmbedBlock'}
             | {
@@ -22526,7 +22582,7 @@ export type FullNavigationFragment = {
                         socialMediaDescription?: string | null
                         socialMediaTitle?: string | null
                         blocks: Array<
-                          | {__typename: 'BildwurfAdBlock'}
+                          | {__typename: 'BildwurfAdBlock'; zoneID: string}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
                           | {
@@ -22732,6 +22788,11 @@ export type FullNavigationFragment = {
                           | {__typename: 'VimeoVideoBlock'}
                           | {__typename: 'YouTubeVideoBlock'}
                         >
+                        properties: Array<{
+                          __typename?: 'PublicProperties'
+                          key: string
+                          value: string
+                        }>
                         authors: Array<{
                           __typename?: 'Author'
                           id: string
@@ -22926,7 +22987,7 @@ export type FullNavigationFragment = {
                         socialMediaDescription?: string | null
                         socialMediaTitle?: string | null
                         blocks: Array<
-                          | {__typename: 'BildwurfAdBlock'}
+                          | {__typename: 'BildwurfAdBlock'; zoneID: string}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
                           | {
@@ -23321,7 +23382,7 @@ export type FullNavigationFragment = {
                         socialMediaDescription?: string | null
                         socialMediaTitle?: string | null
                         blocks: Array<
-                          | {__typename: 'BildwurfAdBlock'}
+                          | {__typename: 'BildwurfAdBlock'; zoneID: string}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
                           | {
@@ -23527,6 +23588,11 @@ export type FullNavigationFragment = {
                           | {__typename: 'VimeoVideoBlock'}
                           | {__typename: 'YouTubeVideoBlock'}
                         >
+                        properties: Array<{
+                          __typename?: 'PublicProperties'
+                          key: string
+                          value: string
+                        }>
                         authors: Array<{
                           __typename?: 'Author'
                           id: string
@@ -23697,7 +23763,7 @@ export type FullNavigationFragment = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -23907,6 +23973,11 @@ export type FullNavigationFragment = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          properties: Array<{
+                            __typename?: 'PublicProperties'
+                            key: string
+                            value: string
+                          }>
                           authors: Array<{
                             __typename?: 'Author'
                             id: string
@@ -24101,7 +24172,7 @@ export type FullNavigationFragment = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -24500,7 +24571,7 @@ export type FullNavigationFragment = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -24710,6 +24781,11 @@ export type FullNavigationFragment = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          properties: Array<{
+                            __typename?: 'PublicProperties'
+                            key: string
+                            value: string
+                          }>
                           authors: Array<{
                             __typename?: 'Author'
                             id: string
@@ -24915,7 +24991,7 @@ export type NavigationListQuery = {
             socialMediaDescription?: string | null
             socialMediaTitle?: string | null
             blocks: Array<
-              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'BildwurfAdBlock'; zoneID: string}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
               | {
@@ -25159,7 +25235,7 @@ export type NavigationListQuery = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -25369,6 +25445,11 @@ export type NavigationListQuery = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          properties: Array<{
+                            __typename?: 'PublicProperties'
+                            key: string
+                            value: string
+                          }>
                           authors: Array<{
                             __typename?: 'Author'
                             id: string
@@ -25563,7 +25644,7 @@ export type NavigationListQuery = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -25962,7 +26043,7 @@ export type NavigationListQuery = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -26172,6 +26253,11 @@ export type NavigationListQuery = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          properties: Array<{
+                            __typename?: 'PublicProperties'
+                            key: string
+                            value: string
+                          }>
                           authors: Array<{
                             __typename?: 'Author'
                             id: string
@@ -26342,7 +26428,7 @@ export type NavigationListQuery = {
                             socialMediaDescription?: string | null
                             socialMediaTitle?: string | null
                             blocks: Array<
-                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {
@@ -26564,6 +26650,11 @@ export type NavigationListQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            properties: Array<{
+                              __typename?: 'PublicProperties'
+                              key: string
+                              value: string
+                            }>
                             authors: Array<{
                               __typename?: 'Author'
                               id: string
@@ -26758,7 +26849,7 @@ export type NavigationListQuery = {
                             socialMediaDescription?: string | null
                             socialMediaTitle?: string | null
                             blocks: Array<
-                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {
@@ -27169,7 +27260,7 @@ export type NavigationListQuery = {
                             socialMediaDescription?: string | null
                             socialMediaTitle?: string | null
                             blocks: Array<
-                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {
@@ -27391,6 +27482,11 @@ export type NavigationListQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            properties: Array<{
+                              __typename?: 'PublicProperties'
+                              key: string
+                              value: string
+                            }>
                             authors: Array<{
                               __typename?: 'Author'
                               id: string
@@ -27505,6 +27601,7 @@ export type NavigationListQuery = {
               | {__typename: 'VimeoVideoBlock'}
               | {__typename: 'YouTubeVideoBlock'}
             >
+            properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
             authors: Array<{
               __typename?: 'Author'
               id: string
@@ -27621,7 +27718,7 @@ export type NavigationListQuery = {
             socialMediaDescription?: string | null
             socialMediaTitle?: string | null
             blocks: Array<
-              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'BildwurfAdBlock'; zoneID: string}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
               | {
@@ -27865,7 +27962,7 @@ export type NavigationListQuery = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -28075,6 +28172,11 @@ export type NavigationListQuery = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          properties: Array<{
+                            __typename?: 'PublicProperties'
+                            key: string
+                            value: string
+                          }>
                           authors: Array<{
                             __typename?: 'Author'
                             id: string
@@ -28269,7 +28371,7 @@ export type NavigationListQuery = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -28668,7 +28770,7 @@ export type NavigationListQuery = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -28878,6 +28980,11 @@ export type NavigationListQuery = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          properties: Array<{
+                            __typename?: 'PublicProperties'
+                            key: string
+                            value: string
+                          }>
                           authors: Array<{
                             __typename?: 'Author'
                             id: string
@@ -29048,7 +29155,7 @@ export type NavigationListQuery = {
                             socialMediaDescription?: string | null
                             socialMediaTitle?: string | null
                             blocks: Array<
-                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {
@@ -29270,6 +29377,11 @@ export type NavigationListQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            properties: Array<{
+                              __typename?: 'PublicProperties'
+                              key: string
+                              value: string
+                            }>
                             authors: Array<{
                               __typename?: 'Author'
                               id: string
@@ -29464,7 +29576,7 @@ export type NavigationListQuery = {
                             socialMediaDescription?: string | null
                             socialMediaTitle?: string | null
                             blocks: Array<
-                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {
@@ -29875,7 +29987,7 @@ export type NavigationListQuery = {
                             socialMediaDescription?: string | null
                             socialMediaTitle?: string | null
                             blocks: Array<
-                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {
@@ -30097,6 +30209,11 @@ export type NavigationListQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            properties: Array<{
+                              __typename?: 'PublicProperties'
+                              key: string
+                              value: string
+                            }>
                             authors: Array<{
                               __typename?: 'Author'
                               id: string
@@ -30305,7 +30422,7 @@ export type NavigationQuery = {
             socialMediaDescription?: string | null
             socialMediaTitle?: string | null
             blocks: Array<
-              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'BildwurfAdBlock'; zoneID: string}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
               | {
@@ -30549,7 +30666,7 @@ export type NavigationQuery = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -30759,6 +30876,11 @@ export type NavigationQuery = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          properties: Array<{
+                            __typename?: 'PublicProperties'
+                            key: string
+                            value: string
+                          }>
                           authors: Array<{
                             __typename?: 'Author'
                             id: string
@@ -30953,7 +31075,7 @@ export type NavigationQuery = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -31352,7 +31474,7 @@ export type NavigationQuery = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -31562,6 +31684,11 @@ export type NavigationQuery = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          properties: Array<{
+                            __typename?: 'PublicProperties'
+                            key: string
+                            value: string
+                          }>
                           authors: Array<{
                             __typename?: 'Author'
                             id: string
@@ -31732,7 +31859,7 @@ export type NavigationQuery = {
                             socialMediaDescription?: string | null
                             socialMediaTitle?: string | null
                             blocks: Array<
-                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {
@@ -31954,6 +32081,11 @@ export type NavigationQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            properties: Array<{
+                              __typename?: 'PublicProperties'
+                              key: string
+                              value: string
+                            }>
                             authors: Array<{
                               __typename?: 'Author'
                               id: string
@@ -32148,7 +32280,7 @@ export type NavigationQuery = {
                             socialMediaDescription?: string | null
                             socialMediaTitle?: string | null
                             blocks: Array<
-                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {
@@ -32559,7 +32691,7 @@ export type NavigationQuery = {
                             socialMediaDescription?: string | null
                             socialMediaTitle?: string | null
                             blocks: Array<
-                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {
@@ -32781,6 +32913,11 @@ export type NavigationQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            properties: Array<{
+                              __typename?: 'PublicProperties'
+                              key: string
+                              value: string
+                            }>
                             authors: Array<{
                               __typename?: 'Author'
                               id: string
@@ -32895,6 +33032,7 @@ export type NavigationQuery = {
               | {__typename: 'VimeoVideoBlock'}
               | {__typename: 'YouTubeVideoBlock'}
             >
+            properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
             authors: Array<{
               __typename?: 'Author'
               id: string
@@ -33011,7 +33149,7 @@ export type NavigationQuery = {
             socialMediaDescription?: string | null
             socialMediaTitle?: string | null
             blocks: Array<
-              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'BildwurfAdBlock'; zoneID: string}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
               | {
@@ -33255,7 +33393,7 @@ export type NavigationQuery = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -33465,6 +33603,11 @@ export type NavigationQuery = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          properties: Array<{
+                            __typename?: 'PublicProperties'
+                            key: string
+                            value: string
+                          }>
                           authors: Array<{
                             __typename?: 'Author'
                             id: string
@@ -33659,7 +33802,7 @@ export type NavigationQuery = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -34058,7 +34201,7 @@ export type NavigationQuery = {
                           socialMediaDescription?: string | null
                           socialMediaTitle?: string | null
                           blocks: Array<
-                            | {__typename: 'BildwurfAdBlock'}
+                            | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
                             | {
@@ -34268,6 +34411,11 @@ export type NavigationQuery = {
                             | {__typename: 'VimeoVideoBlock'}
                             | {__typename: 'YouTubeVideoBlock'}
                           >
+                          properties: Array<{
+                            __typename?: 'PublicProperties'
+                            key: string
+                            value: string
+                          }>
                           authors: Array<{
                             __typename?: 'Author'
                             id: string
@@ -34438,7 +34586,7 @@ export type NavigationQuery = {
                             socialMediaDescription?: string | null
                             socialMediaTitle?: string | null
                             blocks: Array<
-                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {
@@ -34660,6 +34808,11 @@ export type NavigationQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            properties: Array<{
+                              __typename?: 'PublicProperties'
+                              key: string
+                              value: string
+                            }>
                             authors: Array<{
                               __typename?: 'Author'
                               id: string
@@ -34854,7 +35007,7 @@ export type NavigationQuery = {
                             socialMediaDescription?: string | null
                             socialMediaTitle?: string | null
                             blocks: Array<
-                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {
@@ -35265,7 +35418,7 @@ export type NavigationQuery = {
                             socialMediaDescription?: string | null
                             socialMediaTitle?: string | null
                             blocks: Array<
-                              | {__typename: 'BildwurfAdBlock'}
+                              | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
                               | {
@@ -35487,6 +35640,11 @@ export type NavigationQuery = {
                               | {__typename: 'VimeoVideoBlock'}
                               | {__typename: 'YouTubeVideoBlock'}
                             >
+                            properties: Array<{
+                              __typename?: 'PublicProperties'
+                              key: string
+                              value: string
+                            }>
                             authors: Array<{
                               __typename?: 'Author'
                               id: string
@@ -35746,7 +35904,7 @@ export type FullPageFragment = {
   socialMediaDescription?: string | null
   socialMediaTitle?: string | null
   blocks: Array<
-    | {__typename: 'BildwurfAdBlock'}
+    | {__typename: 'BildwurfAdBlock'; zoneID: string}
     | {__typename: 'CommentBlock'}
     | {__typename: 'EmbedBlock'}
     | {
@@ -35990,7 +36148,7 @@ export type FullPageFragment = {
                 socialMediaDescription?: string | null
                 socialMediaTitle?: string | null
                 blocks: Array<
-                  | {__typename: 'BildwurfAdBlock'}
+                  | {__typename: 'BildwurfAdBlock'; zoneID: string}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
                   | {
@@ -36188,6 +36346,7 @@ export type FullPageFragment = {
                   | {__typename: 'VimeoVideoBlock'}
                   | {__typename: 'YouTubeVideoBlock'}
                 >
+                properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                 authors: Array<{
                   __typename?: 'Author'
                   id: string
@@ -36374,7 +36533,7 @@ export type FullPageFragment = {
                 socialMediaDescription?: string | null
                 socialMediaTitle?: string | null
                 blocks: Array<
-                  | {__typename: 'BildwurfAdBlock'}
+                  | {__typename: 'BildwurfAdBlock'; zoneID: string}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
                   | {
@@ -36761,7 +36920,7 @@ export type FullPageFragment = {
                 socialMediaDescription?: string | null
                 socialMediaTitle?: string | null
                 blocks: Array<
-                  | {__typename: 'BildwurfAdBlock'}
+                  | {__typename: 'BildwurfAdBlock'; zoneID: string}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
                   | {
@@ -36959,6 +37118,7 @@ export type FullPageFragment = {
                   | {__typename: 'VimeoVideoBlock'}
                   | {__typename: 'YouTubeVideoBlock'}
                 >
+                properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                 authors: Array<{
                   __typename?: 'Author'
                   id: string
@@ -37119,7 +37279,7 @@ export type FullPageFragment = {
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
                   blocks: Array<
-                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {
@@ -37317,6 +37477,7 @@ export type FullPageFragment = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                   authors: Array<{
                     __typename?: 'Author'
                     id: string
@@ -37503,7 +37664,7 @@ export type FullPageFragment = {
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
                   blocks: Array<
-                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {
@@ -37890,7 +38051,7 @@ export type FullPageFragment = {
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
                   blocks: Array<
-                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {
@@ -38088,6 +38249,7 @@ export type FullPageFragment = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                   authors: Array<{
                     __typename?: 'Author'
                     id: string
@@ -38276,7 +38438,7 @@ export type PageQuery = {
     socialMediaDescription?: string | null
     socialMediaTitle?: string | null
     blocks: Array<
-      | {__typename: 'BildwurfAdBlock'}
+      | {__typename: 'BildwurfAdBlock'; zoneID: string}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
       | {
@@ -38520,7 +38682,7 @@ export type PageQuery = {
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
                   blocks: Array<
-                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {
@@ -38718,6 +38880,7 @@ export type PageQuery = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                   authors: Array<{
                     __typename?: 'Author'
                     id: string
@@ -38904,7 +39067,7 @@ export type PageQuery = {
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
                   blocks: Array<
-                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {
@@ -39291,7 +39454,7 @@ export type PageQuery = {
                   socialMediaDescription?: string | null
                   socialMediaTitle?: string | null
                   blocks: Array<
-                    | {__typename: 'BildwurfAdBlock'}
+                    | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
                     | {
@@ -39489,6 +39652,7 @@ export type PageQuery = {
                     | {__typename: 'VimeoVideoBlock'}
                     | {__typename: 'YouTubeVideoBlock'}
                   >
+                  properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                   authors: Array<{
                     __typename?: 'Author'
                     id: string
@@ -39649,7 +39813,7 @@ export type PageQuery = {
                     socialMediaDescription?: string | null
                     socialMediaTitle?: string | null
                     blocks: Array<
-                      | {__typename: 'BildwurfAdBlock'}
+                      | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {
@@ -39851,6 +40015,7 @@ export type PageQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                     authors: Array<{
                       __typename?: 'Author'
                       id: string
@@ -40037,7 +40202,7 @@ export type PageQuery = {
                     socialMediaDescription?: string | null
                     socialMediaTitle?: string | null
                     blocks: Array<
-                      | {__typename: 'BildwurfAdBlock'}
+                      | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {
@@ -40428,7 +40593,7 @@ export type PageQuery = {
                     socialMediaDescription?: string | null
                     socialMediaTitle?: string | null
                     blocks: Array<
-                      | {__typename: 'BildwurfAdBlock'}
+                      | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
                       | {
@@ -40630,6 +40795,7 @@ export type PageQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                     authors: Array<{
                       __typename?: 'Author'
                       id: string
@@ -41846,6 +42012,9 @@ export const BlockWithoutTeaserFragmentDoc = gql`
     ... on HTMLBlock {
       html
     }
+    ... on BildwurfAdBlock {
+      zoneID
+    }
     ... on EventBlock {
       events {
         ...FullEvent
@@ -41905,6 +42074,10 @@ export const ArticleWithoutBlocksFragmentDoc = gql`
     tags
     title
     url
+    properties {
+      key
+      value
+    }
     authors {
       ...FullAuthor
     }

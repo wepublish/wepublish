@@ -1,15 +1,13 @@
-import {ApolloError} from '@apollo/client'
-import {css} from '@emotion/react'
-import {Meta} from '@storybook/react'
 import {
+  ArticleListDocument,
   ArticleQuery,
-  Event,
-  EventStatus,
   FullAuthorFragment,
-  FullImageFragment,
-  FullPollFragment
+  FullImageFragment
 } from '@wepublish/website/api'
-import {Article} from './article'
+import {action} from '@storybook/addon-actions'
+import {Meta} from '@storybook/react'
+import {ArticleListContainer} from './article-list-container'
+import {css} from '@emotion/react'
 
 const image = {
   __typename: 'Image',
@@ -43,147 +41,6 @@ const image = {
   squareMediumURL: 'https://unsplash.it/300/300',
   squareSmallURL: 'https://unsplash.it/200/200'
 } as FullImageFragment
-
-const event = {
-  id: '16ca80ce-a2d0-44dc-8c87-b735e4b08877',
-  name: 'Cool concert',
-  description: [
-    {
-      type: 'paragraph',
-      children: [
-        {
-          text: 'Lorem ipsum dolor sit amet, '
-        },
-        {
-          text: 'consectetur adipiscing elit, ',
-          bold: true
-        },
-        {
-          text: 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
-          italic: true
-        },
-        {
-          text: 'Ut enim ad minim veniam, ',
-          underline: true
-        },
-        {
-          text: 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
-          strikethrough: true
-        },
-        {
-          text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. '
-        },
-        {
-          text: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-        }
-      ]
-    },
-    {
-      type: 'paragraph',
-      children: [
-        {
-          text: 'Lorem ipsum dolor sit amet, '
-        },
-        {
-          text: 'consectetur adipiscing elit, ',
-          bold: true
-        },
-        {
-          text: 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
-          italic: true
-        },
-        {
-          text: 'Ut enim ad minim veniam, ',
-          underline: true
-        },
-        {
-          text: 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
-          strikethrough: true
-        },
-        {
-          text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. '
-        },
-        {
-          text: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-        }
-      ]
-    },
-    {
-      type: 'paragraph',
-      children: [
-        {
-          text: 'Lorem ipsum dolor sit amet, '
-        },
-        {
-          text: 'consectetur adipiscing elit, ',
-          bold: true
-        },
-        {
-          text: 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
-          italic: true
-        },
-        {
-          text: 'Ut enim ad minim veniam, ',
-          underline: true
-        },
-        {
-          text: 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
-          strikethrough: true
-        },
-        {
-          text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. '
-        },
-        {
-          text: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-        }
-      ]
-    },
-    {
-      type: 'paragraph',
-      children: [
-        {
-          text: 'Lorem ipsum dolor sit amet, '
-        },
-        {
-          text: 'consectetur adipiscing elit, ',
-          bold: true
-        },
-        {
-          text: 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
-          italic: true
-        },
-        {
-          text: 'Ut enim ad minim veniam, ',
-          underline: true
-        },
-        {
-          text: 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
-          strikethrough: true
-        },
-        {
-          text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. '
-        },
-        {
-          text: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-        }
-      ]
-    }
-  ],
-  status: EventStatus.Scheduled,
-  location: 'Basel',
-  image,
-  tags: [
-    {
-      id: 'cldwtndha026601nui49kyxrk',
-      tag: 'Concert',
-      __typename: 'Tag'
-    }
-  ],
-  startsAt: '2023-02-24T09:00:00.000Z',
-  endsAt: '2023-02-25T07:30:00.000Z',
-  url: 'https://example.com',
-  __typename: 'Event'
-} as Event
 
 const author = {
   __typename: 'Author',
@@ -223,57 +80,6 @@ const author = {
   ],
   image
 } as FullAuthorFragment
-
-const poll = {
-  __typename: 'FullPoll',
-  id: '1234',
-  question: 'Question',
-  infoText: [
-    {
-      type: 'paragraph',
-      children: [
-        {
-          text: 'Normal text,'
-        }
-      ]
-    }
-  ],
-  externalVoteSources: [
-    {
-      id: '1234',
-      voteAmounts: [
-        {
-          id: '1',
-          __typename: 'PollExternalVote',
-          amount: 10,
-          answerId: '1234'
-        },
-        {
-          id: '2',
-          __typename: 'PollExternalVote',
-          amount: 5,
-          answerId: '1234-1234'
-        }
-      ]
-    }
-  ],
-  opensAt: '2023-01-01',
-  closedAt: '2033-01-01',
-  answers: [
-    {
-      id: '1234',
-      pollId: '1234',
-      votes: 1,
-      answer: 'Ja'
-    },
-    {
-      id: '1234-1234',
-      pollId: '1234',
-      votes: 5,
-      answer: 'Nein'
-    }
-  ]
-} as FullPollFragment
 
 const article = {
   __typename: 'Article',
@@ -2619,109 +2425,121 @@ const article = {
       html: '<div>Some HTML embed</div>\n<script>console.log("Some HTML embed")</script>'
     },
     {
-      __typename: 'PollBlock',
-      poll
+      __typename: 'PollBlock'
     },
     {
       __typename: 'CommentBlock'
     },
     {
-      __typename: 'EventBlock',
-      events: [event]
+      __typename: 'EventBlock'
     }
   ]
 } as NonNullable<ArticleQuery['article']>
 
 export default {
-  component: Article,
-  title: 'Components/Article'
+  component: ArticleListContainer,
+  title: 'Container/ArticleList'
 } as Meta
 
 export const Default = {
   args: {
-    data: {article}
-  }
-}
+    onQuery: action('onQuery')
+  },
 
-export const WithLoading = {
-  args: {
-    data: {
-      article: null
-    },
-    loading: true
-  }
-}
-
-export const WithError = {
-  args: {
-    data: {
-      article: null
-    },
-    error: new ApolloError({
-      errorMessage: 'Foobar'
-    })
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: ArticleListDocument,
+            variables: {}
+          },
+          result: {
+            data: {
+              articles: {
+                nodes: [article, {...article, id: '2'}, {...article, id: '3'}],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  endCursor: null,
+                  startCursor: null
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }
 
 export const WithClassName = {
   args: {
-    data: {article},
+    onQuery: action('onQuery'),
     className: 'extra-classname'
+  },
+
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: ArticleListDocument,
+            variables: {}
+          },
+          result: {
+            data: {
+              articles: {
+                nodes: [article, {...article, id: '2'}, {...article, id: '3'}],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  endCursor: null,
+                  startCursor: null
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }
 
 export const WithEmotion = {
   args: {
-    data: {article},
+    onQuery: action('onQuery'),
     css: css`
       background-color: #eee;
     `
-  }
-}
+  },
 
-export const WithoutAuthors = {
-  args: {
-    data: {
-      article: {
-        ...article,
-        authors: []
-      }
-    }
-  }
-}
-
-export const WithoutSocialMedia = {
-  args: {
-    data: {
-      article: {
-        ...article,
-        socialMediaImage: null,
-        socialMediaDescription: null,
-        socialMediaTitle: null
-      }
-    }
-  }
-}
-
-export const WithoutLead = {
-  args: {
-    data: {
-      article: {
-        ...article,
-        lead: null
-      }
-    }
-  }
-}
-
-export const WithoutImageMetadata = {
-  args: {
-    data: {
-      article: {
-        ...article,
-        socialMediaImage: null,
-        image: null
-      }
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: ArticleListDocument,
+            variables: {}
+          },
+          result: {
+            data: {
+              articles: {
+                nodes: [article, {...article, id: '2'}, {...article, id: '3'}],
+                totalCount: 3,
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  endCursor: null,
+                  startCursor: null
+                }
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }

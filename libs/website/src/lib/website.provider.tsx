@@ -1,5 +1,5 @@
 import {GlobalStyles, TextField, Theme, ThemeProvider, css} from '@mui/material'
-import {Article, ArticleSEO} from '@wepublish/article/website'
+import {Article, ArticleSEO, ArticleList, ArticleListItem} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {Author, AuthorChip, AuthorList, AuthorListItem} from '@wepublish/author/website'
 import {
@@ -77,6 +77,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         AuthorChip={AuthorChip}
         AuthorList={AuthorList}
         AuthorListItem={AuthorListItem}
+        ArticleList={ArticleList}
+        ArticleListItem={ArticleListItem}
         Article={Article}
         ArticleSEO={ArticleSEO}
         PeerInformation={PeerInformation}
