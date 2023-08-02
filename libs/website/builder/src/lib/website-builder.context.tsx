@@ -85,7 +85,7 @@ const NoComponent = () => null
 
 export type WebsiteBuilderComponents = {
   Head: ComponentType<{children: ReactNode}>
-  Script: ComponentType<{children: ReactNode} & ScriptHTMLAttributes<HTMLScriptElement>>
+  Script: ComponentType<{children?: ReactNode} & ScriptHTMLAttributes<HTMLScriptElement>>
   Navbar: ComponentType<BuilderNavbarProps>
   Footer: ComponentType<BuilderFooterProps>
   MemberPlans: ComponentType<BuilderMemberPlansProps>

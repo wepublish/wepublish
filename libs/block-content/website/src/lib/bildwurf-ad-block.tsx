@@ -1,55 +1,8 @@
-import {useEffect, useState, useRef, useCallback, useMemo} from 'react'
+import {useEffect} from 'react'
 import {BildwurfAdBlock as BildwurfAdBlockType, Block} from '@wepublish/website/api'
 
 import styled from '@emotion/styled'
-import {BuilderBildwurfAdBlockProps} from '@wepublish/website/builder'
-
-function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin = false) {
-  const scriptRef = useRef<HTMLScriptElement | null>(null)
-
-  const [isLoading, setLoading] = useState(false)
-  const [isLoaded, setLoaded] = useState(() => checkIfLoaded())
-
-  useEffect(() => {
-    if (isLoading && !isLoaded && !scriptRef.current) {
-      const script = document.createElement('script')
-
-      script.src = src
-      script.async = true
-      script.defer = true
-      script.onload = () => setLoaded(true)
-      script.crossOrigin = crossOrigin ? 'anonymous' : null
-
-      document.head.appendChild(script)
-      scriptRef.current = script
-    }
-  }, [isLoading, crossOrigin, src, isLoaded])
-
-  const load = useCallback(() => {
-    setLoading(true)
-  }, [])
-
-  const result = useMemo(
-    () => ({
-      isLoading,
-      isLoaded,
-      load
-    }),
-    [isLoading, isLoaded, load]
-  )
-
-  if (typeof window !== 'object') {
-    return {
-      isLoaded: false,
-      isLoading: false,
-      load: () => {
-        /* do nothing */
-      }
-    }
-  }
-
-  return result
-}
+import {BuilderBildwurfAdBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const isBildwurfAdBlock = (block: Block): block is BildwurfAdBlockType =>
   block.__typename === 'BildwurfAdBlock'
@@ -69,14 +22,9 @@ export interface BildwurfAdEmbedProps {
 }
 
 export function BildwurfAdBlock({zoneID, className}: BuilderBildwurfAdBlockProps) {
-  const {load} = useScript(
-    `https://media.online.bildwurf.ch/js/code.min.js`,
-    () => !!window._ASO,
-    false
-  )
+  const {Script} = useWebsiteBuilder()
 
   useEffect(() => {
-    load()
     try {
       window._ASO.loadAd('bildwurf-injection-wrapper', zoneID)
     } catch (error) {
@@ -85,8 +33,11 @@ export function BildwurfAdBlock({zoneID, className}: BuilderBildwurfAdBlockProps
   }, [])
 
   return (
-    <BildwurfBlockWrapper className={className} id="bildwurf-injection-wrapper">
-      <ins className="aso-zone" data-zone={zoneID}></ins>
-    </BildwurfBlockWrapper>
+    <>
+      <Script src="https://media.online.bildwurf.ch/js/code.min.js" />
+      <BildwurfBlockWrapper className={className} id="bildwurf-injection-wrapper">
+        <ins className="aso-zone" data-zone={zoneID}></ins>
+      </BildwurfBlockWrapper>
+    </>
   )
 }

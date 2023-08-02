@@ -2,8 +2,12 @@
 
 exports[`Bildwurf Ad Block should render Default 1`] = `
 <DocumentFragment>
+  <script
+    data-testid="fake-script"
+    src="https://media.online.bildwurf.ch/js/code.min.js"
+  />
   <div
-    class="css-0"
+    class="css-0 ef7o3yi0"
     id="bildwurf-injection-wrapper"
   >
     <ins
@@ -16,8 +20,12 @@ exports[`Bildwurf Ad Block should render Default 1`] = `
 
 exports[`Bildwurf Ad Block should render WithClassName 1`] = `
 <DocumentFragment>
+  <script
+    data-testid="fake-script"
+    src="https://media.online.bildwurf.ch/js/code.min.js"
+  />
   <div
-    class="extra-classname css-0"
+    class="extra-classname css-0 ef7o3yi0"
     id="bildwurf-injection-wrapper"
   >
     <ins

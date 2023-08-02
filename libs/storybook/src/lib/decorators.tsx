@@ -1,4 +1,5 @@
 import {Global} from '@emotion/react'
+import NextScript from 'next/script'
 import {CssBaseline, css} from '@mui/material'
 import {Preview} from '@storybook/react'
 import {
@@ -40,9 +41,13 @@ const SessionProvider = memo<PropsWithChildren>(({children}) => {
 
 const Head = ({children}: PropsWithChildren) => <div data-testid="fake-head">{children}</div>
 const Script = ({children, ...data}: PropsWithChildren<any>) => (
-  <script data-testid="fake-script" {...data}>
-    {children}
-  </script>
+  <>
+    {/* we use next/script, but also include <script /> tag for snapshots */}
+    <NextScript {...data}>{children}</NextScript>
+    <script data-testid="fake-script" {...data}>
+      {children}
+    </script>
+  </>
 )
 
 const withWebsiteProvider = (Story: ComponentType) => (

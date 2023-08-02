@@ -3,10 +3,10 @@
 exports[`Facebook Video Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-1gu3j3w"
+    class="css-l75mtb e6bnd560"
   >
     <div
-      class="css-0"
+      class="css-0 e6bnd561"
       style="width: auto; height: auto;"
     />
   </div>
@@ -16,10 +16,10 @@ exports[`Facebook Video Block should render Default 1`] = `
 exports[`Facebook Video Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-1gu3j3w"
+    class="extra-classname css-l75mtb e6bnd560"
   >
     <div
-      class="css-0"
+      class="css-0 e6bnd561"
       style="width: auto; height: auto;"
     >
       <div

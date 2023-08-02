@@ -3,10 +3,10 @@
 exports[`SoundCloud Track Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-0"
+    class="css-0 eiisaqe0"
   >
     <div
-      class="css-xb9rjn"
+      class="css-zqjcpl eiisaqe1"
       style="width: auto; height: auto;"
     />
   </div>
@@ -16,10 +16,10 @@ exports[`SoundCloud Track Block should render Default 1`] = `
 exports[`SoundCloud Track Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-0"
+    class="extra-classname css-0 eiisaqe0"
   >
     <div
-      class="css-xb9rjn"
+      class="css-zqjcpl eiisaqe1"
       style="width: auto; height: auto;"
     >
       <iframe

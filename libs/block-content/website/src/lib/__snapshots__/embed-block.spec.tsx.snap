@@ -3,7 +3,7 @@
 exports[`Embed Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-1ago99h"
+    class="css-8atqhb e15athp30"
   >
     <div
       style="position: relative; padding-top: 56.07142857142857%; min-height: 45px;"
@@ -23,7 +23,7 @@ exports[`Embed Block should render Default 1`] = `
 exports[`Embed Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-1ago99h"
+    class="extra-classname css-8atqhb e15athp30"
   >
     <div
       style="position: relative; padding-top: 56.07142857142857%; min-height: 45px;"
