@@ -622,12 +622,12 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     setting: {
       type: GraphQLSetting,
-      args: {name: {type: GraphQLNonNull(GraphQLString)}},
+      args: {name: {type: new GraphQLNonNull(GraphQLString)}},
       resolve: (root, {name}, {prisma: {setting}}) => getSetting(name, setting)
     },
 
     settings: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSetting))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLSetting))),
       resolve: (root, _, {prisma: {setting}}) => getSettings(setting)
     }
   }
