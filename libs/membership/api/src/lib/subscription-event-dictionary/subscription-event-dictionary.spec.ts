@@ -334,7 +334,7 @@ describe('SubscriptionEventDictionary', () => {
       autorenwal: true
     })
     let res =
-      '[{"type":"SUBSCRIBE","daysAwayFromEnding":null,"externalMailTemplate":"custom1-SUBSCRIBE"},{"type":"RENEWAL_SUCCESS","daysAwayFromEnding":null,"externalMailTemplate":"custom1-RENEWAL_SUCCESS"},{"type":"RENEWAL_FAILED","daysAwayFromEnding":null,"externalMailTemplate":"custom1-RENEWAL_FAILED"},{"type":"DEACTIVATION_BY_USER","daysAwayFromEnding":null,"externalMailTemplate":"custom1-DEACTIVATION_BY_USER"},{"type":"REACTIVATION","daysAwayFromEnding":null,"externalMailTemplate":"custom1-REACTIVATION"}]'
+      '[{"type":"SUBSCRIBE","daysAwayFromEnding":null,"externalMailTemplate":"custom1-SUBSCRIBE"},{"type":"RENEWAL_SUCCESS","daysAwayFromEnding":null,"externalMailTemplate":"custom1-RENEWAL_SUCCESS"},{"type":"RENEWAL_FAILED","daysAwayFromEnding":null,"externalMailTemplate":"custom1-RENEWAL_FAILED"},{"type":"DEACTIVATION_BY_USER","daysAwayFromEnding":null,"externalMailTemplate":"custom1-DEACTIVATION_BY_USER"}]'
     expect(JSON.stringify(actions)).toEqual(res)
 
     // Test custom variable actions
@@ -399,7 +399,7 @@ describe('SubscriptionEventDictionary', () => {
       autorenwal: false
     })
     res =
-      '[{"type":"SUBSCRIBE","daysAwayFromEnding":null,"externalMailTemplate":"default-SUBSCRIBE"},{"type":"RENEWAL_SUCCESS","daysAwayFromEnding":null,"externalMailTemplate":"default-RENEWAL_SUCCESS"},{"type":"RENEWAL_FAILED","daysAwayFromEnding":null,"externalMailTemplate":"default-RENEWAL_FAILED"},{"type":"DEACTIVATION_BY_USER","daysAwayFromEnding":null,"externalMailTemplate":"default-DEACTIVATION_BY_USER"},{"type":"REACTIVATION","daysAwayFromEnding":null,"externalMailTemplate":"default-REACTIVATION"}]'
+      '[{"type":"SUBSCRIBE","daysAwayFromEnding":null,"externalMailTemplate":"default-SUBSCRIBE"},{"type":"RENEWAL_SUCCESS","daysAwayFromEnding":null,"externalMailTemplate":"default-RENEWAL_SUCCESS"},{"type":"RENEWAL_FAILED","daysAwayFromEnding":null,"externalMailTemplate":"default-RENEWAL_FAILED"},{"type":"DEACTIVATION_BY_USER","daysAwayFromEnding":null,"externalMailTemplate":"default-DEACTIVATION_BY_USER"}]'
     expect(JSON.stringify(actions)).toEqual(res)
 
     // Test custom variable actions

@@ -1030,6 +1030,7 @@ describe('PeriodicJobController', () => {
       )
     }
   })
+
   it('Charge Invoice missing subscription', async () => {
     const pjo: any = {}
     const invoice: any = {}

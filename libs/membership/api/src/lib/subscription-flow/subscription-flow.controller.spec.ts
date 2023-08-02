@@ -175,6 +175,11 @@ describe('SubscriptionFlowController', () => {
     const paymentMethod = await PaymentMethodFactory.create()
     const plan = await MemberPlanFactory.create()
     const existingFlow = await SubscriptionFlowFactory.create({
+      memberPlan: {
+        connect: {
+          id: plan.id
+        }
+      },
       paymentMethods: {connect: [{id: paymentMethod.id}]},
       periodicities: ['monthly', 'yearly'],
       autoRenewal: [true, false]
