@@ -8,14 +8,6 @@ export default {
   docs: {
     autodocs: false
   },
-  env: config => {
-    console.log(config)
-
-    return {
-      ...config,
-      NODE_ENV: 'production'
-    }
-  },
   stories: ['../../**/src/lib/**/*.mdx', '../../**/src/lib/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: [
     '@nx/react/plugins/storybook',
@@ -43,5 +35,16 @@ export default {
     '@storybook/addon-styling',
     '@storybook/addon-links',
     'storybook-react-i18next'
-  ]
+  ],
+  webpack: (config, options) => {
+    config.resolve = {
+      ...config.resolve,
+      fallback: {
+        ...config.resolve?.fallback,
+        stream: require.resolve('stream-browserify')
+      }
+    }
+
+    return config
+  }
 } as StorybookConfig
