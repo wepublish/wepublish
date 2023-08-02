@@ -12,7 +12,8 @@
         "tsConfig": "libs/nest-modules/tsconfig.lib.json",
         "packageJson": "libs/nest-modules/package.json",
         "main": "libs/nest-modules/src/index.ts",
-        "assets": ["libs/nest-modules/*.md"]
+        "assets": ["libs/nest-modules/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true
       }
     },
     "lint": {
