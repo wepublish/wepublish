@@ -3,15 +3,16 @@
 exports[`Author Chip should render Default 1`] = `
 <DocumentFragment>
   <aside
-    class="css-a451hm"
+    class="css-1qi9kls ewiwnhk0"
   >
     <div
-      class="css-chr1eq"
+      class="css-lgj0h8 ewiwnhk1"
     >
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1w3f93h-AuthorChip e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -21,7 +22,7 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-chr1eq"
+      class="css-lgj0h8 ewiwnhk2"
     >
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -49,15 +50,16 @@ https://unsplash.it/200/200 200w"
 exports[`Author Chip should render WithClassName 1`] = `
 <DocumentFragment>
   <aside
-    class="extra-classname css-a451hm"
+    class="extra-classname css-1qi9kls ewiwnhk0"
   >
     <div
-      class="css-chr1eq"
+      class="css-lgj0h8 ewiwnhk1"
     >
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1w3f93h-AuthorChip e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -67,7 +69,7 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-chr1eq"
+      class="css-lgj0h8 ewiwnhk2"
     >
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -95,15 +97,16 @@ https://unsplash.it/200/200 200w"
 exports[`Author Chip should render WithEmotion 1`] = `
 <DocumentFragment>
   <aside
-    class="css-a451hm"
+    class="css-1qi9kls ewiwnhk0"
   >
     <div
-      class="css-chr1eq"
+      class="css-lgj0h8 ewiwnhk1"
     >
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1w3f93h-AuthorChip e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -113,7 +116,7 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-chr1eq"
+      class="css-lgj0h8 ewiwnhk2"
     >
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -141,13 +144,13 @@ https://unsplash.it/200/200 200w"
 exports[`Author Chip should render WithoutImage 1`] = `
 <DocumentFragment>
   <aside
-    class="css-a451hm"
+    class="css-1qi9kls ewiwnhk0"
   >
     <div
-      class="css-chr1eq"
+      class="css-lgj0h8 ewiwnhk1"
     />
     <div
-      class="css-chr1eq"
+      class="css-lgj0h8 ewiwnhk2"
     >
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -175,15 +178,16 @@ exports[`Author Chip should render WithoutImage 1`] = `
 exports[`Author Chip should render WithoutJobTitle 1`] = `
 <DocumentFragment>
   <aside
-    class="css-a451hm"
+    class="css-1qi9kls ewiwnhk0"
   >
     <div
-      class="css-chr1eq"
+      class="css-lgj0h8 ewiwnhk1"
     >
       <img
         alt="DSC07717"
-        class="css-1qnf57e"
+        class="css-1w3f93h-AuthorChip e1nfkf2e0"
         height="6000"
+        loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -193,7 +197,7 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-chr1eq"
+      class="css-lgj0h8 ewiwnhk2"
     >
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"

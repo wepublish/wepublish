@@ -3,7 +3,7 @@
 exports[`Title Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-1gn0lpx"
+    class="css-1nypbew eg8m6wp0"
   >
     <h1
       class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -22,7 +22,7 @@ exports[`Title Block should render Default 1`] = `
 exports[`Title Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-1gn0lpx"
+    class="extra-classname css-1nypbew eg8m6wp0"
   >
     <h1
       class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -41,7 +41,7 @@ exports[`Title Block should render WithClassName 1`] = `
 exports[`Title Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-1gn0lpx"
+    class="css-1nypbew eg8m6wp0"
   >
     <h1
       class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -60,7 +60,7 @@ exports[`Title Block should render WithEmotion 1`] = `
 exports[`Title Block should render WithoutLead 1`] = `
 <DocumentFragment>
   <div
-    class="css-1gn0lpx"
+    class="css-1nypbew eg8m6wp0"
   >
     <h1
       class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"

@@ -39,6 +39,18 @@ fragment BlockWithoutTeaser on Block {
     zoneID
   }
 
+  ... on EventBlock {
+    events {
+      ...FullEvent
+    }
+  }
+
+  ... on PollBlock {
+    poll {
+      ...FullPoll
+    }
+  }
+
   ... on ListicleBlock {
     items {
       title

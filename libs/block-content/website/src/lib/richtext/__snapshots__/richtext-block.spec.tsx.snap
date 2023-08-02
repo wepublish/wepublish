@@ -3,7 +3,7 @@
 exports[`Richtext Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-0"
+    class="css-0 e1e9qmuq0"
   >
     <div
       data-gramm="false"
@@ -370,7 +370,7 @@ exports[`Richtext Block should render Default 1`] = `
 exports[`Richtext Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-0"
+    class="extra-classname css-0 e1e9qmuq0"
   >
     <div
       data-gramm="false"
@@ -737,7 +737,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
 exports[`Richtext Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-0"
+    class="css-0 e1e9qmuq0"
   >
     <div
       data-gramm="false"

@@ -626,9 +626,9 @@ export type FullCommentRatingSystem = {
 
 export type FullPoll = {
   __typename?: 'FullPoll';
-  answers?: Maybe<Array<PollAnswerWithVoteCount>>;
+  answers: Array<PollAnswerWithVoteCount>;
   closedAt?: Maybe<Scalars['DateTime']>;
-  externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
+  externalVoteSources: Array<PollExternalVoteSource>;
   id: Scalars['ID'];
   infoText?: Maybe<Scalars['RichText']>;
   opensAt: Scalars['DateTime'];
@@ -1826,7 +1826,7 @@ export type PollConnection = {
 
 export type PollExternalVote = {
   __typename?: 'PollExternalVote';
-  amount?: Maybe<Scalars['VoteValue']>;
+  amount: Scalars['VoteValue'];
   answerId: Scalars['ID'];
   id: Scalars['ID'];
 };
@@ -1835,7 +1835,7 @@ export type PollExternalVoteSource = {
   __typename?: 'PollExternalVoteSource';
   id: Scalars['ID'];
   source?: Maybe<Scalars['String']>;
-  voteAmounts?: Maybe<Array<PollExternalVote>>;
+  voteAmounts: Array<PollExternalVote>;
 };
 
 export type PollFilter = {

@@ -414,9 +414,9 @@ export type FullCommentRatingSystem = {
 
 export type FullPoll = {
   __typename?: 'FullPoll'
-  answers?: Maybe<Array<PollAnswerWithVoteCount>>
+  answers: Array<PollAnswerWithVoteCount>
   closedAt?: Maybe<Scalars['DateTime']>
-  externalVoteSources?: Maybe<Array<PollExternalVoteSource>>
+  externalVoteSources: Array<PollExternalVoteSource>
   id: Scalars['ID']
   infoText?: Maybe<Scalars['RichText']>
   opensAt: Scalars['DateTime']
@@ -931,7 +931,7 @@ export type PollBlock = {
 
 export type PollExternalVote = {
   __typename?: 'PollExternalVote'
-  amount?: Maybe<Scalars['VoteValue']>
+  amount: Scalars['VoteValue']
   answerId: Scalars['ID']
   id: Scalars['ID']
 }
@@ -940,13 +940,14 @@ export type PollExternalVoteSource = {
   __typename?: 'PollExternalVoteSource'
   id: Scalars['ID']
   source?: Maybe<Scalars['String']>
-  voteAmounts?: Maybe<Array<PollExternalVote>>
+  voteAmounts: Array<PollExternalVote>
 }
 
 export type PollVote = {
   __typename?: 'PollVote'
+  answerId: Scalars['String']
   createdAt: Scalars['DateTime']
-  disabled?: Maybe<Scalars['Boolean']>
+  disabled: Scalars['Boolean']
   fingerprint?: Maybe<Scalars['String']>
 }
 
@@ -1559,7 +1560,50 @@ export type FullArticleFragment = {
     | {__typename: 'BildwurfAdBlock'; zoneID: string}
     | {__typename: 'CommentBlock'}
     | {__typename: 'EmbedBlock'}
-    | {__typename: 'EventBlock'}
+    | {
+        __typename: 'EventBlock'
+        events: Array<{
+          __typename?: 'Event'
+          id: string
+          name: string
+          description?: Node[] | null
+          status: EventStatus
+          location?: string | null
+          startsAt: string
+          endsAt?: string | null
+          url: string
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+        }>
+      }
     | {__typename: 'FacebookPostBlock'}
     | {__typename: 'FacebookVideoBlock'}
     | {__typename: 'HTMLBlock'; html?: string | null}
@@ -1672,7 +1716,34 @@ export type FullArticleFragment = {
         }>
       }
     | {__typename: 'PolisConversationBlock'}
-    | {__typename: 'PollBlock'}
+    | {
+        __typename: 'PollBlock'
+        poll?: {
+          __typename?: 'FullPoll'
+          id: string
+          question?: string | null
+          opensAt: string
+          closedAt?: string | null
+          infoText?: Node[] | null
+          answers: Array<{
+            __typename?: 'PollAnswerWithVoteCount'
+            id: string
+            pollId: string
+            answer?: string | null
+            votes: number
+          }>
+          externalVoteSources: Array<{
+            __typename?: 'PollExternalVoteSource'
+            id: string
+            voteAmounts: Array<{
+              __typename?: 'PollExternalVote'
+              id: string
+              answerId: string
+              amount: number
+            }>
+          }>
+        } | null
+      }
     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
     | {__typename: 'RichTextBlock'; richText: Node[]}
     | {__typename: 'SoundCloudTrackBlock'}
@@ -1733,7 +1804,50 @@ export type FullArticleFragment = {
                   | {__typename: 'BildwurfAdBlock'; zoneID: string}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
-                  | {__typename: 'EventBlock'}
+                  | {
+                      __typename: 'EventBlock'
+                      events: Array<{
+                        __typename?: 'Event'
+                        id: string
+                        name: string
+                        description?: Node[] | null
+                        status: EventStatus
+                        location?: string | null
+                        startsAt: string
+                        endsAt?: string | null
+                        url: string
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                      }>
+                    }
                   | {__typename: 'FacebookPostBlock'}
                   | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
@@ -1846,7 +1960,34 @@ export type FullArticleFragment = {
                       }>
                     }
                   | {__typename: 'PolisConversationBlock'}
-                  | {__typename: 'PollBlock'}
+                  | {
+                      __typename: 'PollBlock'
+                      poll?: {
+                        __typename?: 'FullPoll'
+                        id: string
+                        question?: string | null
+                        opensAt: string
+                        closedAt?: string | null
+                        infoText?: Node[] | null
+                        answers: Array<{
+                          __typename?: 'PollAnswerWithVoteCount'
+                          id: string
+                          pollId: string
+                          answer?: string | null
+                          votes: number
+                        }>
+                        externalVoteSources: Array<{
+                          __typename?: 'PollExternalVoteSource'
+                          id: string
+                          voteAmounts: Array<{
+                            __typename?: 'PollExternalVote'
+                            id: string
+                            answerId: string
+                            amount: number
+                          }>
+                        }>
+                      } | null
+                    }
                   | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                   | {__typename: 'RichTextBlock'; richText: Node[]}
                   | {__typename: 'SoundCloudTrackBlock'}
@@ -2048,7 +2189,50 @@ export type FullArticleFragment = {
                   | {__typename: 'BildwurfAdBlock'; zoneID: string}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
-                  | {__typename: 'EventBlock'}
+                  | {
+                      __typename: 'EventBlock'
+                      events: Array<{
+                        __typename?: 'Event'
+                        id: string
+                        name: string
+                        description?: Node[] | null
+                        status: EventStatus
+                        location?: string | null
+                        startsAt: string
+                        endsAt?: string | null
+                        url: string
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                      }>
+                    }
                   | {__typename: 'FacebookPostBlock'}
                   | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
@@ -2161,7 +2345,34 @@ export type FullArticleFragment = {
                       }>
                     }
                   | {__typename: 'PolisConversationBlock'}
-                  | {__typename: 'PollBlock'}
+                  | {
+                      __typename: 'PollBlock'
+                      poll?: {
+                        __typename?: 'FullPoll'
+                        id: string
+                        question?: string | null
+                        opensAt: string
+                        closedAt?: string | null
+                        infoText?: Node[] | null
+                        answers: Array<{
+                          __typename?: 'PollAnswerWithVoteCount'
+                          id: string
+                          pollId: string
+                          answer?: string | null
+                          votes: number
+                        }>
+                        externalVoteSources: Array<{
+                          __typename?: 'PollExternalVoteSource'
+                          id: string
+                          voteAmounts: Array<{
+                            __typename?: 'PollExternalVote'
+                            id: string
+                            answerId: string
+                            amount: number
+                          }>
+                        }>
+                      } | null
+                    }
                   | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                   | {__typename: 'RichTextBlock'; richText: Node[]}
                   | {__typename: 'SoundCloudTrackBlock'}
@@ -2365,7 +2576,50 @@ export type FullArticleFragment = {
                   | {__typename: 'BildwurfAdBlock'; zoneID: string}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
-                  | {__typename: 'EventBlock'}
+                  | {
+                      __typename: 'EventBlock'
+                      events: Array<{
+                        __typename?: 'Event'
+                        id: string
+                        name: string
+                        description?: Node[] | null
+                        status: EventStatus
+                        location?: string | null
+                        startsAt: string
+                        endsAt?: string | null
+                        url: string
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                      }>
+                    }
                   | {__typename: 'FacebookPostBlock'}
                   | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
@@ -2478,7 +2732,34 @@ export type FullArticleFragment = {
                       }>
                     }
                   | {__typename: 'PolisConversationBlock'}
-                  | {__typename: 'PollBlock'}
+                  | {
+                      __typename: 'PollBlock'
+                      poll?: {
+                        __typename?: 'FullPoll'
+                        id: string
+                        question?: string | null
+                        opensAt: string
+                        closedAt?: string | null
+                        infoText?: Node[] | null
+                        answers: Array<{
+                          __typename?: 'PollAnswerWithVoteCount'
+                          id: string
+                          pollId: string
+                          answer?: string | null
+                          votes: number
+                        }>
+                        externalVoteSources: Array<{
+                          __typename?: 'PollExternalVoteSource'
+                          id: string
+                          voteAmounts: Array<{
+                            __typename?: 'PollExternalVote'
+                            id: string
+                            answerId: string
+                            amount: number
+                          }>
+                        }>
+                      } | null
+                    }
                   | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                   | {__typename: 'RichTextBlock'; richText: Node[]}
                   | {__typename: 'SoundCloudTrackBlock'}
@@ -2654,7 +2935,50 @@ export type FullArticleFragment = {
                     | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
@@ -2767,7 +3091,34 @@ export type FullArticleFragment = {
                         }>
                       }
                     | {__typename: 'PolisConversationBlock'}
-                    | {__typename: 'PollBlock'}
+                    | {
+                        __typename: 'PollBlock'
+                        poll?: {
+                          __typename?: 'FullPoll'
+                          id: string
+                          question?: string | null
+                          opensAt: string
+                          closedAt?: string | null
+                          infoText?: Node[] | null
+                          answers: Array<{
+                            __typename?: 'PollAnswerWithVoteCount'
+                            id: string
+                            pollId: string
+                            answer?: string | null
+                            votes: number
+                          }>
+                          externalVoteSources: Array<{
+                            __typename?: 'PollExternalVoteSource'
+                            id: string
+                            voteAmounts: Array<{
+                              __typename?: 'PollExternalVote'
+                              id: string
+                              answerId: string
+                              amount: number
+                            }>
+                          }>
+                        } | null
+                      }
                     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                     | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
@@ -2969,7 +3320,50 @@ export type FullArticleFragment = {
                     | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
@@ -3082,7 +3476,34 @@ export type FullArticleFragment = {
                         }>
                       }
                     | {__typename: 'PolisConversationBlock'}
-                    | {__typename: 'PollBlock'}
+                    | {
+                        __typename: 'PollBlock'
+                        poll?: {
+                          __typename?: 'FullPoll'
+                          id: string
+                          question?: string | null
+                          opensAt: string
+                          closedAt?: string | null
+                          infoText?: Node[] | null
+                          answers: Array<{
+                            __typename?: 'PollAnswerWithVoteCount'
+                            id: string
+                            pollId: string
+                            answer?: string | null
+                            votes: number
+                          }>
+                          externalVoteSources: Array<{
+                            __typename?: 'PollExternalVoteSource'
+                            id: string
+                            voteAmounts: Array<{
+                              __typename?: 'PollExternalVote'
+                              id: string
+                              answerId: string
+                              amount: number
+                            }>
+                          }>
+                        } | null
+                      }
                     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                     | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
@@ -3286,7 +3707,50 @@ export type FullArticleFragment = {
                     | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
@@ -3399,7 +3863,34 @@ export type FullArticleFragment = {
                         }>
                       }
                     | {__typename: 'PolisConversationBlock'}
-                    | {__typename: 'PollBlock'}
+                    | {
+                        __typename: 'PollBlock'
+                        poll?: {
+                          __typename?: 'FullPoll'
+                          id: string
+                          question?: string | null
+                          opensAt: string
+                          closedAt?: string | null
+                          infoText?: Node[] | null
+                          answers: Array<{
+                            __typename?: 'PollAnswerWithVoteCount'
+                            id: string
+                            pollId: string
+                            answer?: string | null
+                            votes: number
+                          }>
+                          externalVoteSources: Array<{
+                            __typename?: 'PollExternalVoteSource'
+                            id: string
+                            voteAmounts: Array<{
+                              __typename?: 'PollExternalVote'
+                              id: string
+                              answerId: string
+                              amount: number
+                            }>
+                          }>
+                        } | null
+                      }
                     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                     | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
@@ -3649,7 +4140,50 @@ export type ArticleQuery = {
       | {__typename: 'BildwurfAdBlock'; zoneID: string}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
-      | {__typename: 'EventBlock'}
+      | {
+          __typename: 'EventBlock'
+          events: Array<{
+            __typename?: 'Event'
+            id: string
+            name: string
+            description?: Node[] | null
+            status: EventStatus
+            location?: string | null
+            startsAt: string
+            endsAt?: string | null
+            url: string
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+          }>
+        }
       | {__typename: 'FacebookPostBlock'}
       | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -3762,7 +4296,34 @@ export type ArticleQuery = {
           }>
         }
       | {__typename: 'PolisConversationBlock'}
-      | {__typename: 'PollBlock'}
+      | {
+          __typename: 'PollBlock'
+          poll?: {
+            __typename?: 'FullPoll'
+            id: string
+            question?: string | null
+            opensAt: string
+            closedAt?: string | null
+            infoText?: Node[] | null
+            answers: Array<{
+              __typename?: 'PollAnswerWithVoteCount'
+              id: string
+              pollId: string
+              answer?: string | null
+              votes: number
+            }>
+            externalVoteSources: Array<{
+              __typename?: 'PollExternalVoteSource'
+              id: string
+              voteAmounts: Array<{
+                __typename?: 'PollExternalVote'
+                id: string
+                answerId: string
+                amount: number
+              }>
+            }>
+          } | null
+        }
       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
       | {__typename: 'RichTextBlock'; richText: Node[]}
       | {__typename: 'SoundCloudTrackBlock'}
@@ -3823,7 +4384,50 @@ export type ArticleQuery = {
                     | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
@@ -3936,7 +4540,34 @@ export type ArticleQuery = {
                         }>
                       }
                     | {__typename: 'PolisConversationBlock'}
-                    | {__typename: 'PollBlock'}
+                    | {
+                        __typename: 'PollBlock'
+                        poll?: {
+                          __typename?: 'FullPoll'
+                          id: string
+                          question?: string | null
+                          opensAt: string
+                          closedAt?: string | null
+                          infoText?: Node[] | null
+                          answers: Array<{
+                            __typename?: 'PollAnswerWithVoteCount'
+                            id: string
+                            pollId: string
+                            answer?: string | null
+                            votes: number
+                          }>
+                          externalVoteSources: Array<{
+                            __typename?: 'PollExternalVoteSource'
+                            id: string
+                            voteAmounts: Array<{
+                              __typename?: 'PollExternalVote'
+                              id: string
+                              answerId: string
+                              amount: number
+                            }>
+                          }>
+                        } | null
+                      }
                     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                     | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
@@ -4138,7 +4769,50 @@ export type ArticleQuery = {
                     | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
@@ -4251,7 +4925,34 @@ export type ArticleQuery = {
                         }>
                       }
                     | {__typename: 'PolisConversationBlock'}
-                    | {__typename: 'PollBlock'}
+                    | {
+                        __typename: 'PollBlock'
+                        poll?: {
+                          __typename?: 'FullPoll'
+                          id: string
+                          question?: string | null
+                          opensAt: string
+                          closedAt?: string | null
+                          infoText?: Node[] | null
+                          answers: Array<{
+                            __typename?: 'PollAnswerWithVoteCount'
+                            id: string
+                            pollId: string
+                            answer?: string | null
+                            votes: number
+                          }>
+                          externalVoteSources: Array<{
+                            __typename?: 'PollExternalVoteSource'
+                            id: string
+                            voteAmounts: Array<{
+                              __typename?: 'PollExternalVote'
+                              id: string
+                              answerId: string
+                              amount: number
+                            }>
+                          }>
+                        } | null
+                      }
                     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                     | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
@@ -4455,7 +5156,50 @@ export type ArticleQuery = {
                     | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
@@ -4568,7 +5312,34 @@ export type ArticleQuery = {
                         }>
                       }
                     | {__typename: 'PolisConversationBlock'}
-                    | {__typename: 'PollBlock'}
+                    | {
+                        __typename: 'PollBlock'
+                        poll?: {
+                          __typename?: 'FullPoll'
+                          id: string
+                          question?: string | null
+                          opensAt: string
+                          closedAt?: string | null
+                          infoText?: Node[] | null
+                          answers: Array<{
+                            __typename?: 'PollAnswerWithVoteCount'
+                            id: string
+                            pollId: string
+                            answer?: string | null
+                            votes: number
+                          }>
+                          externalVoteSources: Array<{
+                            __typename?: 'PollExternalVoteSource'
+                            id: string
+                            voteAmounts: Array<{
+                              __typename?: 'PollExternalVote'
+                              id: string
+                              answerId: string
+                              amount: number
+                            }>
+                          }>
+                        } | null
+                      }
                     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                     | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
@@ -4744,7 +5515,54 @@ export type ArticleQuery = {
                       | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
                       | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -4857,7 +5675,34 @@ export type ArticleQuery = {
                           }>
                         }
                       | {__typename: 'PolisConversationBlock'}
-                      | {__typename: 'PollBlock'}
+                      | {
+                          __typename: 'PollBlock'
+                          poll?: {
+                            __typename?: 'FullPoll'
+                            id: string
+                            question?: string | null
+                            opensAt: string
+                            closedAt?: string | null
+                            infoText?: Node[] | null
+                            answers: Array<{
+                              __typename?: 'PollAnswerWithVoteCount'
+                              id: string
+                              pollId: string
+                              answer?: string | null
+                              votes: number
+                            }>
+                            externalVoteSources: Array<{
+                              __typename?: 'PollExternalVoteSource'
+                              id: string
+                              voteAmounts: Array<{
+                                __typename?: 'PollExternalVote'
+                                id: string
+                                answerId: string
+                                amount: number
+                              }>
+                            }>
+                          } | null
+                        }
                       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                       | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
@@ -5059,7 +5904,54 @@ export type ArticleQuery = {
                       | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
                       | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -5172,7 +6064,34 @@ export type ArticleQuery = {
                           }>
                         }
                       | {__typename: 'PolisConversationBlock'}
-                      | {__typename: 'PollBlock'}
+                      | {
+                          __typename: 'PollBlock'
+                          poll?: {
+                            __typename?: 'FullPoll'
+                            id: string
+                            question?: string | null
+                            opensAt: string
+                            closedAt?: string | null
+                            infoText?: Node[] | null
+                            answers: Array<{
+                              __typename?: 'PollAnswerWithVoteCount'
+                              id: string
+                              pollId: string
+                              answer?: string | null
+                              votes: number
+                            }>
+                            externalVoteSources: Array<{
+                              __typename?: 'PollExternalVoteSource'
+                              id: string
+                              voteAmounts: Array<{
+                                __typename?: 'PollExternalVote'
+                                id: string
+                                answerId: string
+                                amount: number
+                              }>
+                            }>
+                          } | null
+                        }
                       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                       | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
@@ -5376,7 +6295,54 @@ export type ArticleQuery = {
                       | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
                       | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -5489,7 +6455,34 @@ export type ArticleQuery = {
                           }>
                         }
                       | {__typename: 'PolisConversationBlock'}
-                      | {__typename: 'PollBlock'}
+                      | {
+                          __typename: 'PollBlock'
+                          poll?: {
+                            __typename?: 'FullPoll'
+                            id: string
+                            question?: string | null
+                            opensAt: string
+                            closedAt?: string | null
+                            infoText?: Node[] | null
+                            answers: Array<{
+                              __typename?: 'PollAnswerWithVoteCount'
+                              id: string
+                              pollId: string
+                              answer?: string | null
+                              votes: number
+                            }>
+                            externalVoteSources: Array<{
+                              __typename?: 'PollExternalVoteSource'
+                              id: string
+                              voteAmounts: Array<{
+                                __typename?: 'PollExternalVote'
+                                id: string
+                                answerId: string
+                                amount: number
+                              }>
+                            }>
+                          } | null
+                        }
                       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                       | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
@@ -5741,7 +6734,50 @@ export type PeerArticleQuery = {
       | {__typename: 'BildwurfAdBlock'; zoneID: string}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
-      | {__typename: 'EventBlock'}
+      | {
+          __typename: 'EventBlock'
+          events: Array<{
+            __typename?: 'Event'
+            id: string
+            name: string
+            description?: Node[] | null
+            status: EventStatus
+            location?: string | null
+            startsAt: string
+            endsAt?: string | null
+            url: string
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+          }>
+        }
       | {__typename: 'FacebookPostBlock'}
       | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -5854,7 +6890,34 @@ export type PeerArticleQuery = {
           }>
         }
       | {__typename: 'PolisConversationBlock'}
-      | {__typename: 'PollBlock'}
+      | {
+          __typename: 'PollBlock'
+          poll?: {
+            __typename?: 'FullPoll'
+            id: string
+            question?: string | null
+            opensAt: string
+            closedAt?: string | null
+            infoText?: Node[] | null
+            answers: Array<{
+              __typename?: 'PollAnswerWithVoteCount'
+              id: string
+              pollId: string
+              answer?: string | null
+              votes: number
+            }>
+            externalVoteSources: Array<{
+              __typename?: 'PollExternalVoteSource'
+              id: string
+              voteAmounts: Array<{
+                __typename?: 'PollExternalVote'
+                id: string
+                answerId: string
+                amount: number
+              }>
+            }>
+          } | null
+        }
       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
       | {__typename: 'RichTextBlock'; richText: Node[]}
       | {__typename: 'SoundCloudTrackBlock'}
@@ -5915,7 +6978,50 @@ export type PeerArticleQuery = {
                     | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
@@ -6028,7 +7134,34 @@ export type PeerArticleQuery = {
                         }>
                       }
                     | {__typename: 'PolisConversationBlock'}
-                    | {__typename: 'PollBlock'}
+                    | {
+                        __typename: 'PollBlock'
+                        poll?: {
+                          __typename?: 'FullPoll'
+                          id: string
+                          question?: string | null
+                          opensAt: string
+                          closedAt?: string | null
+                          infoText?: Node[] | null
+                          answers: Array<{
+                            __typename?: 'PollAnswerWithVoteCount'
+                            id: string
+                            pollId: string
+                            answer?: string | null
+                            votes: number
+                          }>
+                          externalVoteSources: Array<{
+                            __typename?: 'PollExternalVoteSource'
+                            id: string
+                            voteAmounts: Array<{
+                              __typename?: 'PollExternalVote'
+                              id: string
+                              answerId: string
+                              amount: number
+                            }>
+                          }>
+                        } | null
+                      }
                     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                     | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
@@ -6230,7 +7363,50 @@ export type PeerArticleQuery = {
                     | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
@@ -6343,7 +7519,34 @@ export type PeerArticleQuery = {
                         }>
                       }
                     | {__typename: 'PolisConversationBlock'}
-                    | {__typename: 'PollBlock'}
+                    | {
+                        __typename: 'PollBlock'
+                        poll?: {
+                          __typename?: 'FullPoll'
+                          id: string
+                          question?: string | null
+                          opensAt: string
+                          closedAt?: string | null
+                          infoText?: Node[] | null
+                          answers: Array<{
+                            __typename?: 'PollAnswerWithVoteCount'
+                            id: string
+                            pollId: string
+                            answer?: string | null
+                            votes: number
+                          }>
+                          externalVoteSources: Array<{
+                            __typename?: 'PollExternalVoteSource'
+                            id: string
+                            voteAmounts: Array<{
+                              __typename?: 'PollExternalVote'
+                              id: string
+                              answerId: string
+                              amount: number
+                            }>
+                          }>
+                        } | null
+                      }
                     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                     | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
@@ -6547,7 +7750,50 @@ export type PeerArticleQuery = {
                     | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
@@ -6660,7 +7906,34 @@ export type PeerArticleQuery = {
                         }>
                       }
                     | {__typename: 'PolisConversationBlock'}
-                    | {__typename: 'PollBlock'}
+                    | {
+                        __typename: 'PollBlock'
+                        poll?: {
+                          __typename?: 'FullPoll'
+                          id: string
+                          question?: string | null
+                          opensAt: string
+                          closedAt?: string | null
+                          infoText?: Node[] | null
+                          answers: Array<{
+                            __typename?: 'PollAnswerWithVoteCount'
+                            id: string
+                            pollId: string
+                            answer?: string | null
+                            votes: number
+                          }>
+                          externalVoteSources: Array<{
+                            __typename?: 'PollExternalVoteSource'
+                            id: string
+                            voteAmounts: Array<{
+                              __typename?: 'PollExternalVote'
+                              id: string
+                              answerId: string
+                              amount: number
+                            }>
+                          }>
+                        } | null
+                      }
                     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                     | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
@@ -6836,7 +8109,54 @@ export type PeerArticleQuery = {
                       | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
                       | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -6949,7 +8269,34 @@ export type PeerArticleQuery = {
                           }>
                         }
                       | {__typename: 'PolisConversationBlock'}
-                      | {__typename: 'PollBlock'}
+                      | {
+                          __typename: 'PollBlock'
+                          poll?: {
+                            __typename?: 'FullPoll'
+                            id: string
+                            question?: string | null
+                            opensAt: string
+                            closedAt?: string | null
+                            infoText?: Node[] | null
+                            answers: Array<{
+                              __typename?: 'PollAnswerWithVoteCount'
+                              id: string
+                              pollId: string
+                              answer?: string | null
+                              votes: number
+                            }>
+                            externalVoteSources: Array<{
+                              __typename?: 'PollExternalVoteSource'
+                              id: string
+                              voteAmounts: Array<{
+                                __typename?: 'PollExternalVote'
+                                id: string
+                                answerId: string
+                                amount: number
+                              }>
+                            }>
+                          } | null
+                        }
                       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                       | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
@@ -7151,7 +8498,54 @@ export type PeerArticleQuery = {
                       | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
                       | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -7264,7 +8658,34 @@ export type PeerArticleQuery = {
                           }>
                         }
                       | {__typename: 'PolisConversationBlock'}
-                      | {__typename: 'PollBlock'}
+                      | {
+                          __typename: 'PollBlock'
+                          poll?: {
+                            __typename?: 'FullPoll'
+                            id: string
+                            question?: string | null
+                            opensAt: string
+                            closedAt?: string | null
+                            infoText?: Node[] | null
+                            answers: Array<{
+                              __typename?: 'PollAnswerWithVoteCount'
+                              id: string
+                              pollId: string
+                              answer?: string | null
+                              votes: number
+                            }>
+                            externalVoteSources: Array<{
+                              __typename?: 'PollExternalVoteSource'
+                              id: string
+                              voteAmounts: Array<{
+                                __typename?: 'PollExternalVote'
+                                id: string
+                                answerId: string
+                                amount: number
+                              }>
+                            }>
+                          } | null
+                        }
                       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                       | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
@@ -7468,7 +8889,54 @@ export type PeerArticleQuery = {
                       | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
                       | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -7581,7 +9049,34 @@ export type PeerArticleQuery = {
                           }>
                         }
                       | {__typename: 'PolisConversationBlock'}
-                      | {__typename: 'PollBlock'}
+                      | {
+                          __typename: 'PollBlock'
+                          poll?: {
+                            __typename?: 'FullPoll'
+                            id: string
+                            question?: string | null
+                            opensAt: string
+                            closedAt?: string | null
+                            infoText?: Node[] | null
+                            answers: Array<{
+                              __typename?: 'PollAnswerWithVoteCount'
+                              id: string
+                              pollId: string
+                              answer?: string | null
+                              votes: number
+                            }>
+                            externalVoteSources: Array<{
+                              __typename?: 'PollExternalVoteSource'
+                              id: string
+                              voteAmounts: Array<{
+                                __typename?: 'PollExternalVote'
+                                id: string
+                                answerId: string
+                                amount: number
+                              }>
+                            }>
+                          } | null
+                        }
                       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                       | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
@@ -7839,7 +9334,50 @@ export type ArticleListQuery = {
         | {__typename: 'BildwurfAdBlock'; zoneID: string}
         | {__typename: 'CommentBlock'}
         | {__typename: 'EmbedBlock'}
-        | {__typename: 'EventBlock'}
+        | {
+            __typename: 'EventBlock'
+            events: Array<{
+              __typename?: 'Event'
+              id: string
+              name: string
+              description?: Node[] | null
+              status: EventStatus
+              location?: string | null
+              startsAt: string
+              endsAt?: string | null
+              url: string
+              image?: {
+                __typename?: 'Image'
+                id: string
+                createdAt: string
+                modifiedAt: string
+                filename?: string | null
+                format: string
+                mimeType: string
+                extension: string
+                width: number
+                height: number
+                fileSize: number
+                title?: string | null
+                description?: string | null
+                tags: Array<string>
+                source?: string | null
+                link?: string | null
+                license?: string | null
+                url?: string | null
+                bigURL?: string | null
+                largeURL?: string | null
+                mediumURL?: string | null
+                smallURL?: string | null
+                squareBigURL?: string | null
+                squareLargeURL?: string | null
+                squareMediumURL?: string | null
+                squareSmallURL?: string | null
+                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+              } | null
+              tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+            }>
+          }
         | {__typename: 'FacebookPostBlock'}
         | {__typename: 'FacebookVideoBlock'}
         | {__typename: 'HTMLBlock'; html?: string | null}
@@ -7952,7 +9490,34 @@ export type ArticleListQuery = {
             }>
           }
         | {__typename: 'PolisConversationBlock'}
-        | {__typename: 'PollBlock'}
+        | {
+            __typename: 'PollBlock'
+            poll?: {
+              __typename?: 'FullPoll'
+              id: string
+              question?: string | null
+              opensAt: string
+              closedAt?: string | null
+              infoText?: Node[] | null
+              answers: Array<{
+                __typename?: 'PollAnswerWithVoteCount'
+                id: string
+                pollId: string
+                answer?: string | null
+                votes: number
+              }>
+              externalVoteSources: Array<{
+                __typename?: 'PollExternalVoteSource'
+                id: string
+                voteAmounts: Array<{
+                  __typename?: 'PollExternalVote'
+                  id: string
+                  answerId: string
+                  amount: number
+                }>
+              }>
+            } | null
+          }
         | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
         | {__typename: 'RichTextBlock'; richText: Node[]}
         | {__typename: 'SoundCloudTrackBlock'}
@@ -8013,7 +9578,54 @@ export type ArticleListQuery = {
                       | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
                       | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -8126,7 +9738,34 @@ export type ArticleListQuery = {
                           }>
                         }
                       | {__typename: 'PolisConversationBlock'}
-                      | {__typename: 'PollBlock'}
+                      | {
+                          __typename: 'PollBlock'
+                          poll?: {
+                            __typename?: 'FullPoll'
+                            id: string
+                            question?: string | null
+                            opensAt: string
+                            closedAt?: string | null
+                            infoText?: Node[] | null
+                            answers: Array<{
+                              __typename?: 'PollAnswerWithVoteCount'
+                              id: string
+                              pollId: string
+                              answer?: string | null
+                              votes: number
+                            }>
+                            externalVoteSources: Array<{
+                              __typename?: 'PollExternalVoteSource'
+                              id: string
+                              voteAmounts: Array<{
+                                __typename?: 'PollExternalVote'
+                                id: string
+                                answerId: string
+                                amount: number
+                              }>
+                            }>
+                          } | null
+                        }
                       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                       | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
@@ -8328,7 +9967,54 @@ export type ArticleListQuery = {
                       | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
                       | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -8441,7 +10127,34 @@ export type ArticleListQuery = {
                           }>
                         }
                       | {__typename: 'PolisConversationBlock'}
-                      | {__typename: 'PollBlock'}
+                      | {
+                          __typename: 'PollBlock'
+                          poll?: {
+                            __typename?: 'FullPoll'
+                            id: string
+                            question?: string | null
+                            opensAt: string
+                            closedAt?: string | null
+                            infoText?: Node[] | null
+                            answers: Array<{
+                              __typename?: 'PollAnswerWithVoteCount'
+                              id: string
+                              pollId: string
+                              answer?: string | null
+                              votes: number
+                            }>
+                            externalVoteSources: Array<{
+                              __typename?: 'PollExternalVoteSource'
+                              id: string
+                              voteAmounts: Array<{
+                                __typename?: 'PollExternalVote'
+                                id: string
+                                answerId: string
+                                amount: number
+                              }>
+                            }>
+                          } | null
+                        }
                       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                       | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
@@ -8645,7 +10358,54 @@ export type ArticleListQuery = {
                       | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
                       | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -8758,7 +10518,34 @@ export type ArticleListQuery = {
                           }>
                         }
                       | {__typename: 'PolisConversationBlock'}
-                      | {__typename: 'PollBlock'}
+                      | {
+                          __typename: 'PollBlock'
+                          poll?: {
+                            __typename?: 'FullPoll'
+                            id: string
+                            question?: string | null
+                            opensAt: string
+                            closedAt?: string | null
+                            infoText?: Node[] | null
+                            answers: Array<{
+                              __typename?: 'PollAnswerWithVoteCount'
+                              id: string
+                              pollId: string
+                              answer?: string | null
+                              votes: number
+                            }>
+                            externalVoteSources: Array<{
+                              __typename?: 'PollExternalVoteSource'
+                              id: string
+                              voteAmounts: Array<{
+                                __typename?: 'PollExternalVote'
+                                id: string
+                                answerId: string
+                                amount: number
+                              }>
+                            }>
+                          } | null
+                        }
                       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                       | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
@@ -8934,7 +10721,54 @@ export type ArticleListQuery = {
                         | {__typename: 'BildwurfAdBlock'; zoneID: string}
                         | {__typename: 'CommentBlock'}
                         | {__typename: 'EmbedBlock'}
-                        | {__typename: 'EventBlock'}
+                        | {
+                            __typename: 'EventBlock'
+                            events: Array<{
+                              __typename?: 'Event'
+                              id: string
+                              name: string
+                              description?: Node[] | null
+                              status: EventStatus
+                              location?: string | null
+                              startsAt: string
+                              endsAt?: string | null
+                              url: string
+                              image?: {
+                                __typename?: 'Image'
+                                id: string
+                                createdAt: string
+                                modifiedAt: string
+                                filename?: string | null
+                                format: string
+                                mimeType: string
+                                extension: string
+                                width: number
+                                height: number
+                                fileSize: number
+                                title?: string | null
+                                description?: string | null
+                                tags: Array<string>
+                                source?: string | null
+                                link?: string | null
+                                license?: string | null
+                                url?: string | null
+                                bigURL?: string | null
+                                largeURL?: string | null
+                                mediumURL?: string | null
+                                smallURL?: string | null
+                                squareBigURL?: string | null
+                                squareLargeURL?: string | null
+                                squareMediumURL?: string | null
+                                squareSmallURL?: string | null
+                                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                              } | null
+                              tags?: Array<{
+                                __typename?: 'Tag'
+                                id: string
+                                tag?: string | null
+                              }> | null
+                            }>
+                          }
                         | {__typename: 'FacebookPostBlock'}
                         | {__typename: 'FacebookVideoBlock'}
                         | {__typename: 'HTMLBlock'; html?: string | null}
@@ -9047,7 +10881,34 @@ export type ArticleListQuery = {
                             }>
                           }
                         | {__typename: 'PolisConversationBlock'}
-                        | {__typename: 'PollBlock'}
+                        | {
+                            __typename: 'PollBlock'
+                            poll?: {
+                              __typename?: 'FullPoll'
+                              id: string
+                              question?: string | null
+                              opensAt: string
+                              closedAt?: string | null
+                              infoText?: Node[] | null
+                              answers: Array<{
+                                __typename?: 'PollAnswerWithVoteCount'
+                                id: string
+                                pollId: string
+                                answer?: string | null
+                                votes: number
+                              }>
+                              externalVoteSources: Array<{
+                                __typename?: 'PollExternalVoteSource'
+                                id: string
+                                voteAmounts: Array<{
+                                  __typename?: 'PollExternalVote'
+                                  id: string
+                                  answerId: string
+                                  amount: number
+                                }>
+                              }>
+                            } | null
+                          }
                         | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                         | {__typename: 'RichTextBlock'; richText: Node[]}
                         | {__typename: 'SoundCloudTrackBlock'}
@@ -9257,7 +11118,54 @@ export type ArticleListQuery = {
                         | {__typename: 'BildwurfAdBlock'; zoneID: string}
                         | {__typename: 'CommentBlock'}
                         | {__typename: 'EmbedBlock'}
-                        | {__typename: 'EventBlock'}
+                        | {
+                            __typename: 'EventBlock'
+                            events: Array<{
+                              __typename?: 'Event'
+                              id: string
+                              name: string
+                              description?: Node[] | null
+                              status: EventStatus
+                              location?: string | null
+                              startsAt: string
+                              endsAt?: string | null
+                              url: string
+                              image?: {
+                                __typename?: 'Image'
+                                id: string
+                                createdAt: string
+                                modifiedAt: string
+                                filename?: string | null
+                                format: string
+                                mimeType: string
+                                extension: string
+                                width: number
+                                height: number
+                                fileSize: number
+                                title?: string | null
+                                description?: string | null
+                                tags: Array<string>
+                                source?: string | null
+                                link?: string | null
+                                license?: string | null
+                                url?: string | null
+                                bigURL?: string | null
+                                largeURL?: string | null
+                                mediumURL?: string | null
+                                smallURL?: string | null
+                                squareBigURL?: string | null
+                                squareLargeURL?: string | null
+                                squareMediumURL?: string | null
+                                squareSmallURL?: string | null
+                                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                              } | null
+                              tags?: Array<{
+                                __typename?: 'Tag'
+                                id: string
+                                tag?: string | null
+                              }> | null
+                            }>
+                          }
                         | {__typename: 'FacebookPostBlock'}
                         | {__typename: 'FacebookVideoBlock'}
                         | {__typename: 'HTMLBlock'; html?: string | null}
@@ -9370,7 +11278,34 @@ export type ArticleListQuery = {
                             }>
                           }
                         | {__typename: 'PolisConversationBlock'}
-                        | {__typename: 'PollBlock'}
+                        | {
+                            __typename: 'PollBlock'
+                            poll?: {
+                              __typename?: 'FullPoll'
+                              id: string
+                              question?: string | null
+                              opensAt: string
+                              closedAt?: string | null
+                              infoText?: Node[] | null
+                              answers: Array<{
+                                __typename?: 'PollAnswerWithVoteCount'
+                                id: string
+                                pollId: string
+                                answer?: string | null
+                                votes: number
+                              }>
+                              externalVoteSources: Array<{
+                                __typename?: 'PollExternalVoteSource'
+                                id: string
+                                voteAmounts: Array<{
+                                  __typename?: 'PollExternalVote'
+                                  id: string
+                                  answerId: string
+                                  amount: number
+                                }>
+                              }>
+                            } | null
+                          }
                         | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                         | {__typename: 'RichTextBlock'; richText: Node[]}
                         | {__typename: 'SoundCloudTrackBlock'}
@@ -9574,7 +11509,54 @@ export type ArticleListQuery = {
                         | {__typename: 'BildwurfAdBlock'; zoneID: string}
                         | {__typename: 'CommentBlock'}
                         | {__typename: 'EmbedBlock'}
-                        | {__typename: 'EventBlock'}
+                        | {
+                            __typename: 'EventBlock'
+                            events: Array<{
+                              __typename?: 'Event'
+                              id: string
+                              name: string
+                              description?: Node[] | null
+                              status: EventStatus
+                              location?: string | null
+                              startsAt: string
+                              endsAt?: string | null
+                              url: string
+                              image?: {
+                                __typename?: 'Image'
+                                id: string
+                                createdAt: string
+                                modifiedAt: string
+                                filename?: string | null
+                                format: string
+                                mimeType: string
+                                extension: string
+                                width: number
+                                height: number
+                                fileSize: number
+                                title?: string | null
+                                description?: string | null
+                                tags: Array<string>
+                                source?: string | null
+                                link?: string | null
+                                license?: string | null
+                                url?: string | null
+                                bigURL?: string | null
+                                largeURL?: string | null
+                                mediumURL?: string | null
+                                smallURL?: string | null
+                                squareBigURL?: string | null
+                                squareLargeURL?: string | null
+                                squareMediumURL?: string | null
+                                squareSmallURL?: string | null
+                                focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                              } | null
+                              tags?: Array<{
+                                __typename?: 'Tag'
+                                id: string
+                                tag?: string | null
+                              }> | null
+                            }>
+                          }
                         | {__typename: 'FacebookPostBlock'}
                         | {__typename: 'FacebookVideoBlock'}
                         | {__typename: 'HTMLBlock'; html?: string | null}
@@ -9687,7 +11669,34 @@ export type ArticleListQuery = {
                             }>
                           }
                         | {__typename: 'PolisConversationBlock'}
-                        | {__typename: 'PollBlock'}
+                        | {
+                            __typename: 'PollBlock'
+                            poll?: {
+                              __typename?: 'FullPoll'
+                              id: string
+                              question?: string | null
+                              opensAt: string
+                              closedAt?: string | null
+                              infoText?: Node[] | null
+                              answers: Array<{
+                                __typename?: 'PollAnswerWithVoteCount'
+                                id: string
+                                pollId: string
+                                answer?: string | null
+                                votes: number
+                              }>
+                              externalVoteSources: Array<{
+                                __typename?: 'PollExternalVoteSource'
+                                id: string
+                                voteAmounts: Array<{
+                                  __typename?: 'PollExternalVote'
+                                  id: string
+                                  answerId: string
+                                  amount: number
+                                }>
+                              }>
+                            } | null
+                          }
                         | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                         | {__typename: 'RichTextBlock'; richText: Node[]}
                         | {__typename: 'SoundCloudTrackBlock'}
@@ -10092,7 +12101,50 @@ type BlockWithoutTeaser_CommentBlock_Fragment = {__typename: 'CommentBlock'}
 
 type BlockWithoutTeaser_EmbedBlock_Fragment = {__typename: 'EmbedBlock'}
 
-type BlockWithoutTeaser_EventBlock_Fragment = {__typename: 'EventBlock'}
+type BlockWithoutTeaser_EventBlock_Fragment = {
+  __typename: 'EventBlock'
+  events: Array<{
+    __typename?: 'Event'
+    id: string
+    name: string
+    description?: Node[] | null
+    status: EventStatus
+    location?: string | null
+    startsAt: string
+    endsAt?: string | null
+    url: string
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+  }>
+}
 
 type BlockWithoutTeaser_FacebookPostBlock_Fragment = {__typename: 'FacebookPostBlock'}
 
@@ -10215,7 +12267,34 @@ type BlockWithoutTeaser_ListicleBlock_Fragment = {
 
 type BlockWithoutTeaser_PolisConversationBlock_Fragment = {__typename: 'PolisConversationBlock'}
 
-type BlockWithoutTeaser_PollBlock_Fragment = {__typename: 'PollBlock'}
+type BlockWithoutTeaser_PollBlock_Fragment = {
+  __typename: 'PollBlock'
+  poll?: {
+    __typename?: 'FullPoll'
+    id: string
+    question?: string | null
+    opensAt: string
+    closedAt?: string | null
+    infoText?: Node[] | null
+    answers: Array<{
+      __typename?: 'PollAnswerWithVoteCount'
+      id: string
+      pollId: string
+      answer?: string | null
+      votes: number
+    }>
+    externalVoteSources: Array<{
+      __typename?: 'PollExternalVoteSource'
+      id: string
+      voteAmounts: Array<{
+        __typename?: 'PollExternalVote'
+        id: string
+        answerId: string
+        amount: number
+      }>
+    }>
+  } | null
+}
 
 type BlockWithoutTeaser_QuoteBlock_Fragment = {
   __typename: 'QuoteBlock'
@@ -10324,7 +12403,50 @@ type FullTeaser_ArticleTeaser_Fragment = {
       | {__typename: 'BildwurfAdBlock'; zoneID: string}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
-      | {__typename: 'EventBlock'}
+      | {
+          __typename: 'EventBlock'
+          events: Array<{
+            __typename?: 'Event'
+            id: string
+            name: string
+            description?: Node[] | null
+            status: EventStatus
+            location?: string | null
+            startsAt: string
+            endsAt?: string | null
+            url: string
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+          }>
+        }
       | {__typename: 'FacebookPostBlock'}
       | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -10437,7 +12559,34 @@ type FullTeaser_ArticleTeaser_Fragment = {
           }>
         }
       | {__typename: 'PolisConversationBlock'}
-      | {__typename: 'PollBlock'}
+      | {
+          __typename: 'PollBlock'
+          poll?: {
+            __typename?: 'FullPoll'
+            id: string
+            question?: string | null
+            opensAt: string
+            closedAt?: string | null
+            infoText?: Node[] | null
+            answers: Array<{
+              __typename?: 'PollAnswerWithVoteCount'
+              id: string
+              pollId: string
+              answer?: string | null
+              votes: number
+            }>
+            externalVoteSources: Array<{
+              __typename?: 'PollExternalVoteSource'
+              id: string
+              voteAmounts: Array<{
+                __typename?: 'PollExternalVote'
+                id: string
+                answerId: string
+                amount: number
+              }>
+            }>
+          } | null
+        }
       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
       | {__typename: 'RichTextBlock'; richText: Node[]}
       | {__typename: 'SoundCloudTrackBlock'}
@@ -10642,7 +12791,50 @@ type FullTeaser_PageTeaser_Fragment = {
       | {__typename: 'BildwurfAdBlock'; zoneID: string}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
-      | {__typename: 'EventBlock'}
+      | {
+          __typename: 'EventBlock'
+          events: Array<{
+            __typename?: 'Event'
+            id: string
+            name: string
+            description?: Node[] | null
+            status: EventStatus
+            location?: string | null
+            startsAt: string
+            endsAt?: string | null
+            url: string
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+          }>
+        }
       | {__typename: 'FacebookPostBlock'}
       | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -10755,7 +12947,34 @@ type FullTeaser_PageTeaser_Fragment = {
           }>
         }
       | {__typename: 'PolisConversationBlock'}
-      | {__typename: 'PollBlock'}
+      | {
+          __typename: 'PollBlock'
+          poll?: {
+            __typename?: 'FullPoll'
+            id: string
+            question?: string | null
+            opensAt: string
+            closedAt?: string | null
+            infoText?: Node[] | null
+            answers: Array<{
+              __typename?: 'PollAnswerWithVoteCount'
+              id: string
+              pollId: string
+              answer?: string | null
+              votes: number
+            }>
+            externalVoteSources: Array<{
+              __typename?: 'PollExternalVoteSource'
+              id: string
+              voteAmounts: Array<{
+                __typename?: 'PollExternalVote'
+                id: string
+                answerId: string
+                amount: number
+              }>
+            }>
+          } | null
+        }
       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
       | {__typename: 'RichTextBlock'; richText: Node[]}
       | {__typename: 'SoundCloudTrackBlock'}
@@ -10960,7 +13179,50 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
       | {__typename: 'BildwurfAdBlock'; zoneID: string}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
-      | {__typename: 'EventBlock'}
+      | {
+          __typename: 'EventBlock'
+          events: Array<{
+            __typename?: 'Event'
+            id: string
+            name: string
+            description?: Node[] | null
+            status: EventStatus
+            location?: string | null
+            startsAt: string
+            endsAt?: string | null
+            url: string
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+          }>
+        }
       | {__typename: 'FacebookPostBlock'}
       | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -11073,7 +13335,34 @@ type FullTeaser_PeerArticleTeaser_Fragment = {
           }>
         }
       | {__typename: 'PolisConversationBlock'}
-      | {__typename: 'PollBlock'}
+      | {
+          __typename: 'PollBlock'
+          poll?: {
+            __typename?: 'FullPoll'
+            id: string
+            question?: string | null
+            opensAt: string
+            closedAt?: string | null
+            infoText?: Node[] | null
+            answers: Array<{
+              __typename?: 'PollAnswerWithVoteCount'
+              id: string
+              pollId: string
+              answer?: string | null
+              votes: number
+            }>
+            externalVoteSources: Array<{
+              __typename?: 'PollExternalVoteSource'
+              id: string
+              voteAmounts: Array<{
+                __typename?: 'PollExternalVote'
+                id: string
+                answerId: string
+                amount: number
+              }>
+            }>
+          } | null
+        }
       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
       | {__typename: 'RichTextBlock'; richText: Node[]}
       | {__typename: 'SoundCloudTrackBlock'}
@@ -11201,7 +13490,50 @@ type FullBlock_CommentBlock_Fragment = {__typename: 'CommentBlock'}
 
 type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'}
 
-type FullBlock_EventBlock_Fragment = {__typename: 'EventBlock'}
+type FullBlock_EventBlock_Fragment = {
+  __typename: 'EventBlock'
+  events: Array<{
+    __typename?: 'Event'
+    id: string
+    name: string
+    description?: Node[] | null
+    status: EventStatus
+    location?: string | null
+    startsAt: string
+    endsAt?: string | null
+    url: string
+    image?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      format: string
+      mimeType: string
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      title?: string | null
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      url?: string | null
+      bigURL?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      smallURL?: string | null
+      squareBigURL?: string | null
+      squareLargeURL?: string | null
+      squareMediumURL?: string | null
+      squareSmallURL?: string | null
+      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+    } | null
+    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+  }>
+}
 
 type FullBlock_FacebookPostBlock_Fragment = {__typename: 'FacebookPostBlock'}
 
@@ -11324,7 +13656,34 @@ type FullBlock_ListicleBlock_Fragment = {
 
 type FullBlock_PolisConversationBlock_Fragment = {__typename: 'PolisConversationBlock'}
 
-type FullBlock_PollBlock_Fragment = {__typename: 'PollBlock'}
+type FullBlock_PollBlock_Fragment = {
+  __typename: 'PollBlock'
+  poll?: {
+    __typename?: 'FullPoll'
+    id: string
+    question?: string | null
+    opensAt: string
+    closedAt?: string | null
+    infoText?: Node[] | null
+    answers: Array<{
+      __typename?: 'PollAnswerWithVoteCount'
+      id: string
+      pollId: string
+      answer?: string | null
+      votes: number
+    }>
+    externalVoteSources: Array<{
+      __typename?: 'PollExternalVoteSource'
+      id: string
+      voteAmounts: Array<{
+        __typename?: 'PollExternalVote'
+        id: string
+        answerId: string
+        amount: number
+      }>
+    }>
+  } | null
+}
 
 type FullBlock_QuoteBlock_Fragment = {
   __typename: 'QuoteBlock'
@@ -11393,7 +13752,50 @@ type FullBlock_TeaserGridBlock_Fragment = {
             | {__typename: 'BildwurfAdBlock'; zoneID: string}
             | {__typename: 'CommentBlock'}
             | {__typename: 'EmbedBlock'}
-            | {__typename: 'EventBlock'}
+            | {
+                __typename: 'EventBlock'
+                events: Array<{
+                  __typename?: 'Event'
+                  id: string
+                  name: string
+                  description?: Node[] | null
+                  status: EventStatus
+                  location?: string | null
+                  startsAt: string
+                  endsAt?: string | null
+                  url: string
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                }>
+              }
             | {__typename: 'FacebookPostBlock'}
             | {__typename: 'FacebookVideoBlock'}
             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -11506,7 +13908,34 @@ type FullBlock_TeaserGridBlock_Fragment = {
                 }>
               }
             | {__typename: 'PolisConversationBlock'}
-            | {__typename: 'PollBlock'}
+            | {
+                __typename: 'PollBlock'
+                poll?: {
+                  __typename?: 'FullPoll'
+                  id: string
+                  question?: string | null
+                  opensAt: string
+                  closedAt?: string | null
+                  infoText?: Node[] | null
+                  answers: Array<{
+                    __typename?: 'PollAnswerWithVoteCount'
+                    id: string
+                    pollId: string
+                    answer?: string | null
+                    votes: number
+                  }>
+                  externalVoteSources: Array<{
+                    __typename?: 'PollExternalVoteSource'
+                    id: string
+                    voteAmounts: Array<{
+                      __typename?: 'PollExternalVote'
+                      id: string
+                      answerId: string
+                      amount: number
+                    }>
+                  }>
+                } | null
+              }
             | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
             | {__typename: 'RichTextBlock'; richText: Node[]}
             | {__typename: 'SoundCloudTrackBlock'}
@@ -11708,7 +14137,50 @@ type FullBlock_TeaserGridBlock_Fragment = {
             | {__typename: 'BildwurfAdBlock'; zoneID: string}
             | {__typename: 'CommentBlock'}
             | {__typename: 'EmbedBlock'}
-            | {__typename: 'EventBlock'}
+            | {
+                __typename: 'EventBlock'
+                events: Array<{
+                  __typename?: 'Event'
+                  id: string
+                  name: string
+                  description?: Node[] | null
+                  status: EventStatus
+                  location?: string | null
+                  startsAt: string
+                  endsAt?: string | null
+                  url: string
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                }>
+              }
             | {__typename: 'FacebookPostBlock'}
             | {__typename: 'FacebookVideoBlock'}
             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -11821,7 +14293,34 @@ type FullBlock_TeaserGridBlock_Fragment = {
                 }>
               }
             | {__typename: 'PolisConversationBlock'}
-            | {__typename: 'PollBlock'}
+            | {
+                __typename: 'PollBlock'
+                poll?: {
+                  __typename?: 'FullPoll'
+                  id: string
+                  question?: string | null
+                  opensAt: string
+                  closedAt?: string | null
+                  infoText?: Node[] | null
+                  answers: Array<{
+                    __typename?: 'PollAnswerWithVoteCount'
+                    id: string
+                    pollId: string
+                    answer?: string | null
+                    votes: number
+                  }>
+                  externalVoteSources: Array<{
+                    __typename?: 'PollExternalVoteSource'
+                    id: string
+                    voteAmounts: Array<{
+                      __typename?: 'PollExternalVote'
+                      id: string
+                      answerId: string
+                      amount: number
+                    }>
+                  }>
+                } | null
+              }
             | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
             | {__typename: 'RichTextBlock'; richText: Node[]}
             | {__typename: 'SoundCloudTrackBlock'}
@@ -12025,7 +14524,50 @@ type FullBlock_TeaserGridBlock_Fragment = {
             | {__typename: 'BildwurfAdBlock'; zoneID: string}
             | {__typename: 'CommentBlock'}
             | {__typename: 'EmbedBlock'}
-            | {__typename: 'EventBlock'}
+            | {
+                __typename: 'EventBlock'
+                events: Array<{
+                  __typename?: 'Event'
+                  id: string
+                  name: string
+                  description?: Node[] | null
+                  status: EventStatus
+                  location?: string | null
+                  startsAt: string
+                  endsAt?: string | null
+                  url: string
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                }>
+              }
             | {__typename: 'FacebookPostBlock'}
             | {__typename: 'FacebookVideoBlock'}
             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -12138,7 +14680,34 @@ type FullBlock_TeaserGridBlock_Fragment = {
                 }>
               }
             | {__typename: 'PolisConversationBlock'}
-            | {__typename: 'PollBlock'}
+            | {
+                __typename: 'PollBlock'
+                poll?: {
+                  __typename?: 'FullPoll'
+                  id: string
+                  question?: string | null
+                  opensAt: string
+                  closedAt?: string | null
+                  infoText?: Node[] | null
+                  answers: Array<{
+                    __typename?: 'PollAnswerWithVoteCount'
+                    id: string
+                    pollId: string
+                    answer?: string | null
+                    votes: number
+                  }>
+                  externalVoteSources: Array<{
+                    __typename?: 'PollExternalVoteSource'
+                    id: string
+                    voteAmounts: Array<{
+                      __typename?: 'PollExternalVote'
+                      id: string
+                      answerId: string
+                      amount: number
+                    }>
+                  }>
+                } | null
+              }
             | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
             | {__typename: 'RichTextBlock'; richText: Node[]}
             | {__typename: 'SoundCloudTrackBlock'}
@@ -12315,7 +14884,50 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
               | {__typename: 'BildwurfAdBlock'; zoneID: string}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
-              | {__typename: 'EventBlock'}
+              | {
+                  __typename: 'EventBlock'
+                  events: Array<{
+                    __typename?: 'Event'
+                    id: string
+                    name: string
+                    description?: Node[] | null
+                    status: EventStatus
+                    location?: string | null
+                    startsAt: string
+                    endsAt?: string | null
+                    url: string
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                  }>
+                }
               | {__typename: 'FacebookPostBlock'}
               | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -12428,7 +15040,34 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
                   }>
                 }
               | {__typename: 'PolisConversationBlock'}
-              | {__typename: 'PollBlock'}
+              | {
+                  __typename: 'PollBlock'
+                  poll?: {
+                    __typename?: 'FullPoll'
+                    id: string
+                    question?: string | null
+                    opensAt: string
+                    closedAt?: string | null
+                    infoText?: Node[] | null
+                    answers: Array<{
+                      __typename?: 'PollAnswerWithVoteCount'
+                      id: string
+                      pollId: string
+                      answer?: string | null
+                      votes: number
+                    }>
+                    externalVoteSources: Array<{
+                      __typename?: 'PollExternalVoteSource'
+                      id: string
+                      voteAmounts: Array<{
+                        __typename?: 'PollExternalVote'
+                        id: string
+                        answerId: string
+                        amount: number
+                      }>
+                    }>
+                  } | null
+                }
               | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
               | {__typename: 'RichTextBlock'; richText: Node[]}
               | {__typename: 'SoundCloudTrackBlock'}
@@ -12630,7 +15269,50 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
               | {__typename: 'BildwurfAdBlock'; zoneID: string}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
-              | {__typename: 'EventBlock'}
+              | {
+                  __typename: 'EventBlock'
+                  events: Array<{
+                    __typename?: 'Event'
+                    id: string
+                    name: string
+                    description?: Node[] | null
+                    status: EventStatus
+                    location?: string | null
+                    startsAt: string
+                    endsAt?: string | null
+                    url: string
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                  }>
+                }
               | {__typename: 'FacebookPostBlock'}
               | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -12743,7 +15425,34 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
                   }>
                 }
               | {__typename: 'PolisConversationBlock'}
-              | {__typename: 'PollBlock'}
+              | {
+                  __typename: 'PollBlock'
+                  poll?: {
+                    __typename?: 'FullPoll'
+                    id: string
+                    question?: string | null
+                    opensAt: string
+                    closedAt?: string | null
+                    infoText?: Node[] | null
+                    answers: Array<{
+                      __typename?: 'PollAnswerWithVoteCount'
+                      id: string
+                      pollId: string
+                      answer?: string | null
+                      votes: number
+                    }>
+                    externalVoteSources: Array<{
+                      __typename?: 'PollExternalVoteSource'
+                      id: string
+                      voteAmounts: Array<{
+                        __typename?: 'PollExternalVote'
+                        id: string
+                        answerId: string
+                        amount: number
+                      }>
+                    }>
+                  } | null
+                }
               | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
               | {__typename: 'RichTextBlock'; richText: Node[]}
               | {__typename: 'SoundCloudTrackBlock'}
@@ -12947,7 +15656,50 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
               | {__typename: 'BildwurfAdBlock'; zoneID: string}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
-              | {__typename: 'EventBlock'}
+              | {
+                  __typename: 'EventBlock'
+                  events: Array<{
+                    __typename?: 'Event'
+                    id: string
+                    name: string
+                    description?: Node[] | null
+                    status: EventStatus
+                    location?: string | null
+                    startsAt: string
+                    endsAt?: string | null
+                    url: string
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                  }>
+                }
               | {__typename: 'FacebookPostBlock'}
               | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -13060,7 +15812,34 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
                   }>
                 }
               | {__typename: 'PolisConversationBlock'}
-              | {__typename: 'PollBlock'}
+              | {
+                  __typename: 'PollBlock'
+                  poll?: {
+                    __typename?: 'FullPoll'
+                    id: string
+                    question?: string | null
+                    opensAt: string
+                    closedAt?: string | null
+                    infoText?: Node[] | null
+                    answers: Array<{
+                      __typename?: 'PollAnswerWithVoteCount'
+                      id: string
+                      pollId: string
+                      answer?: string | null
+                      votes: number
+                    }>
+                    externalVoteSources: Array<{
+                      __typename?: 'PollExternalVoteSource'
+                      id: string
+                      voteAmounts: Array<{
+                        __typename?: 'PollExternalVote'
+                        id: string
+                        answerId: string
+                        amount: number
+                      }>
+                    }>
+                  } | null
+                }
               | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
               | {__typename: 'RichTextBlock'; richText: Node[]}
               | {__typename: 'SoundCloudTrackBlock'}
@@ -16883,7 +19662,50 @@ export type FullNavigationFragment = {
             | {__typename: 'BildwurfAdBlock'; zoneID: string}
             | {__typename: 'CommentBlock'}
             | {__typename: 'EmbedBlock'}
-            | {__typename: 'EventBlock'}
+            | {
+                __typename: 'EventBlock'
+                events: Array<{
+                  __typename?: 'Event'
+                  id: string
+                  name: string
+                  description?: Node[] | null
+                  status: EventStatus
+                  location?: string | null
+                  startsAt: string
+                  endsAt?: string | null
+                  url: string
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                }>
+              }
             | {__typename: 'FacebookPostBlock'}
             | {__typename: 'FacebookVideoBlock'}
             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -16996,7 +19818,34 @@ export type FullNavigationFragment = {
                 }>
               }
             | {__typename: 'PolisConversationBlock'}
-            | {__typename: 'PollBlock'}
+            | {
+                __typename: 'PollBlock'
+                poll?: {
+                  __typename?: 'FullPoll'
+                  id: string
+                  question?: string | null
+                  opensAt: string
+                  closedAt?: string | null
+                  infoText?: Node[] | null
+                  answers: Array<{
+                    __typename?: 'PollAnswerWithVoteCount'
+                    id: string
+                    pollId: string
+                    answer?: string | null
+                    votes: number
+                  }>
+                  externalVoteSources: Array<{
+                    __typename?: 'PollExternalVoteSource'
+                    id: string
+                    voteAmounts: Array<{
+                      __typename?: 'PollExternalVote'
+                      id: string
+                      answerId: string
+                      amount: number
+                    }>
+                  }>
+                } | null
+              }
             | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
             | {__typename: 'RichTextBlock'; richText: Node[]}
             | {__typename: 'SoundCloudTrackBlock'}
@@ -17057,7 +19906,54 @@ export type FullNavigationFragment = {
                           | {__typename: 'BildwurfAdBlock'; zoneID: string}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
-                          | {__typename: 'EventBlock'}
+                          | {
+                              __typename: 'EventBlock'
+                              events: Array<{
+                                __typename?: 'Event'
+                                id: string
+                                name: string
+                                description?: Node[] | null
+                                status: EventStatus
+                                location?: string | null
+                                startsAt: string
+                                endsAt?: string | null
+                                url: string
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                                tags?: Array<{
+                                  __typename?: 'Tag'
+                                  id: string
+                                  tag?: string | null
+                                }> | null
+                              }>
+                            }
                           | {__typename: 'FacebookPostBlock'}
                           | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
@@ -17170,7 +20066,34 @@ export type FullNavigationFragment = {
                               }>
                             }
                           | {__typename: 'PolisConversationBlock'}
-                          | {__typename: 'PollBlock'}
+                          | {
+                              __typename: 'PollBlock'
+                              poll?: {
+                                __typename?: 'FullPoll'
+                                id: string
+                                question?: string | null
+                                opensAt: string
+                                closedAt?: string | null
+                                infoText?: Node[] | null
+                                answers: Array<{
+                                  __typename?: 'PollAnswerWithVoteCount'
+                                  id: string
+                                  pollId: string
+                                  answer?: string | null
+                                  votes: number
+                                }>
+                                externalVoteSources: Array<{
+                                  __typename?: 'PollExternalVoteSource'
+                                  id: string
+                                  voteAmounts: Array<{
+                                    __typename?: 'PollExternalVote'
+                                    id: string
+                                    answerId: string
+                                    amount: number
+                                  }>
+                                }>
+                              } | null
+                            }
                           | {
                               __typename: 'QuoteBlock'
                               quote?: string | null
@@ -17388,7 +20311,54 @@ export type FullNavigationFragment = {
                           | {__typename: 'BildwurfAdBlock'; zoneID: string}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
-                          | {__typename: 'EventBlock'}
+                          | {
+                              __typename: 'EventBlock'
+                              events: Array<{
+                                __typename?: 'Event'
+                                id: string
+                                name: string
+                                description?: Node[] | null
+                                status: EventStatus
+                                location?: string | null
+                                startsAt: string
+                                endsAt?: string | null
+                                url: string
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                                tags?: Array<{
+                                  __typename?: 'Tag'
+                                  id: string
+                                  tag?: string | null
+                                }> | null
+                              }>
+                            }
                           | {__typename: 'FacebookPostBlock'}
                           | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
@@ -17501,7 +20471,34 @@ export type FullNavigationFragment = {
                               }>
                             }
                           | {__typename: 'PolisConversationBlock'}
-                          | {__typename: 'PollBlock'}
+                          | {
+                              __typename: 'PollBlock'
+                              poll?: {
+                                __typename?: 'FullPoll'
+                                id: string
+                                question?: string | null
+                                opensAt: string
+                                closedAt?: string | null
+                                infoText?: Node[] | null
+                                answers: Array<{
+                                  __typename?: 'PollAnswerWithVoteCount'
+                                  id: string
+                                  pollId: string
+                                  answer?: string | null
+                                  votes: number
+                                }>
+                                externalVoteSources: Array<{
+                                  __typename?: 'PollExternalVoteSource'
+                                  id: string
+                                  voteAmounts: Array<{
+                                    __typename?: 'PollExternalVote'
+                                    id: string
+                                    answerId: string
+                                    amount: number
+                                  }>
+                                }>
+                              } | null
+                            }
                           | {
                               __typename: 'QuoteBlock'
                               quote?: string | null
@@ -17709,7 +20706,54 @@ export type FullNavigationFragment = {
                           | {__typename: 'BildwurfAdBlock'; zoneID: string}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
-                          | {__typename: 'EventBlock'}
+                          | {
+                              __typename: 'EventBlock'
+                              events: Array<{
+                                __typename?: 'Event'
+                                id: string
+                                name: string
+                                description?: Node[] | null
+                                status: EventStatus
+                                location?: string | null
+                                startsAt: string
+                                endsAt?: string | null
+                                url: string
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                                tags?: Array<{
+                                  __typename?: 'Tag'
+                                  id: string
+                                  tag?: string | null
+                                }> | null
+                              }>
+                            }
                           | {__typename: 'FacebookPostBlock'}
                           | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
@@ -17822,7 +20866,34 @@ export type FullNavigationFragment = {
                               }>
                             }
                           | {__typename: 'PolisConversationBlock'}
-                          | {__typename: 'PollBlock'}
+                          | {
+                              __typename: 'PollBlock'
+                              poll?: {
+                                __typename?: 'FullPoll'
+                                id: string
+                                question?: string | null
+                                opensAt: string
+                                closedAt?: string | null
+                                infoText?: Node[] | null
+                                answers: Array<{
+                                  __typename?: 'PollAnswerWithVoteCount'
+                                  id: string
+                                  pollId: string
+                                  answer?: string | null
+                                  votes: number
+                                }>
+                                externalVoteSources: Array<{
+                                  __typename?: 'PollExternalVoteSource'
+                                  id: string
+                                  voteAmounts: Array<{
+                                    __typename?: 'PollExternalVote'
+                                    id: string
+                                    answerId: string
+                                    amount: number
+                                  }>
+                                }>
+                              } | null
+                            }
                           | {
                               __typename: 'QuoteBlock'
                               quote?: string | null
@@ -18016,7 +21087,54 @@ export type FullNavigationFragment = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -18129,7 +21247,34 @@ export type FullNavigationFragment = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -18351,7 +21496,54 @@ export type FullNavigationFragment = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -18464,7 +21656,34 @@ export type FullNavigationFragment = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -18676,7 +21895,54 @@ export type FullNavigationFragment = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -18789,7 +22055,34 @@ export type FullNavigationFragment = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -19048,7 +22341,50 @@ export type FullNavigationFragment = {
             | {__typename: 'BildwurfAdBlock'; zoneID: string}
             | {__typename: 'CommentBlock'}
             | {__typename: 'EmbedBlock'}
-            | {__typename: 'EventBlock'}
+            | {
+                __typename: 'EventBlock'
+                events: Array<{
+                  __typename?: 'Event'
+                  id: string
+                  name: string
+                  description?: Node[] | null
+                  status: EventStatus
+                  location?: string | null
+                  startsAt: string
+                  endsAt?: string | null
+                  url: string
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    createdAt: string
+                    modifiedAt: string
+                    filename?: string | null
+                    format: string
+                    mimeType: string
+                    extension: string
+                    width: number
+                    height: number
+                    fileSize: number
+                    title?: string | null
+                    description?: string | null
+                    tags: Array<string>
+                    source?: string | null
+                    link?: string | null
+                    license?: string | null
+                    url?: string | null
+                    bigURL?: string | null
+                    largeURL?: string | null
+                    mediumURL?: string | null
+                    smallURL?: string | null
+                    squareBigURL?: string | null
+                    squareLargeURL?: string | null
+                    squareMediumURL?: string | null
+                    squareSmallURL?: string | null
+                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                  } | null
+                  tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                }>
+              }
             | {__typename: 'FacebookPostBlock'}
             | {__typename: 'FacebookVideoBlock'}
             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -19161,7 +22497,34 @@ export type FullNavigationFragment = {
                 }>
               }
             | {__typename: 'PolisConversationBlock'}
-            | {__typename: 'PollBlock'}
+            | {
+                __typename: 'PollBlock'
+                poll?: {
+                  __typename?: 'FullPoll'
+                  id: string
+                  question?: string | null
+                  opensAt: string
+                  closedAt?: string | null
+                  infoText?: Node[] | null
+                  answers: Array<{
+                    __typename?: 'PollAnswerWithVoteCount'
+                    id: string
+                    pollId: string
+                    answer?: string | null
+                    votes: number
+                  }>
+                  externalVoteSources: Array<{
+                    __typename?: 'PollExternalVoteSource'
+                    id: string
+                    voteAmounts: Array<{
+                      __typename?: 'PollExternalVote'
+                      id: string
+                      answerId: string
+                      amount: number
+                    }>
+                  }>
+                } | null
+              }
             | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
             | {__typename: 'RichTextBlock'; richText: Node[]}
             | {__typename: 'SoundCloudTrackBlock'}
@@ -19222,7 +22585,54 @@ export type FullNavigationFragment = {
                           | {__typename: 'BildwurfAdBlock'; zoneID: string}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
-                          | {__typename: 'EventBlock'}
+                          | {
+                              __typename: 'EventBlock'
+                              events: Array<{
+                                __typename?: 'Event'
+                                id: string
+                                name: string
+                                description?: Node[] | null
+                                status: EventStatus
+                                location?: string | null
+                                startsAt: string
+                                endsAt?: string | null
+                                url: string
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                                tags?: Array<{
+                                  __typename?: 'Tag'
+                                  id: string
+                                  tag?: string | null
+                                }> | null
+                              }>
+                            }
                           | {__typename: 'FacebookPostBlock'}
                           | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
@@ -19335,7 +22745,34 @@ export type FullNavigationFragment = {
                               }>
                             }
                           | {__typename: 'PolisConversationBlock'}
-                          | {__typename: 'PollBlock'}
+                          | {
+                              __typename: 'PollBlock'
+                              poll?: {
+                                __typename?: 'FullPoll'
+                                id: string
+                                question?: string | null
+                                opensAt: string
+                                closedAt?: string | null
+                                infoText?: Node[] | null
+                                answers: Array<{
+                                  __typename?: 'PollAnswerWithVoteCount'
+                                  id: string
+                                  pollId: string
+                                  answer?: string | null
+                                  votes: number
+                                }>
+                                externalVoteSources: Array<{
+                                  __typename?: 'PollExternalVoteSource'
+                                  id: string
+                                  voteAmounts: Array<{
+                                    __typename?: 'PollExternalVote'
+                                    id: string
+                                    answerId: string
+                                    amount: number
+                                  }>
+                                }>
+                              } | null
+                            }
                           | {
                               __typename: 'QuoteBlock'
                               quote?: string | null
@@ -19553,7 +22990,54 @@ export type FullNavigationFragment = {
                           | {__typename: 'BildwurfAdBlock'; zoneID: string}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
-                          | {__typename: 'EventBlock'}
+                          | {
+                              __typename: 'EventBlock'
+                              events: Array<{
+                                __typename?: 'Event'
+                                id: string
+                                name: string
+                                description?: Node[] | null
+                                status: EventStatus
+                                location?: string | null
+                                startsAt: string
+                                endsAt?: string | null
+                                url: string
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                                tags?: Array<{
+                                  __typename?: 'Tag'
+                                  id: string
+                                  tag?: string | null
+                                }> | null
+                              }>
+                            }
                           | {__typename: 'FacebookPostBlock'}
                           | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
@@ -19666,7 +23150,34 @@ export type FullNavigationFragment = {
                               }>
                             }
                           | {__typename: 'PolisConversationBlock'}
-                          | {__typename: 'PollBlock'}
+                          | {
+                              __typename: 'PollBlock'
+                              poll?: {
+                                __typename?: 'FullPoll'
+                                id: string
+                                question?: string | null
+                                opensAt: string
+                                closedAt?: string | null
+                                infoText?: Node[] | null
+                                answers: Array<{
+                                  __typename?: 'PollAnswerWithVoteCount'
+                                  id: string
+                                  pollId: string
+                                  answer?: string | null
+                                  votes: number
+                                }>
+                                externalVoteSources: Array<{
+                                  __typename?: 'PollExternalVoteSource'
+                                  id: string
+                                  voteAmounts: Array<{
+                                    __typename?: 'PollExternalVote'
+                                    id: string
+                                    answerId: string
+                                    amount: number
+                                  }>
+                                }>
+                              } | null
+                            }
                           | {
                               __typename: 'QuoteBlock'
                               quote?: string | null
@@ -19874,7 +23385,54 @@ export type FullNavigationFragment = {
                           | {__typename: 'BildwurfAdBlock'; zoneID: string}
                           | {__typename: 'CommentBlock'}
                           | {__typename: 'EmbedBlock'}
-                          | {__typename: 'EventBlock'}
+                          | {
+                              __typename: 'EventBlock'
+                              events: Array<{
+                                __typename?: 'Event'
+                                id: string
+                                name: string
+                                description?: Node[] | null
+                                status: EventStatus
+                                location?: string | null
+                                startsAt: string
+                                endsAt?: string | null
+                                url: string
+                                image?: {
+                                  __typename?: 'Image'
+                                  id: string
+                                  createdAt: string
+                                  modifiedAt: string
+                                  filename?: string | null
+                                  format: string
+                                  mimeType: string
+                                  extension: string
+                                  width: number
+                                  height: number
+                                  fileSize: number
+                                  title?: string | null
+                                  description?: string | null
+                                  tags: Array<string>
+                                  source?: string | null
+                                  link?: string | null
+                                  license?: string | null
+                                  url?: string | null
+                                  bigURL?: string | null
+                                  largeURL?: string | null
+                                  mediumURL?: string | null
+                                  smallURL?: string | null
+                                  squareBigURL?: string | null
+                                  squareLargeURL?: string | null
+                                  squareMediumURL?: string | null
+                                  squareSmallURL?: string | null
+                                  focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                } | null
+                                tags?: Array<{
+                                  __typename?: 'Tag'
+                                  id: string
+                                  tag?: string | null
+                                }> | null
+                              }>
+                            }
                           | {__typename: 'FacebookPostBlock'}
                           | {__typename: 'FacebookVideoBlock'}
                           | {__typename: 'HTMLBlock'; html?: string | null}
@@ -19987,7 +23545,34 @@ export type FullNavigationFragment = {
                               }>
                             }
                           | {__typename: 'PolisConversationBlock'}
-                          | {__typename: 'PollBlock'}
+                          | {
+                              __typename: 'PollBlock'
+                              poll?: {
+                                __typename?: 'FullPoll'
+                                id: string
+                                question?: string | null
+                                opensAt: string
+                                closedAt?: string | null
+                                infoText?: Node[] | null
+                                answers: Array<{
+                                  __typename?: 'PollAnswerWithVoteCount'
+                                  id: string
+                                  pollId: string
+                                  answer?: string | null
+                                  votes: number
+                                }>
+                                externalVoteSources: Array<{
+                                  __typename?: 'PollExternalVoteSource'
+                                  id: string
+                                  voteAmounts: Array<{
+                                    __typename?: 'PollExternalVote'
+                                    id: string
+                                    answerId: string
+                                    amount: number
+                                  }>
+                                }>
+                              } | null
+                            }
                           | {
                               __typename: 'QuoteBlock'
                               quote?: string | null
@@ -20181,7 +23766,54 @@ export type FullNavigationFragment = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -20294,7 +23926,34 @@ export type FullNavigationFragment = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -20516,7 +24175,54 @@ export type FullNavigationFragment = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -20629,7 +24335,34 @@ export type FullNavigationFragment = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -20841,7 +24574,54 @@ export type FullNavigationFragment = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -20954,7 +24734,34 @@ export type FullNavigationFragment = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -21187,7 +24994,50 @@ export type NavigationListQuery = {
               | {__typename: 'BildwurfAdBlock'; zoneID: string}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
-              | {__typename: 'EventBlock'}
+              | {
+                  __typename: 'EventBlock'
+                  events: Array<{
+                    __typename?: 'Event'
+                    id: string
+                    name: string
+                    description?: Node[] | null
+                    status: EventStatus
+                    location?: string | null
+                    startsAt: string
+                    endsAt?: string | null
+                    url: string
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                  }>
+                }
               | {__typename: 'FacebookPostBlock'}
               | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -21300,7 +25150,34 @@ export type NavigationListQuery = {
                   }>
                 }
               | {__typename: 'PolisConversationBlock'}
-              | {__typename: 'PollBlock'}
+              | {
+                  __typename: 'PollBlock'
+                  poll?: {
+                    __typename?: 'FullPoll'
+                    id: string
+                    question?: string | null
+                    opensAt: string
+                    closedAt?: string | null
+                    infoText?: Node[] | null
+                    answers: Array<{
+                      __typename?: 'PollAnswerWithVoteCount'
+                      id: string
+                      pollId: string
+                      answer?: string | null
+                      votes: number
+                    }>
+                    externalVoteSources: Array<{
+                      __typename?: 'PollExternalVoteSource'
+                      id: string
+                      voteAmounts: Array<{
+                        __typename?: 'PollExternalVote'
+                        id: string
+                        answerId: string
+                        amount: number
+                      }>
+                    }>
+                  } | null
+                }
               | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
               | {__typename: 'RichTextBlock'; richText: Node[]}
               | {__typename: 'SoundCloudTrackBlock'}
@@ -21361,7 +25238,54 @@ export type NavigationListQuery = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -21474,7 +25398,34 @@ export type NavigationListQuery = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -21696,7 +25647,54 @@ export type NavigationListQuery = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -21809,7 +25807,34 @@ export type NavigationListQuery = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -22021,7 +26046,54 @@ export type NavigationListQuery = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -22134,7 +26206,34 @@ export type NavigationListQuery = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -22332,7 +26431,58 @@ export type NavigationListQuery = {
                               | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
                               | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -22453,7 +26603,34 @@ export type NavigationListQuery = {
                                   }>
                                 }
                               | {__typename: 'PolisConversationBlock'}
-                              | {__typename: 'PollBlock'}
+                              | {
+                                  __typename: 'PollBlock'
+                                  poll?: {
+                                    __typename?: 'FullPoll'
+                                    id: string
+                                    question?: string | null
+                                    opensAt: string
+                                    closedAt?: string | null
+                                    infoText?: Node[] | null
+                                    answers: Array<{
+                                      __typename?: 'PollAnswerWithVoteCount'
+                                      id: string
+                                      pollId: string
+                                      answer?: string | null
+                                      votes: number
+                                    }>
+                                    externalVoteSources: Array<{
+                                      __typename?: 'PollExternalVoteSource'
+                                      id: string
+                                      voteAmounts: Array<{
+                                        __typename?: 'PollExternalVote'
+                                        id: string
+                                        answerId: string
+                                        amount: number
+                                      }>
+                                    }>
+                                  } | null
+                                }
                               | {
                                   __typename: 'QuoteBlock'
                                   quote?: string | null
@@ -22675,7 +26852,58 @@ export type NavigationListQuery = {
                               | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
                               | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -22796,7 +27024,34 @@ export type NavigationListQuery = {
                                   }>
                                 }
                               | {__typename: 'PolisConversationBlock'}
-                              | {__typename: 'PollBlock'}
+                              | {
+                                  __typename: 'PollBlock'
+                                  poll?: {
+                                    __typename?: 'FullPoll'
+                                    id: string
+                                    question?: string | null
+                                    opensAt: string
+                                    closedAt?: string | null
+                                    infoText?: Node[] | null
+                                    answers: Array<{
+                                      __typename?: 'PollAnswerWithVoteCount'
+                                      id: string
+                                      pollId: string
+                                      answer?: string | null
+                                      votes: number
+                                    }>
+                                    externalVoteSources: Array<{
+                                      __typename?: 'PollExternalVoteSource'
+                                      id: string
+                                      voteAmounts: Array<{
+                                        __typename?: 'PollExternalVote'
+                                        id: string
+                                        answerId: string
+                                        amount: number
+                                      }>
+                                    }>
+                                  } | null
+                                }
                               | {
                                   __typename: 'QuoteBlock'
                                   quote?: string | null
@@ -23008,7 +27263,58 @@ export type NavigationListQuery = {
                               | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
                               | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -23129,7 +27435,34 @@ export type NavigationListQuery = {
                                   }>
                                 }
                               | {__typename: 'PolisConversationBlock'}
-                              | {__typename: 'PollBlock'}
+                              | {
+                                  __typename: 'PollBlock'
+                                  poll?: {
+                                    __typename?: 'FullPoll'
+                                    id: string
+                                    question?: string | null
+                                    opensAt: string
+                                    closedAt?: string | null
+                                    infoText?: Node[] | null
+                                    answers: Array<{
+                                      __typename?: 'PollAnswerWithVoteCount'
+                                      id: string
+                                      pollId: string
+                                      answer?: string | null
+                                      votes: number
+                                    }>
+                                    externalVoteSources: Array<{
+                                      __typename?: 'PollExternalVoteSource'
+                                      id: string
+                                      voteAmounts: Array<{
+                                        __typename?: 'PollExternalVote'
+                                        id: string
+                                        answerId: string
+                                        amount: number
+                                      }>
+                                    }>
+                                  } | null
+                                }
                               | {
                                   __typename: 'QuoteBlock'
                                   quote?: string | null
@@ -23388,7 +27721,50 @@ export type NavigationListQuery = {
               | {__typename: 'BildwurfAdBlock'; zoneID: string}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
-              | {__typename: 'EventBlock'}
+              | {
+                  __typename: 'EventBlock'
+                  events: Array<{
+                    __typename?: 'Event'
+                    id: string
+                    name: string
+                    description?: Node[] | null
+                    status: EventStatus
+                    location?: string | null
+                    startsAt: string
+                    endsAt?: string | null
+                    url: string
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                  }>
+                }
               | {__typename: 'FacebookPostBlock'}
               | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -23501,7 +27877,34 @@ export type NavigationListQuery = {
                   }>
                 }
               | {__typename: 'PolisConversationBlock'}
-              | {__typename: 'PollBlock'}
+              | {
+                  __typename: 'PollBlock'
+                  poll?: {
+                    __typename?: 'FullPoll'
+                    id: string
+                    question?: string | null
+                    opensAt: string
+                    closedAt?: string | null
+                    infoText?: Node[] | null
+                    answers: Array<{
+                      __typename?: 'PollAnswerWithVoteCount'
+                      id: string
+                      pollId: string
+                      answer?: string | null
+                      votes: number
+                    }>
+                    externalVoteSources: Array<{
+                      __typename?: 'PollExternalVoteSource'
+                      id: string
+                      voteAmounts: Array<{
+                        __typename?: 'PollExternalVote'
+                        id: string
+                        answerId: string
+                        amount: number
+                      }>
+                    }>
+                  } | null
+                }
               | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
               | {__typename: 'RichTextBlock'; richText: Node[]}
               | {__typename: 'SoundCloudTrackBlock'}
@@ -23562,7 +27965,54 @@ export type NavigationListQuery = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -23675,7 +28125,34 @@ export type NavigationListQuery = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -23897,7 +28374,54 @@ export type NavigationListQuery = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -24010,7 +28534,34 @@ export type NavigationListQuery = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -24222,7 +28773,54 @@ export type NavigationListQuery = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -24335,7 +28933,34 @@ export type NavigationListQuery = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -24533,7 +29158,58 @@ export type NavigationListQuery = {
                               | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
                               | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -24654,7 +29330,34 @@ export type NavigationListQuery = {
                                   }>
                                 }
                               | {__typename: 'PolisConversationBlock'}
-                              | {__typename: 'PollBlock'}
+                              | {
+                                  __typename: 'PollBlock'
+                                  poll?: {
+                                    __typename?: 'FullPoll'
+                                    id: string
+                                    question?: string | null
+                                    opensAt: string
+                                    closedAt?: string | null
+                                    infoText?: Node[] | null
+                                    answers: Array<{
+                                      __typename?: 'PollAnswerWithVoteCount'
+                                      id: string
+                                      pollId: string
+                                      answer?: string | null
+                                      votes: number
+                                    }>
+                                    externalVoteSources: Array<{
+                                      __typename?: 'PollExternalVoteSource'
+                                      id: string
+                                      voteAmounts: Array<{
+                                        __typename?: 'PollExternalVote'
+                                        id: string
+                                        answerId: string
+                                        amount: number
+                                      }>
+                                    }>
+                                  } | null
+                                }
                               | {
                                   __typename: 'QuoteBlock'
                                   quote?: string | null
@@ -24876,7 +29579,58 @@ export type NavigationListQuery = {
                               | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
                               | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -24997,7 +29751,34 @@ export type NavigationListQuery = {
                                   }>
                                 }
                               | {__typename: 'PolisConversationBlock'}
-                              | {__typename: 'PollBlock'}
+                              | {
+                                  __typename: 'PollBlock'
+                                  poll?: {
+                                    __typename?: 'FullPoll'
+                                    id: string
+                                    question?: string | null
+                                    opensAt: string
+                                    closedAt?: string | null
+                                    infoText?: Node[] | null
+                                    answers: Array<{
+                                      __typename?: 'PollAnswerWithVoteCount'
+                                      id: string
+                                      pollId: string
+                                      answer?: string | null
+                                      votes: number
+                                    }>
+                                    externalVoteSources: Array<{
+                                      __typename?: 'PollExternalVoteSource'
+                                      id: string
+                                      voteAmounts: Array<{
+                                        __typename?: 'PollExternalVote'
+                                        id: string
+                                        answerId: string
+                                        amount: number
+                                      }>
+                                    }>
+                                  } | null
+                                }
                               | {
                                   __typename: 'QuoteBlock'
                                   quote?: string | null
@@ -25209,7 +29990,58 @@ export type NavigationListQuery = {
                               | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
                               | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -25330,7 +30162,34 @@ export type NavigationListQuery = {
                                   }>
                                 }
                               | {__typename: 'PolisConversationBlock'}
-                              | {__typename: 'PollBlock'}
+                              | {
+                                  __typename: 'PollBlock'
+                                  poll?: {
+                                    __typename?: 'FullPoll'
+                                    id: string
+                                    question?: string | null
+                                    opensAt: string
+                                    closedAt?: string | null
+                                    infoText?: Node[] | null
+                                    answers: Array<{
+                                      __typename?: 'PollAnswerWithVoteCount'
+                                      id: string
+                                      pollId: string
+                                      answer?: string | null
+                                      votes: number
+                                    }>
+                                    externalVoteSources: Array<{
+                                      __typename?: 'PollExternalVoteSource'
+                                      id: string
+                                      voteAmounts: Array<{
+                                        __typename?: 'PollExternalVote'
+                                        id: string
+                                        answerId: string
+                                        amount: number
+                                      }>
+                                    }>
+                                  } | null
+                                }
                               | {
                                   __typename: 'QuoteBlock'
                                   quote?: string | null
@@ -25566,7 +30425,50 @@ export type NavigationQuery = {
               | {__typename: 'BildwurfAdBlock'; zoneID: string}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
-              | {__typename: 'EventBlock'}
+              | {
+                  __typename: 'EventBlock'
+                  events: Array<{
+                    __typename?: 'Event'
+                    id: string
+                    name: string
+                    description?: Node[] | null
+                    status: EventStatus
+                    location?: string | null
+                    startsAt: string
+                    endsAt?: string | null
+                    url: string
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                  }>
+                }
               | {__typename: 'FacebookPostBlock'}
               | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -25679,7 +30581,34 @@ export type NavigationQuery = {
                   }>
                 }
               | {__typename: 'PolisConversationBlock'}
-              | {__typename: 'PollBlock'}
+              | {
+                  __typename: 'PollBlock'
+                  poll?: {
+                    __typename?: 'FullPoll'
+                    id: string
+                    question?: string | null
+                    opensAt: string
+                    closedAt?: string | null
+                    infoText?: Node[] | null
+                    answers: Array<{
+                      __typename?: 'PollAnswerWithVoteCount'
+                      id: string
+                      pollId: string
+                      answer?: string | null
+                      votes: number
+                    }>
+                    externalVoteSources: Array<{
+                      __typename?: 'PollExternalVoteSource'
+                      id: string
+                      voteAmounts: Array<{
+                        __typename?: 'PollExternalVote'
+                        id: string
+                        answerId: string
+                        amount: number
+                      }>
+                    }>
+                  } | null
+                }
               | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
               | {__typename: 'RichTextBlock'; richText: Node[]}
               | {__typename: 'SoundCloudTrackBlock'}
@@ -25740,7 +30669,54 @@ export type NavigationQuery = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -25853,7 +30829,34 @@ export type NavigationQuery = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -26075,7 +31078,54 @@ export type NavigationQuery = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -26188,7 +31238,34 @@ export type NavigationQuery = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -26400,7 +31477,54 @@ export type NavigationQuery = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -26513,7 +31637,34 @@ export type NavigationQuery = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -26711,7 +31862,58 @@ export type NavigationQuery = {
                               | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
                               | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -26832,7 +32034,34 @@ export type NavigationQuery = {
                                   }>
                                 }
                               | {__typename: 'PolisConversationBlock'}
-                              | {__typename: 'PollBlock'}
+                              | {
+                                  __typename: 'PollBlock'
+                                  poll?: {
+                                    __typename?: 'FullPoll'
+                                    id: string
+                                    question?: string | null
+                                    opensAt: string
+                                    closedAt?: string | null
+                                    infoText?: Node[] | null
+                                    answers: Array<{
+                                      __typename?: 'PollAnswerWithVoteCount'
+                                      id: string
+                                      pollId: string
+                                      answer?: string | null
+                                      votes: number
+                                    }>
+                                    externalVoteSources: Array<{
+                                      __typename?: 'PollExternalVoteSource'
+                                      id: string
+                                      voteAmounts: Array<{
+                                        __typename?: 'PollExternalVote'
+                                        id: string
+                                        answerId: string
+                                        amount: number
+                                      }>
+                                    }>
+                                  } | null
+                                }
                               | {
                                   __typename: 'QuoteBlock'
                                   quote?: string | null
@@ -27054,7 +32283,58 @@ export type NavigationQuery = {
                               | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
                               | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -27175,7 +32455,34 @@ export type NavigationQuery = {
                                   }>
                                 }
                               | {__typename: 'PolisConversationBlock'}
-                              | {__typename: 'PollBlock'}
+                              | {
+                                  __typename: 'PollBlock'
+                                  poll?: {
+                                    __typename?: 'FullPoll'
+                                    id: string
+                                    question?: string | null
+                                    opensAt: string
+                                    closedAt?: string | null
+                                    infoText?: Node[] | null
+                                    answers: Array<{
+                                      __typename?: 'PollAnswerWithVoteCount'
+                                      id: string
+                                      pollId: string
+                                      answer?: string | null
+                                      votes: number
+                                    }>
+                                    externalVoteSources: Array<{
+                                      __typename?: 'PollExternalVoteSource'
+                                      id: string
+                                      voteAmounts: Array<{
+                                        __typename?: 'PollExternalVote'
+                                        id: string
+                                        answerId: string
+                                        amount: number
+                                      }>
+                                    }>
+                                  } | null
+                                }
                               | {
                                   __typename: 'QuoteBlock'
                                   quote?: string | null
@@ -27387,7 +32694,58 @@ export type NavigationQuery = {
                               | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
                               | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -27508,7 +32866,34 @@ export type NavigationQuery = {
                                   }>
                                 }
                               | {__typename: 'PolisConversationBlock'}
-                              | {__typename: 'PollBlock'}
+                              | {
+                                  __typename: 'PollBlock'
+                                  poll?: {
+                                    __typename?: 'FullPoll'
+                                    id: string
+                                    question?: string | null
+                                    opensAt: string
+                                    closedAt?: string | null
+                                    infoText?: Node[] | null
+                                    answers: Array<{
+                                      __typename?: 'PollAnswerWithVoteCount'
+                                      id: string
+                                      pollId: string
+                                      answer?: string | null
+                                      votes: number
+                                    }>
+                                    externalVoteSources: Array<{
+                                      __typename?: 'PollExternalVoteSource'
+                                      id: string
+                                      voteAmounts: Array<{
+                                        __typename?: 'PollExternalVote'
+                                        id: string
+                                        answerId: string
+                                        amount: number
+                                      }>
+                                    }>
+                                  } | null
+                                }
                               | {
                                   __typename: 'QuoteBlock'
                                   quote?: string | null
@@ -27767,7 +33152,50 @@ export type NavigationQuery = {
               | {__typename: 'BildwurfAdBlock'; zoneID: string}
               | {__typename: 'CommentBlock'}
               | {__typename: 'EmbedBlock'}
-              | {__typename: 'EventBlock'}
+              | {
+                  __typename: 'EventBlock'
+                  events: Array<{
+                    __typename?: 'Event'
+                    id: string
+                    name: string
+                    description?: Node[] | null
+                    status: EventStatus
+                    location?: string | null
+                    startsAt: string
+                    endsAt?: string | null
+                    url: string
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      createdAt: string
+                      modifiedAt: string
+                      filename?: string | null
+                      format: string
+                      mimeType: string
+                      extension: string
+                      width: number
+                      height: number
+                      fileSize: number
+                      title?: string | null
+                      description?: string | null
+                      tags: Array<string>
+                      source?: string | null
+                      link?: string | null
+                      license?: string | null
+                      url?: string | null
+                      bigURL?: string | null
+                      largeURL?: string | null
+                      mediumURL?: string | null
+                      smallURL?: string | null
+                      squareBigURL?: string | null
+                      squareLargeURL?: string | null
+                      squareMediumURL?: string | null
+                      squareSmallURL?: string | null
+                      focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                    } | null
+                    tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                  }>
+                }
               | {__typename: 'FacebookPostBlock'}
               | {__typename: 'FacebookVideoBlock'}
               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -27880,7 +33308,34 @@ export type NavigationQuery = {
                   }>
                 }
               | {__typename: 'PolisConversationBlock'}
-              | {__typename: 'PollBlock'}
+              | {
+                  __typename: 'PollBlock'
+                  poll?: {
+                    __typename?: 'FullPoll'
+                    id: string
+                    question?: string | null
+                    opensAt: string
+                    closedAt?: string | null
+                    infoText?: Node[] | null
+                    answers: Array<{
+                      __typename?: 'PollAnswerWithVoteCount'
+                      id: string
+                      pollId: string
+                      answer?: string | null
+                      votes: number
+                    }>
+                    externalVoteSources: Array<{
+                      __typename?: 'PollExternalVoteSource'
+                      id: string
+                      voteAmounts: Array<{
+                        __typename?: 'PollExternalVote'
+                        id: string
+                        answerId: string
+                        amount: number
+                      }>
+                    }>
+                  } | null
+                }
               | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
               | {__typename: 'RichTextBlock'; richText: Node[]}
               | {__typename: 'SoundCloudTrackBlock'}
@@ -27941,7 +33396,54 @@ export type NavigationQuery = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -28054,7 +33556,34 @@ export type NavigationQuery = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -28276,7 +33805,54 @@ export type NavigationQuery = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -28389,7 +33965,34 @@ export type NavigationQuery = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -28601,7 +34204,54 @@ export type NavigationQuery = {
                             | {__typename: 'BildwurfAdBlock'; zoneID: string}
                             | {__typename: 'CommentBlock'}
                             | {__typename: 'EmbedBlock'}
-                            | {__typename: 'EventBlock'}
+                            | {
+                                __typename: 'EventBlock'
+                                events: Array<{
+                                  __typename?: 'Event'
+                                  id: string
+                                  name: string
+                                  description?: Node[] | null
+                                  status: EventStatus
+                                  location?: string | null
+                                  startsAt: string
+                                  endsAt?: string | null
+                                  url: string
+                                  image?: {
+                                    __typename?: 'Image'
+                                    id: string
+                                    createdAt: string
+                                    modifiedAt: string
+                                    filename?: string | null
+                                    format: string
+                                    mimeType: string
+                                    extension: string
+                                    width: number
+                                    height: number
+                                    fileSize: number
+                                    title?: string | null
+                                    description?: string | null
+                                    tags: Array<string>
+                                    source?: string | null
+                                    link?: string | null
+                                    license?: string | null
+                                    url?: string | null
+                                    bigURL?: string | null
+                                    largeURL?: string | null
+                                    mediumURL?: string | null
+                                    smallURL?: string | null
+                                    squareBigURL?: string | null
+                                    squareLargeURL?: string | null
+                                    squareMediumURL?: string | null
+                                    squareSmallURL?: string | null
+                                    focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                                  } | null
+                                  tags?: Array<{
+                                    __typename?: 'Tag'
+                                    id: string
+                                    tag?: string | null
+                                  }> | null
+                                }>
+                              }
                             | {__typename: 'FacebookPostBlock'}
                             | {__typename: 'FacebookVideoBlock'}
                             | {__typename: 'HTMLBlock'; html?: string | null}
@@ -28714,7 +34364,34 @@ export type NavigationQuery = {
                                 }>
                               }
                             | {__typename: 'PolisConversationBlock'}
-                            | {__typename: 'PollBlock'}
+                            | {
+                                __typename: 'PollBlock'
+                                poll?: {
+                                  __typename?: 'FullPoll'
+                                  id: string
+                                  question?: string | null
+                                  opensAt: string
+                                  closedAt?: string | null
+                                  infoText?: Node[] | null
+                                  answers: Array<{
+                                    __typename?: 'PollAnswerWithVoteCount'
+                                    id: string
+                                    pollId: string
+                                    answer?: string | null
+                                    votes: number
+                                  }>
+                                  externalVoteSources: Array<{
+                                    __typename?: 'PollExternalVoteSource'
+                                    id: string
+                                    voteAmounts: Array<{
+                                      __typename?: 'PollExternalVote'
+                                      id: string
+                                      answerId: string
+                                      amount: number
+                                    }>
+                                  }>
+                                } | null
+                              }
                             | {
                                 __typename: 'QuoteBlock'
                                 quote?: string | null
@@ -28912,7 +34589,58 @@ export type NavigationQuery = {
                               | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
                               | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -29033,7 +34761,34 @@ export type NavigationQuery = {
                                   }>
                                 }
                               | {__typename: 'PolisConversationBlock'}
-                              | {__typename: 'PollBlock'}
+                              | {
+                                  __typename: 'PollBlock'
+                                  poll?: {
+                                    __typename?: 'FullPoll'
+                                    id: string
+                                    question?: string | null
+                                    opensAt: string
+                                    closedAt?: string | null
+                                    infoText?: Node[] | null
+                                    answers: Array<{
+                                      __typename?: 'PollAnswerWithVoteCount'
+                                      id: string
+                                      pollId: string
+                                      answer?: string | null
+                                      votes: number
+                                    }>
+                                    externalVoteSources: Array<{
+                                      __typename?: 'PollExternalVoteSource'
+                                      id: string
+                                      voteAmounts: Array<{
+                                        __typename?: 'PollExternalVote'
+                                        id: string
+                                        answerId: string
+                                        amount: number
+                                      }>
+                                    }>
+                                  } | null
+                                }
                               | {
                                   __typename: 'QuoteBlock'
                                   quote?: string | null
@@ -29255,7 +35010,58 @@ export type NavigationQuery = {
                               | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
                               | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -29376,7 +35182,34 @@ export type NavigationQuery = {
                                   }>
                                 }
                               | {__typename: 'PolisConversationBlock'}
-                              | {__typename: 'PollBlock'}
+                              | {
+                                  __typename: 'PollBlock'
+                                  poll?: {
+                                    __typename?: 'FullPoll'
+                                    id: string
+                                    question?: string | null
+                                    opensAt: string
+                                    closedAt?: string | null
+                                    infoText?: Node[] | null
+                                    answers: Array<{
+                                      __typename?: 'PollAnswerWithVoteCount'
+                                      id: string
+                                      pollId: string
+                                      answer?: string | null
+                                      votes: number
+                                    }>
+                                    externalVoteSources: Array<{
+                                      __typename?: 'PollExternalVoteSource'
+                                      id: string
+                                      voteAmounts: Array<{
+                                        __typename?: 'PollExternalVote'
+                                        id: string
+                                        answerId: string
+                                        amount: number
+                                      }>
+                                    }>
+                                  } | null
+                                }
                               | {
                                   __typename: 'QuoteBlock'
                                   quote?: string | null
@@ -29588,7 +35421,58 @@ export type NavigationQuery = {
                               | {__typename: 'BildwurfAdBlock'; zoneID: string}
                               | {__typename: 'CommentBlock'}
                               | {__typename: 'EmbedBlock'}
-                              | {__typename: 'EventBlock'}
+                              | {
+                                  __typename: 'EventBlock'
+                                  events: Array<{
+                                    __typename?: 'Event'
+                                    id: string
+                                    name: string
+                                    description?: Node[] | null
+                                    status: EventStatus
+                                    location?: string | null
+                                    startsAt: string
+                                    endsAt?: string | null
+                                    url: string
+                                    image?: {
+                                      __typename?: 'Image'
+                                      id: string
+                                      createdAt: string
+                                      modifiedAt: string
+                                      filename?: string | null
+                                      format: string
+                                      mimeType: string
+                                      extension: string
+                                      width: number
+                                      height: number
+                                      fileSize: number
+                                      title?: string | null
+                                      description?: string | null
+                                      tags: Array<string>
+                                      source?: string | null
+                                      link?: string | null
+                                      license?: string | null
+                                      url?: string | null
+                                      bigURL?: string | null
+                                      largeURL?: string | null
+                                      mediumURL?: string | null
+                                      smallURL?: string | null
+                                      squareBigURL?: string | null
+                                      squareLargeURL?: string | null
+                                      squareMediumURL?: string | null
+                                      squareSmallURL?: string | null
+                                      focalPoint?: {
+                                        __typename?: 'Point'
+                                        x: number
+                                        y: number
+                                      } | null
+                                    } | null
+                                    tags?: Array<{
+                                      __typename?: 'Tag'
+                                      id: string
+                                      tag?: string | null
+                                    }> | null
+                                  }>
+                                }
                               | {__typename: 'FacebookPostBlock'}
                               | {__typename: 'FacebookVideoBlock'}
                               | {__typename: 'HTMLBlock'; html?: string | null}
@@ -29709,7 +35593,34 @@ export type NavigationQuery = {
                                   }>
                                 }
                               | {__typename: 'PolisConversationBlock'}
-                              | {__typename: 'PollBlock'}
+                              | {
+                                  __typename: 'PollBlock'
+                                  poll?: {
+                                    __typename?: 'FullPoll'
+                                    id: string
+                                    question?: string | null
+                                    opensAt: string
+                                    closedAt?: string | null
+                                    infoText?: Node[] | null
+                                    answers: Array<{
+                                      __typename?: 'PollAnswerWithVoteCount'
+                                      id: string
+                                      pollId: string
+                                      answer?: string | null
+                                      votes: number
+                                    }>
+                                    externalVoteSources: Array<{
+                                      __typename?: 'PollExternalVoteSource'
+                                      id: string
+                                      voteAmounts: Array<{
+                                        __typename?: 'PollExternalVote'
+                                        id: string
+                                        answerId: string
+                                        amount: number
+                                      }>
+                                    }>
+                                  } | null
+                                }
                               | {
                                   __typename: 'QuoteBlock'
                                   quote?: string | null
@@ -29996,7 +35907,50 @@ export type FullPageFragment = {
     | {__typename: 'BildwurfAdBlock'; zoneID: string}
     | {__typename: 'CommentBlock'}
     | {__typename: 'EmbedBlock'}
-    | {__typename: 'EventBlock'}
+    | {
+        __typename: 'EventBlock'
+        events: Array<{
+          __typename?: 'Event'
+          id: string
+          name: string
+          description?: Node[] | null
+          status: EventStatus
+          location?: string | null
+          startsAt: string
+          endsAt?: string | null
+          url: string
+          image?: {
+            __typename?: 'Image'
+            id: string
+            createdAt: string
+            modifiedAt: string
+            filename?: string | null
+            format: string
+            mimeType: string
+            extension: string
+            width: number
+            height: number
+            fileSize: number
+            title?: string | null
+            description?: string | null
+            tags: Array<string>
+            source?: string | null
+            link?: string | null
+            license?: string | null
+            url?: string | null
+            bigURL?: string | null
+            largeURL?: string | null
+            mediumURL?: string | null
+            smallURL?: string | null
+            squareBigURL?: string | null
+            squareLargeURL?: string | null
+            squareMediumURL?: string | null
+            squareSmallURL?: string | null
+            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+          } | null
+          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+        }>
+      }
     | {__typename: 'FacebookPostBlock'}
     | {__typename: 'FacebookVideoBlock'}
     | {__typename: 'HTMLBlock'; html?: string | null}
@@ -30109,7 +36063,34 @@ export type FullPageFragment = {
         }>
       }
     | {__typename: 'PolisConversationBlock'}
-    | {__typename: 'PollBlock'}
+    | {
+        __typename: 'PollBlock'
+        poll?: {
+          __typename?: 'FullPoll'
+          id: string
+          question?: string | null
+          opensAt: string
+          closedAt?: string | null
+          infoText?: Node[] | null
+          answers: Array<{
+            __typename?: 'PollAnswerWithVoteCount'
+            id: string
+            pollId: string
+            answer?: string | null
+            votes: number
+          }>
+          externalVoteSources: Array<{
+            __typename?: 'PollExternalVoteSource'
+            id: string
+            voteAmounts: Array<{
+              __typename?: 'PollExternalVote'
+              id: string
+              answerId: string
+              amount: number
+            }>
+          }>
+        } | null
+      }
     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
     | {__typename: 'RichTextBlock'; richText: Node[]}
     | {__typename: 'SoundCloudTrackBlock'}
@@ -30170,7 +36151,50 @@ export type FullPageFragment = {
                   | {__typename: 'BildwurfAdBlock'; zoneID: string}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
-                  | {__typename: 'EventBlock'}
+                  | {
+                      __typename: 'EventBlock'
+                      events: Array<{
+                        __typename?: 'Event'
+                        id: string
+                        name: string
+                        description?: Node[] | null
+                        status: EventStatus
+                        location?: string | null
+                        startsAt: string
+                        endsAt?: string | null
+                        url: string
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                      }>
+                    }
                   | {__typename: 'FacebookPostBlock'}
                   | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
@@ -30283,7 +36307,34 @@ export type FullPageFragment = {
                       }>
                     }
                   | {__typename: 'PolisConversationBlock'}
-                  | {__typename: 'PollBlock'}
+                  | {
+                      __typename: 'PollBlock'
+                      poll?: {
+                        __typename?: 'FullPoll'
+                        id: string
+                        question?: string | null
+                        opensAt: string
+                        closedAt?: string | null
+                        infoText?: Node[] | null
+                        answers: Array<{
+                          __typename?: 'PollAnswerWithVoteCount'
+                          id: string
+                          pollId: string
+                          answer?: string | null
+                          votes: number
+                        }>
+                        externalVoteSources: Array<{
+                          __typename?: 'PollExternalVoteSource'
+                          id: string
+                          voteAmounts: Array<{
+                            __typename?: 'PollExternalVote'
+                            id: string
+                            answerId: string
+                            amount: number
+                          }>
+                        }>
+                      } | null
+                    }
                   | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                   | {__typename: 'RichTextBlock'; richText: Node[]}
                   | {__typename: 'SoundCloudTrackBlock'}
@@ -30485,7 +36536,50 @@ export type FullPageFragment = {
                   | {__typename: 'BildwurfAdBlock'; zoneID: string}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
-                  | {__typename: 'EventBlock'}
+                  | {
+                      __typename: 'EventBlock'
+                      events: Array<{
+                        __typename?: 'Event'
+                        id: string
+                        name: string
+                        description?: Node[] | null
+                        status: EventStatus
+                        location?: string | null
+                        startsAt: string
+                        endsAt?: string | null
+                        url: string
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                      }>
+                    }
                   | {__typename: 'FacebookPostBlock'}
                   | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
@@ -30598,7 +36692,34 @@ export type FullPageFragment = {
                       }>
                     }
                   | {__typename: 'PolisConversationBlock'}
-                  | {__typename: 'PollBlock'}
+                  | {
+                      __typename: 'PollBlock'
+                      poll?: {
+                        __typename?: 'FullPoll'
+                        id: string
+                        question?: string | null
+                        opensAt: string
+                        closedAt?: string | null
+                        infoText?: Node[] | null
+                        answers: Array<{
+                          __typename?: 'PollAnswerWithVoteCount'
+                          id: string
+                          pollId: string
+                          answer?: string | null
+                          votes: number
+                        }>
+                        externalVoteSources: Array<{
+                          __typename?: 'PollExternalVoteSource'
+                          id: string
+                          voteAmounts: Array<{
+                            __typename?: 'PollExternalVote'
+                            id: string
+                            answerId: string
+                            amount: number
+                          }>
+                        }>
+                      } | null
+                    }
                   | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                   | {__typename: 'RichTextBlock'; richText: Node[]}
                   | {__typename: 'SoundCloudTrackBlock'}
@@ -30802,7 +36923,50 @@ export type FullPageFragment = {
                   | {__typename: 'BildwurfAdBlock'; zoneID: string}
                   | {__typename: 'CommentBlock'}
                   | {__typename: 'EmbedBlock'}
-                  | {__typename: 'EventBlock'}
+                  | {
+                      __typename: 'EventBlock'
+                      events: Array<{
+                        __typename?: 'Event'
+                        id: string
+                        name: string
+                        description?: Node[] | null
+                        status: EventStatus
+                        location?: string | null
+                        startsAt: string
+                        endsAt?: string | null
+                        url: string
+                        image?: {
+                          __typename?: 'Image'
+                          id: string
+                          createdAt: string
+                          modifiedAt: string
+                          filename?: string | null
+                          format: string
+                          mimeType: string
+                          extension: string
+                          width: number
+                          height: number
+                          fileSize: number
+                          title?: string | null
+                          description?: string | null
+                          tags: Array<string>
+                          source?: string | null
+                          link?: string | null
+                          license?: string | null
+                          url?: string | null
+                          bigURL?: string | null
+                          largeURL?: string | null
+                          mediumURL?: string | null
+                          smallURL?: string | null
+                          squareBigURL?: string | null
+                          squareLargeURL?: string | null
+                          squareMediumURL?: string | null
+                          squareSmallURL?: string | null
+                          focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                        } | null
+                        tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                      }>
+                    }
                   | {__typename: 'FacebookPostBlock'}
                   | {__typename: 'FacebookVideoBlock'}
                   | {__typename: 'HTMLBlock'; html?: string | null}
@@ -30915,7 +37079,34 @@ export type FullPageFragment = {
                       }>
                     }
                   | {__typename: 'PolisConversationBlock'}
-                  | {__typename: 'PollBlock'}
+                  | {
+                      __typename: 'PollBlock'
+                      poll?: {
+                        __typename?: 'FullPoll'
+                        id: string
+                        question?: string | null
+                        opensAt: string
+                        closedAt?: string | null
+                        infoText?: Node[] | null
+                        answers: Array<{
+                          __typename?: 'PollAnswerWithVoteCount'
+                          id: string
+                          pollId: string
+                          answer?: string | null
+                          votes: number
+                        }>
+                        externalVoteSources: Array<{
+                          __typename?: 'PollExternalVoteSource'
+                          id: string
+                          voteAmounts: Array<{
+                            __typename?: 'PollExternalVote'
+                            id: string
+                            answerId: string
+                            amount: number
+                          }>
+                        }>
+                      } | null
+                    }
                   | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                   | {__typename: 'RichTextBlock'; richText: Node[]}
                   | {__typename: 'SoundCloudTrackBlock'}
@@ -31091,7 +37282,50 @@ export type FullPageFragment = {
                     | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
@@ -31204,7 +37438,34 @@ export type FullPageFragment = {
                         }>
                       }
                     | {__typename: 'PolisConversationBlock'}
-                    | {__typename: 'PollBlock'}
+                    | {
+                        __typename: 'PollBlock'
+                        poll?: {
+                          __typename?: 'FullPoll'
+                          id: string
+                          question?: string | null
+                          opensAt: string
+                          closedAt?: string | null
+                          infoText?: Node[] | null
+                          answers: Array<{
+                            __typename?: 'PollAnswerWithVoteCount'
+                            id: string
+                            pollId: string
+                            answer?: string | null
+                            votes: number
+                          }>
+                          externalVoteSources: Array<{
+                            __typename?: 'PollExternalVoteSource'
+                            id: string
+                            voteAmounts: Array<{
+                              __typename?: 'PollExternalVote'
+                              id: string
+                              answerId: string
+                              amount: number
+                            }>
+                          }>
+                        } | null
+                      }
                     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                     | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
@@ -31406,7 +37667,50 @@ export type FullPageFragment = {
                     | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
@@ -31519,7 +37823,34 @@ export type FullPageFragment = {
                         }>
                       }
                     | {__typename: 'PolisConversationBlock'}
-                    | {__typename: 'PollBlock'}
+                    | {
+                        __typename: 'PollBlock'
+                        poll?: {
+                          __typename?: 'FullPoll'
+                          id: string
+                          question?: string | null
+                          opensAt: string
+                          closedAt?: string | null
+                          infoText?: Node[] | null
+                          answers: Array<{
+                            __typename?: 'PollAnswerWithVoteCount'
+                            id: string
+                            pollId: string
+                            answer?: string | null
+                            votes: number
+                          }>
+                          externalVoteSources: Array<{
+                            __typename?: 'PollExternalVoteSource'
+                            id: string
+                            voteAmounts: Array<{
+                              __typename?: 'PollExternalVote'
+                              id: string
+                              answerId: string
+                              amount: number
+                            }>
+                          }>
+                        } | null
+                      }
                     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                     | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
@@ -31723,7 +38054,50 @@ export type FullPageFragment = {
                     | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
@@ -31836,7 +38210,34 @@ export type FullPageFragment = {
                         }>
                       }
                     | {__typename: 'PolisConversationBlock'}
-                    | {__typename: 'PollBlock'}
+                    | {
+                        __typename: 'PollBlock'
+                        poll?: {
+                          __typename?: 'FullPoll'
+                          id: string
+                          question?: string | null
+                          opensAt: string
+                          closedAt?: string | null
+                          infoText?: Node[] | null
+                          answers: Array<{
+                            __typename?: 'PollAnswerWithVoteCount'
+                            id: string
+                            pollId: string
+                            answer?: string | null
+                            votes: number
+                          }>
+                          externalVoteSources: Array<{
+                            __typename?: 'PollExternalVoteSource'
+                            id: string
+                            voteAmounts: Array<{
+                              __typename?: 'PollExternalVote'
+                              id: string
+                              answerId: string
+                              amount: number
+                            }>
+                          }>
+                        } | null
+                      }
                     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                     | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
@@ -32040,7 +38441,50 @@ export type PageQuery = {
       | {__typename: 'BildwurfAdBlock'; zoneID: string}
       | {__typename: 'CommentBlock'}
       | {__typename: 'EmbedBlock'}
-      | {__typename: 'EventBlock'}
+      | {
+          __typename: 'EventBlock'
+          events: Array<{
+            __typename?: 'Event'
+            id: string
+            name: string
+            description?: Node[] | null
+            status: EventStatus
+            location?: string | null
+            startsAt: string
+            endsAt?: string | null
+            url: string
+            image?: {
+              __typename?: 'Image'
+              id: string
+              createdAt: string
+              modifiedAt: string
+              filename?: string | null
+              format: string
+              mimeType: string
+              extension: string
+              width: number
+              height: number
+              fileSize: number
+              title?: string | null
+              description?: string | null
+              tags: Array<string>
+              source?: string | null
+              link?: string | null
+              license?: string | null
+              url?: string | null
+              bigURL?: string | null
+              largeURL?: string | null
+              mediumURL?: string | null
+              smallURL?: string | null
+              squareBigURL?: string | null
+              squareLargeURL?: string | null
+              squareMediumURL?: string | null
+              squareSmallURL?: string | null
+              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+            } | null
+            tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+          }>
+        }
       | {__typename: 'FacebookPostBlock'}
       | {__typename: 'FacebookVideoBlock'}
       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -32153,7 +38597,34 @@ export type PageQuery = {
           }>
         }
       | {__typename: 'PolisConversationBlock'}
-      | {__typename: 'PollBlock'}
+      | {
+          __typename: 'PollBlock'
+          poll?: {
+            __typename?: 'FullPoll'
+            id: string
+            question?: string | null
+            opensAt: string
+            closedAt?: string | null
+            infoText?: Node[] | null
+            answers: Array<{
+              __typename?: 'PollAnswerWithVoteCount'
+              id: string
+              pollId: string
+              answer?: string | null
+              votes: number
+            }>
+            externalVoteSources: Array<{
+              __typename?: 'PollExternalVoteSource'
+              id: string
+              voteAmounts: Array<{
+                __typename?: 'PollExternalVote'
+                id: string
+                answerId: string
+                amount: number
+              }>
+            }>
+          } | null
+        }
       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
       | {__typename: 'RichTextBlock'; richText: Node[]}
       | {__typename: 'SoundCloudTrackBlock'}
@@ -32214,7 +38685,50 @@ export type PageQuery = {
                     | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
@@ -32327,7 +38841,34 @@ export type PageQuery = {
                         }>
                       }
                     | {__typename: 'PolisConversationBlock'}
-                    | {__typename: 'PollBlock'}
+                    | {
+                        __typename: 'PollBlock'
+                        poll?: {
+                          __typename?: 'FullPoll'
+                          id: string
+                          question?: string | null
+                          opensAt: string
+                          closedAt?: string | null
+                          infoText?: Node[] | null
+                          answers: Array<{
+                            __typename?: 'PollAnswerWithVoteCount'
+                            id: string
+                            pollId: string
+                            answer?: string | null
+                            votes: number
+                          }>
+                          externalVoteSources: Array<{
+                            __typename?: 'PollExternalVoteSource'
+                            id: string
+                            voteAmounts: Array<{
+                              __typename?: 'PollExternalVote'
+                              id: string
+                              answerId: string
+                              amount: number
+                            }>
+                          }>
+                        } | null
+                      }
                     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                     | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
@@ -32529,7 +39070,50 @@ export type PageQuery = {
                     | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
@@ -32642,7 +39226,34 @@ export type PageQuery = {
                         }>
                       }
                     | {__typename: 'PolisConversationBlock'}
-                    | {__typename: 'PollBlock'}
+                    | {
+                        __typename: 'PollBlock'
+                        poll?: {
+                          __typename?: 'FullPoll'
+                          id: string
+                          question?: string | null
+                          opensAt: string
+                          closedAt?: string | null
+                          infoText?: Node[] | null
+                          answers: Array<{
+                            __typename?: 'PollAnswerWithVoteCount'
+                            id: string
+                            pollId: string
+                            answer?: string | null
+                            votes: number
+                          }>
+                          externalVoteSources: Array<{
+                            __typename?: 'PollExternalVoteSource'
+                            id: string
+                            voteAmounts: Array<{
+                              __typename?: 'PollExternalVote'
+                              id: string
+                              answerId: string
+                              amount: number
+                            }>
+                          }>
+                        } | null
+                      }
                     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                     | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
@@ -32846,7 +39457,50 @@ export type PageQuery = {
                     | {__typename: 'BildwurfAdBlock'; zoneID: string}
                     | {__typename: 'CommentBlock'}
                     | {__typename: 'EmbedBlock'}
-                    | {__typename: 'EventBlock'}
+                    | {
+                        __typename: 'EventBlock'
+                        events: Array<{
+                          __typename?: 'Event'
+                          id: string
+                          name: string
+                          description?: Node[] | null
+                          status: EventStatus
+                          location?: string | null
+                          startsAt: string
+                          endsAt?: string | null
+                          url: string
+                          image?: {
+                            __typename?: 'Image'
+                            id: string
+                            createdAt: string
+                            modifiedAt: string
+                            filename?: string | null
+                            format: string
+                            mimeType: string
+                            extension: string
+                            width: number
+                            height: number
+                            fileSize: number
+                            title?: string | null
+                            description?: string | null
+                            tags: Array<string>
+                            source?: string | null
+                            link?: string | null
+                            license?: string | null
+                            url?: string | null
+                            bigURL?: string | null
+                            largeURL?: string | null
+                            mediumURL?: string | null
+                            smallURL?: string | null
+                            squareBigURL?: string | null
+                            squareLargeURL?: string | null
+                            squareMediumURL?: string | null
+                            squareSmallURL?: string | null
+                            focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                          } | null
+                          tags?: Array<{__typename?: 'Tag'; id: string; tag?: string | null}> | null
+                        }>
+                      }
                     | {__typename: 'FacebookPostBlock'}
                     | {__typename: 'FacebookVideoBlock'}
                     | {__typename: 'HTMLBlock'; html?: string | null}
@@ -32959,7 +39613,34 @@ export type PageQuery = {
                         }>
                       }
                     | {__typename: 'PolisConversationBlock'}
-                    | {__typename: 'PollBlock'}
+                    | {
+                        __typename: 'PollBlock'
+                        poll?: {
+                          __typename?: 'FullPoll'
+                          id: string
+                          question?: string | null
+                          opensAt: string
+                          closedAt?: string | null
+                          infoText?: Node[] | null
+                          answers: Array<{
+                            __typename?: 'PollAnswerWithVoteCount'
+                            id: string
+                            pollId: string
+                            answer?: string | null
+                            votes: number
+                          }>
+                          externalVoteSources: Array<{
+                            __typename?: 'PollExternalVoteSource'
+                            id: string
+                            voteAmounts: Array<{
+                              __typename?: 'PollExternalVote'
+                              id: string
+                              answerId: string
+                              amount: number
+                            }>
+                          }>
+                        } | null
+                      }
                     | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                     | {__typename: 'RichTextBlock'; richText: Node[]}
                     | {__typename: 'SoundCloudTrackBlock'}
@@ -33135,7 +39816,54 @@ export type PageQuery = {
                       | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
                       | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -33248,7 +39976,34 @@ export type PageQuery = {
                           }>
                         }
                       | {__typename: 'PolisConversationBlock'}
-                      | {__typename: 'PollBlock'}
+                      | {
+                          __typename: 'PollBlock'
+                          poll?: {
+                            __typename?: 'FullPoll'
+                            id: string
+                            question?: string | null
+                            opensAt: string
+                            closedAt?: string | null
+                            infoText?: Node[] | null
+                            answers: Array<{
+                              __typename?: 'PollAnswerWithVoteCount'
+                              id: string
+                              pollId: string
+                              answer?: string | null
+                              votes: number
+                            }>
+                            externalVoteSources: Array<{
+                              __typename?: 'PollExternalVoteSource'
+                              id: string
+                              voteAmounts: Array<{
+                                __typename?: 'PollExternalVote'
+                                id: string
+                                answerId: string
+                                amount: number
+                              }>
+                            }>
+                          } | null
+                        }
                       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                       | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
@@ -33450,7 +40205,54 @@ export type PageQuery = {
                       | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
                       | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -33563,7 +40365,34 @@ export type PageQuery = {
                           }>
                         }
                       | {__typename: 'PolisConversationBlock'}
-                      | {__typename: 'PollBlock'}
+                      | {
+                          __typename: 'PollBlock'
+                          poll?: {
+                            __typename?: 'FullPoll'
+                            id: string
+                            question?: string | null
+                            opensAt: string
+                            closedAt?: string | null
+                            infoText?: Node[] | null
+                            answers: Array<{
+                              __typename?: 'PollAnswerWithVoteCount'
+                              id: string
+                              pollId: string
+                              answer?: string | null
+                              votes: number
+                            }>
+                            externalVoteSources: Array<{
+                              __typename?: 'PollExternalVoteSource'
+                              id: string
+                              voteAmounts: Array<{
+                                __typename?: 'PollExternalVote'
+                                id: string
+                                answerId: string
+                                amount: number
+                              }>
+                            }>
+                          } | null
+                        }
                       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                       | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
@@ -33767,7 +40596,54 @@ export type PageQuery = {
                       | {__typename: 'BildwurfAdBlock'; zoneID: string}
                       | {__typename: 'CommentBlock'}
                       | {__typename: 'EmbedBlock'}
-                      | {__typename: 'EventBlock'}
+                      | {
+                          __typename: 'EventBlock'
+                          events: Array<{
+                            __typename?: 'Event'
+                            id: string
+                            name: string
+                            description?: Node[] | null
+                            status: EventStatus
+                            location?: string | null
+                            startsAt: string
+                            endsAt?: string | null
+                            url: string
+                            image?: {
+                              __typename?: 'Image'
+                              id: string
+                              createdAt: string
+                              modifiedAt: string
+                              filename?: string | null
+                              format: string
+                              mimeType: string
+                              extension: string
+                              width: number
+                              height: number
+                              fileSize: number
+                              title?: string | null
+                              description?: string | null
+                              tags: Array<string>
+                              source?: string | null
+                              link?: string | null
+                              license?: string | null
+                              url?: string | null
+                              bigURL?: string | null
+                              largeURL?: string | null
+                              mediumURL?: string | null
+                              smallURL?: string | null
+                              squareBigURL?: string | null
+                              squareLargeURL?: string | null
+                              squareMediumURL?: string | null
+                              squareSmallURL?: string | null
+                              focalPoint?: {__typename?: 'Point'; x: number; y: number} | null
+                            } | null
+                            tags?: Array<{
+                              __typename?: 'Tag'
+                              id: string
+                              tag?: string | null
+                            }> | null
+                          }>
+                        }
                       | {__typename: 'FacebookPostBlock'}
                       | {__typename: 'FacebookVideoBlock'}
                       | {__typename: 'HTMLBlock'; html?: string | null}
@@ -33880,7 +40756,34 @@ export type PageQuery = {
                           }>
                         }
                       | {__typename: 'PolisConversationBlock'}
-                      | {__typename: 'PollBlock'}
+                      | {
+                          __typename: 'PollBlock'
+                          poll?: {
+                            __typename?: 'FullPoll'
+                            id: string
+                            question?: string | null
+                            opensAt: string
+                            closedAt?: string | null
+                            infoText?: Node[] | null
+                            answers: Array<{
+                              __typename?: 'PollAnswerWithVoteCount'
+                              id: string
+                              pollId: string
+                              answer?: string | null
+                              votes: number
+                            }>
+                            externalVoteSources: Array<{
+                              __typename?: 'PollExternalVoteSource'
+                              id: string
+                              voteAmounts: Array<{
+                                __typename?: 'PollExternalVote'
+                                id: string
+                                answerId: string
+                                amount: number
+                              }>
+                            }>
+                          } | null
+                        }
                       | {__typename: 'QuoteBlock'; quote?: string | null; author?: string | null}
                       | {__typename: 'RichTextBlock'; richText: Node[]}
                       | {__typename: 'SoundCloudTrackBlock'}
@@ -34300,6 +41203,47 @@ export type PeerQuery = {
       } | null
     } | null
   } | null
+}
+
+export type FullPollFragment = {
+  __typename?: 'FullPoll'
+  id: string
+  question?: string | null
+  opensAt: string
+  closedAt?: string | null
+  infoText?: Node[] | null
+  answers: Array<{
+    __typename?: 'PollAnswerWithVoteCount'
+    id: string
+    pollId: string
+    answer?: string | null
+    votes: number
+  }>
+  externalVoteSources: Array<{
+    __typename?: 'PollExternalVoteSource'
+    id: string
+    voteAmounts: Array<{
+      __typename?: 'PollExternalVote'
+      id: string
+      answerId: string
+      amount: number
+    }>
+  }>
+}
+
+export type UserPollVoteQueryVariables = Exact<{
+  pollId: Scalars['ID']
+}>
+
+export type UserPollVoteQuery = {__typename?: 'Query'; userPollVote?: string | null}
+
+export type PollVoteMutationVariables = Exact<{
+  answerId: Scalars['ID']
+}>
+
+export type PollVoteMutation = {
+  __typename?: 'Mutation'
+  voteOnPoll?: {__typename?: 'PollVote'; answerId: string} | null
 }
 
 export type FullSettingFragment = {
@@ -34975,6 +41919,25 @@ export const FullCommentFragmentDoc = gql`
   }
   ${CommentWithoutNestingFragmentDoc}
 `
+export const PageWithoutBlocksFragmentDoc = gql`
+  fragment PageWithoutBlocks on Page {
+    id
+    slug
+    description
+    tags
+    title
+    url
+    image {
+      ...FullImage
+    }
+    socialMediaDescription
+    socialMediaTitle
+    socialMediaImage {
+      ...FullImage
+    }
+  }
+  ${FullImageFragmentDoc}
+`
 export const FullEventFragmentDoc = gql`
   fragment FullEvent on Event {
     id
@@ -34995,24 +41958,28 @@ export const FullEventFragmentDoc = gql`
   }
   ${FullImageFragmentDoc}
 `
-export const PageWithoutBlocksFragmentDoc = gql`
-  fragment PageWithoutBlocks on Page {
+export const FullPollFragmentDoc = gql`
+  fragment FullPoll on FullPoll {
     id
-    slug
-    description
-    tags
-    title
-    url
-    image {
-      ...FullImage
+    question
+    opensAt
+    closedAt
+    infoText
+    answers {
+      id
+      pollId
+      answer
+      votes
     }
-    socialMediaDescription
-    socialMediaTitle
-    socialMediaImage {
-      ...FullImage
+    externalVoteSources {
+      id
+      voteAmounts {
+        id
+        answerId
+        amount
+      }
     }
   }
-  ${FullImageFragmentDoc}
 `
 export const BlockWithoutTeaserFragmentDoc = gql`
   fragment BlockWithoutTeaser on Block {
@@ -35048,6 +42015,16 @@ export const BlockWithoutTeaserFragmentDoc = gql`
     ... on BildwurfAdBlock {
       zoneID
     }
+    ... on EventBlock {
+      events {
+        ...FullEvent
+      }
+    }
+    ... on PollBlock {
+      poll {
+        ...FullPoll
+      }
+    }
     ... on ListicleBlock {
       items {
         title
@@ -35059,6 +42036,8 @@ export const BlockWithoutTeaserFragmentDoc = gql`
     }
   }
   ${FullImageFragmentDoc}
+  ${FullEventFragmentDoc}
+  ${FullPollFragmentDoc}
 `
 export const FullAuthorFragmentDoc = gql`
   fragment FullAuthor on Author {
@@ -36413,6 +43392,93 @@ export function usePeerLazyQuery(
 export type PeerQueryHookResult = ReturnType<typeof usePeerQuery>
 export type PeerLazyQueryHookResult = ReturnType<typeof usePeerLazyQuery>
 export type PeerQueryResult = Apollo.QueryResult<PeerQuery, PeerQueryVariables>
+export const UserPollVoteDocument = gql`
+  query UserPollVote($pollId: ID!) {
+    userPollVote(pollId: $pollId)
+  }
+`
+
+/**
+ * __useUserPollVoteQuery__
+ *
+ * To run a query within a React component, call `useUserPollVoteQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserPollVoteQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserPollVoteQuery({
+ *   variables: {
+ *      pollId: // value for 'pollId'
+ *   },
+ * });
+ */
+export function useUserPollVoteQuery(
+  baseOptions: Apollo.QueryHookOptions<UserPollVoteQuery, UserPollVoteQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useQuery<UserPollVoteQuery, UserPollVoteQueryVariables>(
+    UserPollVoteDocument,
+    options
+  )
+}
+export function useUserPollVoteLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<UserPollVoteQuery, UserPollVoteQueryVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useLazyQuery<UserPollVoteQuery, UserPollVoteQueryVariables>(
+    UserPollVoteDocument,
+    options
+  )
+}
+export type UserPollVoteQueryHookResult = ReturnType<typeof useUserPollVoteQuery>
+export type UserPollVoteLazyQueryHookResult = ReturnType<typeof useUserPollVoteLazyQuery>
+export type UserPollVoteQueryResult = Apollo.QueryResult<
+  UserPollVoteQuery,
+  UserPollVoteQueryVariables
+>
+export const PollVoteDocument = gql`
+  mutation PollVote($answerId: ID!) {
+    voteOnPoll(answerId: $answerId) {
+      answerId
+    }
+  }
+`
+export type PollVoteMutationFn = Apollo.MutationFunction<
+  PollVoteMutation,
+  PollVoteMutationVariables
+>
+
+/**
+ * __usePollVoteMutation__
+ *
+ * To run a mutation, you first call `usePollVoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePollVoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [pollVoteMutation, { data, loading, error }] = usePollVoteMutation({
+ *   variables: {
+ *      answerId: // value for 'answerId'
+ *   },
+ * });
+ */
+export function usePollVoteMutation(
+  baseOptions?: Apollo.MutationHookOptions<PollVoteMutation, PollVoteMutationVariables>
+) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useMutation<PollVoteMutation, PollVoteMutationVariables>(PollVoteDocument, options)
+}
+export type PollVoteMutationHookResult = ReturnType<typeof usePollVoteMutation>
+export type PollVoteMutationResult = Apollo.MutationResult<PollVoteMutation>
+export type PollVoteMutationOptions = Apollo.BaseMutationOptions<
+  PollVoteMutation,
+  PollVoteMutationVariables
+>
 export const SettingListDocument = gql`
   query SettingList {
     settings {
