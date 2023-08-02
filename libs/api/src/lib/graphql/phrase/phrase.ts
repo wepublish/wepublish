@@ -14,7 +14,7 @@ export const GraphQLPublicPhrase = new GraphQLObjectType<
 >({
   name: 'Phrase',
   fields: {
-    articles: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicArticle)))},
-    pages: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicPage)))}
+    articles: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicArticle)))},
+    pages: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicPage)))}
   }
 })

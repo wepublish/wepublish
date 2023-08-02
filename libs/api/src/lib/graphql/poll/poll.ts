@@ -58,9 +58,9 @@ export const VoteValue = new GraphQLScalarType({
 export const GraphQLPoll = new GraphQLObjectType<Poll, Context>({
   name: 'Poll',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
     question: {type: GraphQLString},
-    opensAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    opensAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     closedAt: {type: GraphQLDateTime}
   }
 })
@@ -68,8 +68,8 @@ export const GraphQLPoll = new GraphQLObjectType<Poll, Context>({
 export const GraphQLPollAnswer = new GraphQLObjectType<PollAnswer, Context>({
   name: 'PollAnswer',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
-    pollId: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
+    pollId: {type: new GraphQLNonNull(GraphQLID)},
     answer: {type: GraphQLString}
   }
 })
@@ -82,11 +82,11 @@ export const GraphQLPollAnswerWithVoteCount = new GraphQLObjectType<
 >({
   name: 'PollAnswerWithVoteCount',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
-    pollId: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
+    pollId: {type: new GraphQLNonNull(GraphQLID)},
     answer: {type: GraphQLString},
     votes: {
-      type: GraphQLNonNull(GraphQLInt),
+      type: new GraphQLNonNull(GraphQLInt),
       resolve: pollAnswer => pollAnswer._count.votes
     }
   }
@@ -95,7 +95,7 @@ export const GraphQLPollAnswerWithVoteCount = new GraphQLObjectType<
 export const GraphQLPollVote = new GraphQLObjectType<PollVote, Context>({
   name: 'PollVote',
   fields: {
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     fingerprint: {type: GraphQLString},
     disabled: {type: GraphQLBoolean}
   }
@@ -104,8 +104,8 @@ export const GraphQLPollVote = new GraphQLObjectType<PollVote, Context>({
 export const GraphQLPollExternalVote = new GraphQLObjectType<PollExternalVote, Context>({
   name: 'PollExternalVote',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
-    answerId: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
+    answerId: {type: new GraphQLNonNull(GraphQLID)},
     amount: {type: VoteValue}
   }
 })
@@ -114,9 +114,9 @@ export const GraphQLPollExternalVoteSource = new GraphQLObjectType<PollExternalV
   {
     name: 'PollExternalVoteSource',
     fields: {
-      id: {type: GraphQLNonNull(GraphQLID)},
+      id: {type: new GraphQLNonNull(GraphQLID)},
       source: {type: GraphQLString},
-      voteAmounts: {type: GraphQLList(GraphQLNonNull(GraphQLPollExternalVote))}
+      voteAmounts: {type: new GraphQLList(new GraphQLNonNull(GraphQLPollExternalVote))}
     }
   }
 )
@@ -124,9 +124,9 @@ export const GraphQLPollExternalVoteSource = new GraphQLObjectType<PollExternalV
 export const GraphQLPollConnection = new GraphQLObjectType<ConnectionResult<Poll>, Context>({
   name: 'PollConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPoll)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPoll)))},
+    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
 
@@ -149,12 +149,12 @@ export const GraphQLPollSort = new GraphQLEnumType({
 export const GraphQLPollWithAnswers = new GraphQLObjectType<Poll, Context>({
   name: 'PollWithAnswers',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
     question: {type: GraphQLString},
-    opensAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    opensAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     closedAt: {type: GraphQLDateTime},
     answers: {
-      type: GraphQLList(GraphQLNonNull(GraphQLPollAnswer))
+      type: new GraphQLList(new GraphQLNonNull(GraphQLPollAnswer))
     }
   }
 })
@@ -162,18 +162,18 @@ export const GraphQLPollWithAnswers = new GraphQLObjectType<Poll, Context>({
 export const GraphQLFullPoll = new GraphQLObjectType<Poll, Context>({
   name: 'FullPoll',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
     question: {type: GraphQLString},
-    opensAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    opensAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     closedAt: {type: GraphQLDateTime},
     infoText: {type: GraphQLRichText},
 
     answers: {
-      type: GraphQLList(GraphQLNonNull(GraphQLPollAnswerWithVoteCount))
+      type: new GraphQLList(new GraphQLNonNull(GraphQLPollAnswerWithVoteCount))
     },
 
     externalVoteSources: {
-      type: GraphQLList(GraphQLNonNull(GraphQLPollExternalVoteSource))
+      type: new GraphQLList(new GraphQLNonNull(GraphQLPollExternalVoteSource))
     }
   }
 })
@@ -181,7 +181,7 @@ export const GraphQLFullPoll = new GraphQLObjectType<Poll, Context>({
 export const GraphQLUpdatePollAnswer = new GraphQLInputObjectType({
   name: 'UpdatePollAnswer',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
     answer: {type: GraphQLString}
   }
 })
@@ -189,7 +189,7 @@ export const GraphQLUpdatePollAnswer = new GraphQLInputObjectType({
 export const GraphQLUpdatePollExternalVote = new GraphQLInputObjectType({
   name: 'UpdatePollExternalVote',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
     amount: {type: VoteValue}
   }
 })
@@ -197,8 +197,8 @@ export const GraphQLUpdatePollExternalVote = new GraphQLInputObjectType({
 export const GraphQLUpdatePollExternalVoteSources = new GraphQLInputObjectType({
   name: 'UpdatePollExternalVoteSources',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
     source: {type: GraphQLString},
-    voteAmounts: {type: GraphQLList(GraphQLNonNull(GraphQLUpdatePollExternalVote))}
+    voteAmounts: {type: new GraphQLList(new GraphQLNonNull(GraphQLUpdatePollExternalVote))}
   }
 })

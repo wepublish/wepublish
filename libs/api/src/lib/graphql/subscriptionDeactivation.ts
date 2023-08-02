@@ -14,7 +14,7 @@ export const GraphQLSubscriptionDeactivationReason = new GraphQLEnumType({
 export const GraphQLSubscriptionDeactivation = new GraphQLObjectType({
   name: 'SubscriptionDeactivation',
   fields: {
-    date: {type: GraphQLNonNull(GraphQLDateTime)},
-    reason: {type: GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
+    date: {type: new GraphQLNonNull(GraphQLDateTime)},
+    reason: {type: new GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
   }
 })

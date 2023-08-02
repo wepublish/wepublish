@@ -83,7 +83,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     // ========
 
     peerProfile: {
-      type: GraphQLNonNull(GraphQLPeerProfile),
+      type: new GraphQLNonNull(GraphQLPeerProfile),
       description: 'This query returns the peer profile.',
       resolve: (root, args, {hostURL, websiteURL, prisma: {peerProfile}}) =>
         getPublicPeerProfile(hostURL, websiteURL, peerProfile)
@@ -114,7 +114,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     navigations: {
-      type: GraphQLList(GraphQLNonNull(GraphQLPublicNavigation)),
+      type: new GraphQLList(new GraphQLNonNull(GraphQLPublicNavigation)),
       description: 'This query returns all navigations.',
       resolve: (root, _, {prisma: {navigation}}) => getNavigations(navigation)
     },
@@ -136,7 +136,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     authors: {
-      type: GraphQLNonNull(GraphQLAuthorConnection),
+      type: new GraphQLNonNull(GraphQLAuthorConnection),
       args: {
         cursor: {type: GraphQLID},
         take: {type: GraphQLInt, defaultValue: 10},
@@ -179,7 +179,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     articles: {
-      type: GraphQLNonNull(GraphQLPublicArticleConnection),
+      type: new GraphQLNonNull(GraphQLPublicArticleConnection),
       args: {
         cursor: {type: GraphQLID},
         take: {type: GraphQLInt, defaultValue: 10},
@@ -201,7 +201,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       args: {
         peerID: {type: GraphQLID},
         peerSlug: {type: GraphQLSlug},
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       description: 'This query takes either the peer ID or the peer slug and returns the article.',
       async resolve(root, {peerID, peerSlug, id}, context, info) {
@@ -275,7 +275,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     pages: {
-      type: GraphQLNonNull(GraphQLPublicPageConnection),
+      type: new GraphQLNonNull(GraphQLPublicPageConnection),
       args: {
         cursor: {type: GraphQLID},
         take: {type: GraphQLInt, defaultValue: 10},
@@ -293,9 +293,9 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     // =======
 
     comments: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicComment))),
       args: {
-        itemId: {type: GraphQLNonNull(GraphQLID)},
+        itemId: {type: new GraphQLNonNull(GraphQLID)},
         sort: {type: GraphQLPublicCommentSort},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
@@ -305,9 +305,9 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     userCommentRatings: {
-      type: GraphQLNonNull(GraphQLList(GraphQLCommentRating)),
+      type: new GraphQLNonNull(new GraphQLList(GraphQLCommentRating)),
       args: {
-        commentId: {type: GraphQLNonNull(GraphQLID)}
+        commentId: {type: new GraphQLNonNull(GraphQLID)}
       },
       description:
         'This query returns the value of a comments answer rating if the user has already rated it.',
@@ -319,7 +319,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     // =======
 
     authProviders: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthProvider))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAuthProvider))),
       args: {redirectUri: {type: GraphQLString}},
       description: 'This query returns the redirect Uri.',
       async resolve(root, {redirectUri}, {getOauth2Clients}) {
@@ -351,14 +351,14 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     invoices: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicInvoice))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicInvoice))),
       description: 'This query returns the invoices  of the authenticated user.',
       resolve: (root, _, {authenticateUser, prisma: {subscription, invoice}}) =>
         getPublicInvoices(authenticateUser, subscription, invoice)
     },
 
     subscriptions: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicSubscription))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicSubscription))),
       description: 'This query returns the subscriptions of the authenticated user.',
       async resolve(root, _, {authenticateUser, prisma}) {
         const {user} = authenticateUser()
@@ -392,7 +392,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     memberPlans: {
-      type: GraphQLNonNull(GraphQLPublicMemberPlanConnection),
+      type: new GraphQLNonNull(GraphQLPublicMemberPlanConnection),
       args: {
         cursor: {type: GraphQLID},
         take: {type: GraphQLInt, defaultValue: 10},
@@ -409,7 +409,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     checkInvoiceStatus: {
       type: GraphQLPublicInvoice,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       description:
         'This mutation will check the invoice status and update with information from the paymentProvider',
@@ -497,7 +497,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     // Challenge
     // =======
     challenge: {
-      type: GraphQLNonNull(GraphQLChallenge),
+      type: new GraphQLNonNull(GraphQLChallenge),
       description:
         'This query generates a challenge which can be used to access protected endpoints.',
       async resolve(_, {input}, {challenge}) {
@@ -514,7 +514,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     // ==========
 
     ratingSystem: {
-      type: GraphQLNonNull(GraphQLFullCommentRatingSystem),
+      type: new GraphQLNonNull(GraphQLFullCommentRatingSystem),
       resolve: (root, input, {prisma: {commentRatingSystem}}) =>
         getRatingSystem(commentRatingSystem)
     },
@@ -522,10 +522,10 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     // Poll
     // =======
     poll: {
-      type: GraphQLNonNull(GraphQLFullPoll),
+      type: new GraphQLNonNull(GraphQLFullPoll),
       description: 'This query returns a poll with all the needed data',
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {prisma: {poll}}) => getPoll(id, poll)
     },
@@ -534,7 +534,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLID,
       description: 'This query returns the answerId of a poll if the user has already voted on it.',
       args: {
-        pollId: {type: GraphQLNonNull(GraphQLID)}
+        pollId: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {pollId}, {authenticateUser, prisma: {pollVote}}) =>
         userPollVote(pollId, authenticateUser, pollVote)
@@ -558,16 +558,16 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     event: {
-      type: GraphQLNonNull(GraphQLEvent),
+      type: new GraphQLNonNull(GraphQLEvent),
       description: 'This query returns an event',
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {prisma: {event}}) => getEvent(id, event)
     },
 
     importedEventsIds: {
-      type: GraphQLList(GraphQLString),
+      type: new GraphQLList(GraphQLString),
       description: 'This query returns a list of original ids of imported events',
       resolve: (root, {prisma: {event}}) => getImportedEventsIds(event)
     },
@@ -598,7 +598,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       description:
         'This query performs a fulltext search on titles and blocks of articles/pages and returns all matching ones.',
       args: {
-        query: {type: GraphQLNonNull(GraphQLString)}
+        query: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {query}, {prisma, loaders}) =>
         queryPhrase(query, prisma, loaders.publicArticles, loaders.publicPagesByID)

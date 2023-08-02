@@ -8,10 +8,14 @@ export default {
   docs: {
     autodocs: false
   },
-  env: config => ({
-    ...config,
-    NODE_ENV: 'production'
-  }),
+  env: config => {
+    console.log(config)
+
+    return {
+      ...config,
+      NODE_ENV: 'production'
+    }
+  },
   stories: ['../../**/src/lib/**/*.mdx', '../../**/src/lib/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: [
     '@nx/react/plugins/storybook',
