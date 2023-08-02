@@ -125,7 +125,8 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     paymentsByID,
     invoicesByID,
     subscriptionClient,
-    userClient
+    userClient,
+    invoiceClient
   }: UpdatePaymentWithIntentStateProps): Promise<Payment> {
     const payment = await paymentsByID.load(intentState.paymentID)
     // TODO: should we overwrite already paid/canceled payments
@@ -153,6 +154,16 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
     if (!invoice || !invoice.subscriptionID) {
       throw new Error(`Invoice with ID ${payment.invoiceID} does not exist`)
+    }
+
+    // Mark invoice as paid
+    if (intentState.state === PaymentState.paid) {
+      await invoiceClient.update({
+        where: {id: invoice.id},
+        data: {
+          paidAt: new Date()
+        }
+      })
     }
 
     const subscription = await subscriptionClient.findUnique({

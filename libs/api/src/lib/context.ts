@@ -1031,6 +1031,16 @@ export async function contextFromRequest(
 
       if (!updatedPayment) throw new Error('Error during updating payment') // TODO: this check needs to be removed
 
+      // Mark invoice as paid
+      if (intent.state === PaymentState.paid) {
+        await prisma.invoice.update({
+          where: {id: invoice.id},
+          data: {
+            paidAt: new Date()
+          }
+        })
+      }
+
       return updatedPayment as Payment
     },
     challenge
