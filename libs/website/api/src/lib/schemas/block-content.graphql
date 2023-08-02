@@ -35,6 +35,22 @@ fragment BlockWithoutTeaser on Block {
     html
   }
 
+  ... on BildwurfAdBlock {
+    zoneID
+  }
+
+  ... on EventBlock {
+    events {
+      ...FullEvent
+    }
+  }
+
+  ... on PollBlock {
+    poll {
+      ...FullPoll
+    }
+  }
+
   ... on ListicleBlock {
     items {
       title

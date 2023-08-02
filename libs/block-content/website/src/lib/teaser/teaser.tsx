@@ -1,8 +1,8 @@
 import {css, styled} from '@mui/material'
 import {FlexAlignment, Teaser as TeaserType} from '@wepublish/website/api'
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {isImageBlock} from './image-block'
-import {isTitleBlock} from './title-block'
+import {isImageBlock} from '../image/image-block'
+import {isTitleBlock} from '../title/title-block'
 
 const TeaserWrapper = styled('article')<FlexAlignment>`
   ${({theme, h, w, x, y}) => css`

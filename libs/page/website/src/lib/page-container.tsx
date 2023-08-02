@@ -1,7 +1,13 @@
-import {usePageQuery, PageQuery} from '@wepublish/website/api'
+import {
+  usePageQuery,
+  PageQuery,
+  useUserPollVoteLazyQuery,
+  usePollVoteMutation
+} from '@wepublish/website/api'
 import {QueryResult} from '@apollo/client'
-import {useEffect} from 'react'
+import {useEffect, PropsWithChildren} from 'react'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {PollBlockContext} from '@wepublish/block-content/website'
 
 type IdOrSlug = {id: string; slug?: never} | {id?: never; slug: string}
 
@@ -24,5 +30,24 @@ export function PageContainer({onQuery, id, slug, className}: PageContainerProps
     onQuery?.({data, loading, error, refetch})
   }, [data, loading, error, refetch, onQuery])
 
-  return <Page data={data} loading={loading} error={error} className={className} />
+  return (
+    <PollBlockProvider>
+      <Page data={data} loading={loading} error={error} className={className} />
+    </PollBlockProvider>
+  )
+}
+
+function PollBlockProvider({children}: PropsWithChildren) {
+  const [fetchUserVote] = useUserPollVoteLazyQuery()
+  const [vote] = usePollVoteMutation()
+
+  return (
+    <PollBlockContext.Provider
+      value={{
+        fetchUserVote,
+        vote
+      }}>
+      {children}
+    </PollBlockContext.Provider>
+  )
 }

@@ -59,6 +59,7 @@ const createV1ApiClient = (
       ...cacheConfig
     }).restore(cache ?? {}),
     ssrMode: typeof window === 'undefined',
+    assumeImmutableResults: true,
     ssrForceFetchDelay: 100,
     defaultOptions
   })

@@ -3,7 +3,7 @@
 exports[`HTML Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-0"
+    class="css-0 ev8pwdu0"
   >
     <div>
       <div
@@ -19,7 +19,7 @@ exports[`HTML Block should render Default 1`] = `
 exports[`HTML Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-0"
+    class="extra-classname css-0 ev8pwdu0"
   >
     <div>
       <div
@@ -35,7 +35,7 @@ exports[`HTML Block should render WithClassName 1`] = `
 exports[`HTML Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-0"
+    class="css-0 ev8pwdu0"
   >
     <div>
       <div
@@ -51,7 +51,7 @@ exports[`HTML Block should render WithEmotion 1`] = `
 exports[`HTML Block should render WithScript 1`] = `
 <DocumentFragment>
   <div
-    class="css-0"
+    class="css-0 ev8pwdu0"
   >
     <div>
       

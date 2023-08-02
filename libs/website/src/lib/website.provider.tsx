@@ -1,5 +1,5 @@
 import {GlobalStyles, TextField, Theme, ThemeProvider, css} from '@mui/material'
-import {Article, ArticleSEO} from '@wepublish/article/website'
+import {Article, ArticleSEO, ArticleList, ArticleListItem} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {Author, AuthorChip, AuthorList, AuthorListItem} from '@wepublish/author/website'
 import {
@@ -8,11 +8,13 @@ import {
   EmbedBlock,
   FacebookPostBlock,
   FacebookVideoBlock,
-  HtmlBlock,
   ImageBlock,
   ImageGalleryBlock,
   InstagramPostBlock,
   PolisConversationBlock,
+  EventBlock,
+  HtmlBlock,
+  PollBlock,
   QuoteBlock,
   RichTextBlock,
   SoundCloudTrackBlock,
@@ -20,11 +22,11 @@ import {
   TeaserGridBlock,
   TeaserGridFlexBlock,
   TikTokVideoBlock,
-  TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
   YouTubeVideoBlock,
-  ListicleBlock
+  ListicleBlock,
+  TitleBlock
 } from '@wepublish/block-content/website'
 import {CommentEditor, CommentList, CommentListItem} from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
@@ -92,6 +94,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         AuthorChip={AuthorChip}
         AuthorList={AuthorList}
         AuthorListItem={AuthorListItem}
+        ArticleList={ArticleList}
+        ArticleListItem={ArticleListItem}
         Article={Article}
         ArticleSEO={ArticleSEO}
         PeerInformation={PeerInformation}
@@ -133,7 +137,9 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           ImageGallery: ImageGalleryBlock,
           Quote: QuoteBlock,
           HTML: HtmlBlock,
+          Poll: PollBlock,
           RichText: RichTextBlock,
+          Event: EventBlock,
           Listicle: ListicleBlock,
           TeaserGridFlex: TeaserGridFlexBlock,
           TeaserGrid: TeaserGridBlock,

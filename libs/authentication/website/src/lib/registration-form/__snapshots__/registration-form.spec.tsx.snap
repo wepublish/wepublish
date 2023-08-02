@@ -3,10 +3,10 @@
 exports[`Registration Form should render Default 1`] = `
 <DocumentFragment>
   <form
-    class="css-1thzeso"
+    class="css-13dpkcn e7hens90"
   >
     <div
-      class="css-axdzh1"
+      class="css-1yctfwl e7hens91"
     >
       <div
         class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -183,11 +183,10 @@ exports[`Registration Form should render Default 1`] = `
         </div>
       </div>
       <div
-        class="css-1n9t5th"
+        class="css-dayqlo e7hens92"
       >
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-          css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-10b0ed7-MuiFormControl-root-MuiTextField-root"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -333,10 +332,10 @@ exports[`Registration Form should render Default 1`] = `
       </div>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-szb73l e7hens93"
     >
       <div
-        class="css-zxc9jp"
+        class="css-kpaq8o e7hens94"
       >
         <svg
           viewBox="0,0,200,200"
@@ -432,8 +431,7 @@ exports[`Registration Form should render Default 1`] = `
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1wgip5b-MuiButtonBase-root-MuiButton-root-RegistrationForm"
       tabindex="0"
       type="submit"
     >
@@ -600,10 +598,10 @@ exports[`Registration Form should render Filled 1`] = `
                   Passwort
                 </span>
               </legend>
-@@ -185,12 +185,12 @@
+@@ -184,12 +184,12 @@
+        >
           <div
-            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-            css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-10b0ed7-MuiFormControl-root-MuiTextField-root"
           >
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -615,7 +613,7 @@ exports[`Registration Form should render Filled 1`] = `
             >
               Address
             </label>
-@@ -201,18 +201,18 @@
+@@ -200,18 +200,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rd:"
@@ -636,7 +634,7 @@ exports[`Registration Form should render Filled 1`] = `
                     Address
                   </span>
                 </legend>
-@@ -221,12 +221,12 @@
+@@ -220,12 +220,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -651,7 +649,7 @@ exports[`Registration Form should render Filled 1`] = `
             >
               Postleitzahl
             </label>
-@@ -237,18 +237,18 @@
+@@ -236,18 +236,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":re:"
@@ -672,7 +670,7 @@ exports[`Registration Form should render Filled 1`] = `
                     Postleitzahl
                   </span>
                 </legend>
-@@ -257,12 +257,12 @@
+@@ -256,12 +256,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -687,7 +685,7 @@ exports[`Registration Form should render Filled 1`] = `
             >
               Stadt
             </label>
-@@ -273,18 +273,18 @@
+@@ -272,18 +272,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rf:"
@@ -708,7 +706,7 @@ exports[`Registration Form should render Filled 1`] = `
                     Stadt
                   </span>
                 </legend>
-@@ -293,12 +293,12 @@
+@@ -292,12 +292,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -723,7 +721,7 @@ exports[`Registration Form should render Filled 1`] = `
             >
               Land
             </label>
-@@ -309,18 +309,18 @@
+@@ -308,18 +308,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rg:"
@@ -744,7 +742,7 @@ exports[`Registration Form should render Filled 1`] = `
                     Land
                   </span>
                 </legend>
-@@ -393,12 +393,12 @@
+@@ -392,12 +392,12 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -759,7 +757,7 @@ exports[`Registration Form should render Filled 1`] = `
           >
             Captcha
           </label>
-@@ -409,18 +409,18 @@
+@@ -408,18 +408,18 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":rh:"
@@ -928,7 +926,7 @@ exports[`Registration Form should render Invalid 1`] = `
               name="password"
               type="password"
               value=""
-@@ -176,31 +198,38 @@
+@@ -176,30 +198,37 @@
                   Passwort
                 </span>
               </legend>
@@ -942,11 +940,10 @@ exports[`Registration Form should render Invalid 1`] = `
 +         </p>
         </div>
         <div
-          class="css-1n9t5th"
+          class="css-dayqlo e7hens92"
         >
           <div
-            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-            css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-10b0ed7-MuiFormControl-root-MuiTextField-root"
           >
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -970,7 +967,7 @@ exports[`Registration Form should render Invalid 1`] = `
                 name="address.streetAddress"
                 type="text"
                 value=""
-@@ -216,27 +245,34 @@
+@@ -215,27 +244,34 @@
                     Address
                   </span>
                 </legend>
@@ -1008,7 +1005,7 @@ exports[`Registration Form should render Invalid 1`] = `
                 name="address.zipCode"
                 type="text"
                 value=""
-@@ -252,27 +288,34 @@
+@@ -251,27 +287,34 @@
                     Postleitzahl
                   </span>
                 </legend>
@@ -1046,7 +1043,7 @@ exports[`Registration Form should render Invalid 1`] = `
                 name="address.city"
                 type="text"
                 value=""
-@@ -288,27 +331,34 @@
+@@ -287,27 +330,34 @@
                     Stadt
                   </span>
                 </legend>
@@ -1084,7 +1081,7 @@ exports[`Registration Form should render Invalid 1`] = `
                 name="address.country"
                 type="text"
                 value=""
-@@ -324,10 +374,16 @@
+@@ -323,10 +373,16 @@
                     Land
                   </span>
                 </legend>
@@ -1100,8 +1097,8 @@ exports[`Registration Form should render Invalid 1`] = `
         </div>
       </div>
       <div
-        class="css-qxt11j"
-@@ -393,22 +449,23 @@
+        class="css-szb73l e7hens93"
+@@ -392,22 +448,23 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -1128,7 +1125,7 @@ exports[`Registration Form should render Invalid 1`] = `
               name="challengeAnswer.challengeSolution"
               type="text"
               value=""
-@@ -424,10 +481,16 @@
+@@ -423,10 +480,16 @@
                   Captcha
                 </span>
               </legend>
@@ -1143,17 +1140,17 @@ exports[`Registration Form should render Invalid 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-        css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop).""
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1wgip5b-MuiButtonBase-root-MuiButton-root-RegistrationForm"
+        tabindex="0""
 `;
 
 exports[`Registration Form should render OnlyAddress 1`] = `
 <DocumentFragment>
   <form
-    class="css-1thzeso"
+    class="css-13dpkcn e7hens90"
   >
     <div
-      class="css-axdzh1"
+      class="css-1yctfwl e7hens91"
     >
       <div
         class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -1228,11 +1225,10 @@ exports[`Registration Form should render OnlyAddress 1`] = `
         </div>
       </div>
       <div
-        class="css-1n9t5th"
+        class="css-dayqlo e7hens92"
       >
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-          css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-10b0ed7-MuiFormControl-root-MuiTextField-root"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -1378,10 +1374,10 @@ exports[`Registration Form should render OnlyAddress 1`] = `
       </div>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-szb73l e7hens93"
     >
       <div
-        class="css-zxc9jp"
+        class="css-kpaq8o e7hens94"
       >
         <svg
           viewBox="0,0,200,200"
@@ -1477,8 +1473,7 @@ exports[`Registration Form should render OnlyAddress 1`] = `
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1wgip5b-MuiButtonBase-root-MuiButton-root-RegistrationForm"
       tabindex="0"
       type="submit"
     >
@@ -1568,10 +1563,10 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
                   Email
                 </span>
               </legend>
-@@ -83,12 +83,12 @@
+@@ -82,12 +82,12 @@
+        >
           <div
-            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-            css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-10b0ed7-MuiFormControl-root-MuiTextField-root"
           >
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -1583,7 +1578,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
             >
               Address
             </label>
-@@ -99,18 +99,18 @@
+@@ -98,18 +98,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r1s:"
@@ -1604,7 +1599,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
                     Address
                   </span>
                 </legend>
-@@ -119,12 +119,12 @@
+@@ -118,12 +118,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1619,7 +1614,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
             >
               Postleitzahl
             </label>
-@@ -135,18 +135,18 @@
+@@ -134,18 +134,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r1t:"
@@ -1640,7 +1635,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
                     Postleitzahl
                   </span>
                 </legend>
-@@ -155,12 +155,12 @@
+@@ -154,12 +154,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1655,7 +1650,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
             >
               Stadt
             </label>
-@@ -171,18 +171,18 @@
+@@ -170,18 +170,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r1u:"
@@ -1676,7 +1671,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
                     Stadt
                   </span>
                 </legend>
-@@ -191,12 +191,12 @@
+@@ -190,12 +190,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1691,7 +1686,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
             >
               Land
             </label>
-@@ -207,18 +207,18 @@
+@@ -206,18 +206,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r1v:"
@@ -1712,7 +1707,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
                     Land
                   </span>
                 </legend>
-@@ -291,12 +291,12 @@
+@@ -290,12 +290,12 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -1727,7 +1722,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
           >
             Captcha
           </label>
-@@ -307,18 +307,18 @@
+@@ -306,18 +306,18 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r20:"
@@ -1820,7 +1815,7 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
               name="email"
               type="email"
               value=""
-@@ -74,31 +82,38 @@
+@@ -74,30 +82,37 @@
                   Email
                 </span>
               </legend>
@@ -1834,11 +1829,10 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
 +         </p>
         </div>
         <div
-          class="css-1n9t5th"
+          class="css-dayqlo e7hens92"
         >
           <div
-            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-            css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-10b0ed7-MuiFormControl-root-MuiTextField-root"
           >
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -1862,7 +1856,7 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
                 name="address.streetAddress"
                 type="text"
                 value=""
-@@ -114,27 +129,34 @@
+@@ -113,27 +128,34 @@
                     Address
                   </span>
                 </legend>
@@ -1900,7 +1894,7 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
                 name="address.zipCode"
                 type="text"
                 value=""
-@@ -150,27 +172,34 @@
+@@ -149,27 +171,34 @@
                     Postleitzahl
                   </span>
                 </legend>
@@ -1938,7 +1932,7 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
                 name="address.city"
                 type="text"
                 value=""
-@@ -186,27 +215,34 @@
+@@ -185,27 +214,34 @@
                     Stadt
                   </span>
                 </legend>
@@ -1976,7 +1970,7 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
                 name="address.country"
                 type="text"
                 value=""
-@@ -222,10 +258,16 @@
+@@ -221,10 +257,16 @@
                     Land
                   </span>
                 </legend>
@@ -1992,8 +1986,8 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
         </div>
       </div>
       <div
-        class="css-qxt11j"
-@@ -291,22 +333,23 @@
+        class="css-szb73l e7hens93"
+@@ -290,22 +332,23 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -2020,7 +2014,7 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
               name="challengeAnswer.challengeSolution"
               type="text"
               value=""
-@@ -322,10 +365,16 @@
+@@ -321,10 +364,16 @@
                   Captcha
                 </span>
               </legend>
@@ -2035,17 +2029,17 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-        css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop).""
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1wgip5b-MuiButtonBase-root-MuiButton-root-RegistrationForm"
+        tabindex="0""
 `;
 
 exports[`Registration Form should render OnlyFirstName 1`] = `
 <DocumentFragment>
   <form
-    class="css-1thzeso"
+    class="css-13dpkcn e7hens90"
   >
     <div
-      class="css-axdzh1"
+      class="css-1yctfwl e7hens91"
     >
       <div
         class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -2157,10 +2151,10 @@ exports[`Registration Form should render OnlyFirstName 1`] = `
       </div>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-szb73l e7hens93"
     >
       <div
-        class="css-zxc9jp"
+        class="css-kpaq8o e7hens94"
       >
         <svg
           viewBox="0,0,200,200"
@@ -2256,8 +2250,7 @@ exports[`Registration Form should render OnlyFirstName 1`] = `
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1wgip5b-MuiButtonBase-root-MuiButton-root-RegistrationForm"
       tabindex="0"
       type="submit"
     >
@@ -2544,7 +2537,7 @@ exports[`Registration Form should render OnlyFirstNameInvalid 1`] = `
         </div>
       </div>
       <div
-        class="css-qxt11j"
+        class="css-szb73l e7hens93"
       >
 @@ -178,22 +199,23 @@
         </div>
@@ -2588,17 +2581,17 @@ exports[`Registration Form should render OnlyFirstNameInvalid 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-        css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop).""
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1wgip5b-MuiButtonBase-root-MuiButton-root-RegistrationForm"
+        tabindex="0""
 `;
 
 exports[`Registration Form should render OnlyPassword 1`] = `
 <DocumentFragment>
   <form
-    class="css-1thzeso"
+    class="css-13dpkcn e7hens90"
   >
     <div
-      class="css-axdzh1"
+      class="css-1yctfwl e7hens91"
     >
       <div
         class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -2740,10 +2733,10 @@ exports[`Registration Form should render OnlyPassword 1`] = `
       </div>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-szb73l e7hens93"
     >
       <div
-        class="css-zxc9jp"
+        class="css-kpaq8o e7hens94"
       >
         <svg
           viewBox="0,0,200,200"
@@ -2839,8 +2832,7 @@ exports[`Registration Form should render OnlyPassword 1`] = `
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1wgip5b-MuiButtonBase-root-MuiButton-root-RegistrationForm"
       tabindex="0"
       type="submit"
     >
@@ -3132,7 +3124,7 @@ exports[`Registration Form should render OnlyPasswordInvalid 1`] = `
         </div>
       </div>
       <div
-        class="css-qxt11j"
+        class="css-szb73l e7hens93"
       >
 @@ -208,22 +229,23 @@
         </div>
@@ -3176,17 +3168,17 @@ exports[`Registration Form should render OnlyPasswordInvalid 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-        css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop).""
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1wgip5b-MuiButtonBase-root-MuiButton-root-RegistrationForm"
+        tabindex="0""
 `;
 
 exports[`Registration Form should render OnlyPreferredName 1`] = `
 <DocumentFragment>
   <form
-    class="css-1thzeso"
+    class="css-13dpkcn e7hens90"
   >
     <div
-      class="css-axdzh1"
+      class="css-1yctfwl e7hens91"
     >
       <div
         class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -3298,10 +3290,10 @@ exports[`Registration Form should render OnlyPreferredName 1`] = `
       </div>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-szb73l e7hens93"
     >
       <div
-        class="css-zxc9jp"
+        class="css-kpaq8o e7hens94"
       >
         <svg
           viewBox="0,0,200,200"
@@ -3397,8 +3389,7 @@ exports[`Registration Form should render OnlyPreferredName 1`] = `
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1wgip5b-MuiButtonBase-root-MuiButton-root-RegistrationForm"
       tabindex="0"
       type="submit"
     >
@@ -3647,7 +3638,7 @@ exports[`Registration Form should render OnlyPreferredNameInvalid 1`] = `
         </div>
       </div>
       <div
-        class="css-qxt11j"
+        class="css-szb73l e7hens93"
       >
 @@ -178,22 +192,23 @@
         </div>
@@ -3691,17 +3682,17 @@ exports[`Registration Form should render OnlyPreferredNameInvalid 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-        css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop).""
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1wgip5b-MuiButtonBase-root-MuiButton-root-RegistrationForm"
+        tabindex="0""
 `;
 
 exports[`Registration Form should render OnlyRequired 1`] = `
 <DocumentFragment>
   <form
-    class="css-1thzeso"
+    class="css-13dpkcn e7hens90"
   >
     <div
-      class="css-axdzh1"
+      class="css-1yctfwl e7hens91"
     >
       <div
         class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -3777,10 +3768,10 @@ exports[`Registration Form should render OnlyRequired 1`] = `
       </div>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-szb73l e7hens93"
     >
       <div
-        class="css-zxc9jp"
+        class="css-kpaq8o e7hens94"
       >
         <svg
           viewBox="0,0,200,200"
@@ -3876,8 +3867,7 @@ exports[`Registration Form should render OnlyRequired 1`] = `
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1wgip5b-MuiButtonBase-root-MuiButton-root-RegistrationForm"
       tabindex="0"
       type="submit"
     >
@@ -4090,7 +4080,7 @@ exports[`Registration Form should render OnlyRequiredInvalid 1`] = `
         </div>
       </div>
       <div
-        class="css-qxt11j"
+        class="css-szb73l e7hens93"
       >
 @@ -142,22 +156,23 @@
         </div>
@@ -4134,17 +4124,17 @@ exports[`Registration Form should render OnlyRequiredInvalid 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-        css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop).""
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1wgip5b-MuiButtonBase-root-MuiButton-root-RegistrationForm"
+        tabindex="0""
 `;
 
 exports[`Registration Form should render WithChallengeError 1`] = `
 <DocumentFragment>
   <form
-    class="css-1thzeso"
+    class="css-13dpkcn e7hens90"
   >
     <div
-      class="css-axdzh1"
+      class="css-1yctfwl e7hens91"
     >
       <div
         class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -4321,11 +4311,10 @@ exports[`Registration Form should render WithChallengeError 1`] = `
         </div>
       </div>
       <div
-        class="css-1n9t5th"
+        class="css-dayqlo e7hens92"
       >
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-          css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-10b0ed7-MuiFormControl-root-MuiTextField-root"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -4496,8 +4485,7 @@ exports[`Registration Form should render WithChallengeError 1`] = `
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1wgip5b-MuiButtonBase-root-MuiButton-root-RegistrationForm"
       tabindex="0"
       type="submit"
     >
@@ -4513,10 +4501,10 @@ exports[`Registration Form should render WithChallengeError 1`] = `
 exports[`Registration Form should render WithChallengeLoading 1`] = `
 <DocumentFragment>
   <form
-    class="css-1thzeso"
+    class="css-13dpkcn e7hens90"
   >
     <div
-      class="css-axdzh1"
+      class="css-1yctfwl e7hens91"
     >
       <div
         class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -4693,11 +4681,10 @@ exports[`Registration Form should render WithChallengeLoading 1`] = `
         </div>
       </div>
       <div
-        class="css-1n9t5th"
+        class="css-dayqlo e7hens92"
       >
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-          css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-10b0ed7-MuiFormControl-root-MuiTextField-root"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -4843,8 +4830,7 @@ exports[`Registration Form should render WithChallengeLoading 1`] = `
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1wgip5b-MuiButtonBase-root-MuiButton-root-RegistrationForm"
       disabled=""
       tabindex="-1"
       type="submit"
@@ -4978,7 +4964,7 @@ exports[`Registration Form should render WithCustomValidation 1`] = `
         </div>
       </div>
       <div
-        class="css-qxt11j"
+        class="css-szb73l e7hens93"
       >
 @@ -208,22 +229,23 @@
         </div>
@@ -5022,17 +5008,17 @@ exports[`Registration Form should render WithCustomValidation 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-        css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop).""
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1wgip5b-MuiButtonBase-root-MuiButton-root-RegistrationForm"
+        tabindex="0""
 `;
 
 exports[`Registration Form should render WithRegisterError 1`] = `
 <DocumentFragment>
   <form
-    class="css-1thzeso"
+    class="css-13dpkcn e7hens90"
   >
     <div
-      class="css-axdzh1"
+      class="css-1yctfwl e7hens91"
     >
       <div
         class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -5209,11 +5195,10 @@ exports[`Registration Form should render WithRegisterError 1`] = `
         </div>
       </div>
       <div
-        class="css-1n9t5th"
+        class="css-dayqlo e7hens92"
       >
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-          css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-10b0ed7-MuiFormControl-root-MuiTextField-root"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -5359,10 +5344,10 @@ exports[`Registration Form should render WithRegisterError 1`] = `
       </div>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-szb73l e7hens93"
     >
       <div
-        class="css-zxc9jp"
+        class="css-kpaq8o e7hens94"
       >
         <svg
           viewBox="0,0,200,200"
@@ -5483,8 +5468,7 @@ exports[`Registration Form should render WithRegisterError 1`] = `
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1wgip5b-MuiButtonBase-root-MuiButton-root-RegistrationForm"
       tabindex="0"
       type="submit"
     >
@@ -5500,10 +5484,10 @@ exports[`Registration Form should render WithRegisterError 1`] = `
 exports[`Registration Form should render WithRegisterLoading 1`] = `
 <DocumentFragment>
   <form
-    class="css-1thzeso"
+    class="css-13dpkcn e7hens90"
   >
     <div
-      class="css-axdzh1"
+      class="css-1yctfwl e7hens91"
     >
       <div
         class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -5680,11 +5664,10 @@ exports[`Registration Form should render WithRegisterLoading 1`] = `
         </div>
       </div>
       <div
-        class="css-1n9t5th"
+        class="css-dayqlo e7hens92"
       >
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-          css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-10b0ed7-MuiFormControl-root-MuiTextField-root"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -5830,10 +5813,10 @@ exports[`Registration Form should render WithRegisterLoading 1`] = `
       </div>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-szb73l e7hens93"
     >
       <div
-        class="css-zxc9jp"
+        class="css-kpaq8o e7hens94"
       >
         <svg
           viewBox="0,0,200,200"
@@ -5929,8 +5912,7 @@ exports[`Registration Form should render WithRegisterLoading 1`] = `
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1wgip5b-MuiButtonBase-root-MuiButton-root-RegistrationForm"
       disabled=""
       tabindex="-1"
       type="submit"
