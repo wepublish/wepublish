@@ -110,30 +110,50 @@ export type ImportedEventsDocument = {
 
 export type Mutation = {
   __typename?: 'Mutation'
-  /** Create a new consent. */
+  /**
+   *
+   *       Create a new consent.
+   *
+   */
   createConsent: Consent
   /**
-   * Creates and event based on data from importable events list and an id and provider.
-   * Also, uploads an image to WePublish Image library.
+   *
+   *       Creates and event based on data from importable events list and an id and provider.
+   *       Also, uploads an image to WePublish Image library.
+   *
    */
   createEvent: Scalars['String']
   /**
-   * Creates a new userConsent based on input.
-   * Returns created userConsent.
+   *
+   *       Creates a new userConsent based on input.
+   *       Returns created userConsent.
+   *
    */
   createUserConsent: UserConsent
-  /** Deletes an existing consent. */
+  /**
+   *
+   *       Deletes an existing consent.
+   *
+   */
   deleteConsent: Consent
   /**
-   * Delete an existing userConsent by id.
-   * Returns deleted userConsent.
+   *
+   *       Delete an existing userConsent by id.
+   *       Returns deleted userConsent.
+   *
    */
   deleteUserConsent: UserConsent
-  /** Updates an existing consent. */
+  /**
+   *
+   *       Updates an existing consent.
+   *
+   */
   updateConsent: Consent
   /**
-   * Updates an existing userConsent based on input.
-   * Returns updated userConsent.
+   *
+   *       Updates an existing userConsent based on input.
+   *       Returns updated userConsent.
+   *
    */
   updateUserConsent: UserConsent
 }
@@ -186,45 +206,87 @@ export enum PaymentPeriodicity {
 export type Query = {
   __typename?: 'Query'
   /**
-   * Returns all active subscribers.
-   * Includes subscribers with a cancelled but not run out subscription.
+   *
+   *       Returns all active subscribers.
+   *       Includes subscribers with a cancelled but not run out subscription.
+   *
    */
   activeSubscribers: Array<DashboardSubscription>
-  /** Returns a consent by id. */
+  /**
+   *
+   *       Returns a consent by id.
+   *
+   */
   consent: Consent
-  /** Returns all consents. */
+  /**
+   *
+   *       Returns all consents.
+   *
+   */
   consents: Array<Consent>
   /**
-   * Returns the expected revenue for the time period given.
-   * Excludes cancelled or manually set as paid invoices.
+   *
+   *       Returns the expected revenue for the time period given.
+   *       Excludes cancelled or manually set as paid invoices.
+   *
    */
   expectedRevenue: Array<DashboardInvoice>
-  /** Returns a more detailed version of a single importable event, by id and source (e.g. AgendaBasel). */
+  /**
+   *
+   *       Returns a more detailed version of a single importable event, by id and source (e.g. AgendaBasel).
+   *
+   */
   importedEvent: Event
-  /** Returns a list of imported events from external sources, transformed to match our model. */
+  /**
+   *
+   *       Returns a list of imported events from external sources, transformed to match our model.
+   *
+   */
   importedEvents: ImportedEventsDocument
-  /** Returns a list of external source ids of already imported events. */
+  /**
+   *
+   *       Returns a list of external source ids of already imported events.
+   *
+   */
   importedEventsIds: Array<Scalars['String']>
   /**
-   * Returns all new deactivations in a given timeframe.
-   * This considers the time the deactivation was made, not when the subscription runs out.
+   *
+   *       Returns all new deactivations in a given timeframe.
+   *       This considers the time the deactivation was made, not when the subscription runs out.
+   *
    */
   newDeactivations: Array<DashboardSubscription>
   /**
-   * Returns all new subscribers in a given timeframe.
-   * Includes already deactivated ones.
+   *
+   *       Returns all new subscribers in a given timeframe.
+   *       Includes already deactivated ones.
+   *
    */
   newSubscribers: Array<DashboardSubscription>
-  /** Returns all renewing subscribers in a given timeframe. */
+  /**
+   *
+   *       Returns all renewing subscribers in a given timeframe.
+   *
+   */
   renewingSubscribers: Array<DashboardSubscription>
   /**
-   * Returns the revenue generated for the time period given.
-   * Only includes paid invoices that have not been manually paid.
+   *
+   *       Returns the revenue generated for the time period given.
+   *       Only includes paid invoices that have not been manually paid.
+   *
    */
   revenue: Array<DashboardInvoice>
-  /** Returns a single userConsent by id. */
+  /**
+   *
+   *       Returns a single userConsent by id.
+   *
+   */
   userConsent: UserConsent
-  /** Returns a list of userConsents. Possible to filter. */
+  /**
+   *
+   *       Returns a list of userConsents. Possible to filter.
+   *
+   */
   userConsents: Array<UserConsent>
   versionInformation: VersionInformation
 }

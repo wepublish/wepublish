@@ -79,7 +79,9 @@ const onDOMContentLoaded = async () => {
     if (graphQLErrors) {
       graphQLErrors.forEach(({/* message, locations, path, */ extensions}) => {
         if (
-          ['UNAUTHENTICATED', 'TOKEN_EXPIRED'].includes(extensions?.code) &&
+          ['UNAUTHENTICATED', 'TOKEN_EXPIRED'].includes(
+            (extensions?.code as string | undefined) ?? ''
+          ) &&
           !(
             window.location.pathname.includes('/logout') ||
             window.location.pathname.includes('/login')
