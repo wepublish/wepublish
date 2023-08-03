@@ -29,7 +29,8 @@ export const createAdminUser = async (
   input: CreateUserInput,
   authenticate: Context['authenticate'],
   hashCostFactor: Context['hashCostFactor'],
-  user: PrismaClient['user']
+  prisma: PrismaClient,
+  mailContext: Context['mailContext']
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateUser, roles)
@@ -37,13 +38,13 @@ export const createAdminUser = async (
   input.email = input.email ? (input.email as string).toLowerCase() : input.email
   await Validator.createUser().parse(input)
 
-  const userExists = await user.findUnique({
+  const userExists = await prisma.user.findUnique({
     where: {email: input.email}
   })
 
   if (userExists) throw new EmailAlreadyInUseError()
 
-  return createUser(input, hashCostFactor, user)
+  return createUser(input, hashCostFactor, prisma, mailContext)
 }
 
 type UpdateUserInput = Prisma.UserUncheckedUpdateInput & {

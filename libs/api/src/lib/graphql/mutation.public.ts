@@ -231,22 +231,14 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             password
           },
           hashCostFactor,
-          prisma.user
+          prisma,
+          mailContext
         )
 
         if (!user) {
           logger('mutation.public').error('Could not create new user for email "%s"', email)
           throw new InternalError()
         }
-
-        // send registration mail
-        const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.ACCOUNT_CREATION)
-        await mailContext.sendMail({
-          externalMailTemplateId: remoteTemplate,
-          recipient: user,
-          optionalData: {},
-          mailType: mailLogType.UserFlow
-        })
 
         const session = await createUserSession(user, sessionTTL, prisma.session, prisma.userRole)
 
@@ -312,7 +304,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           loaders,
           memberContext,
           challenge,
-          createPaymentWithProvider
+          createPaymentWithProvider,
+          mailContext
         }
       ) {
         email = email.toLowerCase()
@@ -377,7 +370,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             password
           },
           hashCostFactor,
-          prisma.user
+          prisma,
+          mailContext
         )
 
         if (!user) {

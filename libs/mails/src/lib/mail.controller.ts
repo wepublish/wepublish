@@ -63,18 +63,20 @@ export class MailController {
    * @returns a HashMap of configuration data
    */
   private buildData() {
-    this.config.recipient.password = 'hidden'
-    this.config.recipient.roleIDs = ['hidden']
+    // avoid unwanted data mutation by reference
+    const recipient = JSON.parse(JSON.stringify(this.config.recipient))
+    recipient.password = 'hidden'
+    recipient.roleIDs = ['hidden']
 
     if (!process.env['JWT_SECRET_KEY']) throw new Error('No JWT_SECRET_KEY defined in environment.')
 
     return {
-      user: this.config.recipient,
+      user: recipient,
       optional: this.config.optionalData,
       jwt: generateJWT({
         issuer: 'mailer',
         audience: 'audience',
-        id: this.config.recipient.id,
+        id: recipient.id,
         expiresInMinutes: ONE_WEEK_IN_MINUTES,
         secret: process.env['JWT_SECRET_KEY']
       })

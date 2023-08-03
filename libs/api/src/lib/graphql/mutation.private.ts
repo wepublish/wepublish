@@ -459,8 +459,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         input: {type: GraphQLNonNull(GraphQLUserInput)},
         password: {type: GraphQLNonNull(GraphQLString)}
       },
-      resolve: (root, {input, password}, {hashCostFactor, authenticate, prisma: {user}}) =>
-        createAdminUser({...input, password}, authenticate, hashCostFactor, user)
+      resolve: (root, {input, password}, {hashCostFactor, authenticate, prisma, mailContext}) =>
+        createAdminUser({...input, password}, authenticate, hashCostFactor, prisma, mailContext)
     },
 
     updateUser: {
