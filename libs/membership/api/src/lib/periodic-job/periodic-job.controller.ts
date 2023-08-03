@@ -128,10 +128,15 @@ export class PeriodicJobController {
               date.getTimezoneOffset()
             )
           }
-        }))
+        })),
+        // Don't send custom mails for deactivated subscriptions
+        deactivation: {
+          is: null
+        }
       },
       include: {
-        user: true
+        user: true,
+        deactivation: true
       }
     })
     for (const subscriptionsWithEvent of subscriptionsWithEvents) {
