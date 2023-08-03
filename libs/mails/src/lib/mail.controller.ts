@@ -74,7 +74,7 @@ export class MailController {
       jwt: generateJWT({
         issuer: 'mailer',
         audience: 'audience',
-        id: this.generateMailIdentifier(),
+        id: this.config.recipient.id,
         expiresInMinutes: ONE_WEEK_IN_MINUTES,
         secret: process.env['JWT_SECRET_KEY']
       })
