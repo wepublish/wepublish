@@ -5,12 +5,23 @@ import {
   HtmlBlock,
   ImageBlock,
   ImageGalleryBlock,
-  ListicleBlock,
   PollBlock,
   QuoteBlock,
   RichTextBlock,
   Teaser,
   TeaserGridBlock,
+  TwitterTweetBlock,
+  FacebookPostBlock,
+  FacebookVideoBlock,
+  InstagramPostBlock,
+  VimeoVideoBlock,
+  YouTubeVideoBlock,
+  SoundCloudTrackBlock,
+  PolisConversationBlock,
+  TikTokVideoBlock,
+  BildwurfAdBlock,
+  EmbedBlock,
+  ListicleBlock,
   TeaserGridFlexBlock,
   TitleBlock
 } from '@wepublish/website/api'
@@ -23,6 +34,17 @@ export type BuilderQuoteBlockProps = QuoteBlock & {className?: string}
 export type BuilderEventBlockProps = EventBlock & {className?: string}
 export type BuilderRichTextBlockProps = RichTextBlock & {className?: string}
 export type BuilderHTMLBlockProps = HtmlBlock & {className?: string}
+export type BuilderFacebookPostBlockProps = FacebookPostBlock & {className?: string}
+export type BuilderFacebookVideoBlockProps = FacebookVideoBlock & {className?: string}
+export type BuilderInstagramPostBlockProps = InstagramPostBlock & {className?: string}
+export type BuilderTwitterTweetBlockProps = TwitterTweetBlock & {className?: string}
+export type BuilderVimeoVideoBlockProps = VimeoVideoBlock & {className?: string}
+export type BuilderYouTubeVideoBlockProps = YouTubeVideoBlock & {className?: string}
+export type BuilderSoundCloudTrackBlockProps = SoundCloudTrackBlock & {className?: string}
+export type BuilderPolisConversationBlockProps = PolisConversationBlock & {className?: string}
+export type BuilderTikTokVideoBlockProps = TikTokVideoBlock & {className?: string}
+export type BuilderBildwurfAdBlockProps = BildwurfAdBlock & {className?: string}
+export type BuilderEmbedBlockProps = EmbedBlock & {className?: string}
 export type BuilderPollBlockProps = PollBlock & {className?: string}
 export type BuilderListicleBlockProps = ListicleBlock & {className?: string}
 export type BuilderTeaserGridFlexBlockProps = TeaserGridFlexBlock & {

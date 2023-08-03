@@ -7,6 +7,16 @@ import {isRichTextBlock} from './richtext/richtext-block'
 import {isTeaserGridFlexBlock} from './teaser/teaser-grid-flex-block'
 import {isTitleBlock} from './title/title-block'
 import {cond} from 'ramda'
+import {isEmbedBlock} from './embed-block'
+import {isBildwurfAdBlock} from './bildwurf-ad-block'
+import {isFacebookPostBlock} from './facebook-post-block'
+import {isFacebookVideoBlock} from './facebook-video-block'
+import {isInstagramBlock} from './instagram-post-block'
+import {isSoundCloudTrackBlock} from './sound-cloud-block'
+import {isTikTokVideoBlock} from './tik-tok-video-block'
+import {isTwitterTweetBlock} from './twitter-tweet-block'
+import {isVimeoVideoBlock} from './vimeo-video-block'
+import {isYouTubeVideoBlock} from './youtube-video-block'
 import {isTeaserGridBlock} from './teaser/teaser-grid-block'
 import {isImageGalleryBlock} from './image-gallery/image-gallery-block'
 import {isPollBlock} from './poll/poll-block'
@@ -15,6 +25,19 @@ import {isEventBlock} from './event/event-block'
 
 export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
   const {blocks} = useWebsiteBuilder()
+
+  const embedCond = cond([
+    [isEmbedBlock, block => <blocks.Embed {...block} />],
+    [isBildwurfAdBlock, block => <blocks.BildwurfAd {...block} />],
+    [isFacebookPostBlock, block => <blocks.FacebookPost {...block} />],
+    [isFacebookVideoBlock, block => <blocks.FacebookVideo {...block} />],
+    [isInstagramBlock, block => <blocks.InstagramPost {...block} />],
+    [isSoundCloudTrackBlock, block => <blocks.SoundCloudTrack {...block} />],
+    [isTikTokVideoBlock, block => <blocks.TikTokVideo {...block} />],
+    [isTwitterTweetBlock, block => <blocks.TwitterTweet {...block} />],
+    [isVimeoVideoBlock, block => <blocks.VimeoVideo {...block} />],
+    [isYouTubeVideoBlock, block => <blocks.YouTubeVideo {...block} />]
+  ])
 
   const teaserCond = cond([
     [isTeaserGridFlexBlock, block => <blocks.TeaserGridFlex {...block} />],
@@ -27,6 +50,7 @@ export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
   ])
 
   return (
+    embedCond(block) ??
     teaserCond(block) ??
     imageCond(block) ??
     cond([

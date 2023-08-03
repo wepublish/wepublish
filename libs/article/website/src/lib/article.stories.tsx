@@ -191,6 +191,8 @@ const author = {
   slug: 'slug',
   name: 'Foobar',
   jobTitle: 'Editor',
+  createdAt: '2023-04-18T12:38:56.369Z',
+  modifiedAt: '2023-04-18T12:38:56.371Z',
   url: 'https://example.com',
   bio: [
     {

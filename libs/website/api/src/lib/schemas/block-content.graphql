@@ -35,6 +35,10 @@ fragment BlockWithoutTeaser on Block {
     html
   }
 
+  ... on BildwurfAdBlock {
+    zoneID
+  }
+
   ... on EventBlock {
     events {
       ...FullEvent
