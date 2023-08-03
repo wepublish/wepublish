@@ -156,6 +156,25 @@ export abstract class BasePaymentProvider implements PaymentProvider {
       throw new Error(`Invoice with ID ${payment.invoiceID} does not exist`)
     }
 
+    const subscription = await subscriptionClient.findUnique({
+      where: {
+        id: invoice.subscriptionID
+      },
+      include: {
+        periods: true
+      }
+    })
+
+    if (!subscription) {
+      throw new Error(`Subscription with ID ${invoice.subscriptionID} does not exist`)
+    }
+
+    const invoicePeriod = subscription.periods.find(period => period.invoiceID === invoice.id)
+
+    if (!invoicePeriod) {
+      throw new Error(`Invoice with ID ${invoice.id} has no period!`)
+    }
+
     // Mark invoice as paid
     if (intentState.state === PaymentState.paid) {
       await invoiceClient.update({
@@ -164,16 +183,13 @@ export abstract class BasePaymentProvider implements PaymentProvider {
           paidAt: new Date()
         }
       })
-    }
 
-    const subscription = await subscriptionClient.findUnique({
-      where: {
-        id: invoice.subscriptionID
-      }
-    })
-
-    if (!subscription) {
-      throw new Error(`Subscription with ID ${invoice.subscriptionID} does not exist`)
+      await subscriptionClient.update({
+        where: {id: invoice.subscriptionID},
+        data: {
+          paidUntil: invoicePeriod.endsAt
+        }
+      })
     }
 
     // update payment provider
