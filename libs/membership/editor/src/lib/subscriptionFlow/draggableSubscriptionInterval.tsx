@@ -11,6 +11,8 @@ import {useDraggable} from '@dnd-kit/core'
 import styled from '@emotion/styled'
 
 import {useAuthorisation} from '@wepublish/ui/editor'
+import {Tooltip} from '@mui/material'
+import {useTranslation} from 'react-i18next'
 
 const DraggableContainer = styled.div`
   margin: 3px;
@@ -38,6 +40,8 @@ export default function ({
   mailTemplates,
   subscriptionFlow
 }: DraggableSubscriptionIntervalProps) {
+  const {t} = useTranslation()
+
   // draggable
   const {attributes, listeners, setNodeRef, transform} = useDraggable({
     id: `draggable-${subscriptionInterval?.object?.id}`,
@@ -59,42 +63,45 @@ export default function ({
   }, [isCustom, transform])
 
   return (
-    <DraggableContainer
-      style={{
-        ...draggableStyle,
-        border: `3px solid ${subscriptionInterval?.color?.bg}`
-      }}>
-      {subscriptionInterval && !isCustom && (
-        <EventTagContainer>
-          {canUpdateSubscriptionFlow && (
+    <Tooltip title={t('draggableSubscriptionInterval.ignoreDeactivatedSubscriptions')}>
+      <DraggableContainer
+        style={{
+          ...draggableStyle,
+          border: `3px solid ${subscriptionInterval?.color?.bg}`
+        }}>
+        {subscriptionInterval && !isCustom && (
+          <EventTagContainer>
+            {canUpdateSubscriptionFlow && (
+              <div
+                style={{cursor: 'move', position: 'absolute', left: 0, top: 0}}
+                ref={setNodeRef}
+                {...listeners}
+                {...attributes}>
+                <MdDragIndicator color={subscriptionInterval.color.fg} size={20} />
+              </div>
+            )}
             <div
-              style={{cursor: 'move', position: 'absolute', left: 0, top: 0}}
-              ref={setNodeRef}
-              {...listeners}
-              {...attributes}>
-              <MdDragIndicator color={subscriptionInterval.color.fg} size={20} />
+              style={{
+                width: '100%',
+                backgroundColor: subscriptionInterval.color.bg,
+                color: subscriptionInterval.color.fg,
+                fontSize: '0.9em'
+              }}>
+              <span>{subscriptionInterval.icon}</span>
+              <br />
+              {subscriptionInterval.title}
             </div>
-          )}
-          <div
-            style={{
-              width: '100%',
-              backgroundColor: subscriptionInterval.color.bg,
-              color: subscriptionInterval.color.fg,
-              fontSize: '0.9em'
-            }}>
-            <span>{subscriptionInterval.icon}</span>
-            <br />
-            {subscriptionInterval.title}
-          </div>
-        </EventTagContainer>
-      )}
-      <MailTemplateSelect
-        mailTemplates={mailTemplates}
-        subscriptionInterval={subscriptionInterval}
-        subscriptionFlow={subscriptionFlow}
-        event={event || subscriptionInterval?.object?.event}
-        newDaysAwayFromEnding={newDaysAwayFromEnding}
-      />
-    </DraggableContainer>
+          </EventTagContainer>
+        )}
+
+        <MailTemplateSelect
+          mailTemplates={mailTemplates}
+          subscriptionInterval={subscriptionInterval}
+          subscriptionFlow={subscriptionFlow}
+          event={event || subscriptionInterval?.object?.event}
+          newDaysAwayFromEnding={newDaysAwayFromEnding}
+        />
+      </DraggableContainer>
+    </Tooltip>
   )
 }

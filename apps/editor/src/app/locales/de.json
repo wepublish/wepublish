@@ -1442,6 +1442,9 @@
       "placeholder": "Placeholder",
       "descriptionTitle": "Beschreibung",
       "example": "Beispiel im Template"
+    },
+    "draggableSubscriptionInterval": {
+      "ignoreDeactivatedSubscriptions": "Mails an deaktivierte Abos werden nicht verschickt!"
     }
   }
 }
