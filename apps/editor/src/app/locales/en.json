@@ -1522,6 +1522,9 @@
     },
     "draggableSubscriptionInterval": {
       "ignoreDeactivatedSubscriptions": "No mails will be sent to deactivated subscriptions!"
+    },
+    "resetUserPasswordForm": {
+      "sendMail": "Send mail to user (Registration System Mail)"
     }
   }
 }

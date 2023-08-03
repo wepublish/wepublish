@@ -1396,6 +1396,9 @@
     },
     "draggableSubscriptionInterval": {
       "ignoreDeactivatedSubscriptions": "Les e-mails destinés aux abonnements désactivés ne sont pas envoyés!"
+    },
+    "resetUserPasswordForm": {
+      "sendMail": "Envoyer un mail à l'utilisateur (Registration System Mail)"
     }
   }
 }

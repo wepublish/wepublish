@@ -3747,6 +3747,7 @@ export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typ
 export type ResetUserPasswordMutationVariables = Exact<{
   id: Scalars['ID'];
   password: Scalars['String'];
+  sendMail?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
@@ -8936,8 +8937,8 @@ export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutati
 export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
 export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
 export const ResetUserPasswordDocument = gql`
-    mutation ResetUserPassword($id: ID!, $password: String!) {
-  resetUserPassword(id: $id, password: $password) {
+    mutation ResetUserPassword($id: ID!, $password: String!, $sendMail: Boolean) {
+  resetUserPassword(id: $id, password: $password, sendMail: $sendMail) {
     ...FullUser
   }
 }
@@ -8959,6 +8960,7 @@ export type ResetUserPasswordMutationFn = Apollo.MutationFunction<ResetUserPassw
  *   variables: {
  *      id: // value for 'id'
  *      password: // value for 'password'
+ *      sendMail: // value for 'sendMail'
  *   },
  * });
  */
