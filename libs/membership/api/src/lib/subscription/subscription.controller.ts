@@ -398,39 +398,55 @@ export class SubscriptionController {
       }
     })
 
-    const intent = await paymentProvider.createIntent({
-      paymentID: payment.id,
-      invoice,
-      saveCustomer: false,
-      customerID: customer.customerID
-    })
+    try {
+      const intent = await paymentProvider.createIntent({
+        paymentID: payment.id,
+        invoice,
+        saveCustomer: false,
+        customerID: customer.customerID
+      })
 
-    await this.prismaService.payment.update({
-      where: {id: payment.id},
-      data: {
-        state: intent.state,
-        intentID: intent.intentID,
-        intentData: intent.intentData,
-        intentSecret: intent.intentSecret,
-        paymentData: intent.paymentData,
-        paymentMethodID: payment.paymentMethodID,
-        invoiceID: payment.invoiceID
-      }
-    })
+      await this.prismaService.payment.update({
+        where: {id: payment.id},
+        data: {
+          state: intent.state,
+          intentID: intent.intentID,
+          intentData: intent.intentData,
+          intentSecret: intent.intentSecret,
+          paymentData: intent.paymentData,
+          paymentMethodID: payment.paymentMethodID,
+          invoiceID: payment.invoiceID
+        }
+      })
 
-    if (intent.state === PaymentState.paid) {
-      const renewalSuccessAction = mailActions.find(
-        ma => ma.type === SubscriptionEvent.RENEWAL_SUCCESS
-      )
-      await this.markInvoiceAsPaid(invoice)
-      return {
-        action: renewalSuccessAction,
-        errorCode: ''
+      if (intent.state === PaymentState.paid) {
+        const renewalSuccessAction = mailActions.find(
+          ma => ma.type === SubscriptionEvent.RENEWAL_SUCCESS
+        )
+        await this.markInvoiceAsPaid(invoice)
+        return {
+          action: renewalSuccessAction,
+          errorCode: ''
+        }
+      } else {
+        return {
+          action: renewalFailedAction,
+          errorCode: 'user-action-required'
+        }
       }
-    } else {
+    } catch (e) {
+      await this.prismaService.payment.update({
+        where: {id: payment.id},
+        data: {
+          state: PaymentState.requiresUserAction,
+          paymentData: `${e}`,
+          paymentMethodID: payment.paymentMethodID,
+          invoiceID: payment.invoiceID
+        }
+      })
       return {
         action: renewalFailedAction,
-        errorCode: 'user-action-required'
+        errorCode: `${e}`
       }
     }
   }
