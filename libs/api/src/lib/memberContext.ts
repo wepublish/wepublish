@@ -677,7 +677,7 @@ export class MemberContext implements MemberContext {
       select: unselectPassword
     })
     if (!user) {
-      logger('events').warn(`User not found %s`, subscription.userID)
+      logger('MemberContext').warn(`User not found %s`, subscription.userID)
       return
     }
 
@@ -687,7 +687,11 @@ export class MemberContext implements MemberContext {
     )
 
     if (!remoteTemplate) {
-      logger('events').warn(`User not found %s`, subscription.userID)
+      logger('MemberContext').warn(
+        `RemoteTemplate <%s> for subscription <%s> not found!`,
+        subscriptionEvent,
+        subscription.id
+      )
       return
     }
 
