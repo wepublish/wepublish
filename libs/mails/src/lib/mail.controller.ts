@@ -9,7 +9,8 @@ const ONE_WEEK_IN_MINUTES = 7 * 24 * 60 * 60
 
 export enum mailLogType {
   SubscriptionFlow,
-  UserFlow
+  UserFlow,
+  SystemMail
 }
 
 export type MailControllerConfig = {
@@ -102,7 +103,7 @@ export class MailController {
       recipient: this.config.recipient.email,
       data: this.buildData()
     })
-    const log = await this.prismaService.mailLog.create({
+    await this.prismaService.mailLog.create({
       data: {
         id: mailLogId,
         recipient: {
