@@ -56,7 +56,7 @@ export const cancelSubscriptionById = async (
 
   return await memberContext.deactivateSubscription({
     subscription,
-    deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated
+    deactivationReason: reason
   })
 }
 
