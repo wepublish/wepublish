@@ -62,8 +62,8 @@ export class PeriodicJobController {
    * - deactivate overdue subscriptions
    * If any of the tasks fail, the entire job is marked as failed.
    */
-  public async execute() {
-    for (const periodicJobRunObject of await this.getOutstandingRuns()) {
+  public async execute(customRunDate: Date = new Date()) {
+    for (const periodicJobRunObject of await this.getOutstandingRuns(customRunDate)) {
       if (periodicJobRunObject.isRetry) {
         await this.retryFailedJob(periodicJobRunObject.date)
       } else {
@@ -406,8 +406,8 @@ export class PeriodicJobController {
    * - If there was an execution pause, it returns all runs between the last successful run and the current day.
    * @returns An array of pending runs.
    */
-  private async getOutstandingRuns(): Promise<PeriodicJobRunObject[]> {
-    const today = new Date()
+  private async getOutstandingRuns(customRunDate: Date): Promise<PeriodicJobRunObject[]> {
+    const today = customRunDate || new Date()
     const runDates: PeriodicJobRunObject[] = []
     const latestRun = await this.prismaService.periodicJob.findFirst({
       orderBy: {
