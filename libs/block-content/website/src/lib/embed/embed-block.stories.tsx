@@ -12,7 +12,7 @@ export const Default = {
     title: 'Title',
     width: 560,
     height: 314,
-    styleCustom: 'border: none; overflow: hidden;',
+    styleCustom: 'background: #aaa; padding: 50px;',
     sandbox: ''
   }
 }

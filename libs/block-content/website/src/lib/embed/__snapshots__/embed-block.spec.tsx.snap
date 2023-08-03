@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Embed Block should render Default 1`] = `
+<DocumentFragment>
+  <div
+    class="css-0 eiyieyx0"
+  >
+    <iframe
+      allowfullscreen=""
+      class="css-1mrtrln-EmbedBlock eiyieyx1"
+      sandbox=""
+      src="https://www.example.com"
+      title="Title"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Embed Block should render WithClassName 1`] = `
+<DocumentFragment>
+  <div
+    class="extra-classname css-0 eiyieyx0"
+  >
+    <iframe
+      allowfullscreen=""
+      class="css-1mrtrln-EmbedBlock eiyieyx1"
+      sandbox=""
+      src="https://www.example.com"
+      title="Title"
+    />
+  </div>
+</DocumentFragment>
+`;

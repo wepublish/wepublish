@@ -17,13 +17,15 @@ export const voteOnPoll = async (
   settingsClient: PrismaClient['setting']
 ) => {
   const session = optionalAuthenticateUser()
+
   // check if anonymous vote on poll is allowed
   const guestVotingSetting = await settingsClient.findUnique({
     where: {
       name: SettingName.ALLOW_GUEST_POLL_VOTING
     }
   })
-  if (!session && guestVotingSetting?.value !== true) {
+
+  if (!session && !guestVotingSetting?.value) {
     throw new AnonymousPollVotingDisabledError()
   }
 

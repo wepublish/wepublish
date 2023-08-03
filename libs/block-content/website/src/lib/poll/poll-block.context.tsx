@@ -8,22 +8,37 @@ import {
 } from '@wepublish/website/api'
 import {createContext, useContext} from 'react'
 
-export const PollBlockContext = createContext<
-  Partial<{
-    fetchUserVote: LazyQueryExecFunction<UserPollVoteQuery, UserPollVoteQueryVariables>
-    vote: (
-      options: MutationFunctionOptions<PollVoteMutation, PollVoteMutationVariables>
-    ) => Promise<FetchResult<PollVoteMutation>>
-  }>
->({})
+export type PollBlockContextProps = Partial<{
+  canVoteAnonymously: boolean
+  getAnonymousVote: (pollId: string) => string | null
+  fetchUserVote: LazyQueryExecFunction<UserPollVoteQuery, UserPollVoteQueryVariables>
+  vote: (
+    options: MutationFunctionOptions<PollVoteMutation, PollVoteMutationVariables>
+  ) => Promise<FetchResult<PollVoteMutation>>
+}>
+
+export const PollBlockContext = createContext<PollBlockContextProps>({})
 
 export const usePollBlock = () => {
   const {hasUser} = useUser()
-  const {fetchUserVote, vote} = useContext(PollBlockContext)
+  const {fetchUserVote, vote, canVoteAnonymously, getAnonymousVote} = useContext(PollBlockContext)
 
-  if (hasUser && (!fetchUserVote || !vote)) {
+  if (hasUser && !fetchUserVote) {
     throw new Error('PollBlockContext has not been fully provided.')
   }
 
-  return {fetchUserVote: fetchUserVote!, vote: vote!}
+  if (!hasUser && canVoteAnonymously && !getAnonymousVote) {
+    throw new Error('PollBlockContext has not been fully provided.')
+  }
+
+  if ((hasUser || canVoteAnonymously) && !vote) {
+    throw new Error('PollBlockContext has not been fully provided.')
+  }
+
+  return {
+    fetchUserVote: fetchUserVote!,
+    vote: vote!,
+    canVoteAnonymously,
+    getAnonymousVote: getAnonymousVote!
+  }
 }

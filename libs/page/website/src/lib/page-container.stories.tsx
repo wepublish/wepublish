@@ -517,7 +517,57 @@ const page = {
       __typename: 'LinkPageBreakBlock'
     },
     {
-      __typename: 'EmbedBlock'
+      __typename: 'EmbedBlock',
+      url: 'https://www.example.com',
+      title: 'Title',
+      width: 560,
+      height: 314,
+      styleCustom: '',
+      sandbox: ''
+    },
+    {
+      __typename: 'BildwurfAdBlock',
+      zoneID: '77348'
+    },
+    {
+      __typename: 'FacebookPostBlock',
+      userID: 'ladolcekita',
+      postID: 'pfbid02JcJeoMg7KasRL8dNjgRJJDFiU8YzeBzEeGeXtqpsE2bnTmeH2y6LRsu7RnmhkPxel'
+    },
+    {
+      __typename: 'FacebookVideoBlock',
+      userID: '100064959061177',
+      videoID: '1310370486335266'
+    },
+    {
+      __typename: 'InstagramPostBlock',
+      postID: 'CvACOxxIqT2'
+    },
+    {
+      __typename: 'PolisConversationBlock',
+      conversationID: '744469711'
+    },
+    {
+      __typename: 'SoundCloudTrackBlock',
+      trackID: '744469711'
+    },
+    {
+      __typename: 'TikTokVideoBlock',
+      userID: 'scout2015',
+      videoID: '6718335390845095173'
+    },
+    {
+      __typename: 'TwitterTweetBlock',
+      userID: 'WePublish_media',
+      tweetID: '1600079498845863937'
+    },
+    {
+      __typename: 'VimeoVideoBlock',
+      videoID: '104626862'
+    },
+    {
+      __typename: 'YouTubeVideoBlock',
+      videoID: 'CCOdQsZa15o'
     },
     {
       __typename: 'TeaserGridBlock',

@@ -82,11 +82,20 @@ const WithUserDecorator = (Story: ComponentType) => {
   )
 }
 
+type PollDecoratorProps = Partial<{
+  fetchUserVoteResult: Pick<UserPollVoteQueryResult, 'data' | 'error'>
+  voteResult: Pick<PollVoteMutationResult, 'data' | 'error'>
+  anonymousVoteResult: string
+  canVoteAnonymously: boolean
+}>
+
 const WithPollBlockDecorators =
-  (
-    fetchUserVoteResult?: Pick<UserPollVoteQueryResult, 'data' | 'error'>,
-    voteResult?: Pick<PollVoteMutationResult, 'data' | 'error'>
-  ) =>
+  ({
+    anonymousVoteResult,
+    canVoteAnonymously,
+    fetchUserVoteResult,
+    voteResult
+  }: PollDecoratorProps) =>
   (Story: ComponentType) => {
     const vote = async (args: unknown) => {
       action('vote')(args)
@@ -94,14 +103,26 @@ const WithPollBlockDecorators =
       return voteResult || {}
     }
 
-    const fetchUserVote = async (args: unknown) => {
+    const fetchUserVote = async (args: unknown): Promise<any> => {
       action('fetchUserVote')(args)
 
       return fetchUserVoteResult || {}
     }
 
+    const getAnonymousVote = (args: unknown): string | null => {
+      action('getAnonymousVote')(args)
+
+      return anonymousVoteResult ?? null
+    }
+
     return (
-      <PollBlockContext.Provider value={{vote, fetchUserVote} as any}>
+      <PollBlockContext.Provider
+        value={{
+          vote,
+          fetchUserVote,
+          canVoteAnonymously,
+          getAnonymousVote
+        }}>
         <Story />
       </PollBlockContext.Provider>
     )
@@ -110,7 +131,7 @@ const WithPollBlockDecorators =
 export default {
   component: PollBlock,
   title: 'Blocks/Poll',
-  decorators: [WithPollBlockDecorators()]
+  decorators: [WithPollBlockDecorators({})]
 } as Meta
 
 export const Default: StoryObj = {
@@ -119,43 +140,25 @@ export const Default: StoryObj = {
   }
 }
 
-export const Closed: StoryObj = {
-  ...Default,
-  args: {
-    ...Default.args,
-    poll: {
-      ...poll,
-      closedAt: poll.opensAt
-    }
-  },
-  decorators: [
-    WithUserDecorator,
-    WithPollBlockDecorators({
-      data: {
-        userPollVote: null
-      }
-    })
-  ]
-}
-
 export const Voting: StoryObj = {
   ...Default,
   decorators: [
     WithUserDecorator,
-    WithPollBlockDecorators(
-      {
+    WithPollBlockDecorators({
+      fetchUserVoteResult: {
         data: {
           userPollVote: null
         }
       },
-      {
+      voteResult: {
         data: {
           voteOnPoll: {
-            answerId: poll.answers[0].id
+            answerId: poll.answers[0].id,
+            pollId: poll.id
           }
         }
       }
-    )
+    })
   ]
 }
 
@@ -174,13 +177,71 @@ export const VotingPlay: StoryObj = {
   }
 }
 
+export const AnonymousVoting: StoryObj = {
+  ...Default,
+  decorators: [
+    WithUserDecorator,
+    WithPollBlockDecorators({
+      canVoteAnonymously: true,
+      anonymousVoteResult: undefined,
+      voteResult: {
+        data: {
+          voteOnPoll: {
+            answerId: poll.answers[0].id,
+            pollId: poll.id
+          }
+        }
+      }
+    })
+  ]
+}
+
+export const AnonymousVotingPlay: StoryObj = {
+  ...AnonymousVoting,
+  play: VotingPlay.play
+}
+
 export const AlreadyVoted: StoryObj = {
   ...Default,
   decorators: [
     WithUserDecorator,
     WithPollBlockDecorators({
-      data: {
-        userPollVote: poll.answers[1].id
+      fetchUserVoteResult: {
+        data: {
+          userPollVote: poll.answers[1].id
+        }
+      }
+    })
+  ]
+}
+
+export const AnonymousAlreadyVoted: StoryObj = {
+  ...Default,
+  decorators: [
+    WithUserDecorator,
+    WithPollBlockDecorators({
+      canVoteAnonymously: true,
+      anonymousVoteResult: poll.answers[1].id
+    })
+  ]
+}
+
+export const VotingClosed: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    poll: {
+      ...poll,
+      closedAt: poll.opensAt
+    }
+  },
+  decorators: [
+    WithUserDecorator,
+    WithPollBlockDecorators({
+      fetchUserVoteResult: {
+        data: {
+          userPollVote: null
+        }
       }
     })
   ]
@@ -190,20 +251,20 @@ export const WithError: StoryObj = {
   ...Default,
   decorators: [
     WithUserDecorator,
-    WithPollBlockDecorators(
-      {
+    WithPollBlockDecorators({
+      fetchUserVoteResult: {
         data: undefined,
         error: new ApolloError({
           errorMessage: 'Something went wrong with the user vote.'
         })
       },
-      {
+      voteResult: {
         data: undefined,
         error: new ApolloError({
           errorMessage: 'Something went wrong with the poll vote.'
         })
       }
-    )
+    })
   ],
   play: VotingPlay.play
 }
@@ -224,4 +285,8 @@ export const WithEmotion: StoryObj = {
       background-color: #eee;
     `
   }
+}
+
+export const WihtoutPoll: StoryObj = {
+  args: {}
 }
