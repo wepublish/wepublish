@@ -46,6 +46,7 @@ export interface CheckIntentProps {
 }
 
 export interface UpdateRemoteSubscriptionAmountProps {
+  newAmount: number
   subscription: Subscription & {properties: MetadataProperty[]}
 }
 

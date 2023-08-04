@@ -155,8 +155,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     if (!isPayrexxExt) {
       throw new Error(`Payrexx Subscription Id not found on subscription ${props.subscription.id}`)
     }
-    const amount =
-      props.subscription.monthlyAmount * getMonths(props.subscription.paymentPeriodicity)
+    const amount = props.newAmount * getMonths(props.subscription.paymentPeriodicity)
     await this.updateAmountUpstream(parseInt(isPayrexxExt.value, 10), amount.toString())
   }
 

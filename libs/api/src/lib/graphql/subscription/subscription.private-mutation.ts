@@ -9,6 +9,7 @@ import {Prisma, PrismaClient, SubscriptionDeactivationReason} from '@prisma/clie
 import {unselectPassword} from '@wepublish/user/api'
 import {MonthlyAmountNotEnough, NotFound, UserSubscriptionAlreadyDeactivated} from '../../error'
 import {MemberContext} from '../../memberContext'
+import {PaymentProvider} from '@wepublish/payments'
 
 export const deleteSubscriptionById = (
   id: string,
@@ -99,10 +100,30 @@ export const updateAdminSubscription = async (
   authenticate: Context['authenticate'],
   memberContext: Context['memberContext'],
   subscriptionClient: PrismaClient['subscription'],
-  userClient: PrismaClient['user']
+  userClient: PrismaClient['user'],
+  paymentProviders: PaymentProvider[]
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateSubscription, roles)
+
+  const originalSubscription = await subscriptionClient.findUnique({
+    where: {
+      id: id
+    },
+    include: {
+      properties: true
+    }
+  })
+  // Only update if amount has changed!
+  if (input.monthlyAmount && input.monthlyAmount !== originalSubscription.monthlyAmount) {
+    const paymentProvider = paymentProviders.find(
+      pp => pp.id === originalSubscription.paymentMethodID
+    )
+    await paymentProvider.updateRemoteSubscriptionAmount({
+      subscription: originalSubscription,
+      newAmount: parseInt(`${input.monthlyAmount}`, 10)
+    })
+  }
 
   const user = await userClient.findUnique({
     where: {
