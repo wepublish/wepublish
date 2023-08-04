@@ -117,8 +117,7 @@ export const handleRemoteManagedSubscription = async ({
     })
   } else if (input.autoRenew === false) {
     await paymentProvider.cancelRemoteSubscription({
-      subscription: originalSubscription,
-      reason: SubscriptionDeactivationReason.userSelfDeactivated
+      subscription: originalSubscription
     })
   } else {
     throw new Error(
