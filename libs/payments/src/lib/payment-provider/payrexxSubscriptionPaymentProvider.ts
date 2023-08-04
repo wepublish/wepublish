@@ -148,6 +148,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     this.instanceAPISecret = props.instanceAPISecret
     this.webhookSecret = props.webhookSecret
     this.remoteManagedSubscription = true
+    this.prisma = props.prisma
   }
 
   async updateRemoteSubscriptionAmount(props: UpdateRemoteSubscriptionAmountProps) {

@@ -533,8 +533,7 @@ export class MemberContext implements MemberContext {
       paymentProvider => paymentProvider.id === paymentProviderID
     )
     await paymentProvider.cancelRemoteSubscription({
-      subscription,
-      reason
+      subscription
     })
   }
 

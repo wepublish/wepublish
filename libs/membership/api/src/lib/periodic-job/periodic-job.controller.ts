@@ -291,7 +291,9 @@ export class PeriodicJobController {
       throw new Error('No subscription deactivation found!')
     }
 
-    const paymentProvider = this.payments.findById(unpaidInvoice.subscription.paymentMethodID)
+    const paymentProvider = await this.payments.findPaymentProviderByPaymentMethodeId(
+      unpaidInvoice.subscription.paymentMethodID
+    )
     if (paymentProvider) {
       const subscription = await this.prismaService.subscription.findUnique({
         where: {
@@ -303,7 +305,6 @@ export class PeriodicJobController {
       })
       if (subscription) {
         await paymentProvider.cancelRemoteSubscription({
-          reason: SubscriptionDeactivationReason.invoiceNotPaid,
           subscription
         })
       }
