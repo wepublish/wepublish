@@ -52,7 +52,6 @@ export interface UpdateRemoteSubscriptionAmountProps {
 
 export interface CancelRemoteSubscriptionProps {
   subscription: Subscription & {properties: MetadataProperty[]}
-  reason: SubscriptionDeactivationReason
 }
 
 export interface CreateRemoteInvoiceProps {
