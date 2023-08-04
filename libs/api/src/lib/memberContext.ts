@@ -527,7 +527,7 @@ export class MemberContext implements MemberContext {
     const {paymentProviderID} = await this.getPaymentMethodByIDOrSlug(
       this.loaders,
       undefined,
-      subscriptionId
+      subscription.paymentMethodID
     )
     const paymentProvider = this.paymentProviders.find(
       paymentProvider => paymentProvider.id === paymentProviderID
