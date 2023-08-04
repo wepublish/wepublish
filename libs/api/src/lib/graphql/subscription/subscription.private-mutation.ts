@@ -158,9 +158,14 @@ export const updateAdminSubscription = async (
       properties: true
     }
   })
-  // handle Payrexx Subscription Provider
+  // handle remote managed subscriptions (Payrexx Subscription)
+  const {paymentProviderID} = await memberContext.getPaymentMethodByIDOrSlug(
+    memberContext.loaders,
+    undefined,
+    originalSubscription.paymentMethodID
+  )
   const paymentProvider = paymentProviders.find(
-    pp => pp.id === originalSubscription.paymentMethodID
+    paymentProvider => paymentProvider.id === paymentProviderID
   )
   if (paymentProvider.remoteManagedSubscription) {
     await handleRemoteManagedSubscription({
