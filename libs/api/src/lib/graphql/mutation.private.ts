@@ -515,14 +515,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLSubscriptionInput)}
       },
-      resolve: (root, {id, input}, {authenticate, prisma, memberContext}) =>
+      resolve: (root, {id, input}, {authenticate, prisma, memberContext, paymentProviders}) =>
         updateAdminSubscription(
           id,
           input,
           authenticate,
           memberContext,
           prisma.subscription,
-          prisma.user
+          prisma.user,
+          paymentProviders
         )
     },
 

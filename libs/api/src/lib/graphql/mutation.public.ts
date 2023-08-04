@@ -775,7 +775,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       resolve: (
         root,
         {id, input},
-        {authenticateUser, prisma: {subscription}, loaders, memberContext}
+        {authenticateUser, prisma: {subscription}, loaders, memberContext, paymentProviders}
       ) =>
         updatePublicSubscription(
           id,
@@ -784,7 +784,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           memberContext,
           loaders.activeMemberPlansByID,
           loaders.activePaymentMethodsByID,
-          subscription
+          subscription,
+          paymentProviders
         )
     },
 

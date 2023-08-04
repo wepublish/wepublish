@@ -1,6 +1,7 @@
 import {Context} from '../../context'
 import {PaymentPeriodicity, Prisma, PrismaClient} from '@prisma/client'
 import {MonthlyAmountNotEnough, NotFound, PaymentConfigurationNotAllowed} from '../../error'
+import {PaymentProvider} from '@wepublish/payments'
 
 export const updatePublicSubscription = async (
   id: string,
@@ -12,13 +13,15 @@ export const updatePublicSubscription = async (
   memberContext: Context['memberContext'],
   activeMemberPlansByID: Context['loaders']['activeMemberPlansByID'],
   activePaymentMethodsByID: Context['loaders']['activePaymentMethodsByID'],
-  subscriptionClient: PrismaClient['subscription']
+  subscriptionClient: PrismaClient['subscription'],
+  paymentProviders: PaymentProvider[]
 ) => {
   const {user} = authenticateUser()
 
   const subscription = await subscriptionClient.findUnique({
     where: {id},
     include: {
+      properties: true,
       deactivation: true
     }
   })
@@ -49,6 +52,15 @@ export const updatePublicSubscription = async (
     })
   ) {
     throw new PaymentConfigurationNotAllowed()
+  }
+
+  // Only update if amount has changed!
+  if (input.monthlyAmount && input.monthlyAmount !== subscription.monthlyAmount) {
+    const paymentProvider = paymentProviders.find(pp => pp.id === subscription.paymentMethodID)
+    await paymentProvider.updateRemoteSubscriptionAmount({
+      subscription: subscription,
+      newAmount: parseInt(`${input.monthlyAmount}`, 10)
+    })
   }
 
   const updateSubscription = await subscriptionClient.update({
