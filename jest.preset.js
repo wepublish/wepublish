@@ -3,5 +3,9 @@ const nxPreset = require('@nx/jest/preset').default
 module.exports = {
   ...nxPreset,
   globalSetup: `${__dirname}/jest.setup.ts`,
-  setupFiles: [`${__dirname}/jest.setup-libraries.ts`]
+  setupFiles: [`${__dirname}/jest.setup-libraries.ts`],
+  coverageReporters: [...nxPreset.coverageReporters, 'text'],
+  reporters: ['default', ['github-actions', { silent: false }]],
+  watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname'],
+  transformIgnorePatterns: [`/node_modules/(?!react-tweet)`]
 }

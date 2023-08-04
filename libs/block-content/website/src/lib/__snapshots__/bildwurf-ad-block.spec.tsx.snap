@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Bildwurf Ad Block should render Default 1`] = `
+<DocumentFragment>
+  <script
+    data-testid="fake-script"
+    src="https://media.online.bildwurf.ch/js/code.min.js"
+  />
+  <div
+    class="css-0 ef7o3yi0"
+    id="bildwurf-injection-wrapper"
+  >
+    <ins
+      class="aso-zone"
+      data-zone="77348"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Bildwurf Ad Block should render WithClassName 1`] = `
+<DocumentFragment>
+  <script
+    data-testid="fake-script"
+    src="https://media.online.bildwurf.ch/js/code.min.js"
+  />
+  <div
+    class="extra-classname css-0 ef7o3yi0"
+    id="bildwurf-injection-wrapper"
+  >
+    <ins
+      class="aso-zone"
+      data-zone="77348"
+    />
+  </div>
+</DocumentFragment>
+`;

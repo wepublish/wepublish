@@ -1,23 +1,7 @@
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {BuilderRenderElementProps} from '@wepublish/website/builder'
 import {Link} from '@mui/material'
-
-export enum BlockFormat {
-  H1 = 'heading-one',
-  H2 = 'heading-two',
-  H3 = 'heading-three',
-  Paragraph = 'paragraph',
-  UnorderedList = 'unordered-list',
-  OrderedList = 'ordered-list',
-  ListItem = 'list-item',
-  Table = 'table',
-  TableRow = 'table-row',
-  TableCell = 'table-cell'
-}
-
-export enum InlineFormat {
-  Link = 'link'
-}
+import {BlockFormat, InlineFormat} from '@wepublish/richtext'
 
 export function RenderElement({
   attributes,

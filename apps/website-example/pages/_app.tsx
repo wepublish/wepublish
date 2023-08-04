@@ -104,6 +104,11 @@ function CustomApp({Component, pageProps}: AppProps) {
             <Head>
               <title>We.Publish</title>
 
+              {/* Feeds */}
+              <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
+              <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
+              <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+
               {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
               <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
               <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />

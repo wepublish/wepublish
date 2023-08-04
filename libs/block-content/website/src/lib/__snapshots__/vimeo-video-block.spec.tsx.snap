@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Vimeo Video Block should render Default 1`] = `
+<DocumentFragment>
+  <div
+    class="css-0 e1rtj5rq0"
+  >
+    <div
+      class="css-zqjcpl e1rtj5rq1"
+      style="width: auto; height: auto;"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Vimeo Video Block should render WithClassName 1`] = `
+<DocumentFragment>
+  <div
+    class="extra-classname css-0 e1rtj5rq0"
+  >
+    <div
+      class="css-zqjcpl e1rtj5rq1"
+      style="width: auto; height: auto;"
+    >
+      <div
+        style="width: 100%; height: 100%; overflow: hidden;"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;

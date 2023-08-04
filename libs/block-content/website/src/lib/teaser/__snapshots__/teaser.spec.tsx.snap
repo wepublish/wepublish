@@ -1,0 +1,1263 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Teaser Article should render Default 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            Pre Title:  Title
+          </h1>
+        </header>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Article should render WithShowLead 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            Pre Title:  Title
+          </h1>
+        </header>
+        <p
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Lead
+        </p>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Article should render WithoutImage 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            Pre Title:  Title
+          </h1>
+        </header>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            Pre Title:  Title
+          </h1>
+        </header>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Article should render WithoutLead 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            Pre Title:  Title
+          </h1>
+        </header>
+        <p
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Lead from block
+        </p>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Article should render WithoutLeadWithoutBlock 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            Pre Title:  Title
+          </h1>
+        </header>
+        <p
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Lead on the article
+        </p>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Article should render WithoutPreTitle 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            Pre Title on the article:  Title
+          </h1>
+        </header>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Article should render WithoutTitle 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            Pre Title:  Title from block
+          </h1>
+        </header>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Custom should render Default 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            preTitle:  Teambesprechung vom 23.05.
+          </h1>
+        </header>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Custom should render WithShowLead 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            preTitle:  Teambesprechung vom 23.05.
+          </h1>
+        </header>
+        <p
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Lead
+        </p>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Custom should render WithoutImage 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            preTitle:  Teambesprechung vom 23.05.
+          </h1>
+        </header>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Custom should render WithoutLead 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            preTitle:  Teambesprechung vom 23.05.
+          </h1>
+        </header>
+        <p
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        />
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Custom should render WithoutPreTitle 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+             Teambesprechung vom 23.05.
+          </h1>
+        </header>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Custom should render WithoutTitle 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            preTitle:  
+          </h1>
+        </header>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Page should render Default 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            Pre Title:  Title
+          </h1>
+        </header>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Page should render WithShowLead 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            Pre Title:  Title
+          </h1>
+        </header>
+        <p
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Lead
+        </p>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Page should render WithoutImage 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            Pre Title:  Title
+          </h1>
+        </header>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            Pre Title:  Title
+          </h1>
+        </header>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Page should render WithoutLead 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            Pre Title:  Title
+          </h1>
+        </header>
+        <p
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Lead from block
+        </p>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Page should render WithoutLeadWithoutBlock 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            Pre Title:  Title
+          </h1>
+        </header>
+        <p
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Description on the page
+        </p>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Page should render WithoutPreTitle 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+             Title
+          </h1>
+        </header>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser Page should render WithoutTitle 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            Pre Title:  Title from block
+          </h1>
+        </header>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser should render WithClassName 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="extra-classname css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            preTitle:  Teambesprechung vom 23.05.
+          </h1>
+        </header>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`Teaser should render WithEmotion 1`] = `
+<DocumentFragment>
+  <article
+    class="css-1c7yv3i e58tik10"
+    x="0"
+    y="0"
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+      href="https://example.com"
+    >
+      <div
+        class="css-16lxa1r e58tik11"
+      >
+        <img
+<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
+          alt="Dicta itaque nisi mollitia voluptate."
+          class="css-1qnf57e"
+          height="500"
+          srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
+https://picsum.photos/seed/dkVOrEU/500/300 500w,
+https://picsum.photos/seed/3ZbG2/300/200 300w,
+https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
+          title="aliquid deleniti quisquam"
+          width="1000"
+=======
+          alt="An image description"
+          class="css-1opieq8-Teaser e1nfkf2e0"
+          height="500"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title="An image title"
+          width="500"
+>>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
+        />
+        <header
+          class="css-0 e58tik12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            preTitle:  Teambesprechung vom 23.05.
+          </h1>
+        </header>
+      </div>
+    </a>
+  </article>
+</DocumentFragment>
+`;

@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TikTok Video Block should render Default 1`] = `
+<DocumentFragment>
+  <div
+    class="css-0 e1xa1s7c0"
+  >
+    <div
+      class="css-1uxsiyp e1xa1s7c1"
+    >
+      <iframe
+        allow="encrypted-media;"
+        allowfullscreen=""
+        height="100%"
+        id=":r0:"
+        src="https://www.tiktok.com/embed/v2/6718335390845095173"
+        title="tik-tok-video-block"
+        width="100%"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`TikTok Video Block should render WithClassName 1`] = `
+<DocumentFragment>
+  <div
+    class="extra-classname css-0 e1xa1s7c0"
+  >
+    <div
+      class="css-1uxsiyp e1xa1s7c1"
+    >
+      <iframe
+        allow="encrypted-media;"
+        allowfullscreen=""
+        height="100%"
+        id=":r1:"
+        src="https://www.tiktok.com/embed/v2/6718335390845095173"
+        title="tik-tok-video-block"
+        width="100%"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
