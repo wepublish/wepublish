@@ -1,7 +1,8 @@
 import {Context} from '../../context'
-import {PaymentPeriodicity, Prisma, PrismaClient} from '@prisma/client'
+import {PaymentPeriodicity, Prisma, PrismaClient, Subscription} from '@prisma/client'
 import {MonthlyAmountNotEnough, NotFound, PaymentConfigurationNotAllowed} from '../../error'
 import {PaymentProvider} from '@wepublish/payments'
+import {handleRemoteManagedSubscription} from './subscription.private-mutation'
 
 export const updatePublicSubscription = async (
   id: string,
@@ -54,19 +55,20 @@ export const updatePublicSubscription = async (
     throw new PaymentConfigurationNotAllowed()
   }
 
-  // Only update if amount has changed!
-  if (input.monthlyAmount && input.monthlyAmount !== subscription.monthlyAmount) {
-    const {paymentProviderID} = await memberContext.getPaymentMethodByIDOrSlug(
-      memberContext.loaders,
-      undefined,
-      subscription.paymentMethodID
-    )
-    const paymentProvider = paymentProviders.find(
-      paymentProvider => paymentProvider.id === paymentProviderID
-    )
-    await paymentProvider.updateRemoteSubscriptionAmount({
-      subscription: subscription,
-      newAmount: parseInt(`${input.monthlyAmount}`, 10)
+  // handle remote managed subscriptions (Payrexx Subscription)
+  const {paymentProviderID} = await memberContext.getPaymentMethodByIDOrSlug(
+    memberContext.loaders,
+    undefined,
+    subscription.paymentMethodID
+  )
+  const paymentProvider = paymentProviders.find(
+    paymentProvider => paymentProvider.id === paymentProviderID
+  )
+  if (paymentProvider.remoteManagedSubscription) {
+    await handleRemoteManagedSubscription({
+      paymentProvider,
+      originalSubscription: subscription,
+      input: input as Subscription
     })
   }
 

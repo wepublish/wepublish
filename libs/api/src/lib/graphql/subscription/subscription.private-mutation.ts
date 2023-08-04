@@ -5,9 +5,15 @@ import {
   CanCreateSubscription,
   CanDeleteSubscription
 } from '@wepublish/permissions/api'
-import {Prisma, PrismaClient, SubscriptionDeactivationReason} from '@prisma/client'
+import {
+  MetadataProperty,
+  Prisma,
+  PrismaClient,
+  Subscription,
+  SubscriptionDeactivationReason
+} from '@prisma/client'
 import {unselectPassword} from '@wepublish/user/api'
-import {MonthlyAmountNotEnough, NotFound, UserSubscriptionAlreadyDeactivated} from '../../error'
+import {NotFound, UserSubscriptionAlreadyDeactivated} from '../../error'
 import {MemberContext} from '../../memberContext'
 import {PaymentProvider} from '@wepublish/payments'
 
@@ -94,6 +100,33 @@ type UpdateSubscriptionInput = Prisma.SubscriptionUncheckedUpdateInput & {
   deactivation: Prisma.SubscriptionDeactivationCreateWithoutSubscriptionInput | null
 }
 
+export const handleRemoteManagedSubscription = async ({
+  paymentProvider,
+  input,
+  originalSubscription
+}: {
+  paymentProvider: PaymentProvider
+  input: Subscription
+  originalSubscription: Subscription & {properties: MetadataProperty[]}
+}) => {
+  // update amount is possible
+  if (input.monthlyAmount !== originalSubscription.monthlyAmount) {
+    await paymentProvider.updateRemoteSubscriptionAmount({
+      subscription: originalSubscription,
+      newAmount: parseInt(`${input.monthlyAmount}`, 10)
+    })
+  } else if (input.autoRenew === false) {
+    await paymentProvider.cancelRemoteSubscription({
+      subscription: originalSubscription,
+      reason: SubscriptionDeactivationReason.userSelfDeactivated
+    })
+  } else {
+    throw new Error(
+      `It is not possible to update the subscription with payment provider "${paymentProvider.name}".`
+    )
+  }
+}
+
 export const updateAdminSubscription = async (
   id: string,
   {properties, ...input}: UpdateSubscriptionInput,
@@ -114,19 +147,15 @@ export const updateAdminSubscription = async (
       properties: true
     }
   })
-  // Only update if amount has changed!
-  if (input.monthlyAmount && input.monthlyAmount !== originalSubscription.monthlyAmount) {
-    const {paymentProviderID} = await memberContext.getPaymentMethodByIDOrSlug(
-      memberContext.loaders,
-      undefined,
-      originalSubscription.paymentMethodID
-    )
-    const paymentProvider = paymentProviders.find(
-      paymentProvider => paymentProvider.id === paymentProviderID
-    )
-    await paymentProvider.updateRemoteSubscriptionAmount({
-      subscription: originalSubscription,
-      newAmount: parseInt(`${input.monthlyAmount}`, 10)
+  // handle Payrexx Subscription Provider
+  const paymentProvider = paymentProviders.find(
+    pp => pp.id === originalSubscription.paymentMethodID
+  )
+  if (paymentProvider.remoteManagedSubscription) {
+    await handleRemoteManagedSubscription({
+      paymentProvider,
+      input: input as Subscription,
+      originalSubscription
     })
   }
 
