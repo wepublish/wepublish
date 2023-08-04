@@ -111,12 +111,13 @@ export const handleRemoteManagedSubscription = async ({
 }) => {
   // not updatable subscription properties for externally managed subscriptions
   if (
-    input.paymentMethodID !== originalSubscription.paymentMethodID ||
-    input.userID !== originalSubscription.userID ||
-    input.memberPlanID !== originalSubscription.memberPlanID ||
-    input.paidUntil !== originalSubscription.paidUntil ||
-    input.paymentPeriodicity !== originalSubscription.paymentPeriodicity ||
-    input.startsAt !== originalSubscription.startsAt
+    (input.paymentMethodID && input.paymentMethodID !== originalSubscription.paymentMethodID) ||
+    (input.userID && input.userID !== originalSubscription.userID) ||
+    (input.memberPlanID && input.memberPlanID !== originalSubscription.memberPlanID) ||
+    (input.paidUntil && input.paidUntil !== originalSubscription.paidUntil) ||
+    (input.paymentPeriodicity &&
+      input.paymentPeriodicity !== originalSubscription.paymentPeriodicity) ||
+    (input.startsAt && input.startsAt !== originalSubscription.startsAt)
   ) {
     throw new Error(
       `It is not possible to update the subscription with payment provider "${paymentProvider.name}".`
