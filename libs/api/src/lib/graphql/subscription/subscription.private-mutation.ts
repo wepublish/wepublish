@@ -109,21 +109,32 @@ export const handleRemoteManagedSubscription = async ({
   input: Subscription
   originalSubscription: Subscription & {properties: MetadataProperty[]}
 }) => {
+  // not updatable subscription properties for externally managed subscriptions
+  if (
+    input.paymentMethodID !== originalSubscription.paymentMethodID ||
+    input.userID !== originalSubscription.userID ||
+    input.memberPlanID !== originalSubscription.memberPlanID ||
+    input.paidUntil !== originalSubscription.paidUntil ||
+    input.paymentPeriodicity !== originalSubscription.paymentPeriodicity ||
+    input.startsAt !== originalSubscription.startsAt
+  ) {
+    throw new Error(
+      `It is not possible to update the subscription with payment provider "${paymentProvider.name}".`
+    )
+  }
+
   // update amount is possible
   if (input.monthlyAmount !== originalSubscription.monthlyAmount) {
     await paymentProvider.updateRemoteSubscriptionAmount({
       subscription: originalSubscription,
       newAmount: parseInt(`${input.monthlyAmount}`, 10)
     })
-  } else if (input.autoRenew === false) {
+  }
+  if (input.autoRenew === false && originalSubscription.autoRenew === true) {
     await paymentProvider.cancelRemoteSubscription({
       subscription: originalSubscription,
       reason: SubscriptionDeactivationReason.userSelfDeactivated
     })
-  } else {
-    throw new Error(
-      `It is not possible to update the subscription with payment provider "${paymentProvider.name}".`
-    )
   }
 }
 
