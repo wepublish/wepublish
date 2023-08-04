@@ -103,11 +103,13 @@ type UpdateSubscriptionInput = Prisma.SubscriptionUncheckedUpdateInput & {
 export const handleRemoteManagedSubscription = async ({
   paymentProvider,
   input,
-  originalSubscription
+  originalSubscription,
+  memberContext
 }: {
   paymentProvider: PaymentProvider
   input: Subscription
   originalSubscription: Subscription & {properties: MetadataProperty[]}
+  memberContext: Context['memberContext']
 }) => {
   // not updatable subscription properties for externally managed subscriptions
   if (
@@ -132,8 +134,9 @@ export const handleRemoteManagedSubscription = async ({
     })
   }
   if (input.autoRenew === false && originalSubscription.autoRenew === true) {
-    await paymentProvider.cancelRemoteSubscription({
-      subscription: originalSubscription
+    await memberContext.deactivateSubscription({
+      subscription: originalSubscription,
+      deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated
     })
   }
 }
@@ -171,7 +174,8 @@ export const updateAdminSubscription = async (
     await handleRemoteManagedSubscription({
       paymentProvider,
       input: input as Subscription,
-      originalSubscription
+      originalSubscription,
+      memberContext
     })
   }
 

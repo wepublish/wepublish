@@ -68,7 +68,8 @@ export const updatePublicSubscription = async (
     await handleRemoteManagedSubscription({
       paymentProvider,
       originalSubscription: subscription,
-      input: input as Subscription
+      input: input as Subscription,
+      memberContext
     })
   }
 
