@@ -103,13 +103,11 @@ type UpdateSubscriptionInput = Prisma.SubscriptionUncheckedUpdateInput & {
 export const handleRemoteManagedSubscription = async ({
   paymentProvider,
   input,
-  originalSubscription,
-  memberContext
+  originalSubscription
 }: {
   paymentProvider: PaymentProvider
   input: Subscription
   originalSubscription: Subscription & {properties: MetadataProperty[]}
-  memberContext: Context['memberContext']
 }) => {
   // not updatable subscription properties for externally managed subscriptions
   if (
@@ -117,7 +115,8 @@ export const handleRemoteManagedSubscription = async ({
     (input.memberPlanID && input.memberPlanID !== originalSubscription.memberPlanID) ||
     (input.paidUntil && input.paidUntil !== originalSubscription.paidUntil) ||
     (input.paymentPeriodicity &&
-      input.paymentPeriodicity !== originalSubscription.paymentPeriodicity)
+      input.paymentPeriodicity !== originalSubscription.paymentPeriodicity) ||
+    (input?.autoRenew === false && originalSubscription.autoRenew === true)
   ) {
     throw new Error(
       `It is not possible to update the subscription with payment provider "${paymentProvider.name}".`
@@ -129,12 +128,6 @@ export const handleRemoteManagedSubscription = async ({
     await paymentProvider.updateRemoteSubscriptionAmount({
       subscription: originalSubscription,
       newAmount: parseInt(`${input.monthlyAmount}`, 10)
-    })
-  }
-  if (input.autoRenew === false && originalSubscription.autoRenew === true) {
-    await memberContext.deactivateSubscription({
-      subscription: originalSubscription,
-      deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated
     })
   }
 }
@@ -178,8 +171,7 @@ export const updateAdminSubscription = async (
     await handleRemoteManagedSubscription({
       paymentProvider,
       input: input as Subscription,
-      originalSubscription,
-      memberContext
+      originalSubscription
     })
   }
 
