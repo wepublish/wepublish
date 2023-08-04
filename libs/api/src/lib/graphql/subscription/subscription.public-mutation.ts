@@ -56,7 +56,14 @@ export const updatePublicSubscription = async (
 
   // Only update if amount has changed!
   if (input.monthlyAmount && input.monthlyAmount !== subscription.monthlyAmount) {
-    const paymentProvider = paymentProviders.find(pp => pp.id === subscription.paymentMethodID)
+    const {paymentProviderID} = await memberContext.getPaymentMethodByIDOrSlug(
+      memberContext.loaders,
+      undefined,
+      subscription.paymentMethodID
+    )
+    const paymentProvider = paymentProviders.find(
+      paymentProvider => paymentProvider.id === paymentProviderID
+    )
     await paymentProvider.updateRemoteSubscriptionAmount({
       subscription: subscription,
       newAmount: parseInt(`${input.monthlyAmount}`, 10)

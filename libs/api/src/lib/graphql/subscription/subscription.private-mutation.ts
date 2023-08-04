@@ -116,8 +116,13 @@ export const updateAdminSubscription = async (
   })
   // Only update if amount has changed!
   if (input.monthlyAmount && input.monthlyAmount !== originalSubscription.monthlyAmount) {
+    const {paymentProviderID} = await memberContext.getPaymentMethodByIDOrSlug(
+      memberContext.loaders,
+      undefined,
+      originalSubscription.paymentMethodID
+    )
     const paymentProvider = paymentProviders.find(
-      pp => pp.id === originalSubscription.paymentMethodID
+      paymentProvider => paymentProvider.id === paymentProviderID
     )
     await paymentProvider.updateRemoteSubscriptionAmount({
       subscription: originalSubscription,

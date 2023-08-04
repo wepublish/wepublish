@@ -167,28 +167,8 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       throw new Error(`Payrexx Subscription Id not found on subscription ${props.subscription.id}`)
     }
 
-    // Doing actual upstream cancelation
+    // Doing actual upstream cancellation
     await this.cancelSubscriptionUpstream(parseInt(isPayrexxExt.value, 10))
-
-    await this.prisma.subscription.update({
-      where: {
-        id: props.subscription.id
-      },
-      data: {
-        deactivation: {
-          upsert: {
-            create: {
-              date: new Date(),
-              reason: props.reason
-            },
-            update: {
-              date: new Date(),
-              reason: props.reason
-            }
-          }
-        }
-      }
-    })
   }
 
   async updatePaymentWithIntentState({
@@ -361,18 +341,22 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
         body: qs.stringify({...data, ApiSignature: signature})
       }
     )
-    if (res.status === 200) {
+    const resJSON = await res.json()
+    if (res.status === 200 && resJSON.status === 'success') {
       logger('payrexxSubscriptionPaymentProvider').info(
         'Payrexx response for subscription %s updated',
         subscriptionId
       )
     } else {
       logger('payrexxSubscriptionPaymentProvider').error(
-        'Payrexx subscription update response for subscription %s is NOK with status %s',
+        'Payrexx subscription update response for subscription %s is NOK with status %s and message %s',
         subscriptionId,
-        res.status
+        res.status,
+        resJSON.message
       )
-      throw new Error(`Payrexx response is NOK with status ${res.status}`)
+      throw new Error(
+        `Payrexx response is NOK with status ${res.status} and message: ${resJSON.message}`
+      )
     }
   }
 
@@ -387,18 +371,22 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       }
     )
 
-    if (res.status === 200) {
+    const resJSON = await res.json()
+    if (res.status === 200 && resJSON.status === 'success') {
       logger('payrexxSubscriptionPaymentProvider').info(
         'Payrexx response for subscription %s canceled',
         subscriptionId
       )
     } else {
       logger('payrexxSubscriptionPaymentProvider').error(
-        'Payrexx subscription cancel response for subscription %s is NOK with status %s',
+        'Payrexx subscription cancel response for subscription %s is NOK with status %s and message %s ',
         subscriptionId,
-        res.status
+        res.status,
+        resJSON.message
       )
-      throw new Error(`Payrexx response is NOK with status ${res.status}`)
+      throw new Error(
+        `Payrexx response is NOK with status ${res.status} and message: ${resJSON.message}`
+      )
     }
   }
 
