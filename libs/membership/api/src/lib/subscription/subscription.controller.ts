@@ -247,6 +247,9 @@ export class SubscriptionController {
             id: subscription.id
           }
         }
+      },
+      include: {
+        items: true
       }
     })
   }

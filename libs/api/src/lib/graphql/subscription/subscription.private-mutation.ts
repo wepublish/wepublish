@@ -116,7 +116,7 @@ export const handleRemoteManagedSubscription = async ({
     (input.paidUntil && input.paidUntil !== originalSubscription.paidUntil) ||
     (input.paymentPeriodicity &&
       input.paymentPeriodicity !== originalSubscription.paymentPeriodicity) ||
-    (input?.autoRenew === false && originalSubscription.autoRenew === true)
+    input?.autoRenew === false
   ) {
     throw new Error(
       `It is not possible to update the subscription with payment provider "${paymentProvider.name}".`

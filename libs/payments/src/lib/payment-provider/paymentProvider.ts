@@ -55,8 +55,8 @@ export interface CancelRemoteSubscriptionProps {
 }
 
 export interface CreateRemoteInvoiceProps {
-  subscriptionId: string
-  amount: string
+  subscription: Subscription & {properties: MetadataProperty[]}
+  invoice: Invoice & {items: InvoiceItem[]}
 }
 
 export interface UpdatePaymentWithIntentStateProps {

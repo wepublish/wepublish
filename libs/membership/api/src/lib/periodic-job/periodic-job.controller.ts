@@ -195,6 +195,7 @@ export class PeriodicJobController {
     const creationEvent = eventInvoiceCreation.find(
       e => e.type === SubscriptionEvent.INVOICE_CREATION
     )
+
     if (!creationEvent) {
       throw new Error('No invoice creation found!')
     }
@@ -214,7 +215,30 @@ export class PeriodicJobController {
       return false
     }
 
-    await this.subscriptionController.createInvoice(subscriptionToCreateInvoice, deactivationEvent)
+    const invoice = await this.subscriptionController.createInvoice(
+      subscriptionToCreateInvoice,
+      deactivationEvent
+    )
+
+    const paymentProvider = await this.payments.findPaymentProviderByPaymentMethodeId(
+      subscriptionToCreateInvoice.paymentMethodID
+    )
+    if (paymentProvider) {
+      const subscription = await this.prismaService.subscription.findUnique({
+        where: {
+          id: subscriptionToCreateInvoice.id
+        },
+        include: {
+          properties: true
+        }
+      })
+      if (subscription) {
+        await paymentProvider.createRemoteInvoice({
+          subscription,
+          invoice
+        })
+      }
+    }
 
     await this.sendTemplateMail(
       creationEvent,
