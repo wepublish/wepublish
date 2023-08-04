@@ -98,7 +98,7 @@ export class PeriodicJobController {
         data: {
           subscriptionID: subscriptionToDeactivate.id,
           date: new Date(),
-          reason: SubscriptionDeactivationReason.invoiceNotPaid
+          reason: SubscriptionDeactivationReason.userSelfDeactivated
         }
       })
     }
