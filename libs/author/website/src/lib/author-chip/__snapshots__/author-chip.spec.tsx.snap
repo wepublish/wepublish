@@ -9,16 +9,16 @@ exports[`Author Chip should render Default 1`] = `
       class="css-lgj0h8 ewiwnhk1"
     >
       <img
-        alt="DSC07717"
+        alt="Dicta itaque nisi mollitia voluptate."
         class="css-1w3f93h-AuthorChip e1nfkf2e0"
-        height="6000"
+        height="500"
         loading="lazy"
-        srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-        title=""
-        width="4000"
+        srcset="https://picsum.photos/seed/LvB65B/800/800 800w,
+https://picsum.photos/seed/za02CkUtN/500/500 500w,
+https://picsum.photos/seed/ZnX7N/300/300 300w,
+https://picsum.photos/seed/hLCnt1cUnM/200/200 200w"
+        title="aliquid deleniti quisquam"
+        width="1000"
       />
     </div>
     <div
@@ -31,16 +31,16 @@ https://unsplash.it/200/200 200w"
           Von 
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-            href="https://example.com"
+            href="https://lasting-parking.org"
           >
-            Foobar
+            Bob Cummings
           </a>
         </strong>
       </p>
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
       >
-        Editor
+        Corporate Marketing Representative
       </p>
     </div>
   </aside>
@@ -56,16 +56,16 @@ exports[`Author Chip should render WithClassName 1`] = `
       class="css-lgj0h8 ewiwnhk1"
     >
       <img
-        alt="DSC07717"
+        alt="Dicta itaque nisi mollitia voluptate."
         class="css-1w3f93h-AuthorChip e1nfkf2e0"
-        height="6000"
+        height="500"
         loading="lazy"
-        srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-        title=""
-        width="4000"
+        srcset="https://picsum.photos/seed/LvB65B/800/800 800w,
+https://picsum.photos/seed/za02CkUtN/500/500 500w,
+https://picsum.photos/seed/ZnX7N/300/300 300w,
+https://picsum.photos/seed/hLCnt1cUnM/200/200 200w"
+        title="aliquid deleniti quisquam"
+        width="1000"
       />
     </div>
     <div
@@ -78,16 +78,16 @@ https://unsplash.it/200/200 200w"
           Von 
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-            href="https://example.com"
+            href="https://lasting-parking.org"
           >
-            Foobar
+            Bob Cummings
           </a>
         </strong>
       </p>
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
       >
-        Editor
+        Corporate Marketing Representative
       </p>
     </div>
   </aside>
@@ -103,16 +103,16 @@ exports[`Author Chip should render WithEmotion 1`] = `
       class="css-lgj0h8 ewiwnhk1"
     >
       <img
-        alt="DSC07717"
+        alt="Dicta itaque nisi mollitia voluptate."
         class="css-1w3f93h-AuthorChip e1nfkf2e0"
-        height="6000"
+        height="500"
         loading="lazy"
-        srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-        title=""
-        width="4000"
+        srcset="https://picsum.photos/seed/LvB65B/800/800 800w,
+https://picsum.photos/seed/za02CkUtN/500/500 500w,
+https://picsum.photos/seed/ZnX7N/300/300 300w,
+https://picsum.photos/seed/hLCnt1cUnM/200/200 200w"
+        title="aliquid deleniti quisquam"
+        width="1000"
       />
     </div>
     <div
@@ -125,16 +125,16 @@ https://unsplash.it/200/200 200w"
           Von 
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-            href="https://example.com"
+            href="https://lasting-parking.org"
           >
-            Foobar
+            Bob Cummings
           </a>
         </strong>
       </p>
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
       >
-        Editor
+        Corporate Marketing Representative
       </p>
     </div>
   </aside>
@@ -159,16 +159,16 @@ exports[`Author Chip should render WithoutImage 1`] = `
           Von 
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-            href="https://example.com"
+            href="https://lasting-parking.org"
           >
-            Foobar
+            Bob Cummings
           </a>
         </strong>
       </p>
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
       >
-        Editor
+        Corporate Marketing Representative
       </p>
     </div>
   </aside>
@@ -184,16 +184,16 @@ exports[`Author Chip should render WithoutJobTitle 1`] = `
       class="css-lgj0h8 ewiwnhk1"
     >
       <img
-        alt="DSC07717"
+        alt="Dicta itaque nisi mollitia voluptate."
         class="css-1w3f93h-AuthorChip e1nfkf2e0"
-        height="6000"
+        height="500"
         loading="lazy"
-        srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-        title=""
-        width="4000"
+        srcset="https://picsum.photos/seed/LvB65B/800/800 800w,
+https://picsum.photos/seed/za02CkUtN/500/500 500w,
+https://picsum.photos/seed/ZnX7N/300/300 300w,
+https://picsum.photos/seed/hLCnt1cUnM/200/200 200w"
+        title="aliquid deleniti quisquam"
+        width="1000"
       />
     </div>
     <div
@@ -206,9 +206,9 @@ https://unsplash.it/200/200 200w"
           Von 
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
-            href="https://example.com"
+            href="https://lasting-parking.org"
           >
-            Foobar
+            Bob Cummings
           </a>
         </strong>
       </p>

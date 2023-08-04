@@ -1,39 +1,11 @@
 import {Meta} from '@storybook/react'
-import {image} from '@wepublish/testing/fixtures/graphql'
-import {PageTeaser} from '@wepublish/website/api'
+import {pageTeaser} from '@wepublish/testing/fixtures/graphql'
 import {Teaser} from './teaser'
 
 export default {
   component: Teaser,
   title: 'Blocks/Teaser/Page'
 } as Meta
-
-const pageTeaser = {
-  __typename: 'PageTeaser',
-  style: 'DEFAULT',
-  image,
-  preTitle: 'Pre Title',
-  title: 'Title',
-  lead: 'Lead',
-  page: {
-    id: 'cl95fumlq261901phgrctx4mz',
-    title: 'Title on the page',
-    description: 'Description on the page',
-    url: 'https://example.com',
-    blocks: [
-      {
-        __typename: 'TitleBlock',
-        title: 'Title from block',
-        lead: 'Lead from block'
-      },
-      {
-        __typename: 'ImageBlock',
-        caption: null,
-        image
-      }
-    ]
-  }
-} as PageTeaser
 
 export const Default = {
   args: {

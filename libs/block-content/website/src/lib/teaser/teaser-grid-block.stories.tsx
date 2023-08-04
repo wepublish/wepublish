@@ -1,84 +1,13 @@
 import {css} from '@emotion/react'
 import {Meta} from '@storybook/react'
-import {image} from '@wepublish/testing/fixtures/graphql'
-import {
-  ArticleTeaser,
-  CustomTeaser,
-  PageTeaser,
-  TeaserGridBlock as TeaserGridBlockType
-} from '@wepublish/website/api'
+import {TeaserGridBlock as TeaserGridBlockType} from '@wepublish/website/api'
 import {TeaserGridBlock} from './teaser-grid-block'
+import {articleTeaser, pageTeaser, customTeaser} from '@wepublish/testing/fixtures/graphql'
 
 export default {
   component: TeaserGridBlock,
   title: 'Blocks/Teaser Grid'
 } as Meta
-
-const customTeaser = {
-  style: 'DEFAULT',
-  image,
-  preTitle: null,
-  title: 'Teambesprechung vom 23.05.',
-  lead: 'Lead',
-  contentUrl: 'https://example.com',
-  properties: [],
-  __typename: 'CustomTeaser'
-} as CustomTeaser
-
-const articleTeaser = {
-  __typename: 'ArticleTeaser',
-  style: 'DEFAULT',
-  image,
-  preTitle: 'Pre Title',
-  title: 'Title',
-  lead: 'Lead',
-  article: {
-    id: 'clg2cxnig57497901rej8i9ubj1',
-    title: 'Title on the article',
-    preTitle: 'Pre Title on the article',
-    lead: 'Lead on the article',
-    url: 'https://example.com',
-    blocks: [
-      {
-        __typename: 'TitleBlock',
-        title: 'Title from block',
-        lead: 'Lead from block'
-      },
-      {
-        __typename: 'ImageBlock',
-        caption: null,
-        image
-      }
-    ]
-  }
-} as ArticleTeaser
-
-const pageTeaser = {
-  __typename: 'PageTeaser',
-  style: 'DEFAULT',
-  image,
-  preTitle: 'Pre Title',
-  title: 'Title',
-  lead: 'Lead',
-  page: {
-    id: 'cl95fumlq261901phgrctx4mz',
-    title: 'Title on the page',
-    description: 'Description on the page',
-    url: 'https://example.com',
-    blocks: [
-      {
-        __typename: 'TitleBlock',
-        title: 'Title from block',
-        lead: 'Lead from block'
-      },
-      {
-        __typename: 'ImageBlock',
-        caption: null,
-        image
-      }
-    ]
-  }
-} as PageTeaser
 
 const flexTeaser = {
   __typename: 'TeaserGridBlock',

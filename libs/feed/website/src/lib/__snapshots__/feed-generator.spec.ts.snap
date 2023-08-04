@@ -23,7 +23,7 @@ exports[`should generate the RSS feed 1`] = `
             <content:encoded><![CDATA[<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>]]></content:encoded>
             <category>foo</category>
             <category>bar</category>
-            <enclosure url="https://unsplash.it/500/300" length="0" type="image//500/300"/>
+            <enclosure url="https://picsum.photos/seed/dkVOrEU/500/300" length="0" type="image//seed/dkVOrEU/500/300"/>
         </item>
         <item>
             <title><![CDATA[Title]]></title>
@@ -34,7 +34,7 @@ exports[`should generate the RSS feed 1`] = `
             <content:encoded><![CDATA[<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>]]></content:encoded>
             <category>foo</category>
             <category>bar</category>
-            <enclosure url="https://unsplash.it/500/300" length="0" type="image//500/300"/>
+            <enclosure url="https://picsum.photos/seed/dkVOrEU/500/300" length="0" type="image//seed/dkVOrEU/500/300"/>
         </item>
     </channel>
 </rss>"
@@ -48,8 +48,8 @@ exports[`should generate the atom feed 1`] = `
     <updated>2023-01-01T00:00:00.000Z</updated>
     <generator>We.Publish (https://github.com/wepublish/wepublish)</generator>
     <author>
-        <name>Foobar</name>
-        <uri>https://example.com</uri>
+        <name>Bob Cummings</name>
+        <uri>https://lasting-parking.org</uri>
     </author>
     <rights>We.Publish</rights>
     <category term="foo"/>
@@ -62,12 +62,12 @@ exports[`should generate the atom feed 1`] = `
         <summary type="html"><![CDATA[lead]]></summary>
         <content type="html"><![CDATA[<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>]]></content>
         <author>
-            <name>Foobar</name>
-            <uri>https://example.com</uri>
+            <name>Bob Cummings</name>
+            <uri>https://lasting-parking.org</uri>
         </author>
         <author>
-            <name>Foobar</name>
-            <uri>https://example.com</uri>
+            <name>Bob Cummings</name>
+            <uri>https://lasting-parking.org</uri>
         </author>
         <category label="foo" term="foo"/>
         <category label="bar" term="bar"/>
@@ -80,12 +80,12 @@ exports[`should generate the atom feed 1`] = `
         <summary type="html"><![CDATA[lead]]></summary>
         <content type="html"><![CDATA[<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>]]></content>
         <author>
-            <name>Foobar</name>
-            <uri>https://example.com</uri>
+            <name>Bob Cummings</name>
+            <uri>https://lasting-parking.org</uri>
         </author>
         <author>
-            <name>Foobar</name>
-            <uri>https://example.com</uri>
+            <name>Bob Cummings</name>
+            <uri>https://lasting-parking.org</uri>
         </author>
         <category label="foo" term="foo"/>
         <category label="bar" term="bar"/>
@@ -98,8 +98,8 @@ exports[`should generate the json feed 1`] = `
     "version": "https://jsonfeed.org/version/1",
     "title": "We.Publish Feed",
     "author": {
-        "name": "Foobar",
-        "url": "https://example.com"
+        "name": "Bob Cummings",
+        "url": "https://lasting-parking.org"
     },
     "items": [
         {
@@ -107,11 +107,11 @@ exports[`should generate the json feed 1`] = `
             "url": "https://example.com",
             "title": "Title",
             "summary": "lead",
-            "image": "https://unsplash.it/500/300",
+            "image": "https://picsum.photos/seed/dkVOrEU/500/300",
             "date_modified": "2023-01-01T00:00:00.000Z",
             "author": {
-                "name": "Foobar",
-                "url": "https://example.com"
+                "name": "Bob Cummings",
+                "url": "https://lasting-parking.org"
             },
             "tags": [
                 "foo",
@@ -123,11 +123,11 @@ exports[`should generate the json feed 1`] = `
             "url": "https://example.com",
             "title": "Title",
             "summary": "lead",
-            "image": "https://unsplash.it/500/300",
+            "image": "https://picsum.photos/seed/dkVOrEU/500/300",
             "date_modified": "2023-01-01T00:00:00.000Z",
             "author": {
-                "name": "Foobar",
-                "url": "https://example.com"
+                "name": "Bob Cummings",
+                "url": "https://lasting-parking.org"
             },
             "tags": [
                 "foo",
@@ -155,12 +155,12 @@ Feed {
     {
       "author": [
         {
-          "link": "https://example.com",
-          "name": "Foobar",
+          "link": "https://lasting-parking.org",
+          "name": "Bob Cummings",
         },
         {
-          "link": "https://example.com",
-          "name": "Foobar",
+          "link": "https://lasting-parking.org",
+          "name": "Bob Cummings",
         },
       ],
       "category": [
@@ -177,19 +177,19 @@ Feed {
       "date": 2023-01-01T00:00:00.000Z,
       "description": "lead",
       "guid": "clgp1hfio50331801rejmrk6sj3",
-      "image": "https://unsplash.it/500/300",
+      "image": "https://picsum.photos/seed/dkVOrEU/500/300",
       "link": "https://example.com",
       "title": "Title",
     },
     {
       "author": [
         {
-          "link": "https://example.com",
-          "name": "Foobar",
+          "link": "https://lasting-parking.org",
+          "name": "Bob Cummings",
         },
         {
-          "link": "https://example.com",
-          "name": "Foobar",
+          "link": "https://lasting-parking.org",
+          "name": "Bob Cummings",
         },
       ],
       "category": [
@@ -206,7 +206,7 @@ Feed {
       "date": 2023-01-01T00:00:00.000Z,
       "description": "lead",
       "guid": "clgp1hfio50331801rejmrk6sj3",
-      "image": "https://unsplash.it/500/300",
+      "image": "https://picsum.photos/seed/dkVOrEU/500/300",
       "link": "https://example.com",
       "title": "Title",
     },
@@ -214,8 +214,8 @@ Feed {
   "json1": [Function],
   "options": {
     "author": {
-      "link": "https://example.com",
-      "name": "Foobar",
+      "link": "https://lasting-parking.org",
+      "name": "Bob Cummings",
     },
     "copyright": "We.Publish",
     "generator": "We.Publish (https://github.com/wepublish/wepublish)",

@@ -1,23 +1,11 @@
 import {Meta} from '@storybook/react'
-import {image} from '@wepublish/testing/fixtures/graphql'
-import {CustomTeaser} from '@wepublish/website/api'
+import {customTeaser} from '@wepublish/testing/fixtures/graphql'
 import {Teaser} from './teaser'
 
 export default {
   component: Teaser,
   title: 'Blocks/Teaser/Custom'
 } as Meta
-
-const customTeaser = {
-  style: 'DEFAULT',
-  image,
-  preTitle: 'preTitle',
-  title: 'Teambesprechung vom 23.05.',
-  lead: 'Lead',
-  contentUrl: 'https://example.com',
-  properties: [],
-  __typename: 'CustomTeaser'
-} as CustomTeaser
 
 export const Default = {
   args: {

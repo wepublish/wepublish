@@ -363,7 +363,7 @@ https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
           >
-            preTitle:  Teambesprechung vom 23.05.
+             Teambesprechung vom 23.05.
           </h1>
         </header>
       </div>
@@ -404,7 +404,7 @@ https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
           >
-            preTitle:  Teambesprechung vom 23.05.
+             Teambesprechung vom 23.05.
           </h1>
         </header>
         <p
@@ -438,7 +438,7 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
           >
-            preTitle:  Teambesprechung vom 23.05.
+             Teambesprechung vom 23.05.
           </h1>
         </header>
       </div>
@@ -479,7 +479,7 @@ https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
           >
-            preTitle:  Teambesprechung vom 23.05.
+             Teambesprechung vom 23.05.
           </h1>
         </header>
         <p
@@ -564,7 +564,7 @@ https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
           >
-            preTitle:  
+             
           </h1>
         </header>
       </div>
