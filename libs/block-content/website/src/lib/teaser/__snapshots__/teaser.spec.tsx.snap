@@ -15,28 +15,16 @@ exports[`Teaser Article should render Default 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -68,28 +56,16 @@ exports[`Teaser Article should render WithShowLead 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -126,28 +102,16 @@ exports[`Teaser Article should render WithoutImage 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -208,28 +172,16 @@ exports[`Teaser Article should render WithoutLead 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -266,28 +218,16 @@ exports[`Teaser Article should render WithoutLeadWithoutBlock 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -324,28 +264,16 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -377,28 +305,16 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -430,28 +346,16 @@ exports[`Teaser Custom should render Default 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -483,28 +387,16 @@ exports[`Teaser Custom should render WithShowLead 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -570,28 +462,16 @@ exports[`Teaser Custom should render WithoutLead 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -626,28 +506,16 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -679,28 +547,16 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -732,28 +588,16 @@ exports[`Teaser Page should render Default 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -785,28 +629,16 @@ exports[`Teaser Page should render WithShowLead 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -843,28 +675,16 @@ exports[`Teaser Page should render WithoutImage 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -896,28 +716,16 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -949,28 +757,16 @@ exports[`Teaser Page should render WithoutLead 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -1007,28 +803,16 @@ exports[`Teaser Page should render WithoutLeadWithoutBlock 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -1065,28 +849,16 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -1118,28 +890,16 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -1171,28 +931,16 @@ exports[`Teaser should render WithClassName 1`] = `
         class="extra-classname css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"
@@ -1224,28 +972,16 @@ exports[`Teaser should render WithEmotion 1`] = `
         class="css-16lxa1r e58tik11"
       >
         <img
-<<<<<<< HEAD:libs/block-content/website/src/lib/__snapshots__/teaser.spec.tsx.snap
           alt="Dicta itaque nisi mollitia voluptate."
-          class="css-1qnf57e"
+          class="css-1opieq8-Teaser e1nfkf2e0"
           height="500"
+          loading="lazy"
           srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
           title="aliquid deleniti quisquam"
           width="1000"
-=======
-          alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
-          height="500"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title="An image title"
-          width="500"
->>>>>>> master:libs/block-content/website/src/lib/teaser/__snapshots__/teaser.spec.tsx.snap
         />
         <header
           class="css-0 e58tik12"

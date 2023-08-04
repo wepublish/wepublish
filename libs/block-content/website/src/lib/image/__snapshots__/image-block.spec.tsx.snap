@@ -7,24 +7,15 @@ exports[`Image Block should render Default 1`] = `
   >
     <img
       alt="Dicta itaque nisi mollitia voluptate."
-      class="css-1qnf57e"
+      class="css-1a2v9hb e1nfkf2e0"
       height="500"
+      loading="lazy"
       srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
       title="aliquid deleniti quisquam"
       width="1000"
-      alt="An image description"
-      class="css-1a2v9hb e1nfkf2e0"
-      height="500"
-      loading="lazy"
-      srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-      title="An image title"
-      width="500"
     />
     <figcaption>
       Image caption
@@ -40,24 +31,15 @@ exports[`Image Block should render WithClassName 1`] = `
   >
     <img
       alt="Dicta itaque nisi mollitia voluptate."
-      class="css-1qnf57e"
+      class="css-1a2v9hb e1nfkf2e0"
       height="500"
+      loading="lazy"
       srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
       title="aliquid deleniti quisquam"
       width="1000"
-      alt="An image description"
-      class="css-1a2v9hb e1nfkf2e0"
-      height="500"
-      loading="lazy"
-      srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-      title="An image title"
-      width="500"
     />
     <figcaption>
       Image caption
@@ -73,24 +55,15 @@ exports[`Image Block should render WithEmotion 1`] = `
   >
     <img
       alt="Dicta itaque nisi mollitia voluptate."
-      class="css-1qnf57e"
+      class="css-1a2v9hb e1nfkf2e0"
       height="500"
+      loading="lazy"
       srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
       title="aliquid deleniti quisquam"
       width="1000"
-      alt="An image description"
-      class="css-1a2v9hb e1nfkf2e0"
-      height="500"
-      loading="lazy"
-      srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-      title="An image title"
-      width="500"
     />
     <figcaption>
       Image caption
@@ -106,24 +79,15 @@ exports[`Image Block should render WithoutCaption 1`] = `
   >
     <img
       alt="Dicta itaque nisi mollitia voluptate."
-      class="css-1qnf57e"
+      class="css-1a2v9hb e1nfkf2e0"
       height="500"
+      loading="lazy"
       srcset="https://picsum.photos/seed/8xHsH/800/400 800w,
 https://picsum.photos/seed/dkVOrEU/500/300 500w,
 https://picsum.photos/seed/3ZbG2/300/200 300w,
 https://picsum.photos/seed/FUAYxo2gyq/200/100 200w"
       title="aliquid deleniti quisquam"
       width="1000"
-      alt="An image description"
-      class="css-1a2v9hb e1nfkf2e0"
-      height="500"
-      loading="lazy"
-      srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-      title="An image title"
-      width="500"
     />
   </figure>
 </DocumentFragment>
