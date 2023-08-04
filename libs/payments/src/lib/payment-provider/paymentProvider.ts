@@ -1,10 +1,12 @@
 import {
   Invoice,
   InvoiceItem,
+  MetadataProperty,
   Payment,
   PaymentState,
   PrismaClient,
-  Subscription
+  Subscription,
+  SubscriptionDeactivationReason
 } from '@prisma/client'
 import bodyParser from 'body-parser'
 import {NextHandleFunction} from 'connect'
@@ -41,6 +43,20 @@ export interface CreatePaymentIntentProps {
 
 export interface CheckIntentProps {
   intentID: string
+}
+
+export interface UpdateRemoteSubscriptionAmountProps {
+  subscription: Subscription & {properties: MetadataProperty[]}
+}
+
+export interface CancelRemoteSubscriptionProps {
+  subscription: Subscription & {properties: MetadataProperty[]}
+  reason: SubscriptionDeactivationReason
+}
+
+export interface CreateRemoteInvoiceProps {
+  subscriptionId: string
+  amount: string
 }
 
 export interface UpdatePaymentWithIntentStateProps {
@@ -90,6 +106,12 @@ export interface PaymentProvider {
   checkIntentStatus(props: CheckIntentProps): Promise<IntentState>
 
   updatePaymentWithIntentState(props: UpdatePaymentWithIntentStateProps): Promise<Payment>
+
+  updateRemoteSubscriptionAmount(props: UpdateRemoteSubscriptionAmountProps): Promise<void>
+
+  cancelRemoteSubscription(props: CancelRemoteSubscriptionProps): Promise<void>
+
+  createRemoteInvoice(props: CreateRemoteInvoiceProps): Promise<void>
 }
 
 export interface PaymentProviderProps {
@@ -118,6 +140,18 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   abstract createIntent(props: CreatePaymentIntentProps): Promise<Intent>
 
   abstract checkIntentStatus(props: CheckIntentProps): Promise<IntentState>
+
+  async updateRemoteSubscriptionAmount(props: UpdateRemoteSubscriptionAmountProps): Promise<void> {
+    return
+  }
+
+  async cancelRemoteSubscription(props: CancelRemoteSubscriptionProps): Promise<void> {
+    return
+  }
+
+  async createRemoteInvoice(props: CreateRemoteInvoiceProps): Promise<void> {
+    return
+  }
 
   async updatePaymentWithIntentState({
     intentState,
