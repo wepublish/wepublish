@@ -97,6 +97,7 @@ export interface PaymentProvider {
   id: string
   name: string
   offSessionPayments: boolean
+  remoteManagedSubscription: boolean
 
   incomingRequestHandler: NextHandleFunction
 
@@ -126,6 +127,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   readonly id: string
   readonly name: string
   readonly offSessionPayments: boolean
+  readonly remoteManagedSubscription: boolean = false
 
   readonly incomingRequestHandler: NextHandleFunction
 

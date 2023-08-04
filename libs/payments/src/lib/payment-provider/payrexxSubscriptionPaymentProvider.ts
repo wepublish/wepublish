@@ -140,12 +140,14 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
   readonly instanceAPISecret: string
   readonly webhookSecret: string
   readonly prisma: PrismaClient
+  readonly remoteManagedSubscription: boolean
 
   constructor(props: PayrexxSubscripionsPaymentProviderProps) {
     super(props)
     this.instanceName = props.instanceName
     this.instanceAPISecret = props.instanceAPISecret
     this.webhookSecret = props.webhookSecret
+    this.remoteManagedSubscription = true
   }
 
   async updateRemoteSubscriptionAmount(props: UpdateRemoteSubscriptionAmountProps) {
