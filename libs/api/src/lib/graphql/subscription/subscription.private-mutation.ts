@@ -112,12 +112,10 @@ export const handleRemoteManagedSubscription = async ({
   // not updatable subscription properties for externally managed subscriptions
   if (
     (input.paymentMethodID && input.paymentMethodID !== originalSubscription.paymentMethodID) ||
-    (input.userID && input.userID !== originalSubscription.userID) ||
     (input.memberPlanID && input.memberPlanID !== originalSubscription.memberPlanID) ||
     (input.paidUntil && input.paidUntil !== originalSubscription.paidUntil) ||
     (input.paymentPeriodicity &&
-      input.paymentPeriodicity !== originalSubscription.paymentPeriodicity) ||
-    (input.startsAt && input.startsAt !== originalSubscription.startsAt)
+      input.paymentPeriodicity !== originalSubscription.paymentPeriodicity)
   ) {
     throw new Error(
       `It is not possible to update the subscription with payment provider "${paymentProvider.name}".`
@@ -155,9 +153,15 @@ export const updateAdminSubscription = async (
       id: id
     },
     include: {
-      properties: true
+      properties: true,
+      deactivation: true
     }
   })
+
+  if (originalSubscription.deactivation) {
+    throw new Error('You are not allowed to change a deactivated subscription!')
+  }
+
   // handle remote managed subscriptions (Payrexx Subscription)
   const {paymentProviderID} = await memberContext.getPaymentMethodByIDOrSlug(
     memberContext.loaders,

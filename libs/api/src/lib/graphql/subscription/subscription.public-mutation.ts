@@ -40,6 +40,10 @@ export const updatePublicSubscription = async (
   if (!monthlyAmount || monthlyAmount < memberPlan.amountPerMonthMin)
     throw new MonthlyAmountNotEnough()
 
+  if (subscription.deactivation) {
+    throw new Error('You are not allowed to change a deactivated subscription!')
+  }
+
   if (
     !memberPlan.availablePaymentMethods.some(apm => {
       if (apm.forceAutoRenewal && !autoRenew) {
