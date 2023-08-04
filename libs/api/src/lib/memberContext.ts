@@ -472,6 +472,12 @@ export class MemberContext implements MemberContext {
     subscription,
     deactivationReason
   }: DeactivateSubscriptionForUserProps): Promise<Subscription> {
+    // deactivate remote subscriptions
+    await this.cancelRemoteSubscription({
+      subscriptionId: subscription.id,
+      reason: deactivationReason
+    })
+
     const now = new Date()
     const deactivationDate =
       subscription.paidUntil !== null && subscription.paidUntil > now ? subscription.paidUntil : now
@@ -503,6 +509,33 @@ export class MemberContext implements MemberContext {
     // Send deactivation Mail
     await this.sendSubscriptionDeactivationMail(subscription, deactivationReason)
     return updatedSubscription
+  }
+
+  async cancelRemoteSubscription({
+    subscriptionId,
+    reason
+  }: {
+    subscriptionId: string
+    reason: SubscriptionDeactivationReason
+  }) {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: {id: subscriptionId},
+      include: {
+        properties: true
+      }
+    })
+    const {paymentProviderID} = await this.getPaymentMethodByIDOrSlug(
+      this.loaders,
+      undefined,
+      subscriptionId
+    )
+    const paymentProvider = this.paymentProviders.find(
+      paymentProvider => paymentProvider.id === paymentProviderID
+    )
+    await paymentProvider.cancelRemoteSubscription({
+      subscription,
+      reason
+    })
   }
 
   /**
