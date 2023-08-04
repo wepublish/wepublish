@@ -9,6 +9,7 @@ import {
   PaymentProviderCustomer,
   PeriodicJob,
   Subscription,
+  SubscriptionDeactivationReason,
   SubscriptionEvent,
   SubscriptionPeriod,
   User
@@ -18,6 +19,7 @@ import {Injectable, Logger} from '@nestjs/common'
 import {MailContext, MailController, mailLogType} from '@wepublish/mails'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {SubscriptionController} from '../subscription/subscription.controller'
+import {PaymentsService} from '@wepublish/payments'
 
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
 
@@ -35,7 +37,8 @@ export class PeriodicJobController {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly mailContext: MailContext,
-    private readonly subscriptionController: SubscriptionController
+    private readonly subscriptionController: SubscriptionController,
+    private readonly payments: PaymentsService
   ) {
     this.subscriptionEventDictionary = new SubscriptionEventDictionary(this.prismaService)
   }
@@ -286,6 +289,24 @@ export class PeriodicJobController {
       })
     if (!eventDeactivationUnpaid[0]) {
       throw new Error('No subscription deactivation found!')
+    }
+
+    const paymentProvider = this.payments.findById(unpaidInvoice.subscription.paymentMethodID)
+    if (paymentProvider) {
+      const subscription = await this.prismaService.subscription.findUnique({
+        where: {
+          id: unpaidInvoice.subscription.id
+        },
+        include: {
+          properties: true
+        }
+      })
+      if (subscription) {
+        await paymentProvider.cancelRemoteSubscription({
+          reason: SubscriptionDeactivationReason.invoiceNotPaid,
+          subscription
+        })
+      }
     }
 
     await this.subscriptionController.deactivateSubscription(unpaidInvoice)
