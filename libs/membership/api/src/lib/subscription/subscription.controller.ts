@@ -145,6 +145,23 @@ export class SubscriptionController {
     })
   }
 
+  public async getExpiredNotAutoRenewSubscriptionsToDeactivate(runDate: Date) {
+    return this.prismaService.subscription.findMany({
+      where: {
+        paidUntil: {
+          lte: endOfDay(runDate)
+        },
+        autoRenew: false,
+        deactivation: {
+          is: null
+        }
+      },
+      include: {
+        deactivation: true
+      }
+    })
+  }
+
   /**
    * Calculate the runtime of a specific {@link PaymentPeriodicity}
    * @param periodicity The periodicity to calculate the runtime for.

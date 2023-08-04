@@ -77,11 +77,30 @@ export class PeriodicJobController {
         await this.findAndCreateInvoices(periodicJobRunObject)
         await this.findAndChargeDueInvoices(periodicJobRunObject)
         await this.findAndDeactivateSubscriptions(periodicJobRunObject)
+        await this.findAndDeactivateExpiredNotAutoRenewSubscription(periodicJobRunObject)
       } catch (e) {
         await this.markJobFailed((e as Error).toString())
         throw e
       }
       await this.markJobSuccessful()
+    }
+  }
+
+  private async findAndDeactivateExpiredNotAutoRenewSubscription(
+    periodicJobRunObject: PeriodicJobRunObject
+  ) {
+    const subscriptionsToDeactivate =
+      await this.subscriptionController.getExpiredNotAutoRenewSubscriptionsToDeactivate(
+        periodicJobRunObject.date
+      )
+    for (const subscriptionToDeactivate of subscriptionsToDeactivate) {
+      await this.prismaService.subscriptionDeactivation.create({
+        data: {
+          subscriptionID: subscriptionToDeactivate.id,
+          date: new Date(),
+          reason: SubscriptionDeactivationReason.invoiceNotPaid
+        }
+      })
     }
   }
 
