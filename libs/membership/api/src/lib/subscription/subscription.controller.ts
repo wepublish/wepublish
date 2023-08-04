@@ -145,6 +145,12 @@ export class SubscriptionController {
     })
   }
 
+  /**
+   * Find all subscriptions that have autorenew false and have a missing deactivation object
+   * @param runDate the date to check for
+   * @returns a list of subscriptions.
+   */
+
   public async getExpiredNotAutoRenewSubscriptionsToDeactivate(runDate: Date) {
     return this.prismaService.subscription.findMany({
       where: {
