@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Twitter Tweet Block should render Default 1`] = `
+<DocumentFragment>
+  <div
+    class="css-0 epowgsq0"
+    data-theme="dark"
+  >
+    <div
+      class="react-tweet-theme root root"
+    >
+      <article
+        class="article"
+      >
+        <span
+          class="skeleton"
+          style="height: 3rem; margin-bottom: 0.75rem;"
+        />
+        <span
+          class="skeleton"
+          style="height: 6rem; margin: 0.5rem 0px;"
+        />
+        <div
+          style="margin: 0.5rem 0px;"
+        />
+        <span
+          class="skeleton"
+          style="height: 2rem;"
+        />
+        <span
+          class="skeleton"
+          style="height: 2rem; border-radius: 9999px; margin-top: 0.5rem;"
+        />
+      </article>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Twitter Tweet Block should render WithClassName 1`] = `
+<DocumentFragment>
+  <div
+    class="extra-classname css-0 epowgsq0"
+    data-theme="dark"
+  >
+    <div
+      class="react-tweet-theme root root"
+    >
+      <article
+        class="article"
+      >
+        <span
+          class="skeleton"
+          style="height: 3rem; margin-bottom: 0.75rem;"
+        />
+        <span
+          class="skeleton"
+          style="height: 6rem; margin: 0.5rem 0px;"
+        />
+        <div
+          style="margin: 0.5rem 0px;"
+        />
+        <span
+          class="skeleton"
+          style="height: 2rem;"
+        />
+        <span
+          class="skeleton"
+          style="height: 2rem; border-radius: 9999px; margin-top: 0.5rem;"
+        />
+      </article>
+    </div>
+  </div>
+</DocumentFragment>
+`;

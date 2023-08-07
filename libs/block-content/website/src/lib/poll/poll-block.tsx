@@ -35,7 +35,7 @@ export const PollBlockMeta = styled('div')`
 `
 
 export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
-  const {vote, fetchUserVote} = usePollBlock()
+  const {vote, fetchUserVote, canVoteAnonymously, getAnonymousVote} = usePollBlock()
 
   const [voteResult, setVoteResult] = useState<
     Pick<PollVoteMutationResult, 'loading' | 'data' | 'error'>
@@ -55,11 +55,6 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
     blocks: {RichText},
     date
   } = useWebsiteBuilder()
-
-  const isOpen = !poll?.closedAt || new Date(poll.closedAt) > new Date()
-  const canVote = hasUser && isOpen
-  const userVote = voteResult?.data?.voteOnPoll?.answerId || loggedInVote?.data?.userPollVote
-  const hasVoted = !!(loggedInVote?.data?.userPollVote ?? voteResult?.data?.voteOnPoll)
 
   const combinedVotes = useMemo(() => {
     const total: Record<string, number> = {}
@@ -102,17 +97,33 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
     }
   }, [fetchUserVote, poll, hasUser])
 
+  if (!poll) {
+    return null
+  }
+
+  const isOpen = !poll.closedAt || new Date(poll.closedAt) > new Date()
+  const canVote = (canVoteAnonymously || hasUser) && isOpen
+  const userVote =
+    voteResult?.data?.voteOnPoll?.answerId ??
+    loggedInVote?.data?.userPollVote ??
+    (canVoteAnonymously ? getAnonymousVote(poll.id) : undefined)
+  const hasVoted = !!(
+    loggedInVote?.data?.userPollVote ??
+    voteResult?.data?.voteOnPoll ??
+    (canVoteAnonymously && getAnonymousVote(poll.id))
+  )
+
   return (
     <PollBlockWrapper className={className}>
-      {poll?.question && <H4 component={'h1'}>{poll.question}</H4>}
-      {poll?.infoText && <RichText richText={poll.infoText} />}
+      {poll.question && <H4 component={'h1'}>{poll.question}</H4>}
+      {poll.infoText && <RichText richText={poll.infoText} />}
 
       {loggedInVote.error && <Alert severity="error">{loggedInVote.error.message}</Alert>}
       {voteResult.error && <Alert severity="error">{voteResult.error.message}</Alert>}
 
       {!hasVoted && canVote && (
         <PollBlockVoting>
-          {poll?.answers.map(answer => (
+          {poll.answers.map(answer => (
             <Button
               variant="outlined"
               color="secondary"
@@ -142,7 +153,7 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
 
       {(hasVoted || !canVote) && (
         <PollBlockVoteResultList>
-          {poll?.answers.map(answer => (
+          {poll.answers.map(answer => (
             <PollBlockResult
               highlight={
                 userVote
@@ -160,7 +171,7 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
 
       <PollBlockMeta>
         {totalVotes} Stimmen
-        {poll?.closedAt && isOpen && (
+        {poll.closedAt && isOpen && (
           <> &ndash; Schliesst am {date.format(new Date(poll.closedAt))}</>
         )}
         {!isOpen && <> &ndash; Abstimmung beendet.</>}

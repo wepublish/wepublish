@@ -949,6 +949,7 @@ export type PollVote = {
   createdAt: Scalars['DateTime']
   disabled: Scalars['Boolean']
   fingerprint?: Maybe<Scalars['String']>
+  pollId: Scalars['ID']
 }
 
 export type PublicProperties = {
@@ -10557,6 +10558,7 @@ export type ArticleListQuery = {
                       | {__typename: 'VimeoVideoBlock'}
                       | {__typename: 'YouTubeVideoBlock'}
                     >
+                    properties: Array<{__typename?: 'PublicProperties'; key: string; value: string}>
                     authors: Array<{
                       __typename?: 'Author'
                       id: string
@@ -41242,7 +41244,7 @@ export type PollVoteMutationVariables = Exact<{
 
 export type PollVoteMutation = {
   __typename?: 'Mutation'
-  voteOnPoll?: {__typename?: 'PollVote'; answerId: string} | null
+  voteOnPoll?: {__typename?: 'PollVote'; answerId: string; pollId: string} | null
 }
 
 export type FullSettingFragment = {
@@ -43441,6 +43443,7 @@ export const PollVoteDocument = gql`
   mutation PollVote($answerId: ID!) {
     voteOnPoll(answerId: $answerId) {
       answerId
+      pollId
     }
   }
 `
