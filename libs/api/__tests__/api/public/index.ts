@@ -943,6 +943,7 @@ export type PollVote = {
   createdAt: Scalars['DateTime'];
   disabled: Scalars['Boolean'];
   fingerprint?: Maybe<Scalars['String']>;
+  pollId: Scalars['ID'];
 };
 
 export type PublicProperties = {

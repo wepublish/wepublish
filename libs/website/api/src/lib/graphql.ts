@@ -945,6 +945,7 @@ export type PollVote = {
   createdAt: Scalars['DateTime'];
   disabled: Scalars['Boolean'];
   fingerprint?: Maybe<Scalars['String']>;
+  pollId: Scalars['ID'];
 };
 
 export type PublicProperties = {
@@ -1785,7 +1786,7 @@ export type PollVoteMutationVariables = Exact<{
 }>;
 
 
-export type PollVoteMutation = { __typename?: 'Mutation', voteOnPoll?: { __typename?: 'PollVote', answerId: string } | null };
+export type PollVoteMutation = { __typename?: 'Mutation', voteOnPoll?: { __typename?: 'PollVote', answerId: string, pollId: string } | null };
 
 export type FullSettingFragment = { __typename?: 'Setting', id: string, name: SettingName, value: any };
 
@@ -3340,6 +3341,7 @@ export const PollVoteDocument = gql`
     mutation PollVote($answerId: ID!) {
   voteOnPoll(answerId: $answerId) {
     answerId
+    pollId
   }
 }
     `;
