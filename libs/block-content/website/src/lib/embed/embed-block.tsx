@@ -9,8 +9,10 @@ export const isEmbedBlock = (block: Block): block is EmbedBlockType =>
 
 export const EmbedBlockWrapper = styled('div')``
 
-export const EmbedBlockIframe = styled('iframe')`
+export const EmbedBlockIframe = styled('iframe')<{aspectRatio: number}>`
+  width: 100%;
   border: 0;
+  aspect-ratio: ${({aspectRatio}) => aspectRatio};
 `
 
 export function EmbedBlock({
@@ -22,20 +24,19 @@ export function EmbedBlock({
   sandbox,
   className
 }: BuilderEmbedBlockProps) {
-  const ratio = width && height ? width / height : 0
+  const ratio = width && height ? width / height : 1
 
   const styleCustomCss = useMemo(
     () => css`
-      width: 100%;
-      aspect-ratio: ${ratio || 1};
       ${styleCustom}
     `,
-    [styleCustom, ratio]
+    [styleCustom]
   )
 
   return url ? (
     <EmbedBlockWrapper className={className}>
       <EmbedBlockIframe
+        aspectRatio={ratio}
         css={styleCustomCss}
         src={url}
         title={title ?? undefined}
