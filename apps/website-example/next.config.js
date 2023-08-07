@@ -18,6 +18,7 @@ const nextConfig = {
   compiler: {
     // This is needed so that we can use components as selectors in Emotion
     emotion: {
+      sourceMap: true,
       importMap: {
         '@mui/material': {
           styled: {
