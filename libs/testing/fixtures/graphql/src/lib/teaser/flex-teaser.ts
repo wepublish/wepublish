@@ -1,7 +1,7 @@
 import {Exact, TeaserGridFlexBlock as TeaserGridFlexBlockType} from '@wepublish/website/api'
-import {customTeaser} from './customTeaser'
-import {articleTeaser} from './articleTeaser'
-import {pageTeaser} from './pageTeaser'
+import {customTeaser} from './custom-teaser'
+import {articleTeaser} from './article-teaser'
+import {pageTeaser} from './page-teaser'
 
 export const flexTeaser: Exact<TeaserGridFlexBlockType> = {
   __typename: 'TeaserGridFlexBlock',

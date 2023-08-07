@@ -2,31 +2,19 @@ import {faker} from '@faker-js/faker'
 import {
   CommentAuthorType,
   CommentItemType,
-  CommentListQuery,
-  CommentState
+  CommentState,
+  Exact,
+  FullCommentFragment
 } from '@wepublish/website/api'
-import {image} from '../image/image'
+import {user} from '../user/user'
 import {text} from '../text/text'
 
-export const verifiedUserComment: CommentListQuery['comments'][number] = {
+export const verifiedUserComment: Exact<FullCommentFragment> = {
   id: 'verified',
   parentID: faker.string.uuid(),
   peerId: null,
   overriddenRatings: [],
-  user: {
-    __typename: 'User',
-    id: faker.string.uuid(),
-    name: faker.person.fullName(),
-    firstName: faker.person.firstName(),
-    email: faker.internet.email(),
-    preferredName: faker.person.fullName(),
-    address: null,
-    flair: 'Flair',
-    paymentProviderCustomers: [],
-    image,
-    properties: [],
-    oauth2Accounts: []
-  },
+  user,
   guestUsername: null,
   guestUserImage: null,
   calculatedRatings: null,

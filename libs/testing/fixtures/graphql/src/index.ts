@@ -10,11 +10,11 @@ export * from './lib/text/text'
 export * from './lib/challenge/challenge'
 
 // comments
-export * from './lib/comment/anonymousComment'
-export * from './lib/comment/verifiedUserComment'
+export * from './lib/comment/anonymous-comment'
+export * from './lib/comment/verified-user-comment'
 
 // teasers
-export * from './lib/teaser/customTeaser'
-export * from './lib/teaser/articleTeaser'
-export * from './lib/teaser/pageTeaser'
-export * from './lib/teaser/flexTeaser'
+export * from './lib/teaser/custom-teaser'
+export * from './lib/teaser/article-teaser'
+export * from './lib/teaser/page-teaser'
+export * from './lib/teaser/flex-teaser'
