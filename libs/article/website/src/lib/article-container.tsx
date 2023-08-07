@@ -1,13 +1,8 @@
 import {QueryResult} from '@apollo/client'
-import {PollBlockContext} from '@wepublish/block-content/website'
-import {
-  ArticleQuery,
-  useArticleQuery,
-  usePollVoteMutation,
-  useUserPollVoteLazyQuery
-} from '@wepublish/website/api'
+import {PollBlockProvider} from '@wepublish/block-content/website'
+import {ArticleQuery, useArticleQuery} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {PropsWithChildren, useEffect} from 'react'
+import {useEffect} from 'react'
 
 type IdOrSlug = {id: string; slug?: never} | {id?: never; slug: string}
 
@@ -34,20 +29,5 @@ export function ArticleContainer({onQuery, id, slug, className}: ArticleContaine
     <PollBlockProvider>
       <Article data={data} loading={loading} error={error} className={className} />
     </PollBlockProvider>
-  )
-}
-
-function PollBlockProvider({children}: PropsWithChildren) {
-  const [fetchUserVote] = useUserPollVoteLazyQuery()
-  const [vote] = usePollVoteMutation()
-
-  return (
-    <PollBlockContext.Provider
-      value={{
-        fetchUserVote,
-        vote
-      }}>
-      {children}
-    </PollBlockContext.Provider>
   )
 }

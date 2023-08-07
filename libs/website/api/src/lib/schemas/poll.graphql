@@ -30,5 +30,6 @@ query UserPollVote($pollId: ID!) {
 mutation PollVote($answerId: ID!) {
   voteOnPoll(answerId: $answerId) {
     answerId
+    pollId
   }
 }
