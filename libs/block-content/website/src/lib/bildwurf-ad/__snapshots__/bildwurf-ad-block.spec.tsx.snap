@@ -7,7 +7,7 @@ exports[`Bildwurf Ad Block should render Default 1`] = `
     src="https://media.online.bildwurf.ch/js/code.min.js"
   />
   <div
-    class="css-0 ef7o3yi0"
+    class="css-0 e1ibnxst0"
     id="bildwurf-injection-wrapper"
   >
     <ins
@@ -25,7 +25,7 @@ exports[`Bildwurf Ad Block should render WithClassName 1`] = `
     src="https://media.online.bildwurf.ch/js/code.min.js"
   />
   <div
-    class="extra-classname css-0 ef7o3yi0"
+    class="extra-classname css-0 e1ibnxst0"
     id="bildwurf-injection-wrapper"
   >
     <ins

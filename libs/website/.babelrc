@@ -10,25 +10,5 @@
       }
     ]
   ],
-  "plugins": [
-    [
-      "@emotion/babel-plugin",
-      {
-        "importMap": {
-          "@mui/material": {
-            "styled": {
-              "canonicalImport": ["@emotion/styled", "default"],
-              "styledBaseImport": ["@mui/material", "styled"]
-            }
-          },
-          "@mui/material/styles": {
-            "styled": {
-              "canonicalImport": ["@emotion/styled", "default"],
-              "styledBaseImport": ["@mui/material/styles", "styled"]
-            }
-          }
-        }
-      }
-    ]
-  ]
+  "plugins": ["@emotion/babel-plugin"]
 }
