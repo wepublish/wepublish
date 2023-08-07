@@ -1,19 +1,25 @@
-import {CommentListQuery} from '@wepublish/website/api'
+import {faker} from '@faker-js/faker'
+import {
+  CommentAuthorType,
+  CommentItemType,
+  CommentListQuery,
+  CommentState
+} from '@wepublish/website/api'
 import {image} from '../image/image'
 import {text} from '../text/text'
 
 export const verifiedUserComment: CommentListQuery['comments'][number] = {
   id: 'verified',
-  parentID: 'cljgx3n3i382572shctpgd5gg0',
+  parentID: faker.string.uuid(),
   peerId: null,
   overriddenRatings: [],
   user: {
     __typename: 'User',
-    id: 'qnK8vb5D5RtlTEbb',
-    name: 'User',
-    firstName: 'Fallback',
-    email: 'foobar@example.com',
-    preferredName: 'Signed Up',
+    id: faker.string.uuid(),
+    name: faker.person.fullName(),
+    firstName: faker.person.firstName(),
+    email: faker.internet.email(),
+    preferredName: faker.person.fullName(),
     address: null,
     flair: 'Flair',
     paymentProviderCustomers: [],
@@ -24,17 +30,17 @@ export const verifiedUserComment: CommentListQuery['comments'][number] = {
   guestUsername: null,
   guestUserImage: null,
   calculatedRatings: null,
-  authorType: 'VerifiedUser',
-  itemID: 'cljfya8sj4342602siydzsx4pxv',
-  itemType: 'Article',
-  title: 'de Finibus Bonorum et Malorum',
+  authorType: CommentAuthorType.VerifiedUser,
+  itemID: faker.string.uuid(),
+  itemType: CommentItemType.Article,
+  title: faker.lorem.words(3),
   lead: null,
   text,
-  state: 'Approved',
+  state: CommentState.Approved,
   source: 'Source',
   rejectionReason: null,
-  createdAt: '2023-06-29T09:39:28.351Z',
-  modifiedAt: '2023-06-29T09:45:01.334Z',
+  createdAt: faker.date.past().toISOString(),
+  modifiedAt: faker.date.past().toISOString(),
   __typename: 'Comment',
   children: [],
   tags: []

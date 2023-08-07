@@ -1,13 +1,14 @@
-import {CustomTeaser, Exact} from '@wepublish/website/api'
+import {faker} from '@faker-js/faker'
+import {CustomTeaser, Exact, TeaserStyle} from '@wepublish/website/api'
 import {image} from '../image/image'
 
 export const customTeaser: Exact<CustomTeaser> = {
-  style: 'DEFAULT',
+  style: TeaserStyle.Default,
   image,
-  preTitle: null,
-  title: 'Teambesprechung vom 23.05.',
-  lead: 'Lead',
-  contentUrl: 'https://example.com',
+  title: faker.lorem.words(3),
+  preTitle: faker.lorem.words(3),
+  lead: faker.lorem.words(3),
+  contentUrl: faker.internet.url(),
   properties: [],
   __typename: 'CustomTeaser'
 }

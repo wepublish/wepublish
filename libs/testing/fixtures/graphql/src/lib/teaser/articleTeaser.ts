@@ -1,24 +1,27 @@
-import {ArticleTeaser, Exact} from '@wepublish/website/api'
+import {faker} from '@faker-js/faker'
+import {Article, ArticleTeaser, Exact, TeaserStyle} from '@wepublish/website/api'
 import {image} from '../image/image'
+import {author} from '../author/author'
 
 export const articleTeaser: Exact<ArticleTeaser> = {
   __typename: 'ArticleTeaser',
-  style: 'DEFAULT',
+  style: TeaserStyle.Default,
   image,
-  preTitle: 'Pre Title',
-  title: 'Title',
+  preTitle: faker.lorem.words(2),
+  title: faker.lorem.words(3),
   lead: 'Lead',
   article: {
-    id: 'clg2cxnig57497901rej8i9ubj1',
-    title: 'Title on the article',
-    preTitle: 'Pre Title on the article',
-    lead: 'Lead on the article',
-    url: 'https://example.com',
+    id: faker.string.uuid(),
+    title: faker.lorem.words(3),
+    preTitle: faker.lorem.words(3),
+    lead: faker.lorem.words(3),
+    url: faker.internet.url(),
+    authors: [author],
     blocks: [
       {
         __typename: 'TitleBlock',
-        title: 'Title from block',
-        lead: 'Lead from block'
+        title: faker.lorem.words(3),
+        lead: faker.lorem.words(3)
       },
       {
         __typename: 'ImageBlock',
@@ -26,5 +29,5 @@ export const articleTeaser: Exact<ArticleTeaser> = {
         image
       }
     ]
-  }
+  } as Article
 }

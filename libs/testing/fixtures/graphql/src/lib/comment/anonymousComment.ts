@@ -1,11 +1,12 @@
+import {faker} from '@faker-js/faker'
 import {image} from '../image/image'
 import {text} from '../text/text'
 
 export const anonymousComment = {
   __typename: 'Comment',
   id: 'anonymous',
-  parentID: null,
-  peerId: null,
+  parentID: faker.string.uuid(),
+  peerId: faker.string.uuid(),
   user: null,
   guestUsername: 'Dr. Anonymous',
   guestUserImage: image,
@@ -15,8 +16,8 @@ export const anonymousComment = {
       mean: 5,
       total: 15,
       answer: {
-        id: 'cl9wv78am1810854fszdbjcu6f',
-        answer: 'Informativ',
+        id: faker.string.uuid(),
+        answer: faker.lorem.words(1),
         ratingSystemId: 'default',
         type: 'STAR',
         __typename: 'CommentRatingSystemAnswer'
@@ -28,8 +29,8 @@ export const anonymousComment = {
       mean: 5,
       total: 10,
       answer: {
-        id: 'cl9wv7drp1822954fszyd05kqe',
-        answer: 'Konstruktiv',
+        id: faker.string.uuid(),
+        answer: faker.lorem.words(1),
         ratingSystemId: 'default',
         type: 'STAR',
         __typename: 'CommentRatingSystemAnswer'
@@ -41,8 +42,8 @@ export const anonymousComment = {
       mean: 5,
       total: 15,
       answer: {
-        id: 'cl9wv7h961829254fsrm9mpjzz',
-        answer: 'Nützlich',
+        id: faker.string.uuid(),
+        answer: faker.lorem.words(1),
         ratingSystemId: 'default',
         type: 'STAR',
         __typename: 'CommentRatingSystemAnswer'
@@ -53,15 +54,15 @@ export const anonymousComment = {
   overriddenRatings: [],
   tags: [],
   authorType: 'GuestUser',
-  itemID: 'cljfya8sj4342602siydzsx4pxv',
+  itemID: faker.string.uuid(),
   itemType: 'Article',
-  title: 'de Finibus Bonorum et Malorum',
+  title: faker.lorem.words(3),
   lead: null,
   text,
   state: 'Approved',
   source: 'Source',
   rejectionReason: null,
-  createdAt: '2023-06-29T09:02:46.446Z',
-  modifiedAt: '2023-06-29T09:02:46.446Z',
+  createdAt: faker.date.past().toISOString(),
+  modifiedAt: faker.date.past().toISOString(),
   children: []
 }

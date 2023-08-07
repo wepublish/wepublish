@@ -1,23 +1,24 @@
-import {Exact, PageTeaser} from '@wepublish/website/api'
+import {faker} from '@faker-js/faker'
+import {Exact, Page, PageTeaser, TeaserStyle} from '@wepublish/website/api'
 import {image} from '../image/image'
 
 export const pageTeaser: Exact<PageTeaser> = {
   __typename: 'PageTeaser',
-  style: 'DEFAULT',
+  style: TeaserStyle.Default,
   image,
-  preTitle: 'Pre Title',
-  title: 'Title',
+  preTitle: faker.lorem.words(2),
+  title: faker.lorem.words(3),
   lead: 'Lead',
   page: {
-    id: 'cl95fumlq261901phgrctx4mz',
-    title: 'Title on the page',
-    description: 'Description on the page',
-    url: 'https://example.com',
+    id: faker.string.uuid(),
+    title: faker.lorem.words(3),
+    description: faker.lorem.words(10),
+    url: faker.internet.url(),
     blocks: [
       {
         __typename: 'TitleBlock',
-        title: 'Title from block',
-        lead: 'Lead from block'
+        title: faker.lorem.words(3),
+        lead: faker.lorem.words(3)
       },
       {
         __typename: 'ImageBlock',
@@ -25,5 +26,5 @@ export const pageTeaser: Exact<PageTeaser> = {
         image
       }
     ]
-  }
+  } as Page
 }
