@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useCallback, useEffect} from 'react'
 import {BildwurfAdBlock as BildwurfAdBlockType, Block} from '@wepublish/website/api'
 
 import styled from '@emotion/styled'
@@ -24,17 +24,22 @@ export interface BildwurfAdEmbedProps {
 export function BildwurfAdBlock({zoneID, className}: BuilderBildwurfAdBlockProps) {
   const {Script} = useWebsiteBuilder()
 
-  useEffect(() => {
+  const loadAd = useCallback(() => {
     try {
       window._ASO.loadAd('bildwurf-injection-wrapper', zoneID)
     } catch (error) {
-      console.warn('could not call _ASO.loadAd()')
+      // do nothing
     }
-  }, [])
+  }, [zoneID])
+
+  useEffect(() => {
+    loadAd()
+  }, [loadAd])
 
   return (
     <>
-      <Script src="https://media.online.bildwurf.ch/js/code.min.js" />
+      <Script src="https://media.online.bildwurf.ch/js/code.min.js" onLoad={loadAd} />
+
       <BildwurfBlockWrapper className={className} id="bildwurf-injection-wrapper">
         <ins className="aso-zone" data-zone={zoneID}></ins>
       </BildwurfBlockWrapper>

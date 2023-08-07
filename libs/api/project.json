@@ -36,7 +36,8 @@
         "assets": ["libs/api/*.md", "libs/api/prisma/**/*"],
         "external": "all",
         "buildableProjectDepsInPackageJsonType": "dependencies",
-        "rootDir": "."
+        "rootDir": ".",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     }
   },

@@ -21,7 +21,8 @@
         "packageJson": "libs/ui/package.json",
         "main": "libs/ui/src/index.ts",
         "assets": ["libs/ui/*.md"],
-        "buildableProjectDepsInPackageJsonType": "dependencies"
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     },
     "test": {

@@ -79,30 +79,30 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     // =======
 
     createSession: {
-      type: GraphQLNonNull(GraphQLPublicSessionWithToken),
+      type: new GraphQLNonNull(GraphQLPublicSessionWithToken),
       args: {
-        email: {type: GraphQLNonNull(GraphQLString)},
-        password: {type: GraphQLNonNull(GraphQLString)}
+        email: {type: new GraphQLNonNull(GraphQLString)},
+        password: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {email, password}, {sessionTTL, prisma}) =>
         createSession(email, password, sessionTTL, prisma.session, prisma.user, prisma.userRole)
     },
 
     createSessionWithJWT: {
-      type: GraphQLNonNull(GraphQLPublicSessionWithToken),
+      type: new GraphQLNonNull(GraphQLPublicSessionWithToken),
       args: {
-        jwt: {type: GraphQLNonNull(GraphQLString)}
+        jwt: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {jwt}, {sessionTTL, prisma, verifyJWT}) =>
         createJWTSession(jwt, sessionTTL, verifyJWT, prisma.session, prisma.user, prisma.userRole)
     },
 
     createSessionWithOAuth2Code: {
-      type: GraphQLNonNull(GraphQLPublicSessionWithToken),
+      type: new GraphQLNonNull(GraphQLPublicSessionWithToken),
       args: {
-        name: {type: GraphQLNonNull(GraphQLString)},
-        code: {type: GraphQLNonNull(GraphQLString)},
-        redirectUri: {type: GraphQLNonNull(GraphQLString)}
+        name: {type: new GraphQLNonNull(GraphQLString)},
+        code: {type: new GraphQLNonNull(GraphQLString)},
+        redirectUri: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {name, code, redirectUri}, {sessionTTL, prisma, oauth2Providers}) =>
         createOAuth2Session(
@@ -118,7 +118,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     revokeActiveSession: {
-      type: GraphQLNonNull(GraphQLBoolean),
+      type: new GraphQLNonNull(GraphQLBoolean),
       args: {},
       description: 'This mutation revokes and deletes the active session.',
       resolve: (root, _, {authenticateUser, prisma: {session}}) =>
@@ -128,17 +128,17 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     // Comment
     // =======
     addComment: {
-      type: GraphQLNonNull(GraphQLPublicComment),
-      args: {input: {type: GraphQLNonNull(GraphQLPublicCommentInput)}},
+      type: new GraphQLNonNull(GraphQLPublicComment),
+      args: {input: {type: new GraphQLNonNull(GraphQLPublicCommentInput)}},
       description: 'This mutation allows to add a comment. The input is of type CommentInput.',
       resolve: (_, {input}, {optionalAuthenticateUser, prisma: {comment, setting}, challenge}) =>
         addPublicComment(input, optionalAuthenticateUser, challenge, setting, comment)
     },
 
     updateComment: {
-      type: GraphQLNonNull(GraphQLPublicComment),
+      type: new GraphQLNonNull(GraphQLPublicComment),
       args: {
-        input: {type: GraphQLNonNull(GraphQLPublicCommentUpdateInput)}
+        input: {type: new GraphQLNonNull(GraphQLPublicCommentUpdateInput)}
       },
       description:
         'This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text.',
@@ -147,11 +147,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     rateComment: {
-      type: GraphQLNonNull(GraphQLCommentRating),
+      type: new GraphQLNonNull(GraphQLCommentRating),
       args: {
-        commentId: {type: GraphQLNonNull(GraphQLID)},
-        answerId: {type: GraphQLNonNull(GraphQLID)},
-        value: {type: GraphQLNonNull(GraphQLInt)}
+        commentId: {type: new GraphQLNonNull(GraphQLID)},
+        answerId: {type: new GraphQLNonNull(GraphQLID)},
+        value: {type: new GraphQLNonNull(GraphQLInt)}
       },
       description: 'This mutation allows to rate a comment. Supports logged in and anonymous',
       resolve: (
@@ -172,16 +172,16 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     registerMember: {
-      type: GraphQLNonNull(GraphQLMemberRegistration),
+      type: new GraphQLNonNull(GraphQLMemberRegistration),
       args: {
-        name: {type: GraphQLNonNull(GraphQLString)},
+        name: {type: new GraphQLNonNull(GraphQLString)},
         firstName: {type: GraphQLString},
         preferredName: {type: GraphQLString},
-        email: {type: GraphQLNonNull(GraphQLString)},
+        email: {type: new GraphQLNonNull(GraphQLString)},
         address: {type: GraphQLUserAddressInput},
         password: {type: GraphQLString},
         challengeAnswer: {
-          type: GraphQLNonNull(GraphQLChallengeInput)
+          type: new GraphQLNonNull(GraphQLChallengeInput)
         }
       },
       description: 'This mutation allows to register a new member,',
@@ -248,28 +248,28 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     registerMemberAndReceivePayment: {
-      type: GraphQLNonNull(GraphQLMemberRegistrationAndPayment),
+      type: new GraphQLNonNull(GraphQLMemberRegistrationAndPayment),
       args: {
-        name: {type: GraphQLNonNull(GraphQLString)},
+        name: {type: new GraphQLNonNull(GraphQLString)},
         firstName: {type: GraphQLString},
         preferredName: {type: GraphQLString},
-        email: {type: GraphQLNonNull(GraphQLString)},
+        email: {type: new GraphQLNonNull(GraphQLString)},
         address: {type: GraphQLUserAddressInput},
         password: {type: GraphQLString},
         memberPlanID: {type: GraphQLID},
         memberPlanSlug: {type: GraphQLSlug},
-        autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
-        paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
-        monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+        autoRenew: {type: new GraphQLNonNull(GraphQLBoolean)},
+        paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
+        monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},
         paymentMethodID: {type: GraphQLID},
         paymentMethodSlug: {type: GraphQLSlug},
         subscriptionProperties: {
-          type: GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublicInput))
+          type: new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublicInput))
         },
         successURL: {type: GraphQLString},
         failureURL: {type: GraphQLString},
         challengeAnswer: {
-          type: GraphQLNonNull(GraphQLChallengeInput)
+          type: new GraphQLNonNull(GraphQLChallengeInput)
         }
       },
       description:
@@ -417,17 +417,17 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     createSubscription: {
-      type: GraphQLNonNull(GraphQLPublicPayment),
+      type: new GraphQLNonNull(GraphQLPublicPayment),
       args: {
         memberPlanID: {type: GraphQLID},
         memberPlanSlug: {type: GraphQLSlug},
-        autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
-        paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
-        monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+        autoRenew: {type: new GraphQLNonNull(GraphQLBoolean)},
+        paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
+        monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},
         paymentMethodID: {type: GraphQLID},
         paymentMethodSlug: {type: GraphQLSlug},
         subscriptionProperties: {
-          type: GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublicInput))
+          type: new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublicInput))
         },
         successURL: {type: GraphQLString},
         failureURL: {type: GraphQLString}
@@ -516,9 +516,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     extendSubscription: {
-      type: GraphQLNonNull(GraphQLPublicPayment),
+      type: new GraphQLNonNull(GraphQLPublicPayment),
       args: {
-        subscriptionId: {type: GraphQLNonNull(GraphQLString)},
+        subscriptionId: {type: new GraphQLNonNull(GraphQLString)},
         successURL: {type: GraphQLString},
         failureURL: {type: GraphQLString}
       },
@@ -655,9 +655,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     sendWebsiteLogin: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       args: {
-        email: {type: GraphQLNonNull(GraphQLString)}
+        email: {type: new GraphQLNonNull(GraphQLString)}
       },
       description:
         'This mutation sends a login link to the email if the user exists. Method will always return email address',
@@ -739,7 +739,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     updateUser: {
       type: GraphQLPublicUser,
       args: {
-        input: {type: GraphQLNonNull(GraphQLPublicUserInput)}
+        input: {type: new GraphQLNonNull(GraphQLPublicUserInput)}
       },
       description:
         "This mutation allows to update the user's data by taking an input of type UserInput.",
@@ -764,8 +764,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     updatePassword: {
       type: GraphQLPublicUser,
       args: {
-        password: {type: GraphQLNonNull(GraphQLString)},
-        passwordRepeated: {type: GraphQLNonNull(GraphQLString)}
+        password: {type: new GraphQLNonNull(GraphQLString)},
+        passwordRepeated: {type: new GraphQLNonNull(GraphQLString)}
       },
       description:
         "This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.",
@@ -779,8 +779,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     updateUserSubscription: {
       type: GraphQLPublicSubscription,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLPublicSubscriptionInput)}
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        input: {type: new GraphQLNonNull(GraphQLPublicSubscriptionInput)}
       },
       description:
         "This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null",
@@ -803,7 +803,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     cancelUserSubscription: {
       type: GraphQLPublicSubscription,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       description:
         'This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now',
@@ -853,10 +853,12 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     updatePaymentProviderCustomers: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentProviderCustomer))),
       args: {
         input: {
-          type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomerInput)))
+          type: new GraphQLNonNull(
+            new GraphQLList(new GraphQLNonNull(GraphQLPaymentProviderCustomerInput))
+          )
         }
       },
       description: 'This mutation allows to update the Payment Provider Customers',
@@ -867,7 +869,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     createPaymentFromInvoice: {
       type: GraphQLPublicPayment,
       args: {
-        input: {type: GraphQLNonNull(GraphQLPaymentFromInvoiceInput)}
+        input: {type: new GraphQLNonNull(GraphQLPaymentFromInvoiceInput)}
       },
       description:
         'This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.',
@@ -926,7 +928,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     voteOnPoll: {
       type: GraphQLPollVote,
       args: {
-        answerId: {type: GraphQLNonNull(GraphQLID)}
+        answerId: {type: new GraphQLNonNull(GraphQLID)}
       },
       description:
         "This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous",

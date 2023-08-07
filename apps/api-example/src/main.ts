@@ -8,6 +8,10 @@ import {MediaAdapterService} from '@wepublish/api'
 
 async function bootstrap() {
   const nestApp = await NestFactory.create(AppModule)
+  nestApp.enableCors({
+    origin: true,
+    credentials: true
+  })
   const mediaAdapter = nestApp.get(MediaAdapterService)
   const port = process.env.PORT ?? 4000
 
