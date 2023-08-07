@@ -101,7 +101,6 @@ exports[`User list view should render successfully 1`] = `
                 <input
                   aria-hidden="true"
                   class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
-                  name="userRoles"
                   readonly=""
                   style="pointer-events: none;"
                   tabindex="-1"

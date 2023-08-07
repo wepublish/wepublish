@@ -169,7 +169,7 @@ exports[`User edit view should allow a new user to be created 1`] = `
                             type="text"
                             value=""
                           />
-@@ -820,14 +832,15 @@
+@@ -819,14 +831,15 @@
                         >
                           <input
                             aria-describedby="password-help-text"
@@ -271,7 +271,7 @@ exports[`User edit view should allow user properties to be added 1`] = `
                     </div>
                     <div
                       class="rs-col rs-col-xs-12"
-@@ -732,12 +774,141 @@
+@@ -731,12 +773,141 @@
                         >
                           articleEditor.panels.properties
                         </label>
@@ -413,7 +413,7 @@ exports[`User edit view should allow user properties to be added 1`] = `
                             >
                               <svg
                                 fill="currentColor"
-@@ -818,17 +989,38 @@
+@@ -817,17 +988,38 @@
                         <div
                           class="rs-form-control rs-form-control-wrapper"
                         >
@@ -472,9 +472,9 @@ exports[`User edit view should allow user role to be added 1`] = `
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="rs-picker-toggle rs-btn rs-btn-default"
-@@ -650,37 +650,59 @@
+@@ -649,37 +649,59 @@
+                                  aria-hidden="true"
                                   class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
-                                  name="userRoles"
                                   readonly=""
                                   style="pointer-events: none;"
                                   tabindex="-1"
@@ -561,9 +561,9 @@ exports[`User edit view should allow user role to be removed 1`] = `
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="rs-picker-toggle rs-btn rs-btn-default"
-@@ -650,37 +650,59 @@
+@@ -649,37 +649,59 @@
+                                  aria-hidden="true"
                                   class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
-                                  name="userRoles"
                                   readonly=""
                                   style="pointer-events: none;"
                                   tabindex="-1"
@@ -1283,7 +1283,6 @@ exports[`User edit view should render 1`] = `
                               <input
                                 aria-hidden="true"
                                 class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
-                                name="userRoles"
                                 readonly=""
                                 style="pointer-events: none;"
                                 tabindex="-1"
@@ -2127,7 +2126,6 @@ exports[`User edit view should render with ID 1`] = `
                               <input
                                 aria-hidden="true"
                                 class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
-                                name="userRoles"
                                 readonly=""
                                 style="pointer-events: none;"
                                 tabindex="-1"
