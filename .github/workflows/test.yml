@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: '16'
       - run: npm ci
-      - run: npm test
+      - run: npm test-ci
         env:
           JWT_SECRET_KEY: 'ThisIsSuperSecret'
           DATABASE_URL: 'postgresql://postgres@localhost:5432/wepublish_test?schema=public'

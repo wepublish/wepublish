@@ -12,6 +12,7 @@
     "lint": " nx run-many --target=lint",
     "build": " nx run-many --target=build --projects=api,editor,api-example,website-example",
     "test": " nx run-many --target=test",
+    "test-ci": " nx run-many --target=test --code-coverage",
     "watch": "npm run migrate && run-p --print-label watch:*",
     "watch:editor": "nx serve editor",
     "watch:api-example": "nx serve api-example",
