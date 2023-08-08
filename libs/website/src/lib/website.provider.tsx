@@ -26,7 +26,8 @@ import {
   VimeoVideoBlock,
   YouTubeVideoBlock,
   ListicleBlock,
-  TitleBlock
+  TitleBlock,
+  BreakBlock
 } from '@wepublish/block-content/website'
 import {CommentEditor, CommentList, CommentListItem} from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
@@ -133,6 +134,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         blocks={{
           Renderer: BlockRenderer,
           Title: TitleBlock,
+          Break: BreakBlock,
           Image: ImageBlock,
           ImageGallery: ImageGalleryBlock,
           Quote: QuoteBlock,
