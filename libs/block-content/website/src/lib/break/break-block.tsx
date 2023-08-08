@@ -5,42 +5,36 @@ import {Block, LinkPageBreakBlock as LinkPageBreakBlockType} from '@wepublish/we
 export const isBreakBlock = (block: Block): block is LinkPageBreakBlockType =>
   block.__typename === 'LinkPageBreakBlock'
 
-export const BreakBlockWrapper = styled('div')<{reverse?: boolean}>`
+export const BreakBlockWrapper = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
-  grid-template-columns: 100%;
   justify-content: center;
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    grid-auto-flow: ${props => props.reverse && 'column'};
-    gap: ${({theme}) => theme.spacing(20)};
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  ${({theme}) => theme.breakpoints.up('lg')} {
-    gap: ${({theme}) => theme.spacing(30)};
+    grid-template-columns: 1fr 2fr;
   }
 `
 
 export const BreakBlockSegment = styled('div')<{reverse?: boolean}>`
   display: grid;
-  width: 100%;
   align-items: center;
-  ${({theme}) => theme.breakpoints.up('md')} {
-    grid-column-end: ${props => props.reverse && '-1'};
-  }
-`
+  gap: ${({theme}) => theme.spacing(2)};
 
-const headingStyles = css`
-  margin-bottom: 24px;
+  ${({theme, reverse}) =>
+    reverse &&
+    css`
+      ${theme.breakpoints.up('md')} {
+        order: 1;
+      }
+    `}
 `
 
 export const BreakBlock = ({
   className,
-  layoutOption,
   text,
   image,
-  richText
+  richText,
+  layoutOption
 }: BuilderBreakBlockProps) => {
   const {
     elements: {H4, Image},
@@ -50,12 +44,14 @@ export const BreakBlock = ({
   const reverse = layoutOption === 'image-right'
 
   return (
-    <BreakBlockWrapper className={className} reverse={reverse}>
-      <BreakBlockSegment reverse={reverse}>
-        {image && <Image image={image} square />}
-      </BreakBlockSegment>
+    <BreakBlockWrapper className={className}>
+      <BreakBlockSegment reverse={reverse}>{image && <Image image={image} />}</BreakBlockSegment>
+
       <BreakBlockSegment>
-        <H4 css={headingStyles}>{text}</H4>
+        <H4 component="div" role="heading">
+          {text}
+        </H4>
+
         <RichText richText={richText} />
       </BreakBlockSegment>
     </BreakBlockWrapper>
