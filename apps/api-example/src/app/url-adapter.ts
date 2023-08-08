@@ -21,6 +21,10 @@ export class ExampleURLAdapter implements URLAdapter {
   }
 
   getPublicPageURL(page: PublicPage): string {
+    if (['', '/'].includes(page.slug)) {
+      return this.websiteURL
+    }
+
     return `${this.websiteURL}/page/${page.id}/${page.slug}`
   }
 
